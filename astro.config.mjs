@@ -5,8 +5,15 @@ import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
+import starlightLlmsTxt from "starlight-llms-txt";
+
+// Load environment variables from .env file
+import "dotenv/config";
+const { VITE_SITE_URL } = import.meta.env;
+
 // https://astro.build/config
 export default defineConfig({
+  site: VITE_SITE_URL,
   integrations: [
     starlight({
       title: "Agentic Flow",
@@ -52,40 +59,41 @@ export default defineConfig({
             label: "Workflow",
             link: "/workflow/guides/example/",
             icon: "open-book",
-			items: [
-				{
-					label: "Guides",
-					autogenerate: { directory: "workflow/guides" },
-				  },
-				  {
-					label: "Reference",
-					autogenerate: { directory: "workflow/reference" },
-				  },
-			],
+            items: [
+              {
+                label: "Guides",
+                autogenerate: { directory: "workflow/guides" },
+              },
+              {
+                label: "Reference",
+                autogenerate: { directory: "workflow/reference" },
+              },
+            ],
           },
           {
             label: {
-				en: "Marketplace",
-				fr: "Marché",
-			},
+              en: "Marketplace",
+              fr: "Marché",
+            },
             link: "/marketplace/guides/example/",
             icon: "information",
-			items: [
-				{
-					label: "Guides",
-					autogenerate: { directory: "marketplace/guides" },
-				  },
-				  {
-					label: "Reference",
-					autogenerate: { directory: "marketplace/reference" },
-				  },
-			],
+            items: [
+              {
+                label: "Guides",
+                autogenerate: { directory: "marketplace/guides" },
+              },
+              {
+                label: "Reference",
+                autogenerate: { directory: "marketplace/reference" },
+              },
+            ],
           },
         ]),
+        starlightLlmsTxt(),
       ],
-	  components: {
+      components: {
         // Override the default `Sidebar` component with a custom one.
-        Sidebar: './src/components/Sidebar.astro',
+        Sidebar: "./src/components/Sidebar.astro",
       },
       customCss: [
         // Path to your Tailwind base styles:
