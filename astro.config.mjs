@@ -56,37 +56,55 @@ export default defineConfig({
       plugins: [
         starlightSidebarTopics([
           {
-            label: "Workflow",
-            link: "/workflow/guides/example/",
-            icon: "open-book",
+            label: "How To Use",
+            link: "/usage/",
+            icon: "rocket",
             items: [
               {
                 label: "Guides",
-                autogenerate: { directory: "workflow/guides" },
+                autogenerate: { directory: "usage/guides" },
               },
               {
                 label: "Reference",
-                autogenerate: { directory: "workflow/reference" },
+                autogenerate: { directory: "usage/reference" },
               },
             ],
           },
           {
             label: {
-              en: "Marketplace",
-              fr: "Marché",
+              en: "Integrations",
+              fr: "Integrations",
             },
-            link: "/marketplace/guides/example/",
-            icon: "information",
+            link: "/integration/",
+            icon: "puzzle",
             items: [
               {
                 label: "Guides",
-                autogenerate: { directory: "marketplace/guides" },
+                autogenerate: { directory: "integration/guides" },
               },
               {
                 label: "Reference",
-                autogenerate: { directory: "marketplace/reference" },
+                autogenerate: { directory: "integration/reference" },
               },
             ],
+          },
+          {
+            label: {
+              en: "Advanced AI",
+              fr: "Marché",
+            },
+            link: "/advanced-ai/",
+            icon: "seti:illustrator",
+            items: [],
+          },
+          {
+            label: {
+              en: "Learning",
+              fr: "Apprendre",
+            },
+            link: "/Learning/",
+            icon: "open-book",
+            items: [],
           },
         ]),
         starlightLlmsTxt(),
@@ -94,7 +112,7 @@ export default defineConfig({
       components: {
         // Override the default `Sidebar` component with a custom one.
         Sidebar: "./src/components/(override)/Sidebar.astro",
-		Pagination: "./src/components/(override)/Pagination.astro"
+        Pagination: "./src/components/(override)/Pagination.astro",
       },
       customCss: [
         // Path to your Tailwind base styles:
