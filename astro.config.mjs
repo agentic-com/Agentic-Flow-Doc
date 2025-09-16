@@ -93,7 +93,8 @@ export default defineConfig({
       ],
       components: {
         // Override the default `Sidebar` component with a custom one.
-        Sidebar: "./src/components/Sidebar.astro",
+        Sidebar: "./src/components/(override)/Sidebar.astro",
+		Pagination: "./src/components/(override)/Pagination.astro"
       },
       customCss: [
         // Path to your Tailwind base styles:
