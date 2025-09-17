@@ -6,6 +6,8 @@ import tailwindcss from "@tailwindcss/vite";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
 import starlightLlmsTxt from "starlight-llms-txt";
+import starlightAutoSidebar from 'starlight-auto-sidebar'
+import starlightVideos from 'starlight-videos'
 
 // Load environment variables from .env file
 import "dotenv/config";
@@ -54,6 +56,7 @@ export default defineConfig({
         },
       },
       plugins: [
+        starlightAutoSidebar(),
         starlightSidebarTopics([
           {
             label: "How To Use",
@@ -61,12 +64,28 @@ export default defineConfig({
             icon: "rocket",
             items: [
               {
-                label: "Guides",
-                autogenerate: { directory: "usage/guides" },
+                label: "Getting started",
+                autogenerate: { directory: "usage/getting-started", collapsed: true },
               },
               {
-                label: "Reference",
-                autogenerate: { directory: "usage/reference" },
+                label: "Using the app",
+                autogenerate: { directory: "usage/using-the-app", collapsed: true },
+              },
+              {
+                label: "Key concepts",
+                autogenerate: { directory: "usage/key-concepts", collapsed: true },
+              },
+              {
+                label: "Releases",
+                autogenerate: { directory: "usage/releases", collapsed: true },
+              },
+              {
+                label: "Help and Community",
+                autogenerate: { directory: "usage/help-and-community", collapsed: true },
+              },
+              {
+                label: "Licenses and privacy",
+                autogenerate: { directory: "usage/licenses-and-privacy", collapsed: true },
               },
             ],
           },
@@ -80,11 +99,11 @@ export default defineConfig({
             items: [
               {
                 label: "Guides",
-                autogenerate: { directory: "integration/guides" },
+                autogenerate: { directory: "integration/guides", collapsed: true },
               },
               {
                 label: "Reference",
-                autogenerate: { directory: "integration/reference" },
+                autogenerate: { directory: "integration/reference", collapsed: true },
               },
             ],
           },
@@ -102,11 +121,25 @@ export default defineConfig({
               en: "Learning",
               fr: "Apprendre",
             },
-            link: "/Learning/",
+            link: "/learning/",
             icon: "open-book",
-            items: [],
+            items: [
+              {
+                label: "Examples",
+                autogenerate: { directory: "learning/examples", collapsed: true },
+              },
+              {
+                label: "Video Courses",
+                autogenerate: { directory: "learning/video-courses", collapsed: true },
+              },
+              {
+                label: "Text Courses",
+                autogenerate: { directory: "learning/text-courses", collapsed: true },
+              },
+            ],
           },
         ]),
+        starlightVideos(),
         starlightLlmsTxt(),
       ],
       components: {
