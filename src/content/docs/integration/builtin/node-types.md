@@ -21,12 +21,12 @@ External services need a way to identify and authenticate users. This data can r
 
 Nodes in Agentic Workflow Studio can then request that credential information. As another layer of security, only node types with specific access rights can access the credentials.
 
-To make sure that the data is secure, it gets saved to the database encrypted. Agentic Workflow Studio uses a random personal encryption key, which it automatically generates on the first run of Agentic Workflow Studio and then saved under `~/.Agentic Workflow Studio/config`.
+To make sure that the data is secure, credentials are stored encrypted within the browser extension's secure storage. Agentic Workflow Studio uses browser-native encryption mechanisms to protect sensitive authentication data.
 
 To learn more about creating, managing, and sharing credentials, refer to [Manage credentials](/credentials/index.md).
 
 ## Community nodes
 
-Agentic Workflow Studio supports custom nodes built by the community. Refer to [Community nodes](/integrations/community-nodes/installation/index.md) for guidance on installing and using these nodes.
+Agentic Workflow Studio supports custom nodes built by the community. These nodes extend the browser extension's capabilities with additional browser interactions and integrations.
 
-For help building your own custom nodes, and publish them to [npm](https://www.npmjs.com/), refer to [Creating nodes](/integrations/creating-nodes/overview.md) for more information.
+For information about contributing new browser extension nodes or workflow templates, connect with the Agentic Workflow Studio community through our official channels.

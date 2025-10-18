@@ -24,38 +24,193 @@ The node leverages the following browser APIs:
 
 ### Input Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| Include DOCTYPE | Boolean | No | Include DOCTYPE declaration (default: true) |
-| Current DOM State | Boolean | No | Capture current DOM vs. original source (default: true) |
-| Minify HTML | Boolean | No | Remove unnecessary whitespace (default: false) |
-| Include Comments | Boolean | No | Preserve HTML comments (default: false) |
-| Max Size | Number | No | Maximum HTML size in bytes (default: 10MB) |
-| Exclude Scripts | Boolean | No | Remove script tags from output (default: false) |
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Include DOCTYPE** | Boolean | No | `true` | Include DOCTYPE declaration in output |
+| **Current DOM State** | Boolean | No | `true` | Capture current DOM vs. original source HTML |
+| **Minify HTML** | Boolean | No | `false` | Remove unnecessary whitespace and formatting |
+| **Include Comments** | Boolean | No | `false` | Preserve HTML comments in output |
+| **Max Size** | Number | No | `10485760` | Maximum HTML size in bytes (10MB) |
+| **Exclude Scripts** | Boolean | No | `false` | Remove all script tags from output |
+| **Exclude Styles** | Boolean | No | `false` | Remove style tags and inline styles |
+| **Processing Mode** | String | No | `complete` | Processing mode: `complete`, `content-only`, `structure-only` |
+
+### HTML Cleaning Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Remove Attributes** | Array | No | `[]` | HTML attributes to remove (e.g., `["onclick", "data-track"]`) |
+| **Remove Elements** | Array | No | `[]` | HTML elements to remove (e.g., `["script", "noscript", "iframe"]`) |
+| **Keep Elements Only** | Array | No | `[]` | Only keep specified elements (whitelist mode) |
+| **Clean Classes** | Boolean | No | `false` | Remove CSS classes that match cleanup patterns |
+| **Clean IDs** | Boolean | No | `false` | Remove or normalize element IDs |
+| **Remove Empty Elements** | Boolean | No | `false` | Remove elements with no content |
+| **Normalize Whitespace** | Boolean | No | `false` | Normalize whitespace between elements |
+
+### Content Filtering Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Content Areas Only** | Boolean | No | `false` | Extract only main content areas |
+| **Exclude Navigation** | Boolean | No | `false` | Remove navigation elements |
+| **Exclude Sidebar** | Boolean | No | `false` | Remove sidebar content |
+| **Exclude Footer** | Boolean | No | `false` | Remove footer elements |
+| **Exclude Ads** | Boolean | No | `false` | Remove advertising content |
+| **Custom Exclude Selectors** | Array | No | `[]` | CSS selectors for elements to exclude |
+| **Custom Include Selectors** | Array | No | `[]` | CSS selectors for elements to include only |
+
+### Processing & Performance Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Processing Timeout** | Number | No | `30000` | Maximum processing time in milliseconds |
+| **Batch Processing** | Boolean | No | `false` | Process large DOMs in batches |
+| **Batch Size** | Number | No | `1000` | Elements to process per batch |
+| **Include Processing Stats** | Boolean | No | `false` | Include performance metrics in output |
+| **Cache Results** | Boolean | No | `false` | Cache processed HTML for repeated access |
+| **Cache Duration** | Number | No | `300000` | Cache duration in milliseconds |
+| **Preserve Source Maps** | Boolean | No | `false` | Maintain mapping to original DOM positions |
+
+### Output Format Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Pretty Print** | Boolean | No | `false` | Format HTML with proper indentation |
+| **Indent Size** | Number | No | `2` | Spaces for indentation when pretty printing |
+| **Line Length Limit** | Number | No | `0` | Maximum line length (0 = no limit) |
+| **Include Metadata** | Boolean | No | `true` | Include extraction metadata in output |
+| **Output Encoding** | String | No | `utf-8` | Character encoding for output |
+| **Compression** | String | No | `none` | Compression: `none`, `gzip`, `deflate` |
 
 ### Output Data
 
-The node outputs an object containing:
+The node outputs a comprehensive object containing:
 
 ```json
 {
   "html": "<!DOCTYPE html><html>...</html>",
-  "size": 245760,
+  "originalSize": 345760,
+  "processedSize": 245760,
+  "compressionRatio": 0.71,
   "elementCount": 1250,
+  "removedElements": 89,
   "metadata": {
     "title": "Page Title",
+    "description": "Page meta description",
     "charset": "UTF-8",
     "doctype": "html",
-    "url": "https://example.com/page"
+    "url": "https://example.com/page",
+    "domain": "example.com",
+    "language": "en",
+    "viewport": "width=device-width, initial-scale=1",
+    "author": "Content Author",
+    "publishDate": "2024-01-10",
+    "lastModified": "2024-01-15"
   },
   "structure": {
     "headElements": 15,
     "bodyElements": 1235,
     "scriptTags": 8,
     "styleTags": 3,
-    "linkTags": 12
+    "linkTags": 12,
+    "imageTags": 45,
+    "formElements": 2,
+    "tableElements": 3,
+    "listElements": 18,
+    "headingElements": {
+      "h1": 1,
+      "h2": 8,
+      "h3": 15,
+      "h4": 12,
+      "h5": 3,
+      "h6": 1
+    }
   },
-  "extractedAt": "2024-01-15T10:30:00Z"
+  "contentAreas": {
+    "header": "<header>...</header>",
+    "navigation": "<nav>...</nav>",
+    "main": "<main>...</main>",
+    "sidebar": "<aside>...</aside>",
+    "footer": "<footer>...</footer>"
+  },
+  "assets": {
+    "stylesheets": [
+      {"href": "/css/main.css", "media": "all"},
+      {"href": "/css/print.css", "media": "print"}
+    ],
+    "scripts": [
+      {"src": "/js/main.js", "type": "text/javascript", "async": true},
+      {"src": "/js/analytics.js", "type": "text/javascript"}
+    ],
+    "images": [
+      {"src": "/images/logo.png", "alt": "Company Logo", "width": 200, "height": 100},
+      {"src": "/images/hero.jpg", "alt": "Hero Image", "loading": "lazy"}
+    ],
+    "fonts": [
+      {"family": "Open Sans", "source": "Google Fonts"},
+      {"family": "Roboto", "source": "Local"}
+    ]
+  },
+  "seo": {
+    "metaTags": {
+      "description": "Page meta description",
+      "keywords": "keyword1, keyword2, keyword3",
+      "robots": "index, follow",
+      "canonical": "https://example.com/page"
+    },
+    "openGraph": {
+      "title": "OG Title",
+      "description": "OG Description", 
+      "image": "https://example.com/og-image.jpg",
+      "type": "article"
+    },
+    "twitterCard": {
+      "card": "summary_large_image",
+      "title": "Twitter Title",
+      "description": "Twitter Description"
+    },
+    "structuredData": [
+      {"type": "Article", "headline": "Article Title"},
+      {"type": "Organization", "name": "Company Name"}
+    ]
+  },
+  "accessibility": {
+    "altTextCount": 42,
+    "missingAltText": 3,
+    "headingStructure": "valid",
+    "ariaLabels": 15,
+    "focusableElements": 28,
+    "colorContrast": "needs-review"
+  },
+  "performance": {
+    "totalElements": 1250,
+    "domDepth": 12,
+    "criticalResources": 8,
+    "renderBlockingResources": 3,
+    "lazyLoadedImages": 23
+  },
+  "processing": {
+    "timeMs": 245,
+    "method": "dom-serialization",
+    "batchesProcessed": 3,
+    "cacheHit": false,
+    "cleaningApplied": ["remove-scripts", "normalize-whitespace"],
+    "warnings": ["Large DOM size", "Missing alt attributes"]
+  },
+  "validation": {
+    "isValidHTML": true,
+    "htmlVersion": "HTML5",
+    "errors": [],
+    "warnings": ["Deprecated attributes found"],
+    "wcagCompliance": "AA-partial"
+  },
+  "extractedAt": "2024-01-15T10:30:00Z",
+  "extractionMethod": "current-dom", // or "original-source"
+  "browserInfo": {
+    "userAgent": "Chrome/120.0.0.0",
+    "viewport": {"width": 1920, "height": 1080},
+    "devicePixelRatio": 1.0
+  }
 }
 ```
 

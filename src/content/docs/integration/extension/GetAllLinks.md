@@ -25,56 +25,279 @@ The node leverages the following browser APIs:
 
 ### Input Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| Include External Links | Boolean | No | Extract links to external domains (default: true) |
-| Include Internal Links | Boolean | No | Extract links within the same domain (default: true) |
-| Include Anchor Links | Boolean | No | Extract page anchor/fragment links (default: false) |
-| Include Hidden Links | Boolean | No | Extract links from hidden elements (default: false) |
-| Resolve Relative URLs | Boolean | No | Convert relative URLs to absolute (default: true) |
-| Include Link Metadata | Boolean | No | Extract additional link attributes (default: true) |
-| Max Links | Number | No | Maximum number of links to extract (default: 1000) |
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Include External Links** | Boolean | No | `true` | Extract links to external domains |
+| **Include Internal Links** | Boolean | No | `true` | Extract links within the same domain |
+| **Include Anchor Links** | Boolean | No | `false` | Extract page anchor/fragment links |
+| **Include Hidden Links** | Boolean | No | `false` | Extract links from hidden elements |
+| **Resolve Relative URLs** | Boolean | No | `true` | Convert relative URLs to absolute |
+| **Include Link Metadata** | Boolean | No | `true` | Extract additional link attributes |
+| **Max Links** | Number | No | `1000` | Maximum number of links to extract |
+
+### Advanced Filtering Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Link Types** | Array | No | `["http", "https"]` | URL schemes to include: `http`, `https`, `mailto`, `tel`, `ftp` |
+| **Domain Filters** | Array | No | `[]` | Specific domains to include or exclude |
+| **URL Pattern Filters** | Array | No | `[]` | Regex patterns for URL filtering |
+| **Anchor Text Filters** | Array | No | `[]` | Text content patterns to match |
+| **Element Selectors** | Array | No | `[]` | CSS selectors for link containers |
+| **Exclude Selectors** | Array | No | `[]` | CSS selectors for elements to exclude |
+| **Minimum Text Length** | Number | No | `0` | Minimum anchor text length |
+| **Maximum Text Length** | Number | No | `0` | Maximum anchor text length (0 = unlimited) |
+
+### Link Categorization Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Categorize By Type** | Boolean | No | `true` | Categorize links by URL type (internal/external/anchor) |
+| **Categorize By Domain** | Boolean | No | `true` | Group links by destination domain |
+| **Categorize By Content** | Boolean | No | `false` | Categorize by content type (page/file/media) |
+| **Detect File Types** | Boolean | No | `true` | Identify file downloads vs web pages |
+| **Analyze Link Context** | Boolean | No | `false` | Analyze surrounding content for context |
+| **Extract Link Hierarchy** | Boolean | No | `false` | Identify navigation vs content links |
+
+### Validation & Quality Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Validate URLs** | Boolean | No | `false` | Check URL format and structure |
+| **Check Accessibility** | Boolean | No | `false` | Verify links are accessible (not 404) |
+| **Analyze Anchor Text** | Boolean | No | `false` | Assess anchor text quality and relevance |
+| **Detect Duplicate Links** | Boolean | No | `true` | Identify and mark duplicate URLs |
+| **Check Redirect Chains** | Boolean | No | `false` | Follow and analyze redirect chains |
+| **Security Scanning** | Boolean | No | `false` | Basic security checks for suspicious URLs |
+
+### Metadata Extraction Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Extract Attributes** | Array | No | `["rel", "target", "title"]` | HTML attributes to extract |
+| **Include Position Data** | Boolean | No | `false` | Include DOM position and XPath |
+| **Extract Context** | Boolean | No | `false` | Include surrounding text and elements |
+| **Include Styling Info** | Boolean | No | `false` | Extract computed styles and visibility |
+| **Analyze Link Relationships** | Boolean | No | `false` | Identify parent-child link relationships |
+| **Extract Semantic Data** | Boolean | No | `false` | Extract microdata and structured data |
+
+### Performance & Processing Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Processing Timeout** | Number | No | `30000` | Maximum processing time in milliseconds |
+| **Batch Processing** | Boolean | No | `false` | Process large link sets in batches |
+| **Batch Size** | Number | No | `100` | Links to process per batch |
+| **Include Processing Stats** | Boolean | No | `false` | Include performance metrics in output |
+| **Cache Results** | Boolean | No | `false` | Cache extracted links for repeated access |
+| **Parallel Processing** | Boolean | No | `false` | Process link validation in parallel |
 
 ### Output Data
 
-The node outputs an object containing:
+The node outputs a comprehensive object containing:
 
 ```json
 {
   "links": [
     {
+      "id": "link-001",
       "url": "https://example.com/page",
+      "originalUrl": "/page", // Before resolution
       "text": "Link text",
       "title": "Link title attribute",
       "type": "external",
+      "category": "content-link",
       "element": "a",
       "attributes": {
         "rel": "nofollow",
         "target": "_blank",
-        "class": "external-link"
+        "class": "external-link",
+        "data-track": "click-event"
       },
       "position": {
         "index": 0,
-        "xpath": "/html/body/div[1]/a[1]"
+        "xpath": "/html/body/div[1]/a[1]",
+        "selector": "div.content > a:first-child",
+        "offsetTop": 150,
+        "offsetLeft": 20
+      },
+      "context": {
+        "parentElement": "div",
+        "parentClass": "content",
+        "surroundingText": "...text before link... Link text ...text after link...",
+        "siblingLinks": 2,
+        "sectionHeading": "Related Articles"
+      },
+      "validation": {
+        "isValid": true,
+        "isAccessible": true,
+        "statusCode": 200,
+        "responseTime": 245,
+        "redirectChain": ["https://example.com/page"],
+        "finalUrl": "https://example.com/page",
+        "contentType": "text/html",
+        "lastChecked": "2024-01-15T10:30:00Z"
+      },
+      "quality": {
+        "anchorTextQuality": "good", // good, fair, poor
+        "anchorTextLength": 9,
+        "isDescriptive": true,
+        "hasGenericText": false, // "click here", "read more"
+        "contextRelevance": 0.85,
+        "trustScore": 0.92
+      },
+      "security": {
+        "isSafe": true,
+        "hasTracking": true,
+        "isShortened": false,
+        "suspiciousPatterns": [],
+        "securityScore": 0.95
+      },
+      "metadata": {
+        "domain": "example.com",
+        "subdomain": "www",
+        "path": "/page",
+        "parameters": {},
+        "fragment": null,
+        "fileExtension": null,
+        "estimatedContentType": "webpage"
       }
     }
   ],
   "summary": {
     "totalLinks": 45,
+    "processedLinks": 45,
+    "validLinks": 43,
+    "brokenLinks": 2,
+    "duplicateLinks": 3,
     "internalLinks": 32,
     "externalLinks": 13,
     "anchorLinks": 5,
-    "brokenLinks": 2,
-    "uniqueDomains": 8
+    "emailLinks": 2,
+    "phoneLinks": 1,
+    "fileLinks": 8,
+    "uniqueDomains": 8,
+    "averageResponseTime": 312,
+    "totalProcessingTime": 2450
+  },
+  "categories": {
+    "byType": {
+      "internal": 32,
+      "external": 13,
+      "anchor": 5,
+      "email": 2,
+      "phone": 1,
+      "file": 8
+    },
+    "byContent": {
+      "navigation": 12,
+      "content": 28,
+      "footer": 8,
+      "sidebar": 5
+    },
+    "byFileType": {
+      "pdf": 3,
+      "image": 4,
+      "document": 2,
+      "media": 1
+    }
   },
   "domains": [
     {
       "domain": "example.com",
       "count": 13,
-      "type": "external"
+      "type": "external",
+      "trustScore": 0.92,
+      "averageResponseTime": 280,
+      "categories": ["content", "reference"],
+      "firstSeen": "2024-01-15T10:30:00Z"
+    },
+    {
+      "domain": "current-site.com",
+      "count": 32,
+      "type": "internal",
+      "categories": ["navigation", "content"],
+      "siteStructure": {
+        "sections": ["about", "products", "contact"],
+        "depth": 3,
+        "breadth": 12
+      }
     }
   ],
-  "extractedAt": "2024-01-15T10:30:00Z"
+  "patterns": {
+    "commonPaths": ["/about", "/contact", "/products"],
+    "parameterPatterns": ["utm_source", "ref", "id"],
+    "anchorTextPatterns": ["Learn more", "Read article", "View details"],
+    "linkingPatterns": {
+      "mostLinkedDomain": "example.com",
+      "averageLinksPerDomain": 2.3,
+      "linkDensity": 0.045 // links per word
+    }
+  },
+  "quality": {
+    "overallScore": 0.87,
+    "factors": {
+      "descriptiveAnchors": 0.92,
+      "workingLinks": 0.96,
+      "appropriateTargets": 0.88,
+      "securityCompliance": 0.94
+    },
+    "issues": [
+      {
+        "type": "generic-anchor-text",
+        "count": 3,
+        "examples": ["click here", "read more"],
+        "severity": "medium"
+      },
+      {
+        "type": "broken-links",
+        "count": 2,
+        "urls": ["https://broken.example.com", "https://missing.example.com"],
+        "severity": "high"
+      }
+    ],
+    "recommendations": [
+      "Replace generic anchor text with descriptive text",
+      "Fix or remove broken links",
+      "Consider adding rel='noopener' to external links"
+    ]
+  },
+  "accessibility": {
+    "score": 0.78,
+    "issues": [
+      {
+        "type": "missing-title-attribute",
+        "count": 5,
+        "severity": "medium"
+      },
+      {
+        "type": "insufficient-color-contrast",
+        "count": 2,
+        "severity": "high"
+      }
+    ],
+    "compliance": {
+      "wcag2.1": "AA-partial",
+      "section508": "partial"
+    }
+  },
+  "processing": {
+    "timeMs": 2450,
+    "method": "dom-traversal",
+    "batchesProcessed": 5,
+    "cacheHit": false,
+    "validationEnabled": true,
+    "parallelProcessing": false,
+    "warnings": ["Some links took longer than 5s to validate"],
+    "errors": []
+  },
+  "extractedAt": "2024-01-15T10:30:00Z",
+  "pageInfo": {
+    "url": "https://current-site.com/page",
+    "title": "Page Title",
+    "domain": "current-site.com",
+    "lastModified": "2024-01-14T15:20:00Z"
+  }
 }
 ```
 
@@ -284,7 +507,29 @@ Factors affecting memory consumption:
 
 ## Related Nodes
 
-- **Get All Images**: Extract all images from the page
+### Content Collection Alternatives
+- **[Get All Images](/integration/extension/GetAllImages/)**: Extract all images from the page for media analysis
+- **[Get All Text](/integration/extension/GetAllText/)**: Extract all text content for comprehensive page analysis
+- **[Get All HTML](/integration/extension/GetAllHTML/)**: Extract complete HTML structure including links
+
+### Link Processing & Analysis
+- **[Link Analyzer](/integration/extension/LinkAnalyzer/)**: Analyze collected links for patterns and metadata
+- **[Navigate to Link](/integration/extension/NavigateToLink/)**: Programmatically navigate to discovered links
+- **[HTTP Request](/integration/builtin/core/Http-Request/)**: Validate link accessibility and response data
+
+### Data Processing
+- **[Edit Fields](/integration/builtin/dataTransformation/EditFields/)**: Process and filter extracted link data
+- **[Filter](/integration/builtin/flow/Filter/)**: Filter links based on criteria and patterns
+
+### Common Workflow Patterns
+- **Link Validation**: GetAllLinks → [HTTP Request](/integration/builtin/core/Http-Request/) → [Filter](/integration/builtin/flow/Filter/) → [Report Generation](/integration/builtin/dataTransformation/DownloadAsFile/)
+- **Site Mapping**: GetAllLinks → [Navigate to Link](/integration/extension/NavigateToLink/) → [Recursive Collection](/integration/builtin/flow/Merge/)
+- **SEO Analysis**: GetAllLinks → [Link Analyzer](/integration/extension/LinkAnalyzer/) → [AI Analysis](/integration/builtin/ai/AIAgents/BasicLLMChainNode/)
+
+### Learning Resources
+- **[Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns/)**: Advanced link collection and processing techniques
+- **[Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/)**: Techniques for processing collected link data
+- **[Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)**: Using link collection for research workflows
 - **Get All Text**: Extract all text content from the page
 - **HTTP Request**: Validate extracted links by making requests
 - **Filter Links**: Process and filter extracted link data

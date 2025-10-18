@@ -10,16 +10,17 @@ It's not necessary to complete all items listed to start using the browser exten
 
 Agentic Workflow Studio has an active community where you can get and offer help. Connect, share, and learn with other users:
 
-- [Ask questions](https://community.n8n.io/t/readme-welcome-to-the-n8n-community/44381) and [make feature requests](https://community.n8n.io/c/feature-requests) in the Community Forum.
-- [Report bugs](https://github.com/n8n-io/n8n/issues) and [contribute](https://github.com/n8n-io/n8n/blob/master/CONTRIBUTING.md) on GitHub.
+- Ask questions and make feature requests in our Community Forum
+- Report bugs and contribute to the project on GitHub
+- Share workflow templates and browser automation ideas with other users
 
 ## Install the browser extension
 
 Get started by installing Agentic Workflow Studio from your browser's extension store:
 
-- **Chrome**: Install from the [Chrome Web Store](https://chrome.google.com/webstore)
-- **Firefox**: Install from [Firefox Add-ons](https://addons.mozilla.org/firefox)
-- **Edge**: Install from the [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons)
+- **Chrome**: Search for "Agentic Workflow Studio" in the [Chrome Web Store](https://chrome.google.com/webstore)
+- **Firefox**: Search for "Agentic Workflow Studio" in [Firefox Add-ons](https://addons.mozilla.org/firefox)
+- **Edge**: Search for "Agentic Workflow Studio" in the [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons)
 
 Once installed, you'll see the Agentic Workflow Studio icon in your browser toolbar. Click it to open the workflow builder and start creating browser-based automation workflows.
 
@@ -61,9 +62,12 @@ Explore the unique capabilities that make Agentic Workflow Studio powerful for b
 
 If you can't find a node for a specific browser interaction or service, you can contribute to the community:
 
-- [Request new browser nodes](https://github.com/n8n-io/n8n/issues) for additional browser capabilities
-- [Share workflow templates](https://community.n8n.io/) with other browser automation enthusiasts
+- Request new browser nodes for additional browser capabilities through our community channels
+- Share workflow templates with other browser automation enthusiasts
+- Contribute ideas for new browser context manipulation features
 
 ## Stay updated
 - Follow new features and bug fixes in the [Release Notes](/usage/releases/)
-- Follow Agentic Workflow Studio on socials: [Twitter/X](https://twitter.com/n8n_io), [Discord](https://discord.com/invite/vWwMVThRta), [LinkedIn](https://www.linkedin.com/company/Agentic Workflow Studio/), [YouTube](https://www.youtube.com/@n8n-io)
+- Stay connected with the Agentic Workflow Studio community through our official channels
+- Check the browser extension store for updates and new features
+- Follow our documentation updates for the latest browser automation techniques

@@ -25,36 +25,176 @@ The node leverages the following browser APIs:
 
 ### Input Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| Include Outer Tags | Boolean | No | Include the outermost selected element tags (default: true) |
-| Preserve Attributes | Boolean | No | Keep all HTML attributes (default: true) |
-| Clean Markup | Boolean | No | Remove unnecessary attributes and clean HTML (default: false) |
-| Include Styles | Boolean | No | Preserve inline styles and style attributes (default: true) |
-| Max Length | Number | No | Maximum HTML length in characters (default: 50,000) |
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Include Outer Tags** | Boolean | No | `true` | Include the outermost selected element tags |
+| **Preserve Attributes** | Boolean | No | `true` | Keep all HTML attributes in extracted content |
+| **Clean Markup** | Boolean | No | `false` | Remove unnecessary attributes and clean HTML |
+| **Include Styles** | Boolean | No | `true` | Preserve inline styles and style attributes |
+| **Max Length** | Number | No | `50000` | Maximum HTML length in characters |
+| **Structure Preservation** | String | No | `complete` | Preservation mode: `complete`, `semantic`, `minimal` |
+| **Include Context** | Boolean | No | `false` | Include parent element context for better structure |
+| **Resolve URLs** | Boolean | No | `false` | Convert relative URLs to absolute |
+
+### Advanced Structure Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Preserve Hierarchy** | Boolean | No | `true` | Maintain parent-child element relationships |
+| **Include Siblings** | Boolean | No | `false` | Include adjacent sibling elements for context |
+| **Depth Limit** | Number | No | `0` | Maximum nesting depth to preserve (0 = unlimited) |
+| **Fragment Completion** | Boolean | No | `true` | Complete partial elements at selection boundaries |
+| **Namespace Preservation** | Boolean | No | `true` | Preserve XML namespaces and custom elements |
+| **Data Attributes** | String | No | `preserve` | Data attribute handling: `preserve`, `remove`, `filter` |
+| **Event Attributes** | String | No | `remove` | Event handler attributes: `preserve`, `remove`, `sanitize` |
+
+### Content Processing Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Link Processing** | String | No | `preserve` | Link handling: `preserve`, `absolute`, `remove`, `extract` |
+| **Image Processing** | String | No | `preserve` | Image handling: `preserve`, `absolute`, `remove`, `metadata-only` |
+| **Form Elements** | String | No | `preserve` | Form element handling: `preserve`, `remove`, `values-only` |
+| **Script Handling** | String | No | `remove` | Script tag handling: `preserve`, `remove`, `comment-out` |
+| **Style Processing** | String | No | `inline-only` | Style handling: `all`, `inline-only`, `external-only`, `none` |
+| **Comment Handling** | String | No | `remove` | HTML comment handling: `preserve`, `remove`, `conditional-only` |
+
+### Output Format Options
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| **Pretty Print** | Boolean | No | `false` | Format HTML with proper indentation |
+| **Indent Style** | String | No | `spaces` | Indentation style: `spaces`, `tabs` |
+| **Indent Size** | Number | No | `2` | Number of spaces/tabs for indentation |
+| **Line Breaks** | String | No | `preserve` | Line break handling: `preserve`, `normalize`, `remove` |
+| **Attribute Order** | String | No | `source` | Attribute ordering: `source`, `alphabetical`, `semantic` |
+| **Quote Style** | String | No | `double` | Attribute quote style: `double`, `single`, `minimal` |
 
 ### Output Data
 
-The node outputs an object containing:
+The node outputs a comprehensive object containing:
 
 ```json
 {
-  "selectedHTML": "<p>Selected content with <strong>formatting</strong></p>",
-  "plainText": "Selected content with formatting",
-  "elementCount": 3,
-  "hasLinks": true,
-  "hasImages": false,
+  "selectedHTML": "<p class=\"content-paragraph\" id=\"para-1\">Selected content with <strong class=\"emphasis\">formatting</strong> and <a href=\"/link\" title=\"More info\">links</a></p>",
+  "plainText": "Selected content with formatting and links",
+  "originalHTML": "<p class=\"content-paragraph\" id=\"para-1\" data-track=\"analytics\">Selected content with <strong class=\"emphasis\">formatting</strong> and <a href=\"/link\" title=\"More info\" onclick=\"track()\">links</a></p>",
+  "processedHTML": "<p class=\"content-paragraph\" id=\"para-1\">Selected content with <strong class=\"emphasis\">formatting</strong> and <a href=\"https://example.com/link\" title=\"More info\">links</a></p>",
+  "statistics": {
+    "elementCount": 3,
+    "characterCount": 156,
+    "wordCount": 8,
+    "attributeCount": 5,
+    "nestingDepth": 2
+  },
   "structure": {
-    "rootElement": "p",
-    "nestedElements": ["strong"],
-    "attributes": ["class", "id"]
+    "rootElement": {
+      "tagName": "p",
+      "attributes": {"class": "content-paragraph", "id": "para-1"},
+      "position": {"start": 0, "end": 156}
+    },
+    "nestedElements": [
+      {
+        "tagName": "strong",
+        "attributes": {"class": "emphasis"},
+        "position": {"start": 25, "end": 45},
+        "parent": "p"
+      },
+      {
+        "tagName": "a", 
+        "attributes": {"href": "/link", "title": "More info"},
+        "position": {"start": 50, "end": 70},
+        "parent": "p"
+      }
+    ],
+    "hierarchy": ["p", "p > strong", "p > a"],
+    "semanticElements": ["emphasis", "link"],
+    "interactiveElements": ["a"]
+  },
+  "content": {
+    "hasLinks": true,
+    "hasImages": false,
+    "hasFormElements": false,
+    "hasMediaElements": false,
+    "hasTableElements": false,
+    "hasListElements": false,
+    "links": [
+      {
+        "text": "links",
+        "href": "/link",
+        "title": "More info",
+        "absoluteUrl": "https://example.com/link",
+        "type": "internal"
+      }
+    ],
+    "images": [],
+    "textNodes": [
+      {"text": "Selected content with ", "position": {"start": 0, "end": 22}},
+      {"text": "formatting", "position": {"start": 25, "end": 35}},
+      {"text": " and ", "position": {"start": 35, "end": 40}},
+      {"text": "links", "position": {"start": 50, "end": 55}}
+    ]
   },
   "selectionInfo": {
-    "startContainer": "text",
-    "endContainer": "text",
-    "rangeCount": 1
+    "rangeCount": 1,
+    "startContainer": {
+      "nodeType": "text",
+      "parentElement": "p",
+      "offset": 0
+    },
+    "endContainer": {
+      "nodeType": "text", 
+      "parentElement": "p",
+      "offset": 156
+    },
+    "commonAncestor": "p",
+    "selectionType": "complete-element",
+    "boundaryElements": ["p"],
+    "crossesElements": false
   },
-  "extractedAt": "2024-01-15T10:30:00Z"
+  "context": {
+    "parentElement": {
+      "tagName": "article",
+      "attributes": {"class": "main-content"},
+      "childIndex": 2
+    },
+    "previousSibling": {
+      "tagName": "h2",
+      "text": "Section Title"
+    },
+    "nextSibling": {
+      "tagName": "p",
+      "text": "Next paragraph content..."
+    },
+    "documentContext": {
+      "title": "Article Title",
+      "url": "https://example.com/article",
+      "section": "main-content"
+    }
+  },
+  "processing": {
+    "appliedCleaning": ["remove-event-handlers", "resolve-urls"],
+    "removedAttributes": ["data-track", "onclick"],
+    "resolvedUrls": ["/link → https://example.com/link"],
+    "preservedStructure": true,
+    "completedFragments": false,
+    "processingTime": 15
+  },
+  "validation": {
+    "isValidHTML": true,
+    "isWellFormed": true,
+    "hasUnclosedTags": false,
+    "hasInvalidNesting": false,
+    "semanticIssues": [],
+    "accessibilityIssues": []
+  },
+  "extractedAt": "2024-01-15T10:30:00Z",
+  "extractionMethod": "range-cloning",
+  "browserInfo": {
+    "selectionAPI": "supported",
+    "rangeAPI": "supported",
+    "serializationMethod": "XMLSerializer"
+  }
 }
 ```
 

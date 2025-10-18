@@ -79,13 +79,15 @@ Data pinning allows you to temporarily freeze the output data of a node during w
 
 The Agentic Workflow Studio editor runs directly in your browser and allows you to create and manage browser-based workflows. The main area is the canvas, where you can compose workflows by adding, configuring, and connecting nodes. The interface provides access to browser extension nodes, credentials, templates, and execution history.
 
-#### entitlement (Agentic Workflow Studio)
+#### Entitlement (Agentic Workflow Studio)
 
-In Agentic Workflow Studio, entitlements grant Agentic Workflow Studio instances access to plan-restricted features for a specific period of time.
+In Agentic Workflow Studio, entitlements grant browser extension instances access to plan-restricted features for a specific period of time.
 
-Floating entitlements are a pool of entitlements that you can distribute among various Agentic Workflow Studio instances. You can re-assign a floating entitlement to transfer its access to a different Agentic Workflow Studiontic Workflow Studio instanceAgentic Workflow Studio#### eAgentic Workflow Studiouation (n8n)
+Floating entitlements are a pool of entitlements that you can distribute among various Agentic Workflow Studio instances. You can re-assign a floating entitlement to transfer its access to a different Agentic Workflow Studio instance.
 
-In n8n, evaluation allows you to tag and organize execution history and compare it against new executions. You can use this to understand how your workflow performs over time as you make changes. In particular, this is useful while developing AI-centered workflows.
+#### Evaluation (Agentic Workflow Studio)
+
+In Agentic Workflow Studio, evaluation allows you to tag and organize execution history and compare it against new executions. You can use this to understand how your workflow performs over time as you make changes. This is particularly useful while developing AI-centered workflows in the browser environment.
 
 #### Expression
 
@@ -101,18 +103,19 @@ Large language models, or LLMs, are AI machine learning models designed to excel
 
 #### Node
 
-In Agentic Workflow Studio, nodes are individual components that you compose to create browser-based workflows. Nodes can extract data from web pages, process browser context information, define flow control logic, and connect with external services within browser security constraiAgentic Workflow Studio.
+In Agentic Workflow Studio, nodes are individual components that you compose to create browser-based workflows. Nodes can extract data from web pages, process browser context information, define flow control logic, and connect with external services within browser security constraints.
 
-Agentic Workflow Studio# project (n8n)
+#### Project (Agentic Workflow Studio)
 
-n8n projects allow you to separate workflows, variables, and credentials into separate groups for easier management. Projects make it easier for teams to collaborate by sharing and compartmentalizing related resourceAgentic Workflow Studio
-#### roAgentic Workflow Studionode (n8n)
+Agentic Workflow Studio projects allow you to separate workflows, variables, and credentials into separate groups for easier management. Projects make it easier for teams to collaborate by sharing and compartmentalizing related resources.
 
-Each n8n cluster node contains a single root nodes that defines the main functionality of the cluster. One or more sub nodes attach to the root node to extend its functionaliAgentic Workflow Studio
+#### Root node (Agentic Workflow Studio)
 
-#Agentic Workflow Studio sub node (n8n)
+Each Agentic Workflow Studio cluster node contains a single root node that defines the main functionality of the cluster. One or more sub nodes attach to the root node to extend its functionality.
 
-n8n cluster nodes consist of one or more sub nodes connected to a root node. Sub nodes extend the functionality of the root node, providing access to specific services or resources or offering specific types of dedicated processing, like calculator functionality, for example.
+#### Sub node (Agentic Workflow Studio)
+
+Agentic Workflow Studio cluster nodes consist of one or more sub nodes connected to a root node. Sub nodes extend the functionality of the root node, providing access to specific services or resources or offering specific types of dedicated processing, like calculator functionality, for example.
 
 #### Template
 

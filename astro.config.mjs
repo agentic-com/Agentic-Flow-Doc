@@ -8,6 +8,7 @@ import starlightSidebarTopics from "starlight-sidebar-topics";
 import starlightLlmsTxt from "starlight-llms-txt";
 import starlightAutoSidebar from 'starlight-auto-sidebar'
 import starlightVideos from 'starlight-videos'
+import mermaid from 'astro-mermaid';
 
 // Load environment variables from .env file
 import "dotenv/config";
@@ -17,6 +18,10 @@ const { VITE_SITE_URL } = import.meta.env;
 export default defineConfig({
   site: VITE_SITE_URL,
   integrations: [
+    mermaid({
+      theme: 'forest',
+      autoTheme: true
+    }),
     starlight({
       title: "Agentic Flow",
       description: "Agentic Workflow Studio - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
