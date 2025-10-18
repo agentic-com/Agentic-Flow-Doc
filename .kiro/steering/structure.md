@@ -1,76 +1,90 @@
-# Project Structure
+# Project Structure & Conventions
 
-## Root Directory
+## Architecture Patterns
+
+### Content Collections Structure
+
+- All documentation lives in `src/content/docs/` with strict organization
+- Four main sections: `usage/`, `integration/`, `advanced-ai/`, `learning/`
+- Each section follows hierarchical folder structure with `_meta.yml` for navigation control
+- Use content collections for type-safe frontmatter validation
+
+### File Naming Conventions
+
+- Documentation files: kebab-case (e.g., `ai-workflow-builder.md`)
+- Component files: PascalCase (e.g., `FeedbackComponent.astro`)
+- Configuration files: lowercase with extensions (e.g., `astro.config.mjs`)
+- Meta files: `_meta.yml` for navigation configuration
+
+## Critical File Locations
+
+### Configuration Files
+
+- `astro.config.mjs` - Main Astro configuration with Starlight setup
+- `src/content.config.ts` - Content collection schemas and validation
+- `tsconfig.json` - TypeScript configuration
+- `package.json` - Dependencies managed with Bun
+
+### Content Organization Rules
+
 ```
-├── .astro/              # Astro build artifacts and type definitions
-├── .env                 # Environment variables
-├── .kiro/               # Kiro AI assistant configuration
-├── public/              # Static assets (favicon, images)
-├── src/                 # Source code
-├── astro.config.mjs     # Astro configuration
-├── package.json         # Dependencies and scripts
-└── tsconfig.json        # TypeScript configuration
+src/content/docs/
+├── usage/           # User-facing app functionality
+├── integration/     # Node documentation by category
+├── advanced-ai/     # AI-specific workflows and concepts
+└── learning/        # Educational content and examples
 ```
 
-## Source Structure (`src/`)
-```
-src/
-├── assets/              # Images, logos, and media files
-├── components/          # Astro components
-│   ├── (override)/      # Starlight component overrides
-│   └── *.astro          # Custom components
-├── content/             # Content collections
-│   └── docs/            # Documentation pages
-├── styles/              # Global CSS and styling
-└── content.config.ts    # Content collection schemas
-```
+### Component Architecture
 
-## Documentation Organization (`src/content/docs/`)
-Content is organized into four main sections:
-
-### 1. Usage (`usage/`)
-- `getting-started/` - Onboarding and quick starts
-- `using-the-app/` - App functionality (workflows, credentials)
-- `key-concepts/` - Core concepts (data, flow logic)
-- `releases/` - Release notes and versioning
-- `help-and-community/` - Support and contribution guides
-- `licenses-and-privacy/` - Legal and security information
-
-### 2. Integration (`integration/`)
-- `builtin/` - Built-in nodes organized by category (ai, core, flow, etc.)
-- `apps/` - Third-party application integrations
-- `extension/` - Browser extension specific nodes
-
-### 3. Advanced AI (`advanced-ai/`)
-- `basics/` - AI workflow fundamentals
-- `langchain/` - LangChain integration guides
-- `evaluations/` - AI model evaluation tools
-- `examples/` - Practical AI workflow examples
-
-### 4. Learning (`learning/`)
-- `examples/` - Tutorial examples
-- `video-courses/` - Video-based learning content
-- `text-courses/` - Written course materials
-
-## File Conventions
-
-### Documentation Files
-- Use `.md` for standard Markdown content
-- Use `.mdx` for content requiring JSX components
-- Include frontmatter with `title` and `description`
-- Use `template: splash` for landing pages
-
-### Navigation Control
-- `_meta.yml` files control section labels and ordering
-- Auto-sidebar generation based on file structure
-- Topic-based navigation configured in `astro.config.mjs`
-
-### Component Organization
 - Override Starlight components in `src/components/(override)/`
-- Custom components use `.astro` extension
-- Feedback components integrated via astro-feelback
+- Custom components in `src/components/` with `.astro` extension
+- Use Astro component syntax, not React/Vue
 
-### Asset Management
-- Images in `src/assets/` for content embedding
-- Static files in `public/` for direct access
-- Logo variants: logo.png, logo-beige.png, logo-black.png
+## Development Patterns
+
+### Content Creation Rules
+
+- Always include frontmatter with `title` and `description`
+- Use `.md` for standard content, `.mdx` only when JSX components needed
+- Landing pages use `template: splash` in frontmatter
+- Node documentation follows consistent structure: purpose → parameters → examples
+
+### Navigation Management
+
+- `_meta.yml` files control sidebar labels and ordering
+- Auto-sidebar generation based on file structure
+- Topic-based navigation configured in main config
+- Maintain consistent hierarchy depth (max 3-4 levels)
+
+### Asset Handling
+
+- Images for content: `src/assets/` (processed by Astro)
+- Static assets: `public/` (served directly)
+- Logo variants available: `logo.png`, `logo-beige.png`, `logo-black.png`
+
+## Code Style Guidelines
+
+### Frontmatter Standards
+
+```yaml
+---
+title: "Node Name"
+description: "Brief description of functionality"
+template: doc # or 'splash' for landing pages
+---
+```
+
+### File Organization Principles
+
+- Group related content in folders with descriptive names
+- Use `index.md` for section overviews
+- Maintain parallel structure across main sections
+- Keep file paths under 100 characters for compatibility
+
+### Content Linking
+
+- Use relative paths for internal links
+- Reference other nodes and concepts with proper linking
+- Maintain cross-references between related topics
+- Use consistent terminology across all documentation
