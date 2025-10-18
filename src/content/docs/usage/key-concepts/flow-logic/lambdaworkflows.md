@@ -1,6 +1,6 @@
 ---
 title: Lambda Workflows
-description: Call workflows from other workflows, and split large workflows into smaller components.
+description: "Learn how to use Agentic Workflow Studio browser extension for lambda workflows with intelligent workflow creation."
 sidebar:
   order: 5
 ---

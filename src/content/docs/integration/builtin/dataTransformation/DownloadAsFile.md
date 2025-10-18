@@ -1,6 +1,6 @@
 ---
 title: Download As File
-description: How to use the Download As File node.
+description: "Explore Download As File for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

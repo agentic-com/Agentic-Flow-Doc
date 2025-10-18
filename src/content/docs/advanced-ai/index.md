@@ -1,49 +1,49 @@
 ---
-title: n8n Advanced AI Documentation and Guides
-description: Use n8n's LangChain integrations to build AI-powered functionality within your workflows. Connect your LangChain functionality to other data sources and services.
+title: Agentic Workflow Studio Advanced AI Documentation and Guides
+description: "Create advanced AI workflows in your browser using LangChain integration and intelligent content processing."
 contentType: overview
 hide:
   - feedback
   - kapaButton
 ---
 
-Build AI functionality using n8n: from creating your own chat bot, to using AI to process documents and data from other sources.
+Build AI functionality using Agentic Workflow Studio: from creating browser-based chat bots, to using AI to process web content and data extracted from browser context.
 
 /// info | Feature availability
-This feature is available on Cloud and self-hosted n8n, in version 1.19.4 and above.
+This feature is available in Agentic Workflow Studio browser extension for Chrome and Firefox.
 ///
 
 <div class="grid cards" markdown>
 
 -   __Get started__
 
-    Work through the short tutorial to learn the basics of building AI workflows in n8n.
+    Work through the short tutorial to learn the basics of building AI workflows in your browser.
 
-    [:octicons-arrow-right-24: Tutorial](/advanced-ai/intro-tutorial.md)
+    [:octicons-arrow-right-24: Tutorial](/advanced-ai/basics/intro-tutorial.md)
 
--   __Use a Starter Kit__
+-   __Browser Extension Setup__
 
-    Try n8n's Self-hosted AI Starter Kit to quickly start building AI workflows.
+    Install Agentic Workflow Studio from your browser's extension store to start building AI workflows with web content.
 
-    [:octicons-arrow-right-24: Self-hosted AI Starter Kit](/hosting/starter-kits/ai-starter-kit.md)
+    [:octicons-arrow-right-24: Getting Started Guide](/usage/getting-started/quick-starts/quick-intro.md)
 
 -   __Explore examples and concepts__
 
-	Browse examples and workflow templates to help you build. Includes explanations of important AI concepts.
+	Browse examples and workflow templates for browser-based AI workflows. Includes explanations of important AI concepts and browser context manipulation.
 
     [:octicons-arrow-right-24: Examples](/advanced-ai/examples/introduction.md)
 
--   __How n8n uses LangChain__
+-   __How Agentic Workflow Studio uses LangChain__
 
-    Learn more about how n8n builds on LangChain.
+    Learn more about how Agentic Workflow Studio builds on LangChain for browser-based AI workflows.
 
-    [:octicons-arrow-right-24: LangChain in n8n](/advanced-ai/langchain/overview.md)
+    [:octicons-arrow-right-24: LangChain in Agentic Workflow Studio](/advanced-ai/langchain/overview.md)
 
--   __Browse AI templates__
+-   __Browser Extension Nodes__
 
-    Explore a wide range of AI workflow templates on the n8n website.
+    Explore browser context manipulation nodes that enable AI workflows to interact with web content.
 
-    [:octicons-arrow-right-24: AI workflows on n8n.io](https://n8n.io/workflows/?categories=25)
+    [:octicons-arrow-right-24: Extension Nodes](/integration/extension/)
 
 </div>
 
@@ -51,22 +51,29 @@ This feature is available on Cloud and self-hosted n8n, in version 1.19.4 and ab
 
 Related documentation and tools.
 
-### Node types
+### Browser Extension Nodes
 
-This feature uses [Cluster nodes](/integrations/builtin/cluster-nodes/index.md): groups of [root](/integrations/builtin/cluster-nodes/root-nodes/index.md) and [sub](/integrations/builtin/cluster-nodes/sub-nodes/index.md) nodes that work together.
+AI workflows in Agentic Workflow Studio use specialized browser extension nodes that can interact with web content:
 
---8<-- "_snippets/integrations/builtin/cluster-nodes/cluster-nodes-summary.md"
+- **Text Extraction**: Extract selected text or full page content for AI processing
+- **HTML Processing**: Capture HTML structure for content analysis
+- **Link Collection**: Gather links from web pages for AI-powered navigation
+- **Image Processing**: Collect and analyze images from web content
 
-### Workflow templates
+### Browser Context Integration
 
-You can browse [workflow templates](/glossary.md#template-n8n) in-app or on the n8n website [Workflows](https://n8n.io/workflows/?categories=25,26) page.
+AI workflows can seamlessly integrate with browser context manipulation:
 
-Refer to [Templates](/workflows/templates.md) for information on accessing templates in-app.
+- Process text selected by users on web pages
+- Analyze entire web page content with AI models
+- Extract structured data from websites for AI processing
+- Insert AI-generated content back into web pages
 
-### Chat trigger
+### Browser-Based AI Patterns
 
-Use the [n8n Chat Trigger](/integrations/builtin/core-nodes/n8n-nodes-langchain.chattrigger/index.md) to trigger a workflow based on chat interactions.
+Common patterns for AI workflows in browser context:
 
-### Chatbot widget
-
-n8n provides a chatbot widget that you can use as a frontend for AI-powered chat workflows. Refer to the [@n8n/chat npm page](https://www.npmjs.com/package/@n8n/chat) for usage information.
+- **Content Analysis**: Use AI to analyze and summarize web page content
+- **Smart Extraction**: Intelligently extract relevant information from complex web pages
+- **Context-Aware Processing**: Leverage browser context to provide more relevant AI responses
+- **Interactive Workflows**: Create AI workflows that respond to user interactions with web content

@@ -1,6 +1,6 @@
 ---
 title: Basic LLM Chain
-description: How to use the Basic LLM Chain node.
+description: "Explore Basic LLM Chain for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

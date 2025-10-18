@@ -1,6 +1,6 @@
 ---
 title: Publishing
-description: Publish your workflows to the marketplace.
+description: "Learn how to use Agentic Workflow Studio browser extension for publishing with intelligent workflow creation."
 sidebar:
     order: 6
 ---

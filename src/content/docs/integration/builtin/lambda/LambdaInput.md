@@ -1,6 +1,6 @@
 ---
 title: Lambda Input
-description: How to use the Lambda Input node.
+description: "Explore Lambda Input for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

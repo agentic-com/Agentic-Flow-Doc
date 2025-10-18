@@ -1,167 +1,136 @@
 ---
 title: Long Intro
-description: Create your first workflow in n8n and learn some key concepts.
+description: "Complete installation and setup guide for Agentic Workflow Studio browser extension with detailed workflow creation tutorial."
 ---
 
-# Your first workflow
+# Your first comprehensive workflow
 
-This guide will show you how to construct a [workflow](/glossary.md#workflow-n8n) in n8n, explaining key concepts along the way. You will:
+This guide will show you how to construct a comprehensive workflow in Agentic Workflow Studio, explaining key concepts along the way. You will:
 
-* Create a workflow from scratch. 
+* Create a browser-based workflow from scratch
 * Understand key concepts and skills, including:
-    * Starting workflows with trigger nodes
-    * Configuring [credentials](/glossary.md#credential-n8n)
-    * Processing data
-    * Representing logic in an n8n workflow
-    * Using [expressions](/glossary.md#expression-n8n)
+    * Extracting data from web pages using browser context manipulation
+    * Processing and transforming browser data
+    * Using AI to analyze web content
+    * Representing logic in browser-based workflows
+    * Using expressions to work with extracted data
 
-!["Screenshot of the completed workflow"](/_images/try-it-out/tutorial-first.png)
-
-This quickstart uses [n8n Cloud](/manage-cloud/overview.md), which is recommended for new users. A free trial is available - if you haven't already done so, [sign up](https://app.n8n.cloud/register) for an account now.
+This tutorial uses the browser extension, which runs entirely in your browser without requiring any server setup or cloud accounts.
 
 ## Step one: Create a new workflow
 
-When you open n8n, you'll see either:
+When you open Agentic Workflow Studio by clicking the browser extension icon, you'll see:
 
-* A window with a welcome message and two large buttons: Choose **Start from Scratch** to create a new workflow.
-* The **Workflows** list on the **Overview** page. Select the **Create Workflow** to create a new workflow.
+* The workflow builder interface with an empty canvas
+* A toolbar with options to add nodes and manage workflows
+* Choose **Create New Workflow** or **Start from Scratch** to begin building your first workflow
 
-## Step two: Add a trigger node
+## Step two: Add a browser context node
 
-n8n provides two ways to start a workflow:
+Agentic Workflow Studio provides powerful browser context manipulation capabilities. For this tutorial, we'll extract all links from a web page and analyze them:
 
-* Manually, by selecting **Execute Workflow**.
-* Automatically, using a trigger node as the first node. The trigger node runs the workflow in response to an external event, or based on your settings.
+1. Navigate to a news website or blog with multiple articles and links.
+2. In the workflow builder, select **Add first step**.
+3. Search for **Get All Links** and select it to add the node to the canvas.
+4. The node will automatically be configured to extract all links from the current web page.
+5. Select **Execute Step** to test the node. You should see all links from the current page in the output panel.
+6. Close the node details view to return to the canvas.
 
-For this tutorial, we'll use the [Schedule trigger](/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/index.md). This allows you to run the workflow on a schedule:
+## Step three: Add text extraction and processing
 
-1. Select **Add first step**.
-1. Search for **Schedule**. n8n shows a list of nodes that match the search.
-1. Select **Schedule Trigger** to add the node to the canvas. n8n opens the node.
-1. For **Trigger Interval**, select **Weeks**.
-1. For **Weeks Between Triggers**, enter `1`.
-1. Enter a time and day. For this example, select **Monday** in **Trigger on Weekdays**, select **9am** in **Trigger at Hour**, and enter `0` in **Trigger at Minute**.
-1. Close the node details view to return to the canvas.
+Now we'll extract text content from the links we collected and process it for analysis:
 
-## Step three: Add the NASA node and set up credentials
+1. Select the **Add node** connector on the Get All Links node.
+2. Search for **Get All Text** and select it to add the node to the canvas.
+3. Configure the node to extract text from the current page:
+   - The node will automatically extract all text content from the web page
+   - This includes article text, navigation text, and other visible content
+4. Select **Execute Step** to test the node and see the extracted text.
 
-The [NASA node](/integrations/builtin/app-nodes/n8n-nodes-base.nasa.md) interacts with NASA's [public APIs](https://api.nasa.gov/) to fetch useful data. We will use the real-time data from the API to find solar events.
+Next, let's process this text data:
 
-??? explanation "Credentials"
-    Credentials are private pieces of information issued by apps and services to authenticate you as a user and allow you to connect and share information between the app or service and the n8n node. The type of information required varies depending on the app/service concerned. You should be careful about sharing or revealing the credentials outside of n8n.
-
-1. Select the **Add node** <span class="n8n-inline-image">![Add node icon](/_images/try-it-out/add-node-small.png){.off-glb}</span> connector on the Schedule Trigger node.
-1. Search for **NASA**. n8n shows a list of nodes that match the search.
-1. Select **NASA** to view a list of operations.
-1. Search for and select **Get a DONKI solar flare**. This operation returns a report about recent solar flares. When you select the operation, n8n adds the node to the canvas and opens it.
-1. To access the NASA APIs, you need to set up credentials:
-    1. Select the  **Credential for NASA API** dropdown.
-    1. Select **Create new credential**. n8n opens the credentials view.
-    1. Go to [NASA APIs](https://api.nasa.gov/) and fill out the form from the **Generate API Key** link. The NASA site generates the key and emails it to the address you entered.
-    1. Check your email account for the API key. Copy the key, and paste it into **API Key** in n8n.
-    1. Select **Save**.
-    1. Close the credentials screen. n8n returns to the node. The new credentials should be automatically selected in **Credential for NASA API**.
-
-1. By default, DONKI Solar Flare provides data for the past 30 days. To limit it to just the last week, use **Additional Fields**:
-    1. Select **Add field**.
-    1. Select **Start date**.
-    1. To get a report starting from a week ago, you can use an expression: next to **Start date**, select the **Expression** tab, then select the expand button <span class="n8n-inline-image">![Add node icon](/_images/common-icons/open-expression-editor.png){.off-glb}</span> to open the full expressions editor.
-    1. In the **Expression** field, enter the following expression:
-    ```js
-    {{ $today.minus(7, 'days') }}
-    ```
-    This generates a date in the correct format, seven days before the current date.
-
-    ![image showing the expression above generating a date](/_images/try-it-out/tutorial-date.png)
-
-    ??? explanation "Date and time formats in n8n..."
-        n8n uses Luxon to work with date and time, and also provides two variables for convenience: `$now` and `$today`. For more information, refer to [Expressions > Luxon](/code/cookbook/luxon.md).
-
-1. Close the **Edit Expression** modal to return to the NASA node.
-1. You can now check that the node is working and returning the expected date: select **Execute step** to run the node manually. n8n calls the NASA API and displays details of solar flares in the past seven days in the **OUTPUT** section.
-1. Close the NASA node to return to the workflow canvas.
+1. Select the **Add node** connector on the Get All Text node.
+2. Search for **Edit Fields** and select it to add the node to the canvas.
+3. Configure the Edit Fields node to analyze the text:
+   - Add a field called "word_count" with the expression: `{{ $json.text.split(' ').length }}`
+   - Add a field called "character_count" with the expression: `{{ $json.text.length }}`
+   - Add a field called "summary" with the expression: `{{ $json.text.substring(0, 200) }}...`
+4. Select **Execute Step** to process the text and see the analysis results.
 
 ## Step four: Add logic with the If node
 
-n8n supports complex logic in workflows. In this tutorial we will use the [If node](/integrations/builtin/core-nodes/n8n-nodes-base.if.md) to create two branches that each generate a report from the NASA data. Solar flares have five possible classifications; we will add logic that sends a report with the lower classifications to one output, and the higher classifications to another.
+Agentic Workflow Studio supports complex logic in workflows. In this tutorial we will use the [If node](/integration/builtin/flow/IFNode/) to create two branches based on the content analysis. We'll create logic that handles long articles differently from short ones.
 
 Add the If node:
 
-1. Select the **Add node** <span class="n8n-inline-image">![Add node icon](/_images/try-it-out/add-node-small.png){.off-glb}</span> connector on the NASA node.
-1. Search for **If**. n8n shows a list of nodes that match the search.
-1. Select **If** to add the node to the canvas. n8n opens the node.
-1. You need to check the value of the `classType` property in the NASA data. To do this:
-	1. Drag **classType** into **Value 1**.
+1. Select the **Add node** connector on the Edit Fields node.
+2. Search for **If** and select it to add the node to the canvas.
+3. Configure the If node to check the word count:
+   - Drag **word_count** from the previous node's output into **Value 1**
+   - Set the comparison operation to **Number > Larger**
+   - In **Value 2**, enter **500** (this will separate long articles from short ones)
+4. Select **Execute Step** to test the node. You'll see the data split into true/false branches based on whether the article has more than 500 words.
 
-		/// note | Make sure you ran the NASA node in the previous section
-		If you didn't follow the step in the previous section to run the NASA node, you won't see any data to work with in this step.
-		///
+This creates two paths: one for long articles (true) and one for short articles (false).
 
-    1. Change the comparison operation to **String > Contains**.
-    1. In **Value 2**, enter **X**. This is the highest classification of solar flare. In the next step, you will create two reports: one for X class solar flares, and one for all the smaller solar flares.
-1. You can now check that the node is working and returning the expected date: select **Execute step** to run the node manually. n8n tests the data against the condition, and shows which results match true or false in the **OUTPUT** panel.
+## Step five: Create different outputs for different content types
 
-    /// note | Weeks without large solar flares
-    In this tutorial, you are working with live data. If you find there aren't any X class solar flares when you run the workflow, try replacing **X** in **Value 2** with either **A**, **B**, **C**, or **M**.
-    ///
+The final step is to create different processing for long and short articles. We'll use browser notifications to display the results.
 
-1. Once you are happy the node will return some events, you can close the node to return to the canvas.
+For long articles (true branch):
+1. On the If node, select the **Add node** connector labeled **true**.
+2. Search for **Edit Fields** and select it.
+3. Configure this node to create a detailed report:
+   - Add a field called "report_type" with value: "Detailed Analysis"
+   - Add a field called "message" with the expression:
+     ```
+     Long Article Found: {{ $json.word_count }} words, {{ $json.character_count }} characters
+     Summary: {{ $json.summary }}
+     ```
 
-## Step five: Output data from your workflow
+For short articles (false branch):
+1. On the If node, select the **Add node** connector labeled **false**.
+2. Search for **Edit Fields** and select it.
+3. Configure this node to create a brief report:
+   - Add a field called "report_type" with value: "Quick Summary"
+   - Add a field called "message" with the expression:
+     ```
+     Short Article: {{ $json.word_count }} words
+     Preview: {{ $json.summary }}
+     ```
 
-The last step of the workflow is to send the two reports about solar flares. For this example, you'll send data to [Postbin](https://www.toptal.com/developers/postbin/). Postbin is a service that receives data and displays it on a temporary web page.
+## Step six: Test the complete workflow
 
-1. On the If node, select the **Add node** <span class="n8n-inline-image">![Add node icon](/_images/try-it-out/add-node-small.png){.off-glb}</span> connector labeled **true**.
-1. Search for **PostBin**. n8n shows a list of nodes that match the search.
-1. Select **PostBin**.
-1. Select **Send a request**. n8n adds the node to the canvas and opens it.
-1. Go to [Postbin](https://www.toptal.com/developers/postbin/) and select **Create Bin**. Leave the tab open so you can come back to it when testing the workflow.
-1. Copy the bin ID. It looks similar to `1651063625300-2016451240051`.
-1. In n8n, paste your Postbin ID into **Bin ID**.
-1. Now, configure the data to send to Postbin. Next to **Bin Content**, select the **Expression** tab (you will need to mouse-over the **Bin Content** for the tab to appear), then select the expand button <span class="n8n-inline-image">![Add node icon](/_images/common-icons/open-expression-editor.png){.off-glb}</span> to open the full expressions editor.
-1. You can now click and drag the correct field from the If Node output into the expressions editor to automatically create a reference for this label. In this case the input we want is 'classType'.
-1. Once dropped into the expressions editor it will transform into this reference: `{{$json["classType"]}}`. Add a message to it, so that the full expression is:
-
-    ```js
-    There was a solar flare of class {{$json["classType"]}}
-    ```
-
-    ![image showing the expression above generating output](/_images/try-it-out/tutorial-expression.png)
-
-1. Close the expressions editor to return to the node.
-1. Close the Postbin node to return to the canvas.
-1. Add another Postbin node, to handle the **false** output path from the If node:
-    1. Hover over the Postbin node, then select **Node context menu** <span class="n8n-inline-image">![Node context menu icon](/_images/common-icons/node-context-menu.png){.off-glb}</span> > **Duplicate node** to duplicate the first Postbin node.
-    1. Drag the **false** connector from the If node to the left side of the new Postbin node.
-
-## Step six: Test the workflow
-
-1. You can now test the entire workflow. Select **Execute Workflow**. n8n runs the workflow, showing each stage in progress.
-1. Go back to your Postbin bin. Refresh the page to see the output.
-1. If you want to use this workflow (in other words, if you want it to run once a week automatically), you need to activate it by selecting the **Active** toggle.
-
-/// note | Time limit
-Postbin's bins exist for 30 minutes after creation. You may need to create a new bin and update the ID in the Postbin nodes, if you exceed this time limit.
-///
+1. Navigate to a web page with substantial text content (like a news article or blog post).
+2. In the workflow builder, select **Execute Workflow** to run the entire workflow.
+3. Watch as each node processes in sequence:
+   - Links are extracted from the page
+   - Text content is analyzed
+   - Word and character counts are calculated
+   - The content is classified as long or short
+   - Appropriate reports are generated
+4. Check the output of the final Edit Fields nodes to see the different reports generated based on content length.
 
 
 ## Congratulations
 
-You now have a fully functioning workflow that does something useful! It should look something like this:
-
-[[ workflowDemo("file:///try-it-out/quickstart/tutorial.json") ]]
+You now have a fully functioning browser-based workflow that analyzes web content! This workflow demonstrates the power of Agentic Workflow Studio's browser context manipulation capabilities.
 
 Along the way you have discovered:
 
-- How to find the nodes you want and join them together
-- How to use expressions to manipulate data
-- How to create credentials and attach them to nodes
-- How to use logic in your workflows
+- How to extract data from web pages using browser context nodes
+- How to process and analyze text content with expressions
+- How to create conditional logic based on content characteristics
+- How to build workflows that adapt to different types of web content
 
-There are plenty of things you could add to this (perhaps add some more credentials and a node to send you an email of the results), or maybe you have a specific project in mind. Whatever your next steps, the resources linked below should help.
+There are plenty of things you could add to this workflow:
+- Use AI nodes to perform sentiment analysis on the extracted text
+- Add image extraction to analyze visual content
+- Create more complex filtering based on content type
+- Integrate with external services to save or share the analysis
 
 ## Next steps
 
-- Interested in what you could do with AI? Find out [how to build an AI chat agent with n8n](/advanced-ai/intro-tutorial.md).
-- Take n8n's [text courses](/courses/index.md) or [video courses](/video-courses.md).
-- Explore more examples in [workflow templates](https://n8n.io/workflows/).
+- Interested in what you could do with AI? Find out [how to build AI-powered browser workflows](/advanced-ai/intro-tutorial/).
+- Explore all [browser extension nodes](/integration/extension/) to see what other data you can extract.
+- Learn about [advanced workflow patterns](/usage/key-concepts/flow-logic/) for more complex browser automation.

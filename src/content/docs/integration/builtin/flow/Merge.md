@@ -1,6 +1,6 @@
 ---
 title: Merge
-description: How to use the Merge node.
+description: "Explore Merge for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

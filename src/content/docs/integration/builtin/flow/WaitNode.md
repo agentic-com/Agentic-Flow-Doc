@@ -1,6 +1,6 @@
 ---
 title: Wait
-description: How to use the Wait node.
+description: "Explore Wait for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

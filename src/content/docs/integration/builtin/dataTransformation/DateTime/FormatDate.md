@@ -1,6 +1,6 @@
 ---
 title: Format Date
-description: How to use the Format Date node.
+description: "Explore Format Date for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

@@ -1,7 +1,7 @@
 ---
 contentType: explanation
 title: Agents vs chains
-description: A workflow example that demonstrates key differences between agents and chains.
+description: "Create advanced AI workflows using Agents vs chains with LangChain integration and intelligent processing."
 ---
 
 # Demonstration of key differences between agents and chains

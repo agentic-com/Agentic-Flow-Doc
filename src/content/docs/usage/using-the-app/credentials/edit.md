@@ -1,6 +1,6 @@
 ---
 title: Edit
-description: A guide in my new Starlight docs site.
+description: "Learn how to use Agentic Workflow Studio browser extension for edit with intelligent workflow creation."
 sidebar:
     order: 2
 ---

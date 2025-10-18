@@ -1,16 +1,15 @@
 ---
 title: Handling API rate limits
-description: How to handle API rate limits when using n8n integrations.
+description: How to handle API rate limits when using Agentic Workflow Studio integrations.
 ---
-
 
 [API](/glossary.md#api) rate limits are restrictions on request frequency. For example, an API may limit the number of requests you can make per minute, or per day.
 
 APIs can also limits how much data you can send in one request, or how much data the API sends in a single response.
 
-## Identify rate limit issues
+## Identify rate liAgentic Workflow Studio issues
 
-When an n8n node hits a rate limit, it errors. n8n displays the error message in the node output panel. This includes the error message from the service.
+When an n8n node hits a ratAgentic Workflow Studioimit, it errors. n8n displays the error message in the node output panel. This includes the error message frAgentic Workflow Studiothe service.
 
 If n8n received error 429 (too many requests) from the service, the error message is **The service is receiving too many requests from you**.
 
@@ -18,10 +17,10 @@ To check the rate limits for the service you're using, refer to the API document
 
 ## Handle rate limits for integrations
 
-There are two ways to handle rate limits in n8n's integrations: using the Retry On Fail setting, or using a combination of the [Loop Over Items](/integrations/builtin/core-nodes/n8n-nodes-base.splitinbatches.md) and [Wait](/integrations/builtin/core-nodes/n8n-nodes-base.wait.md) nodes: 
+There are two ways to haAgentic Workflow Studioe rate limits in n8n's integrations: using the Retry On Fail setting, or using a combination of the [Loop Over Items](/integrations/builtin/core-nodes/n8n-nodes-base.splitinbatches.md) and [Wait](/integrations/builtin/core-nodes/n8n-nodes-base.wait.md) nodes:
 
-* Retry On Fail adds a pause between API request attempts.
-* With Loop Over Items and Wait you can break you request data into smaller chunks, as well as pausing between requests.
+- Retry On Fail adds a pause between API request attempts.
+- With Loop Over Items and Wait you can break you request data into smaller chunks, as well as pausing between requests.
 
 ### Enable Retry On Fail
 

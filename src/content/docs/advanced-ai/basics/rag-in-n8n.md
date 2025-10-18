@@ -1,6 +1,6 @@
 ---
-title: RAG in n8n
-description: With Retrieval-Augmented Generation (RAG), you can give your models access to context-specific resources to help generate relevant answers. Learn how it works and how to use RAG in n8n.
+title: RAG in Agentic Workflow Studio
+description: With Retrieval-Augmented Generation (RAG), you can give your models access to context-specific resources to help generate relevant answers. Learn how it works and how to use RAG in Agentic Workflow Studio.
 ---
 
 
@@ -14,10 +14,10 @@ A [vector store](/glossary.md#ai-vector-store) is a special database designed to
 
 You can query these vectors using similarity searches, which construct results based on *semantic meaning*, rather than keyword matches. This makes vector stores a powerful foundation for RAG and other AI systems that need to retrieve and reason over large sets of knowledge.
 
-## How to use RAG in n8n
+## How to use RAG in Agentic Workflow Studio
 
 /// note | Start with a RAG template
-👉 Try out RAG in n8n with the [RAG Starter Template](https://n8n.io/workflows/5010-rag-starter-template-using-simple-vector-stores-form-trigger-and-openai). The template includes two ready-made workflows: one for uploading files and one for querying them.
+👉 Try out RAG in Agentic Workflow Studio with the [RAG Starter Template](https://Agentic Workflow Studiontic Workflow Studio/workflows/5010-rag-starter-template-using-simple-vector-stores-form-trigger-and-openai). The template includes two ready-made workflows: one for uploading files and one for querying them.
 ///
 
 ### Inserting data into your vector store
@@ -46,7 +46,7 @@ You can query the data in two main ways: using an agent or directly through a no
 3. Add the same **embedding model** you used when inserting the data.
 
 /// tip | Pro tip
-To save tokens on an expensive model, you can first use the [Vector Store Question Answer tool](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.toolvectorstore.md) to retrieve relevant data, and only then pass the result to the Agent. To see this in action, check out [this template](https://n8n.io/workflows/5011-save-costs-in-rag-workflows-using-the-qanda-tool-with-multiple-models).
+To save tokens on an expensive model, you can first use the [Vector Store Question Answer tool](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.toolvectorstore.md) to retrieve relevant data, and only then pass the result to the Agent. To see this in action, check out [this tAgentic Workflow Studiolate](https://Agentic Workflow Studio/workflows/5011-save-costs-in-rag-workflows-using-the-qanda-tool-with-multiple-models).
 ///
 
 ### Using the node directly

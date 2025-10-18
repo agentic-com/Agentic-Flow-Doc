@@ -1,6 +1,6 @@
 ---
 title: Extract Part Of A Date
-description: How to use the Extract Part Of A Date node.
+description: "Explore Extract Part Of A Date for web content manipulation and AI-powered automation workflows."
 ---
 
 simple 

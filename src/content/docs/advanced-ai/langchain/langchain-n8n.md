@@ -1,30 +1,51 @@
 ---
 contentType: explanation
-title: LangChain concepts in n8n
-description: How LangChain concepts map to n8n, and which n8n nodes to use.
+title: LangChain concepts in Agentic Workflow Studio
+description: How LangChain concepts map to Agentic Workflow Studio, and which browser extension nodes to use.
 ---
 
-# LangChain concepts in n8n
+# LangChain concepts in Agentic Workflow Studio
 
-This page explains how LangChain concepts and features map to n8n nodes.
+This page explains how LangChain concepts and features map to Agentic Workflow Studio nodes for browser-based AI workflows.
 
-This page includes lists of the LangChain-focused nodes in n8n. You can use any n8n node in a workflow where you interact with LangChain, to link LangChain to other services. The LangChain features uses n8n's [Cluster nodes](/integrations/builtin/cluster-nodes/index.md).
+This page includes lists of the LangChain-focused nodes in Agentic Workflow Studio. You can use any browser extension node in a workflow where you interact with LangChain, to link LangChain to web content and browser context manipulation. The LangChain features work seamlessly with browser extension capabilities.
 
 
-/// note | n8n implements LangChain JS
-This feature is n8n's implementation of [LangChain's JavaScript framework](https://js.langchain.com/docs/get_started/introduction).
+/// note | Agentic Workflow Studio implements LangChain JS
+This feature is Agentic Workflow Studio's implementation of [LangChain's JavaScript framework](https://js.langchain.com/docs/get_started/introduction) optimized for browser environments.
 ///
-## Trigger nodes
 
-[Chat Trigger](/integrations/builtin/core-nodes/n8n-nodes-langchain.chattrigger/index.md)
+## Browser Extension Integration
 
-## Cluster nodes
+Agentic Workflow Studio's LangChain implementation includes specialized browser extension nodes that enable AI workflows to interact with web content:
 
---8<-- "_snippets/integrations/builtin/cluster-nodes/cluster-nodes-summary.md"
+### Browser Context Nodes
+- **Text Extraction Nodes**: Extract selected text or full page content for AI processing
+- **HTML Processing Nodes**: Capture and analyze HTML structure with AI models
+- **Link Collection Nodes**: Gather and process links for AI-powered navigation
+- **Image Processing Nodes**: Collect and analyze images from web pages
 
-### Root nodes
+### AI + Browser Workflow Patterns
+- **Content Analysis**: Use LangChain agents to analyze web page content extracted via browser nodes
+- **Smart Extraction**: Combine text splitters with browser content extraction for intelligent data processing
+- **Context-Aware AI**: Leverage browser context (current page, selected text) to provide more relevant AI responses
+- **Interactive Processing**: Create AI workflows that respond to user interactions with web content
+## Browser Extension Trigger Patterns
 
-Each cluster starts with one [root node](/glossary.md#root-node-n8n).
+Browser extension workflows can be triggered by various user interactions:
+
+- **Content Selection**: Trigger AI workflows when users select text on web pages
+- **Page Load**: Automatically process page content with AI when pages load
+- **User Actions**: Respond to clicks, form submissions, or other browser events
+- **Context Menu**: Provide AI-powered options in browser context menus
+
+## AI Workflow Nodes
+
+Agentic Workflow Studio provides AI nodes that work seamlessly with browser extension capabilities. These nodes can process web content extracted through browser context manipulation.
+
+### Primary AI Nodes
+
+These nodes form the core of AI workflows and can process data from browser extension nodes.
 
 #### Chains
 
@@ -67,20 +88,25 @@ Learn more about [Vector stores in LangChain](https://js.langchain.com/docs/conc
 
 Utility nodes.
 
-[LangChain Code](/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.code.md): import LangChain. This means if there is functionality you need that n8n hasn't created a node for, you can still use it.
+[LangChain Code](/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.code.md): import LangChain. This means if there is functionality you need that Agentic Workflow Studio hasn't created a node for, you can still use it.
 
-### Sub-nodes
+### Supporting AI Nodes
 
-Each root node can have one or more [sub-nodes](/glossary.md#sub-node-n8n) attached to it.
+These nodes provide additional functionality and can be configured to work with browser-extracted content.
 
 #### Document loaders
 
-Document loaders add data to your chain as documents. The data source can be a file or web service.
+Document loaders add data to your chain as documents. In browser context, these work seamlessly with browser extension nodes to process web content.
+
+**Browser Integration Patterns**:
+- Use browser extension nodes to extract web content, then process with document loaders
+- Combine text extraction nodes with document loaders for intelligent content processing
+- Process selected text or full page content as documents for AI analysis
 
 Available nodes:
 
-* [Default Document Loader](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.documentdefaultdataloader.md)
-* [GitHub Document Loader](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.documentgithubloader.md)
+* [Default Document Loader](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.documentdefaultdataloader.md) - Process browser-extracted content as documents
+* [GitHub Document Loader](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.documentgithubloader.md) - Load GitHub content for AI processing
 
 Learn more about [Document loaders in LangChain](https://js.langchain.com/docs/concepts/document_loaders).
 
@@ -147,7 +173,7 @@ Available nodes:
 * [Recursive Character Text Splitter](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.textsplitterrecursivecharactertextsplitter.md)
 * [Token Splitter](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.textsplittertokensplitter.md)
 
-n8n's text splitter nodes implements parts of [LangChain's text_splitter API](https://js.langchain.com/docs/concepts/text_splitters/).
+Agentic Workflow Studio's text splitter nodes implements parts of [LangChain's text_splitter API](https://js.langchain.com/docs/concepts/text_splitters/).
 
 #### Tools
 

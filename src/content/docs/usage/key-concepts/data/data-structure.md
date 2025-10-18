@@ -1,40 +1,53 @@
 ---
 title: Data structure
-description: A guide in my new Starlight docs site.
+description: "Understand data structures and formats used in Agentic Workflow Studio browser extension workflows for web content processing."
 ---
 
-In n8n, all data passed between nodes is an array of objects. It has the following structure:
+In Agentic Workflow Studio, all data passed between nodes is an array of objects. This structure is particularly important when working with browser context data. It has the following structure:
 
 ```json
 [
 	{
-		// For most data:
+		// For browser context data:
 		// Wrap each item in another object, with the key 'json'
 		"json": {
-			// Example data
-			"apple": "beets",
-			"carrot": {
-				"dill": 1
-			}
+			// Example browser data
+			"text": "Selected text from web page",
+			"url": "https://example.com",
+			"title": "Page Title",
+			"links": [
+				{"href": "https://example.com/page1", "text": "Link 1"},
+				{"href": "https://example.com/page2", "text": "Link 2"}
+			]
 		},
-		// For binary data:
+		// For binary data (images, files):
 		// Wrap each item in another object, with the key 'binary'
 		"binary": {
-			// Example data
-			"apple-picture": {
+			// Example image data from web page
+			"page-screenshot": {
 				"data": "....", // Base64 encoded binary data (required)
 				"mimeType": "image/png", // Best practice to set if possible (optional)
 				"fileExtension": "png", // Best practice to set if possible (optional)
-				"fileName": "example.png", // Best practice to set if possible (optional)
+				"fileName": "screenshot.png", // Best practice to set if possible (optional)
 			}
 		}
 	},
 ]
 ```
 
-/// note | Skipping the `json` key and array syntax
-From 0.166.0 on, when using the Function node or Code node, n8n automatically adds the `json` key if it's missing. It also automatically wraps your items in an array (`[]`) if needed. This is only the case when using the Function or Code nodes. When building your own nodes, you must still make sure the node returns data with the `json` key.
+/// note | Browser context data handling
+Browser extension nodes automatically format extracted data into the proper structure. When using Code nodes to process browser data, Agentic Workflow Studio automatically adds the `json` key if it's missing and wraps items in an array as needed.
 ///
+
+## Browser Data Types
+
+Browser extension nodes extract different types of data from web pages:
+
+- **Text data**: Selected text, all page text, or specific element text
+- **Link data**: URLs, link text, and link attributes
+- **Image data**: Image URLs, alt text, and image metadata
+- **HTML data**: Raw HTML content from selected elements or entire pages
+- **Form data**: Input values, form structure, and form metadata
 ## Data item processing
 
 --8<-- "_snippets/flow-logic/data-flow-nodes.md"

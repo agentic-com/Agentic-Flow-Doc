@@ -1,6 +1,6 @@
 ---
 title: Pick Field
-description: How to use the Pick Field node.
+description: "Explore Pick Field for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

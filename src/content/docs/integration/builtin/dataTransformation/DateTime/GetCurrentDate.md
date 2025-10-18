@@ -1,6 +1,6 @@
 ---
 title: Get Current Date
-description: How to use the Get Current Date node.
+description: "Explore Get Current Date for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

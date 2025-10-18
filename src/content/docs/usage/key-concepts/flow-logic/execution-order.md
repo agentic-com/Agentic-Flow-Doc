@@ -1,14 +1,21 @@
 ---
 title: Execution order in multi-branch workflows
-description: How n8n decides the node execution order in multi-branch workflows.
+description: "Learn how workflow execution works in Agentic Workflow Studio browser extension for optimal web automation performance."
 sidebar:
   order: 7
 ---
 
-n8n's node execution order depends on the version of n8n you're using:
+Agentic Workflow Studio executes each branch in turn, completing one branch before starting another. The browser extension orders branches based on their position on the canvas, from topmost to bottommost. If two branches are at the same height, the leftmost branch executes first.
 
-* For workflows created before version 1.0: n8n executes the first node of each branch, then the second node of each branch, and so on.
-* For workflows created in version 1.0 and above: executes each branch in turn, completing one branch before starting another. n8n orders the branches based on their position on the [canvas](/glossary.md#canvas-n8n), from topmost to bottommost. If two branches are at the same height, the leftmost branch executes first.
+This execution order is particularly important when working with browser context data, as some operations may affect the web page state or require specific timing.
 
-You can change the execution order in your [workflow settings](/workflows/settings.md).
+## Browser Context Considerations
+
+When designing multi-branch workflows that interact with web pages:
+
+* **Page state changes**: Some browser extension nodes may modify the page (like scrolling or clicking), which could affect subsequent data extraction
+* **Timing dependencies**: Certain browser operations may need to complete before others can access the updated page content
+* **Resource limitations**: Browser environments have memory and processing constraints that may affect execution order
+
+You can change the execution order in your workflow settings if needed for your specific browser automation requirements.
 

@@ -1,6 +1,6 @@
 ---
 title: Http Request
-description: How to use the Http Request node.
+description: "Explore Http Request for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

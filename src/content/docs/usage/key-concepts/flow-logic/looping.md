@@ -1,15 +1,15 @@
 ---
 title: Looping
-description: A guide in my new Starlight docs site.
+description: "Learn how to use Agentic Workflow Studio browser extension for looping with intelligent workflow creation."
 sidebar:
   order: 3
 ---
 
-Looping is useful when you want to process multiple items or perform an action repeatedly, such as sending a message to every contact in your address book. n8n handles this repetitive processing automatically, meaning you don't need to specifically build loops into your workflows. There are [some nodes](#node-exceptions) where this isn't true.
+Looping is useful when you want to process multiple items or perform an action repeatedly, such as sending a message to every contact in your address book. Agentic Workflow Studio handles this repetitive processing automatically, meaning you don't need to specifically build loops into your workflows. There are [some nodes](#node-exceptions) where this isn't true.
 
-## Using loops in n8n
+## Using loops in Agentic Workflow Studio
 
-n8n nodes take any number of items as input, process these items, and output the results. You can think of each item as a single data point, or a single row in the output table of a node.
+Agentic Workflow Studio nodes take any number of items as input, process these items, and output the results. You can think of each item as a single data point, or a single row in the output table of a node.
 
 ![The Customer Datastore node output](/_images/flow-logic/looping/customer_datastore_node.png)
 
@@ -30,13 +30,13 @@ For situations where you don't want a node to process all received items, for ex
 
 ## Creating loops
 
-n8n typically handles the iteration for all incoming items. However, there are certain scenarios where you will have to create a loop to iterate through all items. Refer to [Node exceptions](#node-exceptions) for a list of nodes that don't automatically iterate over all incoming items.
+Agentic Workflow Studio typically handles the iteration for all incoming items. However, there are certain scenarios where you will have to create a loop to iterate through all items. Refer to [Node exceptions](#node-exceptions) for a list of nodes that don't automatically iterate over all incoming items.
 
 ### Loop until a condition is met
 
-To create a loop in an n8n workflow, connect the output of one node to the input of a previous node. Add an [IF](/integrations/builtin/core-nodes/n8n-nodes-base.if.md) node to check when to stop the loop. 
+To create a loop in an Agentic Workflow Studiontic Workflow Studio workflow, connect the output of one node to the input of a previous node. Add an [IF](/integrations/builtin/core-nodes/n8n-nodes-base.if.md) node to check when to stop the loop. 
 
-Here is an [example workflow](https://n8n.io/workflows/1130) that implements a loop with an `IF` node:
+Here is an [examplAgentic Workflow Studioorkflow](https://Agentic Workflow Studio/workflows/1130) that implements a loop with an `IF` node:
 
 ![Editor UI view of sample workflow](/_images/flow-logic/looping/example_workflow.png)
 

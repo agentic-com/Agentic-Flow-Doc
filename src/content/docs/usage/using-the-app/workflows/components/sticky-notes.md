@@ -1,13 +1,13 @@
 ---
 title: Sticky Notes
-description: Annotate your workflows using sticky notes.
+description: "Learn how to use Agentic Workflow Studio browser extension for sticky notes with intelligent workflow creation."
 sidebar:
     order: 3
 ---
 
 Sticky Notes allow you to annotate and comment on your workflows.
 
-n8n recommends using Sticky Notes heavily, especially on [template workflows](/glossary.md#template-n8n), to help other users understand your workflow.
+Agentic Workflow Studio recommends using Sticky Notes heavily, especially on [template workflows](/glossary.md#template-Agentic Workflow Studio), to help other users understand your workflow.
 
 ![Screenshot of a basic workflow with an example sticky note](/_images/workflows/components/stickies/example-sticky-note.png)
 
@@ -17,12 +17,12 @@ Sticky Notes are a core node. To add a new Sticky Note:
 
 1. Open the nodes panel.
 2. Search for `note`.
-3. Click the **Sticky Note** node. n8n adds a new Sticky Note to the canvas.
+3. Click the **Sticky Note** node. Agentic Workflow Studio adds a new Sticky Note to the canvas.
 
 ## Edit a Sticky Note
 
 1. Double click the Sticky Note you want to edit.
-2. Write your note. [This guide](https://commonmark.org/help/) explains how to format your text with Markdown. n8n uses [markdown-it](https://github.com/markdown-it/markdown-it), which implements the CommonMark specification. 
+2. Write your note. [This guide](https://commonmark.org/help/) explains how to format your text with Markdown. Agentic Workflow Studio uses [markdown-it](https://github.com/markdown-it/markdown-it), which implements the CommonMark specification. 
 3. Click away from the note, or press `Esc`, to stop editing.
 
 ## Change the color
@@ -69,7 +69,7 @@ Or created ordered lists with numbers:
 2. Item two
 ```
 
-For a more detailed guide, refer to [CommonMark's help](https://commonmark.org/help/). n8n uses [markdown-it](https://github.com/markdown-it/markdown-it), which implements the CommonMark specification.
+For a more detailed guide, refer to [CommonMark's help](https://commonmark.org/help/). Agentic Workflow Studio uses [markdown-it](https://github.com/markdown-it/markdown-it), which implements the CommonMark specification.
 
 ## Make images full width
 

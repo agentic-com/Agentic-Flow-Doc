@@ -1,6 +1,6 @@
 ---
 title: Recursive Character Text Splitter
-description: How to use the Recursive Character Text Splitter node.
+description: "Explore Recursive Character Text Splitter for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

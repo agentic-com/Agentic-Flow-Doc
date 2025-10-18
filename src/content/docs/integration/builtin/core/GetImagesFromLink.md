@@ -1,6 +1,6 @@
 ---
 title: Get Images From Link
-description: How to use the Get Images From Link node.
+description: "Explore Get Images From Link for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

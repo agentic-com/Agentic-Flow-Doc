@@ -1,6 +1,6 @@
 ---
 title: Subtract From A Date
-description: How to use the Subtract From A Date node.
+description: "Explore Subtract From A Date for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

@@ -1,6 +1,6 @@
 ---
 title: Q&A
-description: How to use the Q&A node.
+description: "Explore Q&A for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

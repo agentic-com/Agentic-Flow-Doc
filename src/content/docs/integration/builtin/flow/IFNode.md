@@ -1,6 +1,6 @@
 ---
 title: IF
-description: How to use the IF node.
+description: "Explore IF for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

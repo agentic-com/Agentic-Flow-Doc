@@ -1,6 +1,6 @@
 ---
 title: Ollama
-description: How to use the Ollama node.
+description: "Explore Ollama for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

@@ -1,6 +1,6 @@
 ---
 title: Local Knowledge
-description: How to use the Local Knowledge node.
+description: "Explore Local Knowledge for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

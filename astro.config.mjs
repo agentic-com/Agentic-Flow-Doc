@@ -19,8 +19,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Agentic Flow",
-      description:
-        "Agentic Flow is a framework for building AI-powered workflows that runs inside your Browser.",
+      description: "Agentic Workflow Studio - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
       logo: {
         src: "./src/assets/logo-beige.png",
       },
@@ -31,17 +30,17 @@ export default defineConfig({
           label: "Codeberg",
           href: "https://codeberg.org/knut",
         },
-        { icon: "discord", label: "Discord", href: "https://astro.build/chat" },
+        { icon: "discord", label: "Discord", href: "https://discord.gg/agentic-workflow-studio" },
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/withastro",
+          href: "https://github.com/agentic-workflow-studio",
         },
         { icon: "gitlab", label: "GitLab", href: "https://gitlab.com/delucis" },
         {
           icon: "mastodon",
           label: "Mastodon",
-          href: "https://m.webtoo.ls/@astro",
+          href: "https://mastodon.social/@agentic-workflow-studio",
         },
       ],
       defaultLocale: "root",

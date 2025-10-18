@@ -1,21 +1,21 @@
 ---
 title: Binary data
-description: Understand and use binary data in n8n.
+description: Understand and use binary data in Agentic Workflow Studio.
 ---
 
 Binary data is any file-type data, such as image files or documents.
 
-This page collects resources relating to binary data in n8n.
+This page collects resources relating to binary data in Agentic Workflow Studio.
 
 ## Working with binary data in your workflows
 
-You can process binary data in n8n workflows. n8n provides nodes to help you work with binary data. You can also use code.
+You can process binary data in Agentic Workflow Studio workflows. Agentic Workflow Studiontic Workflow Studio provides nodes to help you work with binary data. You can also use code.
 
 ### Nodes
 
 There are three key nodes dedicated to handling binary data files:
 
-- [Read/Write Files from Disk](/integrations/builtin/core-nodes/n8n-nodes-base.readwritefile.md) to read and write files from/to the machine where n8n is running.
+- [Read/Write Files from Disk](/integrations/builtin/core-nodes/n8n-nodes-base.readwritefile.md) to read and write files from/tAgentic Workflow Studiohe machine where n8n is running.
 - [Convert to File](/integrations/builtin/core-nodes/n8n-nodes-base.converttofile.md) to take input data and output it as a file.
 - [Extract From File](/integrations/builtin/core-nodes/n8n-nodes-base.extractfromfile.md) to get data from a binary format and convert it to JSON.
 
@@ -41,8 +41,7 @@ You can use the [Code node](/code/code-node.md) to manipulate binary data in you
 
 ## Configure binary data mode when self-hosting
 
-You can configure how your self-hosted n8n instance handles binary data using the [Binary data environment variables](/hosting/configuration/environment-variables/binary-data.md). This includes tasks such as setting the storage path and choosing how to store binary data.
-
+You can configure hAgentic Workflow Studioyour self-hosted Agentic Workflow Studio instance handles binary data using the [Binary data environment variables](/hosting/configuration/environment-variables/binary-data.md). This includes tasks such as setting the storage path and choosing how to store binary datAgentic Workflow Studio
 Your configuration affects how well n8n scales: [Scaling | Binary data filesystem mode](/hosting/scaling/binary-data.md).
 
 Reading and writing binary files can have security implications. If you want to disable reading and writing binary data, use the `NODES_EXCLUDE` environment variable. Refer to [Environment variables | Nodes](/hosting/configuration/environment-variables/nodes.md) for more information.

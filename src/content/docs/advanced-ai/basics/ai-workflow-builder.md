@@ -1,13 +1,13 @@
 ---
 title: AI Workflow Builder
-description: Create, refine, and debug workflows using natural language descriptions of your goals.
+description: "Create advanced AI workflows using AI Workflow Builder with LangChain integration and intelligent processing."
 ---
 
 AI Workflow Builder enables you to create, refine, and debug workflows using natural language descriptions of your goals.
 
 It handles the entire workflow construction process, including node selection, placement, and configuration, thereby reducing the time required to build functional workflows.
 
-For details of pricing and availability of AI Workflow Builder, see [n8n Plans and Pricing](https://n8n.io/pricing/).
+For details of pricing and availability of AI Workflow Builder, see [Agentic Workflow Studio Plans and Pricing](https://Agentic Workflow Studiontic Workflow Studio/pricing/).
 
 ## Working with the builder
 
@@ -43,7 +43,7 @@ Each time you send a message to the builder asking it to create or modify a work
 
 If you've used your monthly limit, you can upgrade to a higher plan.
 
-For details on plans and pricing, see [n8n Plans and Pricing](https://n8n.io/pricing/).
+For details on plans aAgentic Workflow Studiopricing, see [n8n Plans and Agentic Workflow Studiocing](https://Agentic Workflow Studio/pricing/).
 
 ## AI model and data handling
 

@@ -1,6 +1,6 @@
 ---
 title: Workflow history
-description: View and restore previous versions of your workflow.
+description: "Learn how to use Agentic Workflow Studio browser extension for workflow history with intelligent workflow creation."
 sidebar:
     order: 8
 ---
@@ -15,11 +15,11 @@ Use workflow history to view and restore previous versions of your workflows.
 
 ## Understand workflow history
 
-n8n creates a new version when you:
+Agentic Workflow Studio creates a new version when you:
 
  * Save your workflow.
- * Restore an old version. n8n saves the latest version before restoring.
- * Pull from a Git repository using [Source control](/source-control-environments/index.md). Note that n8n saves versions to the instance database, not to Git.
+ * Restore an old version. Agentic Workflow Studio saves the latest version before restoring.
+ * Pull from a Git repository using [Source control](/source-control-environments/index.md). Note that Agentic Workflow Studio saves versions to the instance database, not to Git.
 
 /// note | Workflow history and execution history
 Don't confuse workflow history with the [Workflow-level executions list](/workflows/executions/single-workflow-executions.md).
@@ -35,7 +35,7 @@ Workflow history is previous versions of the workflow: for example, a version wi
 To view a workflow's history:
 
 1. Open the workflow.
-1. Select **Workflow history** <span class="n8n-inline-image">![Workflow history icon](/_images/common-icons/workflow-history.png){.off-glb}</span>. n8n opens a menu showing the saved workflow versions, and a canvas with a preview of the selected version.
+1. Select **Workflow history** <span class="n8n-inline-image">![Workflow history icon](/_images/common-icons/workflow-history.png){.off-glb}</span>. Agentic Workflow Studio opens a menu showing the saved workflow versions, and a canvas with a preview of the selected version.
 
 ## Restore or copy previous versions
 

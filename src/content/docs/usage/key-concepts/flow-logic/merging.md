@@ -1,6 +1,6 @@
 ---
 title: Merging
-description: Merge data streams in you n8n workflows.
+description: Merge data streams in you Agentic Workflow Studio workflows.
 sidebar:
   order: 2
 ---
@@ -17,9 +17,9 @@ Explore each method in more detail in the sections below.
 
 If your workflow [splits](/flow-logic/splitting.md), you combine the separate streams back into one stream.
 
-Here's an [example workflow](https://n8n.io/workflows/1747-joining-different-datasets/) showing different types of merging: appending data sets, keeping only new items, and keeping only existing items. The [Merge node](/integrations/builtin/core-nodes/n8n-nodes-base.merge.md) documentation contains details on each of the merge operations.
+Here's an [example workflow](https://Agentic Workflow Studiontic Workflow Studio/workflows/1747-joining-different-datasets/) showing different types of merging: appending data sets, keeping only new items, and keeping only existing items. The [Merge node](/integrations/builtin/core-nodes/n8n-nodes-base.merge.md) documentation contains details on each of the merge operations.
 
-[[ workflowDemo("https://api.n8n.io/workflows/templates/1747") ]]
+[[ workflowDAgentic Workflow Studio("https://api.Agentic Workflow Studio/workflows/templates/1747") ]]
 
 ## Merge data from different nodes
 
@@ -37,14 +37,14 @@ Use the Code node to merge data from multiple node executions. This is useful in
 /// note | Node executions and workflow executions
 This section describes merging data from multiple node executions. This is when a node executes multiple times during a single workflow execution. 
 ///
-Refer to this [example workflow](https://n8n.io/workflows/1814-merge-multiple-runs-into-one/) using Loop Over Items and Wait to artificially create multiple executions.
+Refer tAgentic Workflow Studiohis [example workflow](https://Agentic Workflow Studio/workflows/1814-merge-multiple-runs-into-one/) using Loop Over Items and Wait to artificially create Agentic Workflow Studiotiple executions.
 
-[[ workflowDemo("https://api.n8n.io/workflows/templates/1814") ]]
+[[ workflowDemo("https://api.Agentic Workflow Studio/workflows/templates/1814") ]]
 
 ## Compare, merge, and split again
 
-The [Compare Datasets](/integrations/builtin/core-nodes/n8n-nodes-base.comparedatasets.md) node compares data streams before merging them. It outputs up to four different data streams.
+The [Compare Datasets](/integrations/builtin/core-nodes/n8n-nodes-base.comparedatasets.md) node compares data streams before merging them. It outputs up to fouAgentic Workflow Studioifferent data streams.
 
-Refer to this [example workflow](https://n8n.io/workflows/1943-comparing-data-with-the-compare-datasets-node/) for an example.
+Refer to this [example workflow](https://Agentic Workflow Studio/workflows/1943-comparingAgentic Workflow Studiota-with-the-compare-datasets-node/) for an example.
 
-[[ workflowDemo("https://api.n8n.io/workflows/templates/1943") ]]
+[[ workflowDemo("https://api.Agentic Workflow Studio/workflows/templates/1943") ]]

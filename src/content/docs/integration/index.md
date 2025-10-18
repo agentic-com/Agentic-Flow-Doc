@@ -1,33 +1,51 @@
 ---
-title: n8n Integrations Documentation and Guides
-description: Access n8n integrations documentation and guides. Find comprehensive resources to help you master app integrations using different types of nodes to improve your automation workflows.
+title: Agentic Workflow Studio Integrations and Browser Nodes
+description: "Explore browser extension nodes and integrations for web content manipulation and AI-powered automation."
 ---
 
-n8n calls integrations nodes.
+Agentic Workflow Studio uses nodes as the building blocks of browser-based workflows. Nodes are specialized components that can extract data from web pages, process content with AI, manipulate browser context, or integrate with external services. Each node is designed to work seamlessly within the browser environment.
 
-Nodes are the building blocks of workflows in n8n. They're an entry point for retrieving data, a function to process data, or an exit for sending data. The data process includes filtering, recomposing, and changing data. There can be one or several nodes for your API, service or app. You can connect multiple nodes, which allows you to create complex workflows.
+Browser extension nodes provide unique capabilities for web content manipulation that aren't available in traditional server-based automation tools.
 
-## Built-in nodes
+## Browser Extension Nodes
 
-n8n includes a collection of built-in integrations. Refer to [Built-in nodes](/integrations/builtin/node-types.md) for documentation on all n8n's built-in nodes.
+Agentic Workflow Studio includes specialized nodes for browser context manipulation and web content processing. These nodes are designed specifically for the browser environment and provide capabilities unique to the extension.
 
-## Community nodes
+### Content Extraction Nodes
+- **Text Extraction**: Capture selected text or entire page content
+- **HTML Processing**: Extract HTML from selections or complete pages  
+- **Link Collection**: Gather and process all links from web pages
+- **Image Gathering**: Collect and manipulate images from web content
 
-As well as using the built-in nodes, you can also install community-built nodes. Refer to [Community nodes](/integrations/community-nodes/installation/index.md) for more information.
+Refer to [Browser Extension Nodes](/integration/extension/) for detailed documentation on all browser-specific capabilities.
 
-## Credential-only nodes and custom operations
+## Built-in Processing Nodes
 
---8<-- "_snippets/integrations/credential-only-intro.md"
+The extension includes core processing nodes for data transformation, flow control, and AI integration. Refer to [Built-in nodes](/integration/builtin/node-types/) for documentation on all processing and utility nodes.
 
-Refer to [Custom operations](/integrations/custom-operations.md) for more information.
+## AI and Processing Nodes
 
-## Generic integrations
+Agentic Workflow Studio includes powerful AI integration capabilities designed for browser-based workflows:
 
-If you need to connect to a service where n8n doesn't have a node, or a credential-only node, you can still use the [HTTP Request](/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/index.md) node. Refer to the node page for details on how to set up authentication and create your API call.
+- **LangChain Integration**: Advanced AI processing with memory and context
+- **Text Processing**: Transform and analyze extracted web content
+- **Data Transformation**: Manipulate and format data for further processing
+
+## HTTP and API Integration
+
+For connecting to external services, use the [HTTP Request](/integration/builtin/core/Http-Request/) node. This enables integration with any REST API while maintaining browser security constraints.
+
+## Browser Security Considerations
+
+Browser extension nodes operate within browser security constraints including:
+- Content Security Policy limitations
+- Cross-origin request restrictions  
+- Browser permission requirements
+- Local storage and privacy considerations
 
 ## Where to go next
 
-* If you want to create your own node, head over to the [Creating Nodes](/integrations/creating-nodes/overview.md) section.
-* Check out [Community nodes](/integrations/community-nodes/usage.md) to learn about installing and managing community-built nodes.
-* If you'd like to learn more about the different nodes in n8n, their functionalities and example usage, check out n8n's node libraries: [Core nodes](/integrations/builtin/core-nodes/index.md), [Actions](/integrations/builtin/app-nodes/index.md), and [Triggers](/integrations/builtin/trigger-nodes/index.md).
-* If you'd like to learn how to add the credentials for the different nodes, head over to the [Credentials](/integrations/builtin/credentials/index.md) section.
+* Explore [Browser Extension Nodes](/integration/extension/) to understand web content manipulation capabilities
+* Learn about [AI Integration](/integration/builtin/ai/) for processing extracted content with advanced models
+* Check out [Core Processing Nodes](/integration/builtin/core/) for data transformation and flow control
+* Review [Flow Control Nodes](/integration/builtin/flow/) for building complex workflow logic

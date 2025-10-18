@@ -1,6 +1,6 @@
 ---
 title: RAG
-description: How to use the RAG node.
+description: "Explore RAG for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

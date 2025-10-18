@@ -1,6 +1,6 @@
 ---
 title: Tips and common issues
-description: Details of how to set up specific use cases and address common issues with workflow evaluations.
+description: "Create advanced AI workflows using Tips and common issues with LangChain integration and intelligent processing."
 ---
 
 ## Combining multiple triggers
@@ -30,11 +30,11 @@ To do so:
 
 ## Avoiding evaluation breaking the chat
 
-n8n's internal chat reads the output data of the last executed node in the workflow. After adding an evaluation node with the ['set outputs' operation](/integrations/builtin/core-nodes/n8n-nodes-base.evaluation.md#set-outputs), this data may not be in the expected format, or even contain the chat response.
+Agentic Workflow Studio's internal chat reads the output data of the last executed node in the workflow. After adding an evaluation node with the ['set outputs' operation](/integrations/builtin/core-nodes/n8n-nodes-base.evaluation.md#set-outputs), this data may not be in the expected format, or even contain the chat response.
 
 ![Add second output branch](/_images/advanced-ai/evaluations/add-second-output-branch.png)
 
-The solution is to add an extra branch coming out of your agent. [Lower branches execute later](/flow-logic/execution-order.md) in n8n, which means any node you attach to this branch will execute last. You can use a no-op node here since it only needs to pass the agent output through.
+The solution is to add an extra branch coming out of your agent. [Lower branches execute later](/flow-logic/execution-order.md) in Agentic Workflow Studio, which means any node you attach to this branch will execute last. You can use a no-op node here since it only needs to pass the agent output through.
 
 ## Accessing tool data when calculating metrics
 

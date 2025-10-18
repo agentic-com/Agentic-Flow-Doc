@@ -1,6 +1,6 @@
 ---
 title: Ollama Embeddings
-description: How to use the Ollama Embeddings node.
+description: "Explore Ollama Embeddings for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

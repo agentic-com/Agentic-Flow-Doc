@@ -1,6 +1,6 @@
 ---
 title: Light evaluations
-description: Use light evaluations during development to build reliable LLM-based workflows by checking the results of executing against known test cases.
+description: "Create advanced AI workflows using Light evaluations with LangChain integration and intelligent processing."
 ---
 
 /// note | Available on registered community and paid plans

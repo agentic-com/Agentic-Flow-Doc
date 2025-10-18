@@ -1,6 +1,6 @@
 ---
 title: Stop and Error
-description: How to use the Stop and Error node.
+description: "Explore Stop and Error for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

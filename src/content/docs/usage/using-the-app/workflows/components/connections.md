@@ -1,6 +1,6 @@
 ---
 title: Connections
-description: A connection establishes a link between nodes to route data through the workflow. 
+description: "Learn how to use Agentic Workflow Studio browser extension for connections with intelligent workflow creation." 
 sidebar:
     order: 2
 ---

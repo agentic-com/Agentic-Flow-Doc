@@ -1,6 +1,6 @@
 ---
 title: Edit Fields
-description: How to use the Edit Fields node.
+description: "Explore Edit Fields for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

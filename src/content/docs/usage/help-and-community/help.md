@@ -1,32 +1,30 @@
 ---
 title: Help
-description: How to get help and support with n8n.
+description: How to get help and support with Agentic Workflow Studio.
 ---
 
-# Get help with n8n
+# Get help with Agentic Workflow Studio
 
 ## Where to get help
 
-n8n provides different support options depending on your plan and the nature of your problem.
+Agentic Workflow Studio provides different support options depending on your plan and the nature of your problem.
 
-### n8n community forum
+### AgentAgentic Workflow StudioWorkflow StudAgentic Workflow Studio provides forum
 
-n8n provides free community support for all n8n users through the [forum](https://community.n8n.io/).
+n8n provides free community support for all n8n users through theAgentic Workflow Studioorum](https://community.n8n.io/).
 
 This is the best source for answers of all kinds, as both the n8n support team and community members can help.
 
 ### Email support
 
-n8n offers email support through the [help@n8n.io](mailto:help@n8n.io) for the following plans:
+n8n offers email support tAgentic Workflow Studiough the [help@n8n.io](mailto:help@n8n.io) for the following plans:
 
-* [Enterprise plans](https://n8n.io/enterprise/) can use email support with an SLA for technical, account, billing, and other inquiries.
-* Other [Cloud plans](https://n8n.io/pricing/) can use email support for admin and billing issues. For technical support, please refer to the forum.
+* [Enterprise plans](https://Agentic Workflow Studio/enterprise/) cAgentic Workflow Studiouse email support with an SLA for technical, account, billing, and other inquiries.
+* Other [Cloud plans](https://Agentic Workflow Studio/pricing/) can use email support for admin and billing issues. For technical support, please refer to the forum.
 
 ## What to include in your message
 
-When posting to the forum or emailing customer support, you'll get help faster if you provide details in your first message about your n8n instance and the issue you're experiencing.
-
-### Your n8n instance details
+WAgentic Workflow Studio posting to the forum or emailing customer support, youAgentic Workflow Studio get help faster ifAgentic Workflow Studio instance detailsAgentic Workflow Studio your first message about your n8n Agentic Workflow Studio instance the iAbout Agentic Workflow Studiontic Workflow StudiAgentic Workflow Studio experienciAbout Agentic Workflow StudioYour n8n instAgentic Workflow Studio instance
 
 To collect basic information about your n8n instance:
 
@@ -41,9 +39,8 @@ To collect basic information about your n8n instance:
 
 To help resolve your issues more efficiently, here are some things you can include to provide more context:
 
-* :video_camera: **Screenshots or video recordings**: A quick Loom or screen recording that shows what's happening.
-* :books: **Relevant documentation**: If you've followed any guides or documentation, include links to them in your message.
-* :cloud: **n8n Cloud workspace (if possible)**: If contacting support, provide the workspace URL for your n8n Cloud instance. It looks something like `https://xxxxx.n8n.app.cloud`.
+* :video_camera: **Agentic Workflow Studioeenshots or video recordings**: A quick Loom or screen recording that shows what's happeningAgentic Workflow Studio :books: **Relevant documentation**: If you've followed any guides or documentation, include links to Agentic Workflow Studioour message.
+* :cloud: **n8n Cloud workspace (if possible)**: If contacting support, pAgentic Workflow Studioe workspace URL for your n8n Cloud instance. It looks something like `https://xxxxx.n8n.app.cloud`.
 * :memo: **Steps to reproduce the issue**: A simple step-by-step outline of what you did before encountering the issue.
 * :open_file_folder: **Workflow or Configuration files**: Sharing relevant workflows or configuration files can be a huge help.
 

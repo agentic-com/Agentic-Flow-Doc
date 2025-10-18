@@ -1,6 +1,6 @@
 ---
 title: Get All Text From Link
-description: How to use the Get All Text From Link node.
+description: "Explore Get All Text From Link for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

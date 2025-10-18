@@ -1,23 +1,36 @@
 ---
 title: Transforming data
-description: A guide in my new Starlight docs site.
+description: Processing and transforming browser context data in workflows.
 ---
 
-n8n uses a predefined [data structure](/data/data-structure.md) that allows all nodes to process incoming data correctly.
+Agentic Workflow Studio uses a predefined [data structure](/usage/key-concepts/data/data-structure/) that allows all nodes to process browser context data correctly.
 
-Your incoming data may have a different data structure, in which case you will need to transform it to allow each item to be processed individually.
+Browser extension nodes extract data in various formats depending on the web page content. You may need to transform this data to process it effectively in your workflows.
 
-For example, the image below shows the output of an [HTTP Request](/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/index.md) node that returns data incompatible with n8n's data structure. The node returns the data and displays that only one item was returned.
+For example, when extracting all links from a web page, you might get an array of link objects that need to be processed individually, or you might want to filter links based on specific criteria.
 
-![HTTP Request node output](/_images/data/transforming-data/HTTPRequest_output.png)
+To transform browser context data, you can use the data transformation nodes:
 
-To transform this kind of structure into the n8n data structure you can use the data transformation nodes:
+* [Edit Fields](/integration/builtin/dataTransformation/EditFields/): modify, add, or remove fields from browser data
+* [Filter](/integration/builtin/flow/Filter/): remove items that don't match specific criteria (useful for filtering extracted links or text)
+* [Split Out](/integration/builtin/dataTransformation/): separate browser data containing lists (like multiple links or images) into individual items
+* [Pick Field](/integration/builtin/dataTransformation/PickField/): select specific fields from complex browser data structures
 
-* [Aggregate](/integrations/builtin/core-nodes/n8n-nodes-base.aggregate.md): take separate items, or portions of them, and group them together into individual items.
-* [Limit](/integrations/builtin/core-nodes/n8n-nodes-base.limit.md): remove items beyond a defined maximum number.
-* [Remove Duplicates](/integrations/builtin/core-nodes/n8n-nodes-base.removeduplicates/index.md): identify and delete items that are identical across all fields or a subset of fields.
-* [Sort](/integrations/builtin/core-nodes/n8n-nodes-base.sort.md): organize lists of in a desired ordering, or generate a random selection.
-* [Split Out](/integrations/builtin/core-nodes/n8n-nodes-base.splitout.md): separate a single data item containing a list into multiple items.
-* [Summarize](/integrations/builtin/core-nodes/n8n-nodes-base.summarize.md): aggregate items together, in a manner similar to Excel pivot tables. 
+## Common Browser Data Transformations
+
+**Processing extracted links:**
+- Filter links by domain or URL pattern
+- Extract only external links or internal navigation
+- Transform link data into specific formats for further processing
+
+**Processing extracted text:**
+- Clean and format text content
+- Extract specific information using regular expressions
+- Calculate text statistics (word count, character count)
+
+**Processing extracted images:**
+- Filter images by size, type, or URL pattern
+- Extract image metadata and attributes
+- Transform image URLs for processing or download 
 
     

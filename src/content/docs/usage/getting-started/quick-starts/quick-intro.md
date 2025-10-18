@@ -1,67 +1,71 @@
 ---
 title: Quick Intro
-description: A quick example to try out n8n.
+description: "Get started quickly with Agentic Workflow Studio browser extension - install and create your first AI-powered web automation workflow."
 sidebar:
   order: 0
 ---
 
 # The very quick quickstart
 
-This quickstart gets you started using n8n as quickly as possible. Its allows you to try out the UI and introduces two key features: [workflow templates](/glossary.md#template-n8n) and [expressions](/glossary.md#expression-n8n). It doesn't include detailed explanations or explore concepts in-depth.
+This quickstart gets you started using Agentic Workflow Studio as quickly as possible. It allows you to try out the browser-based workflow builder and introduces two key features: browser context manipulation and workflow creation. It doesn't include detailed explanations or explore concepts in-depth.
 
 In this tutorial, you will:
 
-* Load a [workflow](/glossary.md#workflow-n8n) from the workflow templates library
-* Add a node and configure it using expressions
+* Install the browser extension
+* Create your first browser-based workflow
+* Extract text from a web page using browser context manipulation
 * Run your first workflow
 
 
-## Step one: Open a workflow template and sign up for n8n Cloud
+## Step one: Install the browser extension
 
-n8n provides a quickstart template using training nodes. You can use this to work with fake data and avoid setting up [credentials](/glossary.md#credential-n8n).
+Agentic Workflow Studio runs directly in your browser, making it easy to get started without any server setup.
 
-This quickstart uses [n8n Cloud](/manage-cloud/overview.md). A free trial is available for new users.
+1. Install the extension from your browser's extension store:
+   - **Chrome**: [Chrome Web Store](https://chrome.google.com/webstore)
+   - **Firefox**: [Firefox Add-ons](https://addons.mozilla.org/firefox)
+   - **Edge**: [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons)
 
-1. Go to [Templates | Very quick quickstart](https://n8n.io/workflows/1700-very-quick-quickstart/).
-1. Select **Use for free** to view the options for using the template.
-1. Select **Get started free with n8n cloud** to sign up for a new Cloud instance.
+2. Once installed, you'll see the Agentic Workflow Studio icon in your browser toolbar.
+3. Click the icon to open the workflow builder interface.
 
-This workflow:
+This workflow will:
 
-1. Gets example data from the [Customer Datastore](/integrations/builtin/app-nodes/n8n-nodes-base.n8ntrainingcustomerdatastore.md) node.
-2. Uses the [Edit Fields](/integrations/builtin/core-nodes/n8n-nodes-base.set.md) node to extract only the desired data and assigns that data to variables. In this example, you map the customer name, ID, and description.
+1. Extract text from the current web page using the [Get Selected Text](/integration/extension/GetSelectedText/) node.
+2. Use the [Edit Fields](/integration/builtin/dataTransformation/EditFields/) node to process and format the extracted text.
 
-The individual pieces in an n8n workflow are called [nodes](/glossary.md#node-n8n). Double click a node to explore its settings and how it processes data.
+The individual pieces in an Agentic Workflow Studio workflow are called nodes. Double click a node to explore its settings and how it processes browser data.
 
-## Step two: Run the workflow
+## Step two: Create your first workflow
 
-Select **Execute Workflow**. This runs the workflow, loading the data from the Customer Datastore node, then transforming it with Edit Fields. You need this data available in the workflow so that you can work with it in the next step.
+1. In the workflow builder, select **Add first step**.
+2. Search for **Get Selected Text** and select it to add the node to the canvas.
+3. Navigate to any web page with text content.
+4. Select some text on the page, then return to the workflow builder.
+5. Select **Execute Workflow**. This runs the workflow and extracts the selected text from the web page.
 
-## Step three: Add a node
+## Step three: Add text processing
 
-Add a third node to message each customer and tell them their description. Use the Customer Messenger node to send a message to fake recipients.
+Add a second node to process the extracted text:
 
-1. Select the **Add node** <span class="n8n-inline-image">![Add node icon](/_images/try-it-out/add-node-small.png){.off-glb}</span> connector on the Edit Fields node.
-2. Search for **Customer Messenger**. n8n shows a list of nodes that match the search.
-3. Select **Customer Messenger (n8n training)** to add the node to the [canvas](/glossary.md#canvas-n8n). n8n opens the node automatically.
-4. Use [expressions](/code/expressions.md) to map in the **Customer ID** and create the **Message**:
-	1. In the **INPUT** panel select the **Schema** tab.
-	2. Drag **Edit Fields1** > **customer_id** into the **Customer ID** field in the node settings.
-    2. Hover over **Message**. Select the **Expression** tab, then select the expand button <span class="n8n-inline-image">![Add node icon](/_images/common-icons/open-expression-editor.png){.off-glb}</span> to open the full expressions editor.
-    3. Copy this expression into the editor:
-        ```
-        Hi {{ $json.customer_name }}. Your description is: {{ $json.customer_description }}
-        ```
-5. Close the expressions editor, then close the **Customer Messenger** node by clicking outside the node or selecting **Back to canvas**.
-6. Select **Execute Workflow**. n8n runs the workflow.
+1. Select the **Add node** connector on the Get Selected Text node.
+2. Search for **Edit Fields** and select it to add the node to the canvas.
+3. Configure the Edit Fields node to format the extracted text:
+   - In the **Fields to Set** section, add a new field called "processed_text"
+   - Use an expression to transform the text:
+     ```
+     Extracted text: {{ $json.text }}
+     Length: {{ $json.text.length }} characters
+     ```
+4. Select **Execute Workflow** to run the complete workflow.
 
-The complete workflow should look like this:
+## Congratulations!
 
-[[ workflowDemo("file:///try-it-out/quickstart/very-quick-quickstart-workflow.json") ]]
-
+You've created your first browser-based workflow that extracts and processes text from web pages. The workflow demonstrates the core power of Agentic Workflow Studio: seamlessly combining browser context manipulation with data processing.
 
 ## Next steps
 
-* Read n8n's [longer try it out tutorial](/try-it-out/tutorial-first-workflow.md) for a more complex workflow, and an introduction to more features and n8n concepts.
-* Take the [text courses](/courses/index.md) or [video courses](/video-courses.md).
+* Read the [longer introduction tutorial](/usage/getting-started/quick-starts/long-intro/) for a more complex workflow with AI integration.
+* Explore [browser extension nodes](/integration/extension/) to learn about all available browser context manipulation capabilities.
+* Try [AI-powered workflows](/advanced-ai/) to combine browser data with artificial intelligence.
 

@@ -1,6 +1,6 @@
 ---
 title: Mapping in the UI
-description: A guide in my new Starlight docs site.
+description: "Learn how to use Agentic Workflow Studio browser extension for mapping in the ui with intelligent workflow creation."
 ---
 
 Data mapping means referencing data from previous nodes. It doesn't include changing (transforming) data, just referencing it.
@@ -60,7 +60,7 @@ Given the following data:
 ]
 ```
 
-n8n displays it in table form like this:
+Agentic Workflow Studio displays it in table form like this:
 
 !["Screenshot of a table in the INPUT panel. It includes a top level field named "nested." This field contains nested data, which is indicated in bold."](/_images/data/data-mapping/nested-data.png)
 

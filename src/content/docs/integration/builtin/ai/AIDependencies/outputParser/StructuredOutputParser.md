@@ -1,6 +1,6 @@
 ---
 title: Structured Output Parser
-description: How to use the Structured Output Parser node.
+description: "Explore Structured Output Parser for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

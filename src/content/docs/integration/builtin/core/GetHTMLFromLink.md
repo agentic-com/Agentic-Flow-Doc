@@ -1,6 +1,6 @@
 ---
 title: Get HTML From Link
-description: How to use the Get HTML From Link node.
+description: "Explore Get HTML From Link for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

@@ -1,6 +1,6 @@
 ---
 title: Local Memory
-description: How to use the Local Memory node.
+description: "Explore Local Memory for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

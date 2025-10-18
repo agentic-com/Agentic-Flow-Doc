@@ -1,20 +1,20 @@
 ---
 title: Manual, partial, and production executions
-description: How manual, partial, and automatic workflow executions differ.
+description: "Learn how to use Agentic Workflow Studio browser extension for manual, partial, and production executions with intelligent workflow creation."
 ---
 
-There are some important differences in how n8n executes workflows manually (by clicking the **Execute Workflow** button) and automatically (when the workflow is **Active** and triggered by an event or schedule).
+There are some important differences in how Agentic Workflow Studio executes workflows manually (by clicking the **Execute Workflow** button) and automatically (when the workflow is **Active** and triggered by an event or schedule).
 
 ## Manual executions
 
-Manual executions allow you to run workflows directly from the [canvas](/glossary.md#canvas-n8n) to test your workflow logic. These executions are "ad-hoc": they run only when you manually select the **Execute workflow** button.
+Manual executions allow you to run workflows directly from the [canvas](/glossary.md#canvas-Agentic Workflow Studio) to test your workflow logic. These executions are "ad-hoc": they run only when you manually select the **Execute workflow** button.
 
 Manual executions make building workflows easier by allowing you to iteratively test as you go, following the flow logic and seeing data transformations. You can test conditional branching, data formatting changes, and loop behavior by providing different input items and modifying node options.
 
 /// note | Pinning execution data
 When performing manual executions, you can use [data pinning](/data/data-pinning.md) to "pin" or "freeze" the output data of a node. You can optionally [edit the pinned data](/data/data-editing.md) as well.
 
-On future runs, instead of executing the pinned node, n8n will substitute the pinned data and continue following the flow logic. This allows you to iterate without operating on variable data or repeating queries to external services. Production executions ignore all pinned data.
+On future runs, instead of executing the pinned node, Agentic Workflow Studio will substitute the pinned data and continue following the flow logic. This allows you to iterate without operating on variable data or repeating queries to external services. Production executions ignore all pinned data.
 ///
 
 ## Partial executions
@@ -39,7 +39,7 @@ To work around this, connect a trigger node to the workflow with the node you're
 
 > Please execute the whole workflow, rather than just the node. (Existing execution data is too large.)
 
-This error can appear when performing partial executions on workflows with large numbers of branches. Partial executions involve sending data and workflow logic to the n8n backend in a way that isn't required for full executions. This error occurs when your workflow exceeds the maximum size allowed for these messages.
+This error can appear when performing partial executions on workflows with large numbers of branches. Partial executions involve sending data and workflow logic to the Agentic Workflow Studio backend in a way that isn't required for full executions. This error occurs when your workflow exceeds the maximum size allowed for these messages.
 
 To work around this, consider using the [limit node](/integrations/builtin/core-nodes/n8n-nodes-base.limit.md) to limit node output while running partial executions. Once the workflow is running as intended, you can disable or delete the limit node before enabling production execution.
 
@@ -47,6 +47,6 @@ To work around this, consider using the [limit node](/integrations/builtin/core-
 
 Production executions occur when a triggering event or schedule automatically runs a workflow.
 
-To configure production executions, you must attach a [trigger node](/glossary.md#trigger-node-n8n) (any trigger other than the [manual trigger](/integrations/builtin/core-nodes/n8n-nodes-base.manualworkflowtrigger.md) works) and switch workflow's toggle to **Active**. Once activated, the workflow automatically executes whenever the trigger condition occurs.
+To configure production executions, you must attach a [trigger node](/glossary.md#trigger-node-Agentic Workflow Studio) (any trigger other than the [manual trigger](/integrations/builtin/core-nodes/n8n-nodes-base.manualworkflowtrigger.md) works) and switch workflow's toggle to **Active**. Once activated, the workflow automatically executes whenever the trigger condition occurs.
 
 The execution flow for production executions doesn't display in the Editor tab of the workflow as with manual executions. Instead, you can see executions in the workflow's **Executions** tab according to your [workflow settings](/workflows/settings.md). From there, you can explore and troubleshoot problems using the [debug in editor feature](/workflows/executions/debug.md).

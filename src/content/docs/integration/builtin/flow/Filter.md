@@ -1,6 +1,6 @@
 ---
 title: Filter
-description: How to use the Filter node.
+description: "Explore Filter for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

@@ -1,87 +1,90 @@
 ---
 title: Settings
-description: Manage settings for an individual workflow.
+description: "Learn how to use Agentic Workflow Studio browser extension for settings with intelligent workflow creation."
 sidebar:
     order: 7
 ---
 
-Workflow settings allow you to customize workflow behavior for individual workflows.
+Workflow settings allow you to customize browser workflow behavior for individual workflows, including browser-specific execution options and security considerations.
 
 ## Access workflow settings
 
 To open the settings:
 
-1. Open your workflow.
-1. Select the **three dots icon** <span class="n8n-inline-image">![three dots icon](/_images/common-icons/three-dots-horizontal.png){.off-glb}</span> in the upper-right corner.
-3. Select **Settings**. n8n opens the **Workflow settings** modal.
-
-## Access workflow settings
-
-To open the settings:
-
-1. Open your workflow.
-1. Select the **three dots icon** <span class="n8n-inline-image">![three dots icon](/_images/common-icons/three-dots-horizontal.png){.off-glb}</span> in the upper-right corner.
-3. Select **Settings**. n8n opens the **Workflow settings** modal.
+1. Open your workflow in the browser extension interface.
+2. Select the **settings icon** or **three dots menu** in the workflow toolbar.
+3. Select **Settings**. Agentic Workflow Studio opens the **Workflow settings** panel.
 
 ## Available settings
 
-The following settings are available:
+The following settings are available for browser workflows:
 
 ### Execution order
 
 Choose the execution order for multi-branch workflows:
 
-**v1 (recommended)** executes each branch in turn, completing one branch before starting another. n8n orders the branches based on their position on the [canvas](/glossary.md#canvas-n8n), from topmost to bottommost. If two branches are at the same height, the leftmost branch executes first.
+**Sequential (recommended)** executes each branch in turn, completing one branch before starting another. Agentic Workflow Studio orders the branches based on their position on the canvas, from topmost to bottommost. If two branches are at the same height, the leftmost branch executes first.
 
-**v0 (legacy)** executes the first node of each branch, then the second node of each branch, and so on.
+This is particularly important for browser workflows where one branch might modify page content that affects subsequent branches.
+
+### Browser permissions
+
+Configure browser-specific permissions and security settings:
+
+**Page access level**: Determine which pages the workflow can access
+**Cross-origin requests**: Enable or restrict access to external domains
+**Local storage access**: Allow workflows to read/write browser storage
 
 ### Error Workflow (to notify when this one errors)
 
-Select a workflow to trigger if the current workflow fails. See [error workflows](/flow-logic/error-handling.md) for more details.
+Select a workflow to trigger if the current workflow fails due to browser-specific issues like page loading problems or security restrictions. See [error workflows](/usage/key-concepts/flow-logic/error-handling/) for more details.
 
-<!-- vale from-write-good.Passive = NO -->
-### This workflow can be called by
-<!-- vale from-write-good.Passive = YES -->
+### Browser context handling
 
-Choose which other workflows can call this workflow.
+Configure how the workflow handles browser context changes:
+
+**Page navigation**: How to handle when the user navigates to a different page during execution
+**Tab switching**: Behavior when the user switches browser tabs
+**Page refresh**: How to handle page reloads during workflow execution
 
 ### Timezone
 
-Sets the timezone for this workflow. The timezone setting is important for the Schedule Trigger node.
+Sets the timezone for this workflow, which affects time-based operations and data processing. Browser workflows use the browser's local timezone by default.
 
-You can set your n8n instance's timezone to configure the default timezone workflows use:
+### Performance settings
 
-* [Set a n8n Cloud instance timezone](/manage-cloud/set-cloud-timezone.md)
-* [Configure the timezone for self-hosted instances](/hosting/configuration/environment-variables/timezone-localization.md)
+Configure browser-specific performance options:
 
-If you don't configure the workflow or instance timezone, n8n defaults to the EDT (New York) timezone.
+**Memory usage**: Set limits for workflow memory consumption
+**Execution timeout**: Maximum time allowed for workflow execution
+**Concurrent operations**: Limit simultaneous browser operations to prevent performance issues
 
-### Save failed production executions
+### Save failed executions
 
-Whether n8n should save failed executions for active workflows.
+Whether to save failed executions for debugging browser-specific issues like page loading problems or security violations.
 
-### Save successful production executions
+### Save successful executions
 
-Whether n8n should save successful executions for active workflows.
+Whether to save successful executions for analysis and workflow optimization.
 
 ### Save manual executions
 
-Whether n8n should save executions for workflows started by the user in the editor.
+Whether to save executions for workflows started manually by the user in the browser extension.
 
 ### Save execution progress
 
-Whether n8n should save execution data for each node.
-
-If set to **Save**, the workflow resumes from where it stopped in case of an error. This may increase latency.
+Whether to save execution data for each node, which helps with debugging browser workflows but may impact performance.
 
 ### Timeout Workflow
 
-Whether n8n should cancel the current workflow execution after a certain amount of time elapses.
+Whether to cancel the current workflow execution after a certain amount of time elapses. This is particularly important for browser workflows that may encounter slow-loading pages or network issues.
 
-When enabled, the **Timeout After** option appears. Here, you can set the time (in hours, minutes, and seconds) after which the workflow should timeout. For n8n Cloud users, n8n enforces a maximum available timeout for each plan.
+When enabled, you can set the timeout duration. Browser workflows typically need shorter timeouts due to user interaction expectations.
 
-### Estimated time saved
+### Privacy and security
 
-An estimate of the number of minutes each of execution of this workflow saves you.
+Configure privacy settings for browser workflows:
 
-Setting this lets n8n calculate the amount of time saved for [insights](/insights.md).
+**Data retention**: How long to keep extracted browser data
+**Sensitive data handling**: Special handling for passwords, personal information, or financial data
+**Local storage**: Whether to store workflow data locally in the browser

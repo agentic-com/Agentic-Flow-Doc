@@ -1,6 +1,6 @@
 ---
 title: Web LLM
-description: How to use the Web LLM node.
+description: "Explore Web LLM for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

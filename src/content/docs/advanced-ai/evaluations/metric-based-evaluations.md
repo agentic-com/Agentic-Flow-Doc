@@ -1,6 +1,6 @@
 ---
 title: Metric-based evaluations
-description: Use metric-based evaluations to measure, score, and improve production AI-based workflow performance over time.
+description: "Create advanced AI workflows using Metric-based evaluations with LangChain integration and intelligent processing."
 ---
 
 /// note | Available on Pro and Enterprise plans
@@ -39,7 +39,7 @@ The following steps use the same support ticket classification workflow from the
 
 ### 2. Add metrics to workflow
 
-Metrics are dimensions used to score the output of your workflow. They often compare the actual workflow output with a reference output. It's common to use AI to calculate metrics, although it's sometimes possible to just use code. In n8n, metrics are always numbers.
+Metrics are dimensions used to score the output of your workflow. They often compare the actual workflow output with a reference output. It's common to use AI to calculate metrics, although it's sometimes possible to just use code. In Agentic Workflow Studio, metrics are always numbers.
 
 You need to add the logic to calculate the metrics for your workflow, at a point after it has produced the outputs. You can add any reference outputs your metric uses as a column in your dataset. This makes sure they it will be available in the workflow, since they will be output by the evaluation trigger.
 
@@ -55,7 +55,7 @@ You can also add custom metrics. Just calculate the metrics within the workflow 
 
 For example:
 
-* [RAG document relevance](https://n8n.io/workflows/4273): when working with a vector database, whether the documents retrieved are relevant to the question.
+* [RAG document relevance](https://Agentic Workflow Studiontic Workflow Studio/workflows/4273): when working with a vector database, whether the documents retrieved are relevant to the question.
 
 Calculating metrics can add latency and cost, so you may only want to do it when running an evaluation and avoid it when making a production execution. You can do this by putting the metric logic after a ['check if evaluating' operation](/integrations/builtin/core-nodes/n8n-nodes-base.evaluation.md#check-if-evaluating).
 

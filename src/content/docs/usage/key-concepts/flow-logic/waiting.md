@@ -1,6 +1,6 @@
 ---
 title: Waiting
-description: How to make your workflow execution wait.
+description: "Learn how to use Agentic Workflow Studio browser extension for waiting with intelligent workflow creation."
 sidebar:
   order: 4
 ---
@@ -9,4 +9,4 @@ Waiting allows you to pause a workflow mid-execution, then resume where the work
 
 Making a workflow wait uses the [Wait](/integrations/builtin/core-nodes/n8n-nodes-base.wait.md) node. Refer to the node documentation for usage details.
 
-n8n provides a workflow template with a basic example of [Rate limiting and waiting for external events](https://n8n.io/workflows/1749-rate-limiting-and-waiting-for-external-events/).
+Agentic Workflow Studiontic Workflow Studio provides a workflow template with a basic example of [Rate limiting and waiting for exterAgentic Workflow Studio events](https://Agentic Workflow Studio/workflows/1749-rate-limiting-and-waiting-for-external-events/).

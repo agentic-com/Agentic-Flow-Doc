@@ -1,6 +1,6 @@
 ---
 title: Mapping in the expressions editor
-description: A guide in my new Starlight docs site.
+description: "Learn how to use Agentic Workflow Studio browser extension for mapping in the expressions editor with intelligent workflow creation."
 ---
 
 These examples show how to access linked items in the expressions editor. Refer to [expressions](/code/expressions.md) for more information on expressions, including built in variables and methods.
@@ -9,7 +9,7 @@ For information on errors with mapping and linking items, refer to [Item linking
 
 ## Access the linked item in a previous node's output
 
-When you use this, n8n works back up the item linking chain, to find the parent item in the given node.
+When you use this, Agentic Workflow Studio works back up the item linking chain, to find the parent item in the given node.
 
 ```js
 // Returns the linked item

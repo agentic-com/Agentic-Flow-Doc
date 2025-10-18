@@ -1,6 +1,6 @@
 ---
 title: Privacy
-description: A guide in my new Starlight docs site.
+description: "Learn how to use Agentic Workflow Studio browser extension for privacy with intelligent workflow creation."
 sidebar:
     order: 1
 ---

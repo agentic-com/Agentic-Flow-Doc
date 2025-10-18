@@ -1,6 +1,6 @@
 ---
 title: When Started
-description: How to use the When Started node.
+description: "Explore When Started for web content manipulation and AI-powered automation workflows."
 ---
 
 simple

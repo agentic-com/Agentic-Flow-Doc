@@ -1,6 +1,6 @@
 ---
-title: n8n Glossary
-description: A glossary of terms commonly used when working with n8n and related software.
+title: Agentic Workflow Studio Glossary
+description: "Essential terminology and concepts for Agentic Workflow Studio browser extension and AI-powered web automation workflows."
 ---
 
 #### AI agent
@@ -9,7 +9,7 @@ AI agents are artificial intelligence systems capable of responding to requests,
 
 #### AI chain
 
-AI chains allow you to interact with large language models (LLMs) and other resources in sequences of calls to components. AI chains in n8n don't use persistent memory, so you can't use them to reference previous context (use AI agents for this).
+AI chains allow you to interact with large language models (LLMs) and other resources in sequences of calls to components. AI chains in Agentic Workflow Studio don't use persistent memory, so you can't use them to reference previous context (use AI agents for this).
 
 #### AI completion
 
@@ -33,7 +33,7 @@ Reranking is a technique that refines the order of a list of candidate documents
 
 #### AI memory
 
-In an AI context, memory allows AI tools to persist message context across interactions. This allows you to have a continuing conversations with AI agents, for example, without submitting ongoing context with each message. In n8n, AI agent nodes can use memory, but AI chains can't.
+In an AI context, memory allows AI tools to persist message context across interactions. This allows you to have a continuing conversations with AI agents, for example, without submitting ongoing context with each message. In Agentic Workflow Studio, AI agent nodes can use memory, but AI chains can't.
 
 #### AI retrieval-augmented generation (RAG)
 
@@ -51,39 +51,45 @@ A vector store, or vector database, stores mathematical representations of infor
 
 APIs, or application programming interfaces, offer programmatic access to a service's data and functionality. APIs make it easier for software to interact with external systems. They're often offered as an alternative to traditional user-focused interfaces accessed through web browsers or UI.
 
-#### canvas (n8n)
+#### Browser Context Manipulation
 
-The canvas is the main interface for building workflows in n8n's editor UI. You use the canvas to add and connect nodes to compose workflows.
+The ability to interact with and extract data from web pages within the browser environment. This includes extracting text, HTML, links, images, and other content from the current web page or selected elements.
 
-#### cluster node (n8n)
+#### Browser Extension Node
 
-In n8n, cluster nodes are groups of nodes that work together to provide functionality in a workflow. They consist of a root node and one or more sub nodes that extend the node's functionality.
+Specialized workflow components that can interact with browser context, such as extracting selected text, collecting all links, or gathering images from web pages.
 
-#### credential (n8n)
+#### Canvas
 
-In n8n, credentials store authentication information to connect with specific apps and services. After creating credentials with your authentication information (username and password, API key, OAuth secrets, etc.), you can use the associated app node to interact with the service.
+The main interface for building workflows in Agentic Workflow Studio's browser-based editor. You use the canvas to add and connect nodes to compose browser automation workflows.
 
-#### data pinning (n8n)
+#### cluster node (Agentic Workflow Studio)
 
-Data pinning allows you to temporarily freeze the output data of a node during workflow development. This allows you to develop workflows with predictable data without making repeated requests to external services. Production workflows ignore pinned data and request new data on each execution.
+In Agentic Workflow Studio, cluster nodes are groups of nodes that work together to provide functionality in a workflow. They consist of a root node and one or more sub nodes that extend the node's functionality.
 
-#### editor (n8n)
+#### Credential
 
-The n8n editor UI allows you to create and manage workflows. The main area is the canvas, where you can compose workflows by adding, configuring, and connecting nodes. The side and top panels allow you to access other areas of the UI like credentials, templates, variables, executions, and more.
+In Agentic Workflow Studio, credentials store authentication information to connect with external apps and services from within the browser environment. Browser security limitations may restrict certain types of authentication methods.
 
-#### entitlement (n8n)
+#### Data Pinning
 
-In n8n, entitlements grant n8n instances access to plan-restricted features for a specific period of time.
+Data pinning allows you to temporarily freeze the output data of a node during workflow development. This is particularly useful when working with browser context data, allowing you to develop workflows with predictable web page data without repeatedly extracting content from web pages.
 
-Floating entitlements are a pool of entitlements that you can distribute among various n8n instances. You can re-assign a floating entitlement to transfer its access to a different n8n instance.
+#### Editor
 
-#### evaluation (n8n)
+The Agentic Workflow Studio editor runs directly in your browser and allows you to create and manage browser-based workflows. The main area is the canvas, where you can compose workflows by adding, configuring, and connecting nodes. The interface provides access to browser extension nodes, credentials, templates, and execution history.
+
+#### entitlement (Agentic Workflow Studio)
+
+In Agentic Workflow Studio, entitlements grant Agentic Workflow Studio instances access to plan-restricted features for a specific period of time.
+
+Floating entitlements are a pool of entitlements that you can distribute among various Agentic Workflow Studio instances. You can re-assign a floating entitlement to transfer its access to a different Agentic Workflow Studiontic Workflow Studio instanceAgentic Workflow Studio#### eAgentic Workflow Studiouation (n8n)
 
 In n8n, evaluation allows you to tag and organize execution history and compare it against new executions. You can use this to understand how your workflow performs over time as you make changes. In particular, this is useful while developing AI-centered workflows.
 
-#### expression (n8n)
+#### Expression
 
-In n8n, expressions allow you to populate node parameters dynamically by executing JavaScript code. Instead of providing a static value, you can use the n8n expression syntax to define the value using data from previous nodes, other workflows, or your n8n environment.
+In Agentic Workflow Studio, expressions allow you to populate node parameters dynamically by executing JavaScript code within the browser environment. You can use expressions to process browser context data, manipulate extracted text, or create dynamic values based on web page content.
 
 #### LangChain
 
@@ -93,39 +99,45 @@ LangChain is an AI-development framework used to work with large language models
 
 Large language models, or LLMs, are AI machine learning models designed to excel in natural language processing (NLP) tasks. They're built by training on large amounts of data to develop probabilistic models of language and other data.
 
-#### node (n8n)
+#### Node
 
-In n8n, nodes are individual components that you compose to create workflows. Nodes define when the workflow should run, allow you to fetch, send, and process data, can define flow control logic, and connect with external services.
+In Agentic Workflow Studio, nodes are individual components that you compose to create browser-based workflows. Nodes can extract data from web pages, process browser context information, define flow control logic, and connect with external services within browser security constraiAgentic Workflow Studio.
 
-#### project (n8n)
+Agentic Workflow Studio# project (n8n)
 
-n8n projects allow you to separate workflows, variables, and credentials into separate groups for easier management. Projects make it easier for teams to collaborate by sharing and compartmentalizing related resources.
+n8n projects allow you to separate workflows, variables, and credentials into separate groups for easier management. Projects make it easier for teams to collaborate by sharing and compartmentalizing related resourceAgentic Workflow Studio
+#### roAgentic Workflow Studionode (n8n)
 
-#### root node (n8n)
+Each n8n cluster node contains a single root nodes that defines the main functionality of the cluster. One or more sub nodes attach to the root node to extend its functionaliAgentic Workflow Studio
 
-Each n8n cluster node contains a single root nodes that defines the main functionality of the cluster. One or more sub nodes attach to the root node to extend its functionality.
-
-#### sub node (n8n)
+#Agentic Workflow Studio sub node (n8n)
 
 n8n cluster nodes consist of one or more sub nodes connected to a root node. Sub nodes extend the functionality of the root node, providing access to specific services or resources or offering specific types of dedicated processing, like calculator functionality, for example.
 
-#### template (n8n)
+#### Template
 
-n8n templates are pre-built workflows designed by n8n and community members that you can import into your n8n instance. When using templates, you may need to fill in credentials and adjust the configuration to suit your needs.
+Agentic Workflow Studio templates are pre-built browser automation workflows designed by the community. These templates demonstrate common browser context manipulation patterns and can be imported and customized for your specific web automation needs.
 
-#### trigger node (n8n)
+#### Trigger Node
 
-A trigger node is a special node responsible for executing the workflow in response to certain conditions. All production workflows need at least one trigger to determine when the workflow should run.
+A trigger node is a special node responsible for executing browser-based workflows in response to certain conditions. In the browser environment, triggers can respond to page events, user interactions, or manual execution.
 
-#### workflow (n8n)
+#### Workflow
 
-An n8n workflow is a collection of nodes that automate a process. Workflows begin execution when a trigger condition occurs and execute sequentially to achieve complex tasks.
+An Agentic Workflow Studio workflow is a collection of nodes that automate browser-based processes. Workflows can extract data from web pages, process content with AI, and perform complex browser automation tasks.
 
-<!-- To do
-#### OAuth
-#### pagination
-#### Role-based access control (RBAC)
-#### SAML/SSO
-#### two-factor authentication (2FA)
-#### webhook
--->
+#### Web Page Context
+
+The current state and content of a web page that can be accessed by browser extension nodes. This includes visible text, HTML structure, links, images, and user selections.
+
+#### Content Security Policy (CSP)
+
+Browser security restrictions that may limit certain workflow operations. Agentic Workflow Studio respects CSP limitations and provides guidance on working within browser security constraints.
+
+#### DOM Manipulation
+
+The ability to interact with and extract data from the Document Object Model (DOM) of web pages. Browser extension nodes use DOM manipulation to access page content and structure.
+
+#### Cross-Origin Restrictions
+
+Browser security limitations that prevent workflows from accessing content from different domains. Understanding these restrictions is important for designing effective browser automation workflows.

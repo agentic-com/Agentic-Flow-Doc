@@ -1,38 +1,50 @@
 ---
 title: Create a workflow
-description: Create, run, and activate workflows.
+description: "Learn how to use Agentic Workflow Studio browser extension for create a workflow with intelligent workflow creation."
 sidebar:
     order: 1
 ---
 
-A [workflow](/glossary.md#workflow-n8n) is a collection of nodes connected together to automate a process. You build workflows on the [workflow canvas](/glossary.md#canvas-n8n).
+A workflow is a collection of nodes connected together to automate browser-based processes. You build workflows on the workflow canvas within the Agentic Workflow Studio browser extension interface.
 
 ## Create a workflow
 
-1. Select the <span class="n8n-inline-image">![universal create resource icon](/_images/common-icons/universal-resource-button.png){.off-glb}</span> **button** in the upper-left corner of the side menu. Select workflow.
-2. If your n8n instance supports projects, you'll also need to choose whether to create the workflow inside your **personal space** or a specific **project** you have access to. If you're using the community version, you'll always create workflows inside your personal space.
-3. Get started by adding a trigger node: select **Add first step...**
+1. Click the Agentic Workflow Studio icon in your browser toolbar to open the extension.
+2. In the workflow builder interface, select **Create New Workflow** or **Start from Scratch**.
+3. The workflow canvas will open, ready for you to build your browser automation workflow.
+4. Get started by adding your first node: select **Add first step...**
 
-Or:
+You can create workflows that:
+* Extract data from the current web page
+* Process content with AI
+* Interact with multiple browser tabs
+* Combine browser data with external services
 
-1. Select the  <span class="n8n-inline-image">![universal create resource icon](/_images/common-icons/universal-resource-button.png){.off-glb}</span> **create** button in the upper-right corner from either the **Overview** page or a specific **project**. Select workflow.
-2. If you're doing this from the **Overview** page, you'll create the workflow inside your personal space. If you're doing this from inside a project, you'll create the workflow inside that specific project.
-3. Get started by adding a trigger node: select **Add first step...**
-
-If it's your first time building a workflow, you may want to use the [quickstart guides](/try-it-out/index.md) to quickly try out n8n features.
+If it's your first time building a browser workflow, you may want to use the [quickstart guides](/usage/getting-started/quick-starts/) to quickly try out browser extension features.
 
 ## Run workflows manually
 
-You may need to run your workflow manually when building and testing, or if your workflow doesn't have a trigger node. 
+You can run browser workflows manually at any time, which is particularly useful when building and testing workflows that interact with web page content.
 
-To run manually, select **Execute Workflow**.
+To run manually:
+1. Navigate to the web page you want to work with
+2. Open the Agentic Workflow Studio extension
+3. Select your workflow and click **Execute Workflow**
 
-## Run workflows automatically
+The workflow will process the current page content and execute all connected nodes.
 
-All new workflows are inactive by default.
+## Browser workflow execution
 
-You need to activate workflows that start with a trigger node or Webhook node so that they can run automatically. When a workflow is inactive, you must run it manually.
+Browser workflows execute within the context of the current web page and browser environment. This means:
 
-To activate or deactivate your workflow, open your workflow and toggle **Inactive** / **Active**.
+* **Page context**: Workflows have access to the current page's content, including text, links, images, and HTML structure
+* **Real-time data**: Each execution works with the current state of the web page
+* **Browser limitations**: Workflows respect browser security policies and cross-origin restrictions
+* **Performance**: Complex workflows may be limited by browser memory and processing capabilities
 
-Once a workflow is active, it runs whenever its trigger conditions are met.
+## Workflow persistence
+
+Browser workflows are saved locally within the extension and persist across browser sessions. You can:
+* Create multiple workflows for different automation tasks
+* Switch between workflows based on the type of web page you're working with
+* Export and import workflows to share with others or backup your automation
