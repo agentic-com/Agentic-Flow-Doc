@@ -19,5 +19,5 @@ export const collections = {
 		schema: autoSidebarSchema(),
 	}),
 	// Optional: the i18n collection is used to translate UI in multilingual sites
-	i18n: defineCollection({ loader: i18nLoader(), schema: i18nSchema() }),
+	//i18n: defineCollection({ loader: i18nLoader(), schema: i18nSchema() }),
 };

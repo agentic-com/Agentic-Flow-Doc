@@ -98,12 +98,16 @@ export default defineConfig({
             icon: "puzzle",
             items: [
               {
-                label: "Guides",
-                autogenerate: { directory: "integration/guides", collapsed: true },
+                label: "Built-in nodes",
+                autogenerate: { directory: "integration/builtin", collapsed: true },
               },
               {
-                label: "Reference",
-                autogenerate: { directory: "integration/reference", collapsed: true },
+                label: "Applications",
+                autogenerate: { directory: "integration/applications", collapsed: true },
+              },
+              {
+                label: "Extension specific",
+                autogenerate: { directory: "integration/extension", collapsed: true },
               },
             ],
           },
@@ -114,7 +118,24 @@ export default defineConfig({
             },
             link: "/advanced-ai/",
             icon: "seti:illustrator",
-            items: [],
+            items: [
+              {
+                label: "Basics",
+                autogenerate: { directory: "advanced-ai/basics", collapsed: true },
+              },
+              {
+                label: "LangChain",
+                autogenerate: { directory: "advanced-ai/langchain", collapsed: true },
+              },
+              {
+                label: "Evaluations",
+                autogenerate: { directory: "advanced-ai/evaluations", collapsed: true },
+              },
+              {
+                label: "Examples",
+                autogenerate: { directory: "advanced-ai/examples", collapsed: true },
+              },
+            ],
           },
           {
             label: {

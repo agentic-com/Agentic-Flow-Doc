@@ -1,10 +1,11 @@
 ---
 title: Publishing
-description: A guide in my new Starlight docs site.
+description: Publish your workflows to the marketplace.
+sidebar:
+    order: 6
 ---
 
-Guides lead a user through a specific task they want to accomplish, often with a sequence of steps.
-Writing a good guide requires thinking about what your users are trying to do.
+Publish your workflows to the marketplace to share them with other users.
 
 ## Further reading
 

@@ -4,4 +4,5 @@ sidebar:
   order: 0
 video:
   type: collection
+  collection: beginner-flow
 ---
