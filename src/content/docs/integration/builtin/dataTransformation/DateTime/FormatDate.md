@@ -20,6 +20,50 @@ Format Date serves as a versatile date formatting tool that allows you to:
 - Create custom date format patterns for specific requirements
 - Support batch formatting of multiple dates simultaneously
 
+```mermaid
+flowchart LR
+    A[Input Date] --> B[Format Date Node]
+    B --> C{Format Type}
+    
+    C -->|Preset| D[ISO/RFC/Timestamp]
+    C -->|Custom| E[Pattern Tokens]
+    C -->|Localized| F[Locale-Specific]
+    
+    D --> G[Apply Timezone]
+    E --> G
+    F --> G
+    
+    G --> H[Generate Output]
+    H --> I[Formatted Date String]
+    
+    subgraph "Format Options"
+        J[YYYY-MM-DD]
+        K[MMM D, YYYY]
+        L[dddd, MMMM D]
+        M[h:mm A]
+    end
+    
+    subgraph "Localization"
+        N[en-US: January]
+        O[fr-FR: janvier]
+        P[es-ES: enero]
+        Q[de-DE: Januar]
+    end
+    
+    E --> J
+    E --> K
+    E --> L
+    E --> M
+    
+    F --> N
+    F --> O
+    F --> P
+    F --> Q
+    
+    style B fill:#fff3e0
+    style I fill:#e8f5e8
+```
+
 ### Key Features
 
 - **Multi-Format Support**: Convert between ISO, RFC, custom patterns, and locale-specific formats
@@ -195,10 +239,25 @@ Format Date serves as a versatile date formatting tool that allows you to:
 ```
 
 **Workflow Integration**:
-```
-Data Collection → Format Date → Report Generator
-      ↓              ↓              ↓
-   raw_dates    formatted_dates   final_report
+
+```mermaid
+sequenceDiagram
+    participant DC as Data Collection
+    participant FD as Format Date
+    participant RG as Report Generator
+    participant L as Localization
+    
+    DC->>FD: Send raw timestamps
+    FD->>L: Apply locale settings
+    L->>FD: Return localized patterns
+    FD->>FD: Apply timezone conversion
+    FD->>FD: Format using patterns
+    FD->>RG: Send formatted dates
+    RG->>RG: Generate final report
+    
+    Note over DC,FD: Raw ISO timestamps<br/>from data sources
+    Note over FD,L: Locale-specific<br/>formatting rules
+    Note over FD,RG: User-friendly<br/>formatted dates
 ```
 
 **Complete Example**:

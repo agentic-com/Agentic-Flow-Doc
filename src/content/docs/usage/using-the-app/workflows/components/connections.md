@@ -9,6 +9,31 @@ sidebar:
 
 A connection establishes a link between nodes to route data through the workflow. A connection between two nodes passes data from one node's output to another node's input.
 
+## Connection Data Flow
+
+```mermaid
+graph LR
+    A[Node A] -->|Output Data| B[Connection]
+    B -->|Input Data| C[Node B]
+    
+    A --> A1[Processing]
+    A1 --> A2[Generate Output]
+    A2 --> B
+    
+    B --> C1[Receive Input]
+    C1 --> C2[Process Data]
+    C2 --> C3[Generate Output]
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+```
+
+**Data Flow Process:**
+1. **Source Node** processes data and generates output
+2. **Connection** transfers data from source to target
+3. **Target Node** receives input and continues processing
+
 ![Example of creating and deleting a connection](/_images/workflows/components/connections/example.gif)
 
 ## Create a connection

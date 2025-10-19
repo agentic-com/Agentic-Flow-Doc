@@ -21,8 +21,35 @@ Extract specific data from a single web page using text and HTML extraction node
 ### Implementation
 
 #### Workflow Structure
-```
-[Navigate] → [GetAllText] → [Filter] → [EditFields] → [Output]
+
+```mermaid
+flowchart LR
+    A[NavigateToLink] --> B[GetAllText Node]
+    B --> C[Filter Node]
+    C --> D[EditFields Node]
+    D --> E[Output Data]
+    
+    A --> A1[Load Target Page]
+    A --> A2[Wait for Content]
+    A --> A3[Handle Timeouts]
+    
+    B --> B1[Extract Text Content]
+    B --> B2[Preserve Structure]
+    B --> B3[Clean Whitespace]
+    
+    C --> C1[Apply Filters]
+    C --> C2[Remove Noise]
+    C --> C3[Validate Content]
+    
+    D --> D1[Extract Patterns]
+    D --> D2[Transform Data]
+    D --> D3[Validate Results]
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#e8f5e8
+    style E fill:#e1f5fe
 ```
 
 #### Step-by-Step Implementation
@@ -89,8 +116,37 @@ Navigate through multiple pages systematically to collect comprehensive datasets
 ### Implementation
 
 #### Workflow Structure
-```
-[GetAllLinks] → [Filter] → [Loop: Navigate + Extract] → [Merge] → [Output]
+
+```mermaid
+graph TD
+    A[GetAllLinks Node] --> B[Filter Links]
+    B --> C{For Each Link}
+    C --> D[NavigateToLink]
+    D --> E[Extract Data]
+    E --> F[Store Results]
+    F --> C
+    C --> G[All Links Processed]
+    G --> H[Merge Node]
+    H --> I[Aggregate Results]
+    I --> J[Output Dataset]
+    
+    subgraph "Parallel Processing"
+        D1[Navigate Link 1] --> E1[Extract Data 1]
+        D2[Navigate Link 2] --> E2[Extract Data 2]
+        D3[Navigate Link 3] --> E3[Extract Data 3]
+    end
+    
+    C --> D1
+    C --> D2
+    C --> D3
+    
+    E1 --> H
+    E2 --> H
+    E3 --> H
+    
+    style A fill:#e3f2fd
+    style H fill:#fff3e0
+    style J fill:#e8f5e8
 ```
 
 #### Step-by-Step Implementation
@@ -162,8 +218,27 @@ Handle JavaScript-rendered content and single-page applications that load data d
 ### Implementation
 
 #### Workflow Structure
-```
-[Navigate] → [Wait] → [GetAllHTML] → [ProcessHTML] → [Extract Data]
+
+```mermaid
+sequenceDiagram
+    participant W as Workflow
+    participant N as NavigateToLink
+    participant Wait as WaitNode
+    participant H as GetAllHTML
+    participant P as ProcessHTML
+    participant JS as JavaScript Engine
+    
+    W->>N: Navigate to SPA URL
+    N->>JS: Execute page JavaScript
+    JS->>JS: Render dynamic content
+    N->>Wait: Wait for content indicators
+    Wait->>Wait: Monitor for data-loaded attributes
+    Wait->>H: Content ready signal
+    H->>P: Extract rendered HTML
+    P->>W: Return processed data
+    
+    Note over JS: Dynamic content loading:<br/>AJAX requests, DOM updates,<br/>infinite scroll handling
+    Note over Wait: Smart waiting:<br/>element detection,<br/>timeout handling,<br/>loading indicators
 ```
 
 #### Step-by-Step Implementation
@@ -228,8 +303,34 @@ Access and scrape content that requires user authentication or session managemen
 ### Implementation
 
 #### Workflow Structure
-```
-[Login] → [Session Management] → [Navigate] → [Extract] → [Logout]
+
+```mermaid
+stateDiagram-v2
+    [*] --> Authentication: Start Workflow
+    Authentication --> SessionActive: Login Success
+    Authentication --> AuthFailed: Login Failed
+    AuthFailed --> [*]: Terminate
+    
+    SessionActive --> Navigation: Session Validated
+    Navigation --> DataExtraction: Page Loaded
+    DataExtraction --> Navigation: More Pages
+    DataExtraction --> SessionMaintenance: Check Session
+    SessionMaintenance --> SessionActive: Session Valid
+    SessionMaintenance --> Authentication: Session Expired
+    DataExtraction --> Cleanup: Extraction Complete
+    Cleanup --> [*]: Logout & Exit
+    
+    note right of Authentication
+        FormFiller for login
+        Credential management
+        2FA handling
+    end note
+    
+    note right of SessionMaintenance
+        Session validation
+        Token refresh
+        Cookie management
+    end note
 ```
 
 #### Step-by-Step Implementation

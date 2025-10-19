@@ -23,6 +23,27 @@ By the end of this tutorial, you'll be able to:
 
 ## Step 1: Download and Install the Extension
 
+```mermaid
+flowchart TD
+    A[Open Browser] --> B{Choose Browser}
+    B -->|Chrome| C[Chrome Web Store]
+    B -->|Firefox| D[Firefox Add-ons]
+    B -->|Edge| E[Edge Add-ons]
+    
+    C --> F[Search 'Agentic Workflow Studio']
+    D --> F
+    E --> F
+    
+    F --> G[Click 'Add to Browser']
+    G --> H[Review Permissions]
+    H --> I[Confirm Installation]
+    I --> J[Verify Icon in Toolbar]
+    
+    style A fill:#e1f5fe
+    style I fill:#e8f5e8
+    style J fill:#fff3e0
+```
+
 ### For Chrome Users
 
 1. **Open Chrome Web Store**

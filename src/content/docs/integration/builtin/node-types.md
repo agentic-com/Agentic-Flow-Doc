@@ -1,21 +1,21 @@
 ---
 title: Built-in Node Types
-description: Comprehensive guide to all built-in node categories in Agentic Flow, with selection guidance and use case examples.
+description: Comprehensive guide to all built-in node categories in `Agentic Workflow Studio`, with selection guidance and use case examples.
 ---
 
 ## Overview
 
-This document provides a comprehensive guide to the different types of nodes available in Agentic Flow, helping you understand their categories, purposes, and when to use each type in your workflows.
+This document provides a comprehensive guide to the different types of nodes available in `Agentic Workflow Studio`, helping you understand their categories, purposes, and when to use each type in your workflows.
 
 # Built-in Node Types
 
-Agentic Flow provides a comprehensive library of built-in nodes organized into six main categories. Each category serves specific workflow automation needs, from basic web interactions to advanced AI-powered processing.
+`Agentic Workflow Studio` provides a comprehensive library of built-in nodes organized into six main categories. Each category serves specific workflow automation needs, from basic web interactions to advanced AI-powered processing.
 
 ## Prerequisites
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 

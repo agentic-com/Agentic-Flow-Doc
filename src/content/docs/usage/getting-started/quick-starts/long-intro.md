@@ -5,7 +5,26 @@ description: "Complete installation and setup guide for Agentic Workflow Studio 
 
 # Your first comprehensive workflow
 
-This guide will show you how to construct a comprehensive workflow in Agentic Workflow Studio, explaining key concepts along the way. You will:
+This guide will show you how to construct a comprehensive workflow in Agentic Workflow Studio, explaining key concepts along the way.
+
+## Comprehensive Workflow Overview
+
+```mermaid
+graph TB
+    A[Web Page] --> B[Get All Links]
+    B --> C[Get All Text]
+    C --> D[Edit Fields - Analysis]
+    D --> E[If Node - Logic]
+    E -->|Long Article| F[Detailed Report]
+    E -->|Short Article| G[Quick Summary]
+    
+    style A fill:#e3f2fd
+    style E fill:#e8f5e8
+    style F fill:#fff3e0
+    style G fill:#f3e5f5
+```
+
+You will:
 
 * Create a browser-based workflow from scratch
 * Understand key concepts and skills, including:
@@ -58,6 +77,22 @@ Next, let's process this text data:
 4. Select **Execute Step** to process the text and see the analysis results.
 
 ## Step four: Add logic with the If node
+
+```mermaid
+graph TB
+    A[Text Analysis Data] --> B[If Node]
+    B --> C{Word Count > 500?}
+    C -->|True| D[Long Article Branch]
+    C -->|False| E[Short Article Branch]
+    
+    D --> F[Detailed Analysis]
+    E --> G[Quick Summary]
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style F fill:#fff3e0
+    style G fill:#f3e5f5
+```
 
 Agentic Workflow Studio supports complex logic in workflows. In this tutorial we will use the [If node](/integration/builtin/flow/IFNode/) to create two branches based on the content analysis. We'll create logic that handles long articles differently from short ones.
 

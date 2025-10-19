@@ -20,6 +20,39 @@ Pick Field serves as a data filtering and selection tool that allows you to:
 - Handle nested object structures and array elements
 - Apply conditional field selection based on data content
 
+```mermaid
+graph TD
+    A[Large Input Object] --> B[Pick Field Node]
+    B --> C{Selection Mode}
+    
+    C -->|Include Mode| D[Select Specified Fields]
+    C -->|Exclude Mode| E[Remove Specified Fields]
+    
+    D --> F[Field Path Resolution]
+    E --> F
+    
+    F --> G[Nested Object Handling]
+    G --> H[Array Element Processing]
+    H --> I[Structure Preservation]
+    I --> J[Filtered Output Object]
+    
+    subgraph "Field Selection"
+        K[user.name]
+        L[profile.email]
+        M[posts[*].title]
+        N[metadata.tags]
+    end
+    
+    B --> K
+    B --> L
+    B --> M
+    B --> N
+    
+    style B fill:#fff3e0
+    style J fill:#e8f5e8
+    style A fill:#ffebee
+```
+
 ### Key Features
 
 - **Selective Field Extraction**: Choose exactly which fields to include or exclude
@@ -213,10 +246,38 @@ Pick Field serves as a data filtering and selection tool that allows you to:
 ```
 
 **Workflow Integration**:
-```
-API Request → Pick Field → Price Calculator
-     ↓           ↓            ↓
-  full_data  selected_data  processed_data
+
+```mermaid
+flowchart LR
+    A[API Request] --> B[Full Product Data]
+    B --> C[Pick Field Node]
+    C --> D[Selected Data]
+    D --> E[Price Calculator]
+    E --> F[Processed Results]
+    
+    subgraph "Data Reduction"
+        G[Complete API Response<br/>~50KB]
+        H[Selected Fields<br/>~5KB]
+    end
+    
+    B --> G
+    D --> H
+    
+    subgraph "Selected Fields"
+        I[product.name]
+        J[product.price]
+        K[reviews[*].rating]
+        L[inventory.stock_count]
+    end
+    
+    C --> I
+    C --> J
+    C --> K
+    C --> L
+    
+    style C fill:#fff3e0
+    style H fill:#e8f5e8
+    style G fill:#ffebee
 ```
 
 **Complete Example**:

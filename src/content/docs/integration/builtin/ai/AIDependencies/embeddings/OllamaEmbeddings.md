@@ -11,13 +11,45 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 
 ## Overview
 
 The Ollama Embeddings node provides local embedding generation capabilities using Ollama's embedding models. This node enables semantic search, document similarity, and vector operations directly within browser workflows without requiring external API services, ensuring privacy and reducing latency for embedding-based AI operations.
+
+### Embedding Generation Process
+
+```mermaid
+sequenceDiagram
+    participant Input as Text Input
+    participant Embeddings as Ollama Embeddings Node
+    participant Server as Ollama Server
+    participant Model as Embedding Model
+    participant Cache as Embedding Cache
+    participant Output as Vector Output
+    
+    Input->>Embeddings: Text content for embedding
+    Embeddings->>Cache: Check for cached embedding
+    
+    alt Cache Hit
+        Cache->>Embeddings: Return cached vector
+    else Cache Miss
+        Embeddings->>Server: Request embedding generation
+        Server->>Model: Process text with embedding model
+        Model->>Model: Generate vector representation
+        Model->>Server: Return embedding vector
+        Server->>Embeddings: Embedding response
+        Embeddings->>Cache: Store for future use
+    end
+    
+    Embeddings->>Embeddings: Normalize vector (optional)
+    Embeddings->>Output: Formatted embedding + metadata
+    
+    Note over Server,Model: Local embedding generation
+    Note over Cache: Performance optimization
+```
 
 ### Purpose and Functionality
 

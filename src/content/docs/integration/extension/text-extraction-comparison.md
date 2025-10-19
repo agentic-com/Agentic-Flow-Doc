@@ -9,6 +9,34 @@ This guide helps you choose the most appropriate text extraction node for your s
 
 Agentic Workflow Studio provides several nodes for extracting text content from web pages, each optimized for different scenarios and use cases.
 
+```mermaid
+graph TB
+    subgraph "User-Driven Extraction"
+        A[Get Selected Text<br/>User selects specific content]
+        B[Get HTML of Selected Text<br/>User selects with formatting]
+    end
+    
+    subgraph "Automated Extraction"
+        C[Get All Text<br/>Complete page text content]
+        D[Get All HTML<br/>Complete page with structure]
+    end
+    
+    subgraph "Content Types"
+        E[Clean Text<br/>AI Processing, Analysis]
+        F[Structured Content<br/>Formatting, Links, Metadata]
+    end
+    
+    A --> E
+    C --> E
+    B --> F
+    D --> F
+    
+    style A fill:#e1f5fe
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+```
+
 | Node | Purpose | User Interaction | Content Scope | Best For |
 |------|---------|------------------|---------------|----------|
 | **[Get Selected Text](/integration/extension/GetSelectedText/)** | Extract user-selected text | Required | User selection only | Focused analysis, user-driven workflows |
@@ -130,26 +158,36 @@ Get Selected Text → Language Detection → Translation API → Insert Text
 
 Use this decision tree to quickly choose the right text extraction approach:
 
-```
-Start: What type of content extraction do you need?
-
-├── User-Selected Content
-│   ├── Need Formatting/Structure?
-│   │   ├── Yes → Get HTML of Selected Text
-│   │   └── No → Get Selected Text
-│   └── Automated Processing?
-│       └── No → Get Selected Text (requires user interaction)
-│
-└── Complete Page Content
-    ├── Need Formatting/Structure?
-    │   ├── Yes → Get All HTML
-    │   └── No → Get All Text
-    ├── Performance Critical?
-    │   ├── Yes → Get All Text (smaller, faster)
-    │   └── No → Either option works
-    └── AI Processing?
-        ├── Yes → Get All Text (cleaner for AI)
-        └── No → Get All HTML (more complete)
+```mermaid
+flowchart TD
+    A[Content Extraction Need] --> B{Content Scope?}
+    
+    B -->|User-Selected| C[User-Selected Content]
+    B -->|Complete Page| D[Complete Page Content]
+    
+    C --> E{Need Formatting/Structure?}
+    E -->|Yes| F[Get HTML of Selected Text]
+    E -->|No| G[Get Selected Text]
+    
+    D --> H{Need Formatting/Structure?}
+    H -->|Yes| I[Get All HTML]
+    H -->|No| J[Get All Text]
+    
+    D --> K{Performance Critical?}
+    K -->|Yes| L[Get All Text<br/>Smaller, Faster]
+    K -->|No| M[Either Option Works]
+    
+    D --> N{AI Processing?}
+    N -->|Yes| O[Get All Text<br/>Cleaner for AI]
+    N -->|No| P[Get All HTML<br/>More Complete]
+    
+    style A fill:#e1f5fe
+    style F fill:#e8f5e8
+    style G fill:#e8f5e8
+    style I fill:#fff3e0
+    style J fill:#fff3e0
+    style L fill:#f3e5f5
+    style O fill:#f3e5f5
 ```
 
 ## Performance Comparison

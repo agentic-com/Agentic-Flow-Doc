@@ -5,6 +5,44 @@ description: "Systematic approach to diagnosing and resolving common workflow is
 
 This guide provides a systematic approach to troubleshooting workflow issues using decision trees, diagnostic steps, and proven solutions for common problems.
 
+## Troubleshooting Process Overview
+
+```mermaid
+graph TB
+    A[Issue Detected] --> B[Quick Diagnostic Checklist]
+    B --> C{Issue Resolved?}
+    C -->|Yes| D[Document Solution]
+    C -->|No| E[Identify Issue Category]
+    
+    E --> F[Workflow Execution]
+    E --> G[Data Extraction]
+    E --> H[Node Connection]
+    E --> I[Performance]
+    E --> J[Security/Permissions]
+    
+    F --> K[Decision Tree 1]
+    G --> L[Decision Tree 2]
+    H --> M[Decision Tree 3]
+    I --> N[Decision Tree 4]
+    J --> O[Decision Tree 5]
+    
+    K --> P[Apply Solution]
+    L --> P
+    M --> P
+    N --> P
+    O --> P
+    
+    P --> Q[Test & Validate]
+    Q --> R{Issue Resolved?}
+    R -->|Yes| D
+    R -->|No| S[Escalate to Community]
+    
+    style A fill:#ffebee
+    style E fill:#e3f2fd
+    style P fill:#e8f5e8
+    style D fill:#f3e5f5
+```
+
 ## Quick Diagnostic Checklist
 
 Before diving into detailed troubleshooting, run through this quick checklist:
@@ -57,30 +95,30 @@ Browser security restrictions or permission problems
 
 ### Decision Tree 1: Workflow Won't Start
 
-```
-Workflow doesn't execute when triggered?
-│
-├── Manual Trigger Workflow
-│   ├── Button/trigger not responding?
-│   │   ├── Check browser console for JavaScript errors
-│   │   ├── Verify extension permissions are granted
-│   │   └── Try refreshing page and re-triggering
-│   │
-│   └── Workflow starts but immediately fails?
-│       ├── Check first node configuration
-│       ├── Verify required input data is available
-│       └── Review node parameter validation
-│
-└── Automated/Scheduled Workflow
-    ├── Timer/trigger not firing?
-    │   ├── Verify trigger configuration and timing
-    │   ├── Check if browser tab is active/visible
-    │   └── Confirm no browser sleep/suspend mode
-    │
-    └── Trigger fires but workflow fails?
-        ├── Check workflow permissions for automated execution
-        ├── Verify all required data sources are accessible
-        └── Review error logs for specific failure points
+```mermaid
+flowchart TD
+    A[Workflow Won't Execute] --> B{Trigger Type?}
+    
+    B -->|Manual| C[Manual Trigger Issues]
+    B -->|Automated| D[Automated Trigger Issues]
+    
+    C --> E{Button Responding?}
+    E -->|No| F[Check Console Errors<br/>Verify Permissions<br/>Refresh Page]
+    E -->|Yes| G[Workflow Starts Then Fails]
+    
+    G --> H[Check First Node Config<br/>Verify Input Data<br/>Review Parameters]
+    
+    D --> I{Timer Firing?}
+    I -->|No| J[Check Trigger Config<br/>Verify Tab Active<br/>Check Browser Sleep]
+    I -->|Yes| K[Trigger Fires But Fails]
+    
+    K --> L[Check Execution Permissions<br/>Verify Data Sources<br/>Review Error Logs]
+    
+    style A fill:#ffebee
+    style F fill:#e8f5e8
+    style H fill:#e8f5e8
+    style J fill:#e8f5e8
+    style L fill:#e8f5e8
 ```
 
 **Common Solutions**:
@@ -94,49 +132,40 @@ Workflow doesn't execute when triggered?
 
 ### Decision Tree 2: Data Extraction Failures
 
-```
-Cannot extract data from web page?
-│
-├── Text Extraction Issues
-│   ├── No text extracted?
-│   │   ├── Page content loaded?
-│   │   │   ├── Wait for page load completion
-│   │   │   └── Check for dynamic content loading
-│   │   │
-│   │   ├── Content in iframes?
-│   │   │   ├── Cannot access cross-origin iframes
-│   │   │   └── Try extracting from parent page
-│   │   │
-│   │   └── Content security policy blocking?
-│   │       ├── Check browser console for CSP errors
-│   │       └── Try alternative extraction method
-│   │
-│   └── Partial/incorrect text extracted?
-│       ├── Check CSS selectors and filters
-│       ├── Verify text visibility and accessibility
-│       └── Review extraction parameters
-│
-├── HTML Extraction Issues
-│   ├── HTML structure missing?
-│   │   ├── Verify DOM elements exist
-│   │   ├── Check for shadow DOM content
-│   │   └── Ensure proper element selection
-│   │
-│   └── Malformed HTML output?
-│       ├── Enable HTML sanitization
-│       ├── Check for dynamic content changes
-│       └── Verify extraction timing
-│
-└── Selection-Based Extraction
-    ├── No selection detected?
-    │   ├── Ensure user has selected text
-    │   ├── Check selection API compatibility
-    │   └── Verify selection timing
-    │
-    └── Selection lost during processing?
-        ├── Process selection immediately
-        ├── Store selection before processing
-        └── Handle selection change events
+```mermaid
+flowchart TD
+    A[Cannot Extract Data] --> B{Extraction Type?}
+    
+    B -->|Text| C[Text Extraction Issues]
+    B -->|HTML| D[HTML Extraction Issues]
+    B -->|Selection| E[Selection-Based Issues]
+    
+    C --> F{Text Extracted?}
+    F -->|None| G{Page Loaded?}
+    F -->|Partial| H[Check Selectors<br/>Verify Visibility<br/>Review Parameters]
+    
+    G -->|No| I[Wait for Load<br/>Check Dynamic Content]
+    G -->|Yes| J{In iframes?}
+    
+    J -->|Yes| K[Cannot Access Cross-Origin<br/>Try Parent Page]
+    J -->|No| L[Check CSP Errors<br/>Try Alternative Method]
+    
+    D --> M{HTML Structure?}
+    M -->|Missing| N[Verify DOM Elements<br/>Check Shadow DOM<br/>Fix Selection]
+    M -->|Malformed| O[Enable Sanitization<br/>Check Dynamic Changes<br/>Fix Timing]
+    
+    E --> P{Selection Detected?}
+    P -->|No| Q[Ensure Text Selected<br/>Check API Compatibility<br/>Verify Timing]
+    P -->|Lost| R[Process Immediately<br/>Store Selection<br/>Handle Events]
+    
+    style A fill:#ffebee
+    style I fill:#e8f5e8
+    style K fill:#fff3e0
+    style L fill:#fff3e0
+    style N fill:#e8f5e8
+    style O fill:#e8f5e8
+    style Q fill:#e8f5e8
+    style R fill:#e8f5e8
 ```
 
 **Diagnostic Commands**:
@@ -157,41 +186,39 @@ console.log(document.querySelectorAll("your-selector").length);
 
 ### Decision Tree 3: Node Connection Problems
 
-```
-Data not flowing between nodes correctly?
-│
-├── Connection Configuration
-│   ├── Nodes not connected?
-│   │   ├── Verify visual connections in workflow editor
-│   │   ├── Check connection endpoints match
-│   │   └── Ensure proper data flow direction
-│   │
-│   └── Wrong data type/format?
-│       ├── Check output format of source node
-│       ├── Verify input requirements of target node
-│       └── Add data transformation if needed
-│
-├── Data Validation Issues
-│   ├── Empty data passed?
-│   │   ├── Check source node execution success
-│   │   ├── Verify data extraction completed
-│   │   └── Add validation node to check data
-│   │
-│   └── Invalid data format?
-│       ├── Review data structure requirements
-│       ├── Add data formatting/cleaning steps
-│       └── Implement error handling for invalid data
-│
-└── Execution Order Problems
-    ├── Nodes executing out of order?
-    │   ├── Check dependency relationships
-    │   ├── Verify execution flow logic
-    │   └── Add explicit wait/sync points
-    │
-    └── Parallel execution conflicts?
-        ├── Identify resource conflicts
-        ├── Serialize conflicting operations
-        └── Implement proper synchronization
+```mermaid
+flowchart TD
+    A[Data Not Flowing Between Nodes] --> B{Connection Type?}
+    
+    B -->|Visual Connection| C[Connection Configuration Issues]
+    B -->|Data Format| D[Data Validation Issues]
+    B -->|Timing| E[Execution Order Problems]
+    
+    C --> F{Nodes Connected?}
+    F -->|No| G[Verify Visual Connections<br/>Check Endpoints<br/>Fix Data Flow Direction]
+    F -->|Yes| H{Data Type Match?}
+    
+    H -->|No| I[Check Output Format<br/>Verify Input Requirements<br/>Add Data Transformation]
+    H -->|Yes| J[Connection OK - Check Data]
+    
+    D --> K{Data Exists?}
+    K -->|No| L[Check Source Node Success<br/>Verify Extraction Completed<br/>Add Validation Node]
+    K -->|Yes| M{Valid Format?}
+    
+    M -->|No| N[Review Data Structure<br/>Add Formatting Steps<br/>Implement Error Handling]
+    M -->|Yes| O[Data OK - Check Execution]
+    
+    E --> P{Execution Order?}
+    P -->|Wrong| Q[Check Dependencies<br/>Verify Flow Logic<br/>Add Wait/Sync Points]
+    P -->|Conflicts| R[Identify Resource Conflicts<br/>Serialize Operations<br/>Implement Synchronization]
+    
+    style A fill:#ffebee
+    style G fill:#e8f5e8
+    style I fill:#e8f5e8
+    style L fill:#e8f5e8
+    style N fill:#e8f5e8
+    style Q fill:#e8f5e8
+    style R fill:#e8f5e8
 ```
 
 **Data Flow Validation**:
@@ -211,41 +238,33 @@ Debug Node Configuration:
 
 ### Decision Tree 4: Performance Problems
 
-```
-Workflow running slowly or timing out?
-│
-├── Extraction Performance
-│   ├── Large page content?
-│   │   ├── Set maximum content length limits
-│   │   ├── Use CSS selectors to exclude unnecessary content
-│   │   └── Process content in smaller chunks
-│   │
-│   └── Multiple extractions?
-│       ├── Combine extractions where possible
-│       ├── Cache extracted content for reuse
-│       └── Parallelize independent extractions
-│
-├── Processing Performance
-│   ├── AI/API calls slow?
-│   │   ├── Optimize prompts and requests
-│   │   ├── Implement caching for repeated requests
-│   │   └── Use faster/smaller AI models
-│   │
-│   └── Data transformation slow?
-│       ├── Optimize data processing algorithms
-│       ├── Reduce data size before processing
-│       └── Use more efficient data structures
-│
-└── Browser Resource Issues
-    ├── Memory usage high?
-    │   ├── Clear unused data and references
-    │   ├── Process data in smaller batches
-    │   └── Implement garbage collection points
-    │
-    └── CPU usage high?
-        ├── Add delays between intensive operations
-        ├── Use web workers for heavy processing
-        └── Optimize algorithms and reduce complexity
+```mermaid
+flowchart TD
+    A[Workflow Running Slowly] --> B{Performance Issue Type?}
+    
+    B -->|Extraction| C[Extraction Performance Issues]
+    B -->|Processing| D[Processing Performance Issues]
+    B -->|Resources| E[Browser Resource Issues]
+    
+    C --> F{Content Size?}
+    F -->|Large| G[Set Content Limits<br/>Use CSS Selectors<br/>Process in Chunks]
+    F -->|Multiple| H[Combine Extractions<br/>Cache Content<br/>Parallelize Operations]
+    
+    D --> I{Operation Type?}
+    I -->|AI/API| J[Optimize Prompts<br/>Implement Caching<br/>Use Faster Models]
+    I -->|Data Transform| K[Optimize Algorithms<br/>Reduce Data Size<br/>Efficient Structures]
+    
+    E --> L{Resource Type?}
+    L -->|Memory| M[Clear Unused Data<br/>Process in Batches<br/>Garbage Collection]
+    L -->|CPU| N[Add Delays<br/>Use Web Workers<br/>Optimize Algorithms]
+    
+    style A fill:#ffebee
+    style G fill:#e8f5e8
+    style H fill:#e8f5e8
+    style J fill:#e8f5e8
+    style K fill:#e8f5e8
+    style M fill:#e8f5e8
+    style N fill:#e8f5e8
 ```
 
 **Performance Monitoring**:
@@ -269,41 +288,33 @@ performance.measure("extraction-time", "extraction-start", "extraction-end");
 
 ### Decision Tree 5: Security & Permission Issues
 
-```
-Security or permission errors?
-│
-├── Browser Permission Issues
-│   ├── "Permission denied" errors?
-│   │   ├── Check extension permissions in browser settings
-│   │   ├── Verify activeTab permission is granted
-│   │   └── Ensure scripting permission is available
-│   │
-│   └── Cross-origin access blocked?
-│       ├── Cannot access different domain content
-│       ├── Use alternative data sources
-│       └── Implement server-side proxy if needed
-│
-├── Content Security Policy (CSP)
-│   ├── Script injection blocked?
-│   │   ├── Check browser console for CSP violations
-│   │   ├── Use alternative extraction methods
-│   │   └── Request CSP exceptions if possible
-│   │
-│   └── External resource access blocked?
-│       ├── Use local processing instead of external APIs
-│       ├── Implement CSP-compliant alternatives
-│       └── Cache resources locally when possible
-│
-└── Site-Specific Restrictions
-    ├── Anti-automation measures?
-    │   ├── Add delays to mimic human behavior
-    │   ├── Rotate user agents and headers
-    │   └── Respect robots.txt and rate limits
-    │
-    └── Login/authentication required?
-        ├── Handle authentication flows
-        ├── Manage session cookies properly
-        └── Implement credential management
+```mermaid
+flowchart TD
+    A[Security/Permission Errors] --> B{Error Type?}
+    
+    B -->|Browser Permissions| C[Browser Permission Issues]
+    B -->|Content Security| D[Content Security Policy]
+    B -->|Site Restrictions| E[Site-Specific Restrictions]
+    
+    C --> F{Permission Type?}
+    F -->|Denied| G[Check Extension Permissions<br/>Verify activeTab Permission<br/>Ensure Scripting Permission]
+    F -->|Cross-Origin| H[Cannot Access Different Domain<br/>Use Alternative Sources<br/>Implement Proxy]
+    
+    D --> I{CSP Issue Type?}
+    I -->|Script Injection| J[Check Console for CSP<br/>Use Alternative Methods<br/>Request CSP Exceptions]
+    I -->|External Resources| K[Use Local Processing<br/>CSP-Compliant Alternatives<br/>Cache Resources Locally]
+    
+    E --> L{Restriction Type?}
+    L -->|Anti-Automation| M[Add Human-Like Delays<br/>Rotate User Agents<br/>Respect Rate Limits]
+    L -->|Authentication| N[Handle Auth Flows<br/>Manage Session Cookies<br/>Implement Credentials]
+    
+    style A fill:#ffebee
+    style G fill:#e8f5e8
+    style H fill:#fff3e0
+    style J fill:#e8f5e8
+    style K fill:#e8f5e8
+    style M fill:#e8f5e8
+    style N fill:#e8f5e8
 ```
 
 **Permission Verification**:

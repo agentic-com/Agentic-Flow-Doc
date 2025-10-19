@@ -11,6 +11,38 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 The Local Knowledge node provides a comprehensive vector database solution that runs entirely within the browser environment. Using SurrealDB embedded with IndexedDB, this node creates powerful, searchable knowledge bases that enable semantic search, document retrieval, and RAG (Retrieval-Augmented Generation) capabilities without external database dependencies.
 
+### Vector Database Architecture
+
+```mermaid
+sequenceDiagram
+    participant Input as Document Input
+    participant Knowledge as Local Knowledge Node
+    participant SurrealDB as SurrealDB Embedded
+    participant IndexedDB as IndexedDB Storage
+    participant Vector as Vector Search Engine
+    participant Output as Search Results
+    
+    Input->>Knowledge: Document + embedding data
+    
+    alt Insert Operation
+        Knowledge->>SurrealDB: Store document + metadata
+        SurrealDB->>IndexedDB: Persist to browser storage
+        Knowledge->>Vector: Index embedding vector
+        Vector->>IndexedDB: Store vector index
+    else Search Operation
+        Knowledge->>Vector: Query with embedding
+        Vector->>Vector: Calculate similarity scores
+        Vector->>SurrealDB: Retrieve matching documents
+        SurrealDB->>IndexedDB: Fetch document data
+        IndexedDB->>Knowledge: Return results + metadata
+    end
+    
+    Knowledge->>Output: Formatted search results
+    
+    Note over SurrealDB,IndexedDB: Embedded database in browser
+    Note over Vector: Semantic similarity search
+```
+
 ### Purpose and Functionality
 
 The Local Knowledge node enables:

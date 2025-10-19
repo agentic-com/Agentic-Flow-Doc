@@ -9,6 +9,26 @@ sidebar:
 
 This quickstart gets you started using Agentic Workflow Studio as quickly as possible. It allows you to try out the browser-based workflow builder and introduces two key features: browser context manipulation and workflow creation. It doesn't include detailed explanations or explore concepts in-depth.
 
+## Quick Start Process
+
+```mermaid
+graph TB
+    A[Install Extension] --> B[Open Workflow Builder]
+    B --> C[Create First Workflow]
+    C --> D[Add Get Selected Text Node]
+    D --> E[Select Text on Web Page]
+    E --> F[Execute Workflow]
+    F --> G[Add Edit Fields Node]
+    G --> H[Configure Text Processing]
+    H --> I[Run Complete Workflow]
+    I --> J[Success! First Workflow Complete]
+    
+    style A fill:#e3f2fd
+    style C fill:#e8f5e8
+    style F fill:#fff3e0
+    style J fill:#f3e5f5
+```
+
 In this tutorial, you will:
 
 * Install the browser extension
@@ -28,6 +48,25 @@ Agentic Workflow Studio runs directly in your browser, making it easy to get sta
 
 2. Once installed, you'll see the Agentic Workflow Studio icon in your browser toolbar.
 3. Click the icon to open the workflow builder interface.
+
+## Workflow Structure
+
+```mermaid
+graph LR
+    A[Web Page] --> B[Get Selected Text]
+    B --> C[Edit Fields]
+    C --> D[Processed Output]
+    
+    A --> A1[User Selects Text]
+    B --> B1[Extract Selected Text]
+    C --> C1[Format & Process]
+    D --> D1[Final Result]
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+```
 
 This workflow will:
 

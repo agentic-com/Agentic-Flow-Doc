@@ -11,13 +11,44 @@ tags: ["Workflow Logic", "Conditional Processing", "Data Flow", "Error Handling"
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 
 ## Overview
 
 The Filter node enables selective data processing by filtering arrays and collections based on specified conditions. It's essential for data quality control, content curation, and performance optimization in browser automation workflows. The node supports complex filtering logic, multiple criteria, and efficient processing of large datasets extracted from web pages.
+
+```mermaid
+flowchart LR
+    A[Input Array] --> B[Filter Node]
+    B --> C{Apply Filter Conditions}
+    
+    C --> D[Item 1]
+    C --> E[Item 2]
+    C --> F[Item 3]
+    C --> G[Item N]
+    
+    D --> H{Meets Criteria?}
+    E --> I{Meets Criteria?}
+    F --> J{Meets Criteria?}
+    G --> K{Meets Criteria?}
+    
+    H -->|Yes| L[Include in Output]
+    H -->|No| M[Exclude from Output]
+    I -->|Yes| L
+    I -->|No| M
+    J -->|Yes| L
+    J -->|No| M
+    K -->|Yes| L
+    K -->|No| M
+    
+    L --> N[Filtered Array]
+    
+    style B fill:#fff3e0
+    style C fill:#e3f2fd
+    style N fill:#e8f5e8
+```
 
 ### Purpose and Functionality
 
@@ -257,10 +288,36 @@ The Filter node operates on data and doesn't require specific browser permission
 
 **Workflow Integration**:
 
-```
-User Context → Permission Check → Filter Node → Available Actions
-                                      ↓
-                                 Filtered Actions
+```mermaid
+graph TD
+    A[User Context] --> B[Permission Check]
+    B --> C[Available Actions Array]
+    C --> D[Filter Node]
+    
+    D --> E{Filter Logic}
+    E --> F[Check User Permission]
+    E --> G[Check Browser Support]
+    E --> H[Check Feature Flags]
+    
+    F --> I{Has Permission?}
+    G --> J{Browser Compatible?}
+    H --> K{Feature Enabled?}
+    
+    I -->|Yes| L[Include Action]
+    I -->|No| M[Exclude Action]
+    J -->|Yes| L
+    J -->|No| M
+    K -->|Yes| L
+    K -->|No| M
+    
+    L --> N[Filtered Actions]
+    M --> O[Excluded Actions]
+    
+    N --> P[Display to User]
+    
+    style D fill:#fff3e0
+    style E fill:#e3f2fd
+    style N fill:#e8f5e8
 ```
 
 **Complete Example**:

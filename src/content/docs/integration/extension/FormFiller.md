@@ -9,6 +9,47 @@ The **Form Filler** node provides comprehensive automated form filling capabilit
 
 This node analyzes web forms, maps data to appropriate fields, and automatically fills them with provided information. It supports various input types, handles validation, manages form state, and can simulate human-like interaction patterns for enhanced compatibility.
 
+```mermaid
+flowchart TD
+    A[Form Data Input] --> B[Analyze Form Structure]
+    B --> C[Detect Field Types]
+    C --> D[Map Data to Fields]
+    
+    D --> E{Fill Method?}
+    E -->|Intelligent| F[Auto-detect Field Purpose]
+    E -->|Mapped| G[Use Custom Field Mapping]
+    E -->|Sequential| H[Fill Fields in Order]
+    
+    F --> I[Fill Fields with Validation]
+    G --> I
+    H --> I
+    
+    I --> J{Simulate Human Input?}
+    J -->|Yes| K[Add Typing Delays & Variations]
+    J -->|No| L[Direct Value Assignment]
+    
+    K --> M[Validate Field Content]
+    L --> M
+    
+    M --> N{Validation Passed?}
+    N -->|No| O[Retry with Corrections]
+    N -->|Yes| P[Continue to Next Field]
+    
+    O --> M
+    P --> Q{More Fields?}
+    Q -->|Yes| I
+    Q -->|No| R[Form Completion]
+    
+    R --> S{Submit Form?}
+    S -->|Yes| T[Submit with Validation]
+    S -->|No| U[Return Results]
+    
+    style A fill:#e1f5fe
+    style I fill:#e8f5e8
+    style M fill:#fff3e0
+    style T fill:#f3e5f5
+```
+
 ## Browser API Details
 
 The node leverages multiple browser APIs for comprehensive form automation:

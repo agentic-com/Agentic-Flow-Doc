@@ -11,7 +11,7 @@ tags: ["Data Processing", "Field Manipulation", "Type Conversion", "Validation",
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 

@@ -11,6 +11,29 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 The Ollama node provides seamless integration with locally-hosted Large Language Models through Ollama, enabling privacy-focused AI processing directly within browser workflows. This node eliminates the need for external API services while providing access to powerful language models running on your local machine.
 
+### Local LLM Integration Architecture
+
+```mermaid
+sequenceDiagram
+    participant Browser as Browser Workflow
+    participant Ollama as Ollama Node
+    participant Server as Ollama Server
+    participant Model as Local LLM Model
+    participant Storage as Local Storage
+    
+    Browser->>Ollama: Input text + prompt
+    Ollama->>Server: HTTP request to localhost:11434
+    Server->>Model: Load model (if not cached)
+    Model->>Model: Process prompt with local AI
+    Model->>Server: Generated response
+    Server->>Ollama: JSON response with text
+    Ollama->>Storage: Cache response (optional)
+    Ollama->>Browser: Formatted AI response + metadata
+    
+    Note over Server,Model: Complete local processing
+    Note over Storage: Privacy-focused caching
+```
+
 ### Purpose and Functionality
 
 The Ollama node enables:

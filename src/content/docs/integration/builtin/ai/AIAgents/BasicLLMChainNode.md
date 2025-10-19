@@ -11,13 +11,34 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 
 ## Overview
 
 The Basic LLM Chain node provides a straightforward interface for integrating Large Language Models (LLMs) into your browser-based workflows. This node serves as the foundation for AI-powered text processing, content generation, and intelligent automation tasks that leverage the power of modern language models directly within web contexts.
+
+### Data Flow Architecture
+
+```mermaid
+sequenceDiagram
+    participant User as User Input
+    participant Node as Basic LLM Chain
+    participant LLM as Language Model
+    participant Output as Response Output
+    
+    User->>Node: Input text + prompt template
+    Node->>Node: Process variables & format prompt
+    Node->>LLM: Send formatted prompt
+    LLM->>LLM: Generate response
+    LLM->>Node: Return AI response
+    Node->>Node: Format output & add metadata
+    Node->>Output: Structured response data
+    
+    Note over Node,LLM: Secure HTTPS connection
+    Note over Node: Error handling & retry logic
+```
 
 ### Purpose and Functionality
 
@@ -192,7 +213,24 @@ The Basic LLM Chain node creates a direct connection between your workflow data 
 }
 ```
 
-**Step-by-Step Process**:
+**Step-by-Step Process**
+
+```mermaid
+flowchart TD
+    A[Web Content Extraction] --> B[Basic LLM Chain Node]
+    B --> C{Process Content}
+    C --> D[Format Prompt with Variables]
+    D --> E[Send to LLM Provider]
+    E --> F[AI Processing]
+    F --> G[Generate Summary]
+    G --> H[Add Metadata & Formatting]
+    H --> I[Return Structured Response]
+    
+    style B fill:#e1f5fe
+    style F fill:#f3e5f5
+    style I fill:#e8f5e8
+```
+
 1. Web content is extracted using a content extraction node
 2. Content is passed to the Basic LLM Chain with summarization prompt
 3. AI processes the content and generates a concise summary

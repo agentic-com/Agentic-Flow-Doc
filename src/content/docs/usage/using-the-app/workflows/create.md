@@ -7,6 +7,30 @@ sidebar:
 
 A workflow is a collection of nodes connected together to automate browser-based processes. You build workflows on the workflow canvas within the Agentic Workflow Studio browser extension interface.
 
+## Workflow Creation Process
+
+```mermaid
+graph TB
+    A[Open Browser Extension] --> B[Create New Workflow]
+    B --> C[Workflow Canvas]
+    C --> D[Add First Node]
+    D --> E[Configure Node]
+    E --> F[Add More Nodes]
+    F --> G[Connect Nodes]
+    G --> H[Test Workflow]
+    H --> I[Save & Execute]
+    
+    F --> F1[Browser Extension Nodes]
+    F --> F2[Processing Nodes]
+    F --> F3[AI Nodes]
+    F --> F4[Flow Control Nodes]
+    
+    style A fill:#e3f2fd
+    style C fill:#e8f5e8
+    style H fill:#fff3e0
+    style I fill:#f3e5f5
+```
+
 ## Create a workflow
 
 1. Click the Agentic Workflow Studio icon in your browser toolbar to open the extension.

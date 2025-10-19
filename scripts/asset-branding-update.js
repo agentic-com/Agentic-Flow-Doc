@@ -129,8 +129,8 @@ async function checkAssetBrandingConsistency() {
     const configContent = await fs.readFile("astro.config.mjs", "utf-8");
 
     // Verify title is correct
-    if (configContent.includes('title: "Agentic Flow"')) {
-      console.log('✅ Site title is correctly set to "Agentic Flow"');
+    if (configContent.includes('title: "`Agentic Workflow Studio`"')) {
+      console.log('✅ Site title is correctly set to "`Agentic Workflow Studio`"');
     } else {
       issues.push("Site title may need updating in astro.config.mjs");
     }

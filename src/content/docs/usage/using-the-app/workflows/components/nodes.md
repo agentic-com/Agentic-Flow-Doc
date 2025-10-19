@@ -9,6 +9,42 @@ sidebar:
 
 Nodes are the key building blocks of browser-based workflows. They perform a range of actions, including:
 
+## Node Types and Functions
+
+```mermaid
+graph TB
+    A[Workflow Nodes] --> B[Browser Extension Nodes]
+    A --> C[Built-in Integration Nodes]
+    A --> D[AI Processing Nodes]
+    A --> E[Flow Control Nodes]
+    
+    B --> B1[Extract Text]
+    B --> B2[Extract Links]
+    B --> B3[Extract Images]
+    B --> B4[Extract HTML]
+    
+    C --> C1[HTTP Requests]
+    C --> C2[Data Transformation]
+    C --> C3[File Operations]
+    C --> C4[External APIs]
+    
+    D --> D1[AI Analysis]
+    D --> D2[Content Processing]
+    D --> D3[LLM Integration]
+    D --> D4[RAG Operations]
+    
+    E --> E1[Conditional Logic]
+    E --> E2[Loops & Iteration]
+    E --> E3[Error Handling]
+    E --> E4[Data Merging]
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+    style E fill:#fce4ec
+```
+
 * Extracting data from web pages (text, links, images, HTML)
 * Processing and manipulating browser context data
 * Integrating with external services and APIs

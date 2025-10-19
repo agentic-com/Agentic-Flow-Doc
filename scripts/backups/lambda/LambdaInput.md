@@ -1,6 +1,6 @@
 ---
 title: Lambda Input
-description: "Define input parameters and data flow for modular lambda workflows in Agentic Flow automation."
+description: "Define input parameters and data flow for modular lambda workflows in `Agentic Workflow Studio` automation."
 template: doc
 tags: ["Modular Workflows", "Reusability", "Workflow Triggers", "Event Handling"]
 ---
@@ -401,5 +401,5 @@ The node outputs validated and structured data for use within the lambda workflo
 ---
 
 **Last Updated**: October 19, 2024  
-**Tested With**: Agentic Flow v1.0  
+**Tested With**: `Agentic Workflow Studio` v1.0  
 **Validation Status**: ✅ Code Examples Tested | ✅ Schema Validation Verified | ✅ Integration Tested

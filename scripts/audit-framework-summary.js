@@ -7,7 +7,7 @@ import { join } from 'path';
  * Content Audit Framework Summary
  * 
  * This script provides an overview of the comprehensive content audit and enhancement
- * framework established for the Agentic Flow documentation project.
+ * framework established for the `Agentic Workflow Studio` documentation project.
  */
 
 class AuditFrameworkSummary {
@@ -86,7 +86,7 @@ class AuditFrameworkSummary {
     console.log('🎯 FRAMEWORK OVERVIEW');
     console.log('This comprehensive framework provides automated analysis, quality assessment,');
     console.log('and strategic planning for documentation enhancement across the entire');
-    console.log('Agentic Flow documentation ecosystem.\n');
+    console.log('`Agentic Workflow Studio` documentation ecosystem.\n');
     
     // Current Status
     await this.displayCurrentStatus();

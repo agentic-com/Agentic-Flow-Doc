@@ -9,6 +9,31 @@ The **Get All Text** node captures all visible text content from the current web
 
 This node uses browser APIs to traverse the DOM and extract all text content from visible elements, excluding hidden content, scripts, and styling information. It provides clean, readable text that represents what a user would see on the page.
 
+```mermaid
+sequenceDiagram
+    participant Workflow as Workflow Engine
+    participant Extension as Browser Extension
+    participant ContentScript as Content Script
+    participant DOM as Web Page DOM
+    participant API as Browser APIs
+
+    Workflow->>Extension: Execute GetAllText Node
+    Extension->>ContentScript: Inject Content Script
+    ContentScript->>DOM: Access Document Object
+    ContentScript->>API: Use DOM Traversal APIs
+    
+    loop For Each Element
+        API->>DOM: Query Element Visibility
+        DOM-->>API: Return Visibility State
+        API->>DOM: Extract Text Content
+        DOM-->>API: Return Text Data
+    end
+    
+    ContentScript->>ContentScript: Process & Clean Text
+    ContentScript-->>Extension: Return Extracted Data
+    Extension-->>Workflow: Provide Structured Output
+```
+
 ## Browser API Details
 
 The node leverages the following browser APIs:

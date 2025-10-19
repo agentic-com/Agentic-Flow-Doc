@@ -20,6 +20,43 @@ Download As File serves as a file generation and delivery tool that allows you t
 - Handle large datasets with streaming and chunking capabilities
 - Provide automated file naming and organization
 
+```mermaid
+flowchart TD
+    A[Workflow Data] --> B[Download As File Node]
+    B --> C{File Format}
+    
+    C -->|CSV| D[CSV Generator]
+    C -->|JSON| E[JSON Generator]
+    C -->|TXT| F[Text Generator]
+    C -->|XML| G[XML Generator]
+    C -->|PDF| H[PDF Generator]
+    
+    D --> I[File Processing]
+    E --> I
+    F --> I
+    G --> I
+    H --> I
+    
+    I --> J[Browser Download API]
+    J --> K[User Download]
+    
+    subgraph "File Generation"
+        L[Data Formatting]
+        M[Compression]
+        N[Encoding]
+        O[Naming]
+    end
+    
+    I --> L
+    I --> M
+    I --> N
+    I --> O
+    
+    style B fill:#fff3e0
+    style J fill:#e3f2fd
+    style K fill:#e8f5e8
+```
+
 ### Key Features
 
 - **Multi-Format Support**: Generate files in JSON, CSV, TXT, XML, and binary formats
@@ -240,10 +277,26 @@ Download As File serves as a file generation and delivery tool that allows you t
 ```
 
 **Workflow Integration**:
-```
-Database Query → Data Processing → Download As File
-      ↓              ↓                ↓
-   raw_data    processed_data    downloadable_file
+
+```mermaid
+sequenceDiagram
+    participant DQ as Database Query
+    participant DP as Data Processing
+    participant DF as Download As File
+    participant B as Browser
+    participant U as User
+    
+    DQ->>DP: Send raw data
+    DP->>DP: Process and format data
+    DP->>DF: Send processed data
+    DF->>DF: Generate file content
+    DF->>DF: Apply compression & encoding
+    DF->>B: Create download blob
+    B->>U: Trigger file download
+    
+    Note over DQ,DP: Data preparation<br/>and transformation
+    Note over DF,B: File generation<br/>and browser integration
+    Note over B,U: Automatic download<br/>or save dialog
 ```
 
 ## Examples

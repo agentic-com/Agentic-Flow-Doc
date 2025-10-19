@@ -9,6 +9,19 @@ Evaluation is a crucial technique for checking that your AI workflow is reliable
 
 The foundation of evaluation is running a test dataset through your workflow. This dataset contains multiple test cases. Each test case contains a sample input for your workflow, and often includes the expected output(s) too.
 
+```mermaid
+flowchart LR
+    A[Test Dataset] --> B[AI Workflow]
+    B --> C[Actual Output]
+    D[Expected Output] --> E[Comparison]
+    C --> E
+    E --> F{Evaluation Results}
+    F -->|Pass| G[Reliable Workflow]
+    F -->|Fail| H[Needs Improvement]
+    H --> I[Iterate & Fix]
+    I --> B
+```
+
 Evaluation allows you to:
 
 * **Test your workflow over a range of inputs** so you know how it performs on edge cases
@@ -41,6 +54,31 @@ Once you deploy your workflow, it's easier to build a bigger, more representativ
 Since there are too many test cases to check individually, evaluations measure the quality of the outputs using a metric, a numeric value representing a particular characteristic. This also allows you to track quality changes between runs.
 
 ### Comparison of evaluation types
+
+```mermaid
+graph TB
+    subgraph "Light Evaluation (Pre-deployment)"
+        A1[Small Dataset<br/>5-20 test cases]
+        A2[Hand-generated Examples]
+        A3[Visual Inspection]
+        A4[Large Performance Gains]
+        A5[Optional Expected Outputs]
+    end
+    
+    subgraph "Metric-based Evaluation (Post-deployment)"
+        B1[Large Dataset<br/>100+ test cases]
+        B2[Production Data]
+        B3[Automated Metrics]
+        B4[Small Incremental Gains]
+        B5[Required Expected Outputs]
+    end
+    
+    C[Development Phase] --> A1
+    D[Production Phase] --> B1
+    
+    style A1 fill:#e8f5e8
+    style B1 fill:#fff3e0
+```
 
 |                                                     | Light evaluation (pre-deployment)       | Metric-based evaluation (post-deployment)      |
 |-----------------------------------------------------|-----------------------------------------|------------------------------------------------|

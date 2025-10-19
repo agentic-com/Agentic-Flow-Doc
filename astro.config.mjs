@@ -23,7 +23,7 @@ export default defineConfig({
       autoTheme: true
     }),
     starlight({
-      title: "Agentic Flow",
+      title: "Agentic Workflow Studio",
       description: "Agentic Workflow Studio - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
       logo: {
         src: "./src/assets/logo-beige.png",

@@ -21,8 +21,24 @@ Automatically fill, validate, and submit web forms with intelligent data handlin
 ### Implementation
 
 #### Workflow Structure
-```
-[Navigate] → [FormFiller] → [Validate] → [Submit] → [Confirm] → [Output]
+
+```mermaid
+flowchart LR
+    A[Navigate to Page] --> B[Detect Form]
+    B --> C[FormFiller Node]
+    C --> D[Validate Fields]
+    D --> E[Submit Form]
+    E --> F[Confirm Success]
+    F --> G[Output Results]
+    
+    D --> H{Validation Failed?}
+    H -->|Yes| I[Retry with Corrections]
+    I --> C
+    H -->|No| E
+    
+    style A fill:#e3f2fd
+    style C fill:#fff3e0
+    style G fill:#e8f5e8
 ```
 
 #### Step-by-Step Implementation
@@ -140,8 +156,25 @@ Dynamically insert content into web pages while preserving existing structure an
 ### Implementation
 
 #### Workflow Structure
-```
-[Analyze Page] → [Prepare Content] → [InsertContent] → [Validate] → [Monitor]
+
+```mermaid
+sequenceDiagram
+    participant W as Workflow
+    participant P as Page Analysis
+    participant C as Content Preparation
+    participant I as InsertContent Node
+    participant V as Validation
+    participant M as Monitor
+    
+    W->>P: Analyze page structure
+    P->>C: Identify insertion points
+    C->>I: Prepare sanitized content
+    I->>V: Insert content dynamically
+    V->>M: Validate insertion success
+    M->>W: Monitor for removal/changes
+    
+    Note over I,V: Content injection with<br/>structure preservation
+    Note over V,M: Continuous monitoring<br/>and re-insertion if needed
 ```
 
 #### Step-by-Step Implementation
@@ -224,8 +257,30 @@ Modify existing page content, structure, and styling while maintaining page func
 ### Implementation
 
 #### Workflow Structure
-```
-[Analyze] → [ContentReplacer] → [StyleModification] → [Validate] → [Monitor]
+
+```mermaid
+graph TD
+    A[Analyze Page Content] --> B[ContentReplacer Node]
+    B --> C[Apply Style Modifications]
+    C --> D[Validate Changes]
+    D --> E[Monitor Stability]
+    
+    B --> B1[Replace Text Content]
+    B --> B2[Replace Media Elements]
+    B --> B3[Update Metadata]
+    
+    C --> C1[Apply CSS Changes]
+    C --> C2[Add Accessibility Features]
+    C --> C3[Update Branding]
+    
+    D --> F{Changes Valid?}
+    F -->|No| G[Rollback Changes]
+    F -->|Yes| E
+    G --> A
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style E fill:#e8f5e8
 ```
 
 #### Step-by-Step Implementation
@@ -319,8 +374,32 @@ Simulate complex user interactions and automate multi-step processes that requir
 ### Implementation
 
 #### Workflow Structure
-```
-[Plan Interaction] → [Execute Steps] → [Handle Responses] → [Adapt] → [Complete]
+
+```mermaid
+stateDiagram-v2
+    [*] --> Planning: Start Interactive Automation
+    Planning --> Executing: Plan Complete
+    Executing --> Responding: Action Executed
+    Responding --> Adapting: Response Received
+    Adapting --> Executing: Continue Sequence
+    Adapting --> Completed: All Steps Done
+    Completed --> [*]
+    
+    Executing --> ErrorHandling: Action Failed
+    ErrorHandling --> Adapting: Apply Fallback
+    ErrorHandling --> Completed: Max Retries Reached
+    
+    note right of Planning
+        Analyze interaction sequence
+        Identify target elements
+        Plan adaptive strategies
+    end note
+    
+    note right of Adapting
+        Handle dynamic responses
+        Adjust to page changes
+        Apply fallback strategies
+    end note
 ```
 
 #### Step-by-Step Implementation

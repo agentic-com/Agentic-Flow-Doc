@@ -9,6 +9,40 @@ description: How to get help and support with Agentic Workflow Studio.
 
 Agentic Workflow Studio provides different support options depending on your plan and the nature of your problem.
 
+## Getting Help Process
+
+```mermaid
+graph TB
+    A[Need Help?] --> B{Problem Type?}
+    
+    B -->|Technical Issue| C[Community Forum]
+    B -->|Account/Billing| D[Email Support]
+    B -->|Bug Report| E[GitHub Issues]
+    B -->|Feature Request| F[Community Forum]
+    
+    C --> G[Post in Forum]
+    D --> H[Email help@n8n.io]
+    E --> I[Create GitHub Issue]
+    F --> G
+    
+    G --> J[Include Debug Info]
+    H --> J
+    I --> J
+    
+    J --> K[Add Screenshots/Videos]
+    K --> L[Describe Steps to Reproduce]
+    L --> M[Provide Workflow Files]
+    M --> N[Get Community/Team Response]
+    
+    style A fill:#e3f2fd
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#f3e5f5
+    style N fill:#e0f2f1
+```
+
+Agentic Workflow Studio provides different support options depending on your plan and the nature of your problem.
+
 ### AgentAgentic Workflow StudioWorkflow StudAgentic Workflow Studio provides forum
 
 n8n provides free community support for all n8n users through theAgentic Workflow Studioorum](https://community.n8n.io/).
@@ -25,6 +59,26 @@ n8n offers email support tAgentic Workflow Studiough the [help@n8n.io](mailto:he
 ## What to include in your message
 
 WAgentic Workflow Studio posting to the forum or emailing customer support, youAgentic Workflow Studio get help faster ifAgentic Workflow Studio instance detailsAgentic Workflow Studio your first message about your n8n Agentic Workflow Studio instance the iAbout Agentic Workflow Studiontic Workflow StudiAgentic Workflow Studio experienciAbout Agentic Workflow StudioYour n8n instAgentic Workflow Studio instance
+
+## Debug Information Collection Process
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant P as Left Panel
+    participant H as Help Menu
+    participant M as About Modal
+    participant C as Clipboard
+    
+    U->>P: Open left-side panel
+    U->>H: Select "Help"
+    U->>H: Select "About n8n"
+    H->>M: Open About modal
+    M->>U: Display instance information
+    U->>M: Select "Copy debug information"
+    M->>C: Copy to clipboard
+    U->>C: Paste in forum/email
+```
 
 To collect basic information about your n8n instance:
 

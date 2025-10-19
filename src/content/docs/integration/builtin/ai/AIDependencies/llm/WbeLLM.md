@@ -11,6 +11,37 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 The Web LLM node provides cutting-edge browser-native AI processing using WebLLM technology, enabling Large Language Models to run entirely within the browser environment. This node offers the ultimate in privacy and accessibility by eliminating all external dependencies while providing powerful AI capabilities directly in the user's browser.
 
+### Browser-Native AI Architecture
+
+```mermaid
+sequenceDiagram
+    participant Input as User Input
+    participant WebLLM as Web LLM Node
+    participant WASM as WebAssembly Runtime
+    participant GPU as WebGPU (Optional)
+    participant Storage as Browser Storage
+    participant Output as AI Response
+    
+    Input->>WebLLM: Text prompt + configuration
+    WebLLM->>Storage: Check for cached model
+    Storage->>WebLLM: Model availability status
+    
+    alt Model not cached
+        WebLLM->>Storage: Download & cache model
+        Storage->>WebLLM: Model ready
+    end
+    
+    WebLLM->>WASM: Load model into WebAssembly
+    WASM->>GPU: Utilize GPU acceleration (if available)
+    GPU->>WASM: Enhanced processing power
+    WASM->>WASM: Process prompt with local AI
+    WASM->>WebLLM: Generated response
+    WebLLM->>Output: Formatted response + performance metrics
+    
+    Note over WASM,GPU: Complete browser-native processing
+    Note over Storage: No external dependencies
+```
+
 ### Purpose and Functionality
 
 The Web LLM node enables:

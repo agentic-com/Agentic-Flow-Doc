@@ -11,7 +11,7 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 

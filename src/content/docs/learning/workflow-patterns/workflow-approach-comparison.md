@@ -223,34 +223,69 @@ Best For:
 ### Step 1: Define Requirements
 
 #### Volume and Frequency
-```
-Low Volume (< 10 items/day):
-├── Manual Trigger → User-driven workflows
-└── Simple Sequential → Basic automation
 
-Medium Volume (10-100 items/day):
-├── Semi-Automated → Guided workflows with validation
-└── Batch Processing → Scheduled execution
-
-High Volume (> 100 items/day):
-├── Fully Automated → Minimal user interaction
-└── Parallel Processing → Maximum throughput
+```mermaid
+graph TD
+    A[Define Volume Requirements] --> B{Daily Volume?}
+    
+    B -->|< 10 items| C[Low Volume Approaches]
+    B -->|10-100 items| D[Medium Volume Approaches]
+    B -->|> 100 items| E[High Volume Approaches]
+    
+    C --> C1[Manual Trigger]
+    C --> C2[Simple Sequential]
+    C1 --> C1a[User-driven workflows]
+    C2 --> C2a[Basic automation]
+    
+    D --> D1[Semi-Automated]
+    D --> D2[Batch Processing]
+    D1 --> D1a[Guided workflows with validation]
+    D2 --> D2a[Scheduled execution]
+    
+    E --> E1[Fully Automated]
+    E --> E2[Parallel Processing]
+    E1 --> E1a[Minimal user interaction]
+    E2 --> E2a[Maximum throughput]
+    
+    style A fill:#e3f2fd
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#ffebee
 ```
 
 #### Accuracy Requirements
-```
-High Accuracy Needed:
-├── Manual Oversight → Human validation steps
-├── Conservative Processing → Fail-safe approaches
-└── Validation Workflows → Multi-step verification
 
-Moderate Accuracy Acceptable:
-├── Automated with Monitoring → Exception handling
-└── Confidence Thresholds → AI-based filtering
-
-Speed Over Accuracy:
-├── Fully Automated → Minimal validation
-└── Best-effort Processing → Accept some errors
+```mermaid
+flowchart TD
+    A[Accuracy Requirements] --> B{Accuracy Priority?}
+    
+    B -->|High Accuracy| C[High Accuracy Approaches]
+    B -->|Moderate Accuracy| D[Balanced Approaches]
+    B -->|Speed Priority| E[Speed-Focused Approaches]
+    
+    C --> C1[Manual Oversight]
+    C --> C2[Conservative Processing]
+    C --> C3[Validation Workflows]
+    
+    D --> D1[Automated with Monitoring]
+    D --> D2[Confidence Thresholds]
+    
+    E --> E1[Fully Automated]
+    E --> E2[Best-effort Processing]
+    
+    C1 --> C1a[Human validation steps]
+    C2 --> C2a[Fail-safe approaches]
+    C3 --> C3a[Multi-step verification]
+    
+    D1 --> D1a[Exception handling]
+    D2 --> D2a[AI-based filtering]
+    
+    E1 --> E1a[Minimal validation]
+    E2 --> E2a[Accept some errors]
+    
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#ffebee
 ```
 
 #### Resource Constraints
@@ -276,82 +311,136 @@ Unlimited Resources:
 #### Pattern 1: User-Centric Interactive
 **Best For**: Research, content creation, ad-hoc analysis
 
-```javascript
-Architecture:
-User Input → Browser Processing → User Review → Action
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant A as AI Analysis
+    participant R as Results
+    
+    U->>B: Select content of interest
+    B->>A: Get Selected Text
+    A->>A: Process and analyze
+    A->>R: Generate insights
+    R->>U: Present results for review
+    U->>U: Review and decide
+    U->>B: Choose next action
+    
+    Note over U,B: High user engagement<br/>and control
+    Note over A,R: Quality-focused<br/>processing
+```
 
-Example Workflow:
-1. User selects content of interest
-2. Get Selected Text → AI Analysis
-3. Present results for user review
-4. User chooses next action
-
-Characteristics:
+**Characteristics:**
 - High user engagement
 - Flexible and adaptable
 - Quality over quantity
 - Manual quality control
-```
 
 #### Pattern 2: Automated Monitoring
 **Best For**: Content monitoring, change detection, alerts
 
-```javascript
-Architecture:
-Scheduled Trigger → Automated Processing → Conditional Actions
+```mermaid
+graph LR
+    A[Scheduled Trigger] --> B[Get All Text]
+    B --> C[Compare with Baseline]
+    C --> D{Changes Detected?}
+    D -->|Yes| E[Filter Significant Changes]
+    D -->|No| F[Wait for Next Cycle]
+    E --> G[HTTP Request - Send Alert]
+    G --> H[Update Baseline]
+    H --> F
+    F --> A
+    
+    style A fill:#e3f2fd
+    style D fill:#fff3e0
+    style G fill:#ffebee
+```
 
-Example Workflow:
-1. Timer triggers workflow execution
-2. Get All Text → Compare with baseline
-3. Filter → Detect changes
-4. HTTP Request → Send alerts if needed
-
-Characteristics:
+**Characteristics:**
 - Fully automated
 - Consistent execution
 - Exception-based intervention
 - Scalable monitoring
-```
 
 #### Pattern 3: Batch Processing
 **Best For**: Data collection, analysis, reporting
 
-```javascript
-Architecture:
-Batch Input → Parallel Processing → Aggregated Output
+```mermaid
+graph TB
+    A[Batch Input - URL List] --> B[Parallel Processing]
+    
+    subgraph "Parallel Execution"
+        B --> C1[Navigate URL 1]
+        B --> C2[Navigate URL 2]
+        B --> C3[Navigate URL 3]
+        
+        C1 --> D1[Extract Data 1]
+        C2 --> D2[Extract Data 2]
+        C3 --> D3[Extract Data 3]
+        
+        D1 --> E1[Analyze 1]
+        D2 --> E2[Analyze 2]
+        D3 --> E3[Analyze 3]
+    end
+    
+    E1 --> F[Merge Node]
+    E2 --> F
+    E3 --> F
+    
+    F --> G[Aggregate Results]
+    G --> H[Generate Report]
+    
+    style A fill:#e3f2fd
+    style F fill:#fff3e0
+    style H fill:#e8f5e8
+```
 
-Example Workflow:
-1. Process list of URLs
-2. Navigate → Extract → Analyze (parallel)
-3. Merge → Aggregate results
-4. Generate comprehensive report
-
-Characteristics:
+**Characteristics:**
 - High throughput
 - Efficient resource usage
 - Comprehensive results
 - Scheduled execution
-```
 
 #### Pattern 4: Adaptive AI-Driven
 **Best For**: Complex decision-making, learning systems
 
-```javascript
-Architecture:
-Context Analysis → AI Decision → Dynamic Execution
+```mermaid
+stateDiagram-v2
+    [*] --> ContextAnalysis: Start
+    ContextAnalysis --> AIDecision: Context Understood
+    AIDecision --> StrategyA: Choose Strategy A
+    AIDecision --> StrategyB: Choose Strategy B
+    AIDecision --> StrategyC: Choose Strategy C
+    
+    StrategyA --> Execution: Execute A
+    StrategyB --> Execution: Execute B
+    StrategyC --> Execution: Execute C
+    
+    Execution --> Learning: Collect Results
+    Learning --> ContextAnalysis: Update Knowledge
+    Learning --> [*]: Task Complete
+    
+    note right of AIDecision
+        AI Agent evaluates:
+        - Current context
+        - Historical performance
+        - Available strategies
+        - Success probability
+    end note
+    
+    note right of Learning
+        Continuous improvement:
+        - Result analysis
+        - Strategy effectiveness
+        - Knowledge updates
+    end note
+```
 
-Example Workflow:
-1. Analyze current context and goals
-2. AI Agent → Determine optimal approach
-3. Execute chosen strategy
-4. Learn from results for future decisions
-
-Characteristics:
+**Characteristics:**
 - Intelligent adaptation
 - Context-aware processing
 - Continuous improvement
 - Complex implementation
-```
 
 ## Performance Comparison
 

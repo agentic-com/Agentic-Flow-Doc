@@ -506,7 +506,7 @@ export class QualityFramework {
       contentTypeRequirements: this.contentTypeRequirements,
       priorityFactors: this.priorityFactors,
       usage: {
-        description: 'Content Quality Scoring Framework for Agentic Flow Documentation',
+        description: 'Content Quality Scoring Framework for `Agentic Workflow Studio` Documentation',
         implementation: 'Use calculateQualityScore() method with content analysis data',
         integration: 'Can be integrated with content audit scripts and CI/CD pipelines'
       }

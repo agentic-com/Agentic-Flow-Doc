@@ -11,7 +11,7 @@ tags: ["Data Processing", "Field Manipulation", "Type Conversion", "Validation",
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 
@@ -27,6 +27,35 @@ Get Current Date serves as a fundamental timing tool that allows you to:
 - Generate timestamps for logging and audit trails
 - Provide time-based inputs for scheduling and conditional logic
 - Support multiple output formats for different use cases
+
+```mermaid
+stateDiagram-v2
+    [*] --> BrowserTime: Request Current Time
+    BrowserTime --> TimezoneDetection: Get Browser Timezone
+    TimezoneDetection --> PrecisionControl: Apply Precision Settings
+    PrecisionControl --> FormatSelection: Choose Output Format
+    FormatSelection --> CacheCheck: Check Cache Settings
+    CacheCheck --> OutputGeneration: Generate Final Output
+    OutputGeneration --> [*]: Return Current Date
+    
+    CacheCheck --> CachedResult: Cache Hit
+    CachedResult --> [*]: Return Cached Date
+    
+    note right of TimezoneDetection
+        Auto-detect browser timezone
+        or use specified timezone
+    end note
+    
+    note right of PrecisionControl
+        Second, millisecond,
+        or microsecond precision
+    end note
+    
+    note right of FormatSelection
+        ISO, timestamp, object,
+        or custom format
+    end note
+```
 
 ### Key Features
 
@@ -197,10 +226,42 @@ None - the node works without any required parameters and uses sensible defaults
 ```
 
 **Workflow Integration**:
-```
-User Input → Get Current Date → Schedule Calculation
-     ↓             ↓                    ↓
-  event_data   current_time        scheduled_time
+
+```mermaid
+graph TD
+    A[User Input] --> B[Get Current Date Node]
+    B --> C[Schedule Calculation]
+    
+    A --> A1[Meeting Request<br/>Duration: 60 min<br/>Preference: Morning]
+    
+    B --> B1[Current Time Check]
+    B --> B2[Timezone Detection]
+    B --> B3[Precision Control]
+    
+    B1 --> C
+    B2 --> C
+    B3 --> C
+    
+    C --> C1{Time Analysis}
+    C1 -->|Morning Available| C2[Schedule for 10:00 AM]
+    C1 -->|Morning Full| C3[Suggest Afternoon]
+    
+    C2 --> D[Confirmed Appointment]
+    C3 --> E[Alternative Options]
+    
+    subgraph "Current Time Context"
+        F[9:30 AM - Available]
+        G[11:30 AM - Too Late]
+        H[2:30 PM - Alternative]
+    end
+    
+    B --> F
+    B --> G
+    B --> H
+    
+    style B fill:#fff3e0
+    style C1 fill:#e3f2fd
+    style D fill:#e8f5e8
 ```
 
 **Complete Example**:

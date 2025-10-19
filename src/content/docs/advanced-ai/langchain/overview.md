@@ -17,6 +17,33 @@ Agentic Workflow Studio provides a collection of nodes that implement LangChain'
 
 When using LangChain in browser environments, there are specific considerations and limitations:
 
+```mermaid
+graph TB
+    subgraph "Browser Extension Environment"
+        A[Content Script] --> B[LangChain Workflow]
+        C[Background Script] --> B
+        D[User Context<br/>Selected Text, Page Data] --> B
+    end
+    
+    subgraph "LangChain Integration"
+        B --> E[AI Models]
+        B --> F[Vector Stores]
+        B --> G[Memory Systems]
+        B --> H[Tools & Agents]
+    end
+    
+    subgraph "External Services"
+        E --> I[Cloud AI APIs]
+        E --> J[Local WebAssembly Models]
+        F --> K[Browser Storage]
+        F --> L[External Vector DBs]
+    end
+    
+    style A fill:#e1f5fe
+    style B fill:#e8f5e8
+    style I fill:#fff3e0
+```
+
 ### Browser Security Limitations
 - **CORS Restrictions**: Some AI model APIs may have cross-origin restrictions when called from browser extensions
 - **API Key Security**: Store API keys securely using browser extension storage APIs

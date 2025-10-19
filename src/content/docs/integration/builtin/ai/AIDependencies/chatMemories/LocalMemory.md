@@ -11,6 +11,37 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 The Local Memory node provides persistent conversation memory for AI agents and chatbots directly within the browser environment. This node stores chat history, context, and conversation state using IndexedDB, enabling AI workflows to maintain context across sessions while keeping all data local and private.
 
+### Memory Management Flow
+
+```mermaid
+sequenceDiagram
+    participant Workflow as AI Workflow
+    participant Memory as Local Memory Node
+    participant IndexedDB as IndexedDB Storage
+    participant Context as Context Manager
+    participant Cleanup as Auto Cleanup
+    
+    Workflow->>Memory: Store/Retrieve memory request
+    
+    alt Store Operation
+        Memory->>IndexedDB: Write message to database
+        IndexedDB->>Memory: Confirm storage
+        Memory->>Context: Update context window
+    else Retrieve Operation
+        Memory->>IndexedDB: Query recent messages
+        IndexedDB->>Context: Return message history
+        Context->>Context: Format context for AI
+        Context->>Memory: Prepared context
+    end
+    
+    Memory->>Cleanup: Check retention policy
+    Cleanup->>IndexedDB: Remove old messages
+    Memory->>Workflow: Return formatted results
+    
+    Note over IndexedDB: Persistent local storage
+    Note over Cleanup: Automatic data management
+```
+
 ### Purpose and Functionality
 
 The Local Memory node enables:

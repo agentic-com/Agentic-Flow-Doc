@@ -11,6 +11,30 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 The Q&A node transforms your browser workflows into intelligent question-answering systems. This node analyzes web content, documents, or any text data to provide accurate, contextual answers to specific questions. It's designed for scenarios where you need to extract specific information or insights from large amounts of content through natural language queries.
 
+### Question-Answer Process Flow
+
+```mermaid
+sequenceDiagram
+    participant User as Question Input
+    participant QA as Q&A Node
+    participant Context as Content Analysis
+    participant LLM as Language Model
+    participant Output as Answer Output
+    
+    User->>QA: Question + Context Content
+    QA->>Context: Analyze content relevance
+    Context->>Context: Extract relevant sections
+    Context->>QA: Relevant content chunks
+    QA->>LLM: Question + Context + Instructions
+    LLM->>LLM: Generate contextual answer
+    LLM->>QA: Answer + confidence score
+    QA->>QA: Add source attribution
+    QA->>Output: Structured answer with sources
+    
+    Note over Context: Content filtering & ranking
+    Note over LLM: Context-aware processing
+```
+
 ### Purpose and Functionality
 
 The Q&A node specializes in:
@@ -199,7 +223,26 @@ The Q&A node specializes in:
 }
 ```
 
-**Step-by-Step Process**:
+**Step-by-Step Process**
+
+```mermaid
+flowchart TD
+    A[Product Page Content] --> B[Q&A Node]
+    B --> C{Analyze Question}
+    C --> D[Extract Relevant Sections]
+    D --> E[Rank Content by Relevance]
+    E --> F[Generate Contextual Answer]
+    F --> G[Add Source Attribution]
+    G --> H[Format Response with Confidence]
+    H --> I[Structured Answer Output]
+    
+    J[Question: Product Features] --> B
+    
+    style B fill:#e1f5fe
+    style F fill:#f3e5f5
+    style I fill:#e8f5e8
+```
+
 1. Product page content is extracted using GetHTMLFromLink node
 2. Q&A node analyzes content to identify relevant product information
 3. AI generates structured answer highlighting key features and specifications

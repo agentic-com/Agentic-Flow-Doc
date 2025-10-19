@@ -11,7 +11,7 @@ tags: ["Data Processing", "Field Manipulation", "Type Conversion", "Validation",
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 
@@ -27,6 +27,40 @@ Edit Fields serves as a comprehensive data manipulation tool that allows you to:
 - Apply validation rules and transformations
 - Restructure data objects for downstream processing
 - Clean and normalize data from multiple sources
+
+```mermaid
+flowchart LR
+    A[Input Data] --> B[Edit Fields Node]
+    B --> C{Operation Type}
+    
+    C -->|Rename| D[Field Renaming]
+    C -->|Convert| E[Type Conversion]
+    C -->|Transform| F[Value Transformation]
+    C -->|Validate| G[Data Validation]
+    
+    D --> H[Apply Changes]
+    E --> H
+    F --> H
+    G --> H
+    
+    H --> I[Output Data]
+    
+    subgraph "Operations"
+        J[Rename Fields]
+        K[Convert Types]
+        L[Apply Functions]
+        M[Validate Rules]
+    end
+    
+    B --> J
+    B --> K
+    B --> L
+    B --> M
+    
+    style B fill:#fff3e0
+    style C fill:#e3f2fd
+    style I fill:#e8f5e8
+```
 
 ### Key Features
 
@@ -221,10 +255,22 @@ Edit Fields serves as a comprehensive data manipulation tool that allows you to:
 ```
 
 **Workflow Integration**:
-```
-Web Scraper → Edit Fields → Database Insert
-     ↓            ↓            ↓
-  raw_data   validated_data  stored_data
+
+```mermaid
+sequenceDiagram
+    participant WS as Web Scraper
+    participant EF as Edit Fields
+    participant DB as Database Insert
+    
+    WS->>EF: Send raw scraped data
+    Note over EF: Apply transformations:<br/>- Rename fields<br/>- Convert types<br/>- Validate data
+    EF->>EF: Process field operations
+    EF->>EF: Apply validation rules
+    EF->>DB: Send validated data
+    DB->>DB: Store processed data
+    
+    Note over WS,EF: Raw data with<br/>inconsistent formats
+    Note over EF,DB: Clean, validated data<br/>ready for storage
 ```
 
 ## Examples

@@ -31,6 +31,24 @@ By the end of this tutorial, you'll understand:
 
 ## Step 1: Create Your First Workflow
 
+```mermaid
+flowchart TD
+    A[Click Extension Icon] --> B[Select 'Create New Workflow']
+    B --> C[Name: 'My First Text Extraction']
+    C --> D[Choose 'Learning Projects' Folder]
+    D --> E[Select 'Browser Extension' Type]
+    E --> F[Workflow Studio Opens]
+    
+    F --> G[Canvas: Node Placement Area]
+    F --> H[Node Panel: Available Nodes]
+    F --> I[Properties Panel: Node Configuration]
+    F --> J[Execution Panel: Run & Debug]
+    
+    style A fill:#e1f5fe
+    style F fill:#e8f5e8
+    style G fill:#fff3e0
+```
+
 ### Opening the Workflow Studio
 
 1. **Launch the Extension**
@@ -51,8 +69,17 @@ By the end of this tutorial, you'll understand:
 ### Workflow Planning
 
 Before building, let's plan our workflow:
-```
-Web Page → Select Text → Extract Text → Process Text → Save Results
+
+```mermaid
+graph LR
+    A[Web Page] --> B[Select Text]
+    B --> C[Extract Text]
+    C --> D[Process Text]
+    D --> E[Save Results]
+    
+    style A fill:#e1f5fe
+    style C fill:#e8f5e8
+    style E fill:#fff3e0
 ```
 
 This simple flow demonstrates the fundamental pattern of browser automation workflows.
@@ -170,8 +197,23 @@ The EditFields node receives the raw extraction data and:
    - This creates a complete workflow chain
 
 Your workflow should now look like:
-```
-WhenStarted → GetSelectedText → EditFields → DownloadAsFile
+
+```mermaid
+graph LR
+    A[WhenStarted<br/>Trigger] --> B[GetSelectedText<br/>Extract]
+    B --> C[EditFields<br/>Process]
+    C --> D[DownloadAsFile<br/>Save]
+    
+    subgraph "Data Flow"
+        E[User Selection] --> F[Raw Text Data]
+        F --> G[Processed Data]
+        G --> H[JSON File]
+    end
+    
+    style A fill:#e1f5fe
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
 ```
 
 ## Step 5: Test Your Workflow

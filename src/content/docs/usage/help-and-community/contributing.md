@@ -5,7 +5,42 @@ description: Learn how to contribute to Agentic Workflow Studio.
 
 # How can you contribute?
 
-There are a several ways in which yoAgentic Workflow Studioan contribute to Agentic Workflow Studio, depending on your skills and interests. Each form of contribution is valuable to us!
+There are a several ways in which you can contribute to Agentic Workflow Studio, depending on your skills and interests. Each form of contribution is valuable to us!
+
+## Contribution Pathways
+
+```mermaid
+graph TB
+    A[Want to Contribute?] --> B[Choose Contribution Type]
+    
+    B --> C[Community Support]
+    B --> D[Code Contribution]
+    B --> E[Content Creation]
+    B --> F[Promotion & Reviews]
+    
+    C --> C1[Answer Forum Questions]
+    C --> C2[Help Debug Workflows]
+    C --> C3[Share Knowledge]
+    
+    D --> D1[Fix GitHub Issues]
+    D --> D2[Build New Nodes]
+    D --> D3[Add Features]
+    D --> D4[Improve Documentation]
+    
+    E --> E1[Create Workflow Templates]
+    E --> E2[Write Blog Posts]
+    E --> E3[Make Tutorials]
+    
+    F --> F1[Star on GitHub]
+    F --> F2[Write Reviews]
+    F --> F3[Social Media Sharing]
+    
+    style A fill:#e3f2fd
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#f3e5f5
+    style F fill:#e0f2f1
+```
 
 ## Share some love: Review us
 

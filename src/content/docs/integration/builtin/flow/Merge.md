@@ -11,13 +11,44 @@ tags: ["Workflow Logic", "Conditional Processing", "Data Flow", "Error Handling"
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 
 ## Overview
 
 The Merge node combines data from multiple workflow branches or data sources into a single, unified output stream. It's essential for aggregating results from parallel processing, combining data from different sources, and synchronizing workflow execution. The node supports multiple merging strategies and handles data type conflicts intelligently.
+
+```mermaid
+graph TD
+    A[Branch 1 Data] --> D[Merge Node]
+    B[Branch 2 Data] --> D
+    C[Branch 3 Data] --> D
+    
+    D --> E{Merge Strategy}
+    E -->|Append| F[Concatenated Array]
+    E -->|Merge Objects| G[Combined Object]
+    E -->|Wait for All| H[Synchronized Output]
+    
+    F --> I[Unified Output]
+    G --> I
+    H --> I
+    
+    subgraph "Merge Strategies"
+        J[Append Mode]
+        K[Object Merge]
+        L[Choose Branch]
+        M[Wait Mode]
+    end
+    
+    D --> J
+    D --> K
+    D --> L
+    D --> M
+    
+    style D fill:#fff3e0
+    style I fill:#e8f5e8
+```
 
 ### Purpose and Functionality
 
@@ -227,12 +258,29 @@ The Merge node operates on data and doesn't require specific browser permissions
 ```
 
 **Workflow Integration**:
-```
-User API → Branch 1 (Profile Data)
-              ↓
-Profile API → Branch 2 (Settings) → Merge Node → Complete Profile
-              ↓
-Activity API → Branch 3 (History)
+
+```mermaid
+sequenceDiagram
+    participant U as User API
+    participant P as Profile API
+    participant A as Activity API
+    participant M as Merge Node
+    participant O as Complete Profile
+    
+    par Parallel Data Collection
+        U->>M: Branch 1: Basic user data
+    and
+        P->>M: Branch 2: User settings & preferences
+    and
+        A->>M: Branch 3: Activity history & analytics
+    end
+    
+    M->>M: Merge by userId
+    M->>M: Resolve conflicts
+    M->>M: Combine all data sources
+    M->>O: Unified user profile
+    
+    Note over M: Intelligent merging:<br/>- Join by common fields<br/>- Handle data conflicts<br/>- Preserve all information
 ```
 
 **Complete Example**:

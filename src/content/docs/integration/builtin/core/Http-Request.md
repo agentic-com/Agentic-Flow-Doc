@@ -11,6 +11,31 @@ tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"
 
 The HTTP Request node enables browser workflows to communicate with external APIs and services, allowing seamless integration between browser-extracted data and external systems. This node is essential for sending data to cloud services, validating information, and building comprehensive automation workflows that extend beyond browser boundaries.
 
+### HTTP Request Flow Architecture
+
+```mermaid
+sequenceDiagram
+    participant Workflow as Workflow Data
+    participant HTTP as HTTP Request Node
+    participant Auth as Authentication
+    participant API as External API
+    participant Response as Response Handler
+    
+    Workflow->>HTTP: Input data + configuration
+    HTTP->>HTTP: Format request parameters
+    HTTP->>Auth: Apply authentication headers
+    Auth->>HTTP: Authenticated request
+    HTTP->>API: Send HTTP request
+    API->>API: Process request
+    API->>HTTP: Return response
+    HTTP->>Response: Parse response data
+    Response->>Response: Add metadata & timing
+    Response->>Workflow: Structured response output
+    
+    Note over HTTP,API: HTTPS secure connection
+    Note over Response: Error handling & validation
+```
+
 ### Purpose and Functionality
 
 This node performs HTTP communication by:
@@ -201,7 +226,30 @@ This node performs HTTP communication by:
 }
 ```
 
-**Step-by-Step Process**:
+**Step-by-Step Process**
+
+```mermaid
+flowchart TD
+    A[Extract Selected Text] --> B[HTTP Request Node]
+    B --> C{Validate Input Data}
+    C --> D[Format Request Body]
+    D --> E[Add Authentication Headers]
+    E --> F[Send POST Request]
+    F --> G[External AI Service]
+    G --> H[Process Response]
+    H --> I{Check Status Code}
+    I -->|Success| J[Parse JSON Response]
+    I -->|Error| K[Handle Error Response]
+    J --> L[Add Response Metadata]
+    K --> L
+    L --> M[Return Structured Output]
+    
+    style B fill:#e1f5fe
+    style G fill:#fff3e0
+    style J fill:#e8f5e8
+    style K fill:#ffebee
+```
+
 1. Extract selected text from webpage using GetSelectedText node
 2. Format text data for AI service API requirements
 3. Send POST request with authentication headers

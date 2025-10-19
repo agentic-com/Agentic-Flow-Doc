@@ -11,6 +11,38 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 The Tools Agent node represents the most sophisticated AI automation capability in browser workflows. This node creates an intelligent agent that can reason about tasks, select appropriate tools from available browser APIs and workflow nodes, and execute complex multi-step operations autonomously. It bridges the gap between AI reasoning and practical browser automation.
 
+### Agent Decision-Making and Tool Execution Flow
+
+```mermaid
+sequenceDiagram
+    participant Task as Task Input
+    participant Agent as Tools Agent
+    participant Planning as AI Planning
+    participant Tools as Available Tools
+    participant Execution as Tool Execution
+    participant Feedback as Result Analysis
+    
+    Task->>Agent: Task description + constraints
+    Agent->>Planning: Analyze task requirements
+    Planning->>Planning: Create execution plan
+    Planning->>Agent: Step-by-step plan
+    
+    loop For each step
+        Agent->>Agent: Evaluate current state
+        Agent->>Planning: Select best tool for step
+        Planning->>Tools: Choose appropriate tool
+        Tools->>Execution: Execute tool with parameters
+        Execution->>Feedback: Return execution results
+        Feedback->>Agent: Analyze success/failure
+        Agent->>Agent: Update plan if needed
+    end
+    
+    Agent->>Task: Final results + execution log
+    
+    Note over Planning: Dynamic replanning based on results
+    Note over Execution: Error handling & recovery
+```
+
 ### Purpose and Functionality
 
 The Tools Agent node enables:
@@ -280,7 +312,33 @@ The Tools Agent node enables:
 }
 ```
 
-**Step-by-Step Process**:
+**Step-by-Step Process**
+
+```mermaid
+flowchart TD
+    A[Task: Research Competitors] --> B[Tools Agent]
+    B --> C{Analyze Task}
+    C --> D[Create Execution Plan]
+    D --> E[Select Tool: GetAllTextFromLink]
+    E --> F[Visit Competitor Website]
+    F --> G[Extract Content]
+    G --> H[Select Tool: BasicLLMChain]
+    H --> I[Structure Pricing Data]
+    I --> J{More Competitors?}
+    J -->|Yes| E
+    J -->|No| K[Compile Results]
+    K --> L[Validate Completeness]
+    L --> M{Meets Success Criteria?}
+    M -->|No| N[Identify Missing Data]
+    N --> E
+    M -->|Yes| O[Return Final Results]
+    
+    style B fill:#e1f5fe
+    style C fill:#fff3e0
+    style H fill:#f3e5f5
+    style O fill:#e8f5e8
+```
+
 1. Agent analyzes task and creates execution plan
 2. Visits first competitor website using GetAllTextFromLink
 3. Extracts and structures pricing information using BasicLLMChain

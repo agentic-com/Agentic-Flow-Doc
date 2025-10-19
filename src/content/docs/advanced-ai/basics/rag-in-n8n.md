@@ -8,6 +8,26 @@ description: With Retrieval-Augmented Generation (RAG), you can give your models
 
 [Retrieval-Augmented Generation (RAG)](/glossary.md#ai-retrieval-augmented-generation-rag) is a technique that improves AI responses by combining language models with external data sources. Instead of relying solely on the model's internal training data, RAG systems retrieve relevant documents to [ground](/glossary.md#ai-groundedness) responses in up-to-date, domain-specific, or proprietary knowledge. RAG workflows typically rely on vector stores to manage and search this external data efficiently.
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant RAG_System as RAG System
+    participant Vector_Store as Vector Store
+    participant LLM as Language Model
+    participant Knowledge_Base as Knowledge Base
+
+    Note over User, Knowledge_Base: RAG Workflow Process
+    
+    User->>RAG_System: Submit Query
+    RAG_System->>Vector_Store: Search for Relevant Documents
+    Vector_Store->>Knowledge_Base: Retrieve Document Chunks
+    Knowledge_Base-->>Vector_Store: Return Matching Content
+    Vector_Store-->>RAG_System: Provide Relevant Context
+    RAG_System->>LLM: Send Query + Retrieved Context
+    LLM-->>RAG_System: Generate Contextual Response
+    RAG_System-->>User: Return Enhanced Answer
+```
+
 ## What is a vector store?
 
 A [vector store](/glossary.md#ai-vector-store) is a special database designed to store and search high-dimensional vectors: numerical representations of text, images, or other data. When you upload a document, the vector store splits it into chunks and converts each chunk into a vector using an [embedding model](/glossary.md#ai-embedding).
@@ -19,6 +39,29 @@ You can query these vectors using similarity searches, which construct results b
 /// note | Start with a RAG template
 👉 Try out RAG in Agentic Workflow Studio with the [RAG Starter Template](https://Agentic Workflow Studiontic Workflow Studio/workflows/5010-rag-starter-template-using-simple-vector-stores-form-trigger-and-openai). The template includes two ready-made workflows: one for uploading files and one for querying them.
 ///
+
+```mermaid
+flowchart TD
+    A[Source Data] --> B[Data Loader Node]
+    B --> C[Text Splitter]
+    C --> D[Embedding Model]
+    D --> E[Vector Store - Insert]
+    
+    F[User Query] --> G[Vector Store - Search]
+    G --> H[Retrieved Chunks]
+    H --> I{Use Agent or Direct Query?}
+    
+    I -->|Agent| J[Agent Node with Vector Store Tool]
+    I -->|Direct| K[Vector Store - Get Many]
+    
+    J --> L[LLM with Context]
+    K --> L
+    L --> M[Enhanced Response]
+    
+    style A fill:#e1f5fe
+    style F fill:#e8f5e8
+    style M fill:#fff3e0
+```
 
 ### Inserting data into your vector store
 

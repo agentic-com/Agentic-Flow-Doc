@@ -1,6 +1,6 @@
 ---
 title: When Started
-description: "Initiate workflow execution automatically when specific conditions are met in Agentic Flow automation."
+description: "Initiate workflow execution automatically when specific conditions are met in `Agentic Workflow Studio` automation."
 template: doc
 tags: ["Modular Workflows", "Reusability", "Workflow Triggers", "Event Handling"]
 ---
@@ -9,7 +9,7 @@ tags: ["Modular Workflows", "Reusability", "Workflow Triggers", "Event Handling"
 
 ## Overview
 
-The When Started node serves as the primary trigger mechanism for automated workflow execution in Agentic Flow. This node defines the conditions and events that automatically initiate workflow processing, enabling hands-free automation based on browser events, time schedules, data changes, or external triggers.
+The When Started node serves as the primary trigger mechanism for automated workflow execution in `Agentic Workflow Studio`. This node defines the conditions and events that automatically initiate workflow processing, enabling hands-free automation based on browser events, time schedules, data changes, or external triggers.
 
 ### Purpose and Functionality
 
@@ -457,5 +457,5 @@ The node outputs trigger context and initial data for workflow processing:
 ---
 
 **Last Updated**: October 19, 2024  
-**Tested With**: Agentic Flow v1.0  
+**Tested With**: `Agentic Workflow Studio` v1.0  
 **Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ Trigger Logic Tested

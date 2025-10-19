@@ -11,13 +11,40 @@ tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artifici
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 
 ## Overview
 
 The RAG (Retrieval-Augmented Generation) node represents the cutting edge of AI-powered information processing in browser workflows. This node combines the power of vector search with large language models to provide highly accurate, contextually relevant responses by retrieving relevant information from knowledge bases before generating answers.
+
+### RAG Architecture and Process Flow
+
+```mermaid
+sequenceDiagram
+    participant Query as User Query
+    participant RAG as RAG Node
+    participant Vector as Vector Store
+    participant Retrieval as Document Retrieval
+    participant LLM as Language Model
+    participant Output as Enhanced Response
+    
+    Query->>RAG: Search query/question
+    RAG->>RAG: Convert query to embedding
+    RAG->>Vector: Semantic search with embedding
+    Vector->>Retrieval: Return similar documents
+    Retrieval->>Retrieval: Rank by similarity score
+    Retrieval->>RAG: Top-k relevant documents
+    RAG->>LLM: Query + Retrieved context
+    LLM->>LLM: Generate contextual response
+    LLM->>RAG: AI response with reasoning
+    RAG->>RAG: Add source attribution
+    RAG->>Output: Response + sources + metadata
+    
+    Note over Vector: Semantic similarity search
+    Note over LLM: Context-grounded generation
+```
 
 ### Purpose and Functionality
 
@@ -228,7 +255,30 @@ The RAG node enhances AI capabilities by:
 }
 ```
 
-**Step-by-Step Process**:
+**Step-by-Step Process**
+
+```mermaid
+flowchart TD
+    A[User Query] --> B[RAG Node]
+    B --> C[Generate Query Embedding]
+    C --> D[Vector Store Search]
+    D --> E[Retrieve Similar Documents]
+    E --> F{Filter by Similarity Threshold}
+    F -->|Above Threshold| G[Rank Documents]
+    F -->|Below Threshold| H[Expand Search]
+    G --> I[Select Top-K Documents]
+    I --> J[Combine Query + Context]
+    J --> K[LLM Generation]
+    K --> L[Add Source Attribution]
+    L --> M[Return Enhanced Response]
+    H --> D
+    
+    style B fill:#e1f5fe
+    style D fill:#fff3e0
+    style K fill:#f3e5f5
+    style M fill:#e8f5e8
+```
+
 1. Query is converted to vector embedding for semantic search
 2. Vector store is searched for most relevant documentation chunks
 3. Retrieved documents are ranked by similarity and filtered by threshold

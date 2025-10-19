@@ -1,11 +1,11 @@
 ---
 title: Rate Limits and Performance
-description: Understanding and managing rate limits, performance considerations, and browser constraints in Agentic Flow workflows.
+description: Understanding and managing rate limits, performance considerations, and browser constraints in `Agentic Workflow Studio` workflows.
 ---
 
 ## Overview
 
-This document explains the rate limiting considerations and best practices for builtin nodes in Agentic Flow, helping you understand how to optimize your workflows for performance and reliability.
+This document explains the rate limiting considerations and best practices for builtin nodes in `Agentic Workflow Studio`, helping you understand how to optimize your workflows for performance and reliability.
 
 # Rate Limits and Performance
 
@@ -15,7 +15,7 @@ Browser-based workflows face unique performance considerations including API rat
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 

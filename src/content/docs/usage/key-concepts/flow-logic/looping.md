@@ -9,6 +9,31 @@ Looping is useful when you want to process multiple items or perform an action r
 
 ## Using loops in Agentic Workflow Studio
 
+```mermaid
+graph TB
+    A[Input Items] --> B[Node Processing]
+    B --> C[Output Items]
+    
+    A --> A1[Item 1]
+    A --> A2[Item 2]
+    A --> A3[Item 3]
+    A --> A4[Item N...]
+    
+    A1 --> B
+    A2 --> B
+    A3 --> B
+    A4 --> B
+    
+    B --> C1[Result 1]
+    B --> C2[Result 2]
+    B --> C3[Result 3]
+    B --> C4[Result N...]
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+```
+
 Agentic Workflow Studio nodes take any number of items as input, process these items, and output the results. You can think of each item as a single data point, or a single row in the output table of a node.
 
 ![The Customer Datastore node output](/_images/flow-logic/looping/customer_datastore_node.png)
@@ -34,7 +59,20 @@ Agentic Workflow Studio typically handles the iteration for all incoming items. 
 
 ### Loop until a condition is met
 
-To create a loop in an Agentic Workflow Studiontic Workflow Studio workflow, connect the output of one node to the input of a previous node. Add an [IF](/integrations/builtin/core-nodes/n8n-nodes-base.if.md) node to check when to stop the loop. 
+```mermaid
+graph TB
+    A[Start] --> B[Process Node]
+    B --> C[IF Node]
+    C -->|Condition Met| D[Continue Workflow]
+    C -->|Condition Not Met| B
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+```
+
+To create a loop in an Agentic Workflow Studio workflow, connect the output of one node to the input of a previous node. Add an [IF](/integrations/builtin/core-nodes/n8n-nodes-base.if.md) node to check when to stop the loop. 
 
 Here is an [examplAgentic Workflow Studioorkflow](https://Agentic Workflow Studio/workflows/1130) that implements a loop with an `IF` node:
 

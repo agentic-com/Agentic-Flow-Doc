@@ -8,6 +8,31 @@ description: "Create advanced AI workflows using Agents vs chains with LangChain
 
 In this workflow you can choose whether your chat query goes to an [agent](/glossary.md#ai-agent) or [chain](/glossary.md#ai-chain). It shows some of the ways that agents are more powerful than chains.
 
+```mermaid
+graph TB
+    subgraph "Agent Workflow"
+        A1[User Query] --> A2[Agent Node]
+        A2 --> A3{Decision Making}
+        A3 --> A4[Tool Selection]
+        A4 --> A5[Execute Tools]
+        A5 --> A6[Evaluate Results]
+        A6 --> A7{Need More Tools?}
+        A7 -->|Yes| A4
+        A7 -->|No| A8[Final Response]
+    end
+    
+    subgraph "Chain Workflow"
+        B1[User Query] --> B2[Basic LLM Chain]
+        B2 --> B3[Predetermined Sequence]
+        B3 --> B4[Direct LLM Response]
+    end
+    
+    style A2 fill:#e8f5e8
+    style A3 fill:#fff3e0
+    style B2 fill:#e1f5fe
+    style B3 fill:#f3e5f5
+```
+
 [[ workflowDemo("file:///advanced-ai/examples/agents_vs_chains.json") ]]
 
 ## Key features

@@ -11,6 +11,32 @@ tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"
 
 The Code node enables execution of custom Python code within browser workflows using Pyodide, providing unlimited flexibility for data processing, scientific computing, and complex automation logic. This node bridges the gap between built-in node functionality and custom requirements, allowing developers to implement sophisticated workflows with the full power of Python and its ecosystem.
 
+### Python Execution Architecture
+
+```mermaid
+sequenceDiagram
+    participant Input as Workflow Data
+    participant Code as Code Node
+    participant Pyodide as Pyodide Runtime
+    participant Packages as Package Manager
+    participant Python as Python Interpreter
+    participant Output as Results Output
+    
+    Input->>Code: Input data + Python code
+    Code->>Pyodide: Initialize runtime
+    Pyodide->>Packages: Install required packages
+    Packages->>Pyodide: Package dependencies ready
+    Code->>Python: Execute Python code
+    Python->>Python: Process data with libraries
+    Python->>Code: Return execution results
+    Code->>Code: Capture stdout/stderr
+    Code->>Code: Add execution metadata
+    Code->>Output: Structured results + logs
+    
+    Note over Pyodide: WebAssembly sandbox
+    Note over Python: Full Python ecosystem
+```
+
 ### Purpose and Functionality
 
 This node performs custom code execution by:
@@ -196,7 +222,32 @@ This node performs custom code execution by:
 }
 ```
 
-**Step-by-Step Process**:
+**Step-by-Step Process**
+
+```mermaid
+flowchart TD
+    A[Input Data from Previous Node] --> B[Code Node]
+    B --> C[Initialize Pyodide Runtime]
+    C --> D{Packages Required?}
+    D -->|Yes| E[Install Python Packages]
+    D -->|No| F[Execute Python Code]
+    E --> F
+    F --> G[Import Libraries]
+    G --> H[Process Input Data]
+    H --> I[Perform Calculations]
+    I --> J[Generate Results]
+    J --> K{Execution Successful?}
+    K -->|Yes| L[Format Output Data]
+    K -->|No| M[Capture Error Information]
+    L --> N[Add Execution Metadata]
+    M --> N
+    N --> O[Return Structured Results]
+    
+    style B fill:#e1f5fe
+    style E fill:#fff3e0
+    style I fill:#f3e5f5
+    style O fill:#e8f5e8
+```
 
 1. Import required Python libraries (Pandas, NumPy)
 2. Extract text data from previous workflow node

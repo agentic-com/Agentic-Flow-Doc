@@ -1,6 +1,6 @@
 ---
 title: Lambda Output
-description: "Define output structure and data flow for modular lambda workflows in Agentic Flow automation."
+description: "Define output structure and data flow for modular lambda workflows in `Agentic Workflow Studio` automation."
 template: doc
 tags: ["Modular Workflows", "Reusability", "Workflow Triggers", "Event Handling"]
 ---
@@ -487,5 +487,5 @@ Example showing how this node integrates with other workflow nodes:
 ---
 
 **Last Updated**: October 19, 2024  
-**Tested With**: Agentic Flow v1.0  
+**Tested With**: `Agentic Workflow Studio` v1.0  
 **Validation Status**: ✅ Code Examples Tested | ✅ Schema Validation Verified | ✅ Integration Tested

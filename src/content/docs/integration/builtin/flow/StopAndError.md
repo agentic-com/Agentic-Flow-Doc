@@ -11,13 +11,42 @@ tags: ["Workflow Logic", "Conditional Processing", "Data Flow", "Error Handling"
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 
 ## Overview
 
 The Stop and Error node provides controlled workflow termination with comprehensive error reporting and debugging capabilities. It's essential for implementing robust error handling strategies, debugging complex workflows, and ensuring graceful failure handling in browser automation scenarios. The node captures detailed execution context and provides actionable error information.
+
+```mermaid
+stateDiagram-v2
+    [*] --> WorkflowRunning: Normal Execution
+    WorkflowRunning --> ErrorDetected: Error Condition Met
+    ErrorDetected --> StopAndError: Trigger Error Node
+    
+    StopAndError --> CaptureContext: Collect Debug Info
+    CaptureContext --> GenerateReport: Create Error Report
+    GenerateReport --> NotifyUsers: Send Notifications
+    NotifyUsers --> CleanupResources: Resource Cleanup
+    CleanupResources --> [*]: Workflow Terminated
+    
+    WorkflowRunning --> WorkflowRunning: Continue Normal Flow
+    
+    note right of StopAndError
+        Controlled termination with:
+        - Error categorization
+        - Debug information capture
+        - Execution context snapshot
+    end note
+    
+    note right of GenerateReport
+        Comprehensive reporting:
+        - Error details & severity
+        - Execution path & data
+        - Browser state & context
+    end note
+```
 
 ### Purpose and Functionality
 
@@ -226,10 +255,38 @@ The Stop and Error node may require permissions for error reporting and debuggin
 ```
 
 **Workflow Integration**:
-```
-Permission Check → IF Node → Continue Workflow
-                     ↓
-                 Stop and Error → Error Handler
+
+```mermaid
+flowchart TD
+    A[Permission Check] --> B[IF Node]
+    B --> C{Permission Granted?}
+    C -->|Yes| D[Continue Workflow]
+    C -->|No| E[Stop and Error Node]
+    
+    D --> F[Execute Protected Operations]
+    F --> G[Complete Successfully]
+    
+    E --> H[Capture Error Context]
+    H --> I[Generate Error Report]
+    I --> J[Send Notifications]
+    J --> K[Cleanup Resources]
+    K --> L[Terminate Workflow]
+    
+    subgraph "Error Handling Flow"
+        E --> E1[Set Error Message]
+        E --> E2[Classify Error Type]
+        E --> E3[Determine Severity]
+    end
+    
+    subgraph "Success Flow"
+        D --> D1[Access Granted Operations]
+        D --> D2[Process Sensitive Data]
+        D --> D3[Generate Results]
+    end
+    
+    style C fill:#fff3e0
+    style E fill:#ffebee
+    style G fill:#e8f5e8
 ```
 
 **Complete Example**:

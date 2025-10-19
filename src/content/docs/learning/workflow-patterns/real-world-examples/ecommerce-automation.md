@@ -15,8 +15,41 @@ Automatically extract and synchronize product information from supplier websites
 ### Technical Architecture
 
 #### Workflow Overview
-```
-[Product URLs] → [Navigate] → [Extract Data] → [Process] → [Validate] → [Store] → [Notify]
+
+```mermaid
+flowchart LR
+    A[Product URLs Input] --> B[NavigateToLink]
+    B --> C[Extract Product Data]
+    C --> D[Process & Enrich]
+    D --> E[Validate Quality]
+    E --> F[Store in Database]
+    F --> G[Send Notifications]
+    
+    subgraph "Data Extraction"
+        C --> C1[GetAllHTML]
+        C --> C2[ProcessHTML]
+        C --> C3[Extract Images]
+    end
+    
+    subgraph "Processing"
+        D --> D1[Clean Data]
+        D --> D2[Enrich with AI]
+        D --> D3[Categorize]
+    end
+    
+    subgraph "Quality Control"
+        E --> E1[Validate Fields]
+        E --> E2[Check Completeness]
+        E --> E3[Verify Images]
+    end
+    
+    E --> H{Quality Check}
+    H -->|Fail| I[Flag for Review]
+    H -->|Pass| F
+    
+    style A fill:#e3f2fd
+    style F fill:#e8f5e8
+    style G fill:#fff3e0
 ```
 
 #### Implementation
@@ -200,8 +233,42 @@ Monitor competitor pricing across multiple platforms to maintain competitive pos
 ### Implementation
 
 #### Workflow Structure
-```
-[Price Sources] → [Extract Prices] → [Compare] → [Analyze Trends] → [Alert] → [Report]
+
+```mermaid
+graph TD
+    A[Price Sources Configuration] --> B[Extract Current Prices]
+    B --> C[Compare with Historical Data]
+    C --> D[Analyze Price Trends]
+    D --> E{Threshold Exceeded?}
+    E -->|Yes| F[Generate Alerts]
+    E -->|No| G[Store Data]
+    F --> H[Send Notifications]
+    G --> I[Update Reports]
+    H --> I
+    
+    subgraph "Price Sources"
+        J[Competitor A]
+        K[Competitor B]
+        L[Marketplace]
+    end
+    
+    A --> J
+    A --> K
+    A --> L
+    
+    subgraph "Alert Types"
+        M[Price Drop Alert]
+        N[Competitive Position Alert]
+        O[Market Average Alert]
+    end
+    
+    F --> M
+    F --> N
+    F --> O
+    
+    style E fill:#fff3e0
+    style F fill:#ffebee
+    style I fill:#e8f5e8
 ```
 
 #### Step-by-Step Implementation

@@ -21,8 +21,35 @@ Extract, clean, and transform textual content from web pages with advanced proce
 ### Implementation
 
 #### Workflow Structure
-```
-[GetAllText] → [EditFields] → [Filter] → [Transform] → [Output]
+
+```mermaid
+flowchart LR
+    A[GetAllText Node] --> B[EditFields Node]
+    B --> C[Filter Node]
+    C --> D[Transform Data]
+    D --> E[Output Results]
+    
+    A --> A1[Extract with Context]
+    A --> A2[Preserve Formatting]
+    A --> A3[Include Metadata]
+    
+    B --> B1[Clean Text]
+    B --> B2[Normalize Content]
+    B --> B3[Calculate Metrics]
+    
+    C --> C1[Quality Filter]
+    C --> C2[Relevance Filter]
+    C --> C3[Length Filter]
+    
+    D --> D1[Keyword Extraction]
+    D --> D2[Sentiment Analysis]
+    D --> D3[Content Classification]
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#e8f5e8
+    style E fill:#e1f5fe
 ```
 
 #### Step-by-Step Implementation
@@ -109,8 +136,45 @@ Parse and extract structured data from tables, lists, forms, and other organized
 ### Implementation
 
 #### Workflow Structure
-```
-[GetAllHTML] → [ProcessHTML] → [ParseStructure] → [Validate] → [Output]
+
+```mermaid
+graph TB
+    A[GetAllHTML Node] --> B[ProcessHTML Node]
+    B --> C[Parse Structure]
+    C --> D[Validate Data]
+    D --> E[Output Structured Data]
+    
+    subgraph "Structure Types"
+        F[Tables] --> F1[Header Detection]
+        F --> F2[Column Mapping]
+        F --> F3[Data Type Conversion]
+        
+        G[Lists] --> G1[Item Extraction]
+        G --> G2[Hierarchy Detection]
+        G --> G3[Metadata Parsing]
+        
+        H[Forms] --> H1[Field Identification]
+        H --> H2[Value Extraction]
+        H --> H3[Validation Rules]
+    end
+    
+    B --> F
+    B --> G
+    B --> H
+    
+    F1 --> C
+    F2 --> C
+    F3 --> C
+    G1 --> C
+    G2 --> C
+    G3 --> C
+    H1 --> C
+    H2 --> C
+    H3 --> C
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style E fill:#e8f5e8
 ```
 
 #### Step-by-Step Implementation
@@ -206,8 +270,27 @@ Extract, process, and analyze images, videos, and other media content from web p
 ### Implementation
 
 #### Workflow Structure
-```
-[GetAllImages] → [ImageProcessor] → [MediaExtractor] → [Analysis] → [Output]
+
+```mermaid
+sequenceDiagram
+    participant W as Workflow
+    participant GI as GetAllImages
+    participant IP as ImageProcessor
+    participant ME as MediaExtractor
+    participant A as Analysis Engine
+    participant O as Output
+    
+    W->>GI: Extract images from page
+    GI->>IP: Send image collection
+    IP->>IP: Resize & optimize images
+    IP->>ME: Process optimized images
+    ME->>ME: Extract metadata & properties
+    ME->>A: Send for content analysis
+    A->>A: Detect objects & extract text
+    A->>O: Return processed results
+    
+    Note over IP: Image processing:<br/>resize, format conversion,<br/>quality optimization
+    Note over A: AI-powered analysis:<br/>object detection,<br/>text extraction,<br/>content classification
 ```
 
 #### Step-by-Step Implementation
@@ -302,8 +385,33 @@ Process continuous data feeds and real-time updates from dynamic web sources.
 ### Implementation
 
 #### Workflow Structure
-```
-[Monitor] → [Detect Changes] → [Extract Delta] → [Process] → [Stream Output]
+
+```mermaid
+timeline
+    title Real-time Data Streaming Process
+    
+    section Monitoring Phase
+        Initial Setup    : Monitor configuration
+                        : Target selection
+                        : Polling intervals
+        
+        Change Detection : Content monitoring
+                        : Delta identification
+                        : Change classification
+    
+    section Processing Phase
+        Data Extraction  : Extract new content
+                        : Parse changes
+                        : Validate data
+        
+        Stream Processing: Buffer management
+                         : Batch processing
+                         : Real-time output
+    
+    section Output Phase
+        Data Delivery   : Stream to endpoints
+                       : Update subscribers
+                       : Maintain state
 ```
 
 #### Step-by-Step Implementation

@@ -20,6 +20,34 @@ Add To A Date serves as a powerful date arithmetic tool that allows you to:
 - Support multiple date input formats and output formatting
 - Perform batch date calculations for multiple dates simultaneously
 
+```mermaid
+timeline
+    title Date Addition Process
+    
+    section Input Processing
+        Parse Input Date    : Validate format
+                           : Handle timezone
+                           : Convert to standard format
+        
+        Configure Addition  : Set time unit
+                           : Set amount to add
+                           : Apply business rules
+    
+    section Calculation
+        Date Arithmetic     : Add time period
+                           : Handle month/year boundaries
+                           : Account for leap years
+        
+        Business Day Logic  : Skip weekends
+                           : Exclude holidays
+                           : Adjust final date
+    
+    section Output
+        Format Result      : Apply timezone conversion
+                          : Format output string
+                          : Include metadata
+```
+
 ### Key Features
 
 - **Flexible Time Units**: Support for years, months, weeks, days, hours, minutes, and seconds
@@ -172,10 +200,39 @@ Add To A Date serves as a powerful date arithmetic tool that allows you to:
 ```
 
 **Workflow Integration**:
-```
-Project Creation → Add To A Date → Calendar Integration
-       ↓               ↓                ↓
-   start_date     deadline_date    scheduled_event
+
+```mermaid
+graph LR
+    A[Project Creation] --> B[Add To A Date Node]
+    B --> C[Calendar Integration]
+    
+    A --> A1[Project Start Date<br/>2024-01-15]
+    A1 --> B
+    
+    B --> B1[Add 10 Business Days]
+    B --> B2[Skip Weekends]
+    B --> B3[Exclude Holidays]
+    
+    B1 --> C
+    B2 --> C
+    B3 --> C
+    
+    C --> C1[Deadline Date<br/>2024-01-31]
+    C --> C2[Calendar Event]
+    C --> C3[Team Notification]
+    
+    subgraph "Business Rules"
+        D[Weekend Exclusion]
+        E[Holiday Calendar]
+        F[Timezone Handling]
+    end
+    
+    B --> D
+    B --> E
+    B --> F
+    
+    style B fill:#fff3e0
+    style C1 fill:#e8f5e8
 ```
 
 **Complete Example**:

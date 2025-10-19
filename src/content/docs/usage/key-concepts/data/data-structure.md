@@ -3,7 +3,30 @@ title: Data structure
 description: "Understand data structures and formats used in Agentic Workflow Studio browser extension workflows for web content processing."
 ---
 
-In Agentic Workflow Studio, all data passed between nodes is an array of objects. This structure is particularly important when working with browser context data. It has the following structure:
+In Agentic Workflow Studio, all data passed between nodes is an array of objects. This structure is particularly important when working with browser context data.
+
+## Data Structure Overview
+
+```mermaid
+graph TB
+    A[Node Output] --> B[Array of Objects]
+    B --> C[Object 1]
+    B --> D[Object 2]
+    B --> E[Object N...]
+    
+    C --> F[json: Browser Data]
+    C --> G[binary: File Data]
+    
+    F --> H[text, url, title, links...]
+    G --> I[data, mimeType, fileName...]
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style F fill:#e8f5e8
+    style G fill:#fff3e0
+```
+
+The data structure has the following format:
 
 ```json
 [
@@ -42,6 +65,42 @@ Browser extension nodes automatically format extracted data into the proper stru
 ## Browser Data Types
 
 Browser extension nodes extract different types of data from web pages:
+
+```mermaid
+graph LR
+    A[Web Page] --> B[Text Data]
+    A --> C[Link Data]
+    A --> D[Image Data]
+    A --> E[HTML Data]
+    A --> F[Form Data]
+    
+    B --> B1[Selected Text]
+    B --> B2[All Page Text]
+    B --> B3[Element Text]
+    
+    C --> C1[URLs]
+    C --> C2[Link Text]
+    C --> C3[Link Attributes]
+    
+    D --> D1[Image URLs]
+    D --> D2[Alt Text]
+    D --> D3[Image Metadata]
+    
+    E --> E1[Raw HTML]
+    E --> E2[Element HTML]
+    E --> E3[Page Structure]
+    
+    F --> F1[Input Values]
+    F --> F2[Form Structure]
+    F --> F3[Form Metadata]
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+    style E fill:#fce4ec
+    style F fill:#e0f2f1
+```
 
 - **Text data**: Selected text, all page text, or specific element text
 - **Link data**: URLs, link text, and link attributes

@@ -5,6 +5,30 @@ description: "Learn how to use Agentic Workflow Studio browser extension for map
 
 Data mapping means referencing data from previous nodes. It doesn't include changing (transforming) data, just referencing it.
 
+## Data Mapping Process
+
+```mermaid
+graph TB
+    A[Previous Node Output] --> B[Data Mapping]
+    B --> C[Current Node Input]
+    
+    B --> D[Drag & Drop Method]
+    B --> E[Expression Editor Method]
+    
+    D --> F[Select Data Field]
+    F --> G[Drag to Parameter]
+    G --> H[Auto-Generated Expression]
+    
+    E --> I[Write Expression]
+    I --> J[Reference Node Data]
+    J --> K[Custom Expression]
+    
+    style A fill:#e3f2fd
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#f3e5f5
+```
+
 You can map data in the following ways:
 
 * Using the expressions editor.
@@ -23,6 +47,20 @@ For information on errors with mapping and linking items, refer to [Item linking
 4. Drag the item into the field where you want to use the data.
 
 ### Understand what you're mapping with drag and drop
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant I as INPUT Panel
+    participant F as Parameter Field
+    participant E as Expression Engine
+    
+    U->>I: Select data field
+    U->>F: Drag field to parameter
+    I->>E: Generate expression path
+    E->>F: Create {{ $json.field }} expression
+    F->>U: Display mapped value
+```
 
 Data mapping maps the key path, and loads the key's value into the field. For example, given the following data:
 

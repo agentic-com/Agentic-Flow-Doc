@@ -11,6 +11,32 @@ tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"
 
 The Get All Text From Link node extracts all visible text content from web pages, providing clean, structured text data for analysis, processing, and AI workflows. This node leverages browser APIs to access page content directly, making it ideal for content analysis, data extraction, and feeding text to AI models.
 
+### Web Scraping Process Flow
+
+```mermaid
+sequenceDiagram
+    participant Input as URL Input
+    participant Node as GetAllTextFromLink
+    participant Browser as Browser Tab
+    participant DOM as DOM Parser
+    participant Filter as Content Filter
+    participant Output as Text Output
+    
+    Input->>Node: Target URL
+    Node->>Browser: Navigate to URL
+    Browser->>Browser: Load page content
+    Browser->>DOM: Parse HTML structure
+    DOM->>Filter: Extract all text nodes
+    Filter->>Filter: Remove hidden elements
+    Filter->>Filter: Apply text filters
+    Filter->>Node: Clean text content
+    Node->>Node: Add metadata & statistics
+    Node->>Output: Structured text data
+    
+    Note over Browser: Wait for dynamic content
+    Note over Filter: Remove ads, navigation, scripts
+```
+
 ### Purpose and Functionality
 
 This node performs comprehensive text extraction from web pages by:
@@ -170,7 +196,31 @@ This node performs comprehensive text extraction from web pages by:
 }
 ```
 
-**Step-by-Step Process**:
+**Step-by-Step Process**
+
+```mermaid
+flowchart TD
+    A[URL Input] --> B[GetAllTextFromLink Node]
+    B --> C[Navigate to URL]
+    C --> D{Page Loaded?}
+    D -->|No| E[Wait for Load]
+    E --> D
+    D -->|Yes| F[Inject Content Script]
+    F --> G[Traverse DOM Tree]
+    G --> H[Extract Text Nodes]
+    H --> I[Filter Hidden Elements]
+    I --> J[Apply Custom Filters]
+    J --> K[Remove Ads & Navigation]
+    K --> L[Calculate Statistics]
+    L --> M[Add Metadata]
+    M --> N[Return Clean Text]
+    
+    style B fill:#e1f5fe
+    style G fill:#fff3e0
+    style I fill:#f3e5f5
+    style N fill:#e8f5e8
+```
+
 1. Navigate to the specified URL in a browser tab
 2. Wait for the page to fully load (including dynamic content)
 3. Execute content script to traverse DOM and extract visible text

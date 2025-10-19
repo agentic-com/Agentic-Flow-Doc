@@ -11,13 +11,40 @@ tags: ["Workflow Logic", "Conditional Processing", "Data Flow", "Error Handling"
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in Agentic Flow
+- Basic understanding of workflow creation in `Agentic Workflow Studio`
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 
 ## Overview
 
 The IF node provides conditional logic capabilities for workflow automation, allowing you to create branching paths based on data evaluation, boolean expressions, and dynamic conditions. This node is essential for building intelligent workflows that adapt their behavior based on input data, user interactions, or external conditions.
+
+```mermaid
+flowchart TD
+    A[Input Data] --> B[IF Node]
+    B --> C{Evaluate Condition}
+    C -->|True| D[True Branch]
+    C -->|False| E[False Branch]
+    
+    D --> F[Continue Workflow Path A]
+    E --> G[Continue Workflow Path B]
+    
+    subgraph "Condition Types"
+        H[JavaScript Expression]
+        I[Data Comparison]
+        J[Boolean Logic]
+        K[Multiple Conditions]
+    end
+    
+    B --> H
+    B --> I
+    B --> J
+    B --> K
+    
+    style C fill:#fff3e0
+    style D fill:#e8f5e8
+    style E fill:#ffebee
+```
 
 ### Purpose and Functionality
 
@@ -196,10 +223,32 @@ The IF node operates on data and doesn't require specific browser permissions, b
 ```
 
 **Workflow Integration**:
-```
-User Auth Check → IF Node → Admin Actions
-                     ↓
-                 Regular Actions
+
+```mermaid
+graph LR
+    A[User Auth Check] --> B[IF Node]
+    B --> C{User Has Admin Permission?}
+    C -->|Yes| D[Admin Actions]
+    C -->|No| E[Regular Actions]
+    
+    D --> F[Advanced Operations]
+    E --> G[Standard Operations]
+    
+    subgraph "Admin Path"
+        F --> F1[User Management]
+        F --> F2[System Configuration]
+        F --> F3[Advanced Analytics]
+    end
+    
+    subgraph "Regular Path"
+        G --> G1[View Content]
+        G --> G2[Basic Operations]
+        G --> G3[Personal Settings]
+    end
+    
+    style C fill:#fff3e0
+    style D fill:#e8f5e8
+    style E fill:#e3f2fd
 ```
 
 **Complete Example**:

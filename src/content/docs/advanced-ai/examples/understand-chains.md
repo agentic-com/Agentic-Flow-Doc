@@ -8,6 +8,24 @@ contentType: explanation
 
 [Chains](/glossary.md#ai-chain) bring together different components of AI to create a cohesive system. They set up a sequence of calls between the components. These components can include models and [memory](/glossary.md#ai-memory) (though note that in Agentic Workflow Studio chains can't use memory).
 
+```mermaid
+flowchart LR
+    A[Input] --> B[Component 1]
+    B --> C[Component 2]
+    C --> D[Component 3]
+    D --> E[Output]
+    
+    subgraph "Chain Types in Agentic Workflow Studio"
+        F[Basic LLM Chain<br/>Input → LLM → Output]
+        G[Q&A Chain<br/>Query → Vector Store → LLM → Answer]
+        H[Summarization Chain<br/>Document → Chunking → LLM → Summary]
+    end
+    
+    style F fill:#e1f5fe
+    style G fill:#e8f5e8
+    style H fill:#fff3e0
+```
+
 
 ## Chains in Agentic Workflow Studio
 
