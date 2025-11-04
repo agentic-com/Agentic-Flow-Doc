@@ -127,22 +127,14 @@
     - Keep each guide to single-page length for easy consumption
     - _Requirements: 3.3, 4.3, 7.1, 1.4, 5.1, 5.3_
 
-- [ ] 8. Add support and template content
-  - [ ] 8.1 Create troubleshooting section in `src/content/docs/usage/troubleshooting/`
+- [-] 8. Add support and template content
+  - [x] 8.1 Create troubleshooting section in `src/content/docs/usage/troubleshooting/`
     - Write solutions for browser compatibility problems
     - Include permission and security issue resolutions
     - Add performance optimization tips with visual guides
     - Include clear feedback mechanisms for content improvement
     - Add diagnostic tables showing error symptoms, causes, and solutions
     - _Requirements: 4.3, 7.3, 9.4, 9.5_
-
-  - [ ] 8.2 Add Template Library to `src/content/docs/usage/templates/`
-    - Develop downloadable workflow templates for common tasks
-    - Include customization guides for each template
-    - Add copy-paste ready configurations with setup instructions
-    - Write real user workflow examples with business impact
-    - Create template specification tables showing inputs, outputs, and configuration options
-    - _Requirements: 5.2, 7.5, 5.4_
 
 - [ ] 9. Final content quality review and validation
   - [ ] 9.1 Review and validate all updated existing content

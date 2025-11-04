@@ -105,6 +105,20 @@ export default defineConfig({
                 },
               },
               {
+                label: "Quick Wins",
+                autogenerate: {
+                  directory: "usage/quick-wins",
+                  collapsed: false,
+                },
+              },
+              {
+                label: "How-To Guides",
+                autogenerate: {
+                  directory: "usage/how-to",
+                  collapsed: false,
+                },
+              },
+              {
                 label: "Releases",
                 autogenerate: { directory: "usage/releases", collapsed: true },
               },
@@ -117,7 +131,16 @@ export default defineConfig({
               },
               {
                 label: "Troubleshooting",
-                items: ["usage/troubleshooting-decision-guide"],
+                items: [
+                  "usage/troubleshooting-decision-guide",
+                  {
+                    label: "Common Issues",
+                    autogenerate: {
+                      directory: "usage/troubleshooting",
+                      collapsed: false,
+                    },
+                  },
+                ],
               },
               {
                 label: "Licenses and privacy",
