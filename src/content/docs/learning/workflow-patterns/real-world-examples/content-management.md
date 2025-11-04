@@ -233,7 +233,7 @@ Automate the migration of content between different platforms, CMS systems, or w
          "scanDepth": "full_site",
          "contentTypes": [
            "pages",
-           "posts", 
+           "posts",
            "images",
            "documents",
            "media_files"

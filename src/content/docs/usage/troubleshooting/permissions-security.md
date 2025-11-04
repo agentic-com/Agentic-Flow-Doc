@@ -178,7 +178,7 @@ async function checkPermissions() {
     hostAccess: {},
     errors: []
   };
-  
+
   // Check basic permissions
   const basicPerms = ['activeTab', 'scripting', 'storage'];
   for (const perm of basicPerms) {
@@ -189,7 +189,7 @@ async function checkPermissions() {
       results.errors.push(`Permission check failed for ${perm}: ${e.message}`);
     }
   }
-  
+
   // Check host access
   try {
     const granted = await chrome.permissions.contains({
@@ -199,7 +199,7 @@ async function checkPermissions() {
   } catch (e) {
     results.errors.push(`Host access check failed: ${e.message}`);
   }
-  
+
   console.log('Permission diagnostic results:', results);
   return results;
 }
@@ -256,7 +256,7 @@ function safeExtract(selector) {
     if (elements.length === 0) {
       return { error: 'No elements found', data: null };
     }
-    
+
     // Extract content safely
     const data = Array.from(elements).map(el => ({
       text: el.textContent?.trim() || '',
@@ -265,7 +265,7 @@ function safeExtract(selector) {
         Array.from(el.attributes).map(attr => [attr.name, attr.value])
       )
     }));
-    
+
     return { error: null, data };
   } catch (e) {
     return { error: e.message, data: null };

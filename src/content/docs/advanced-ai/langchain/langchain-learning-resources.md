@@ -14,4 +14,4 @@ The [LangChain documentation](https://docs.langchain.com/docs/) includes introdu
 
 If you prefer video, this [YouTube series by Greg Kamradt](https://youtu.be/_v_fgW2SkkQ?si=8Z2tfAoXnN3lXU9s) works through the LangChain documentation, providing code examples as it goes.
 
-Agentic Workflow Studiontic Workflow Studio offers space to discuss LangChain on the [Discord](https://discord.gg/bAt54txhHg). Join to share your projects and discuss ideas with the community.
+Agentic Workflow Studio offers space to discuss LangChain on the [Discord](https://discord.gg/bAt54txhHg). Join to share your projects and discuss ideas with the community.

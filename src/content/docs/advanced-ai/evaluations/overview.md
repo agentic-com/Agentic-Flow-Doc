@@ -5,7 +5,7 @@ description: Use Agentic Workflow Studio evaluations to build reliable AI workfl
 
 ## What are evaluations?
 
-Evaluation is a crucial technique for checking that your AI workflow is reliable. It can be the difference between a flaky proof of concept and a solid production workflow. It's important both in the building phase and after deploying to production. 
+Evaluation is a crucial technique for checking that your AI workflow is reliable. It can be the difference between a flaky proof of concept and a solid production workflow. It's important both in the building phase and after deploying to production.
 
 The foundation of evaluation is running a test dataset through your workflow. This dataset contains multiple test cases. Each test case contains a sample input for your workflow, and often includes the expected output(s) too.
 
@@ -34,10 +34,9 @@ The following video explains what evaluations are, why they're useful, and how t
 <iframe width="840" height="472.5" src="https://www.youtube.com/embed/5LlF196PKaE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 
-
 ## Why is evaluation needed?
 
-AI models are fundamentally different than code. Code is deterministic and you can reason about it. This is difficult to do with LLMs, since they're black boxes. Instead, you must *measure* LLM output by running data through them and observing the output. 
+AI models are fundamentally different than code. Code is deterministic and you can reason about it. This is difficult to do with LLMs, since they're black boxes. Instead, you must *measure* LLM output by running data through them and observing the output.
 
 You can only build confidence that your model performs reliably after you have run it over multiple inputs that accurately reflect all the edge cases that it will have to deal with in production.
 
@@ -64,7 +63,7 @@ graph TB
         A4[Large Performance Gains]
         A5[Optional Expected Outputs]
     end
-    
+
     subgraph "Metric-based Evaluation (Post-deployment)"
         B1[Large Dataset<br/>100+ test cases]
         B2[Production Data]
@@ -72,10 +71,10 @@ graph TB
         B4[Small Incremental Gains]
         B5[Required Expected Outputs]
     end
-    
+
     C[Development Phase] --> A1
     D[Production Phase] --> B1
-    
+
     style A1 fill:#e8f5e8
     style B1 fill:#fff3e0
 ```

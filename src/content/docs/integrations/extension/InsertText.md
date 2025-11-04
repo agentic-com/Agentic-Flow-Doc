@@ -58,7 +58,7 @@ Add helpful hints or validation messages next to form fields to guide users.
 
 **Position Options:**
 - **Before:** Adds text before the target element
-- **After:** Adds text after the target element  
+- **After:** Adds text after the target element
 - **Inside:** Adds text inside the target element
 
 **Text Formatting:** The inserted text appears as plain text. For formatted content, use HTML insertion methods.

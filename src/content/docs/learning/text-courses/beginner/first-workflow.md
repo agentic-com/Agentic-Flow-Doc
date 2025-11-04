@@ -1,6 +1,7 @@
 ---
 title: "Your First Workflow: Save Text from Any Website"
 description: "Learn to build your first automation by saving text from websites - no coding required! Perfect for research, note-taking, and content collection."
+difficulty: "🌱 beginner"
 ---
 
 # Your First Workflow: Save Text from Any Website
@@ -41,12 +42,12 @@ flowchart TD
     B --> C[✏️ Name: 'Save Website Text']
     C --> D[📁 Choose 'My Projects' Folder]
     D --> E[🎯 Workflow Builder Opens]
-    
+
     E --> F[🎨 Canvas: Your Work Area]
     E --> G[🧩 Toolbox: Available Tools]
     E --> H[⚙️ Settings: Tool Options]
     E --> I[▶️ Run Button: Test Your Work]
-    
+
     style A fill:#e1f5fe
     style E fill:#e8f5e8
     style F fill:#fff3e0
@@ -58,7 +59,7 @@ flowchart TD
    - **✅ Checkpoint:** You should see a small popup menu when you click it
 
 2. **Create your automation**
-   - Click "Create New Workflow" 
+   - Click "Create New Workflow"
    - Name it: "Save Website Text" (or whatever makes sense to you)
    - **✅ Checkpoint:** A new window should open with a blank workspace
 
@@ -79,7 +80,7 @@ graph LR
     A[🌐 You highlight text<br/>on any website] --> B[📝 Automation captures<br/>your selected text]
     B --> C[🧹 Automation cleans up<br/>the text and adds info]
     C --> D[💾 Automation saves it<br/>as a file on your computer]
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -134,7 +135,7 @@ Next, we'll add a worker that cleans up and improves the text we captured.
 ### Adding the Text Cleaner
 
 1. **Find the cleaning tool**
-   - In your toolbox, click on "Data Tools" 
+   - In your toolbox, click on "Data Tools"
    - Look for "EditFields" (this tool modifies and improves data)
    - **✅ Checkpoint:** You should see "EditFields" in the Data Tools section
 
@@ -165,7 +166,7 @@ Now let's tell this worker what improvements to make:
 
    **Improvement 2: Add Today's Date**
    ```
-   Create new field: extractedAt  
+   Create new field: extractedAt
    Set it to: Today's date and time
    ```
 
@@ -234,7 +235,7 @@ graph LR
     A[▶️ WhenStarted<br/>Start Button] --> B[📝 Grab Selected Text<br/>Text Capturer]
     B --> C[🧹 EditFields<br/>Text Cleaner]
     C --> D[💾 DownloadAsFile<br/>File Saver]
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -306,7 +307,7 @@ When you open the downloaded file, you'll see something like this:
 
 **💡 What this means:**
 - **selectedText:** The exact text you highlighted
-- **context:** A bit of surrounding text for reference  
+- **context:** A bit of surrounding text for reference
 - **extractedAt:** When you captured this (date and time)
 - **wordCount:** How many words were in your selection
 - **website:** Where you found this text
@@ -443,7 +444,7 @@ Don't worry if something goes wrong - it happens to everyone! Here are the most 
    - **✅ Test:** Try running the automation again after granting permissions
 
 3. **Manual download**
-   - Click on the last box (DownloadAsFile) 
+   - Click on the last box (DownloadAsFile)
    - Look for a "Download" button and click it manually
    - **✅ Test:** This should force the download to start
 
@@ -454,7 +455,7 @@ Don't worry if something goes wrong - it happens to everyone! Here are the most 
 ### Skills You've Gained
 - **Build automations** using connected workers (**nodes**)
 - **Capture text** from any website by highlighting it
-- **Clean and organize** captured information automatically  
+- **Clean and organize** captured information automatically
 - **Save your work** as files on your computer
 - **Troubleshoot** when things don't work as expected
 
@@ -477,10 +478,10 @@ Don't worry if something goes wrong - it happens to everyone! Here are the most 
 
 **Explore more nodes:** [Get All Text](/integrations/extension/GetAllText/) • [Get All Links](/integrations/extension/GetAllLinks/) • [Form Filler](/integrations/extension/FormFiller/)
 
-**Workflow patterns:** [Content Manipulation](/learning/workflow-patterns/content-manipulation-patterns/) • [Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/) • [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns/)
+**Workflow patterns:** [Content Manipulation](/learning/workflow-patterns/content-manipulation-patterns/) • [Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/) • [Web Extraction Patterns](/learning/workflow-patterns/web-extraction-patterns/)
 
 ---
 
-**⏱️ Time to complete:** 30-45 minutes  
-**🎯 Difficulty:** 🌱 Beginner (perfect for first-timers)  
+**⏱️ Time to complete:** 30-45 minutes
+**🎯 Difficulty:** 🌱 Beginner (perfect for first-timers)
 **📋 What you needed:** Browser extension installed

@@ -16,7 +16,7 @@ graph LR
     A[🔍 Check Data] --> B[❌ Problem Found]
     B --> C[🛑 Stop & Error]
     C --> D[📝 Error Report]
-    
+
     style A fill:#e1f5fe
     style B fill:#ffebee
     style C fill:#ffcdd2
@@ -27,10 +27,10 @@ graph LR
 
 ## Common Use Cases
 
-**Data validation** - Stop if scraped data is incomplete or wrong format  
-**Quality control** - Stop if content doesn't meet your standards  
-**Permission errors** - Stop if browser permissions are denied  
-**API failures** - Stop if external services aren't working  
+**Data validation** - Stop if scraped data is incomplete or wrong format
+**Quality control** - Stop if content doesn't meet your standards
+**Permission errors** - Stop if browser permissions are denied
+**API failures** - Stop if external services aren't working
 **Debugging** - Stop at specific points to check what's happening
 
 ## Real Example
@@ -117,6 +117,6 @@ Timestamp: 2024-01-17 10:30:15
 
 **Related nodes:** [If](/integrations/builtin/flow/If/) • [Filter](/integrations/builtin/flow/Filter/) • [Wait](/integrations/builtin/flow/wait/)
 
-**Common workflows:** [Data Validation Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Error Handling Strategies](/learning/workflow-patterns/optimization-best-practices/) • [Quality Control Workflows](/learning/workflow-patterns/web-scraping-patterns/)
+**Common workflows:** [Data Validation Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Error Handling Strategies](/learning/workflow-patterns/optimization-best-practices/) • [Quality Control Workflows](/learning/workflow-patterns/web-extraction-patterns/)
 
 **Learn more:** [Workflow Debugging](/learning/text-courses/intermediate/workflow-debugging/) • [Flow Control Basics](/learning/text-courses/beginner/data-flow-basics/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)

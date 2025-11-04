@@ -35,7 +35,7 @@ The Tools Agent is like having an AI assistant that can actually do things. Give
 **🔍 Competitive Research**: "Find pricing info from 5 competitor websites"
 - *Agent automatically*: Visits sites, extracts pricing, compares features, creates report
 
-**📊 Market Analysis**: "Research AI startups founded in 2024"  
+**📊 Market Analysis**: "Research AI startups founded in 2024"
 - *Agent automatically*: Searches multiple sources, extracts company data, validates information
 
 **📝 Lead Generation**: "Find contact info for tech companies in San Francisco"
@@ -50,7 +50,7 @@ flowchart LR
     C --> D[⚡ Execution]
     D --> E[🔄 Adapt & Continue]
     E --> F[✅ Final Results]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -340,7 +340,7 @@ flowchart TD
     M -->|No| N[Identify Missing Data]
     N --> E
     M -->|Yes| O[Return Final Results]
-    
+
     style B fill:#e1f5fe
     style C fill:#fff3e0
     style H fill:#f3e5f5

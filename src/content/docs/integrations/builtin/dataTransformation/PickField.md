@@ -22,7 +22,7 @@ description: "Select only the data fields you need from complex objects to simpl
 graph LR
     A[🗂️ Complex Data] --> B[🎯 Pick Field]
     B --> C[📋 Selected Fields Only]
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style C fill:#f3e5f5
@@ -87,15 +87,15 @@ graph LR
 
 ## Common Use Cases
 
-**API response filtering** - Extract only relevant data from large API responses  
-**Data privacy** - Remove sensitive fields before sharing data externally  
-**Performance optimization** - Reduce data size to speed up processing  
+**API response filtering** - Extract only relevant data from large API responses
+**Data privacy** - Remove sensitive fields before sharing data externally
+**Performance optimization** - Reduce data size to speed up processing
 **Focused processing** - Create clean datasets for specific workflow needs
 
 ## Quick Troubleshooting
 
-**Missing field errors:** Check field names are spelled correctly and exist in your data  
-**Nested fields not working:** Use dot notation like "user.profile.name" for nested data  
+**Missing field errors:** Check field names are spelled correctly and exist in your data
+**Nested fields not working:** Use dot notation like "user.profile.name" for nested data
 **Array access issues:** Use [0] for first item, [*] for all items in arrays
 
 ## What's Next?

@@ -87,7 +87,7 @@ class PageAwareMemory extends BaseMemory {
 
   async saveContext(inputs, outputs) {
     const url = await this.getCurrentPageUrl();
-    
+
     // Save to global memory
     await this.storage.save('global_memory', {
       timestamp: Date.now(),
@@ -173,7 +173,7 @@ class BrowserTextExtractionTool extends Tool {
 
   async _call(input) {
     const { type, selector } = JSON.parse(input);
-    
+
     switch (type) {
       case "selected":
         return await this.getSelectedText();
@@ -210,7 +210,7 @@ class BrowserHTMLAnalysisTool extends Tool {
 
   async _call(input) {
     const { action, selector, attribute } = JSON.parse(input);
-    
+
     return new Promise((resolve) => {
       const code = this.generateExtractionCode(action, selector, attribute);
       chrome.tabs.executeScript({ code }, (result) => {
@@ -283,7 +283,7 @@ class WebResearchAgent {
   createResearchPrompt() {
     return new PromptTemplate({
       template: `You are a web research assistant with access to browser tools.
-      
+
 Available tools:
 {tools}
 
@@ -306,7 +306,7 @@ Question: {input}
 
   async research(query, context = {}) {
     const pageContext = await this.getCurrentPageContext();
-    
+
     return await this.agent.call({
       input: query,
       page_context: JSON.stringify(pageContext),
@@ -403,7 +403,7 @@ class PrivacyAwareProcessor {
 
   sanitizeContent(content) {
     let sanitized = content;
-    
+
     this.sensitivePatterns.forEach(pattern => {
       sanitized = sanitized.replace(pattern, '[REDACTED]');
     });
@@ -432,11 +432,11 @@ class StreamingBrowserLLM {
 
   async streamResponse(prompt, onToken, onComplete) {
     const stream = await this.llm.stream(prompt);
-    
+
     for await (const chunk of stream) {
       onToken(chunk.content);
     }
-    
+
     onComplete();
   }
 }
@@ -490,7 +490,7 @@ class BrowserLLMCache {
 
   async set(prompt, options, response) {
     const key = this.generateKey(prompt, options);
-    
+
     if (this.cache.size >= this.maxSize) {
       // Remove oldest entry
       const firstKey = this.cache.keys().next().value;

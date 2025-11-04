@@ -80,7 +80,7 @@ Configure [HTTP Request](/integrations/builtin/core/Http-Request/) for reliabili
 - **Use local models** when possible to avoid API limits
 - **Clear memory** between large AI operations
 
-### 🌐 Web Scraping Nodes
+### 🌐 Web Extraction Nodes
 - **Add 1-2 second delays** between page requests
 - **Keep active tab open** for faster processing
 - **Process smaller chunks** of data at a time
@@ -99,7 +99,7 @@ Configure [HTTP Request](/integrations/builtin/core/Http-Request/) for reliabili
 
 **Exponential Backoff** (recommended)
 - Try 1: Wait 1 second
-- Try 2: Wait 2 seconds  
+- Try 2: Wait 2 seconds
 - Try 3: Wait 4 seconds
 - Try 4: Wait 8 seconds (max)
 

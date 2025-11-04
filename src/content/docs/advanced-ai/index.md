@@ -61,7 +61,7 @@ Powerful AI processing capabilities designed for browser environments
 |---------|-------------|-----------|------------|
 | **[LangChain Integration](/advanced-ai/langchain/overview/)** | Full LangChain framework support | Complex AI workflows, memory, tools | Advanced |
 | **[AI Agents](/integration/builtin/ai/AIAgents/)** | Intelligent decision-making agents | Autonomous workflows, problem-solving | Intermediate |
-| **[RAG Workflows](/advanced-ai/basics/rag-in-n8n/)** | Retrieval-Augmented Generation | Knowledge-based responses, context-aware AI | Advanced |
+| **[RAG Workflows](/advanced-ai/basics/rag-in-Agentic Workflow Studio/)** | Retrieval-Augmented Generation | Knowledge-based responses, context-aware AI | Advanced |
 | **[Memory Systems](/advanced-ai/examples/understand-memory/)** | Persistent AI context and learning | Conversational AI, personalized responses | Intermediate |
 
 ### 🌐 Browser-Specific AI Patterns
@@ -70,7 +70,7 @@ AI workflows optimized for browser environments and web content processing
 | Pattern | Purpose | Browser Integration | Best For |
 |---------|---------|-------------------|----------|
 | **[Intelligent Content Analysis](/advanced-ai/examples/intelligent-content-analysis/)** | AI-powered web content analysis | Text extraction + AI processing | Content research, SEO analysis |
-| **[Smart Web Scraping](/advanced-ai/examples/intelligent-web-scraping/)** | AI-guided data extraction | Dynamic content recognition | Data collection, research automation |
+| **[Smart Web Extraction](/advanced-ai/examples/intelligent-web-extraction/)** | AI-guided data extraction | Dynamic content recognition | Data collection, research automation |
 | **[AI Form Automation](/advanced-ai/examples/ai-form-automation/)** | Intelligent form completion | Context-aware form filling | Business automation, data entry |
 | **[Interactive AI Workflows](/advanced-ai/examples/intelligent-web-automation/)** | Real-time AI responses | User interaction + AI processing | Customer service, content enhancement |
 
@@ -98,7 +98,7 @@ AI workflows optimized for browser environments and web content processing
 |--------|----------|-------|---------------|
 | **[Understanding Memory](/advanced-ai/examples/understand-memory/)** | 35 min | AI memory and context | AI Beginner Path |
 | **[Understanding Tools](/advanced-ai/examples/understand-tools/)** | 40 min | AI tool integration | Understanding Memory |
-| **[RAG in Browser](/advanced-ai/basics/rag-in-n8n/)** | 60 min | Retrieval-Augmented Generation | Understanding Tools |
+| **[RAG in Browser](/advanced-ai/basics/rag-in-Agentic Workflow Studio/)** | 60 min | Retrieval-Augmented Generation | Understanding Tools |
 | **[Vector Databases](/advanced-ai/examples/understand-vector-databases/)** | 45 min | Vector storage and retrieval | RAG in Browser |
 
 **Intermediate AI Projects**:
@@ -170,7 +170,7 @@ AI-powered content analysis and enhancement
 - **[Example Workflow](/advanced-ai/examples/web-content-analysis/)**
 
 ### 🤖 Intelligent Automation
-AI-driven workflow automation and decision making
+AI-driven workflow and decision making
 
 **Scenario**: **Smart Form Completion**
 - **Input**: Form fields, context data
@@ -178,11 +178,11 @@ AI-driven workflow automation and decision making
 - **Output**: Completed forms, accuracy verification
 - **[Example Workflow](/advanced-ai/examples/ai-form-automation/)**
 
-**Scenario**: **Adaptive Web Scraping**
+**Scenario**: **Adaptive Web Extraction**
 - **Input**: Target websites, data requirements
 - **AI Processing**: Dynamic element recognition, content extraction
 - **Output**: Structured data, extraction reports
-- **[Example Workflow](/advanced-ai/examples/intelligent-web-scraping/)**
+- **[Example Workflow](/advanced-ai/examples/intelligent-web-extraction/)**
 
 ### 💬 Conversational AI
 Browser-based chat and interaction systems
@@ -197,7 +197,7 @@ Browser-based chat and interaction systems
 - **Input**: Questions, document collections
 - **AI Processing**: RAG-based retrieval, answer generation
 - **Output**: Accurate answers, source citations
-- **[Example Workflow](/advanced-ai/basics/rag-in-n8n/)**
+- **[Example Workflow](/advanced-ai/basics/rag-in-Agentic Workflow Studio/)**
 
 ## ⚡ Performance & Optimization
 

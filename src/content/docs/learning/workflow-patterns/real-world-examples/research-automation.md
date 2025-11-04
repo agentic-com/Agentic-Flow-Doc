@@ -26,7 +26,7 @@ graph LR
     A[🌐 Visit Competitor Sites] --> B[📝 Extract Key Info]
     B --> C[🤖 Analyze Changes]
     C --> D[📊 Generate Report]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#e8f5e8

@@ -15,7 +15,7 @@ description: "Keep only the data you want by filtering out items that don't meet
 graph LR
     A[📊 All Data] --> B[🔍 Filter]
     B --> C[✅ Matching Items Only]
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style C fill:#f3e5f5
@@ -68,21 +68,21 @@ graph LR
 
 ## Common Use Cases
 
-**Remove low-quality content** - Filter out articles that are too short or missing key information  
-**Deduplicate data** - Remove duplicate entries from scraped data  
-**Select by criteria** - Keep only items that match specific conditions  
+**Remove low-quality content** - Filter out articles that are too short or missing key information
+**Deduplicate data** - Remove duplicate entries from scraped data
+**Select by criteria** - Keep only items that match specific conditions
 **Performance optimization** - Reduce data size before expensive processing
 
 ## Quick Troubleshooting
 
-**No items pass filter:** Check that your criteria aren't too strict or field names are correct  
-**Filter too slow:** Simplify your conditions or process smaller batches  
+**No items pass filter:** Check that your criteria aren't too strict or field names are correct
+**Filter too slow:** Simplify your conditions or process smaller batches
 **Wrong results:** Verify field names match your data structure exactly
 
 ## What's Next?
 
 **Related nodes:** [If](/integrations/builtin/flow/If/) • [Merge](/integrations/builtin/flow/Merge/) • [Edit Fields](/integrations/builtin/dataTransformation/EditFields/)
 
-**Common workflows:** [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Web Scraping Workflows](/learning/workflow-patterns/web-scraping-patterns/) • [Quality Control Workflows](/learning/workflow-patterns/optimization-best-practices/)
+**Common workflows:** [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Web Extraction Workflows](/learning/workflow-patterns/web-extraction-patterns/) • [Quality Control Workflows](/learning/workflow-patterns/optimization-best-practices/)
 
 **Learn more:** [Flow Control Basics](/learning/text-courses/beginner/data-flow-basics/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)

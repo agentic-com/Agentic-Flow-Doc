@@ -3,6 +3,7 @@ title: Common Web Automation Workflow Patterns
 description: "Learn common web automation patterns and best practices using Agentic Workflow Studio browser extension."
 sidebar:
   order: 3
+difficulty: "🌱 beginner"
 ---
 
 # Common Web Automation Workflow Patterns

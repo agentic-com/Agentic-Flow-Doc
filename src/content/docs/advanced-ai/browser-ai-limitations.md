@@ -49,13 +49,13 @@ class BrowserMemoryManager {
   async optimizeMemoryForAI() {
     // Clear unnecessary data structures
     await this.clearUnusedCaches();
-    
+
     // Optimize AI model memory usage
     await this.optimizeModelMemory();
-    
+
     // Implement memory-efficient data processing
     await this.enableStreamingProcessing();
-    
+
     // Force garbage collection if available
     if (window.gc) {
       window.gc();
@@ -72,7 +72,7 @@ class BrowserMemoryManager {
     // Clear cached embeddings older than threshold
     const maxAge = 30 * 60 * 1000; // 30 minutes
     const now = Date.now();
-    
+
     for (const [key, value] of this.embeddingCache.entries()) {
       if (now - value.timestamp > maxAge) {
         this.embeddingCache.delete(key);
@@ -95,15 +95,15 @@ class MemoryEfficientAI {
 
   async processLargeDataset(data, processor) {
     const results = [];
-    
+
     // Process in memory-efficient batches
     for (let i = 0; i < data.length; i += this.batchSize) {
       const batch = data.slice(i, i + this.batchSize);
-      
+
       // Process batch with memory monitoring
       const batchResults = await this.processBatchWithMemoryCheck(batch, processor);
       results.push(...batchResults);
-      
+
       // Clear intermediate results to free memory
       if (i % (this.batchSize * 5) === 0) {
         await this.performMemoryCleanup();
@@ -148,10 +148,10 @@ class BrowserCPUOptimizer {
   async optimizeForBrowserCPU(operations) {
     // Detect browser capabilities
     const capabilities = await this.detectBrowserCapabilities();
-    
+
     // Adjust processing strategy based on capabilities
     const strategy = this.selectProcessingStrategy(capabilities);
-    
+
     return await this.executeWithStrategy(operations, strategy);
   }
 
@@ -169,13 +169,13 @@ class BrowserCPUOptimizer {
     switch (strategy.type) {
       case 'sequential':
         return await this.executeSequentially(operations);
-      
+
       case 'limited_parallel':
         return await this.executeLimitedParallel(operations, strategy.maxConcurrent);
-      
+
       case 'web_worker':
         return await this.executeWithWebWorkers(operations);
-      
+
       case 'chunked':
         return await this.executeChunked(operations, strategy.chunkSize);
     }
@@ -225,16 +225,16 @@ class AIWebWorkerManager {
   async initializeWorkers() {
     for (let i = 0; i < this.maxWorkers; i++) {
       const worker = new Worker('/ai-worker.js');
-      
+
       worker.onmessage = (event) => {
         this.handleWorkerMessage(event, worker);
       };
-      
+
       worker.onerror = (error) => {
         console.error('AI Worker error:', error);
         this.handleWorkerError(error, worker);
       };
-      
+
       this.workers.push({
         worker: worker,
         busy: false,
@@ -246,7 +246,7 @@ class AIWebWorkerManager {
   async processWithWorker(task) {
     return new Promise((resolve, reject) => {
       const availableWorker = this.workers.find(w => !w.busy);
-      
+
       if (availableWorker) {
         this.executeTaskOnWorker(task, availableWorker, resolve, reject);
       } else {
@@ -259,7 +259,7 @@ class AIWebWorkerManager {
   executeTaskOnWorker(task, workerInfo, resolve, reject) {
     workerInfo.busy = true;
     workerInfo.currentTask = { resolve, reject };
-    
+
     workerInfo.worker.postMessage({
       type: 'AI_TASK',
       task: task,
@@ -272,10 +272,10 @@ class AIWebWorkerManager {
 const aiWorkerScript = `
   // Import AI libraries (if available in worker context)
   // Note: Many AI libraries may not work in Web Workers due to DOM dependencies
-  
+
   self.onmessage = function(event) {
     const { type, task, id } = event.data;
-    
+
     if (type === 'AI_TASK') {
       processAITask(task)
         .then(result => {
@@ -294,18 +294,18 @@ const aiWorkerScript = `
         });
     }
   };
-  
+
   async function processAITask(task) {
     switch (task.type) {
       case 'text_processing':
         return await processText(task.data);
-      
+
       case 'data_analysis':
         return await analyzeData(task.data);
-      
+
       case 'embedding_calculation':
         return await calculateEmbeddings(task.data);
-      
+
       default:
         throw new Error('Unknown task type: ' + task.type);
     }
@@ -330,10 +330,10 @@ class CSPCompliantAI {
   async initializeWithCSP() {
     // Detect CSP restrictions
     const cspInfo = await this.analyzeCSP();
-    
+
     // Configure allowed endpoints
     await this.configureAllowedEndpoints(cspInfo);
-    
+
     // Set up fallback strategies
     await this.setupFallbackStrategies(cspInfo);
   }
@@ -498,25 +498,25 @@ class StreamingAIProcessor {
 
   async processStreamingResponse(prompt, onChunk, onComplete) {
     const stream = await this.createStream(prompt);
-    
+
     let fullResponse = '';
     const decoder = new TextDecoder();
-    
+
     try {
       for await (const chunk of stream) {
         const text = decoder.decode(chunk, { stream: true });
         fullResponse += text;
-        
+
         // Process chunk immediately for better UX
         await onChunk(text, fullResponse);
-        
+
         // Yield control to prevent blocking
         await this.yieldControl();
       }
-      
+
       await onComplete(fullResponse);
       return fullResponse;
-      
+
     } catch (error) {
       console.error('Streaming error:', error);
       // Fallback to non-streaming
@@ -568,66 +568,66 @@ class AIResponseCache {
       temperature: options.temperature || 0.7,
       maxTokens: options.maxTokens || 1000
     };
-    
+
     return btoa(JSON.stringify(keyData));
   }
 
   async get(prompt, options = {}) {
     const key = this.generateCacheKey(prompt, options);
     const cached = this.cache.get(key);
-    
+
     if (cached && this.isValid(cached)) {
       // Update access time for LRU
       cached.lastAccessed = Date.now();
       return this.decompress(cached.response);
     }
-    
+
     return null;
   }
 
   async set(prompt, options, response) {
     const key = this.generateCacheKey(prompt, options);
-    
+
     // Implement LRU eviction
     if (this.cache.size >= this.maxSize) {
       this.evictLRU();
     }
-    
+
     const cacheEntry = {
       response: await this.compress(response),
       timestamp: Date.now(),
       lastAccessed: Date.now(),
       size: JSON.stringify(response).length
     };
-    
+
     this.cache.set(key, cacheEntry);
   }
 
   async compress(data) {
     if (!this.compressionEnabled) return data;
-    
+
     try {
       // Use browser compression if available
       if ('CompressionStream' in window) {
         const stream = new CompressionStream('gzip');
         const writer = stream.writable.getWriter();
         const reader = stream.readable.getReader();
-        
+
         writer.write(new TextEncoder().encode(JSON.stringify(data)));
         writer.close();
-        
+
         const chunks = [];
         let done = false;
-        
+
         while (!done) {
           const { value, done: readerDone } = await reader.read();
           done = readerDone;
           if (value) chunks.push(value);
         }
-        
+
         return new Uint8Array(chunks.reduce((acc, chunk) => [...acc, ...chunk], []));
       }
-      
+
       // Fallback to simple JSON compression
       return JSON.stringify(data);
     } catch (error) {
@@ -666,31 +666,31 @@ class BrowserAIOptimizer {
       browserCapabilities,
       constraints
     );
-    
+
     return optimizedConfig;
   }
 
   async generateOptimizedConfig(modelType, capabilities, constraints) {
     const baseConfig = this.getBaseConfig(modelType);
-    
+
     // Adjust for memory constraints
     if (capabilities.availableMemory < 100 * 1024 * 1024) { // Less than 100MB
       baseConfig.maxTokens = Math.min(baseConfig.maxTokens, 512);
       baseConfig.batchSize = 1;
     }
-    
+
     // Adjust for CPU constraints
     if (capabilities.cores < 4) {
       baseConfig.temperature = 0.3; // Lower temperature for faster processing
       baseConfig.streaming = true;
     }
-    
+
     // Adjust for network constraints
     if (constraints.networkSpeed === 'slow') {
       baseConfig.maxTokens = Math.min(baseConfig.maxTokens, 256);
       baseConfig.timeout = 30000; // Longer timeout for slow networks
     }
-    
+
     return baseConfig;
   }
 
@@ -715,7 +715,7 @@ class BrowserAIOptimizer {
         batchSize: 10
       }
     };
-    
+
     return { ...configs[modelType] } || configs['chat'];
   }
 }
@@ -730,10 +730,10 @@ class BrowserAIOptimizer {
 class MemoryTroubleshooter {
   async diagnoseMemoryIssues() {
     const issues = [];
-    
+
     // Check current memory usage
     const memoryUsage = await this.getMemoryUsage();
-    
+
     if (memoryUsage.used > memoryUsage.limit * 0.8) {
       issues.push({
         type: 'high_memory_usage',
@@ -741,7 +741,7 @@ class MemoryTroubleshooter {
         solution: 'Implement memory cleanup and reduce batch sizes'
       });
     }
-    
+
     // Check for memory leaks
     const leakDetection = await this.detectMemoryLeaks();
     if (leakDetection.suspected) {
@@ -751,7 +751,7 @@ class MemoryTroubleshooter {
         solution: 'Clear unused references and implement proper cleanup'
       });
     }
-    
+
     return issues;
   }
 
@@ -761,7 +761,7 @@ class MemoryTroubleshooter {
         case 'high_memory_usage':
           await this.reduceMemoryUsage();
           break;
-        
+
         case 'memory_leak':
           await this.fixMemoryLeaks();
           break;
@@ -772,13 +772,13 @@ class MemoryTroubleshooter {
   async reduceMemoryUsage() {
     // Clear caches
     this.clearAllCaches();
-    
+
     // Reduce batch sizes
     this.reduceBatchSizes();
-    
+
     // Enable streaming
     this.enableStreaming();
-    
+
     // Force garbage collection
     if (window.gc) {
       window.gc();
@@ -795,7 +795,7 @@ class PerformanceTroubleshooter {
   async diagnosePerformanceIssues() {
     const metrics = await this.collectPerformanceMetrics();
     const issues = [];
-    
+
     if (metrics.averageResponseTime > 5000) {
       issues.push({
         type: 'slow_response',
@@ -803,7 +803,7 @@ class PerformanceTroubleshooter {
         solution: 'Optimize model parameters and enable caching'
       });
     }
-    
+
     if (metrics.errorRate > 0.1) {
       issues.push({
         type: 'high_error_rate',
@@ -811,7 +811,7 @@ class PerformanceTroubleshooter {
         solution: 'Implement better error handling and retry logic'
       });
     }
-    
+
     return issues;
   }
 
@@ -821,7 +821,7 @@ class PerformanceTroubleshooter {
         case 'slow_response':
           await this.optimizeResponseTime();
           break;
-        
+
         case 'high_error_rate':
           await this.improveErrorHandling();
           break;

@@ -7,9 +7,7 @@ sidebar:
 
 Sticky Notes allow you to annotate and comment on your workflows.
 
-Agentic Workflow Studio recommends using Sticky Notes heavily, especially on [template workflows](/glossary.md#template-Agentic Workflow Studio), to help other users understand your workflow.
-
-![Screenshot of a basic workflow with an example sticky note](/_images/workflows/components/stickies/example-sticky-note.png)
+Agentic Workflow Studio recommends using Sticky Notes heavily, especially on template workflows, to help other users understand your workflow.
 
 ## Create a Sticky Note
 
@@ -22,7 +20,7 @@ Sticky Notes are a core node. To add a new Sticky Note:
 ## Edit a Sticky Note
 
 1. Double click the Sticky Note you want to edit.
-2. Write your note. [This guide](https://commonmark.org/help/) explains how to format your text with Markdown. Agentic Workflow Studio uses [markdown-it](https://github.com/markdown-it/markdown-it), which implements the CommonMark specification. 
+2. Write your note. [This guide](https://commonmark.org/help/) explains how to format your text with Markdown. Agentic Workflow Studio uses [markdown-it](https://github.com/markdown-it/markdown-it), which implements the CommonMark specification.
 3. Click away from the note, or press `Esc`, to stop editing.
 
 ## Change the color
@@ -30,7 +28,7 @@ Sticky Notes are a core node. To add a new Sticky Note:
 To change the Sticky Note color:
 
 1. Hover over the Sticky Note
-1. Select **Change color** <span class="n8n-inline-image">![Change Sticky Note color icon](/_images/common-icons/change-color.png){.off-glb}</span>
+1. Select **Change color** <span class="Agentic Workflow Studio-inline-image">{.off-glb}</span>
 
 ## Sticky Note positioning
 
@@ -39,7 +37,7 @@ You can:
 * Drag a Sticky Note anywhere on the canvas.
 * Drag Sticky Notes behind nodes. You can use this to visually group nodes.
 * Resize Sticky Notes by hovering over the edge of the note and dragging to resize.
-* Change the color: select **Options** <span class="n8n-inline-image">![Options icon](/_images/common-icons/three-dot-options-menu.png){.off-glb}</span> to open the color selector.
+* Change the color: select **Options** <span class="Agentic Workflow Studio-inline-image">{.off-glb}</span> to open the color selector.
 
 ## Writing in Markdown
 

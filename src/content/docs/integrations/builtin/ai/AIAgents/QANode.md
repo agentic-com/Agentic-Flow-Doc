@@ -37,7 +37,7 @@ The Q&A node is like having a smart reading assistant. Give it any text content 
 - *Output*: Key points and takeaways
 
 **🛍️ Product Research**: "What are the pros and cons mentioned in this review?"
-- *Input*: Product review content  
+- *Input*: Product review content
 - *Output*: Balanced summary of positives and negatives
 
 **📊 Report Insights**: "What were the key findings in this research?"
@@ -51,7 +51,7 @@ flowchart LR
     A[❓ Your Question] --> B[📄 Content to Analyze]
     B --> C[🤖 AI Analysis]
     C --> D[✅ Smart Answer]
-    
+
     style A fill:#e3f2fd
     style B fill:#f3e5f5
     style C fill:#fff3e0
@@ -60,7 +60,7 @@ flowchart LR
 
 **Perfect for when you need to:**
 - 🎯 **Extract specific information** from long documents
-- 📊 **Analyze content** and get insights  
+- 📊 **Analyze content** and get insights
 - ✅ **Verify facts** mentioned in articles
 - 🔍 **Find answers** without reading everything yourself
 
@@ -100,7 +100,7 @@ flowchart LR
 **For Detailed Analysis**:
 ```json
 {
-  "answer_style": "detailed", 
+  "answer_style": "detailed",
   "max_answer_length": 600,
   "include_sources": true
 }
@@ -119,7 +119,7 @@ flowchart LR
 
 Works in all major browsers:
 - ✅ **Chrome**: Full support with response caching
-- ✅ **Firefox**: Full support  
+- ✅ **Firefox**: Full support
 - ⚠️ **Safari**: Limited caching capabilities
 - ✅ **Edge**: Full support
 
@@ -208,8 +208,6 @@ Get All Text From Link → Q&A Node → Edit Fields
 
 </details>
 
-
-
 ## Best Practices
 
 ### ✅ Do This
@@ -227,19 +225,19 @@ Get All Text From Link → Q&A Node → Edit Fields
 ## Troubleshooting
 
 ### 🤔 "Low Confidence" Answers
-**Problem**: AI says it's not confident about the answer  
+**Problem**: AI says it's not confident about the answer
 **Solution**: Make your question more specific or check if the content actually contains the information
 
 ### 📝 Inconsistent Answer Formats
-**Problem**: Answers don't follow your requested format  
+**Problem**: Answers don't follow your requested format
 **Solution**: Be more specific in your question: "List the top 3 features as bullet points"
 
 ### ⏱️ Slow Processing
-**Problem**: Q&A takes too long to respond  
+**Problem**: Q&A takes too long to respond
 **Solution**: Break very long content into smaller chunks or ask more focused questions
 
 ### ❌ "Information Not Found"
-**Problem**: AI can't find answers in the content  
+**Problem**: AI can't find answers in the content
 **Solution**: Verify the content actually contains what you're asking about, or rephrase your question
 
 ## Limitations to Know

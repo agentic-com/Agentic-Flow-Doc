@@ -2,6 +2,7 @@
 contentType: tutorial
 title: Web Content Analysis with AI
 description: "Analyze web content intelligently using Agentic Workflow Studio browser extension with AI-powered processing workflows."
+difficulty: "🎯 advanced"
 ---
 
 # Web Content Analysis with AI
@@ -46,7 +47,7 @@ const structuredAnalysis = await StructuredOutputParser.execute({
   input: analysis,
   schema: {
     topics: "array",
-    insights: "array", 
+    insights: "array",
     summary: "string"
   }
 });

@@ -16,7 +16,7 @@ graph LR
     A[🔄 Lambda Workflow] --> B[📤 Lambda Output]
     B --> C[✅ Format Data]
     C --> D[📥 Calling Workflow]
-    
+
     style A fill:#e1f5fe
     style B fill:#fff3e0
     style C fill:#e8f5e8
@@ -27,14 +27,14 @@ graph LR
 
 ## Common Use Cases
 
-**Return processed data** - Send results back to the workflow that called your lambda  
-**Format results** - Structure data in a consistent way for other workflows  
-**Aggregate results** - Combine multiple processing steps into one output  
+**Return processed data** - Send results back to the workflow that called your lambda
+**Format results** - Structure data in a consistent way for other workflows
+**Aggregate results** - Combine multiple processing steps into one output
 **Standardize responses** - Ensure all your reusable workflows return data the same way
 
 ## Real Example
 
-**Scenario:** Return extracted content and metadata from a web scraping lambda workflow
+**Scenario:** Return extracted content and metadata from a web extraction lambda workflow
 
 **Lambda Output Configuration:**
 ```json

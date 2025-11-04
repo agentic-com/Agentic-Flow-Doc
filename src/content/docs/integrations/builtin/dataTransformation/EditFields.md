@@ -22,7 +22,7 @@ description: "Transform and clean up data by renaming fields, converting types, 
 graph LR
     A[🌐 Raw Data] --> B[✏️ Edit Fields]
     B --> C[📊 Clean Data]
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style C fill:#f3e5f5
@@ -76,21 +76,21 @@ graph LR
 
 ## Common Use Cases
 
-**Clean web scraped data** - Fix messy field names and data types from websites  
-**Prepare API data** - Format data before sending to external services  
-**Process form submissions** - Clean and validate user input data  
+**Clean web scraped data** - Fix messy field names and data types from websites
+**Prepare API data** - Format data before sending to external services
+**Process form submissions** - Clean and validate user input data
 **Standardize data** - Make data consistent across different sources
 
 ## Quick Troubleshooting
 
-**Field not found errors:** Check that field names match exactly (case-sensitive)  
-**Type conversion fails:** Make sure the data can actually be converted (e.g., "abc" can't become a number)  
+**Field not found errors:** Check that field names match exactly (case-sensitive)
+**Type conversion fails:** Make sure the data can actually be converted (e.g., "abc" can't become a number)
 **Operations not working:** Verify your JSON syntax is correct
 
 ## What's Next?
 
 **Related nodes:** [Filter](/integrations/builtin/flow/Filter/) • [Merge](/integrations/builtin/flow/Merge/) • [HTTP Request](/integrations/builtin/core/Http-Request/)
 
-**Common workflows:** [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Web Scraping Workflows](/learning/workflow-patterns/web-scraping-patterns/) • [API Integration](/learning/workflow-patterns/integration-patterns/)
+**Common workflows:** [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Web Extraction Workflows](/learning/workflow-patterns/web-extraction-patterns/) • [API Integration](/learning/workflow-patterns/integration-patterns/)
 
 **Learn more:** [Data Transformation Guide](/learning/text-courses/intermediate/data-transformation/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)

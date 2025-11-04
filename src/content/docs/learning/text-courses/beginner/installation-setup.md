@@ -1,6 +1,7 @@
 ---
 title: "Install Your Automation Tool: Step-by-Step Setup"
 description: "Get Agentic Workflow Studio running in your browser in just 10 minutes. Simple instructions with pictures and troubleshooting help."
+difficulty: "🌱 beginner"
 ---
 
 # Install Your Automation Tool: Step-by-Step Setup
@@ -26,16 +27,16 @@ flowchart TD
     B -->|Chrome| C[🏪 Chrome Web Store]
     B -->|Firefox| D[🦊 Firefox Add-ons]
     B -->|Edge| E[🔷 Edge Add-ons]
-    
+
     C --> F[🔍 Search 'Agentic Workflow Studio']
     D --> F
     E --> F
-    
+
     F --> G[➕ Click 'Add to Browser']
     G --> H[👀 Review What It Can Do]
     H --> I[✅ Click 'Add Extension']
     I --> J[🎉 Look for New Icon in Toolbar]
-    
+
     style A fill:#e1f5fe
     style I fill:#e8f5e8
     style J fill:#fff3e0
@@ -125,7 +126,7 @@ Now we need to tell your browser what the extension is allowed to do. Think of t
 - **Why it's helpful:** You can create automations that work on news sites, shopping sites, social media, etc.
 - **Is it safe?** Yes - it only acts when you tell it to
 
-**💾 "Download files"**  
+**💾 "Download files"**
 - **What it means:** The extension can save files to your Downloads folder
 - **Why it's helpful:** When you extract text or data, it can save it as a file for you
 - **Is it safe?** Yes - it only saves what you tell it to save
@@ -160,7 +161,7 @@ When you first open the workspace, you might see some setup options:
 **Recommended settings for beginners:**
 ```
 Auto-save: ✅ Every 30 seconds (so you don't lose work)
-Beginner mode: ✅ Shows helpful tips and explanations  
+Beginner mode: ✅ Shows helpful tips and explanations
 Debug mode: ✅ Helps you see what's happening when things go wrong
 ```
 
@@ -214,7 +215,7 @@ Don't worry if you run into issues - these are the most common problems and thei
 **How to fix it:**
 1. **Check if it's actually installed**
    - **Chrome:** Type `chrome://extensions/` in your address bar
-   - **Firefox:** Type `about:addons` in your address bar  
+   - **Firefox:** Type `about:addons` in your address bar
    - **✅ Test:** You should see "Agentic Workflow Studio" in the list
 
 2. **Make the icon visible**
@@ -336,6 +337,6 @@ Don't worry if you run into issues - these are the most common problems and thei
 
 ---
 
-**⏱️ Time to complete:** 10-15 minutes  
-**🎯 Difficulty:** 🌱 Beginner (anyone can do this)  
+**⏱️ Time to complete:** 10-15 minutes
+**🎯 Difficulty:** 🌱 Beginner (anyone can do this)
 **📋 What you needed:** A modern web browser

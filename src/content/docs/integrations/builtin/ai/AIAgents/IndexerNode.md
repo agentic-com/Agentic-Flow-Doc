@@ -36,7 +36,7 @@ The Indexer Node takes long documents and breaks them into smart, searchable chu
 - *Output*: Searchable chunks ready for Q&A system
 
 **🔍 Research Assistant**: Make academic papers searchable by concept
-- *Input*: Research papers and articles  
+- *Input*: Research papers and articles
 - *Output*: Organized chunks that AI can search through
 
 **💬 Smart Customer Support**: Index help docs for instant answers
@@ -50,7 +50,7 @@ flowchart LR
     A[📄 Long Document] --> B[✂️ Smart Chunking]
     B --> C[🧠 Create Embeddings]
     C --> D[📊 Searchable Chunks]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -83,7 +83,7 @@ flowchart LR
 
 Works in all major browsers:
 - ✅ **Chrome**: Full support with fast processing
-- ✅ **Firefox**: Full support  
+- ✅ **Firefox**: Full support
 - ⚠️ **Safari**: Limited storage for large documents
 - ✅ **Edge**: Full support
 
@@ -157,8 +157,6 @@ Get HTML From Link → Indexer Node → Local Knowledge → RAG Node
 
 </details>
 
-
-
 ## Best Practices
 
 ### ✅ Do This
@@ -177,19 +175,19 @@ Get HTML From Link → Indexer Node → Local Knowledge → RAG Node
 ## Troubleshooting
 
 ### 🚫 "Rate Limit Exceeded" Error
-**Problem**: Too many embedding API requests  
+**Problem**: Too many embedding API requests
 **Solution**: Reduce batch size, add delays between requests, or upgrade API plan
 
 ### ✂️ Poor Chunk Quality
-**Problem**: Chunks cut off mid-sentence or lose context  
+**Problem**: Chunks cut off mid-sentence or lose context
 **Solution**: Adjust chunk size and overlap, customize separators for your document type
 
 ### 💾 "Out of Memory" Error
-**Problem**: Browser crashes with very large documents  
+**Problem**: Browser crashes with very large documents
 **Solution**: Process documents in smaller segments, reduce max chunks limit
 
 ### 🐌 Slow Processing
-**Problem**: Indexing takes too long  
+**Problem**: Indexing takes too long
 **Solution**: Use smaller documents, reduce chunk overlap, or try local embedding models
 
 ## Limitations to Know
@@ -219,7 +217,7 @@ Indexer Node is the first step in:
 
 **Common workflows:** [AI Knowledge Base](/advanced-ai/examples/intelligent-content-analysis/) • [Document Search](/advanced-ai/examples/end-to-end-ai-workflows/) • [Smart Research](/learning/workflow-patterns/real-world-examples/research-automation/)
 
-**Learn more:** [AI Workflow Builder](/advanced-ai/basics/ai-workflow-builder/) • [Understanding RAG](/advanced-ai/basics/rag-in-n8n/) • [Vector Databases](/advanced-ai/examples/understand-vector-databases/)
+**Learn more:** [AI Workflow Builder](/advanced-ai/basics/ai-workflow-builder/) • [Understanding RAG](/advanced-ai/basics/rag-in-Agentic Workflow Studio/) • [Vector Databases](/advanced-ai/examples/understand-vector-databases/)
 
 ---
 

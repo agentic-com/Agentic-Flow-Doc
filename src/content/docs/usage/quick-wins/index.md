@@ -2,6 +2,7 @@
 title: "🚀 Quick Wins"
 description: "Get immediate value from Agentic Workflow Studio with these 5-15 minute tutorials"
 template: doc
+difficulty: "🌱 beginner"
 ---
 
 # 🚀 Quick Wins
@@ -11,7 +12,7 @@ Get up and running with Agentic Workflow Studio in minutes, not hours. These foc
 ## Why Start Here?
 
 - **Immediate Results**: See value in your first 5 minutes
-- **Real Problems**: Solve actual business challenges, not toy examples  
+- **Real Problems**: Solve actual business challenges, not toy examples
 - **Build Confidence**: Success breeds success - start with wins
 - **Learn by Doing**: Hands-on tutorials with copy-paste workflows
 
@@ -21,18 +22,18 @@ Get up and running with Agentic Workflow Studio in minutes, not hours. These foc
 
 <div class="quick-win-card">
 
-**[Extract Product Prices](extract-product-prices)**  
+**[Extract Product Prices](extract-product-prices)**
 *5 minutes • 🌱 Beginner*
 
 Automatically collect product prices from any shopping website. Perfect for price comparison and market research.
 
-**What you'll learn**: Web scraping basics, data extraction, workflow building
+**What you'll learn**: Web extraction basics, data extraction, workflow building
 
 </div>
 
 <div class="quick-win-card">
 
-**[Monitor Competitor Prices](monitor-competitor-prices)**  
+**[Monitor Competitor Prices](monitor-competitor-prices)**
 *15 minutes • 🚀 Intermediate*
 
 Set up automated competitor price tracking with alerts. Stay ahead of market changes without manual checking.
@@ -45,7 +46,7 @@ Set up automated competitor price tracking with alerts. Stay ahead of market cha
 
 <div class="quick-win-card">
 
-**[Automate Form Filling](automate-form-filling)**  
+**[Automate Form Filling](automate-form-filling)**
 *10 minutes • 🌱 Beginner*
 
 Speed up repetitive data entry by automatically filling web forms with your information.
@@ -68,7 +69,7 @@ flowchart LR
     A[🚀 Quick Win] --> B[💡 Understanding]
     B --> C[🔧 Customization]
     C --> D[📈 Advanced Projects]
-    
+
     style A fill:#e8f5e8
     style B fill:#fff3e0
     style C fill:#f3e5f5

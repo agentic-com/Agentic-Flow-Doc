@@ -2,7 +2,7 @@
 title: "Get HTML From Link"
 description: "Extract complete HTML source code from web pages for structure analysis, content processing, and advanced web automation workflows."
 template: doc
-tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
+tags: ["Web Extraction", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
 ---
 
 # Get HTML From Link
@@ -37,7 +37,7 @@ This node performs comprehensive HTML extraction by:
 
 ### Primary Use Cases
 
-- **Web Scraping**: Extract structured data from HTML elements for database population or analysis
+- **Web Extraction**: Extract structured data from HTML elements for database population or analysis
 - **Content Analysis**: Analyze page structure, SEO elements, and content organization
 - **Template Extraction**: Capture page layouts and structures for replication or analysis
 - **Quality Assurance**: Validate HTML structure, accessibility compliance, and content standards
@@ -288,7 +288,7 @@ Example showing how this node integrates with other workflow nodes:
 
 ### Common Node Combinations
 
-#### Pattern 1: Web Scraping Pipeline
+#### Pattern 1: Web Extraction Pipeline
 
 - **Nodes**: Get HTML From Link → HTML Parser → Data Extractor → Database Storage
 - **Use Case**: Systematic data extraction from websites for business intelligence
@@ -315,7 +315,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Missing elements or content that appears in browser but not in extracted HTML
 - **Causes**: JavaScript-rendered content not fully loaded, AJAX requests still pending
-- **Solutions**: 
+- **Solutions**:
   1. Increase waitForLoad timeout to allow complete rendering
   2. Check if page uses lazy loading or infinite scroll
   3. Verify that dynamic content has finished loading before extraction
@@ -325,7 +325,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Important elements or attributes missing from output
 - **Causes**: Overly aggressive sanitization removing legitimate HTML elements
-- **Solutions**: 
+- **Solutions**:
   1. Disable sanitization if content source is trusted
   2. Configure custom sanitization rules to preserve required elements
   3. Use post-processing to restore necessary attributes
@@ -381,13 +381,13 @@ Example showing how this node integrates with other workflow nodes:
 
 **Content Script**: JavaScript code that runs in the context of web pages
 
-**Web Scraping**: Automated extraction of data from websites
+**Web Extraction**: Automated extraction of data from websites
 
 ## Search & Discovery
 
 ### Keywords
 
-- web scraping
+- web extraction
 - browser automation
 - HTTP requests
 - DOM manipulation
@@ -415,7 +415,7 @@ Example showing how this node integrates with other workflow nodes:
 - content extraction
 - API integration
 - browser interaction
-- web scraping
+- web extraction
 
 ## Learning Path
 
@@ -425,14 +425,14 @@ Example showing how this node integrates with other workflow nodes:
 
 ### Workflow Patterns
 
-- [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns)
+- [Web Extraction Patterns](/learning/workflow-patterns/web-extraction-patterns)
 - [Browser Automation Workflows](/learning/workflow-patterns/browser-automation)
 - [API Integration Patterns](/learning/workflow-patterns/integration-patterns)
 
 ### Related Tutorials
 
 - [Web Automation Basics](/learning/text-courses/beginner/web-automation-basics)
-- [Advanced Web Scraping](/learning/text-courses/advanced/complex-web-scraping)
+- [Advanced Web Extraction](/learning/text-courses/advanced/complex-web-extraction)
 
 ### Practical Examples
 
@@ -490,13 +490,13 @@ Example showing how this node integrates with other workflow nodes:
 
 ## Additional Resources
 
-- [Web Scraping Security Guide](/usage/licenses-and-privacy/privacy-security/security)
-- [HTML Processing Workflows](/learning/workflow-patterns/web-scraping-patterns)
+- [Web Extraction Security Guide](/usage/licenses-and-privacy/privacy-security/security)
+- [HTML Processing Workflows](/learning/workflow-patterns/web-extraction-patterns)
 - [Advanced Web Automation](/learning/examples/intelligent-web-automation)
 - [Content Analysis Patterns](/learning/workflow-patterns/content-manipulation-patterns)
 
 ---
 
-**Last Updated**: October 18, 2024  
-**Tested With**: Browser Extension v2.1.0  
+**Last Updated**: October 18, 2024
+**Tested With**: Browser Extension v2.1.0
 **Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

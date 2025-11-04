@@ -1,6 +1,7 @@
 ---
 title: "Understanding Browser Permissions: Stay Safe While Automating"
-description: "Learn how to safely give your automation tool the right permissions without compromising your security. Simple explanations with practical examples."
+description: "Learn how to safely give your workflow builder the right permissions without compromising your security. Simple explanations with practical examples."
+difficulty: "🌱 beginner"
 ---
 
 # Understanding Browser Permissions: Stay Safe While Automating
@@ -29,7 +30,7 @@ By the end of this guide, you'll know:
 
 ### The Simple Explanation
 
-**💡 Think of it this way:** Your browser is like a security guard at an office building. When the automation tool wants to help you, the security guard (browser) asks "Should I let this tool into the building? What rooms can it access?"
+**💡 Think of it this way:** Your browser is like a security guard at an office building. When the workflow builder wants to help you, the security guard (browser) asks "Should I let this tool into the building? What rooms can it access?"
 
 **Why this happens:**
 - **Your safety:** Prevents bad tools from doing harmful things
@@ -43,7 +44,7 @@ By the end of this guide, you'll know:
 - **Why it's needed:** So it can find text, links, and other content you want to automate
 - **Your control:** You can say yes to specific websites or all websites
 
-**💾 Storage Permissions**  
+**💾 Storage Permissions**
 - **What it means:** "Can this tool remember your settings and save your work?"
 - **Why it's needed:** So you don't have to rebuild automations every time
 - **Your control:** This is usually safe - it only saves to your computer
@@ -132,7 +133,7 @@ By the end of this guide, you'll know:
 
 ### Site-Specific Permissions
 
-**Best Practice:** Grant permissions only to sites where you need workflow automation
+**Best Practice:** Grant permissions only to sites where you need workflow
 
 **How to configure:**
 1. **Right-click the extension icon**
@@ -145,7 +146,7 @@ By the end of this guide, you'll know:
 **Recommended approach:**
 ```
 News sites: "On this site" - for regular content extraction
-Work sites: "On this site" - for business workflow automation
+Work sites: "On this site" - for business workflow
 General browsing: "When you click the extension" - for occasional use
 ```
 
@@ -285,8 +286,8 @@ Some websites implement strict CSP that may block extension functionality:
 **Diagnostic steps:**
 1. **Check current permissions**
    ```
-   Right-click extension icon → 
-   "This can read and change site data" → 
+   Right-click extension icon →
+   "This can read and change site data" →
    Verify current setting
    ```
 
@@ -410,7 +411,7 @@ const privacySettings = {
 
 ## Next Steps
 
-You now understand browser permissions and security implications for workflow automation. You're ready to:
+You now understand browser permissions and security implications for workflow. You're ready to:
 
 1. **[Learn Data Flow Basics](/learning/text-courses/beginner/data-flow-basics/)** - Understand how data moves securely between nodes
 2. **[Build Multi-Node Workflows](/learning/examples/multi-node-automation/)** - Create more complex automation with security in mind
@@ -424,6 +425,6 @@ You now understand browser permissions and security implications for workflow au
 
 ---
 
-**Estimated Time:** 25-30 minutes  
-**Difficulty:** Beginner  
+**Estimated Time:** 25-30 minutes
+**Difficulty:** Beginner
 **Prerequisites:** Basic browser and security knowledge

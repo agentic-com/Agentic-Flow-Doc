@@ -2,7 +2,7 @@
 title: "Get All Text From Link"
 description: "Extract all visible text content from web pages using browser APIs for content analysis and AI processing workflows."
 template: doc
-tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
+tags: ["Web Extraction", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
 ---
 
 # Get All Text From Link
@@ -11,7 +11,7 @@ tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"
 
 The Get All Text From Link node extracts all visible text content from web pages, providing clean, structured text data for analysis, processing, and AI workflows. This node leverages browser APIs to access page content directly, making it ideal for content analysis, data extraction, and feeding text to AI models.
 
-### Web Scraping Process Flow
+### Web Extraction Process Flow
 
 ```mermaid
 sequenceDiagram
@@ -21,7 +21,7 @@ sequenceDiagram
     participant DOM as DOM Parser
     participant Filter as Content Filter
     participant Output as Text Output
-    
+
     Input->>Node: Target URL
     Node->>Browser: Navigate to URL
     Browser->>Browser: Load page content
@@ -32,7 +32,7 @@ sequenceDiagram
     Filter->>Node: Clean text content
     Node->>Node: Add metadata & statistics
     Node->>Output: Structured text data
-    
+
     Note over Browser: Wait for dynamic content
     Note over Filter: Remove ads, navigation, scripts
 ```
@@ -214,7 +214,7 @@ flowchart TD
     K --> L[Calculate Statistics]
     L --> M[Add Metadata]
     M --> N[Return Clean Text]
-    
+
     style B fill:#e1f5fe
     style G fill:#fff3e0
     style I fill:#f3e5f5
@@ -338,7 +338,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Output contains very little text or only navigation elements
 - **Causes**: Page content is dynamically loaded, blocked by CSP, or hidden behind authentication
-- **Solutions**: 
+- **Solutions**:
   1. Increase timeout to allow for dynamic content loading
   2. Check if the page requires authentication or has access restrictions
   3. Verify the page isn't using heavy JavaScript rendering that blocks content access
@@ -348,7 +348,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Node fails with timeout error before completing text extraction
 - **Causes**: Slow page loading, heavy JavaScript execution, or network connectivity issues
-- **Solutions**: 
+- **Solutions**:
   1. Increase timeout value in configuration
   2. Check network connectivity and page accessibility
   3. Try extracting from a cached or faster-loading version of the page
@@ -404,13 +404,13 @@ Example showing how this node integrates with other workflow nodes:
 
 **Content Script**: JavaScript code that runs in the context of web pages
 
-**Web Scraping**: Automated extraction of data from websites
+**Web Extraction**: Automated extraction of data from websites
 
 ## Search & Discovery
 
 ### Keywords
 
-- web scraping
+- web extraction
 - browser automation
 - HTTP requests
 - DOM manipulation
@@ -438,7 +438,7 @@ Example showing how this node integrates with other workflow nodes:
 - content extraction
 - API integration
 - browser interaction
-- web scraping
+- web extraction
 
 ## Learning Path
 
@@ -457,14 +457,14 @@ Example showing how this node integrates with other workflow nodes:
 
 ### Workflow Patterns
 
-- [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns)
+- [Web Extraction Patterns](/learning/workflow-patterns/web-extraction-patterns)
 - [Browser Automation Workflows](/learning/workflow-patterns/browser-automation)
 - [API Integration Patterns](/learning/workflow-patterns/integration-patterns)
 
 ### Related Tutorials
 
 - [Web Automation Basics](/learning/text-courses/beginner/web-automation-basics)
-- [Advanced Web Scraping](/learning/text-courses/advanced/complex-web-scraping)
+- [Advanced Web Extraction](/learning/text-courses/advanced/complex-web-extraction)
 
 ### Practical Examples
 
@@ -521,13 +521,13 @@ Example showing how this node integrates with other workflow nodes:
 
 ## Additional Resources
 
-- [Web Scraping Best Practices Tutorial](/learning/examples/web-automation-patterns)
+- [Web Extraction Best Practices Tutorial](/learning/examples/web-automation-patterns)
 - [AI Content Analysis Workflows](/advanced-ai/examples/intelligent-content-analysis)
 - [Browser Extension Security Guide](/usage/licenses-and-privacy/privacy-security/security)
 - [Text Processing Patterns](/learning/workflow-patterns/content-manipulation-patterns)
 
 ---
 
-**Last Updated**: October 18, 2024  
-**Tested With**: Browser Extension v2.1.0  
+**Last Updated**: October 18, 2024
+**Tested With**: Browser Extension v2.1.0
 **Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

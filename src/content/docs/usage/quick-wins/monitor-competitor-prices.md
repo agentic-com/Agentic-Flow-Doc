@@ -13,8 +13,8 @@ tags: ["ecommerce", "monitoring", "competition", "automation", "quick-win"]
 
 Create an automated system that tracks competitor prices across multiple websites and alerts you to changes, helping you stay competitive in the market.
 
-**⏱️ Time**: 15 minutes  
-**🎯 Difficulty**: Intermediate  
+**⏱️ Time**: 15 minutes
+**🎯 Difficulty**: Intermediate
 **✅ Result**: Automated price monitoring system with alerts
 
 ## Why This Matters
@@ -50,7 +50,7 @@ Create a list of competitor products to track:
       "your_price": 1299.99
     },
     {
-      "name": "Competitor B", 
+      "name": "Competitor B",
       "product": "Laptop Pro",
       "url": "https://competitor-b.com/laptop-pro",
       "your_price": 1299.99
@@ -77,7 +77,7 @@ flowchart TD
     E -->|Yes| F[🚨 Send Alert]
     E -->|No| G[📁 Save Data]
     F --> G
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -129,7 +129,7 @@ flowchart TD
       "action": "immediate_alert"
     },
     {
-      "condition": "competitor_price > your_price * 1.1", 
+      "condition": "competitor_price > your_price * 1.1",
       "alert": "Opportunity to raise prices",
       "action": "weekly_report"
     }
@@ -141,18 +141,18 @@ flowchart TD
 
 **Scheduling Options:**
 - **Hourly**: For fast-moving markets
-- **Daily**: For standard monitoring  
+- **Daily**: For standard monitoring
 - **Weekly**: For stable markets
 
 ## Real-World Example
 
-**Business**: Electronics retailer  
-**Monitoring**: 25 laptop models across 5 competitors  
-**Frequency**: Twice daily  
+**Business**: Electronics retailer
+**Monitoring**: 25 laptop models across 5 competitors
+**Frequency**: Twice daily
 **Result**: 15% increase in competitive positioning
 
 **Alert Example:**
-> 🚨 **Price Alert**: Competitor A dropped MacBook Pro to $1,199 (was $1,299)  
+> 🚨 **Price Alert**: Competitor A dropped MacBook Pro to $1,199 (was $1,299)
 > Your price: $1,289 | Recommended action: Consider price adjustment
 
 ## Advanced Features

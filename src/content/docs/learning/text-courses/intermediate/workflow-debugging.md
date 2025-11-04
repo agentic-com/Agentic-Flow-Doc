@@ -1,6 +1,7 @@
 ---
 title: "Workflow Debugging & Error Handling"
 description: "Master debugging techniques and error handling strategies for robust browser automation workflows."
+difficulty: "🚀 intermediate"
 ---
 
 # Workflow Debugging & Error Handling
@@ -27,10 +28,10 @@ By the end of this tutorial, you'll master:
 
 ### The TRACE Debugging Framework
 
-**T**rack - Monitor workflow execution flow  
-**R**ecord - Capture detailed execution data  
-**A**nalyze - Identify patterns and root causes  
-**C**orrect - Implement targeted fixes  
+**T**rack - Monitor workflow execution flow
+**R**ecord - Capture detailed execution data
+**A**nalyze - Identify patterns and root causes
+**C**orrect - Implement targeted fixes
 **E**valuate - Verify fixes and prevent regression
 
 ### Debugging Workflow Lifecycle
@@ -94,13 +95,13 @@ Issue Detection → Data Collection → Analysis → Fix Implementation → Vali
   "code": `
     const startTime = performance.now();
     const memoryBefore = performance.memory ? performance.memory.usedJSHeapSize : 0;
-    
+
     // Process your data here
     const processedData = $input.all();
-    
+
     const endTime = performance.now();
     const memoryAfter = performance.memory ? performance.memory.usedJSHeapSize : 0;
-    
+
     return [{
       ...processedData,
       performance: {
@@ -288,7 +289,7 @@ Issue Detection → Data Collection → Analysis → Fix Implementation → Vali
   "code": `
     // Interactive debugging capabilities
     const debugData = $input.all();
-    
+
     // Log current state
     console.group('🔍 Debug Breakpoint - ' + new Date().toISOString());
     console.log('Input Data:', debugData);
@@ -299,12 +300,12 @@ Issue Detection → Data Collection → Analysis → Fix Implementation → Vali
       executionId: $execution.id
     });
     console.groupEnd();
-    
+
     // Conditional breakpoint
     if (debugData.some(item => item.error || item.warning)) {
       debugger; // Triggers browser debugger
     }
-    
+
     return debugData;
   `
 }
@@ -353,11 +354,11 @@ Issue Detection → Data Collection → Analysis → Fix Implementation → Vali
       memory: {
         before: performance.memory ? performance.memory.usedJSHeapSize : 0
       },
-      
+
       profile: function(data) {
         const now = performance.now();
         const memoryNow = performance.memory ? performance.memory.usedJSHeapSize : 0;
-        
+
         return {
           ...data,
           profiling: {
@@ -370,7 +371,7 @@ Issue Detection → Data Collection → Analysis → Fix Implementation → Vali
         };
       }
     };
-    
+
     return $input.all().map(item => profiler.profile(item));
   `
 }
@@ -570,7 +571,7 @@ Issue Detection → Data Collection → Analysis → Fix Implementation → Vali
     "stackTraces": true,
     "performanceMarks": true
   },
-  
+
   "customDebugMethods": {
     "logNodeExecution": function(nodeData) {
       console.group(`🔧 Node: ${nodeData.name}`);
@@ -579,7 +580,7 @@ Issue Detection → Data Collection → Analysis → Fix Implementation → Vali
       console.log('Duration:', nodeData.duration + 'ms');
       console.groupEnd();
     },
-    
+
     "logDataTransformation": function(before, after, operation) {
       console.group(`🔄 Transform: ${operation}`);
       console.log('Before:', before);
@@ -796,6 +797,6 @@ You've mastered workflow debugging and error handling! Continue your learning wi
 
 ---
 
-**Estimated Time:** 50-65 minutes  
-**Difficulty:** Intermediate  
+**Estimated Time:** 50-65 minutes
+**Difficulty:** Intermediate
 **Prerequisites:** Multi-step workflow experience, basic debugging knowledge

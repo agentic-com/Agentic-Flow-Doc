@@ -14,24 +14,24 @@ Agentic Workflow Studio lets you create powerful automations that run directly i
 - Collect research data from multiple sources
 - Monitor websites for changes
 
-**Process with AI**  
+**Process with AI**
 - Analyze content with smart AI models
 - Generate summaries and insights
 - Make intelligent decisions based on web data
 
 **Automate Web Tasks**
 - Fill forms automatically with processed data
-- Navigate between pages programmatically  
+- Navigate between pages programmatically
 - Insert content and interact with web elements
 
 ## How It Works
 
-**Visual Workflow Builder:** Drag and drop nodes to create automations  
-**Real-Time Processing:** Works directly with live web pages  
+**Visual Workflow Builder:** Drag and drop nodes to create automations
+**Real-Time Processing:** Works directly with live web pages
 **Browser Integration:** Runs securely within your browser extension
 
 ## Get Started
 
-**New user?** → **[Quick Setup Guide](/usage/getting-started/quick-starts/quick-intro/)** (5 minutes)  
-**Ready to build?** → **[Create Your First Workflow](/learning/text-courses/beginner/first-workflow/)** (15 minutes)  
+**New user?** → **[Quick Setup Guide](/usage/getting-started/quick-starts/quick-intro/)** (5 minutes)
+**Ready to build?** → **[Create Your First Workflow](/learning/text-courses/beginner/first-workflow/)** (15 minutes)
 **Need concepts?** → **[Key Concepts](/usage/key-concepts/)** • **[Browser Nodes](/integration/extension/)**

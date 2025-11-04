@@ -13,14 +13,14 @@ tags: ["ecommerce", "data-extraction", "automation", "quick-win"]
 
 In 5 minutes, you'll create a workflow that automatically extracts product prices from any e-commerce website. Perfect for price monitoring, comparison shopping, or market research.
 
-**⏱️ Time**: 5 minutes  
-**🎯 Difficulty**: Beginner  
+**⏱️ Time**: 5 minutes
+**🎯 Difficulty**: Beginner
 **✅ Result**: Working price extraction workflow
 
 ## Why This Matters
 
 - **Save Time**: No more manual price checking across multiple sites
-- **Stay Competitive**: Monitor competitor pricing automatically  
+- **Stay Competitive**: Monitor competitor pricing automatically
 - **Make Better Decisions**: Track price trends to find the best deals
 - **Scale Your Research**: Extract prices from hundreds of products quickly
 
@@ -49,7 +49,7 @@ flowchart LR
     A[🌐 Product URL] --> B[📝 Get All Text]
     B --> C[✂️ Edit Fields]
     C --> D[💾 Save Results]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -92,9 +92,9 @@ flowchart LR
 
 ## Real-World Example
 
-**Target**: Amazon laptop listing  
-**Input URL**: `https://amazon.com/laptop-example`  
-**Extracted Price**: `$1,299.99`  
+**Target**: Amazon laptop listing
+**Input URL**: `https://amazon.com/laptop-example`
+**Extracted Price**: `$1,299.99`
 **Processing Time**: 3 seconds
 
 ## Troubleshooting
@@ -129,11 +129,11 @@ Ready to level up your price monitoring? Try these tutorials:
         }
       },
       {
-        "type": "EditFields", 
+        "type": "EditFields",
         "config": {
           "operations": [{
             "field": "text",
-            "operation": "extract_regex", 
+            "operation": "extract_regex",
             "pattern": "\\$[0-9,]+\\.?[0-9]*",
             "output_field": "price"
           }]

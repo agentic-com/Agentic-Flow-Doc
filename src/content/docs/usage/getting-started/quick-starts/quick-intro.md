@@ -20,7 +20,7 @@ graph TB
     G --> H[Configure Text Processing]
     H --> I[Run Complete Workflow]
     I --> J[Success! First Workflow Complete]
-    
+
     style A fill:#e3f2fd
     style C fill:#e8f5e8
     style F fill:#fff3e0
@@ -33,7 +33,6 @@ In this tutorial, you will:
 * Create your first browser-based workflow
 * Extract text from a web page using browser context manipulation
 * Run your first workflow
-
 
 ## Step one: Install the browser extension
 
@@ -54,12 +53,12 @@ graph LR
     A[Web Page] --> B[Get Selected Text]
     B --> C[Edit Fields]
     C --> D[Processed Output]
-    
+
     A --> A1[User Selects Text]
     B --> B1[Extract Selected Text]
     C --> C1[Format & Process]
     D --> D1[Final Result]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0

@@ -24,28 +24,28 @@ graph TD
     A[Branch 1 Data] --> D[Merge Node]
     B[Branch 2 Data] --> D
     C[Branch 3 Data] --> D
-    
+
     D --> E{Merge Strategy}
     E -->|Append| F[Concatenated Array]
     E -->|Merge Objects| G[Combined Object]
     E -->|Wait for All| H[Synchronized Output]
-    
+
     F --> I[Unified Output]
     G --> I
     H --> I
-    
+
     subgraph "Merge Strategies"
         J[Append Mode]
         K[Object Merge]
         L[Choose Branch]
         M[Wait Mode]
     end
-    
+
     D --> J
     D --> K
     D --> L
     D --> M
-    
+
     style D fill:#fff3e0
     style I fill:#e8f5e8
 ```
@@ -66,7 +66,7 @@ The Merge node processes multiple input streams and combines them according to s
 ### Primary Use Cases
 
 <ul role="list" aria-label="Primary use cases for the Merge node">
-<li><strong>Parallel Processing Results</strong>: Combine results from multiple parallel web scraping or processing operations</li>
+<li><strong>Parallel Processing Results</strong>: Combine results from multiple parallel web extraction or processing operations</li>
 <li><strong>Data Source Aggregation</strong>: Merge data from different APIs, databases, or web sources into unified datasets</li>
 <li><strong>Workflow Synchronization</strong>: Synchronize multiple workflow branches before proceeding to final processing steps</li>
 <li><strong>Content Compilation</strong>: Combine extracted content, metadata, and analysis results into comprehensive reports</li>
@@ -149,7 +149,7 @@ The Merge node operates on data and doesn't require specific browser permissions
     "metadata": "object"
   },
   "branch2": {
-    "data": "any_type", 
+    "data": "any_type",
     "metadata": "object"
   }
 }
@@ -182,9 +182,9 @@ The Merge node operates on data and doesn't require specific browser permissions
 
 ## Practical Examples
 
-### Example 1: Parallel Web Scraping Results
+### Example 1: Parallel Web Extraction Results
 
-**Scenario**: Combine results from multiple parallel web scraping operations targeting different sections of a website
+**Scenario**: Combine results from multiple parallel web extraction operations targeting different sections of a website
 
 **Configuration**:
 ```json
@@ -219,7 +219,7 @@ The Merge node operates on data and doesn't require specific browser permissions
   "mergedData": [
     {
       "url": "page1.html",
-      "title": "Page 1", 
+      "title": "Page 1",
       "content": "Content 1",
       "images": ["img1.jpg"],
       "links": ["link1.html"]
@@ -239,7 +239,7 @@ The Merge node operates on data and doesn't require specific browser permissions
 ```
 
 **Step-by-Step Process**:
-1. Receive data from multiple parallel scraping branches
+1. Receive data from multiple parallel extraction branches
 2. Identify common join field (URL) for merging related records
 3. Combine data while preserving all information from both sources
 
@@ -270,7 +270,7 @@ sequenceDiagram
     participant A as Activity API
     participant M as Merge Node
     participant O as Complete Profile
-    
+
     par Parallel Data Collection
         U->>M: Branch 1: Basic user data
     and
@@ -278,12 +278,12 @@ sequenceDiagram
     and
         A->>M: Branch 3: Activity history & analytics
     end
-    
+
     M->>M: Merge by userId
     M->>M: Resolve conflicts
     M->>M: Combine all data sources
     M->>O: Unified user profile
-    
+
     Note over M: Intelligent merging:<br/>- Join by common fields<br/>- Handle data conflicts<br/>- Preserve all information
 ```
 
@@ -383,7 +383,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Some data from input branches is missing in merged output
 - **Causes**: Incorrect join fields, conflicting merge rules, or data type mismatches
-- **Solutions**: 
+- **Solutions**:
   1. Verify join field exists in all input data
   2. Review conflict resolution settings
   3. Check data type compatibility between branches
@@ -393,7 +393,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Browser becomes unresponsive or crashes during merge operations
 - **Causes**: Insufficient memory for large datasets or inefficient merge algorithms
-- **Solutions**: 
+- **Solutions**:
   1. Implement streaming merge for very large datasets
   2. Use more efficient merge strategies
   3. Process data in smaller batches
@@ -561,6 +561,6 @@ Example showing how this node integrates with other workflow nodes:
 
 ---
 
-**Last Updated**: October 18, 2024  
-**Tested With**: Browser Extension v2.1.0  
+**Last Updated**: October 18, 2024
+**Tested With**: Browser Extension v2.1.0
 **Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

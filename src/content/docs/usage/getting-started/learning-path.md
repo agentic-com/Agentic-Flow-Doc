@@ -2,7 +2,7 @@
 title: Learning Path
 description: "Follow the complete learning path to master Agentic Workflow Studio browser extension and create intelligent web automation workflows."
 ---
-This guide outlines a series of tutorials and resources designed to get you started with Agentic Workflow Studio. 
+This guide outlines a series of tutorials and resources designed to get you started with Agentic Workflow Studio.
 
 It's not necessary to complete all items listed to start using the browser extension. Use this as a reference to navigate to the most relevant parts of the documentation and other resources according to your needs.
 
@@ -13,22 +13,22 @@ graph TD
     A[Start Here] --> B[Install Extension]
     B --> C[Quick Start Guide]
     C --> D{Choose Learning Path}
-    
+
     D -->|Beginner| E[Text Courses - Level 1]
     D -->|Visual Learner| F[Video Courses]
     D -->|AI Focus| G[AI Workflow Tutorial]
-    
+
     E --> H[Browser Workflow Basics]
     F --> I[Beginner Video Series]
     G --> J[Advanced AI Integration]
-    
+
     H --> K[Intermediate Concepts]
     I --> K
     J --> L[Advanced Browser Automation]
-    
+
     K --> L
     L --> M[Community Contribution]
-    
+
     style A fill:#e1f5fe
     style D fill:#e8f5e8
     style M fill:#fff3e0
@@ -49,20 +49,20 @@ graph TB
     A[Choose Your Browser] --> B[Chrome]
     A --> C[Firefox]
     A --> D[Edge]
-    
+
     B --> B1[Chrome Web Store]
     C --> C1[Firefox Add-ons]
     D --> D1[Microsoft Edge Add-ons]
-    
+
     B1 --> E[Search 'Agentic Workflow Studio']
     C1 --> E
     D1 --> E
-    
+
     E --> F[Install Extension]
     F --> G[Extension Icon in Toolbar]
     G --> H[Click Icon to Open]
     H --> I[Start Building Workflows]
-    
+
     style A fill:#e3f2fd
     style F fill:#e8f5e8
     style I fill:#fff3e0
@@ -78,7 +78,7 @@ Once installed, you'll see the Agentic Workflow Studio icon in your browser tool
 
 ## Try it out
 
-Start with the quickstart guides to help you get up and running with building browser-based workflows. 
+Start with the quickstart guides to help you get up and running with building browser-based workflows.
 
 - [A very quick quickstart](/usage/getting-started/quick-starts/quick-intro/)
 - [A longer introduction](/usage/getting-started/quick-starts/long-intro/)
@@ -91,29 +91,29 @@ graph TB
     A[Learning Resources] --> B[Video Courses]
     A --> C[Text Courses]
     A --> D[Interactive Tutorials]
-    
+
     B --> B1[Beginner Level]
     B --> B2[Advanced Level]
-    
+
     C --> C1[Level 1: Browser Basics]
     C --> C2[Level 2: Advanced Automation]
-    
+
     D --> D1[Quick Start Guide]
     D --> D2[AI Integration Tutorial]
-    
+
     B1 --> E[Browser Workflow Creation]
     B2 --> F[Complex Automation & AI]
     C1 --> E
     C2 --> F
     D1 --> E
     D2 --> F
-    
+
     style A fill:#e3f2fd
     style E fill:#e8f5e8
     style F fill:#fff3e0
 ```
 
-Agentic Workflow Studio offers comprehensive learning resources focused on browser-based workflow automation.
+Agentic Workflow Studio offers comprehensive learning resources focused on browser-based workflow.
 
 ### Video courses
 

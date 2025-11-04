@@ -2,7 +2,7 @@
 title: "Code"
 description: "Execute custom Python code within browser workflows using Pyodide for advanced data processing, scientific computing, and complex automation logic."
 template: doc
-tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
+tags: ["Web Extraction", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
 ---
 
 # Code
@@ -21,7 +21,7 @@ sequenceDiagram
     participant Packages as Package Manager
     participant Python as Python Interpreter
     participant Output as Results Output
-    
+
     Input->>Code: Input data + Python code
     Code->>Pyodide: Initialize runtime
     Pyodide->>Packages: Install required packages
@@ -32,7 +32,7 @@ sequenceDiagram
     Code->>Code: Capture stdout/stderr
     Code->>Code: Add execution metadata
     Code->>Output: Structured results + logs
-    
+
     Note over Pyodide: WebAssembly sandbox
     Note over Python: Full Python ecosystem
 ```
@@ -242,7 +242,7 @@ flowchart TD
     L --> N[Add Execution Metadata]
     M --> N
     N --> O[Return Structured Results]
-    
+
     style B fill:#e1f5fe
     style E fill:#fff3e0
     style I fill:#f3e5f5
@@ -438,13 +438,13 @@ Example showing how this node integrates with other workflow nodes:
 
 **Content Script**: JavaScript code that runs in the context of web pages
 
-**Web Scraping**: Automated extraction of data from websites
+**Web Extraction**: Automated extraction of data from websites
 
 ## Search & Discovery
 
 ### Keywords
 
-- web scraping
+- web extraction
 - browser automation
 - HTTP requests
 - DOM manipulation
@@ -472,7 +472,7 @@ Example showing how this node integrates with other workflow nodes:
 - content extraction
 - API integration
 - browser interaction
-- web scraping
+- web extraction
 
 ## Learning Path
 
@@ -482,14 +482,14 @@ Example showing how this node integrates with other workflow nodes:
 
 ### Workflow Patterns
 
-- [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns)
+- [Web Extraction Patterns](/learning/workflow-patterns/web-extraction-patterns)
 - [Browser Automation Workflows](/learning/workflow-patterns/browser-automation)
 - [API Integration Patterns](/learning/workflow-patterns/integration-patterns)
 
 ### Related Tutorials
 
 - [Web Automation Basics](/learning/text-courses/beginner/web-automation-basics)
-- [Advanced Web Scraping](/learning/text-courses/advanced/complex-web-scraping)
+- [Advanced Web Extraction](/learning/text-courses/advanced/complex-web-extraction)
 
 ### Practical Examples
 
@@ -554,6 +554,6 @@ Example showing how this node integrates with other workflow nodes:
 
 ---
 
-**Last Updated**: October 18, 2024  
-**Tested With**: Pyodide v0.24.1, Browser Extension v2.1.0  
+**Last Updated**: October 18, 2024
+**Tested With**: Pyodide v0.24.1, Browser Extension v2.1.0
 **Validation Status**: ✅ Python Examples Tested | ✅ Package Installation Verified | ✅ Performance Benchmarked

@@ -1,6 +1,7 @@
 ---
 title: Intelligent Content Analysis Workflows
 description: "Build AI workflows that analyze extracted web data and content using advanced language models and browser context."
+difficulty: "🎯 advanced"
 ---
 
 # Intelligent Content Analysis Workflows
@@ -56,7 +57,7 @@ class IntelligentContentAnalyzer {
         originalUrl: originalContent.url
       },
       prompt: `Synthesize these multi-modal content analyses into a comprehensive report:
-        
+
         1. Overall content quality and credibility assessment
         2. Key themes and topics identified
         3. Content structure and organization evaluation
@@ -64,7 +65,7 @@ class IntelligentContentAnalyzer {
         5. SEO and accessibility insights
         6. Audience targeting and engagement potential
         7. Content gaps and improvement opportunities
-        
+
         Provide actionable insights and recommendations.`
     });
   }
@@ -86,14 +87,14 @@ class SemanticContentAnalyzer {
       input: content,
       tools: [EntityExtractionTool, RelationshipMapperTool],
       prompt: `Perform comprehensive semantic analysis:
-        
+
         1. Extract all named entities (people, organizations, locations, concepts)
         2. Identify relationships between entities
         3. Map semantic roles and dependencies
         4. Extract key concepts and themes
         5. Identify implicit meanings and context
         6. Analyze discourse structure and argumentation
-        
+
         Return detailed semantic map with confidence scores.`
     });
 
@@ -104,14 +105,14 @@ class SemanticContentAnalyzer {
         entities: entityAnalysis.entities
       },
       prompt: `Analyze the conceptual framework of this content:
-        
+
         1. Identify main conceptual categories
         2. Map concept hierarchies and taxonomies
         3. Find conceptual gaps or inconsistencies
         4. Analyze conceptual complexity level
         5. Identify domain-specific terminology
         6. Assess conceptual coherence and clarity
-        
+
         Return conceptual analysis with recommendations.`
     });
 
@@ -136,7 +137,7 @@ class SemanticContentAnalyzer {
         - Complexity of relationships
         - Conceptual depth and breadth
         - Domain-specific terminology density
-        
+
         Return complexity score with explanation.`
     });
   }
@@ -167,14 +168,14 @@ class ContentQualityEvaluator {
       input: content,
       tools: [ReadabilityAnalyzerTool, LanguageComplexityTool],
       prompt: `Assess content readability:
-        
+
         1. Calculate reading level (grade level equivalent)
         2. Analyze sentence structure complexity
         3. Evaluate vocabulary difficulty
         4. Assess paragraph organization
         5. Check for clarity and coherence
         6. Identify potential comprehension barriers
-        
+
         Return readability assessment with improvement suggestions.`
     });
   }
@@ -184,36 +185,36 @@ class ContentQualityEvaluator {
       input: content,
       tools: [FactCheckerTool, SourceValidatorTool, BiasDetectorTool],
       prompt: `Evaluate content credibility:
-        
+
         1. Identify factual claims and verify accuracy
         2. Assess source quality and authority
         3. Detect potential bias or misinformation
         4. Evaluate evidence quality and citations
         5. Check for logical consistency
         6. Assess transparency and disclosure
-        
+
         Return credibility score with detailed analysis.`
     });
   }
 
   async analyzeCompleteness(content, contentType) {
     const completenessFramework = this.getCompletenessFramework(contentType);
-    
+
     return await Agent.execute({
       input: {
         content: content,
         framework: completenessFramework
       },
       prompt: `Analyze content completeness against framework:
-        
+
         Framework requirements: ${JSON.stringify(completenessFramework)}
-        
+
         1. Check coverage of required topics
         2. Identify missing information gaps
         3. Assess depth of coverage for each topic
         4. Evaluate logical flow and structure
         5. Check for supporting evidence and examples
-        
+
         Return completeness analysis with gap identification.`
     });
   }
@@ -263,7 +264,7 @@ class VisualContentAnalyzer {
         },
         tools: [ImageRecognitionTool, OCRTool, VisualQualityTool],
         prompt: `Analyze this image comprehensively:
-          
+
           1. Identify objects, people, and scenes
           2. Extract any text content (OCR)
           3. Assess visual quality and composition
@@ -271,7 +272,7 @@ class VisualContentAnalyzer {
           5. Check accessibility (alt text quality)
           6. Identify potential copyright or licensing issues
           7. Assess emotional impact and messaging
-          
+
           Return detailed image analysis report.`
       });
 
@@ -285,14 +286,14 @@ class VisualContentAnalyzer {
     return await Agent.execute({
       input: JSON.stringify(imageAnalyses),
       prompt: `Synthesize visual content analysis:
-        
+
         1. Overall visual content strategy assessment
         2. Visual-text content alignment evaluation
         3. Brand consistency analysis
         4. Accessibility compliance review
         5. Visual engagement potential
         6. Recommendations for improvement
-        
+
         Return comprehensive visual content report.`
     });
   }
@@ -302,14 +303,14 @@ class VisualContentAnalyzer {
       input: html,
       tools: [CSSAnalyzerTool, LayoutAnalyzerTool],
       prompt: `Analyze visual hierarchy and design:
-        
+
         1. Evaluate heading structure and typography
         2. Assess color scheme and contrast
         3. Analyze layout and spacing
         4. Check responsive design elements
         5. Evaluate visual flow and user attention
         6. Identify design inconsistencies
-        
+
         Return visual design analysis with UX recommendations.`
     });
   }
@@ -346,7 +347,7 @@ class CompetitiveContentAnalyzer {
         competitors: JSON.stringify(competitors)
       },
       prompt: `Perform competitive content analysis:
-        
+
         1. Compare content depth and coverage
         2. Analyze unique value propositions
         3. Identify content gaps and opportunities
@@ -354,7 +355,7 @@ class CompetitiveContentAnalyzer {
         5. Analyze audience targeting differences
         6. Evaluate content format and presentation
         7. Identify competitive advantages and weaknesses
-        
+
         Return strategic content recommendations.`
     });
   }
@@ -366,14 +367,14 @@ class CompetitiveContentAnalyzer {
         competitors: competitorContents
       },
       prompt: `Identify content gaps and opportunities:
-        
+
         1. Topics covered by competitors but missing from target
         2. Depth gaps in shared topics
         3. Format opportunities (video, interactive, etc.)
         4. Audience segment gaps
         5. Keyword and SEO opportunities
         6. Content freshness and update opportunities
-        
+
         Prioritize gaps by potential impact and difficulty.`
     });
   }
@@ -395,19 +396,19 @@ class ContentTrendAnalyzer {
       },
       tools: [TrendDetectionTool, StatisticalAnalysisTool],
       prompt: `Analyze content trends over ${timeframe}:
-        
+
         1. Identify emerging topics and themes
         2. Track content format evolution
         3. Analyze engagement pattern changes
         4. Detect seasonal or cyclical patterns
         5. Identify declining or rising content types
         6. Analyze audience preference shifts
-        
+
         Return trend analysis with confidence intervals.`
     });
 
     const predictions = await this.predictFutureTrends(trendAnalysis);
-    
+
     return {
       currentTrends: trendAnalysis,
       predictions: predictions,
@@ -420,14 +421,14 @@ class ContentTrendAnalyzer {
       input: JSON.stringify(trendAnalysis),
       tools: [PredictionModelTool, ScenarioAnalysisTool],
       prompt: `Predict future content trends based on current analysis:
-        
+
         1. Extrapolate current trend trajectories
         2. Identify potential disruption points
         3. Consider external factors (technology, society, economy)
         4. Predict new content format emergence
         5. Forecast audience behavior changes
         6. Estimate timeline for trend maturation
-        
+
         Return predictions with probability estimates.`
     });
   }
@@ -449,16 +450,16 @@ class AudienceContentAnalyzer {
       },
       tools: [PersonaAnalyzerTool, EngagementPredictorTool],
       prompt: `Analyze content effectiveness for target audience:
-        
+
         Audience Profile: ${JSON.stringify(audienceProfile)}
-        
+
         1. Assess content relevance to audience interests
         2. Evaluate language and tone appropriateness
         3. Check complexity level alignment
         4. Analyze cultural sensitivity and inclusivity
         5. Assess engagement potential
         6. Identify personalization opportunities
-        
+
         Return audience-specific content analysis.`
     });
 
@@ -469,14 +470,14 @@ class AudienceContentAnalyzer {
     return await Agent.execute({
       input: JSON.stringify(audienceAnalysis),
       prompt: `Generate personalization recommendations:
-        
+
         1. Content adaptation strategies for different segments
         2. Dynamic content element suggestions
         3. Personalized call-to-action recommendations
         4. Audience-specific content format preferences
         5. Timing and delivery optimization
         6. Cross-segment content opportunities
-        
+
         Return actionable personalization strategy.`
     });
   }
@@ -486,14 +487,14 @@ class AudienceContentAnalyzer {
       input: JSON.stringify(engagementData),
       tools: [ClusteringTool, BehaviorAnalysisTool],
       prompt: `Segment audience based on engagement patterns:
-        
+
         1. Identify distinct behavior clusters
         2. Characterize each segment's preferences
         3. Analyze content consumption patterns
         4. Identify segment-specific needs and pain points
         5. Map content journey preferences
         6. Suggest segment-specific content strategies
-        
+
         Return detailed audience segmentation analysis.`
     });
   }
@@ -512,13 +513,13 @@ class ContentStrategyOptimizer {
   async optimizeStrategy(currentContent, businessGoals, audienceData) {
     // Comprehensive content audit
     const contentAudit = await this.auditCurrentContent(currentContent);
-    
+
     // Goal alignment analysis
     const goalAlignment = await this.analyzeGoalAlignment(contentAudit, businessGoals);
-    
+
     // Audience fit assessment
     const audienceFit = await this.assessAudienceFit(contentAudit, audienceData);
-    
+
     return await this.generateOptimizationPlan(contentAudit, goalAlignment, audienceFit);
   }
 
@@ -530,7 +531,7 @@ class ContentStrategyOptimizer {
         audience: JSON.stringify(audience)
       },
       prompt: `Generate comprehensive content strategy optimization plan:
-        
+
         1. Priority content improvements (high impact, low effort)
         2. Content gap filling strategy
         3. Audience alignment improvements
@@ -538,7 +539,7 @@ class ContentStrategyOptimizer {
         5. Content format diversification plan
         6. Performance measurement framework
         7. Implementation timeline and resources
-        
+
         Return actionable optimization roadmap.`
     });
   }

@@ -49,7 +49,6 @@ To extract the name, use the following expression:
 {{$("<node-name>").item.json.name}}
 ```
 
-
 ### Access the linked item in the current node's input
 
 In this case, the item linking is within the node: find the input item that the node links to an output item.

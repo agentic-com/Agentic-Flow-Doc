@@ -314,7 +314,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Unexpected negative values in duration calculations
 - **Causes**: End date is before start date or absolute_value is set to false
-- **Solutions**: 
+- **Solutions**:
   1. Verify date order (start should be before end)
   2. Set absolute_value to true for always-positive results
   3. Check for timezone-related date shifts
@@ -324,7 +324,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Incorrect business day counts or unexpected exclusions
 - **Causes**: Incorrect weekend_days configuration or overlapping holidays
-- **Solutions**: 
+- **Solutions**:
   1. Verify weekend_days array (0=Sunday, 6=Saturday)
   2. Check holiday date formats (YYYY-MM-DD)
   3. Ensure holidays don't overlap with configured weekend days

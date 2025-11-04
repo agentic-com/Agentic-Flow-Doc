@@ -30,10 +30,10 @@ Web LLM runs AI models completely in your browser using cutting-edge WebAssembly
 
 ## Why Choose Browser AI?
 
-**🔒 Ultimate Privacy**: AI runs entirely in your browser - data never leaves your device  
-**🌐 Works Offline**: No internet needed after initial model download  
-**⚡ Instant Responses**: No network delays, just local processing speed  
-**💰 Zero Costs**: No API fees or usage charges  
+**🔒 Ultimate Privacy**: AI runs entirely in your browser - data never leaves your device
+**🌐 Works Offline**: No internet needed after initial model download
+**⚡ Instant Responses**: No network delays, just local processing speed
+**💰 Zero Costs**: No API fees or usage charges
 **🚀 Always Available**: Works even when external AI services are down
 
 ### Browser-Native AI Architecture
@@ -46,23 +46,23 @@ sequenceDiagram
     participant GPU as WebGPU (Optional)
     participant Storage as Browser Storage
     participant Output as AI Response
-    
+
     Input->>WebLLM: Text prompt + configuration
     WebLLM->>Storage: Check for cached model
     Storage->>WebLLM: Model availability status
-    
+
     alt Model not cached
         WebLLM->>Storage: Download & cache model
         Storage->>WebLLM: Model ready
     end
-    
+
     WebLLM->>WASM: Load model into WebAssembly
     WASM->>GPU: Utilize GPU acceleration (if available)
     GPU->>WASM: Enhanced processing power
     WASM->>WASM: Process prompt with local AI
     WASM->>WebLLM: Generated response
     WebLLM->>Output: Formatted response + performance metrics
-    
+
     Note over WASM,GPU: Complete browser-native processing
     Note over Storage: No external dependencies
 ```

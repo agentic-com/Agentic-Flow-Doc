@@ -13,7 +13,7 @@ Once your workflow is ready for deployment, you often want to test it on more ex
 
 For example, when production executions start to turn up edge cases, you want to add them to your test dataset so that you can make sure they're covered.
 
-For large datasets like the ones built from production data, it can be hard to get a sense of performance just by eyeballing the results. Instead, you must measure performance. Metric-based evaluations can assign one or more scores to each test run, which you can compare to previous runs. Individual scores get rolled up to measure performance on the whole dataset. 
+For large datasets like the ones built from production data, it can be hard to get a sense of performance just by eyeballing the results. Instead, you must measure performance. Metric-based evaluations can assign one or more scores to each test run, which you can compare to previous runs. Individual scores get rolled up to measure performance on the whole dataset.
 
 This feature allows you to run evaluations that calculate metrics, track how those metrics change between runs and drill down into the reasons for those changes.
 
@@ -35,8 +35,6 @@ Follow the [setup instructions](/advanced-ai/evaluations/light-evaluations.md) t
 
 The following steps use the same support ticket classification workflow from the light evaluation docs:
 
-![Light evaluation workflow](/_images/advanced-ai/evaluations/light-evaluation-workflow.png)
-
 ### 2. Add metrics to workflow
 
 Metrics are dimensions used to score the output of your workflow. They often compare the actual workflow output with a reference output. It's common to use AI to calculate metrics, although it's sometimes possible to just use code. In Agentic Workflow Studio, metrics are always numbers.
@@ -55,11 +53,9 @@ You can also add custom metrics. Just calculate the metrics within the workflow 
 
 For example:
 
-* [RAG document relevance](https://Agentic Workflow Studiontic Workflow Studio/workflows/4273): when working with a vector database, whether the documents retrieved are relevant to the question.
+* [RAG document relevance](https://Agentic Workflow Studio/workflows/4273): when working with a vector database, whether the documents retrieved are relevant to the question.
 
-Calculating metrics can add latency and cost, so you may only want to do it when running an evaluation and avoid it when making a production execution. You can do this by putting the metric logic after a ['check if evaluating' operation](/integrations/builtin/core-nodes/n8n-nodes-base.evaluation.md#check-if-evaluating).
-
-![Check if evaluating node](/_images/advanced-ai/evaluations/check-if-evaluating.png)
+Calculating metrics can add latency and cost, so you may only want to do it when running an evaluation and avoid it when making a production execution. You can do this by putting the metric logic after a ['check if evaluating' operation](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.evaluation.md#check-if-evaluating).
 
 ### 3. Run evaluation and view results
 

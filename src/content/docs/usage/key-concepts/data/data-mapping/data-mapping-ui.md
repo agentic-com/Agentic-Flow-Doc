@@ -11,18 +11,18 @@ Data mapping means referencing data from previous nodes. It doesn't include chan
 graph TB
     A[Previous Node Output] --> B[Data Mapping]
     B --> C[Current Node Input]
-    
+
     B --> D[Drag & Drop Method]
     B --> E[Expression Editor Method]
-    
+
     D --> F[Select Data Field]
     F --> G[Drag to Parameter]
     G --> H[Auto-Generated Expression]
-    
+
     E --> I[Write Expression]
     I --> J[Reference Node Data]
     J --> K[Custom Expression]
-    
+
     style A fill:#e3f2fd
     style C fill:#e8f5e8
     style D fill:#fff3e0
@@ -42,7 +42,7 @@ For information on errors with mapping and linking items, refer to [Item linking
 2. Open the node where you need to map data.
 3. You can map in table, JSON, and schema view:
 	* In table view: click and hold a table heading to map top level data, or a field in the table to map nested data.
-	* In JSON view: click and hold a key. 
+	* In JSON view: click and hold a key.
 	* In schema view: click and hold a key.
 4. Drag the item into the field where you want to use the data.
 
@@ -54,7 +54,7 @@ sequenceDiagram
     participant I as INPUT Panel
     participant F as Parameter Field
     participant E as Expression Engine
-    
+
     U->>I: Select data field
     U->>F: Drag field to parameter
     I->>E: Generate expression path
@@ -99,6 +99,4 @@ Given the following data:
 ```
 
 Agentic Workflow Studio displays it in table form like this:
-
-!["Screenshot of a table in the INPUT panel. It includes a top level field named "nested." This field contains nested data, which is indicated in bold."](/_images/data/data-mapping/nested-data.png)
 

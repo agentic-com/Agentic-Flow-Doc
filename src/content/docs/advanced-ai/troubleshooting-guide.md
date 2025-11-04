@@ -28,7 +28,7 @@ async function diagnoseCORSIssue(apiEndpoint) {
       method: 'HEAD',
       mode: 'cors'
     });
-    
+
     return {
       hasCORSIssue: false,
       status: response.status
@@ -45,7 +45,7 @@ async function diagnoseCORSIssue(apiEndpoint) {
         ]
       };
     }
-    
+
     return {
       hasCORSIssue: false,
       networkIssue: true,
@@ -70,7 +70,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     .then(response => response.json())
     .then(data => sendResponse({ success: true, data }))
     .catch(error => sendResponse({ success: false, error: error.message }));
-    
+
     return true; // Keep message channel open for async response
   }
 });
@@ -148,7 +148,7 @@ class RateLimitHandler {
     if (response.status === 429) {
       const retryAfter = response.headers.get('Retry-After');
       const resetTime = response.headers.get('X-RateLimit-Reset');
-      
+
       return {
         isRateLimited: true,
         retryAfter: retryAfter ? parseInt(retryAfter) : 60,
@@ -199,7 +199,7 @@ class ExponentialBackoff {
 
   async executeWithBackoff(operation, context = {}) {
     let attempt = 0;
-    
+
     while (attempt < this.maxRetries) {
       try {
         return await operation();
@@ -224,9 +224,9 @@ class ExponentialBackoff {
   }
 
   isRetryableError(error) {
-    return error.status === 429 || 
-           error.status === 502 || 
-           error.status === 503 || 
+    return error.status === 429 ||
+           error.status === 502 ||
+           error.status === 503 ||
            error.status === 504;
   }
 }
@@ -260,7 +260,7 @@ class RateLimitedQueue {
       // Check if we can make a request
       if (await this.canMakeRequest()) {
         const { request, resolve, reject } = this.queue.shift();
-        
+
         try {
           const result = await request();
           this.recordRequest();
@@ -280,10 +280,10 @@ class RateLimitedQueue {
   async canMakeRequest() {
     const now = Date.now();
     const oneMinuteAgo = now - 60000;
-    
+
     // Remove old request times
     this.requestTimes = this.requestTimes.filter(time => time > oneMinuteAgo);
-    
+
     return this.requestTimes.length < this.requestsPerMinute;
   }
 
@@ -325,24 +325,24 @@ class MemoryLeakDetector {
         total: performance.memory.totalJSHeapSize,
         limit: performance.memory.jsHeapSizeLimit
       };
-      
+
       this.memorySnapshots.push(snapshot);
-      
+
       // Keep only recent snapshots
       if (this.memorySnapshots.length > 100) {
         this.memorySnapshots.shift();
       }
-      
+
       this.analyzeMemoryTrend();
     }
   }
 
   analyzeMemoryTrend() {
     if (this.memorySnapshots.length < 10) return;
-    
+
     const recent = this.memorySnapshots.slice(-10);
     const trend = this.calculateTrend(recent.map(s => s.used));
-    
+
     if (trend > 1024 * 1024) { // 1MB increase per snapshot
       console.warn('Potential memory leak detected');
       this.triggerMemoryCleanup();
@@ -356,7 +356,7 @@ class MemoryLeakDetector {
     const sumY = values.reduce((a, b) => a + b, 0);
     const sumXY = values.reduce((sum, y, x) => sum + x * y, 0);
     const sumXX = n * (n - 1) * (2 * n - 1) / 6;
-    
+
     return (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
   }
 }
@@ -379,11 +379,11 @@ class AIMemoryManager {
 
   async manageMemory() {
     const currentUsage = await this.getCurrentMemoryUsage();
-    
+
     if (currentUsage > this.memoryThreshold) {
       for (const strategy of this.cleanupStrategies) {
         await strategy();
-        
+
         const newUsage = await this.getCurrentMemoryUsage();
         if (newUsage < this.memoryThreshold * 0.8) {
           break; // Sufficient memory freed
@@ -404,7 +404,7 @@ class AIMemoryManager {
     // Clear old embeddings
     const maxAge = 30 * 60 * 1000; // 30 minutes
     const now = Date.now();
-    
+
     if (this.embeddingCache) {
       for (const [key, value] of this.embeddingCache.entries()) {
         if (now - value.timestamp > maxAge) {
@@ -442,34 +442,34 @@ class AIPerformanceAnalyzer {
   async analyzePerformance(operation) {
     const startTime = performance.now();
     const startMemory = performance.memory?.usedJSHeapSize || 0;
-    
+
     try {
       const result = await operation();
-      
+
       const endTime = performance.now();
       const endMemory = performance.memory?.usedJSHeapSize || 0;
-      
+
       const metrics = {
         duration: endTime - startTime,
         memoryDelta: endMemory - startMemory,
         success: true,
         timestamp: Date.now()
       };
-      
+
       this.performanceMetrics.push(metrics);
       this.analyzeBottlenecks(metrics);
-      
+
       return result;
     } catch (error) {
       const endTime = performance.now();
-      
+
       this.performanceMetrics.push({
         duration: endTime - startTime,
         success: false,
         error: error.message,
         timestamp: Date.now()
       });
-      
+
       throw error;
     }
   }
@@ -519,21 +519,21 @@ class StreamingOptimizer {
     try {
       while (true) {
         const { done, value } = await reader.read();
-        
+
         if (done) break;
-        
+
         const chunk = decoder.decode(value, { stream: true });
         result += chunk;
-        
+
         // Process chunk immediately for better UX
         if (request.onChunk) {
           await request.onChunk(chunk, result);
         }
-        
+
         // Yield control to prevent blocking
         await new Promise(resolve => setTimeout(resolve, 0));
       }
-      
+
       return result;
     } finally {
       reader.releaseLock();
@@ -568,7 +568,7 @@ class SecureAPIKeyManager {
 
   async storeAPIKey(service, apiKey) {
     const encrypted = await this.encrypt(apiKey);
-    
+
     // Store in browser extension storage (more secure than localStorage)
     if (chrome && chrome.storage) {
       await chrome.storage.local.set({
@@ -582,31 +582,31 @@ class SecureAPIKeyManager {
 
   async getAPIKey(service) {
     let encrypted;
-    
+
     if (chrome && chrome.storage) {
       const result = await chrome.storage.local.get([`api_key_${service}`]);
       encrypted = result[`api_key_${service}`];
     } else {
       encrypted = sessionStorage.getItem(`api_key_${service}`);
     }
-    
+
     if (encrypted) {
       return await this.decrypt(encrypted);
     }
-    
+
     return null;
   }
 
   async encrypt(data) {
     const encoder = new TextEncoder();
     const dataBuffer = encoder.encode(data);
-    
+
     const encrypted = await crypto.subtle.encrypt(
       { name: 'AES-GCM', iv: crypto.getRandomValues(new Uint8Array(12)) },
       this.encryptionKey,
       dataBuffer
     );
-    
+
     return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
   }
 
@@ -614,13 +614,13 @@ class SecureAPIKeyManager {
     const dataBuffer = new Uint8Array(
       atob(encryptedData).split('').map(char => char.charCodeAt(0))
     );
-    
+
     const decrypted = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv: dataBuffer.slice(0, 12) },
       this.encryptionKey,
       dataBuffer.slice(12)
     );
-    
+
     return new TextDecoder().decode(decrypted);
   }
 }
@@ -664,12 +664,12 @@ class CSPCompliantAI {
     if (window.parent !== window) {
       return await this.usePostMessage(url, options);
     }
-    
+
     // Use web worker if allowed
     if (this.cspPolicy.allowsWorkers) {
       return await this.useWebWorker(url, options);
     }
-    
+
     throw new Error('No CSP-compliant method available for this request');
   }
 }
@@ -699,10 +699,10 @@ class BrowserLangChain {
     try {
       // Check for browser compatibility
       await this.checkCompatibility();
-      
+
       // Initialize browser-compatible components
       await this.initializeComponents();
-      
+
       this.isInitialized = true;
     } catch (error) {
       console.error('LangChain initialization failed:', error);
@@ -786,7 +786,7 @@ class AIDiagnosticTool {
     ];
 
     const results = await Promise.allSettled(tests);
-    
+
     return {
       apiEndpoints: results[0].status === 'fulfilled' ? results[0].value : results[0].reason,
       corsPolicy: results[1].status === 'fulfilled' ? results[1].value : results[1].reason,

@@ -49,7 +49,7 @@ Capture interesting quotes or statistics from articles to use in your own writin
 
 **Browser Requirements:** Works in Chrome, Firefox, and Edge. Requires permission to access the current webpage.
 
-**Limitations:** 
+**Limitations:**
 - You must select text before running the workflow
 - Cannot capture text from password fields or secure elements
 - Some websites may block text selection

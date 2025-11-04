@@ -30,10 +30,10 @@ Local Memory gives your AI workflows the ability to remember previous conversati
 
 ## Why Use AI Memory?
 
-**🧠 Maintains Context**: AI remembers what you've discussed before  
-**🔒 Private Storage**: All conversation history stays in your browser  
-**💬 Better Conversations**: AI can reference previous interactions  
-**⚡ Fast Access**: Instant retrieval of conversation history  
+**🧠 Maintains Context**: AI remembers what you've discussed before
+**🔒 Private Storage**: All conversation history stays in your browser
+**💬 Better Conversations**: AI can reference previous interactions
+**⚡ Fast Access**: Instant retrieval of conversation history
 **🗂️ Organized**: Separate memory for different conversations or topics
 
 ## How It Works
@@ -43,7 +43,7 @@ flowchart LR
     A[💬 Conversation] --> B[💾 Store Memory]
     B --> C[🧠 Remember Context]
     C --> D[🤖 Smarter AI]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -58,9 +58,9 @@ flowchart LR
 
 ## Perfect For
 
-**💬 Chatbots**: AI assistants that remember your preferences  
-**🎓 Learning Systems**: AI tutors that track your progress  
-**🛠️ Support Systems**: Help systems that remember your previous issues  
+**💬 Chatbots**: AI assistants that remember your preferences
+**🎓 Learning Systems**: AI tutors that track your progress
+**🛠️ Support Systems**: Help systems that remember your previous issues
 **📝 Content Creation**: AI writers that maintain consistent tone and context
 
 - **IndexedDB Storage**: Utilizes browser's IndexedDB for efficient, persistent local storage

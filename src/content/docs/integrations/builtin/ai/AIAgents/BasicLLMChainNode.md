@@ -49,7 +49,7 @@ The Basic LLM Chain node adds AI intelligence to your workflows. Think of it as 
 flowchart LR
     A[📄 Web Content] --> B[🤖 Basic LLM Chain]
     B --> C[✨ AI Response]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#e8f5e8
@@ -93,7 +93,7 @@ flowchart LR
 
 Works in all major browsers:
 - ✅ **Chrome**: Full support
-- ✅ **Firefox**: Full support  
+- ✅ **Firefox**: Full support
 - ⚠️ **Safari**: Limited caching
 - ✅ **Edge**: Full support
 
@@ -163,8 +163,6 @@ Get HTML From Link → Basic LLM Chain → Edit Fields
 
 </details>
 
-
-
 ## Best Practices
 
 ### ✅ Do This
@@ -181,19 +179,19 @@ Get HTML From Link → Basic LLM Chain → Edit Fields
 ## Troubleshooting
 
 ### 🚫 "Too Many Requests" Error
-**Problem**: Getting rate limit errors  
+**Problem**: Getting rate limit errors
 **Solution**: Add delays between requests or upgrade your AI service plan
 
-### 🎲 Inconsistent Results  
-**Problem**: AI gives different answers to the same content  
+### 🎲 Inconsistent Results
+**Problem**: AI gives different answers to the same content
 **Solution**: Lower temperature to 0.1-0.3 for more consistent results
 
 ### ⏱️ Slow Processing
-**Problem**: AI takes too long to respond  
+**Problem**: AI takes too long to respond
 **Solution**: Reduce max_tokens or break large content into smaller chunks
 
 ### 📝 Wrong Output Format
-**Problem**: AI doesn't follow your format instructions  
+**Problem**: AI doesn't follow your format instructions
 **Solution**: Be more specific in prompts: "Format as: Title: [title] | Summary: [summary]"
 
 ## Limitations to Know
@@ -211,7 +209,7 @@ Get HTML From Link → Basic LLM Chain → Edit Fields
 
 ### 🔗 Works Great With
 - **Get All Text From Link**: Grabs content from web pages
-- **Edit Fields**: Cleans up and formats AI responses  
+- **Edit Fields**: Cleans up and formats AI responses
 - **Download As File**: Saves results to your computer
 
 ### 🛠️ Required Setup

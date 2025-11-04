@@ -42,7 +42,7 @@ graph LR
     A[Source Node] -->|Data Type: String| B[Target Node]
     C[Source Node] -->|Data Type: Number| D[Target Node]
     E[Source Node] -->|❌ Type Mismatch| F[Target Node]
-    
+
     style E fill:#ffebee
     style F fill:#ffebee
 ```
@@ -89,11 +89,11 @@ graph TB
     A[Trigger Node] --> B[Extract Data]
     B --> C[Process Data]
     C --> D[Save Results]
-    
+
     E[❌ Wrong Order] --> F[Save Results]
     F --> G[Process Data]
     G --> H[Extract Data]
-    
+
     style E fill:#ffebee
     style F fill:#ffebee
     style G fill:#ffebee
@@ -123,12 +123,12 @@ function debugDataFlow(nodeId, data) {
     isArray: Array.isArray(data),
     length: data?.length || 'N/A'
   });
-  
+
   // Validate data structure
   if (typeof data === 'object' && data !== null) {
     console.log('Object keys:', Object.keys(data));
   }
-  
+
   return data; // Pass through for next node
 }
 ```
@@ -178,19 +178,19 @@ function validateNodeConfig(nodeType, config) {
       optional: ['temperature', 'maxTokens']
     }
   };
-  
+
   const nodeValidation = validations[nodeType];
   if (!nodeValidation) {
     return { valid: false, error: 'Unknown node type' };
   }
-  
+
   // Check required parameters
   for (const param of nodeValidation.required) {
     if (!config[param]) {
       return { valid: false, error: `Missing required parameter: ${param}` };
     }
   }
-  
+
   return { valid: true };
 }
 ```
@@ -209,7 +209,7 @@ graph TB
         D -->|Analysis Results| E[Format Output]
         E -->|Formatted Data| F[Save File]
     end
-    
+
     subgraph "Debug Points"
         G[Debug: Raw HTML] --> B
         H[Debug: Extracted Text] --> C
@@ -228,7 +228,7 @@ class ConnectionTester {
   constructor() {
     this.testResults = [];
   }
-  
+
   testConnection(sourceNode, targetNode, testData) {
     const test = {
       source: sourceNode.id,
@@ -238,22 +238,22 @@ class ConnectionTester {
       error: null,
       data: null
     };
-    
+
     try {
       // Simulate data flow
       const output = sourceNode.process(testData);
       const result = targetNode.process(output);
-      
+
       test.success = true;
       test.data = result;
     } catch (e) {
       test.error = e.message;
     }
-    
+
     this.testResults.push(test);
     return test;
   }
-  
+
   generateReport() {
     const summary = {
       total: this.testResults.length,
@@ -261,7 +261,7 @@ class ConnectionTester {
       failed: this.testResults.filter(t => !t.success).length,
       details: this.testResults
     };
-    
+
     console.table(summary.details);
     return summary;
   }
@@ -280,7 +280,7 @@ function validateWorkflow(workflow) {
     executionOrder: [],
     issues: []
   };
-  
+
   // Validate nodes
   workflow.nodes.forEach(node => {
     const nodeValidation = {
@@ -290,14 +290,14 @@ function validateWorkflow(workflow) {
       hasInputs: node.inputs.length > 0,
       hasOutputs: node.outputs.length > 0
     };
-    
+
     if (!nodeValidation.configured) {
       validation.issues.push(`Node ${node.id} is not properly configured`);
     }
-    
+
     validation.nodes.push(nodeValidation);
   });
-  
+
   // Validate connections
   workflow.connections.forEach(connection => {
     const connectionValidation = {
@@ -306,20 +306,20 @@ function validateWorkflow(workflow) {
       valid: connection.isValid(),
       typeMatch: connection.typesMatch()
     };
-    
+
     if (!connectionValidation.valid) {
       validation.issues.push(`Invalid connection from ${connection.source} to ${connection.target}`);
     }
-    
+
     validation.connections.push(connectionValidation);
   });
-  
+
   // Check for circular dependencies
   const hasCycles = detectCycles(workflow);
   if (hasCycles) {
     validation.issues.push('Workflow contains circular dependencies');
   }
-  
+
   return validation;
 }
 ```
@@ -360,20 +360,20 @@ function transformData(data, targetType) {
         return JSON.stringify(data);
       }
       return String(data);
-      
+
     case 'number':
       if (typeof data === 'string') {
         const parsed = parseFloat(data);
         return isNaN(parsed) ? 0 : parsed;
       }
       return Number(data);
-      
+
     case 'array':
       if (!Array.isArray(data)) {
         return [data];
       }
       return data;
-      
+
     case 'object':
       if (typeof data === 'string') {
         try {
@@ -383,7 +383,7 @@ function transformData(data, targetType) {
         }
       }
       return data;
-      
+
     default:
       return data;
   }
@@ -403,31 +403,31 @@ function safeNodeExecution(node, inputData) {
     nodeId: node.id,
     timestamp: new Date().toISOString()
   };
-  
+
   try {
     // Validate input data
     if (!validateInputData(node, inputData)) {
       throw new Error('Invalid input data for node');
     }
-    
+
     // Execute node
     result.data = node.execute(inputData);
     result.success = true;
-    
+
   } catch (error) {
     result.error = {
       message: error.message,
       stack: error.stack,
       type: error.constructor.name
     };
-    
+
     // Log error for debugging
     console.error(`Node ${node.id} execution failed:`, error);
-    
+
     // Attempt recovery
     result.data = attemptErrorRecovery(node, inputData, error);
   }
-  
+
   return result;
 }
 
@@ -437,13 +437,13 @@ function attemptErrorRecovery(node, inputData, error) {
     // Retry with longer timeout
     return node.executeWithTimeout(inputData, 30000);
   }
-  
+
   if (error.message.includes('type')) {
     // Attempt type conversion
     const convertedData = transformData(inputData, node.expectedInputType);
     return node.execute(convertedData);
   }
-  
+
   // Return safe default
   return null;
 }
@@ -465,42 +465,42 @@ class DataFlowOptimizer {
       totalTransfers: 0
     };
   }
-  
+
   transferData(sourceId, targetId, data) {
     this.metrics.totalTransfers++;
-    
+
     // Check cache for expensive computations
     const cacheKey = `${sourceId}-${targetId}-${this.hashData(data)}`;
-    
+
     if (this.cache.has(cacheKey)) {
       this.metrics.cacheHits++;
       return this.cache.get(cacheKey);
     }
-    
+
     this.metrics.cacheMisses++;
-    
+
     // Process data transfer
     const result = this.processTransfer(data);
-    
+
     // Cache result if beneficial
     if (this.shouldCache(data, result)) {
       this.cache.set(cacheKey, result);
     }
-    
+
     return result;
   }
-  
+
   hashData(data) {
     // Simple hash for caching
     return JSON.stringify(data).length;
   }
-  
+
   shouldCache(input, output) {
     // Cache expensive operations
-    return JSON.stringify(input).length > 1000 || 
+    return JSON.stringify(input).length > 1000 ||
            JSON.stringify(output).length > 1000;
   }
-  
+
   getMetrics() {
     return {
       ...this.metrics,
@@ -520,7 +520,7 @@ class ConnectionMonitor {
     this.connections = new Map();
     this.alerts = [];
   }
-  
+
   monitorConnection(connectionId, sourceId, targetId) {
     const connection = {
       id: connectionId,
@@ -532,34 +532,34 @@ class ConnectionMonitor {
       lastTransfer: null,
       health: 'good'
     };
-    
+
     this.connections.set(connectionId, connection);
   }
-  
+
   recordTransfer(connectionId, success, duration, dataSize) {
     const connection = this.connections.get(connectionId);
     if (!connection) return;
-    
+
     connection.transfers++;
     connection.lastTransfer = new Date();
-    
+
     if (success) {
       // Update average transfer time
-      connection.avgTransferTime = 
-        (connection.avgTransferTime * (connection.transfers - 1) + duration) / 
+      connection.avgTransferTime =
+        (connection.avgTransferTime * (connection.transfers - 1) + duration) /
         connection.transfers;
     } else {
       connection.errors++;
     }
-    
+
     // Update health status
     this.updateConnectionHealth(connection);
   }
-  
+
   updateConnectionHealth(connection) {
     const errorRate = connection.errors / connection.transfers;
     const isSlowTransfer = connection.avgTransferTime > 5000; // 5 seconds
-    
+
     if (errorRate > 0.1 || isSlowTransfer) {
       connection.health = 'poor';
       this.alerts.push({
@@ -573,10 +573,10 @@ class ConnectionMonitor {
       connection.health = 'good';
     }
   }
-  
+
   getHealthReport() {
     const connections = Array.from(this.connections.values());
-    
+
     return {
       totalConnections: connections.length,
       healthDistribution: {

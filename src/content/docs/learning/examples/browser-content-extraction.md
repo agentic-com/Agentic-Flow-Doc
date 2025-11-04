@@ -3,6 +3,7 @@ title: Complete Web Content Extraction Workflow
 description: "Master browser content extraction techniques with Agentic Workflow Studio extension through practical examples and tutorials."
 sidebar:
   order: 1
+difficulty: "🌱 beginner"
 ---
 
 # Complete Web Content Extraction Workflow
@@ -45,7 +46,7 @@ Start by setting up parallel extraction of different content types:
   }
 }
 
-// Node 2: GetAllLinks  
+// Node 2: GetAllLinks
 {
   "node": "GetAllLinks",
   "parameters": {
@@ -57,7 +58,7 @@ Start by setting up parallel extraction of different content types:
 
 // Node 3: GetAllImages
 {
-  "node": "GetAllImages", 
+  "node": "GetAllImages",
   "parameters": {
     "includeAltText": true,
     "includeDimensions": true,
@@ -88,7 +89,7 @@ Process the extracted content to remove noise and focus on valuable information:
 
 // Filter images to focus on content images
 {
-  "node": "Filter", 
+  "node": "Filter",
   "parameters": {
     "conditions": {
       "width": { "greater_than": 100 },
@@ -182,7 +183,7 @@ Handle common browser extension limitations:
 
 Perfect for researchers who need to:
 - Extract key quotes and citations from academic papers
-- Collect relevant links for further investigation  
+- Collect relevant links for further investigation
 - Gather supporting images and diagrams
 - Create structured research notes
 

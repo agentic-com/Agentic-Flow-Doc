@@ -1,6 +1,7 @@
 ---
 title: "Multi-Step Workflow Integration"
 description: "Build complex workflows combining text extraction, processing, and external API integration with real-world examples."
+difficulty: "🚀 intermediate"
 ---
 
 # Multi-Step Workflow Integration
@@ -651,6 +652,6 @@ You've now mastered multi-step workflow integration! You're ready to:
 
 ---
 
-**Estimated Time:** 60-75 minutes  
-**Difficulty:** Intermediate  
+**Estimated Time:** 60-75 minutes
+**Difficulty:** Intermediate
 **Prerequisites:** Completed beginner tutorials, basic API knowledge

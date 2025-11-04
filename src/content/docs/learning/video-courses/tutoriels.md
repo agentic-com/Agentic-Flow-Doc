@@ -12,7 +12,7 @@ Each course is designed to help you accomplish real tasks. You'll watch, follow 
 ## 🌱 Beginner Courses: Your First Automations
 *Perfect if you've never built a workflow before*
 
-### **Getting Your First Workflow Running** 
+### **Getting Your First Workflow Running**
 🕐 *15 minutes* | 🌱 *Beginner*
 
 **What You'll Accomplish:**

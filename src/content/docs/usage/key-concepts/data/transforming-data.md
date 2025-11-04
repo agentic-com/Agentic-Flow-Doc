@@ -31,6 +31,5 @@ To transform browser context data, you can use the data transformation nodes:
 **Processing extracted images:**
 - Filter images by size, type, or URL pattern
 - Extract image metadata and attributes
-- Transform image URLs for processing or download 
+- Transform image URLs for processing or download
 
-    

@@ -2,11 +2,12 @@
 contentType: explanation
 title: Agents vs chains
 description: "Create advanced AI workflows using Agents vs chains with LangChain integration and intelligent processing."
+difficulty: "🎯 advanced"
 ---
 
 # Demonstration of key differences between agents and chains
 
-In this workflow you can choose whether your chat query goes to an [agent](/glossary.md#ai-agent) or [chain](/glossary.md#ai-chain). It shows some of the ways that agents are more powerful than chains.
+In this workflow you can choose whether your chat query goes to an agent or chain. It shows some of the ways that agents are more powerful than chains.
 
 ```mermaid
 graph TB
@@ -20,13 +21,13 @@ graph TB
         A7 -->|Yes| A4
         A7 -->|No| A8[Final Response]
     end
-    
+
     subgraph "Chain Workflow"
         B1[User Query] --> B2[Basic LLM Chain]
         B2 --> B3[Predetermined Sequence]
         B3 --> B4[Direct LLM Response]
     end
-    
+
     style A2 fill:#e8f5e8
     style A3 fill:#fff3e0
     style B2 fill:#e1f5fe
@@ -39,11 +40,10 @@ graph TB
 
 This workflow uses:
 
-* [Chat Trigger](/integrations/builtin/core-nodes/n8n-nodes-langchain.chattrigger/index.md): start your workflow and respond to user chat interactions. The node provides a customizable chat interface.
-* [Switch node](/integrations/builtin/core-nodes/n8n-nodes-base.switch.md): directs your query to either the agent or chain, depending on which you specify in your query. If you say "agent" it sends it to the agent. If you say "chain" it sends it to the chain.
-* [Agent](/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent/index.md): the Agent node interacts with other components of the workflow and makes decisions about what [tools](/glossary.md#ai-tool) to use.
-* [Basic LLM Chain](/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.chainllm.md): the Basic LLM Chain node supports chatting with a connected LLM, but doesn't support [memory](/glossary.md#ai-memory) or tools.
-
+* [Chat Trigger](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-langchain.chattrigger/index.md): start your workflow and respond to user chat interactions. The node provides a customizable chat interface.
+* [Switch node](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.switch.md): directs your query to either the agent or chain, depending on which you specify in your query. If you say "agent" it sends it to the agent. If you say "chain" it sends it to the chain.
+* Agent: the Agent node interacts with other components of the workflow and makes decisions about what tools to use.
+* Basic LLM Chain: the Basic LLM Chain node supports chatting with a connected LLM, but doesn't support memory or tools.
 
 ## Using the example
 

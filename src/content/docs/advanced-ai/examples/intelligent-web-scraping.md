@@ -1,23 +1,24 @@
 ---
-title: Intelligent Web Scraping with AI
-description: "Advanced web scraping workflows that combine browser extension nodes with AI processing for intelligent data extraction and analysis."
+title: Intelligent Web Extraction with AI
+description: "Advanced web extraction workflows that combine browser extension nodes with AI processing for intelligent data extraction and analysis."
+difficulty: "🎯 advanced"
 ---
 
-# Intelligent Web Scraping with AI
+# Intelligent Web Extraction with AI
 
-This guide demonstrates how to create sophisticated web scraping workflows that use AI to intelligently identify, extract, and process web content, making scraping more adaptive and robust than traditional selector-based approaches.
+This guide demonstrates how to create sophisticated web extraction workflows that use AI to intelligently identify, extract, and process web content, making extraction more adaptive and robust than traditional selector-based approaches.
 
 ## Core Concepts
 
-### Traditional vs AI-Powered Scraping
+### Traditional vs AI-Powered Extraction
 
-**Traditional Scraping:**
+**Traditional Extraction:**
 - Relies on fixed CSS selectors and XPath expressions
 - Breaks when website structure changes
 - Requires manual updates for each site variation
 - Limited to predefined data patterns
 
-**AI-Powered Scraping:**
+**AI-Powered Extraction:**
 - Uses machine learning to identify content patterns
 - Adapts to structural changes automatically
 - Learns from examples to improve extraction
@@ -40,7 +41,7 @@ const contentAnalysis = await Agent.execute({
     3. Sidebar content
     4. Footer information
     5. Advertisement sections
-    
+
     Return a JSON structure mapping content types to CSS selectors.`
 });
 
@@ -69,7 +70,7 @@ class AdaptiveExtractor {
 
   async extract(url, dataType) {
     await NavigateToLink.execute({ url });
-    
+
     for (const strategy of this.strategies) {
       try {
         const result = await strategy.extract(dataType);
@@ -87,7 +88,7 @@ class AdaptiveExtractor {
 
   async aiEmergencyExtraction(dataType) {
     const pageContent = await GetAllText.execute();
-    
+
     return await Agent.execute({
       input: pageContent,
       prompt: `Extract ${dataType} information from this text.
@@ -113,7 +114,7 @@ const contentClassifier = await Agent.execute({
     - Related products or recommendations
     - Company/seller information
     - Shipping and return policies
-    
+
     For each category found, provide:
     1. Confidence score (0-1)
     2. Key information extracted
@@ -128,7 +129,7 @@ for (const category of contentClassifier.categories) {
 }
 ```
 
-## Advanced Scraping Patterns
+## Advanced Extraction Patterns
 
 ### Multi-Page Intelligence
 
@@ -148,7 +149,7 @@ class SmartPaginator {
 
     while (currentUrl && pageCount < maxPages) {
       if (this.visitedUrls.has(currentUrl)) break;
-      
+
       await NavigateToLink.execute({ url: currentUrl });
       this.visitedUrls.add(currentUrl);
 
@@ -220,13 +221,13 @@ class DynamicContentScraper {
     });
 
     // Wait based on AI recommendation
-    await WaitNode.execute({ 
-      seconds: loadingAnalysis.recommendedWaitTime || 3 
+    await WaitNode.execute({
+      seconds: loadingAnalysis.recommendedWaitTime || 3
     });
 
     // Re-analyze after waiting
     const finalContent = await GetAllText.execute();
-    
+
     if (finalContent.length > initialContent.length * 1.2) {
       console.log("Dynamic content detected and loaded");
     }
@@ -261,13 +262,13 @@ class DataValidator {
         schema: JSON.stringify(expectedSchema)
       },
       prompt: `Validate this extracted data against the expected schema:
-        
+
         1. Check completeness (all required fields present)
         2. Verify data types and formats
         3. Identify inconsistencies or anomalies
         4. Suggest corrections for invalid data
         5. Rate overall quality (0-1 score)
-        
+
         Return validation report with issues and suggestions.`
     });
 
@@ -287,7 +288,7 @@ class DataValidator {
       },
       prompt: `Attempt to correct the identified data quality issues:
         ${validationReport.issues.join('\n')}
-        
+
         Return corrected data maintaining the original structure.`
     });
   }
@@ -315,7 +316,7 @@ class ProductIntelligenceScraper {
       },
       tools: [ImageAnalysisTool, PriceExtractorTool, ReviewAnalyzerTool],
       prompt: `Perform comprehensive product analysis:
-        
+
         1. Extract basic product information (name, brand, model)
         2. Identify pricing information (current, original, discounts)
         3. Analyze product images for features and quality
@@ -323,7 +324,7 @@ class ProductIntelligenceScraper {
         5. Analyze customer reviews and ratings
         6. Identify related or competing products
         7. Extract availability and shipping information
-        
+
         Return structured product intelligence report.`
     });
 
@@ -378,12 +379,12 @@ class NewsMonitoringScraper {
           links: await GetAllLinks.execute()
         },
         prompt: `Find articles related to "${topic}" on this news site:
-          
+
           1. Identify article links and headlines
           2. Extract publication dates
           3. Determine relevance score (0-1) to the topic
           4. Classify article type (news, opinion, analysis, etc.)
-          
+
           Return array of relevant articles with metadata.`
       });
 
@@ -409,7 +410,7 @@ class NewsMonitoringScraper {
       },
       tools: [SentimentAnalysisTool, EntityExtractionTool],
       prompt: `Extract comprehensive article information:
-        
+
         1. Article title and subtitle
         2. Author and publication info
         3. Main content (clean text)
@@ -417,7 +418,7 @@ class NewsMonitoringScraper {
         5. Sentiment analysis (positive/negative/neutral)
         6. Key topics and themes
         7. Article summary (2-3 sentences)
-        
+
         Return structured article data.`
     });
   }
@@ -429,13 +430,13 @@ class NewsMonitoringScraper {
         topic: topic
       },
       prompt: `Analyze this collection of articles about "${topic}":
-        
+
         1. Identify trending themes and subtopics
         2. Track sentiment evolution over time
         3. Find key influencers and sources
         4. Detect emerging narratives or controversies
         5. Summarize overall coverage patterns
-        
+
         Return comprehensive topic analysis report.`
     });
   }
@@ -444,7 +445,7 @@ class NewsMonitoringScraper {
 
 ### Research Data Collection
 
-Academic and research-focused intelligent scraping:
+Academic and research-focused intelligent extraction:
 
 ```javascript
 // Research-oriented scraper
@@ -466,13 +467,13 @@ class ResearchDataScraper {
           links: await GetAllLinks.execute()
         },
         prompt: `Analyze this academic/research source for "${researchQuery}":
-          
+
           1. Identify research papers and publications
           2. Find datasets and data sources
           3. Extract researcher and expert information
           4. Identify institutional affiliations
           5. Find related research topics and keywords
-          
+
           Classify each finding by type and relevance.`
       });
 
@@ -508,17 +509,17 @@ class ResearchDataScraper {
         query: query
       },
       prompt: `Synthesize this research data collection:
-        
+
         1. Identify key research themes and trends
         2. Map relationships between papers, authors, and institutions
         3. Find research gaps and opportunities
         4. Suggest follow-up research directions
         5. Create citation network analysis
-        
+
         Return comprehensive research landscape report.`
     });
   }
 }
 ```
 
-This intelligent web scraping approach provides more robust, adaptable, and insightful data extraction capabilities that can handle the complexity and variability of modern web content.
+This intelligent web extraction approach provides more robust, adaptable, and insightful data extraction capabilities that can handle the complexity and variability of modern web content.

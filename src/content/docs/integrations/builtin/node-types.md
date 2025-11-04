@@ -1,6 +1,6 @@
 ---
 title: Built-in Node Types
-description: "Quick guide to choosing the right nodes for your workflows - from web scraping to AI processing to data transformation."
+description: "Quick guide to choosing the right nodes for your workflows - from web extraction to AI processing to data transformation."
 ---
 
 # Built-in Node Types
@@ -13,82 +13,82 @@ description: "Quick guide to choosing the right nodes for your workflows - from 
 
 Agentic Workflow Studio organizes nodes into six main categories to help you find what you need:
 
-🤖 **AI Nodes** - Add intelligence to your workflows  
-🌐 **Core Nodes** - Essential web and API interactions  
-🔄 **Data Transformation** - Process and format your data  
-⚡ **Flow Control** - Control how your workflow runs  
-📦 **Lambda Nodes** - Create reusable workflow components  
+🤖 **AI Nodes** - Add intelligence to your workflows
+🌐 **Core Nodes** - Essential web and API interactions
+🔄 **Data Transformation** - Process and format your data
+⚡ **Flow Control** - Control how your workflow runs
+📦 **Lambda Nodes** - Create reusable workflow components
 🚀 **Trigger Nodes** - Start your workflows automatically
 
 ## Quick Decision Guides
 
-### 🌐 Web Scraping & Data Collection
-**Extract text from webpages** → Use [GetAllText](/integrations/builtin/extension/GetAllText/)  
-**Get page HTML** → Use [GetAllHTML](/integrations/builtin/extension/GetAllHTML/)  
-**Extract images** → Use [GetAllImages](/integrations/builtin/extension/GetAllImages/)  
-**Collect links** → Use [GetAllLinks](/integrations/builtin/extension/GetAllLinks/)  
+### 🌐 Web Extraction & Data Collection
+**Extract text from webpages** → Use [GetAllText](/integrations/builtin/extension/GetAllText/)
+**Get page HTML** → Use [GetAllHTML](/integrations/builtin/extension/GetAllHTML/)
+**Extract images** → Use [GetAllImages](/integrations/builtin/extension/GetAllImages/)
+**Collect links** → Use [GetAllLinks](/integrations/builtin/extension/GetAllLinks/)
 **Make API calls** → Use [HTTP Request](/integrations/builtin/core/Http-Request/)
 
 ### 🤖 AI Processing
-**Simple AI text processing** → Use [Basic LLM Chain](/integrations/builtin/ai/AIAgents/BasicLLMChainNode/)  
-**Question answering** → Use [QA Node](/integrations/builtin/ai/AIAgents/QANode/)  
-**Advanced AI with sources** → Use [RAG Node](/integrations/builtin/ai/AIAgents/RAGNode/)  
+**Simple AI text processing** → Use [Basic LLM Chain](/integrations/builtin/ai/AIAgents/BasicLLMChainNode/)
+**Question answering** → Use [QA Node](/integrations/builtin/ai/AIAgents/QANode/)
+**Advanced AI with sources** → Use [RAG Node](/integrations/builtin/ai/AIAgents/RAGNode/)
 **AI with tools** → Use [Tools Agent](/integrations/builtin/ai/AIAgents/ToolsAgentNode/)
 
 ### 🔄 Data Processing
-**Edit/rename fields** → Use [Edit Fields](/integrations/builtin/dataTransformation/EditFields/)  
-**Select specific fields** → Use [Pick Field](/integrations/builtin/dataTransformation/PickField/)  
-**Custom JavaScript** → Use [Code](/integrations/builtin/core/Code/)  
+**Edit/rename fields** → Use [Edit Fields](/integrations/builtin/dataTransformation/EditFields/)
+**Select specific fields** → Use [Pick Field](/integrations/builtin/dataTransformation/PickField/)
+**Custom JavaScript** → Use [Code](/integrations/builtin/core/Code/)
 **Save as file** → Use [Download As File](/integrations/builtin/dataTransformation/DownloadAsFile/)
 
 ### ⚡ Workflow Control
-**If/then logic** → Use [If](/integrations/builtin/flow/If/)  
-**Filter data** → Use [Filter](/integrations/builtin/flow/Filter/)  
-**Combine data** → Use [Merge](/integrations/builtin/flow/Merge/)  
-**Handle errors** → Use [Stop & Error](/integrations/builtin/flow/StopAndError/)  
+**If/then logic** → Use [If](/integrations/builtin/flow/If/)
+**Filter data** → Use [Filter](/integrations/builtin/flow/Filter/)
+**Combine data** → Use [Merge](/integrations/builtin/flow/Merge/)
+**Handle errors** → Use [Stop & Error](/integrations/builtin/flow/StopAndError/)
 **Add delays** → Use [Wait](/integrations/builtin/flow/wait/)
 
 ## Detailed Category Guide
 
 ### 🤖 AI Nodes
-**What they do:** Add artificial intelligence to your workflows  
-**Common uses:** Analyze text, answer questions, summarize content, extract insights  
-**Popular nodes:** Basic LLM Chain, QA Node, RAG Node, Tools Agent  
+**What they do:** Add artificial intelligence to your workflows
+**Common uses:** Analyze text, answer questions, summarize content, extract insights
+**Popular nodes:** Basic LLM Chain, QA Node, RAG Node, Tools Agent
 **Best for:** Content analysis, intelligent automation, natural language processing
 
-### 🌐 Core Nodes  
-**What they do:** Essential web interactions and API calls  
-**Common uses:** Scrape websites, make HTTP requests, run custom code  
-**Popular nodes:** Get All Text, HTTP Request, Code, Get All HTML  
+### 🌐 Core Nodes
+**What they do:** Essential web interactions and API calls
+**Common uses:** Scrape websites, make HTTP requests, run custom code
+**Popular nodes:** Get All Text, HTTP Request, Code, Get All HTML
 **Best for:** Data collection, API integration, custom logic
 
 ### 🔄 Data Transformation Nodes
-**What they do:** Process, clean, and format your data  
-**Common uses:** Edit fields, pick specific data, convert formats, save files  
-**Popular nodes:** Edit Fields, Pick Field, Download As File  
+**What they do:** Process, clean, and format your data
+**Common uses:** Edit fields, pick specific data, convert formats, save files
+**Popular nodes:** Edit Fields, Pick Field, Download As File
 **Best for:** Data cleaning, format conversion, report generation
 
 ### ⚡ Flow Control Nodes
-**What they do:** Control how your workflow runs  
-**Common uses:** Add conditions, filter data, handle errors, add delays  
-**Popular nodes:** If, Filter, Merge, Stop & Error, Wait  
+**What they do:** Control how your workflow runs
+**Common uses:** Add conditions, filter data, handle errors, add delays
+**Popular nodes:** If, Filter, Merge, Stop & Error, Wait
 **Best for:** Complex workflow logic, error handling, data routing
 
 ### 📦 Lambda Nodes
-**What they do:** Create reusable workflow components  
-**Common uses:** Build modular workflows, create templates  
-**Popular nodes:** Lambda Input, Lambda Output  
+**What they do:** Create reusable workflow components
+**Common uses:** Build modular workflows, create templates
+**Popular nodes:** Lambda Input, Lambda Output
 **Best for:** Reusable components, complex workflow organization
 
 ### 🚀 Trigger Nodes
-**What they do:** Start your workflows automatically  
-**Common uses:** Page load triggers, scheduled runs, manual buttons  
-**Popular nodes:** When Started  
+**What they do:** Start your workflows automatically
+**Common uses:** Page load triggers, scheduled runs, manual buttons
+**Popular nodes:** When Started
 **Best for:** Automation, scheduled tasks, event-driven workflows
 
 ## Common Workflow Patterns
 
-### 🌐 Web Scraping Workflow
+### 🌐 Web Extraction Workflow
 ```
 [When Started] → [Get All Text] → [Edit Fields] → [Download As File]
 ```

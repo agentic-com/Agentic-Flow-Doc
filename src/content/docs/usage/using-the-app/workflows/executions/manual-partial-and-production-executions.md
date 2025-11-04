@@ -7,7 +7,7 @@ There are some important differences in how Agentic Workflow Studio executes wor
 
 ## Manual executions
 
-Manual executions allow you to run workflows directly from the [canvas](/glossary.md#canvas-Agentic Workflow Studio) to test your workflow logic. These executions are "ad-hoc": they run only when you manually select the **Execute workflow** button.
+Manual executions allow you to run workflows directly from the canvas to test your workflow logic. These executions are "ad-hoc": they run only when you manually select the **Execute workflow** button.
 
 Manual executions make building workflows easier by allowing you to iteratively test as you go, following the flow logic and seeing data transformations. You can test conditional branching, data formatting changes, and loop behavior by providing different input items and modifying node options.
 
@@ -35,18 +35,18 @@ Some common issues you might come across when running partial executions include
 
 This error message appears when you try to perform a partial execution without connecting the workflow to a trigger. Manual executions, including partial executions, attempt to mimic production executions when possible. Part of this includes requiring a trigger node to describe when the workflow logic should execute.
 
-To work around this, connect a trigger node to the workflow with the node you're trying to execute. Most often, a [manual trigger](/integrations/builtin/core-nodes/n8n-nodes-base.manualworkflowtrigger.md) is the simplest option.
+To work around this, connect a trigger node to the workflow with the node you're trying to execute. Most often, a [manual trigger](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.manualworkflowtrigger.md) is the simplest option.
 
 > Please execute the whole workflow, rather than just the node. (Existing execution data is too large.)
 
 This error can appear when performing partial executions on workflows with large numbers of branches. Partial executions involve sending data and workflow logic to the Agentic Workflow Studio backend in a way that isn't required for full executions. This error occurs when your workflow exceeds the maximum size allowed for these messages.
 
-To work around this, consider using the [limit node](/integrations/builtin/core-nodes/n8n-nodes-base.limit.md) to limit node output while running partial executions. Once the workflow is running as intended, you can disable or delete the limit node before enabling production execution.
+To work around this, consider using the [limit node](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.limit.md) to limit node output while running partial executions. Once the workflow is running as intended, you can disable or delete the limit node before enabling production execution.
 
 ## Production executions
 
 Production executions occur when a triggering event or schedule automatically runs a workflow.
 
-To configure production executions, you must attach a [trigger node](/glossary.md#trigger-node-Agentic Workflow Studio) (any trigger other than the [manual trigger](/integrations/builtin/core-nodes/n8n-nodes-base.manualworkflowtrigger.md) works) and switch workflow's toggle to **Active**. Once activated, the workflow automatically executes whenever the trigger condition occurs.
+To configure production executions, you must attach a trigger node (any trigger other than the [manual trigger](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.manualworkflowtrigger.md) works) and switch workflow's toggle to **Active**. Once activated, the workflow automatically executes whenever the trigger condition occurs.
 
 The execution flow for production executions doesn't display in the Editor tab of the workflow as with manual executions. Instead, you can see executions in the workflow's **Executions** tab according to your [workflow settings](/workflows/settings.md). From there, you can explore and troubleshoot problems using the [debug in editor feature](/workflows/executions/debug.md).

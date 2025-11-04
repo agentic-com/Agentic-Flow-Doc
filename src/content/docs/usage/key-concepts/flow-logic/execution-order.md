@@ -14,21 +14,21 @@ graph TB
     A[Start Node] --> B[Branch 1 - Top]
     A --> C[Branch 2 - Middle]
     A --> D[Branch 3 - Bottom]
-    
+
     B --> B1[Node B1]
     B1 --> B2[Node B2]
     B2 --> E[Merge Point]
-    
+
     C --> C1[Node C1]
     C1 --> C2[Node C2]
     C2 --> E
-    
+
     D --> D1[Node D1]
     D1 --> D2[Node D2]
     D2 --> E
-    
+
     E --> F[Continue Workflow]
-    
+
     style A fill:#e3f2fd
     style E fill:#e8f5e8
     style F fill:#fff3e0

@@ -32,10 +32,10 @@ Ollama lets you run powerful AI models directly on your computer instead of usin
 
 ## Why Choose Local AI?
 
-**🔒 Complete Privacy**: Your data never leaves your computer  
-**💰 No Usage Fees**: No per-token charges or monthly subscriptions  
-**🌐 Works Offline**: No internet required once models are downloaded  
-**⚡ Fast Processing**: No network delays, just local processing speed  
+**🔒 Complete Privacy**: Your data never leaves your computer
+**💰 No Usage Fees**: No per-token charges or monthly subscriptions
+**🌐 Works Offline**: No internet required once models are downloaded
+**⚡ Fast Processing**: No network delays, just local processing speed
 **🎛️ Full Control**: Choose exactly which models to use
 
 ## How It Works
@@ -45,7 +45,7 @@ flowchart LR
     A[🖥️ Your Computer] --> B[🤖 Ollama Server]
     B --> C[🧠 AI Model]
     C --> D[✨ Local Response]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -107,7 +107,7 @@ ollama serve
 **For Creative Content** (writing, brainstorming):
 ```json
 {
-  "model": "llama2:7b", 
+  "model": "llama2:7b",
   "temperature": 0.8,
   "max_tokens": 1000
 }
@@ -126,7 +126,7 @@ ollama serve
 
 Works in all major browsers:
 - ✅ **Chrome**: Full support including streaming
-- ✅ **Firefox**: Full support  
+- ✅ **Firefox**: Full support
 - ⚠️ **Safari**: Limited streaming support
 - ✅ **Edge**: Full support
 
@@ -190,8 +190,6 @@ Manual Input → Ollama → Edit Fields → Download As File
 
 </details>
 
-
-
 ## Best Practices
 
 ### ✅ Do This
@@ -209,19 +207,19 @@ Manual Input → Ollama → Edit Fields → Download As File
 ## Troubleshooting
 
 ### 🚫 "Connection Failed" Error
-**Problem**: Can't connect to Ollama server  
+**Problem**: Can't connect to Ollama server
 **Solution**: Make sure Ollama is running (`ollama serve`) and check the URL is correct
 
 ### 📥 "Model Not Found" Error
-**Problem**: Specified model isn't available  
+**Problem**: Specified model isn't available
 **Solution**: Download the model first: `ollama pull llama2:7b`
 
 ### 🐌 Very Slow Processing
-**Problem**: AI responses take too long  
+**Problem**: AI responses take too long
 **Solution**: Try a smaller model (7b instead of 13b) or check if your system has enough RAM
 
 ### 💾 "Out of Memory" Error
-**Problem**: System runs out of RAM  
+**Problem**: System runs out of RAM
 **Solution**: Close other applications or use a smaller model
 
 ## Model Recommendations
@@ -315,5 +313,4 @@ Manual Input → Ollama → Edit Fields → Download As File
 - document processing
 - intelligent automation
 - knowledge extraction
-
 

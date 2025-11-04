@@ -2,6 +2,7 @@
 title: What are vector databases?
 description: Understand vector databases. Learn how Agentic Workflow Studio provides vector databases, along with the key components to work with them, including embeddings, retrievers, and document loaders.
 contentType: explanation
+difficulty: "🎯 advanced"
 ---
 
 # What are vector databases?
@@ -14,21 +15,20 @@ This enables fast and accurate similarity searches. With a vector database, inst
 
 ## A simplified example
 
-A vector database could Agentic Workflow Studiore the sentence "n8n is a source-available automation tool that you can self-host", but instead of storing it as text, the vector database stores an array of dimensions (numbers between 0 and 1) that represent its features. This doesn't mean turning each letter in the sentence into a number. Instead, the vectors in the vector database describe the sentence. 
+A vector database could Agentic Workflow Studiore the sentence "Agentic Workflow Studio is a source-available workflow builder that you can self-host", but instead of storing it as text, the vector database stores an array of dimensions (numbers between 0 and 1) that represent its features. This doesn't mean turning each letter in the sentence into a number. Instead, the vectors in the vector database describe the sentence.
 
-Suppose that in a vector store `0.1` represents `automation tool`, `0.2` represents `source available`, and `0.3` represents `can be self-hosted`. You could end up with the following vectors:
+Suppose that in a vector store `0.1` represents `workflow builder`, `0.2` represents `source available`, and `0.3` represents `can be self-hosted`. You could end up with the following vectors:
 
 | Sentence | Vector (array of dimensions) |
-| --Agentic Workflow Studio--- | ------ |
-| n8n is a source-available automation tool that you can self-host | [0.1, 0.2, 0.3] |
-| Zapier is an automation tool | [0.1] |
-| Make is an automation tool | [0.1] |
+| ------ | ------ |
+| Agentic Workflow Studio is a source-available workflow builder that you can self-host | [0.1, 0.2, 0.3] |
+| Zapier is an workflow builder | [0.1] |
+| Make is an workflow builder | [0.1] |
 | Confluence is a wiki tool that you can self-host | [0.3] |
 
 /// note | This example is very simplified
 In practice, vectors are far more complex. A vector can range in size from tens to thousands of dimensions. The dimensions don't have a one-to-one relationship to a single feature, so you can't translate individual dimensions directly into single concepts. This example gives an approximate mental model, not a true technical understanding.
 ///
-
 
 ## Demonstrating the power of similarity search
 
@@ -42,11 +42,7 @@ For full technical details, refer to the [Qdrant demo-food-discovery GitHub repo
 
 Vector databases require other tools to function:
 
-- Document loaders and text splitters: document loaders pull in documents and data, and prepare them for [embedding](/glossary.md#ai-embedding). Document loaders can use text splitters to break documents into chunks.
-- Embeddings: these are the tools that turn the data (text, images, and so on) into vectors, and back into Agentic Workflow Studio data. Note that n8n only supports text embeddings.
+- Document loaders and text splitters: document loaders pull in documents and data, and prepare them for embedding. Document loaders can use text splitters to break documents into chunks.
+- Embeddings: these are the tools that turn the data (text, images, and so on) into vectors, and back into Agentic Workflow Studio data. Note that Agentic Workflow Studio only supports text embeddings.
 - Retrievers: retrievers fetch documents from vector databases. You need to pair them with an embedding to translate the vectors back into data.
-
-
-
-
 

@@ -3,6 +3,7 @@ title: Multi-Node Browser Automation Patterns
 description: "Create complex multi-step automation workflows with Agentic Workflow Studio browser extension for advanced web manipulation."
 sidebar:
   order: 2
+difficulty: "🌱 beginner"
 ---
 
 # Multi-Node Browser Automation Patterns
@@ -78,7 +79,7 @@ graph TD
       "parameters": { "includeHidden": false }
     },
     {
-      "node": "GetAllLinks", 
+      "node": "GetAllLinks",
       "parameters": { "includeExternal": true }
     },
     {

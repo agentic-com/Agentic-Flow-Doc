@@ -19,12 +19,12 @@ graph TB
     F --> G[Connect Nodes]
     G --> H[Test Workflow]
     H --> I[Save & Execute]
-    
+
     F --> F1[Browser Extension Nodes]
     F --> F2[Processing Nodes]
     F --> F3[AI Nodes]
     F --> F4[Flow Control Nodes]
-    
+
     style A fill:#e3f2fd
     style C fill:#e8f5e8
     style H fill:#fff3e0

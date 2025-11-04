@@ -17,7 +17,7 @@ Before using this node, ensure you have:
 
 ## Overview
 
-The Subtract From A Date node provides comprehensive date arithmetic capabilities for subtracting multiple time periods from existing dates. This node handles complex date calculations including timezone conversions, business day arithmetic, and flexible time unit operations, making it essential for deadline calculations, historical analysis, and temporal workflow automation.
+The Subtract From A Date node provides comprehensive date arithmetic capabilities for subtracting multiple time periods from existing dates. This node handles complex date calculations including timezone conversions, business day arithmetic, and flexible time unit operations, making it essential for deadline calculations, historical analysis, and temporal workflow.
 
 ### Purpose and Functionality
 
@@ -299,7 +299,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Unexpected dates when subtracting months across month boundaries
 - **Causes**: Different month lengths causing day overflow or underflow
-- **Solutions**: 
+- **Solutions**:
   1. Use end_of_month_handling configuration for consistent behavior
   2. Consider using days instead of months for precise calculations
   3. Test calculations around month boundaries
@@ -309,7 +309,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Incorrect business day counts or unexpected date results
 - **Causes**: Overlapping weekend and holiday exclusions or incorrect holiday formats
-- **Solutions**: 
+- **Solutions**:
   1. Ensure holiday dates are in YYYY-MM-DD format
   2. Check weekend_days configuration (0=Sunday, 6=Saturday)
   3. Verify holiday list doesn't include weekends unless intended

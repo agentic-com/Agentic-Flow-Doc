@@ -3,10 +3,9 @@ title: RAG in Agentic Workflow Studio
 description: With Retrieval-Augmented Generation (RAG), you can give your models access to context-specific resources to help generate relevant answers. Learn how it works and how to use RAG in Agentic Workflow Studio.
 ---
 
-
 ## What is RAG
 
-[Retrieval-Augmented Generation (RAG)](/glossary.md#ai-retrieval-augmented-generation-rag) is a technique that improves AI responses by combining language models with external data sources. Instead of relying solely on the model's internal training data, RAG systems retrieve relevant documents to [ground](/glossary.md#ai-groundedness) responses in up-to-date, domain-specific, or proprietary knowledge. RAG workflows typically rely on vector stores to manage and search this external data efficiently.
+Retrieval-Augmented Generation (RAG) is a technique that improves AI responses by combining language models with external data sources. Instead of relying solely on the model's internal training data, RAG systems retrieve relevant documents to ground responses in up-to-date, domain-specific, or proprietary knowledge. RAG workflows typically rely on vector stores to manage and search this external data efficiently.
 
 ```mermaid
 sequenceDiagram
@@ -17,7 +16,7 @@ sequenceDiagram
     participant Knowledge_Base as Knowledge Base
 
     Note over User, Knowledge_Base: RAG Workflow Process
-    
+
     User->>RAG_System: Submit Query
     RAG_System->>Vector_Store: Search for Relevant Documents
     Vector_Store->>Knowledge_Base: Retrieve Document Chunks
@@ -30,14 +29,14 @@ sequenceDiagram
 
 ## What is a vector store?
 
-A [vector store](/glossary.md#ai-vector-store) is a special database designed to store and search high-dimensional vectors: numerical representations of text, images, or other data. When you upload a document, the vector store splits it into chunks and converts each chunk into a vector using an [embedding model](/glossary.md#ai-embedding).
+A vector store is a special database designed to store and search high-dimensional vectors: numerical representations of text, images, or other data. When you upload a document, the vector store splits it into chunks and converts each chunk into a vector using an embedding model.
 
 You can query these vectors using similarity searches, which construct results based on *semantic meaning*, rather than keyword matches. This makes vector stores a powerful foundation for RAG and other AI systems that need to retrieve and reason over large sets of knowledge.
 
 ## How to use RAG in Agentic Workflow Studio
 
 /// note | Start with a RAG template
-👉 Try out RAG in Agentic Workflow Studio with the [RAG Starter Template](https://Agentic Workflow Studiontic Workflow Studio/workflows/5010-rag-starter-template-using-simple-vector-stores-form-trigger-and-openai). The template includes two ready-made workflows: one for uploading files and one for querying them.
+👉 Try out RAG in Agentic Workflow Studio with the [RAG Starter Template](https://Agentic Workflow Studio/workflows/5010-rag-starter-template-using-simple-vector-stores-form-trigger-and-openai). The template includes two ready-made workflows: one for uploading files and one for querying them.
 ///
 
 ```mermaid
@@ -46,18 +45,18 @@ flowchart TD
     B --> C[Text Splitter]
     C --> D[Embedding Model]
     D --> E[Vector Store - Insert]
-    
+
     F[User Query] --> G[Vector Store - Search]
     G --> H[Retrieved Chunks]
     H --> I{Use Agent or Direct Query?}
-    
+
     I -->|Agent| J[Agent Node with Vector Store Tool]
     I -->|Direct| K[Vector Store - Get Many]
-    
+
     J --> L[LLM with Context]
     K --> L
     L --> M[Enhanced Response]
-    
+
     style A fill:#e1f5fe
     style F fill:#e8f5e8
     style M fill:#fff3e0
@@ -68,9 +67,9 @@ flowchart TD
 Before your agent can access custom knowledge, you need to upload that data to a vector store:
 
 1. Add the nodes needed to fetch your source data.
-2. Insert a **Vector Store** node (e.g. the [Simple Vector Store](/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.vectorstoreinmemory.md)) and choose the **Insert Documents** operation.
+2. Insert a **Vector Store** node (e.g. the Simple Vector Store) and choose the **Insert Documents** operation.
 3. Select an **embedding model**, which converts your text into vector embeddings. Consult the FAQ for more information on [choosing the right embedding model](#how-do-i-choose-the-right-embedding-model).
-4. Add a [Default Data Loader](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.documentdefaultdataloader.md) node, which splits your content into chunks. You can use the default settings or define your own chunking strategy:
+4. Add a Default Data Loader node, which splits your content into chunks. You can use the default settings or define your own chunking strategy:
 	* **Character Text Splitter:** splits by character length.
 	* **Recursive Character Text Splitter:** recursively splits by Markdown, HTML, code blocks or simple characters (recommended for most use cases).
 	* **Token Text Splitter:** splits by token count.
@@ -82,14 +81,14 @@ You can query the data in two main ways: using an agent or directly through a no
 
 ### Using agents
 
-1. Add an [agent](/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent/index.md) to your workflow.
+1. Add an agent to your workflow.
 2. Add the vector store as a **tool** and give it a **description** to help the agent understand when to use it:
 	* Set the **limit** to define how many chunks to return.
 	* Enable **Include Metadata** to provide extra context for each chunk.
 3. Add the same **embedding model** you used when inserting the data.
 
 /// tip | Pro tip
-To save tokens on an expensive model, you can first use the [Vector Store Question Answer tool](/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.toolvectorstore.md) to retrieve relevant data, and only then pass the result to the Agent. To see this in action, check out [this tAgentic Workflow Studiolate](https://Agentic Workflow Studio/workflows/5011-save-costs-in-rag-workflows-using-the-qanda-tool-with-multiple-models).
+To save tokens on an expensive model, you can first use the Vector Store Question Answer tool to retrieve relevant data, and only then pass the result to the Agent. To see this in action, check out [this tAgentic Workflow Studiolate](https://Agentic Workflow Studio/workflows/5011-save-costs-in-rag-workflows-using-the-qanda-tool-with-multiple-models).
 ///
 
 ### Using the node directly

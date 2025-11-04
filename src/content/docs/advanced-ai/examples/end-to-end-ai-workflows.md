@@ -1,6 +1,7 @@
 ---
 title: End-to-End AI Workflows
 description: "Build complete automation workflows that extract web data, process it with AI, and deliver actionable business results."
+difficulty: "🎯 advanced"
 ---
 
 # End-to-End AI Workflows
@@ -19,10 +20,10 @@ Every effective AI workflow follows this pattern:
 
 ```mermaid
 graph LR
-    A[🌐 Extract Data] --> B[🤖 Process with AI] 
+    A[🌐 Extract Data] --> B[🤖 Process with AI]
     B --> C[📊 Generate Insights]
     C --> D[📋 Take Action]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#e8f5e8
@@ -30,7 +31,7 @@ graph LR
 ```
 
 1. **Extract Data** - Get information from websites
-2. **Process with AI** - Clean and analyze the data  
+2. **Process with AI** - Clean and analyze the data
 3. **Generate Insights** - Create summaries and recommendations
 4. **Take Action** - Save results, send reports, or trigger next steps
 
@@ -51,12 +52,12 @@ graph LR
   "nodes": [
     {
       "id": "get_competitor_content",
-      "type": "GetAllText", 
+      "type": "GetAllText",
       "name": "Extract Competitor Content",
       "settings": {
         "urls": [
           "https://competitor1.com/blog",
-          "https://competitor2.com/news", 
+          "https://competitor2.com/news",
           "https://competitor3.com/updates"
         ]
       }
@@ -72,7 +73,7 @@ graph LR
     },
     {
       "id": "generate_insights",
-      "type": "Agent", 
+      "type": "Agent",
       "name": "Generate Strategic Insights",
       "settings": {
         "input": "{{analyze_content.output}}",
@@ -82,7 +83,7 @@ graph LR
     {
       "id": "format_report",
       "type": "StructuredOutputParser",
-      "name": "Create Weekly Report", 
+      "name": "Create Weekly Report",
       "settings": {
         "input": "{{generate_insights.output}}",
         "schema": {
@@ -106,7 +107,7 @@ graph LR
 
 **What This Workflow Does:**
 1. **Visits competitor websites** and extracts their latest content
-2. **Analyzes the content** to identify new products, pricing changes, and strategic moves  
+2. **Analyzes the content** to identify new products, pricing changes, and strategic moves
 3. **Generates insights** about market trends and competitive threats
 4. **Creates a formatted report** ready to share with your team
 
@@ -118,7 +119,7 @@ graph LR
 ### Step 1: Choose Your Business Goal
 Pick a specific task that you do regularly:
 - Monitor competitor pricing
-- Research industry trends  
+- Research industry trends
 - Analyze customer feedback
 - Track product mentions
 - Generate market reports
@@ -164,7 +165,7 @@ Connect the pieces using these node types:
 
 **Solution:** Process fewer sources at once, or add filters to only analyze the most relevant content first.
 
-**Problem:** AI analysis is inconsistent or inaccurate  
+**Problem:** AI analysis is inconsistent or inaccurate
 
 **Solution:** Make your prompts more specific with clear examples of what you want. Add validation steps to check results.
 

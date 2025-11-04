@@ -41,7 +41,7 @@ Retrieval-augmented generation, or RAG, is a technique for providing LLMs access
 
 #### AI tool
 
-In an AI context, a tool is an add-on resource that the AI can refer to for specific information or functionality when responding to a request. The AI model can use a tool to interact with external systems or complete specific, focused tasks.
+In an AI context, a tool is an browser extension resource that the AI can refer to for specific information or functionality when responding to a request. The AI model can use a tool to interact with external systems or complete specific, focused tasks.
 
 #### AI vector store
 

@@ -60,7 +60,7 @@ graph LR
     B --> C[Extract Content]
     C --> D[Extract Links]
     D --> E[Process Results]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#e8f5e8
@@ -105,11 +105,11 @@ const fullArticle = document.querySelector('.article').textContent; // 10,000+ w
 function chunkText(text, maxWords = 500) {
   const words = text.split(' ');
   const chunks = [];
-  
+
   for (let i = 0; i < words.length; i += maxWords) {
     chunks.push(words.slice(i, i + maxWords).join(' '));
   }
-  
+
   return chunks;
 }
 
@@ -160,17 +160,17 @@ if (performance.memory) {
 function processLargeDataset(data, callback) {
   let index = 0;
   const batchSize = 100;
-  
+
   function processBatch() {
     const endIndex = Math.min(index + batchSize, data.length);
-    
+
     // Process batch
     for (let i = index; i < endIndex; i++) {
       // Process data[i]
     }
-    
+
     index = endIndex;
-    
+
     if (index < data.length) {
       // Continue processing in next frame
       requestAnimationFrame(processBatch);
@@ -179,7 +179,7 @@ function processLargeDataset(data, callback) {
       callback();
     }
   }
-  
+
   processBatch();
 }
 ```
@@ -195,12 +195,12 @@ const nodeTimings = {};
 
 function measureNode(nodeName, operation) {
   const startTime = performance.now();
-  
+
   const result = operation();
-  
+
   const endTime = performance.now();
   nodeTimings[nodeName] = endTime - startTime;
-  
+
   console.log(`${nodeName} took ${endTime - startTime}ms`);
   return result;
 }
@@ -238,7 +238,7 @@ measures.forEach(measure => {
 const resourceMonitor = {
   startTime: Date.now(),
   measurements: [],
-  
+
   measure() {
     const now = Date.now();
     const measurement = {
@@ -249,11 +249,11 @@ const resourceMonitor = {
       } : null,
       timing: performance.now()
     };
-    
+
     this.measurements.push(measurement);
     return measurement;
   },
-  
+
   report() {
     console.table(this.measurements);
   }
@@ -303,16 +303,16 @@ function processAllData(data) {
 // Process in batches with delays
 async function processBatched(data, batchSize = 50) {
   const results = [];
-  
+
   for (let i = 0; i < data.length; i += batchSize) {
     const batch = data.slice(i, i + batchSize);
     const batchResults = batch.map(item => expensiveOperation(item));
     results.push(...batchResults);
-    
+
     // Allow browser to update UI
     await new Promise(resolve => setTimeout(resolve, 10));
   }
-  
+
   return results;
 }
 ```
@@ -382,16 +382,16 @@ const cache = new Map();
 
 function cachedOperation(input) {
   const cacheKey = JSON.stringify(input);
-  
+
   if (cache.has(cacheKey)) {
     console.log('Cache hit');
     return cache.get(cacheKey);
   }
-  
+
   console.log('Cache miss - computing...');
   const result = expensiveOperation(input);
   cache.set(cacheKey, result);
-  
+
   return result;
 }
 ```
@@ -420,7 +420,7 @@ const performanceTests = {
     const start = performance.now();
     const data = document.querySelectorAll('.test-content');
     const end = performance.now();
-    
+
     return {
       operation: 'Content Extraction',
       duration: end - start,
@@ -428,12 +428,12 @@ const performanceTests = {
       passed: (end - start) < 2000 // 2 second threshold
     };
   },
-  
+
   async testProcessing(data) {
     const start = performance.now();
     const processed = data.map(item => item.textContent.trim());
     const end = performance.now();
-    
+
     return {
       operation: 'Data Processing',
       duration: end - start,
@@ -446,10 +446,10 @@ const performanceTests = {
 // Run performance tests
 async function runPerformanceTests() {
   const results = [];
-  
+
   results.push(await performanceTests.testExtraction());
   // Add more tests...
-  
+
   console.table(results);
   return results;
 }

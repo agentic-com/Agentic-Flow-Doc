@@ -412,6 +412,6 @@ This example shows how to integrate the Lambda Workflow node into a customer onb
 
 ---
 
-**Last Updated**: January 15, 2024  
-**Tested With**: Browser Extension v2.1.0  
+**Last Updated**: January 15, 2024
+**Tested With**: Browser Extension v2.1.0
 **Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

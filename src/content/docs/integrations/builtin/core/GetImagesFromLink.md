@@ -2,7 +2,7 @@
 title: "Get Images From Link"
 description: "Extract image URLs, metadata, and properties from web pages for content analysis, media processing, and automated image workflows."
 template: doc
-tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
+tags: ["Web Extraction", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
 ---
 
 # Get Images From Link
@@ -345,7 +345,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Fewer images returned than visible on the page
 - **Causes**: Lazy-loaded images not triggered, insufficient wait time for dynamic loading
-- **Solutions**: 
+- **Solutions**:
   1. Enable waitForLoad and increase timeout
   2. Implement scroll simulation to trigger lazy loading
   3. Check if images require user interaction to load
@@ -355,7 +355,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Images found but metadata extraction fails
 - **Causes**: Cross-origin restrictions preventing access to image properties
-- **Solutions**: 
+- **Solutions**:
   1. Disable detailed metadata extraction for cross-origin images
   2. Use proxy or server-side processing for metadata extraction
   3. Focus on DOM-available metadata instead of image file properties
@@ -411,13 +411,13 @@ Example showing how this node integrates with other workflow nodes:
 
 **Content Script**: JavaScript code that runs in the context of web pages
 
-**Web Scraping**: Automated extraction of data from websites
+**Web Extraction**: Automated extraction of data from websites
 
 ## Search & Discovery
 
 ### Keywords
 
-- web scraping
+- web extraction
 - browser automation
 - HTTP requests
 - DOM manipulation
@@ -445,7 +445,7 @@ Example showing how this node integrates with other workflow nodes:
 - content extraction
 - API integration
 - browser interaction
-- web scraping
+- web extraction
 
 ## Learning Path
 
@@ -455,14 +455,14 @@ Example showing how this node integrates with other workflow nodes:
 
 ### Workflow Patterns
 
-- [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns)
+- [Web Extraction Patterns](/learning/workflow-patterns/web-extraction-patterns)
 - [Browser Automation Workflows](/learning/workflow-patterns/browser-automation)
 - [API Integration Patterns](/learning/workflow-patterns/integration-patterns)
 
 ### Related Tutorials
 
 - [Web Automation Basics](/learning/text-courses/beginner/web-automation-basics)
-- [Advanced Web Scraping](/learning/text-courses/advanced/complex-web-scraping)
+- [Advanced Web Extraction](/learning/text-courses/advanced/complex-web-extraction)
 
 ### Practical Examples
 
@@ -522,10 +522,10 @@ Example showing how this node integrates with other workflow nodes:
 - [Web Accessibility Guidelines](/usage/licenses-and-privacy/privacy-security/security)
 - [Media Processing Workflows](/learning/workflow-patterns/content-manipulation-patterns)
 - [Image Analysis with AI](/advanced-ai/examples/intelligent-content-analysis)
-- [Web Scraping Best Practices](/learning/examples/web-automation-patterns)
+- [Web Extraction Best Practices](/learning/examples/web-automation-patterns)
 
 ---
 
-**Last Updated**: October 18, 2024  
-**Tested With**: Browser Extension v2.1.0  
+**Last Updated**: October 18, 2024
+**Tested With**: Browser Extension v2.1.0
 **Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

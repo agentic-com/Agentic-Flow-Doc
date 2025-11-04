@@ -13,7 +13,7 @@ Nodes are like LEGO blocks for automation. Each node does one specific job - ext
 
 **Start here in 3 steps:**
 1. **[Install Extension](/usage/getting-started/quick-starts/quick-intro/)** (2 minutes)
-2. **[Build Your First Workflow](/learning/text-courses/beginner/first-workflow/)** (15 minutes)  
+2. **[Build Your First Workflow](/learning/text-courses/beginner/first-workflow/)** (15 minutes)
 3. **[Learn Browser Permissions](/learning/text-courses/beginner/browser-permissions/)** (5 minutes)
 
 **Popular uses:** Save website text • Fill forms automatically • Monitor prices • Collect research data
@@ -63,7 +63,7 @@ Nodes are like LEGO blocks for automation. Each node does one specific job - ext
 - **[Insert Text](/integration/extension/InsertText/)** - Add text to web pages
 - **[Get HTML of Selected Text](/integration/extension/GetHTMLofSelectedText/)** - Get formatted text
 
-### 🌐 HTML & Structure  
+### 🌐 HTML & Structure
 - **[Get All HTML](/integration/extension/GetAllHTML/)** - Extract complete page HTML
 - **[Process HTML](/integration/extension/ProcessHTML/)** - Clean and modify HTML
 
@@ -103,7 +103,7 @@ Nodes are like LEGO blocks for automation. Each node does one specific job - ext
 <tr>
 <td><strong><a href="/integration/builtin/core/">⚙️ Core Tools</a></strong></td>
 <td>Essential functions</td>
-<td>HTTP Request, Code, Web scraping</td>
+<td>HTTP Request, Code, Web extraction</td>
 </tr>
 <tr>
 <td><strong><a href="/integration/builtin/dataTransformation/">📊 Data Tools</a></strong></td>
@@ -126,7 +126,7 @@ Nodes are like LEGO blocks for automation. Each node does one specific job - ext
 2. **[First Workflow](/learning/text-courses/beginner/first-workflow/)** (20 min)
 3. **[Understanding Permissions](/learning/text-courses/beginner/browser-permissions/)** (5 min)
 
-### 🚀 Ready for More (Build Complex Workflows)  
+### 🚀 Ready for More (Build Complex Workflows)
 **Goal:** Create multi-step automations that solve real problems
 1. **[Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)**
 2. **[Data Processing](/learning/text-courses/intermediate/data-transformation/)**
@@ -135,7 +135,7 @@ Nodes are like LEGO blocks for automation. Each node does one specific job - ext
 ### 🎯 Advanced User (AI & Enterprise)
 **Goal:** Build intelligent, scalable automation systems
 1. **[AI Integration](/learning/text-courses/advanced/ai-powered-analysis/)**
-2. **[Advanced Web Scraping](/learning/text-courses/advanced/complex-web-scraping/)**
+2. **[Advanced Web Extraction](/learning/text-courses/advanced/complex-web-extraction/)**
 3. **[Enterprise Patterns](/learning/text-courses/advanced/enterprise-patterns/)**
 
 ## 💡 Popular Workflow Ideas
@@ -144,13 +144,13 @@ Nodes are like LEGO blocks for automation. Each node does one specific job - ext
 - **[Smart Content Analysis](/advanced-ai/examples/intelligent-content-analysis/)** - AI analyzes web content
 - **[Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)** - Collect data from multiple sites
 
-**Business & E-commerce**  
+**Business & E-commerce**
 - **[Price Monitoring](/learning/workflow-patterns/real-world-examples/ecommerce-automation/)** - Track competitor prices
 - **[Social Media Automation](/learning/workflow-patterns/real-world-examples/social-media-automation/)** - Schedule and monitor posts
 
 **AI-Powered Workflows**
 - **[Intelligent Form Filling](/advanced-ai/examples/ai-form-automation/)** - AI fills forms smartly
-- **[Smart Web Scraping](/advanced-ai/examples/intelligent-web-scraping/)** - AI-guided data extraction
+- **[Smart Web Extraction](/advanced-ai/examples/intelligent-web-extraction/)** - AI-guided data extraction
 
 ## 🎯 What's Next?
 

@@ -1,13 +1,13 @@
 ---
-title: Web Scraping Patterns
+title: Web Extraction Patterns
 description: Comprehensive patterns for extracting data from websites with varying complexity levels and use cases
 ---
 
-# Web Scraping Patterns
+# Web Extraction Patterns
 
-Web scraping is one of the most common use cases for browser automation. This guide covers proven patterns for different scraping scenarios, from simple single-page extraction to complex multi-site data collection.
+Web extraction is one of the most common use cases for browser automation. This guide covers proven patterns for different extraction scenarios, from simple single-page extraction to complex multi-site data collection.
 
-## Basic Web Scraping Pattern
+## Basic Web Extraction Pattern
 
 ### Overview
 Extract specific data from a single web page using text and HTML extraction nodes.
@@ -28,23 +28,23 @@ flowchart LR
     B --> C[Filter Node]
     C --> D[EditFields Node]
     D --> E[Output Data]
-    
+
     A --> A1[Load Target Page]
     A --> A2[Wait for Content]
     A --> A3[Handle Timeouts]
-    
+
     B --> B1[Extract Text Content]
     B --> B2[Preserve Structure]
     B --> B3[Clean Whitespace]
-    
+
     C --> C1[Apply Filters]
     C --> C2[Remove Noise]
     C --> C3[Validate Content]
-    
+
     D --> D1[Extract Patterns]
     D --> D2[Transform Data]
     D --> D3[Validate Results]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -86,7 +86,7 @@ flowchart LR
        },
        {
          "field": "price",
-         "operation": "extract", 
+         "operation": "extract",
          "pattern": "\\$([0-9,]+\\.?[0-9]*)"
        }
      ]
@@ -102,13 +102,13 @@ flowchart LR
 }
 ```
 
-## Multi-Page Scraping Pattern
+## Multi-Page Extraction Pattern
 
 ### Overview
 Navigate through multiple pages systematically to collect comprehensive datasets.
 
 ### Use Cases
-- E-commerce catalog scraping
+- E-commerce catalog extraction
 - Directory listings extraction
 - Search result aggregation
 - Pagination handling
@@ -129,21 +129,21 @@ graph TD
     G --> H[Merge Node]
     H --> I[Aggregate Results]
     I --> J[Output Dataset]
-    
+
     subgraph "Parallel Processing"
         D1[Navigate Link 1] --> E1[Extract Data 1]
         D2[Navigate Link 2] --> E2[Extract Data 2]
         D3[Navigate Link 3] --> E3[Extract Data 3]
     end
-    
+
     C --> D1
     C --> D2
     C --> D3
-    
+
     E1 --> H
     E2 --> H
     E3 --> H
-    
+
     style A fill:#e3f2fd
     style H fill:#fff3e0
     style J fill:#e8f5e8
@@ -186,7 +186,7 @@ graph TD
          "selector": "h1.product-title"
        },
        {
-         "field": "description", 
+         "field": "description",
          "selector": ".product-description"
        },
        {
@@ -204,7 +204,7 @@ graph TD
 - Cache frequently accessed data
 - Handle rate limiting gracefully
 
-## Dynamic Content Scraping Pattern
+## Dynamic Content Extraction Pattern
 
 ### Overview
 Handle JavaScript-rendered content and single-page applications that load data dynamically.
@@ -227,7 +227,7 @@ sequenceDiagram
     participant H as GetAllHTML
     participant P as ProcessHTML
     participant JS as JavaScript Engine
-    
+
     W->>N: Navigate to SPA URL
     N->>JS: Execute page JavaScript
     JS->>JS: Render dynamic content
@@ -236,7 +236,7 @@ sequenceDiagram
     Wait->>H: Content ready signal
     H->>P: Extract rendered HTML
     P->>W: Return processed data
-    
+
     Note over JS: Dynamic content loading:<br/>AJAX requests, DOM updates,<br/>infinite scroll handling
     Note over Wait: Smart waiting:<br/>element detection,<br/>timeout handling,<br/>loading indicators
 ```
@@ -289,7 +289,7 @@ sequenceDiagram
 - Form submission handling
 - WebSocket data capture
 
-## Authenticated Scraping Pattern
+## Authenticated Extraction Pattern
 
 ### Overview
 Access and scrape content that requires user authentication or session management.
@@ -310,7 +310,7 @@ stateDiagram-v2
     Authentication --> SessionActive: Login Success
     Authentication --> AuthFailed: Login Failed
     AuthFailed --> [*]: Terminate
-    
+
     SessionActive --> Navigation: Session Validated
     Navigation --> DataExtraction: Page Loaded
     DataExtraction --> Navigation: More Pages
@@ -319,13 +319,13 @@ stateDiagram-v2
     SessionMaintenance --> Authentication: Session Expired
     DataExtraction --> Cleanup: Extraction Complete
     Cleanup --> [*]: Logout & Exit
-    
+
     note right of Authentication
         FormFiller for login
         Credential management
         2FA handling
     end note
-    
+
     note right of SessionMaintenance
         Session validation
         Token refresh

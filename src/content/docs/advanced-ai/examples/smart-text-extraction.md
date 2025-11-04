@@ -2,6 +2,7 @@
 contentType: tutorial
 title: Smart Text Extraction and Processing
 description: "Extract and analyze text from any website using AI to get clean, structured data for your business needs."
+difficulty: "🎯 advanced"
 ---
 
 # Smart Text Extraction and Processing
@@ -36,7 +37,7 @@ Here's a complete workflow you can use right away to extract clean article conte
       "name": "Get Page Text"
     },
     {
-      "id": "clean_content", 
+      "id": "clean_content",
       "type": "Agent",
       "name": "Extract Main Content",
       "settings": {
@@ -46,7 +47,7 @@ Here's a complete workflow you can use right away to extract clean article conte
     },
     {
       "id": "structure_data",
-      "type": "StructuredOutputParser", 
+      "type": "StructuredOutputParser",
       "name": "Create Structured Data",
       "settings": {
         "input": "{{clean_content.output}}",
@@ -80,7 +81,7 @@ Here's a complete workflow you can use right away to extract clean article conte
 
 **📊 Market Research**
 - Extract competitor product descriptions and pricing
-- Analyze industry reports and whitepapers  
+- Analyze industry reports and whitepapers
 - Monitor news articles about your market
 
 **📝 Content Creation**

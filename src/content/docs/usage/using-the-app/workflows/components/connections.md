@@ -1,6 +1,6 @@
 ---
 title: Connections
-description: "Learn how to use Agentic Workflow Studio browser extension for connections with intelligent workflow creation." 
+description: "Learn how to use Agentic Workflow Studio browser extension for connections with intelligent workflow creation."
 sidebar:
     order: 2
 ---
@@ -15,15 +15,15 @@ A connection establishes a link between nodes to route data through the workflow
 graph LR
     A[Node A] -->|Output Data| B[Connection]
     B -->|Input Data| C[Node B]
-    
+
     A --> A1[Processing]
     A1 --> A2[Generate Output]
     A2 --> B
-    
+
     B --> C1[Receive Input]
     C1 --> C2[Process Data]
     C2 --> C3[Generate Output]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -34,14 +34,11 @@ graph LR
 2. **Connection** transfers data from source to target
 3. **Target Node** receives input and continues processing
 
-![Example of creating and deleting a connection](/_images/workflows/components/connections/example.gif)
-
 ## Create a connection
 
-To create a connection between two nodes, select the grey dot or **Add node** <span class="n8n-inline-image">![Add node icon](/_images/try-it-out/add-node-small.png){.off-glb}</span> on the right side of a node and slide the arrow to the grey rectangle on the left side of the following node.
+To create a connection between two nodes, select the grey dot or **Add node** <span class="Agentic Workflow Studio-inline-image">{.off-glb}</span> on the right side of a node and slide the arrow to the grey rectangle on the left side of the following node.
 
 ## Delete a connection
 
-Hover over the connection, then select **Delete** <span class="n8n-inline-image">![Delete connector icon](/_images/common-icons/delete-connector.png){.off-glb}</span>.
-
+Hover over the connection, then select **Delete** <span class="Agentic Workflow Studio-inline-image">{.off-glb}</span>.
 

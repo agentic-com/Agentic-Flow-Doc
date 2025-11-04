@@ -36,7 +36,7 @@ RAG is like having a research assistant that actually reads your documents befor
 - *Input*: "What's our vacation policy?"
 - *Output*: Accurate answer with policy references
 
-**🔍 Research Assistant**: Get insights from large document collections  
+**🔍 Research Assistant**: Get insights from large document collections
 - *Input*: "What are the main findings about climate change?"
 - *Output*: Summary with source citations
 
@@ -52,7 +52,7 @@ flowchart LR
     B --> C[📄 Find Relevant Info]
     C --> D[🤖 AI Analysis]
     D --> E[✅ Accurate Answer + Sources]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -62,7 +62,7 @@ flowchart LR
 
 **Why RAG is Better Than Regular AI:**
 - 🎯 **More Accurate**: Uses your actual documents, not AI's training data
-- 📚 **Source Citations**: Shows you exactly where answers come from  
+- 📚 **Source Citations**: Shows you exactly where answers come from
 - 🚫 **No Hallucinations**: Can't make up facts because it reads real documents first
 - 🔄 **Always Current**: Uses your latest documents, not outdated training data
 
@@ -71,7 +71,7 @@ flowchart LR
 **Goal**: Create a smart FAQ system for your company docs
 
 **Setup**:
-1. Upload your documents to **Local Knowledge** 
+1. Upload your documents to **Local Knowledge**
 2. Connect **RAG Node** to search and answer
 3. Ask questions like "What's our return policy?"
 
@@ -105,7 +105,7 @@ flowchart LR
 
 Works in all major browsers:
 - ✅ **Chrome**: Full support with fast vector search
-- ✅ **Firefox**: Full support  
+- ✅ **Firefox**: Full support
 - ⚠️ **Safari**: Limited storage for large document collections
 - ✅ **Edge**: Full support
 
@@ -179,8 +179,6 @@ Upload Documents → Local Knowledge → RAG Node → Download As File
 
 </details>
 
-
-
 ## Best Practices
 
 ### ✅ Do This
@@ -198,19 +196,19 @@ Upload Documents → Local Knowledge → RAG Node → Download As File
 ## Troubleshooting
 
 ### 🎯 "No Relevant Documents Found"
-**Problem**: RAG can't find documents related to your question  
+**Problem**: RAG can't find documents related to your question
 **Solution**: Lower similarity_threshold to 0.6 or add more documents to your knowledge base
 
 ### 🐌 Slow Search Results
-**Problem**: RAG takes too long to find and process documents  
+**Problem**: RAG takes too long to find and process documents
 **Solution**: Reduce top_k to 3, or clean up your knowledge base to remove irrelevant documents
 
 ### 📄 Poor Answer Quality
-**Problem**: Answers don't make sense or miss important information  
+**Problem**: Answers don't make sense or miss important information
 **Solution**: Check if your documents actually contain the information you're asking about
 
 ### 💾 "Storage Quota Exceeded"
-**Problem**: Can't add more documents to knowledge base  
+**Problem**: Can't add more documents to knowledge base
 **Solution**: Remove old/irrelevant documents or use document compression
 
 ## Limitations to Know

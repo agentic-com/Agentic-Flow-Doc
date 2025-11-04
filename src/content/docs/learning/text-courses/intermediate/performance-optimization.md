@@ -1,6 +1,7 @@
 ---
 title: "Performance Optimization for Complex Workflows"
 description: "Master performance optimization techniques for browser automation workflows with best practices and real-world examples."
+difficulty: "🚀 intermediate"
 ---
 
 # Performance Optimization for Complex Workflows
@@ -27,10 +28,10 @@ By the end of this tutorial, you'll master:
 
 ### The SPEED Methodology
 
-**S**cale - Design for scalability from the start  
-**P**arallel - Leverage parallel processing where possible  
-**E**fficient - Optimize algorithms and data structures  
-**E**liminate - Remove unnecessary operations and data  
+**S**cale - Design for scalability from the start
+**P**arallel - Leverage parallel processing where possible
+**E**fficient - Optimize algorithms and data structures
+**E**liminate - Remove unnecessary operations and data
 **D**efer - Delay non-critical operations
 
 ### Performance Metrics Hierarchy
@@ -64,7 +65,7 @@ Individual Operations (< 1s per operation)
           resourceUsage: []
         };
       }
-      
+
       getMemoryUsage() {
         return performance.memory ? {
           used: performance.memory.usedJSHeapSize,
@@ -72,29 +73,29 @@ Individual Operations (< 1s per operation)
           limit: performance.memory.jsHeapSizeLimit
         } : null;
       }
-      
+
       profileNode(nodeName, operation) {
         const start = performance.now();
         const memBefore = this.getMemoryUsage();
-        
+
         const result = operation();
-        
+
         const end = performance.now();
         const memAfter = this.getMemoryUsage();
-        
+
         this.metrics.nodeMetrics.set(nodeName, {
           executionTime: end - start,
           memoryDelta: memAfter ? memAfter.used - memBefore.used : 0,
           timestamp: new Date().toISOString()
         });
-        
+
         return result;
       }
-      
+
       generateReport() {
         const totalTime = performance.now() - this.metrics.startTime;
         const memoryEnd = this.getMemoryUsage();
-        
+
         return {
           summary: {
             totalExecutionTime: totalTime,
@@ -106,11 +107,11 @@ Individual Operations (< 1s per operation)
           recommendations: this.generateRecommendations()
         };
       }
-      
+
       generateRecommendations() {
         const recommendations = [];
         const nodeMetrics = Array.from(this.metrics.nodeMetrics.entries());
-        
+
         // Identify slow nodes
         const slowNodes = nodeMetrics.filter(([name, metrics]) => metrics.executionTime > 5000);
         if (slowNodes.length > 0) {
@@ -121,7 +122,7 @@ Individual Operations (< 1s per operation)
             suggestion: 'Consider optimizing these nodes or implementing caching'
           });
         }
-        
+
         // Check memory usage
         const highMemoryNodes = nodeMetrics.filter(([name, metrics]) => metrics.memoryDelta > 10000000); // 10MB
         if (highMemoryNodes.length > 0) {
@@ -132,14 +133,14 @@ Individual Operations (< 1s per operation)
             suggestion: 'Implement data streaming or reduce data retention'
           });
         }
-        
+
         return recommendations;
       }
     }
-    
+
     const profiler = new WorkflowProfiler();
     const inputData = $input.all();
-    
+
     // Profile the current operation
     const result = profiler.profileNode($node.name, () => {
       // Your node logic here
@@ -148,7 +149,7 @@ Individual Operations (< 1s per operation)
         processedAt: new Date().toISOString()
       }));
     });
-    
+
     // Add profiling data to output
     return result.map(item => ({
       ...item,
@@ -176,7 +177,7 @@ Individual Operations (< 1s per operation)
           startTime: entry.startTime
         }));
       }
-      
+
       static getNavigationTiming() {
         const nav = performance.getEntriesByType('navigation')[0];
         return nav ? {
@@ -185,24 +186,24 @@ Individual Operations (< 1s per operation)
           totalTime: nav.loadEventEnd - nav.fetchStart
         } : null;
       }
-      
+
       static analyzePerformance() {
         const resources = this.getResourceTiming();
         const navigation = this.getNavigationTiming();
-        
+
         return {
           resourceCount: resources.length,
           totalResourceSize: resources.reduce((sum, r) => sum + (r.size || 0), 0),
-          slowestResource: resources.reduce((slowest, current) => 
+          slowestResource: resources.reduce((slowest, current) =>
             current.duration > (slowest?.duration || 0) ? current : slowest, null),
           navigation,
           recommendations: this.generateResourceRecommendations(resources)
         };
       }
-      
+
       static generateResourceRecommendations(resources) {
         const recommendations = [];
-        
+
         // Large resources
         const largeResources = resources.filter(r => r.size > 1000000); // 1MB
         if (largeResources.length > 0) {
@@ -212,7 +213,7 @@ Individual Operations (< 1s per operation)
             impact: 'high'
           });
         }
-        
+
         // Slow resources
         const slowResources = resources.filter(r => r.duration > 3000); // 3s
         if (slowResources.length > 0) {
@@ -222,14 +223,14 @@ Individual Operations (< 1s per operation)
             impact: 'medium'
           });
         }
-        
+
         return recommendations;
       }
     }
-    
+
     const performanceData = ResourceMonitor.analyzePerformance();
     const inputData = $input.all();
-    
+
     return inputData.map(item => ({
       ...item,
       _performance: performanceData
@@ -250,22 +251,22 @@ Individual Operations (< 1s per operation)
     class MemoryOptimizer {
       static processLargeDataset(data, batchSize = 100) {
         const results = [];
-        
+
         // Process in batches to avoid memory spikes
         for (let i = 0; i < data.length; i += batchSize) {
           const batch = data.slice(i, i + batchSize);
           const processedBatch = this.processBatch(batch);
           results.push(...processedBatch);
-          
+
           // Force garbage collection hint
           if (i % (batchSize * 10) === 0) {
             this.suggestGarbageCollection();
           }
         }
-        
+
         return results;
       }
-      
+
       static processBatch(batch) {
         return batch.map(item => {
           // Create new object instead of modifying existing
@@ -274,35 +275,35 @@ Individual Operations (< 1s per operation)
             processedData: this.optimizeDataStructure(item.data),
             timestamp: Date.now()
           };
-          
+
           // Clear references to original data
           item = null;
-          
+
           return processed;
         });
       }
-      
+
       static optimizeDataStructure(data) {
         // Remove unnecessary properties
         const optimized = {};
         const essentialFields = ['name', 'value', 'type', 'id'];
-        
+
         essentialFields.forEach(field => {
           if (data[field] !== undefined) {
             optimized[field] = data[field];
           }
         });
-        
+
         return optimized;
       }
-      
+
       static suggestGarbageCollection() {
         // Hint for garbage collection (browser-dependent)
         if (window.gc) {
           window.gc();
         }
       }
-      
+
       static getMemoryStats() {
         if (performance.memory) {
           return {
@@ -314,14 +315,14 @@ Individual Operations (< 1s per operation)
         return null;
       }
     }
-    
+
     const inputData = $input.all();
     const memoryBefore = MemoryOptimizer.getMemoryStats();
-    
+
     const processedData = MemoryOptimizer.processLargeDataset(inputData);
-    
+
     const memoryAfter = MemoryOptimizer.getMemoryStats();
-    
+
     return [{
       processedItems: processedData,
       memoryUsage: {
@@ -347,11 +348,11 @@ Individual Operations (< 1s per operation)
         this.processed = 0;
         this.errors = 0;
       }
-      
+
       async *processStream(dataArray) {
         for (let i = 0; i < dataArray.length; i += this.chunkSize) {
           const chunk = dataArray.slice(i, i + this.chunkSize);
-          
+
           try {
             const processedChunk = await this.processChunk(chunk);
             this.processed += processedChunk.length;
@@ -361,12 +362,12 @@ Individual Operations (< 1s per operation)
             console.error('Chunk processing error:', error);
             yield []; // Continue with empty chunk
           }
-          
+
           // Allow other operations to run
           await this.yield();
         }
       }
-      
+
       async processChunk(chunk) {
         return chunk.map(item => ({
           ...item,
@@ -374,11 +375,11 @@ Individual Operations (< 1s per operation)
           chunkId: Math.random().toString(36).substr(2, 9)
         }));
       }
-      
+
       async yield() {
         return new Promise(resolve => setTimeout(resolve, 0));
       }
-      
+
       getStats() {
         return {
           processed: this.processed,
@@ -387,16 +388,16 @@ Individual Operations (< 1s per operation)
         };
       }
     }
-    
+
     const inputData = $input.all();
     const processor = new StreamProcessor();
     const results = [];
-    
+
     // Process data in streams
     for await (const chunk of processor.processStream(inputData)) {
       results.push(...chunk);
     }
-    
+
     return [{
       streamResults: results,
       processingStats: processor.getStats()
@@ -448,12 +449,12 @@ Individual Operations (< 1s per operation)
         this.workers = new Map();
         this.maxWorkers = navigator.hardwareConcurrency || 4;
       }
-      
+
       createWorker(taskType) {
         const workerCode = \`
           self.onmessage = function(e) {
             const { taskType, data, taskId } = e.data;
-            
+
             try {
               let result;
               switch(taskType) {
@@ -469,13 +470,13 @@ Individual Operations (< 1s per operation)
                 default:
                   throw new Error('Unknown task type: ' + taskType);
               }
-              
+
               self.postMessage({ taskId, result, success: true });
             } catch (error) {
               self.postMessage({ taskId, error: error.message, success: false });
             }
           };
-          
+
           function processText(data) {
             return data.map(item => ({
               ...item,
@@ -483,14 +484,14 @@ Individual Operations (< 1s per operation)
               processed: true
             }));
           }
-          
+
           function validateData(data) {
-            return data.filter(item => 
-              item.name && item.name.length > 0 && 
+            return data.filter(item =>
+              item.name && item.name.length > 0 &&
               item.value !== null && item.value !== undefined
             );
           }
-          
+
           function performCalculations(data) {
             return data.map(item => ({
               ...item,
@@ -499,34 +500,34 @@ Individual Operations (< 1s per operation)
             }));
           }
         \`;
-        
+
         const blob = new Blob([workerCode], { type: 'application/javascript' });
         const worker = new Worker(URL.createObjectURL(blob));
-        
+
         this.workers.set(taskType, worker);
         return worker;
       }
-      
+
       async processInBackground(taskType, data) {
         return new Promise((resolve, reject) => {
           let worker = this.workers.get(taskType);
-          
+
           if (!worker) {
             worker = this.createWorker(taskType);
           }
-          
+
           const taskId = Math.random().toString(36).substr(2, 9);
-          
+
           const timeout = setTimeout(() => {
             reject(new Error('Worker timeout'));
           }, 30000);
-          
+
           worker.onmessage = (e) => {
             const { taskId: responseTaskId, result, error, success } = e.data;
-            
+
             if (responseTaskId === taskId) {
               clearTimeout(timeout);
-              
+
               if (success) {
                 resolve(result);
               } else {
@@ -534,11 +535,11 @@ Individual Operations (< 1s per operation)
               }
             }
           };
-          
+
           worker.postMessage({ taskType, data, taskId });
         });
       }
-      
+
       cleanup() {
         this.workers.forEach(worker => {
           worker.terminate();
@@ -546,35 +547,35 @@ Individual Operations (< 1s per operation)
         this.workers.clear();
       }
     }
-    
+
     const inputData = $input.all();
     const workerManager = new WorkerManager();
-    
+
     try {
       // Process different types of data in parallel
-      const textProcessingPromise = workerManager.processInBackground('textProcessing', 
+      const textProcessingPromise = workerManager.processInBackground('textProcessing',
         inputData.filter(item => item.text));
-      
-      const validationPromise = workerManager.processInBackground('dataValidation', 
+
+      const validationPromise = workerManager.processInBackground('dataValidation',
         inputData);
-      
-      const calculationPromise = workerManager.processInBackground('calculation', 
+
+      const calculationPromise = workerManager.processInBackground('calculation',
         inputData.filter(item => item.value !== undefined));
-      
+
       // Wait for all background tasks to complete
       const [textResults, validationResults, calculationResults] = await Promise.all([
         textProcessingPromise,
         validationPromise,
         calculationPromise
       ]);
-      
+
       return [{
         textProcessing: textResults,
         validation: validationResults,
         calculations: calculationResults,
         processingMode: 'parallel_workers'
       }];
-      
+
     } finally {
       workerManager.cleanup();
     }
@@ -599,7 +600,7 @@ Individual Operations (< 1s per operation)
         this.maxMemoryItems = 100;
         this.defaultTTL = 300000; // 5 minutes
       }
-      
+
       generateKey(data) {
         // Create deterministic key from data
         const keyData = {
@@ -609,7 +610,7 @@ Individual Operations (< 1s per operation)
         };
         return btoa(JSON.stringify(keyData));
       }
-      
+
       get(key, level = 'memory') {
         switch (level) {
           case 'memory':
@@ -618,7 +619,7 @@ Individual Operations (< 1s per operation)
               return memItem.data;
             }
             break;
-            
+
           case 'session':
             const sessionItem = this.sessionCache.getItem(key);
             if (sessionItem) {
@@ -628,7 +629,7 @@ Individual Operations (< 1s per operation)
               }
             }
             break;
-            
+
           case 'persistent':
             const persistentItem = this.persistentCache.getItem(key);
             if (persistentItem) {
@@ -641,14 +642,14 @@ Individual Operations (< 1s per operation)
         }
         return null;
       }
-      
+
       set(key, data, ttl = this.defaultTTL, level = 'memory') {
         const item = {
           data,
           expires: Date.now() + ttl,
           created: Date.now()
         };
-        
+
         switch (level) {
           case 'memory':
             // Implement LRU eviction
@@ -658,7 +659,7 @@ Individual Operations (< 1s per operation)
             }
             this.memoryCache.set(key, item);
             break;
-            
+
           case 'session':
             try {
               this.sessionCache.setItem(key, JSON.stringify(item));
@@ -668,7 +669,7 @@ Individual Operations (< 1s per operation)
               this.sessionCache.setItem(key, JSON.stringify(item));
             }
             break;
-            
+
           case 'persistent':
             try {
               this.persistentCache.setItem(key, JSON.stringify(item));
@@ -680,10 +681,10 @@ Individual Operations (< 1s per operation)
             break;
         }
       }
-      
+
       clearExpired(level = 'all') {
         const now = Date.now();
-        
+
         if (level === 'all' || level === 'memory') {
           for (const [key, item] of this.memoryCache.entries()) {
             if (item.expires <= now) {
@@ -691,7 +692,7 @@ Individual Operations (< 1s per operation)
             }
           }
         }
-        
+
         if (level === 'all' || level === 'session') {
           for (let i = 0; i < this.sessionCache.length; i++) {
             const key = this.sessionCache.key(i);
@@ -701,7 +702,7 @@ Individual Operations (< 1s per operation)
             }
           }
         }
-        
+
         if (level === 'all' || level === 'persistent') {
           for (let i = 0; i < this.persistentCache.length; i++) {
             const key = this.persistentCache.key(i);
@@ -712,7 +713,7 @@ Individual Operations (< 1s per operation)
           }
         }
       }
-      
+
       getStats() {
         return {
           memoryItems: this.memoryCache.size,
@@ -722,15 +723,15 @@ Individual Operations (< 1s per operation)
         };
       }
     }
-    
+
     const cacheManager = new CacheManager();
     const inputData = $input.all();
-    
+
     // Try to get cached results first
     const cacheKey = cacheManager.generateKey(inputData[0] || {});
-    let cachedResult = cacheManager.get(cacheKey, 'memory') || 
+    let cachedResult = cacheManager.get(cacheKey, 'memory') ||
                       cacheManager.get(cacheKey, 'session');
-    
+
     if (cachedResult) {
       return [{
         ...cachedResult,
@@ -738,7 +739,7 @@ Individual Operations (< 1s per operation)
         cacheStats: cacheManager.getStats()
       }];
     }
-    
+
     // Process data if not cached
     const processedData = inputData.map(item => ({
       ...item,
@@ -746,10 +747,10 @@ Individual Operations (< 1s per operation)
       processedAt: new Date().toISOString(),
       processingTime: Math.random() * 1000 // Simulate processing time
     }));
-    
+
     // Cache the results
     cacheManager.set(cacheKey, processedData[0], 300000, 'memory'); // 5 min cache
-    
+
     return [{
       ...processedData[0],
       fromCache: false,
@@ -804,12 +805,12 @@ Individual Operations (< 1s per operation)
           'well ': 'wl',
           'were ': 'wr'
         };
-        
+
         let compressed = text;
         for (const [original, replacement] of Object.entries(compressionMap)) {
           compressed = compressed.replace(new RegExp(original, 'gi'), replacement);
         }
-        
+
         return {
           compressed,
           originalSize: text.length,
@@ -817,7 +818,7 @@ Individual Operations (< 1s per operation)
           compressionRatio: (1 - compressed.length / text.length) * 100
         };
       }
-      
+
       static decompressText(compressedData) {
         const decompressionMap = {
           'þ': 'the ',
@@ -854,15 +855,15 @@ Individual Operations (< 1s per operation)
           'wl': 'well ',
           'wr': 'were '
         };
-        
+
         let decompressed = compressedData.compressed;
         for (const [compressed, original] of Object.entries(decompressionMap)) {
           decompressed = decompressed.replace(new RegExp(compressed, 'g'), original);
         }
-        
+
         return decompressed;
       }
-      
+
       static optimizeDataStructure(data) {
         // Remove null/undefined values
         const cleaned = {};
@@ -878,14 +879,14 @@ Individual Operations (< 1s per operation)
             }
           }
         }
-        
+
         return cleaned;
       }
-      
+
       static calculateDataEfficiency(original, optimized) {
         const originalSize = JSON.stringify(original).length;
         const optimizedSize = JSON.stringify(optimized).length;
-        
+
         return {
           originalSize,
           optimizedSize,
@@ -894,20 +895,20 @@ Individual Operations (< 1s per operation)
         };
       }
     }
-    
+
     const inputData = $input.all();
     const results = [];
-    
+
     for (const item of inputData) {
       const optimizedStructure = DataOptimizer.optimizeDataStructure(item);
-      
+
       let textCompression = null;
       if (item.text && typeof item.text === 'string') {
         textCompression = DataOptimizer.compressText(item.text);
       }
-      
+
       const efficiency = DataOptimizer.calculateDataEfficiency(item, optimizedStructure);
-      
+
       results.push({
         original: item,
         optimized: optimizedStructure,
@@ -916,7 +917,7 @@ Individual Operations (< 1s per operation)
         optimizationApplied: true
       });
     }
-    
+
     return results;
   `
 }
@@ -936,11 +937,11 @@ Individual Operations (< 1s per operation)
         // Use DocumentFragment for batch operations
         const fragment = document.createDocumentFragment();
         const results = [];
-        
+
         // Disable layout thrashing
         const originalDisplay = document.body.style.display;
         document.body.style.display = 'none';
-        
+
         try {
           operations.forEach(operation => {
             switch (operation.type) {
@@ -956,24 +957,24 @@ Individual Operations (< 1s per operation)
                 break;
             }
           });
-          
+
           // Apply all changes at once
           if (fragment.children.length > 0) {
             document.body.appendChild(fragment);
           }
-          
+
         } finally {
           // Re-enable layout
           document.body.style.display = originalDisplay;
         }
-        
+
         return results;
       }
-      
+
       static extractFromElement(selector) {
         const elements = document.querySelectorAll(selector);
         const results = [];
-        
+
         // Use faster iteration methods
         for (let i = 0; i < elements.length; i++) {
           const element = elements[i];
@@ -984,21 +985,21 @@ Individual Operations (< 1s per operation)
             position: this.getElementPosition(element)
           });
         }
-        
+
         return results;
       }
-      
+
       static getElementAttributes(element) {
         const attributes = {};
         const attrs = element.attributes;
-        
+
         for (let i = 0; i < attrs.length; i++) {
           attributes[attrs[i].name] = attrs[i].value;
         }
-        
+
         return attributes;
       }
-      
+
       static getElementPosition(element) {
         const rect = element.getBoundingClientRect();
         return {
@@ -1009,16 +1010,16 @@ Individual Operations (< 1s per operation)
           visible: this.isElementVisible(element)
         };
       }
-      
+
       static isElementVisible(element) {
         const style = window.getComputedStyle(element);
-        return style.display !== 'none' && 
-               style.visibility !== 'hidden' && 
+        return style.display !== 'none' &&
+               style.visibility !== 'hidden' &&
                style.opacity !== '0' &&
-               element.offsetWidth > 0 && 
+               element.offsetWidth > 0 &&
                element.offsetHeight > 0;
       }
-      
+
       static optimizeSelectors(selectors) {
         // Optimize CSS selectors for performance
         return selectors.map(selector => {
@@ -1026,12 +1027,12 @@ Individual Operations (< 1s per operation)
           if (selector.includes('#')) {
             return selector;
           }
-          
+
           // Add performance hints
           if (selector.includes('.')) {
             return selector; // Class selectors are reasonably fast
           }
-          
+
           // Optimize complex selectors
           if (selector.includes(' ')) {
             const parts = selector.split(' ');
@@ -1043,25 +1044,25 @@ Individual Operations (< 1s per operation)
               return part;
             }).join(' ');
           }
-          
+
           return selector;
         });
       }
     }
-    
+
     const inputData = $input.all();
     const optimizer = new DOMOptimizer();
-    
+
     // Batch DOM operations for better performance
     const operations = inputData.map(item => ({
       type: 'extract',
       selector: item.selector || 'p, h1, h2, h3, h4, h5, h6'
     }));
-    
+
     const startTime = performance.now();
     const extractedData = optimizer.batchDOMOperations(operations);
     const endTime = performance.now();
-    
+
     return [{
       extractedData,
       performance: {
@@ -1089,38 +1090,38 @@ Individual Operations (< 1s per operation)
         this.batchDelay = 100; // ms
         this.cache = new Map();
       }
-      
+
       async batchRequests(requests) {
         const batches = [];
-        
+
         // Group requests into batches
         for (let i = 0; i < requests.length; i += this.batchSize) {
           batches.push(requests.slice(i, i + this.batchSize));
         }
-        
+
         const results = [];
-        
+
         // Process batches with delay
         for (const batch of batches) {
           const batchPromises = batch.map(request => this.makeOptimizedRequest(request));
           const batchResults = await Promise.allSettled(batchPromises);
-          
-          results.push(...batchResults.map(result => 
+
+          results.push(...batchResults.map(result =>
             result.status === 'fulfilled' ? result.value : { error: result.reason }
           ));
-          
+
           // Add delay between batches to avoid rate limiting
           if (batches.indexOf(batch) < batches.length - 1) {
             await this.delay(this.batchDelay);
           }
         }
-        
+
         return results;
       }
-      
+
       async makeOptimizedRequest(request) {
         const cacheKey = this.generateCacheKey(request);
-        
+
         // Check cache first
         if (this.cache.has(cacheKey)) {
           const cached = this.cache.get(cacheKey);
@@ -1128,7 +1129,7 @@ Individual Operations (< 1s per operation)
             return { ...cached.data, fromCache: true };
           }
         }
-        
+
         // Optimize request headers
         const optimizedRequest = {
           ...request,
@@ -1138,7 +1139,7 @@ Individual Operations (< 1s per operation)
             ...request.headers
           }
         };
-        
+
         try {
           const response = await fetch(optimizedRequest.url, {
             method: optimizedRequest.method || 'GET',
@@ -1146,27 +1147,27 @@ Individual Operations (< 1s per operation)
             body: optimizedRequest.body,
             signal: AbortSignal.timeout(optimizedRequest.timeout || 10000)
           });
-          
+
           if (!response.ok) {
             throw new Error(\`HTTP \${response.status}: \${response.statusText}\`);
           }
-          
+
           const data = await response.json();
-          
+
           // Cache successful responses
           this.cache.set(cacheKey, {
             data,
             expires: Date.now() + (request.cacheTTL || 300000) // 5 min default
           });
-          
+
           return { ...data, fromCache: false };
-          
+
         } catch (error) {
           console.error('Request failed:', error);
           throw error;
         }
       }
-      
+
       generateCacheKey(request) {
         const keyData = {
           url: request.url,
@@ -1175,11 +1176,11 @@ Individual Operations (< 1s per operation)
         };
         return btoa(JSON.stringify(keyData));
       }
-      
+
       async delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
-      
+
       clearExpiredCache() {
         const now = Date.now();
         for (const [key, value] of this.cache.entries()) {
@@ -1188,7 +1189,7 @@ Individual Operations (< 1s per operation)
           }
         }
       }
-      
+
       getStats() {
         return {
           cacheSize: this.cache.size,
@@ -1197,10 +1198,10 @@ Individual Operations (< 1s per operation)
         };
       }
     }
-    
+
     const inputData = $input.all();
     const optimizer = new NetworkOptimizer();
-    
+
     // Extract API requests from input data
     const requests = inputData.filter(item => item.apiUrl).map(item => ({
       url: item.apiUrl,
@@ -1210,18 +1211,18 @@ Individual Operations (< 1s per operation)
       timeout: item.timeout || 10000,
       cacheTTL: item.cacheTTL || 300000
     }));
-    
+
     if (requests.length === 0) {
       return inputData;
     }
-    
+
     const startTime = performance.now();
     const results = await optimizer.batchRequests(requests);
     const endTime = performance.now();
-    
+
     // Clean up expired cache entries
     optimizer.clearExpiredCache();
-    
+
     return [{
       apiResults: results,
       performance: {
@@ -1254,7 +1255,7 @@ Individual Operations (< 1s per operation)
         };
         this.startTime = performance.now();
       }
-      
+
       collectWorkflowMetrics(nodeData) {
         const metrics = {
           timestamp: Date.now(),
@@ -1264,11 +1265,11 @@ Individual Operations (< 1s per operation)
           memoryUsage: this.getMemoryUsage(),
           cpuUsage: this.estimateCPUUsage()
         };
-        
+
         this.metrics.workflow.set('current', metrics);
         return metrics;
       }
-      
+
       collectSystemMetrics() {
         const metrics = {
           timestamp: Date.now(),
@@ -1277,11 +1278,11 @@ Individual Operations (< 1s per operation)
           battery: this.getBatteryInfo(),
           hardware: this.getHardwareInfo()
         };
-        
+
         this.metrics.system.set('current', metrics);
         return metrics;
       }
-      
+
       getMemoryUsage() {
         if (performance.memory) {
           return {
@@ -1293,22 +1294,22 @@ Individual Operations (< 1s per operation)
         }
         return null;
       }
-      
+
       estimateCPUUsage() {
         // Rough CPU usage estimation based on timing
         const start = performance.now();
         let iterations = 0;
         const endTime = start + 10; // 10ms sample
-        
+
         while (performance.now() < endTime) {
           iterations++;
         }
-        
+
         // Normalize based on expected iterations (rough estimate)
         const expectedIterations = 100000; // Baseline for comparison
         return Math.min(100, Math.max(0, 100 - (iterations / expectedIterations * 100)));
       }
-      
+
       getConnectionInfo() {
         if (navigator.connection) {
           return {
@@ -1320,7 +1321,7 @@ Individual Operations (< 1s per operation)
         }
         return null;
       }
-      
+
       getBatteryInfo() {
         // Note: Battery API is deprecated in many browsers
         if (navigator.getBattery) {
@@ -1333,7 +1334,7 @@ Individual Operations (< 1s per operation)
         }
         return null;
       }
-      
+
       getHardwareInfo() {
         return {
           cores: navigator.hardwareConcurrency || 'unknown',
@@ -1344,11 +1345,11 @@ Individual Operations (< 1s per operation)
           onLine: navigator.onLine
         };
       }
-      
+
       generatePerformanceReport() {
         const workflowMetrics = this.metrics.workflow.get('current');
         const systemMetrics = this.metrics.system.get('current');
-        
+
         const report = {
           summary: {
             overallHealth: this.calculateOverallHealth(workflowMetrics, systemMetrics),
@@ -1358,24 +1359,24 @@ Individual Operations (< 1s per operation)
           system: systemMetrics,
           generatedAt: new Date().toISOString()
         };
-        
+
         return report;
       }
-      
+
       calculateOverallHealth(workflow, system) {
         let score = 100;
-        
+
         // Deduct points for performance issues
         if (workflow && workflow.processingTime > 10000) score -= 20; // Slow processing
         if (system && system.memory && system.memory.percentage > 80) score -= 15; // High memory
         if (workflow && workflow.dataSize > 1000000) score -= 10; // Large data
-        
+
         return Math.max(0, score);
       }
-      
+
       generateRecommendations(workflow, system) {
         const recommendations = [];
-        
+
         if (workflow && workflow.processingTime > 10000) {
           recommendations.push({
             type: 'performance',
@@ -1384,7 +1385,7 @@ Individual Operations (< 1s per operation)
             suggestion: 'Consider implementing parallel processing or data streaming'
           });
         }
-        
+
         if (system && system.memory && system.memory.percentage > 80) {
           recommendations.push({
             type: 'memory',
@@ -1393,7 +1394,7 @@ Individual Operations (< 1s per operation)
             suggestion: 'Implement data cleanup and garbage collection'
           });
         }
-        
+
         if (workflow && workflow.dataSize > 1000000) {
           recommendations.push({
             type: 'data',
@@ -1402,21 +1403,21 @@ Individual Operations (< 1s per operation)
             suggestion: 'Consider data compression or pagination'
           });
         }
-        
+
         return recommendations;
       }
     }
-    
+
     const inputData = $input.all();
     const dashboard = new PerformanceDashboard();
-    
+
     // Collect comprehensive metrics
     const workflowMetrics = dashboard.collectWorkflowMetrics(inputData);
     const systemMetrics = dashboard.collectSystemMetrics();
-    
+
     // Generate performance report
     const performanceReport = dashboard.generatePerformanceReport();
-    
+
     return [{
       originalData: inputData,
       performanceReport,
@@ -1464,6 +1465,6 @@ You've mastered performance optimization for browser automation workflows! Conti
 
 ---
 
-**Estimated Time:** 70-85 minutes  
-**Difficulty:** Intermediate  
+**Estimated Time:** 70-85 minutes
+**Difficulty:** Intermediate
 **Prerequisites:** Advanced workflow experience, performance concepts knowledge

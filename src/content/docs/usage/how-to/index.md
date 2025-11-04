@@ -2,6 +2,7 @@
 title: "📚 How-To Guides"
 description: "Complete project tutorials that teach you to build real solutions with Agentic Workflow Studio"
 template: doc
+difficulty: "🚀 intermediate"
 ---
 
 # 📚 How-To Guides
@@ -21,13 +22,13 @@ Master Agentic Workflow Studio by building complete, real-world projects. These 
 
 <div class="how-to-card">
 
-**[Extract Data from Any Website](extract-data-from-any-website)**  
+**[Extract Data from Any Website](extract-data-from-any-website)**
 *30 minutes • 🚀 Intermediate*
 
 Master the universal approach to web data extraction that works on any site. Learn the systematic method professionals use to reliably extract data from any website structure.
 
-**What you'll build**: Universal data extraction workflow  
-**Skills learned**: Web scraping patterns, data cleaning, error handling  
+**What you'll build**: Universal data extraction workflow
+**Skills learned**: Web extraction patterns, data cleaning, error handling
 **Use cases**: Product catalogs, job listings, real estate data, research
 
 </div>
@@ -36,13 +37,13 @@ Master the universal approach to web data extraction that works on any site. Lea
 
 <div class="how-to-card">
 
-**[Create AI-Powered Content Analysis](create-ai-content-analysis)**  
+**[Create AI-Powered Content Analysis](create-ai-content-analysis)**
 *45 minutes • 🚀 Intermediate*
 
 Build intelligent workflows that analyze and understand web content like a human researcher. Perfect for competitive intelligence and content strategy.
 
-**What you'll build**: AI content analysis system  
-**Skills learned**: AI prompt engineering, content processing, insight generation  
+**What you'll build**: AI content analysis system
+**Skills learned**: AI prompt engineering, content processing, insight generation
 **Use cases**: Competitor analysis, content research, SEO analysis, market intelligence
 
 </div>
@@ -51,13 +52,13 @@ Build intelligent workflows that analyze and understand web content like a human
 
 <div class="how-to-card">
 
-**[Build a Price Monitoring System](build-price-monitoring-system)**  
+**[Build a Price Monitoring System](build-price-monitoring-system)**
 *60 minutes • 🎯 Advanced*
 
 Create a complete, enterprise-ready price monitoring solution with alerts, historical tracking, and business intelligence dashboards.
 
-**What you'll build**: Full price monitoring system  
-**Skills learned**: System architecture, alert systems, data analytics, automation  
+**What you'll build**: Full price monitoring system
+**Skills learned**: System architecture, alert systems, data analytics, automation
 **Use cases**: Competitive pricing, market monitoring, business intelligence
 
 </div>
@@ -68,7 +69,7 @@ Create a complete, enterprise-ready price monitoring solution with alerts, histo
 
 Pick a guide that matches a real problem you want to solve:
 - **Need data extraction?** Start with "Extract Data from Any Website"
-- **Want AI insights?** Try "Create AI-Powered Content Analysis"  
+- **Want AI insights?** Try "Create AI-Powered Content Analysis"
 - **Building a business system?** Go for "Build a Price Monitoring System"
 
 ### 2. Follow the Structure
@@ -80,7 +81,7 @@ flowchart LR
     A[📋 Project Overview] --> B[🔧 Core Setup]
     B --> C[⚙️ Advanced Features]
     C --> D[🚀 Production Ready]
-    
+
     style A fill:#e8f5e8
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -109,7 +110,7 @@ These aren't toy examples - they're production-ready systems you can use immedia
 3. Move to "Create AI-Powered Content Analysis" for AI basics
 
 ### For Intermediate Users
-1. Begin with "Create AI-Powered Content Analysis" 
+1. Begin with "Create AI-Powered Content Analysis"
 2. Build "Extract Data from Any Website" for advanced patterns
 3. Complete "Build a Price Monitoring System" for system design
 
@@ -133,7 +134,7 @@ These aren't toy examples - they're production-ready systems you can use immedia
 - **Batch Processing**: Handle large datasets efficiently
 - **Error Handling**: Build resilient workflows
 
-### AI Integration Patterns  
+### AI Integration Patterns
 - **Content Analysis**: Extract insights from text
 - **Prompt Engineering**: Get consistent AI results
 - **Multi-step Processing**: Chain AI operations
@@ -165,7 +166,7 @@ After completing these guides, you'll be ready for:
 See how others have adapted these guides:
 
 - **E-commerce Price Intelligence**: Extended monitoring system with ML predictions
-- **Content Strategy Platform**: AI analysis system for marketing teams  
+- **Content Strategy Platform**: AI analysis system for marketing teams
 - **Research Automation Suite**: Data extraction system for academic research
 - **Competitive Intelligence Dashboard**: Combined monitoring and analysis system
 

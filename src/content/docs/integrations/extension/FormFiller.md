@@ -48,7 +48,7 @@ Automatically fill contact forms on websites when reaching out to potential clie
 ```json
 {
   "firstName": "John",
-  "lastName": "Doe", 
+  "lastName": "Doe",
   "email": "john.doe@example.com",
   "phone": "555-123-4567",
   "company": "Tech Solutions Inc"
@@ -61,7 +61,7 @@ Automatically fill contact forms on websites when reaching out to potential clie
 ```json
 {
   "name": "Jane Smith",
-  "email": "jane@example.com", 
+  "email": "jane@example.com",
   "subject": "Partnership Inquiry",
   "message": "I'd like to discuss a potential partnership."
 }

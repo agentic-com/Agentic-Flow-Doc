@@ -19,12 +19,12 @@ graph TB
     E -->|No| G[Check Details]
     G --> C
     F --> H[Use in Workflows]
-    
+
     B --> B1[API Keys]
     B --> B2[OAuth Tokens]
     B --> B3[Username/Password]
     B --> B4[Custom Headers]
-    
+
     style A fill:#e3f2fd
     style F fill:#e8f5e8
     style H fill:#fff3e0

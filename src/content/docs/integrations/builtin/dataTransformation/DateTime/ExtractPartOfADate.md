@@ -333,7 +333,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Node fails to parse input dates or returns null values
 - **Causes**: Unsupported date format or invalid date strings
-- **Solutions**: 
+- **Solutions**:
   1. Specify input_format explicitly instead of using "auto"
   2. Validate date strings before extraction
   3. Use standard ISO date formats when possible
@@ -343,7 +343,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Incorrect time components or unexpected timezone results
 - **Causes**: Invalid timezone identifiers or daylight saving time issues
-- **Solutions**: 
+- **Solutions**:
   1. Use valid IANA timezone identifiers
   2. Check timezone_offset in output for verification
   3. Test around DST transition dates

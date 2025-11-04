@@ -29,9 +29,9 @@ The Character Text Splitter breaks long documents into smaller, equal-sized piec
 
 ## Perfect For
 
-**📄 Simple Document Processing**: When you just need to break text into equal pieces  
-**⚡ Quick Setup**: Fastest way to prepare documents for AI  
-**📊 Consistent Sizing**: All pieces are roughly the same size  
+**📄 Simple Document Processing**: When you just need to break text into equal pieces
+**⚡ Quick Setup**: Fastest way to prepare documents for AI
+**📊 Consistent Sizing**: All pieces are roughly the same size
 **🔧 Basic Workflows**: Good starting point for document processing
 
 | Parameter   | Type     | Description                              | Example               |
@@ -169,7 +169,7 @@ The Character Text Splitter operates entirely within the browser environment and
 
 ```json
 {
-  "inputText": "Introduction\n\nThis document provides comprehensive guidelines for using the platform.\n\nGetting Started\n\nTo begin, create an account and log into the dashboard. The interface consists of several key components that work together to provide a seamless experience.\n\nFeatures Overview\n\nThe platform offers multiple features including workflow automation, data processing, and integration capabilities.",
+  "inputText": "Introduction\n\nThis document provides comprehensive guidelines for using the platform.\n\nGetting Started\n\nTo begin, create an account and log into the dashboard. The interface consists of several key components that work together to provide a seamless experience.\n\nFeatures Overview\n\nThe platform offers multiple features including workflow, data processing, and integration capabilities.",
   "metadata": {
     "sourceId": "user-guide-v2",
     "documentType": "technical_documentation"
@@ -190,7 +190,7 @@ The Character Text Splitter operates entirely within the browser environment and
       "characterCount": 247
     },
     {
-      "text": "The interface consists of several key components that work together to provide a seamless experience.\n\nFeatures Overview\n\nThe platform offers multiple features including workflow automation, data processing, and integration capabilities.",
+      "text": "The interface consists of several key components that work together to provide a seamless experience.\n\nFeatures Overview\n\nThe platform offers multiple features including workflow, data processing, and integration capabilities.",
       "index": 1,
       "startPosition": 147,
       "endPosition": 367,
@@ -393,5 +393,4 @@ This configuration is ideal for processing structured data files where maintaini
 - For document processing, consider combining with: Document Loader, Text Cleaner, Metadata Enricher
 - For RAG systems, this node works well before: Embedding Generator, Vector Store Writer, Similarity Search
 - For content analysis, follow this node with: Text Analyzer, Sentiment Processor, Topic Classifier
-
 

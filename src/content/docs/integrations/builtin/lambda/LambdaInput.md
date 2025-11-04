@@ -16,7 +16,7 @@ graph LR
     A[📥 Calling Workflow] --> B[🔄 Lambda Input]
     B --> C[✅ Validate Data]
     C --> D[▶️ Start Lambda Workflow]
-    
+
     style A fill:#e1f5fe
     style B fill:#fff3e0
     style C fill:#e8f5e8
@@ -27,9 +27,9 @@ graph LR
 
 ## Common Use Cases
 
-**Reusable components** - Create workflows that can be used by multiple other workflows  
-**Template workflows** - Build workflow templates that work with different data  
-**Data processing** - Create specialized data processing workflows  
+**Reusable components** - Create workflows that can be used by multiple other workflows
+**Template workflows** - Build workflow templates that work with different data
+**Data processing** - Create specialized data processing workflows
 **API integration** - Standardize how workflows handle external data
 
 ## Real Example
@@ -79,7 +79,7 @@ graph LR
 **URL with validation:**
 ```json
 {
-  "parameterName": "websiteUrl", 
+  "parameterName": "websiteUrl",
   "inputSchema": {"type": "string", "format": "uri"}
 }
 ```

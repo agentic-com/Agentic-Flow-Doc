@@ -7,13 +7,13 @@ description: "What to do when you see an 'Unknown Node' in your workflow - usual
 
 **What it is:** A placeholder that appears when your workflow contains a node type that can't be found or loaded.
 
-**Perfect for:** Troubleshooting • Workflow migration • Plugin issues • Version compatibility
+**Perfect for:** Troubleshooting • Workflow migration • Browser extension issues • Version compatibility
 
 ## Why You See This
 
 Unknown Nodes appear when:
 - **Node was removed** - The node type no longer exists in the current version
-- **Plugin missing** - A custom node's plugin isn't installed
+- **Browser extension missing** - A custom node's browser extension isn't installed
 - **Version mismatch** - Workflow was created with a different version
 - **Typo in node name** - Original node type name was incorrect
 
@@ -28,23 +28,23 @@ The Unknown Node is a safety feature that:
 ## Common Scenarios
 
 ### Deprecated Node
-**What happened:** Node was removed in a system update  
-**Error message:** "Node type deprecated in version 2.0.0"  
+**What happened:** Node was removed in a system update
+**Error message:** "Node type deprecated in version 2.0.0"
 **Solution:** Replace with the suggested newer node type
 
-### Missing Plugin
-**What happened:** Custom node's plugin isn't installed  
-**Error message:** "Plugin 'custom-ai-nodes' not found"  
-**Solution:** Reinstall the plugin or replace with built-in node
+### Missing Browser extension
+**What happened:** Custom node's browser extension isn't installed
+**Error message:** "Browser extension 'custom-ai-nodes' not found"
+**Solution:** Reinstall the browser extension or replace with built-in node
 
 ### Version Mismatch
-**What happened:** Workflow from different system version  
-**Error message:** "Node type not found"  
+**What happened:** Workflow from different system version
+**Error message:** "Node type not found"
 **Solution:** Update workflow or find equivalent node
 
 ### Typo in Name
-**What happened:** Original node name was incorrect  
-**Error message:** "Node type 'typo-node-name' not recognized"  
+**What happened:** Original node name was incorrect
+**Error message:** "Node type 'typo-node-name' not recognized"
 **Solution:** Replace with correct node type
 
 ## How to Fix Unknown Nodes
@@ -53,7 +53,7 @@ The Unknown Node is a safety feature that:
 Look at the error message to understand what's wrong:
 - Check the original node type name
 - Note any suggested replacement
-- See if it mentions a missing plugin
+- See if it mentions a missing browser extension
 
 ### Step 2: Find a Solution
 **For deprecated nodes:**
@@ -61,7 +61,7 @@ Look at the error message to understand what's wrong:
 - Copy over compatible settings from the original
 
 **For missing plugins:**
-- Reinstall the plugin if you need it
+- Reinstall the browser extension if you need it
 - Replace with a built-in node that does the same thing
 - Remove the node if it's not essential
 
@@ -85,7 +85,7 @@ Look at the error message to understand what's wrong:
 
 ### ❌ Common Mistakes
 - **Ignoring Unknown Nodes** - They won't work and will break your workflow
-- **Not checking plugin status** - Missing plugins cause Unknown Nodes
+- **Not checking browser extension status** - Missing plugins cause Unknown Nodes
 - **Skipping update notes** - System updates often deprecate old nodes
 - **No workflow backups** - Makes recovery much harder
 
@@ -94,8 +94,8 @@ Look at the error message to understand what's wrong:
 **Unknown Node after system update**
 → Check release notes for deprecated nodes and use suggested replacements
 
-**Missing plugin error**
-→ Reinstall the plugin or replace with built-in equivalent
+**Missing browser extension error**
+→ Reinstall the browser extension or replace with built-in equivalent
 
 **Workflow won't run**
 → Replace all Unknown Nodes with working alternatives
@@ -107,6 +107,6 @@ Look at the error message to understand what's wrong:
 
 **Find replacements:** Browse [Built-in Node Types](/integrations/builtin/node-types/) to find nodes that do what you need.
 
-**Learn about plugins:** Check plugin documentation if you need to reinstall missing plugins.
+**Learn about plugins:** Check browser extension documentation if you need to reinstall missing plugins.
 
 **Get help:** Visit [Troubleshooting Guides](/learning/troubleshooting/) for more workflow problem-solving tips.

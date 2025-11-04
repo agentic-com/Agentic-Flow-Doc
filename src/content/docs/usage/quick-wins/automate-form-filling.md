@@ -13,8 +13,8 @@ tags: ["automation", "forms", "productivity", "quick-win"]
 
 Create a workflow that automatically fills out web forms with your data, eliminating repetitive typing and reducing errors.
 
-**⏱️ Time**: 10 minutes  
-**🎯 Difficulty**: Beginner  
+**⏱️ Time**: 10 minutes
+**🎯 Difficulty**: Beginner
 **✅ Result**: Automated form filling workflow
 
 ## Why This Matters
@@ -42,7 +42,7 @@ Create a simple data structure with your information:
 ```json
 {
   "name": "John Smith",
-  "email": "john@example.com", 
+  "email": "john@example.com",
   "phone": "555-123-4567",
   "company": "Tech Solutions Inc"
 }
@@ -61,7 +61,7 @@ flowchart LR
     A[📋 Form Data] --> B[🌐 Navigate to Form]
     B --> C[✍️ Fill Fields]
     C --> D[📤 Submit Form]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -79,7 +79,7 @@ flowchart LR
       "value": "{{data.name}}"
     },
     {
-      "selector": "#email", 
+      "selector": "#email",
       "value": "{{data.email}}"
     },
     {
@@ -101,12 +101,12 @@ flowchart LR
 
 ## Real-World Example
 
-**Use Case**: Job application forms  
-**Data**: Resume information  
-**Target**: Company career pages  
+**Use Case**: Job application forms
+**Data**: Resume information
+**Target**: Company career pages
 **Result**: 50+ applications submitted in 30 minutes
 
-**Before**: 5 minutes per form × 50 forms = 4+ hours  
+**Before**: 5 minutes per form × 50 forms = 4+ hours
 **After**: 30 seconds per form × 50 forms = 25 minutes
 
 ## Common Form Types
@@ -116,7 +116,7 @@ flowchart LR
 - Newsletter signups
 - Support requests
 
-### Registration Forms  
+### Registration Forms
 - Account creation
 - Event registration
 - Service signups

@@ -13,8 +13,8 @@ tags: ["ai", "content-analysis", "automation", "langchain", "how-to"]
 
 Build intelligent workflows that can read, understand, and analyze web content like a human researcher. Perfect for content research, competitive analysis, and automated insights.
 
-**⏱️ Time**: 45 minutes  
-**🎯 Difficulty**: Intermediate  
+**⏱️ Time**: 45 minutes
+**🎯 Difficulty**: Intermediate
 **✅ Result**: AI workflow that analyzes content and generates insights
 
 ## Why AI Content Analysis?
@@ -33,7 +33,7 @@ flowchart TD
     C --> D[🤖 AI Analysis]
     D --> E[📊 Generate Insights]
     E --> F[📋 Structured Report]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -55,7 +55,7 @@ Start with reliable text extraction that feeds clean data to AI:
   "timeout": 25000,
   "textFilters": [
     ".navigation",
-    ".footer", 
+    ".footer",
     ".sidebar",
     ".advertisement",
     ".comments",
@@ -116,7 +116,7 @@ Create focused prompts that extract specific insights:
 Set up this proven 5-node analysis pattern:
 
 1. **Get All Text From Link** - Extract content
-2. **Recursive Character Text Splitter** - Handle long content  
+2. **Recursive Character Text Splitter** - Handle long content
 3. **Basic LLM Chain** - AI analysis
 4. **Edit Fields** - Structure results
 5. **Download as File** - Save insights
@@ -212,7 +212,7 @@ Content: {content}
 ```json
 {
   "content_type": "Tutorial",
-  "expertise_level": "Intermediate", 
+  "expertise_level": "Intermediate",
   "cta": "Sign up for free trial",
   "content_pillars": ["Automation", "Productivity", "Business Growth"],
   "engagement_factors": ["Step-by-step examples", "Real case studies", "Actionable tips"]
@@ -260,7 +260,7 @@ flowchart LR
     B --> C[Sentiment AI]
     C --> D[Keyword AI]
     D --> E[Final Report]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -325,7 +325,7 @@ flowchart LR
     B --> C[AI Analysis]
     C --> D[Structure Results]
     D --> E[CSV Report]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -342,7 +342,7 @@ flowchart TD
     C --> D[Parallel AI Analysis]
     D --> E[Merge Results]
     E --> F[Generate Report]
-    
+
     style A fill:#e3f2fd
     style D fill:#fff3e0
     style F fill:#fce4ec
@@ -432,7 +432,7 @@ Expand your AI analysis capabilities:
               "output_field": "main_topic"
             },
             {
-              "field": "ai_response", 
+              "field": "ai_response",
               "operation": "extract_regex",
               "pattern": "Sentiment: ([^\\n]+)",
               "output_field": "sentiment"

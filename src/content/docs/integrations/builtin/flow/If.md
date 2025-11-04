@@ -15,22 +15,22 @@ flowchart TD
     B --> C{Evaluate Condition}
     C -->|True| D[True Branch]
     C -->|False| E[False Branch]
-    
+
     D --> F[Continue Workflow Path A]
     E --> G[Continue Workflow Path B]
-    
+
     subgraph "Condition Types"
         H[JavaScript Expression]
         I[Data Comparison]
         J[Boolean Logic]
         K[Multiple Conditions]
     end
-    
+
     B --> H
     B --> I
     B --> J
     B --> K
-    
+
     style C fill:#fff3e0
     style D fill:#e8f5e8
     style E fill:#ffebee
@@ -43,7 +43,7 @@ graph TD
     A[📊 Data] --> B[❓ IF Condition]
     B -->|True| C[✅ Path A]
     B -->|False| D[❌ Path B]
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style C fill:#f3e5f5
@@ -205,7 +205,7 @@ The IF node operates on data and doesn't require specific browser permissions, b
 ```
 
 **Step-by-Step Process**:
-1. Receive input data from previous node (web scraping result)
+1. Receive input data from previous node (web extraction result)
 2. Evaluate condition: check content length and title existence
 3. Return boolean result and route workflow accordingly
 
@@ -241,22 +241,22 @@ graph LR
     B --> C{User Has Admin Permission?}
     C -->|Yes| D[Admin Actions]
     C -->|No| E[Regular Actions]
-    
+
     D --> F[Advanced Operations]
     E --> G[Standard Operations]
-    
+
     subgraph "Admin Path"
         F --> F1[User Management]
         F --> F2[System Configuration]
         F --> F3[Advanced Analytics]
     end
-    
+
     subgraph "Regular Path"
         G --> G1[View Content]
         G --> G2[Basic Operations]
         G --> G3[Personal Settings]
     end
-    
+
     style C fill:#fff3e0
     style D fill:#e8f5e8
     style E fill:#e3f2fd
@@ -358,7 +358,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Workflow always takes the false branch regardless of input data
 - **Causes**: Incorrect data path references, type mismatches, or syntax errors in expressions
-- **Solutions**: 
+- **Solutions**:
   1. Verify data path syntax using `{{$json.path.to.data}}`
   2. Check data types and use appropriate comparison operators
   3. Test expressions in isolation before adding to workflow
@@ -368,7 +368,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Node execution fails with evaluation errors
 - **Causes**: Invalid JavaScript syntax, undefined variables, or restricted function usage
-- **Solutions**: 
+- **Solutions**:
   1. Validate JavaScript syntax using browser console
   2. Ensure all referenced variables exist in input data
   3. Use only allowed JavaScript functions and operators
@@ -543,6 +543,6 @@ Example showing how this node integrates with other workflow nodes:
 
 ---
 
-**Last Updated**: October 18, 2024  
-**Tested With**: Browser Extension v2.1.0  
+**Last Updated**: October 18, 2024
+**Tested With**: Browser Extension v2.1.0
 **Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

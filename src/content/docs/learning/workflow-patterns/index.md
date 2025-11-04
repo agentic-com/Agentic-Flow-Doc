@@ -9,31 +9,31 @@ This section provides a comprehensive library of proven workflow patterns that y
 
 ```mermaid
 graph TB
-    A[Workflow Patterns] --> B[Web Scraping Patterns]
+    A[Workflow Patterns] --> B[Web Extraction Patterns]
     A --> C[Data Processing Patterns]
     A --> D[Content Manipulation Patterns]
     A --> E[Integration Patterns]
-    
-    B --> B1[Basic Web Scraping]
-    B --> B2[Multi-Page Scraping]
-    B --> B3[Dynamic Content Scraping]
-    B --> B4[Authenticated Scraping]
-    
+
+    B --> B1[Basic Web Extraction]
+    B --> B2[Multi-Page Extraction]
+    B --> B3[Dynamic Content Extraction]
+    B --> B4[Authenticated Extraction]
+
     C --> C1[Text Processing]
     C --> C2[Structured Data Extraction]
     C --> C3[Media Processing]
     C --> C4[Real-time Data Streaming]
-    
+
     D --> D1[Form Automation]
     D --> D2[Content Injection]
     D --> D3[Page Modification]
     D --> D4[Interactive Automation]
-    
+
     E --> E1[API Integration]
     E --> E2[Database Operations]
     E --> E3[File System Operations]
     E --> E4[Cross-Platform Integration]
-    
+
     style A fill:#e1f5fe
     style B fill:#f3e5f5
     style C fill:#e8f5e8
@@ -43,11 +43,11 @@ graph TB
 
 ## Pattern Categories
 
-### Web Scraping Patterns
-- **Basic Web Scraping**: Simple data extraction from single pages
-- **Multi-Page Scraping**: Navigate and extract data across multiple pages
-- **Dynamic Content Scraping**: Handle JavaScript-rendered content and SPAs
-- **Authenticated Scraping**: Work with login-protected content
+### Web Extraction Patterns
+- **Basic Web Extraction**: Simple data extraction from single pages
+- **Multi-Page Extraction**: Navigate and extract data across multiple pages
+- **Dynamic Content Extraction**: Handle JavaScript-rendered content and SPAs
+- **Authenticated Extraction**: Work with login-protected content
 
 ### Data Processing Patterns
 - **Text Processing**: Extract, clean, and transform textual data
@@ -78,7 +78,7 @@ flowchart LR
     E --> F[Apply Variations]
     F --> G[Test & Troubleshoot]
     G --> H[Deploy Workflow]
-    
+
     style A fill:#e3f2fd
     style H fill:#e8f5e8
 ```

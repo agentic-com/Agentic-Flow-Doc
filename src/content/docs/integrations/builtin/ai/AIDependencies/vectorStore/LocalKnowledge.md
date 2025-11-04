@@ -32,10 +32,10 @@ Local Knowledge creates a smart document database right in your browser. Think o
 
 ## Why Use Local Knowledge?
 
-**🔒 Complete Privacy**: All documents stay in your browser, never uploaded anywhere  
-**🌐 Works Offline**: Search your documents even without internet  
-**🔍 Smart Search**: Find documents by meaning, not just keywords  
-**💾 No Storage Limits**: Store as many documents as your browser allows  
+**🔒 Complete Privacy**: All documents stay in your browser, never uploaded anywhere
+**🌐 Works Offline**: Search your documents even without internet
+**🔍 Smart Search**: Find documents by meaning, not just keywords
+**💾 No Storage Limits**: Store as many documents as your browser allows
 **⚡ Fast Search**: Instant results from your local database
 
 ## How It Works
@@ -45,7 +45,7 @@ flowchart LR
     A[📄 Your Documents] --> B[💾 Local Storage]
     B --> C[🔍 Smart Search]
     C --> D[📋 Relevant Results]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -60,10 +60,10 @@ flowchart LR
 
 ## Perfect For
 
-**📚 Personal Research**: Store and search through research papers, articles, and notes  
-**💼 Company Knowledge**: Create searchable databases of policies, procedures, and documentation  
-**🎓 Study Materials**: Organize and search through educational content  
-**📝 Content Collections**: Build searchable libraries of any text content  
+**📚 Personal Research**: Store and search through research papers, articles, and notes
+**💼 Company Knowledge**: Create searchable databases of policies, procedures, and documentation
+**🎓 Study Materials**: Organize and search through educational content
+**📝 Content Collections**: Build searchable libraries of any text content
 **🔍 Smart FAQ Systems**: Create question-answering systems from your documents
 
 ## Quick Setup Guide
@@ -98,7 +98,7 @@ flowchart LR
 ```json
 {
   "database_name": "technical_docs",
-  "action": "search", 
+  "action": "search",
   "similarity_threshold": 0.8,
   "max_results": 3
 }
@@ -118,16 +118,16 @@ flowchart LR
 
 Works in all major browsers:
 - ✅ **Chrome**: Full support with large storage
-- ✅ **Firefox**: Full support  
+- ✅ **Firefox**: Full support
 - ⚠️ **Safari**: Limited large storage support
 - ✅ **Edge**: Full support
 
 ## Storage & Privacy
 
-**🔒 Complete Privacy**: All documents stored locally in your browser  
-**💾 Browser Storage**: Uses IndexedDB for reliable, persistent storage  
-**🔐 Optional Encryption**: Can encrypt sensitive documents  
-**🚫 No External Access**: Data never leaves your device  
+**🔒 Complete Privacy**: All documents stored locally in your browser
+**💾 Browser Storage**: Uses IndexedDB for reliable, persistent storage
+**🔐 Optional Encryption**: Can encrypt sensitive documents
+**🚫 No External Access**: Data never leaves your device
 **♻️ Easy Cleanup**: Delete knowledge bases anytime
 
 ## Try It Yourself
@@ -194,8 +194,6 @@ Upload Documents → Local Knowledge → Q&A Node → Download As File
 
 </details>
 
-
-
 ## Best Practices
 
 ### ✅ Do This
@@ -214,26 +212,26 @@ Upload Documents → Local Knowledge → Q&A Node → Download As File
 ## Troubleshooting
 
 ### 💾 "Storage Quota Exceeded"
-**Problem**: Can't add more documents to knowledge base  
+**Problem**: Can't add more documents to knowledge base
 **Solution**: Delete old documents, enable compression, or request unlimited storage permission
 
 ### 🔍 "No Results Found"
-**Problem**: Search doesn't return any documents  
+**Problem**: Search doesn't return any documents
 **Solution**: Lower similarity threshold to 0.6 or check if documents actually contain related content
 
 ### 🐌 Slow Search Performance
-**Problem**: Searches take too long  
+**Problem**: Searches take too long
 **Solution**: Reduce max_results, optimize database size, or use more specific search terms
 
 ### 📄 "Document Not Inserted"
-**Problem**: Documents fail to save  
+**Problem**: Documents fail to save
 **Solution**: Check document format, ensure embeddings are included, verify database name is correct
 
 ## Keeping Your Knowledge Base Organized
 
 ### 🧹 Simple Maintenance
 - **Remove old documents** you no longer need
-- **Delete test databases** when you're done experimenting  
+- **Delete test databases** when you're done experimenting
 - **Keep related documents together** for better search results
 
 ### 💡 Tips for Better Performance
@@ -271,8 +269,6 @@ Local Knowledge is essential for:
 ---
 
 **💡 Pro Tip**: Start with a focused collection of related documents (like all your research papers on one topic) rather than mixing different types of content. This gives better search results and helps you understand how the system works.
-
-
 
 ### Workflow Patterns
 

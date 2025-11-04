@@ -1,16 +1,17 @@
 ---
 contentType: tutorial
-title: AI-Powered Web Scraping
-description: "Build advanced web scraping workflows with AI processing using Agentic Workflow Studio browser extension."
+title: AI-Powered Web Extraction
+description: "Build advanced web extraction workflows with AI processing using Agentic Workflow Studio browser extension."
+difficulty: "🎯 advanced"
 ---
 
-# AI-Powered Web Scraping
+# AI-Powered Web Extraction
 
-This example demonstrates how to create intelligent web scraping workflows that combine browser extension nodes with AI models to extract, process, and structure data from websites automatically.
+This example demonstrates how to create intelligent web extraction workflows that combine browser extension nodes with AI models to extract, process, and structure data from websites automatically.
 
 ## Overview
 
-Traditional web scraping relies on fixed selectors and patterns. AI-powered scraping uses machine learning to intelligently identify and extract relevant information, making it more robust and adaptable to different website structures.
+Traditional web extraction relies on fixed selectors and patterns. AI-powered extraction uses machine learning to intelligently identify and extract relevant information, making it more robust and adaptable to different website structures.
 
 ## Workflow Components
 
@@ -29,7 +30,7 @@ Traditional web scraping relies on fixed selectors and patterns. AI-powered scra
 - **Memory**: Maintains context across multiple pages
 - **Workflow Tool**: Chains multiple extraction steps together
 
-## Example: E-commerce Product Scraping
+## Example: E-commerce Product Extraction
 
 ```javascript
 // Workflow: Intelligent Product Data Extraction
@@ -71,7 +72,7 @@ await VectorStore.execute({
 });
 ```
 
-## Advanced Scraping Patterns
+## Advanced Extraction Patterns
 
 ### Multi-Page Navigation
 Intelligently navigate through paginated content:
@@ -164,7 +165,7 @@ try {
 ```
 
 ### Rate Limiting and Politeness
-Implement respectful scraping practices:
+Implement respectful extraction practices:
 
 ```javascript
 // Intelligent delay between requests
@@ -214,4 +215,4 @@ if (similarContent.length > 0) {
 }
 ```
 
-This AI-powered approach to web scraping provides more robust, adaptable, and intelligent data extraction capabilities compared to traditional methods.
+This AI-powered approach to web extraction provides more robust, adaptable, and intelligent data extraction capabilities compared to traditional methods.

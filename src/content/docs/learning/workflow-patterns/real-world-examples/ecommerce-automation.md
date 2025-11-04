@@ -24,29 +24,29 @@ flowchart LR
     D --> E[Validate Quality]
     E --> F[Store in Database]
     F --> G[Send Notifications]
-    
+
     subgraph "Data Extraction"
         C --> C1[GetAllHTML]
         C --> C2[ProcessHTML]
         C --> C3[Extract Images]
     end
-    
+
     subgraph "Processing"
         D --> D1[Clean Data]
         D --> D2[Enrich with AI]
         D --> D3[Categorize]
     end
-    
+
     subgraph "Quality Control"
         E --> E1[Validate Fields]
         E --> E2[Check Completeness]
         E --> E3[Verify Images]
     end
-    
+
     E --> H{Quality Check}
     H -->|Fail| I[Flag for Review]
     H -->|Pass| F
-    
+
     style A fill:#e3f2fd
     style F fill:#e8f5e8
     style G fill:#fff3e0
@@ -80,7 +80,7 @@ flowchart LR
        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
      }
    }
-   
+
    // GetAllHTML for structured extraction
    {
      "selector": ".product-details, .item-info, .listing-content",
@@ -245,27 +245,27 @@ graph TD
     F --> H[Send Notifications]
     G --> I[Update Reports]
     H --> I
-    
+
     subgraph "Price Sources"
         J[Competitor A]
         K[Competitor B]
         L[Marketplace]
     end
-    
+
     A --> J
     A --> K
     A --> L
-    
+
     subgraph "Alert Types"
         M[Price Drop Alert]
         N[Competitive Position Alert]
         O[Market Average Alert]
     end
-    
+
     F --> M
     F --> N
     F --> O
-    
+
     style E fill:#fff3e0
     style F fill:#ffebee
     style I fill:#e8f5e8
@@ -289,7 +289,7 @@ graph TD
                "priceSelector": ".price-current"
              },
              {
-               "name": "Competitor B", 
+               "name": "Competitor B",
                "url": "https://competitor-b.com/item/audio-headphones",
                "priceSelector": ".sale-price, .regular-price"
              },
@@ -462,7 +462,7 @@ Monitor inventory levels across multiple sales channels and suppliers to prevent
          "groupBy": ["sku", "location"],
          "calculations": [
            "totalQuantity",
-           "availableQuantity", 
+           "availableQuantity",
            "reservedQuantity"
          ]
        },

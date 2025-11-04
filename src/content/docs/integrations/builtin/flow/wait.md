@@ -16,7 +16,7 @@ graph LR
     A[⏰ Start Wait] --> B[⏳ Counting Down]
     B --> C[✅ Time Up]
     C --> D[▶️ Continue Workflow]
-    
+
     style A fill:#e1f5fe
     style B fill:#fff3e0
     style C fill:#e8f5e8
@@ -63,14 +63,14 @@ graph LR
 
 ## Common Wait Times
 
-**Web scraping delays:**
+**Web extraction delays:**
 - **1-2 seconds** - Between form fills and submissions
-- **3-5 seconds** - After page navigation, before scraping
+- **3-5 seconds** - After page navigation, before extraction
 - **10+ seconds** - For very slow-loading pages
 
 **API request delays:**
 - **1 second** - Conservative rate limiting
-- **2-5 seconds** - Moderate rate limiting  
+- **2-5 seconds** - Moderate rate limiting
 - **10+ seconds** - Very strict rate limits
 
 **General workflow delays:**
@@ -85,7 +85,7 @@ graph LR
 [HTTP Request] → [Wait 2s] → [HTTP Request] → [Wait 2s] → [Continue...]
 ```
 
-**Page scraping with delays:**
+**Page extraction with delays:**
 ```
 [Navigate to Page] → [Wait 3s] → [Get Text] → [Wait 1s] → [Next Page]
 ```
@@ -123,6 +123,6 @@ graph LR
 
 **Related nodes:** [HTTP Request](/integrations/builtin/core/Http-Request/) • [If](/integrations/builtin/flow/If/) • [Stop & Error](/integrations/builtin/flow/StopAndError/)
 
-**Common workflows:** [Rate Limiting Patterns](/integrations/builtin/rate-limits/) • [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns/) • [API Integration Patterns](/learning/workflow-patterns/integration-patterns/)
+**Common workflows:** [Rate Limiting Patterns](/integrations/builtin/rate-limits/) • [Web Extraction Patterns](/learning/workflow-patterns/web-extraction-patterns/) • [API Integration Patterns](/learning/workflow-patterns/integration-patterns/)
 
 **Learn more:** [Flow Control Basics](/learning/text-courses/beginner/data-flow-basics/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/) • [Performance Optimization](/learning/workflow-patterns/optimization-best-practices/)

@@ -29,10 +29,10 @@ The Recursive Character Text Splitter intelligently breaks long documents into s
 
 ## Why Use Smart Chunking?
 
-**🧠 Preserves Meaning**: Keeps related sentences and paragraphs together  
-**📏 Perfect Sizing**: Creates chunks that are just the right size for AI models  
-**🔗 Maintains Context**: Overlaps chunks so important connections aren't lost  
-**📚 Format Aware**: Understands different document types (HTML, markdown, plain text)  
+**🧠 Preserves Meaning**: Keeps related sentences and paragraphs together
+**📏 Perfect Sizing**: Creates chunks that are just the right size for AI models
+**🔗 Maintains Context**: Overlaps chunks so important connections aren't lost
+**📚 Format Aware**: Understands different document types (HTML, markdown, plain text)
 **⚡ AI Ready**: Outputs chunks perfectly formatted for knowledge bases and AI processing
 
 ## How It Works
@@ -42,7 +42,7 @@ flowchart LR
     A[📄 Long Document] --> B[✂️ Smart Splitting]
     B --> C[📝 Perfect Chunks]
     C --> D[🤖 AI Ready]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -57,9 +57,9 @@ flowchart LR
 
 ## Perfect For
 
-**📚 Preparing Documents for AI**: Get documents ready for knowledge bases  
-**🔍 Building Search Systems**: Create searchable chunks from long content  
-**🤖 AI Processing**: Split content into AI-friendly sizes  
+**📚 Preparing Documents for AI**: Get documents ready for knowledge bases
+**🔍 Building Search Systems**: Create searchable chunks from long content
+**🤖 AI Processing**: Split content into AI-friendly sizes
 **📊 Content Organization**: Break large documents into manageable pieces
 
 ## Simple Settings
@@ -514,5 +514,4 @@ Example showing how this node integrates with other workflow nodes:
 - document processing
 - intelligent automation
 - knowledge extraction
-
 

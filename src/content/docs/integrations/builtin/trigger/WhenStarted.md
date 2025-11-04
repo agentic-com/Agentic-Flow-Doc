@@ -16,7 +16,7 @@ graph LR
     A[🔍 Monitor Conditions] --> B[✅ Condition Met]
     B --> C[▶️ Start Workflow]
     C --> D[🔄 Run Your Nodes]
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -27,9 +27,9 @@ graph LR
 
 ## Common Trigger Types
 
-**Page Load** - Start when you visit specific websites or pages  
-**Manual** - Start when you click a button in your browser  
-**Scheduled** - Start automatically at specific times or intervals  
+**Page Load** - Start when you visit specific websites or pages
+**Manual** - Start when you click a button in your browser
+**Scheduled** - Start automatically at specific times or intervals
 **Event-based** - Start when specific browser events happen
 
 ## Real Examples
@@ -130,6 +130,6 @@ graph LR
 
 **Related nodes:** [Get All Text](/integrations/builtin/extension/GetAllText/) • [HTTP Request](/integrations/builtin/core/Http-Request/) • [If](/integrations/builtin/flow/If/)
 
-**Common workflows:** [Page Automation Patterns](/learning/workflow-patterns/web-scraping-patterns/) • [Scheduled Task Patterns](/learning/workflow-patterns/automation-patterns/) • [Event-Driven Workflows](/learning/workflow-patterns/event-driven-patterns/)
+**Common workflows:** [Page Automation Patterns](/learning/workflow-patterns/web-extraction-patterns/) • [Scheduled Task Patterns](/learning/workflow-patterns/automation-patterns/) • [Event-Driven Workflows](/learning/workflow-patterns/event-driven-patterns/)
 
 **Learn more:** [Workflow Automation Guide](/learning/text-courses/intermediate/workflow-automation/) • [Browser Extension Basics](/learning/text-courses/beginner/browser-extension-basics/) • [Advanced Triggers](/learning/text-courses/advanced/advanced-triggers/)

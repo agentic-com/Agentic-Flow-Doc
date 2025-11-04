@@ -195,8 +195,8 @@ Connect workflows with databases for data storage, retrieval, and management ope
    {
      "operation": "select",
      "query": `
-       SELECT * FROM extracted_data 
-       WHERE url = $1 
+       SELECT * FROM extracted_data
+       WHERE url = $1
        AND extracted_at > $2
        ORDER BY extracted_at DESC
        LIMIT 10

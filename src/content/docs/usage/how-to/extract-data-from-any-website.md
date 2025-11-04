@@ -4,7 +4,7 @@ description: "Master the universal approach to web data extraction that works on
 template: doc
 difficulty: "🚀 intermediate"
 time: "30 min"
-tags: ["web-scraping", "data-extraction", "automation", "how-to"]
+tags: ["web-extraction", "data-extraction", "automation", "how-to"]
 ---
 
 # Extract Data from Any Website
@@ -13,8 +13,8 @@ tags: ["web-scraping", "data-extraction", "automation", "how-to"]
 
 Master a reliable, universal approach to extracting data from any website. This guide teaches you the core method that works across different site structures and technologies.
 
-**⏱️ Time**: 30 minutes  
-**🎯 Difficulty**: Intermediate  
+**⏱️ Time**: 30 minutes
+**🎯 Difficulty**: Intermediate
 **✅ Result**: Universal data extraction workflow you can adapt to any site
 
 ## The Universal Method
@@ -28,7 +28,7 @@ flowchart TD
     C --> D[✂️ Filter & Clean Data]
     D --> E[📊 Structure Output]
     E --> F[💾 Save Results]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -73,7 +73,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
 
 1. **Get All Text From Link** - Captures page content
 2. **Edit Fields** - Extracts and cleans specific data
-3. **Filter** - Removes unwanted results  
+3. **Filter** - Removes unwanted results
 4. **Download as File** - Saves structured data
 
 ### Configuration Template
@@ -84,9 +84,9 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
   "waitForLoad": true,
   "timeout": 20000,
   "textFilters": [
-    ".navigation", 
-    ".footer", 
-    ".sidebar", 
+    ".navigation",
+    ".footer",
+    ".sidebar",
     ".advertisement"
   ]
 }
@@ -103,7 +103,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
       "output_field": "product_name"
     },
     {
-      "field": "text", 
+      "field": "text",
       "operation": "extract_regex",
       "pattern": "\\$([0-9,]+\\.?[0-9]*)",
       "output_field": "price"
@@ -116,7 +116,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
 
 ### Challenge 1: Dynamic Content
 
-**Problem**: Content loads after page renders  
+**Problem**: Content loads after page renders
 **Solution**: Increase timeout and enable JavaScript waiting
 
 ```json
@@ -130,7 +130,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
 
 ### Challenge 2: Anti-Bot Protection
 
-**Problem**: Site blocks automated access  
+**Problem**: Site blocks automated access
 **Solution**: Add realistic delays and headers
 
 ```json
@@ -143,7 +143,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
 
 ### Challenge 3: Inconsistent Data Format
 
-**Problem**: Data appears in different formats across pages  
+**Problem**: Data appears in different formats across pages
 **Solution**: Use multiple extraction patterns
 
 ```json
@@ -157,7 +157,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
     },
     {
       "field": "text",
-      "operation": "extract_regex", 
+      "operation": "extract_regex",
       "pattern": "\\$([0-9,]+\\.?[0-9]*)",
       "output_field": "price_format2"
     },
@@ -179,7 +179,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
 {
   "urls": [
     "https://example.com/product1",
-    "https://example.com/product2", 
+    "https://example.com/product2",
     "https://example.com/product3"
   ],
   "batch_size": 5,
@@ -204,7 +204,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
 
 ### Example 1: Job Listings
 
-**Target**: Job board with consistent structure  
+**Target**: Job board with consistent structure
 **Data**: Title, company, salary, location, description
 
 **Extraction Pattern:**
@@ -235,7 +235,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
 
 ### Example 2: Real Estate Listings
 
-**Target**: Property listings with images and details  
+**Target**: Property listings with images and details
 **Data**: Price, bedrooms, bathrooms, square footage, address
 
 **Multi-Pattern Extraction:**
@@ -250,7 +250,7 @@ Use this proven 4-node pattern that works for 90% of extraction tasks:
     },
     {
       "field": "text",
-      "operation": "extract_regex", 
+      "operation": "extract_regex",
       "pattern": "([0-9]+) bed",
       "output_field": "bedrooms"
     },
@@ -294,7 +294,7 @@ flowchart LR
     B --> C[Extract: Name, Price, Description]
     C --> D[Clean & Format]
     D --> E[CSV Output]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -307,13 +307,13 @@ flowchart LR
 ```mermaid
 flowchart TD
     A[URL List] --> B[Site A Extraction]
-    A --> C[Site B Extraction] 
+    A --> C[Site B Extraction]
     A --> D[Site C Extraction]
     B --> E[Merge Results]
     C --> E
     D --> E
     E --> F[Comparison Report]
-    
+
     style A fill:#e3f2fd
     style E fill:#fff3e0
     style F fill:#fce4ec
@@ -324,7 +324,7 @@ flowchart TD
 ### Performance Optimization
 
 - **Filter early**: Remove unnecessary content before processing
-- **Batch requests**: Process multiple URLs efficiently  
+- **Batch requests**: Process multiple URLs efficiently
 - **Cache results**: Avoid re-extracting unchanged data
 - **Monitor resources**: Track memory and processing time
 
@@ -363,7 +363,7 @@ Sometimes extraction reveals hidden APIs:
 
 1. Monitor network requests during manual browsing
 2. Look for JSON endpoints that provide structured data
-3. Use API endpoints instead of HTML scraping when available
+3. Use API endpoints instead of HTML extraction when available
 
 ## What's Next?
 

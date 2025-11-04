@@ -22,7 +22,7 @@ description: "Save your workflow data as downloadable files in various formats l
 graph LR
     A[📊 Workflow Data] --> B[💾 Download As File]
     B --> C[📁 Downloaded File]
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style C fill:#f3e5f5
@@ -81,15 +81,15 @@ Carol Davis,carol@company.com,92
 
 ## Common Use Cases
 
-**Generate reports** - Create CSV or Excel files from workflow data  
-**Export data** - Save processed data for external analysis  
-**Create backups** - Download JSON files of important data  
+**Generate reports** - Create CSV or Excel files from workflow data
+**Export data** - Save processed data for external analysis
+**Create backups** - Download JSON files of important data
 **Content delivery** - Provide users with generated files
 
 ## Quick Troubleshooting
 
-**Download not starting:** Check if browser is blocking downloads or requires user interaction  
-**File too large:** Enable compression or split data into smaller files  
+**Download not starting:** Check if browser is blocking downloads or requires user interaction
+**File too large:** Enable compression or split data into smaller files
 **Wrong format:** Verify your data structure matches the chosen file format
 
 ## What's Next?

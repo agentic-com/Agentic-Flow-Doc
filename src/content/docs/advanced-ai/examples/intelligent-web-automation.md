@@ -1,6 +1,7 @@
 ---
 title: Intelligent Web Automation Patterns
 description: "Advanced web automation workflows with AI decision-making, adaptive behavior, and intelligent interaction patterns."
+difficulty: "🎯 advanced"
 ---
 
 # Intelligent Web Automation Patterns
@@ -52,10 +53,10 @@ class AdaptiveNavigationAgent {
 
     while (attempt < maxAttempts) {
       console.log(`Navigation attempt ${attempt + 1}: ${currentStrategy}`);
-      
+
       // Analyze current page context
       const pageContext = await this.analyzePageContext();
-      
+
       // Determine navigation strategy
       const strategy = await this.selectNavigationStrategy(
         targetDescription,
@@ -63,16 +64,16 @@ class AdaptiveNavigationAgent {
         currentStrategy,
         attempt
       );
-      
+
       // Execute navigation
       const navigationResult = await this.executeNavigation(strategy, targetDescription);
-      
+
       if (navigationResult.success) {
         // Learn from successful navigation
         await this.recordSuccessfulPattern(strategy, pageContext, targetDescription);
         return navigationResult;
       }
-      
+
       // Adapt strategy for next attempt
       currentStrategy = await this.adaptStrategy(strategy, navigationResult, attempt);
       attempt++;
@@ -96,11 +97,11 @@ class AdaptiveNavigationAgent {
       },
       tools: [NavigationAnalyzerTool, PatternMatcherTool],
       prompt: `Select optimal navigation strategy:
-        
+
         Target: ${target}
         Current Context: ${JSON.stringify(context.summary)}
         Previous Strategy: ${previousStrategy} (Attempt ${attempt})
-        
+
         Available strategies:
         1. direct_search - Use search functionality
         2. menu_navigation - Navigate through menus
@@ -108,13 +109,13 @@ class AdaptiveNavigationAgent {
         4. link_analysis - Analyze page links semantically
         5. sitemap_exploration - Use sitemap if available
         6. ai_guided_exploration - AI-driven page exploration
-        
+
         Consider:
         - Site structure and navigation patterns
         - Previous attempt results
         - Target specificity and context
         - Available navigation elements
-        
+
         Return strategy with reasoning and confidence score.`
     });
   }
@@ -123,13 +124,13 @@ class AdaptiveNavigationAgent {
     switch (strategy.type) {
       case 'direct_search':
         return await this.executeDirectSearch(target, strategy.parameters);
-      
+
       case 'menu_navigation':
         return await this.executeMenuNavigation(target, strategy.parameters);
-      
+
       case 'ai_guided_exploration':
         return await this.executeAIGuidedExploration(target, strategy.parameters);
-      
+
       default:
         return await this.executeGenericStrategy(strategy, target);
     }
@@ -138,7 +139,7 @@ class AdaptiveNavigationAgent {
   async executeAIGuidedExploration(target, parameters) {
     const explorationSteps = [];
     let currentPage = await this.getCurrentPageInfo();
-    
+
     while (explorationSteps.length < parameters.maxSteps) {
       // Analyze current page for navigation options
       const navigationOptions = await Agent.execute({
@@ -149,33 +150,33 @@ class AdaptiveNavigationAgent {
         },
         tools: [LinkAnalyzerTool, ContentAnalyzerTool],
         prompt: `Analyze navigation options to reach target:
-          
+
           Target: ${target}
           Current Page: ${currentPage.title}
-          
+
           Evaluate available links and navigation elements:
           1. Semantic relevance to target
           2. Likelihood of leading to target
           3. Navigation hierarchy and structure
           4. Content context and relationships
-          
+
           Return ranked navigation options with confidence scores.`
       });
 
       if (navigationOptions.bestOption.confidence > 0.7) {
         // Execute the recommended navigation
         const navResult = await this.clickElement(navigationOptions.bestOption.selector);
-        
+
         if (navResult.success) {
           explorationSteps.push({
             action: 'click',
             element: navigationOptions.bestOption.selector,
             reasoning: navigationOptions.bestOption.reasoning
           });
-          
+
           // Wait for page load and check if target reached
           await WaitNode.execute({ seconds: 2 });
-          
+
           const targetCheck = await this.checkTargetReached(target);
           if (targetCheck.reached) {
             return {
@@ -184,7 +185,7 @@ class AdaptiveNavigationAgent {
               finalPage: await this.getCurrentPageInfo()
             };
           }
-          
+
           currentPage = await this.getCurrentPageInfo();
         }
       } else {
@@ -217,19 +218,19 @@ class ContentInteractionAgent {
   async interactWithContent(interactionGoal, contentSelector = null) {
     // Discover and analyze content
     const contentAnalysis = await this.analyzeInteractiveContent(contentSelector);
-    
+
     // Plan interaction strategy
     const interactionPlan = await this.planContentInteraction(
       interactionGoal,
       contentAnalysis
     );
-    
+
     // Execute intelligent interactions
     const interactionResults = await this.executeInteractionPlan(interactionPlan);
-    
+
     // Learn from interaction outcomes
     await this.learnFromInteraction(interactionPlan, interactionResults);
-    
+
     return interactionResults;
   }
 
@@ -242,9 +243,9 @@ class ContentInteractionAgent {
       },
       tools: [InteractivityAnalyzer, ContentTypeDetector],
       prompt: `Analyze interactive content on the page:
-        
+
         ${contentSelector ? `Focus on: ${contentSelector}` : 'Analyze all interactive elements'}
-        
+
         Identify:
         1. Interactive elements (buttons, forms, dropdowns, etc.)
         2. Dynamic content areas (AJAX-loaded, infinite scroll)
@@ -252,7 +253,7 @@ class ContentInteractionAgent {
         4. User interaction patterns and flows
         5. State changes and transitions
         6. Data input/output opportunities
-        
+
         Return comprehensive interactivity analysis.`
     });
   }
@@ -265,10 +266,10 @@ class ContentInteractionAgent {
       },
       tools: [InteractionPlanner, GoalDecomposer],
       prompt: `Plan content interaction strategy:
-        
+
         Goal: ${goal}
         Available Content: ${JSON.stringify(contentAnalysis.summary)}
-        
+
         Create interaction plan:
         1. Break down goal into actionable steps
         2. Map steps to available interactive elements
@@ -276,20 +277,20 @@ class ContentInteractionAgent {
         4. Plan for dynamic content handling
         5. Define success criteria for each step
         6. Include error handling and fallback strategies
-        
+
         Return detailed interaction execution plan.`
     });
   }
 
   async executeInteractionPlan(plan) {
     const results = [];
-    
+
     for (const step of plan.steps) {
       console.log(`Executing step: ${step.description}`);
-      
+
       const stepResult = await this.executeInteractionStep(step);
       results.push(stepResult);
-      
+
       if (!stepResult.success && step.required) {
         return {
           success: false,
@@ -298,11 +299,11 @@ class ContentInteractionAgent {
           error: stepResult.error
         };
       }
-      
+
       // Handle dynamic content changes
       if (step.expectsContentChange) {
         await this.waitForContentStabilization();
-        
+
         // Re-analyze content if significant changes occurred
         const contentChanged = await this.detectContentChanges();
         if (contentChanged.significant) {
@@ -322,19 +323,19 @@ class ContentInteractionAgent {
     switch (step.type) {
       case 'click':
         return await this.intelligentClick(step);
-      
+
       case 'input':
         return await this.intelligentInput(step);
-      
+
       case 'scroll':
         return await this.intelligentScroll(step);
-      
+
       case 'wait':
         return await this.intelligentWait(step);
-      
+
       case 'extract':
         return await this.intelligentExtraction(step);
-      
+
       default:
         return await this.executeCustomStep(step);
     }
@@ -349,17 +350,17 @@ class ContentInteractionAgent {
       },
       tools: [ElementLocator, ClickabilityAnalyzer],
       prompt: `Find optimal click target for step:
-        
+
         Step: ${step.description}
         Target Criteria: ${JSON.stringify(step.criteria)}
-        
+
         Analyze:
         1. Element visibility and accessibility
         2. Click event handlers and functionality
         3. Element state (enabled/disabled)
         4. Potential side effects of clicking
         5. Alternative elements if primary target unavailable
-        
+
         Return best click target with confidence score.`
     });
 
@@ -383,17 +384,17 @@ class ContentInteractionAgent {
       },
       tools: [InputGenerator, ValidationPredictor],
       prompt: `Generate appropriate input for field:
-        
+
         Field: ${step.fieldName} (${step.fieldType})
         Context: ${JSON.stringify(step.fieldContext)}
         Requirements: ${JSON.stringify(step.requirements)}
-        
+
         Generate:
         1. Contextually appropriate value
         2. Value that meets validation requirements
         3. Fallback values if primary fails
         4. Input method (typing, selection, etc.)
-        
+
         Return optimized input strategy.`
     });
 
@@ -418,36 +419,36 @@ class AdaptiveWorkflowOrchestrator {
   async executeAdaptiveWorkflow(workflowDefinition, context = {}) {
     // Initialize workflow execution
     const execution = await this.initializeExecution(workflowDefinition, context);
-    
+
     // Execute workflow with adaptive behavior
     const results = await this.executeWithAdaptation(execution);
-    
+
     // Learn from execution results
     await this.learnFromExecution(execution, results);
-    
+
     return results;
   }
 
   async executeWithAdaptation(execution) {
     const results = [];
     let currentStep = 0;
-    
+
     while (currentStep < execution.steps.length) {
       const step = execution.steps[currentStep];
-      
+
       // Analyze current context before step execution
       const stepContext = await this.analyzeStepContext(step, results);
-      
+
       // Adapt step based on context
       const adaptedStep = await this.adaptStep(step, stepContext);
-      
+
       // Execute adapted step
       const stepResult = await this.executeStep(adaptedStep, stepContext);
       results.push(stepResult);
-      
+
       // Evaluate execution and determine next action
       const evaluation = await this.evaluateStepResult(stepResult, adaptedStep);
-      
+
       if (evaluation.shouldAdaptWorkflow) {
         // Modify remaining workflow based on results
         execution.steps = await this.adaptRemainingWorkflow(
@@ -457,11 +458,11 @@ class AdaptiveWorkflowOrchestrator {
           evaluation
         );
       }
-      
+
       if (evaluation.shouldTerminate) {
         break;
       }
-      
+
       currentStep = evaluation.nextStep || (currentStep + 1);
     }
 
@@ -482,17 +483,17 @@ class AdaptiveWorkflowOrchestrator {
       },
       tools: [StepAdapterTool, ContextAnalyzer],
       prompt: `Adapt workflow step based on current context:
-        
+
         Original Step: ${JSON.stringify(step)}
         Current Context: ${JSON.stringify(context.summary)}
-        
+
         Consider adaptations for:
         1. Changed page structure or content
         2. Previous step results and side effects
         3. Performance optimization opportunities
         4. Error prevention based on context
         5. Alternative approaches for better results
-        
+
         Return adapted step with reasoning for changes.`
     });
   }
@@ -507,18 +508,18 @@ class AdaptiveWorkflowOrchestrator {
       },
       tools: [WorkflowAdapterTool, FlowOptimizer],
       prompt: `Adapt remaining workflow steps:
-        
+
         Last Result: ${JSON.stringify(lastResult.summary)}
         Evaluation: ${evaluation.reason}
         Remaining Steps: ${steps.length - currentIndex - 1}
-        
+
         Possible adaptations:
         1. Skip unnecessary steps
         2. Add new steps to handle unexpected situations
         3. Reorder steps for better efficiency
         4. Modify step parameters based on new context
         5. Insert error recovery steps
-        
+
         Return adapted workflow with change explanations.`
     });
   }
@@ -540,14 +541,14 @@ class IntelligentErrorRecovery {
 
   async recoverFromError(error, context, maxRecoveryAttempts = 3) {
     let recoveryAttempt = 0;
-    
+
     while (recoveryAttempt < maxRecoveryAttempts) {
       // Analyze error and context
       const errorAnalysis = await this.analyzeError(error, context, recoveryAttempt);
-      
+
       // Determine recovery strategy
       const recoveryStrategy = await this.selectRecoveryStrategy(errorAnalysis);
-      
+
       if (!recoveryStrategy.viable) {
         return {
           recovered: false,
@@ -555,14 +556,14 @@ class IntelligentErrorRecovery {
           reason: 'No viable recovery strategy found'
         };
       }
-      
+
       // Execute recovery strategy
       const recoveryResult = await this.executeRecoveryStrategy(recoveryStrategy);
-      
+
       if (recoveryResult.success) {
         // Learn from successful recovery
         await this.recordSuccessfulRecovery(errorAnalysis, recoveryStrategy);
-        
+
         return {
           recovered: true,
           attempts: recoveryAttempt + 1,
@@ -570,7 +571,7 @@ class IntelligentErrorRecovery {
           result: recoveryResult
         };
       }
-      
+
       recoveryAttempt++;
     }
 
@@ -591,11 +592,11 @@ class IntelligentErrorRecovery {
       },
       tools: [ErrorClassifier, ContextAnalyzer, PatternMatcher],
       prompt: `Analyze error for recovery planning:
-        
+
         Error: ${error.message || error.type}
         Context: ${JSON.stringify(context.summary)}
         Recovery Attempt: ${attempt + 1}
-        
+
         Analyze:
         1. Error type and severity
         2. Root cause analysis
@@ -603,7 +604,7 @@ class IntelligentErrorRecovery {
         4. Similar error patterns from history
         5. Potential recovery approaches
         6. Risk assessment for recovery attempts
-        
+
         Return comprehensive error analysis with recovery recommendations.`
     });
   }
@@ -616,9 +617,9 @@ class IntelligentErrorRecovery {
       },
       tools: [StrategySelector, RiskAssessor],
       prompt: `Select optimal recovery strategy:
-        
+
         Error Analysis: ${JSON.stringify(errorAnalysis.summary)}
-        
+
         Available strategies:
         1. retry_with_delay - Simple retry with exponential backoff
         2. alternative_approach - Try different method to achieve same goal
@@ -626,13 +627,13 @@ class IntelligentErrorRecovery {
         4. graceful_degradation - Accept partial success and continue
         5. user_intervention - Request user input or decision
         6. workflow_adaptation - Modify workflow to work around issue
-        
+
         Consider:
         - Success probability for each strategy
         - Risk of making situation worse
         - Resource cost and time investment
         - Impact on overall workflow goals
-        
+
         Return strategy selection with confidence and reasoning.`
     });
   }
@@ -641,16 +642,16 @@ class IntelligentErrorRecovery {
     switch (strategy.type) {
       case 'retry_with_delay':
         return await this.executeRetryStrategy(strategy);
-      
+
       case 'alternative_approach':
         return await this.executeAlternativeApproach(strategy);
-      
+
       case 'context_reset':
         return await this.executeContextReset(strategy);
-      
+
       case 'workflow_adaptation':
         return await this.executeWorkflowAdaptation(strategy);
-      
+
       default:
         return await this.executeCustomRecovery(strategy);
     }
@@ -666,17 +667,17 @@ class IntelligentErrorRecovery {
       },
       tools: [AlternativeFinder, ApproachEvaluator],
       prompt: `Find alternative approaches to achieve goal:
-        
+
         Original Goal: ${JSON.stringify(strategy.originalGoal)}
         Failed Approach: ${strategy.failedApproach.method}
-        
+
         Generate alternatives:
         1. Different interaction methods
         2. Alternative navigation paths
         3. Different data sources or targets
         4. Modified success criteria
         5. Workaround solutions
-        
+
         Return ranked alternatives with implementation details.`
     });
 
@@ -709,16 +710,16 @@ class WorkflowLearningSystem {
   async learnFromExecution(workflow, results, context) {
     // Extract learning insights
     const insights = await this.extractInsights(workflow, results, context);
-    
+
     // Update performance models
     await this.updatePerformanceModels(insights);
-    
+
     // Generate optimization recommendations
     const optimizations = await this.generateOptimizations(insights);
-    
+
     // Store experience for future reference
     await this.storeExperience(workflow, results, context, insights);
-    
+
     return {
       insights: insights,
       optimizations: optimizations,
@@ -735,11 +736,11 @@ class WorkflowLearningSystem {
       },
       tools: [InsightExtractor, PatternAnalyzer, PerformanceAnalyzer],
       prompt: `Extract learning insights from workflow execution:
-        
+
         Workflow: ${workflow.name || 'Unnamed'}
         Success Rate: ${results.filter(r => r.success).length}/${results.length}
         Context: ${JSON.stringify(context.summary)}
-        
+
         Analyze:
         1. Success and failure patterns
         2. Performance bottlenecks and optimizations
@@ -747,7 +748,7 @@ class WorkflowLearningSystem {
         4. Effective strategies and techniques
         5. Common error patterns and causes
         6. Adaptation opportunities
-        
+
         Return actionable insights for future improvements.`
     });
   }
@@ -757,9 +758,9 @@ class WorkflowLearningSystem {
       input: JSON.stringify(insights),
       tools: [OptimizationGenerator, EfficiencyAnalyzer],
       prompt: `Generate workflow optimizations based on insights:
-        
+
         Insights: ${JSON.stringify(insights.summary)}
-        
+
         Generate optimizations for:
         1. Execution speed and efficiency
         2. Success rate improvements
@@ -767,7 +768,7 @@ class WorkflowLearningSystem {
         4. Resource usage optimization
         5. User experience enhancements
         6. Scalability improvements
-        
+
         Prioritize optimizations by impact and implementation difficulty.`
     });
   }
@@ -775,20 +776,20 @@ class WorkflowLearningSystem {
   async optimizeWorkflow(workflowDefinition, optimizationGoals) {
     // Analyze current workflow performance
     const currentPerformance = await this.analyzeWorkflowPerformance(workflowDefinition);
-    
+
     // Apply learned optimizations
     const optimizedWorkflow = await this.applyOptimizations(
       workflowDefinition,
       currentPerformance,
       optimizationGoals
     );
-    
+
     // Validate optimizations
     const validation = await this.validateOptimizations(
       workflowDefinition,
       optimizedWorkflow
     );
-    
+
     return {
       optimizedWorkflow: optimizedWorkflow,
       expectedImprovements: validation.improvements,

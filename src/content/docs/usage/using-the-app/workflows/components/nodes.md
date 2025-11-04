@@ -17,27 +17,27 @@ graph TB
     A --> C[Built-in Integration Nodes]
     A --> D[AI Processing Nodes]
     A --> E[Flow Control Nodes]
-    
+
     B --> B1[Extract Text]
     B --> B2[Extract Links]
     B --> B3[Extract Images]
     B --> B4[Extract HTML]
-    
+
     C --> C1[HTTP Requests]
     C --> C2[Data Transformation]
     C --> C3[File Operations]
     C --> C4[External APIs]
-    
+
     D --> D1[AI Analysis]
     D --> D2[Content Processing]
     D --> D3[LLM Integration]
     D --> D4[RAG Operations]
-    
+
     E --> E1[Conditional Logic]
     E --> E2[Loops & Iteration]
     E --> E3[Error Handling]
     E --> E4[Data Merging]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -55,7 +55,6 @@ Agentic Workflow Studio provides a collection of built-in nodes optimized for br
 * [Browser extension nodes](/integration/extension/) for web page data extraction
 * [Built-in integrations](/integration/builtin/) for data processing and external services
 * [AI nodes](/advanced-ai/) for intelligent content analysis
-
 
 ## Add a node to your workflow
 
@@ -117,7 +116,7 @@ When active or set, they do the following:
 * **Always Output Data**: The node returns an empty item even if no browser data is found during execution. Useful for browser nodes that might not find content on certain pages.
 * **Execute Once**: The node executes once with data from the current page state. Useful for browser nodes that should only run once per page.
 * **Retry On Fail**: When a browser operation fails (due to page loading, security restrictions, etc.), the node reruns until it succeeds.
-* **On Error**: 
+* **On Error**:
     - **Stop Workflow**: Halts the entire workflow when a browser error occurs (page not found, security violation, etc.)
     - **Continue**: Proceeds to the next node despite browser errors, using the last valid data
     - **Continue (using error output)**: Continues workflow execution, passing browser error information to the next node

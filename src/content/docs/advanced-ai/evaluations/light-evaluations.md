@@ -30,8 +30,6 @@ Steps:
 
 The following explanation will use a sample workflow that assigns a category and priority to incoming support tickets.
 
-![Example AI workflow ](/_images/advanced-ai/evaluations/example-ai-workflow.png)
-
 ### 1. Create a dataset
 
 Create a data table or Google Sheet with a handful of examples for your workflow. Your dataset should contain columns for:
@@ -43,7 +41,7 @@ Create a data table or Google Sheet with a handful of examples for your workflow
 Leave the actual output column or columns blank, since you'll be filling them during the evaluation.
 
 <figure markdown="span">
-![Sample dataset for a support ticket classification workflow](/_images/advanced-ai/evaluations/sample-dataset.png)
+
 <figcaption>A <a href="https://docs.google.com/spreadsheets/d/1uuPS5cHtSNZ6HNLOi75A2m8nVWZrdBZ_Ivf58osDAS8/edit?gid=294497137#gid=294497137">sample dataset</a> for the support ticket classification workflow.</figcaption>
 </figure>
 
@@ -51,7 +49,7 @@ Leave the actual output column or columns blank, since you'll be filling them du
 
 #### Insert an evaluation trigger to pull in your dataset
 
-Each time the [evaluation trigger](/integrations/builtin/core-nodes/n8n-nodes-base.evaluationtrigger.md) runs, it will output a single item representing one row of your dataset.
+Each time the [evaluation trigger](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.evaluationtrigger.md) runs, it will output a single item representing one row of your dataset.
 
 Clicking the 'Evaluate all' button to the left of the evaluation trigger will run your workflow multiple times in sequence, once for each row in your dataset. This is a special behavior of the evaluation trigger.
 
@@ -67,7 +65,7 @@ You can now connect the evaluation trigger to the rest of your workflow and refe
 If you have multiple triggers in your workflow you will need to [merge their branches together](/advanced-ai/evaluations/tips-and-common-issues.md#combining-multiple-triggers).
 
 <figure markdown="span">
-![Connecting the evaluation trigger](/_images/advanced-ai/evaluations/connecting-evaluation-trigger.png)
+
 <figcaption>The support ticket classification workflow with the evaluation trigger added in and wired up.</figcaption>
 </figure>
 
@@ -75,20 +73,18 @@ If you have multiple triggers in your workflow you will need to [merge their bra
 
 To populate the output column(s) of your dataset when the evaluation runs:
 
-- Insert the 'Set outputs' action of the [evaluation node](/integrations/builtin/core-nodes/n8n-nodes-base.evaluation.md)
+- Insert the 'Set outputs' action of the [evaluation node](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.evaluation.md)
 - Wire it up to your workflow at a point after it has produced the outputs you're evaluating
 - In the node's parameters, map the workflow outputs into the correct dataset column
 
 <figure markdown="span">
-![Connecting the set outputs node](/_images/advanced-ai/evaluations/connecting-set-outputs-node.png)
+
 <figcaption>The support ticket classification workflow with the 'set outputs' node added in and wired up.</figcaption>
 </figure>
 
 ### 4. Run evaluation
 
 Click on the **Execute workflow** button to the left of the evaluation trigger. The workflow will execute multiple times, once for each row of the dataset:
-
-![Execute workflow button](/_images/advanced-ai/evaluations/execute-workflow-button.png)
 
 Review the outputs of each execution in the data table or Google Sheet, and examine the execution details using the workflow's 'executions' tab if you need to.
 

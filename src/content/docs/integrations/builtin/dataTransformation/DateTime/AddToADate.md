@@ -9,7 +9,7 @@ tags: ["Data Processing", "Field Manipulation", "Type Conversion", "Validation",
 
 ## Overview
 
-The Add To A Date node provides comprehensive date arithmetic capabilities for adding multiple time periods to existing dates. This node handles complex date calculations including timezone conversions, business day arithmetic, and flexible time unit operations, making it essential for scheduling, deadline calculations, and temporal workflow automation.
+The Add To A Date node provides comprehensive date arithmetic capabilities for adding multiple time periods to existing dates. This node handles complex date calculations including timezone conversions, business day arithmetic, and flexible time unit operations, making it essential for scheduling, deadline calculations, and temporal workflow.
 
 ### Purpose and Functionality
 
@@ -23,25 +23,25 @@ Add To A Date serves as a powerful date arithmetic tool that allows you to:
 ```mermaid
 timeline
     title Date Addition Process
-    
+
     section Input Processing
         Parse Input Date    : Validate format
                            : Handle timezone
                            : Convert to standard format
-        
+
         Configure Addition  : Set time unit
                            : Set amount to add
                            : Apply business rules
-    
+
     section Calculation
         Date Arithmetic     : Add time period
                            : Handle month/year boundaries
                            : Account for leap years
-        
+
         Business Day Logic  : Skip weekends
                            : Exclude holidays
                            : Adjust final date
-    
+
     section Output
         Format Result      : Apply timezone conversion
                           : Format output string
@@ -205,32 +205,32 @@ timeline
 graph LR
     A[Project Creation] --> B[Add To A Date Node]
     B --> C[Calendar Integration]
-    
+
     A --> A1[Project Start Date<br/>2024-01-15]
     A1 --> B
-    
+
     B --> B1[Add 10 Business Days]
     B --> B2[Skip Weekends]
     B --> B3[Exclude Holidays]
-    
+
     B1 --> C
     B2 --> C
     B3 --> C
-    
+
     C --> C1[Deadline Date<br/>2024-01-31]
     C --> C2[Calendar Event]
     C --> C3[Team Notification]
-    
+
     subgraph "Business Rules"
         D[Weekend Exclusion]
         E[Holiday Calendar]
         F[Timezone Handling]
     end
-    
+
     B --> D
     B --> E
     B --> F
-    
+
     style B fill:#fff3e0
     style C1 fill:#e8f5e8
 ```
@@ -345,7 +345,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Incorrect date results or timezone-related errors
 - **Causes**: Invalid timezone identifiers or daylight saving time transitions
-- **Solutions**: 
+- **Solutions**:
   1. Use valid IANA timezone identifiers (e.g., "America/New_York")
   2. Handle DST transitions by checking metadata.dst_transition
   3. Test calculations around DST change dates
@@ -355,7 +355,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Unexpected results when excluding weekends and holidays
 - **Causes**: Overlapping weekend and holiday exclusions or incorrect holiday formats
-- **Solutions**: 
+- **Solutions**:
   1. Ensure holiday dates are in YYYY-MM-DD format
   2. Check weekend_days configuration (0=Sunday, 6=Saturday)
   3. Verify holiday list doesn't include weekends unless intended

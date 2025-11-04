@@ -13,22 +13,22 @@ Looping is useful when you want to process multiple items or perform an action r
 graph TB
     A[Input Items] --> B[Node Processing]
     B --> C[Output Items]
-    
+
     A --> A1[Item 1]
     A --> A2[Item 2]
     A --> A3[Item 3]
     A --> A4[Item N...]
-    
+
     A1 --> B
     A2 --> B
     A3 --> B
     A4 --> B
-    
+
     B --> C1[Result 1]
     B --> C2[Result 2]
     B --> C3[Result 3]
     B --> C4[Result N...]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -36,13 +36,11 @@ graph TB
 
 Agentic Workflow Studio nodes take any number of items as input, process these items, and output the results. You can think of each item as a single data point, or a single row in the output table of a node.
 
-![The Customer Datastore node output](/_images/flow-logic/looping/customer_datastore_node.png)
-
 Nodes usually run once for each item. For example, if you wanted to send the name and notes of the customers in the Customer Datastore node as a message on Slack, you would:
 
 1. Connect the Slack node to the Customer Datastore node.
 2. Configure the parameters.
-3. Execute the node. 
+3. Execute the node.
 
 You would receive five messages: one for each item.
 
@@ -50,8 +48,7 @@ This is how you can process multiple items without having to explicitly connect 
 
 ### Executing nodes once
 
-For situations where you don't want a node to process all received items, for example sending a Slack message only to the first customer, you can do so by toggling the **Execute Once** parameter in the **Settings** tab of that node This setting is helpful when the incoming data contains multiple items and you want to only process the first one. 
-
+For situations where you don't want a node to process all received items, for example sending a Slack message only to the first customer, you can do so by toggling the **Execute Once** parameter in the **Settings** tab of that node This setting is helpful when the incoming data contains multiple items and you want to only process the first one.
 
 ## Creating loops
 
@@ -65,22 +62,20 @@ graph TB
     B --> C[IF Node]
     C -->|Condition Met| D[Continue Workflow]
     C -->|Condition Not Met| B
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
     style D fill:#f3e5f5
 ```
 
-To create a loop in an Agentic Workflow Studio workflow, connect the output of one node to the input of a previous node. Add an [IF](/integrations/builtin/core-nodes/n8n-nodes-base.if.md) node to check when to stop the loop. 
+To create a loop in an Agentic Workflow Studio workflow, connect the output of one node to the input of a previous node. Add an [IF](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.if.md) node to check when to stop the loop.
 
 Here is an [examplAgentic Workflow Studioorkflow](https://Agentic Workflow Studio/workflows/1130) that implements a loop with an `IF` node:
 
-![Editor UI view of sample workflow](/_images/flow-logic/looping/example_workflow.png)
-
 ### Loop until all items are processed
 
-Use the [Loop Over Items](/integrations/builtin/core-nodes/n8n-nodes-base.splitinbatches.md) node when you want to loop until all items are processed. To process each item individually, set **Batch Size** to `1`.
+Use the [Loop Over Items](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.splitinbatches.md) node when you want to loop until all items are processed. To process each item individually, set **Batch Size** to `1`.
 
 You can batch the data in groups and process these batches. This approach is useful for avoiding API rate limits when processing large incoming data or when you want to process a specific group of returned items.
 
@@ -90,14 +85,14 @@ The Loop Over Items node stops executing after all the incoming items get divide
 
 Nodes and operations where you need to design a loop into your workflow:
 
-* [CrateDB](/integrations/builtin/app-nodes/n8n-nodes-base.cratedb.md) executes once for `insert` and `update`.
-* [Code](/integrations/builtin/core-nodes/n8n-nodes-base.code/index.md) node in **Run Once for All Items** mode: processes all the items based on the entered code snippet.
-* [Execute Workflow](/integrations/builtin/core-nodes/n8n-nodes-base.executeworkflow.md) node in **Run Once for All Items** mode.
-* [HTTP Request](/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/index.md): you must handle pagination yourself. If your API call returns paginated results you must create a loop to fetch one page at a time.
-* [Microsoft SQL](/integrations/builtin/app-nodes/n8n-nodes-base.microsoftsql.md) executes once for `insert`, `update`, and `delete`.
-* [MongoDB](/integrations/builtin/app-nodes/n8n-nodes-base.mongodb.md) executes once for `insert` and `update`.
-* [QuestDB](/integrations/builtin/app-nodes/n8n-nodes-base.questdb.md) executes once for `insert`.
-* [Redis](/integrations/builtin/app-nodes/n8n-nodes-base.redis.md):
+* [CrateDB](/integrations/builtin/app-nodes/Agentic Workflow Studio-nodes-base.cratedb.md) executes once for `insert` and `update`.
+* [Code](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.code/index.md) node in **Run Once for All Items** mode: processes all the items based on the entered code snippet.
+* [Execute Workflow](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.executeworkflow.md) node in **Run Once for All Items** mode.
+* [HTTP Request](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.httprequest/index.md): you must handle pagination yourself. If your API call returns paginated results you must create a loop to fetch one page at a time.
+* [Microsoft SQL](/integrations/builtin/app-nodes/Agentic Workflow Studio-nodes-base.microsoftsql.md) executes once for `insert`, `update`, and `delete`.
+* [MongoDB](/integrations/builtin/app-nodes/Agentic Workflow Studio-nodes-base.mongodb.md) executes once for `insert` and `update`.
+* [QuestDB](/integrations/builtin/app-nodes/Agentic Workflow Studio-nodes-base.questdb.md) executes once for `insert`.
+* [Redis](/integrations/builtin/app-nodes/Agentic Workflow Studio-nodes-base.redis.md):
 	* Info: this operation executes only once, regardless of the number of items in the incoming data.
-* [RSS Read](/integrations/builtin/core-nodes/n8n-nodes-base.rssfeedread.md) executes once for the requested URL.
-* [TimescaleDB](/integrations/builtin/app-nodes/n8n-nodes-base.timescaledb.md) executes once for `insert` and `update`.
+* [RSS Read](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.rssfeedread.md) executes once for the requested URL.
+* [TimescaleDB](/integrations/builtin/app-nodes/Agentic Workflow Studio-nodes-base.timescaledb.md) executes once for `insert` and `update`.

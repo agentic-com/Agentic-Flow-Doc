@@ -13,8 +13,8 @@ tags: ["ecommerce", "monitoring", "automation", "project", "how-to"]
 
 Create a complete, enterprise-ready price monitoring system that tracks competitor prices, sends alerts for changes, and maintains historical data for trend analysis.
 
-**⏱️ Time**: 60 minutes  
-**🎯 Difficulty**: Advanced  
+**⏱️ Time**: 60 minutes
+**🎯 Difficulty**: Advanced
 **✅ Result**: Full-featured price monitoring system with dashboard and alerts
 
 ## System Overview
@@ -32,7 +32,7 @@ flowchart TD
     F --> H[📧 Notifications]
     G --> I[📋 Dashboard Report]
     D --> I
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -62,7 +62,7 @@ Create a structured catalog of products to monitor:
           "selector_hints": ".pricing-price__range"
         },
         {
-          "name": "Amazon", 
+          "name": "Amazon",
           "url": "https://amazon.com/macbook-pro-13",
           "selector_hints": ".a-price-whole"
         }
@@ -107,7 +107,7 @@ Create a robust extraction workflow that handles different site formats:
     "timeout": 30000,
     "textFilters": [
       ".navigation",
-      ".footer", 
+      ".footer",
       ".reviews",
       ".recommendations",
       ".advertisement"
@@ -186,7 +186,7 @@ Implement intelligent change detection with thresholds:
     },
     {
       "name": "undercut_alert",
-      "condition": "competitor_price < your_price * 0.98", 
+      "condition": "competitor_price < your_price * 0.98",
       "priority": "urgent",
       "message": "Competitor undercut your price",
       "actions": ["email", "sms", "slack"]
@@ -194,7 +194,7 @@ Implement intelligent change detection with thresholds:
     {
       "name": "opportunity_alert",
       "condition": "competitor_price > your_price * 1.1",
-      "priority": "medium", 
+      "priority": "medium",
       "message": "Opportunity to raise prices",
       "actions": ["email"]
     }
@@ -291,7 +291,7 @@ Create comprehensive reports:
         "charts": ["price_trend_overview"]
       },
       {
-        "name": "Competitive Analysis", 
+        "name": "Competitive Analysis",
         "metrics": ["market_position", "undercut_count", "opportunity_count"],
         "charts": ["competitor_comparison", "price_distribution"]
       },
@@ -347,7 +347,7 @@ Extract additional insights beyond pricing:
 
 ### E-commerce Retailer Case Study
 
-**Challenge**: Monitor 500+ products across 8 competitors  
+**Challenge**: Monitor 500+ products across 8 competitors
 **Solution**: Automated system with smart batching and error handling
 
 **System Architecture:**
@@ -359,7 +359,7 @@ flowchart LR
     D --> E[Change Detector]
     E --> F[Alert Engine]
     F --> G[Dashboard]
-    
+
     style A fill:#e3f2fd
     style C fill:#e8f5e8
     style E fill:#fff3e0
@@ -442,7 +442,7 @@ flowchart LR
 ### Production Considerations
 
 **Infrastructure Requirements:**
-- Reliable internet connection for web scraping
+- Reliable internet connection for web extraction
 - Database for historical data storage
 - Email/SMS service for notifications
 - Monitoring dashboard hosting

@@ -236,7 +236,7 @@ Monitor brand mentions, track engagement metrics, and identify opportunities for
          "competitor2"
        ],
        "industryTerms": [
-         "workflow automation",
+         "workflow",
          "business process automation"
        ],
        "platforms": ["twitter", "linkedin", "facebook", "instagram", "reddit"],

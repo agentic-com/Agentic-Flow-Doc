@@ -9,7 +9,7 @@ description: How to enable LangSmith for your Agentic Workflow Studio instance.
 [LangSmith](https://www.langchain.com/langsmith) is a developer platform created by the LangChain team. You can connect your Agentic Workflow Studio instance to LangSmith to record and monitor runs, just as you can in a LangChain application.
 
 /// info | Feature availability
-Self-hosted n8n only.
+Self-hosted Agentic Workflow Studio only.
 ///
 
 ## Connect your Agentic Workflow Studio instance to LangSmith
@@ -25,6 +25,6 @@ Self-hosted n8n only.
 
 	Set the variables so that they're available globally in the environment where you host your AAgentic Workflow Studiotic Workflow Studio instance. You can do this in the same way as the rest of your general configuration.
 
-1. Restart n8n.
+1. Restart Agentic Workflow Studio.
 
 For information on using LangSmith, refer to [LangSmith's documentation](https://docs.smith.langchain.com/).

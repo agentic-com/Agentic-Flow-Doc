@@ -1,6 +1,7 @@
 ---
 title: "Enterprise Workflow Patterns"
 description: "Build scalable, maintainable workflows for enterprise environments with advanced patterns and best practices."
+difficulty: "🎯 advanced"
 ---
 
 # Enterprise Workflow Patterns
@@ -26,7 +27,7 @@ In this tutorial, you'll create enterprise-ready workflows that:
 ## Learning Objectives
 
 By the end of this tutorial, you'll understand:
-- Enterprise architecture patterns for workflow automation
+- Enterprise architecture patterns for workflow
 - Scalability and performance optimization strategies
 - Security, compliance, and governance frameworks
 - Monitoring, alerting, and operational excellence practices

@@ -14,7 +14,7 @@ description: "Compare different text extraction methods and choose the right app
 | **[Get Selected Text](./GetSelectedText.md)** | You want specific text | Yes - highlight text | Focused analysis, quotes |
 | **[Get All Text](./GetAllText.md)** | You want everything | No | Full page analysis, monitoring |
 | **[Get HTML of Selected Text](./GetHTMLofSelectedText.md)** | You want formatted text | Yes - highlight text | Preserving formatting |
-| **[Get All HTML](./GetAllHTML.md)** | You want complete structure | No | Web scraping, archiving |
+| **[Get All HTML](./GetAllHTML.md)** | You want complete structure | No | Web extraction, archiving |
 
 ## Real-World Examples
 

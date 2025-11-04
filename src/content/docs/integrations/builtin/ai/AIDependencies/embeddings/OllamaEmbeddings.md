@@ -29,10 +29,10 @@ Ollama Embeddings converts text into numerical vectors (embeddings) that capture
 
 ## Why Use Local Embeddings?
 
-**🔒 Complete Privacy**: Text processing happens locally on your machine  
-**💰 No API Costs**: No per-request charges or usage limits  
-**⚡ Fast Processing**: No network delays, just local computation  
-**🌐 Works Offline**: Generate embeddings without internet connection  
+**🔒 Complete Privacy**: Text processing happens locally on your machine
+**💰 No API Costs**: No per-request charges or usage limits
+**⚡ Fast Processing**: No network delays, just local computation
+**🌐 Works Offline**: Generate embeddings without internet connection
 **🎛️ Full Control**: Choose exactly which embedding models to use
 
 ## How It Works
@@ -42,7 +42,7 @@ flowchart LR
     A[📝 Your Text] --> B[🧠 Ollama Model]
     B --> C[🔢 Vector Numbers]
     C --> D[💾 Ready for Search]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#f3e5f5
@@ -57,9 +57,9 @@ flowchart LR
 
 ## Perfect For
 
-**📚 Building Knowledge Bases**: Convert documents to searchable format  
-**🔍 Finding Similar Content**: Compare documents by meaning, not just keywords  
-**🤖 AI Search Systems**: Essential component for smart document search  
+**📚 Building Knowledge Bases**: Convert documents to searchable format
+**🔍 Finding Similar Content**: Compare documents by meaning, not just keywords
+**🤖 AI Search Systems**: Essential component for smart document search
 **📊 Content Organization**: Group similar content automatically
 
 - **Local Processing**: Generate embeddings locally using Ollama without external API calls

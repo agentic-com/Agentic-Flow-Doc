@@ -72,7 +72,7 @@ function waitForElement(selector, timeout = 10000) {
       resolve(element);
       return;
     }
-    
+
     const observer = new MutationObserver((mutations) => {
       const element = document.querySelector(selector);
       if (element) {
@@ -80,12 +80,12 @@ function waitForElement(selector, timeout = 10000) {
         resolve(element);
       }
     });
-    
+
     observer.observe(document.body, {
       childList: true,
       subtree: true
     });
-    
+
     setTimeout(() => {
       observer.disconnect();
       reject(new Error(`Element ${selector} not found within ${timeout}ms`));
@@ -123,29 +123,29 @@ waitForElement('.dynamic-content').then(element => {
 async function extractFromAllPages(baseSelector) {
   let allData = [];
   let currentPage = 1;
-  
+
   while (true) {
     // Extract from current page
     const pageData = Array.from(document.querySelectorAll(baseSelector))
       .map(el => el.textContent.trim());
-    
+
     if (pageData.length === 0) {
       break; // No more data
     }
-    
+
     allData.push(...pageData);
-    
+
     // Try to go to next page
     const nextButton = document.querySelector('.next-page, .pagination-next');
     if (!nextButton || nextButton.disabled) {
       break; // No more pages
     }
-    
+
     nextButton.click();
     await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for page load
     currentPage++;
   }
-  
+
   return allData;
 }
 ```
@@ -221,7 +221,7 @@ function extractFromShadowDOM(hostSelector, contentSelector) {
   if (!host || !host.shadowRoot) {
     return null;
   }
-  
+
   return host.shadowRoot.querySelector(contentSelector);
 }
 ```
@@ -273,7 +273,7 @@ async function waitForSPAReady() {
     waitForElement('app-root'), // Angular
     new Promise(resolve => setTimeout(resolve, 5000)) // Fallback timeout
   ]);
-  
+
   // Additional wait for content to load
   await new Promise(resolve => setTimeout(resolve, 2000));
 }
@@ -308,7 +308,7 @@ function extractProductInfo() {
       '.price'
     ]
   };
-  
+
   function findBySelectors(selectorList) {
     for (const selector of selectorList) {
       const element = document.querySelector(selector);
@@ -316,7 +316,7 @@ function extractProductInfo() {
     }
     return null;
   }
-  
+
   return {
     title: findBySelectors(selectors.title)?.textContent?.trim(),
     price: findBySelectors(selectors.price)?.textContent?.trim()
@@ -333,10 +333,10 @@ function extractProductInfo() {
 // Comprehensive element analysis
 function analyzeElement(selector) {
   const elements = document.querySelectorAll(selector);
-  
+
   console.log(`Selector: ${selector}`);
   console.log(`Found: ${elements.length} elements`);
-  
+
   elements.forEach((el, index) => {
     console.log(`Element ${index}:`, {
       tagName: el.tagName,
@@ -367,7 +367,7 @@ analyzeElement('.product-price');
 // Test multiple selectors
 function testSelectors(selectors) {
   const results = {};
-  
+
   selectors.forEach(selector => {
     try {
       const elements = document.querySelectorAll(selector);
@@ -386,7 +386,7 @@ function testSelectors(selectors) {
       };
     }
   });
-  
+
   console.table(results);
   return results;
 }
@@ -411,7 +411,7 @@ function analyzePage() {
     url: window.location.href,
     title: document.title,
     loadTime: performance.timing.loadEventEnd - performance.timing.navigationStart,
-    
+
     // Content analysis
     content: {
       totalElements: document.querySelectorAll('*').length,
@@ -424,7 +424,7 @@ function analyzePage() {
       images: document.querySelectorAll('img').length,
       links: document.querySelectorAll('a').length
     },
-    
+
     // Structure analysis
     structure: {
       hasIframes: document.querySelectorAll('iframe').length > 0,
@@ -436,7 +436,7 @@ function analyzePage() {
         angular: !!document.querySelector('app-root')
       }
     },
-    
+
     // Common extraction targets
     commonSelectors: {
       headings: document.querySelectorAll('h1, h2, h3').length,
@@ -446,7 +446,7 @@ function analyzePage() {
       forms: document.querySelectorAll('form').length
     }
   };
-  
+
   console.log('Page Analysis:', analysis);
   return analysis;
 }
@@ -497,42 +497,42 @@ function safeExtraction(selector, options = {}) {
     retries = 3,
     fallbackSelectors = []
   } = options;
-  
+
   async function attemptExtraction(sel) {
     try {
       const element = await waitForElement(sel, timeout);
       const value = element[attribute];
-      
+
       if (!value || value.trim() === '') {
         throw new Error('Empty value extracted');
       }
-      
+
       return value.trim();
     } catch (e) {
       console.warn(`Extraction failed for ${sel}:`, e.message);
       return null;
     }
   }
-  
+
   async function extractWithRetries() {
     const allSelectors = [selector, ...fallbackSelectors];
-    
+
     for (const sel of allSelectors) {
       for (let attempt = 1; attempt <= retries; attempt++) {
         const result = await attemptExtraction(sel);
         if (result) {
           return { success: true, data: result, selector: sel, attempt };
         }
-        
+
         if (attempt < retries) {
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
     }
-    
+
     return { success: false, data: null, error: 'All extraction attempts failed' };
   }
-  
+
   return extractWithRetries();
 }
 ```
@@ -545,10 +545,10 @@ function safeExtraction(selector, options = {}) {
 function batchExtraction(containerSelector, itemSelector, dataExtractors) {
   const containers = document.querySelectorAll(containerSelector);
   const results = [];
-  
+
   containers.forEach((container, index) => {
     const item = {};
-    
+
     // Extract all data points for this item
     Object.entries(dataExtractors).forEach(([key, extractor]) => {
       try {
@@ -565,10 +565,10 @@ function batchExtraction(containerSelector, itemSelector, dataExtractors) {
         item[key] = null;
       }
     });
-    
+
     results.push(item);
   });
-  
+
   return results;
 }
 

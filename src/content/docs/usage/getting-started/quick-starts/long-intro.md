@@ -17,7 +17,7 @@ graph TB
     D --> E[If Node - Logic]
     E -->|Long Article| F[Detailed Report]
     E -->|Short Article| G[Quick Summary]
-    
+
     style A fill:#e3f2fd
     style E fill:#e8f5e8
     style F fill:#fff3e0
@@ -84,10 +84,10 @@ graph TB
     B --> C{Word Count > 500?}
     C -->|True| D[Long Article Branch]
     C -->|False| E[Short Article Branch]
-    
+
     D --> F[Detailed Analysis]
     E --> G[Quick Summary]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style F fill:#fff3e0
@@ -145,7 +145,6 @@ For short articles (false branch):
    - The content is classified as long or short
    - Appropriate reports are generated
 4. Check the output of the final Edit Fields nodes to see the different reports generated based on content length.
-
 
 ## Congratulations
 

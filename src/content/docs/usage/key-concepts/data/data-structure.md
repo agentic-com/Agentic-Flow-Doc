@@ -13,13 +13,13 @@ graph TB
     B --> C[Object 1]
     B --> D[Object 2]
     B --> E[Object N...]
-    
+
     C --> F[json: Browser Data]
     C --> G[binary: File Data]
-    
+
     F --> H[text, url, title, links...]
     G --> I[data, mimeType, fileName...]
-    
+
     style A fill:#e1f5fe
     style B fill:#f3e5f5
     style F fill:#e8f5e8
@@ -73,27 +73,27 @@ graph LR
     A --> D[Image Data]
     A --> E[HTML Data]
     A --> F[Form Data]
-    
+
     B --> B1[Selected Text]
     B --> B2[All Page Text]
     B --> B3[Element Text]
-    
+
     C --> C1[URLs]
     C --> C2[Link Text]
     C --> C3[Link Attributes]
-    
+
     D --> D1[Image URLs]
     D --> D2[Alt Text]
     D --> D3[Image Metadata]
-    
+
     E --> E1[Raw HTML]
     E --> E2[Element HTML]
     E --> E3[Page Structure]
-    
+
     F --> F1[Input Values]
     F --> F2[Form Structure]
     F --> F3[Form Metadata]
-    
+
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
@@ -110,5 +110,4 @@ graph LR
 ## Data item processing
 
 --8<-- "_snippets/flow-logic/data-flow-nodes.md"
-
 

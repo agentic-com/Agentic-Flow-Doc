@@ -2,7 +2,7 @@
 title: "HTTP Request"
 description: "Make HTTP requests from browser workflows to integrate with external APIs and services while respecting browser security constraints."
 template: doc
-tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
+tags: ["Web Extraction", "Browser Automation", "HTTP", "DOM", "Content Extraction"]
 ---
 
 # HTTP Request
@@ -21,7 +21,7 @@ graph LR
     B --> C[🔐 Add Authentication]
     C --> D[☁️ External API]
     D --> E[📥 Response Data]
-    
+
     style A fill:#e1f5fe
     style B fill:#e8f5e8
     style D fill:#fff3e0
@@ -41,7 +41,7 @@ graph LR
 
 ### Primary Use Cases
 - **API Integration**: Send extracted data to external services
-- **Data Validation**: Verify information against external databases  
+- **Data Validation**: Verify information against external databases
 - **Webhook Notifications**: Trigger external systems
 - **Cloud Integration**: Connect with SaaS platforms
 
@@ -231,7 +231,7 @@ flowchart TD
     J --> L[Add Response Metadata]
     K --> L
     L --> M[Return Structured Output]
-    
+
     style B fill:#e1f5fe
     style G fill:#fff3e0
     style J fill:#e8f5e8
@@ -361,7 +361,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Request fails with CORS policy error
 - **Causes**: Target API doesn't allow cross-origin requests from browser extensions
-- **Solutions**: 
+- **Solutions**:
   1. Use APIs that explicitly support browser extension requests
   2. Implement server-side proxy for CORS-restricted APIs
   3. Check if API provides JSONP or other cross-origin alternatives
@@ -371,7 +371,7 @@ Example showing how this node integrates with other workflow nodes:
 
 - **Symptoms**: Request blocked by CSP with policy violation error
 - **Causes**: Current webpage has strict CSP that blocks external requests
-- **Solutions**: 
+- **Solutions**:
   1. Test requests on different websites with less restrictive CSP
   2. Use background scripts instead of content scripts for requests
   3. Implement fallback behavior for CSP-restricted environments
@@ -427,13 +427,13 @@ Example showing how this node integrates with other workflow nodes:
 
 **Content Script**: JavaScript code that runs in the context of web pages
 
-**Web Scraping**: Automated extraction of data from websites
+**Web Extraction**: Automated extraction of data from websites
 
 ## Search & Discovery
 
 ### Keywords
 
-- web scraping
+- web extraction
 - browser automation
 - HTTP requests
 - DOM manipulation
@@ -461,7 +461,7 @@ Example showing how this node integrates with other workflow nodes:
 - content extraction
 - API integration
 - browser interaction
-- web scraping
+- web extraction
 
 ## Learning Path
 
@@ -471,14 +471,14 @@ Example showing how this node integrates with other workflow nodes:
 
 ### Workflow Patterns
 
-- [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns)
+- [Web Extraction Patterns](/learning/workflow-patterns/web-extraction-patterns)
 - [Browser Automation Workflows](/learning/workflow-patterns/browser-automation)
 - [API Integration Patterns](/learning/workflow-patterns/integration-patterns)
 
 ### Related Tutorials
 
 - [Web Automation Basics](/learning/text-courses/beginner/web-automation-basics)
-- [Advanced Web Scraping](/learning/text-courses/advanced/complex-web-scraping)
+- [Advanced Web Extraction](/learning/text-courses/advanced/complex-web-extraction)
 
 ### Practical Examples
 
@@ -542,6 +542,6 @@ Example showing how this node integrates with other workflow nodes:
 
 ---
 
-**Last Updated**: October 18, 2024  
-**Tested With**: Browser Extension v2.1.0  
+**Last Updated**: October 18, 2024
+**Tested With**: Browser Extension v2.1.0
 **Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

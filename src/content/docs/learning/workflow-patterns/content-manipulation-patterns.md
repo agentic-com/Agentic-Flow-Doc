@@ -7,7 +7,7 @@ description: Simple patterns for automatically filling forms, inserting content,
 
 Automate repetitive tasks like filling forms, updating content, and modifying web pages. These workflow patterns help you work faster and avoid manual errors when dealing with web content.
 
-**Related patterns:** [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns/) • [Integration Patterns](/learning/workflow-patterns/integration-patterns/)
+**Related patterns:** [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Web Extraction Patterns](/learning/workflow-patterns/web-extraction-patterns/) • [Integration Patterns](/learning/workflow-patterns/integration-patterns/)
 
 ## Why This Matters
 
@@ -28,7 +28,7 @@ graph LR
     A[🌐 Navigate to Form] --> B[📝 Fill Fields]
     B --> C[✅ Submit Form]
     C --> D[📋 Confirm Success]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#e8f5e8
@@ -47,7 +47,7 @@ graph LR
       "name": "Fill Contact Form",
       "settings": {
         "firstName": "Alex",
-        "lastName": "Johnson", 
+        "lastName": "Johnson",
         "email": "alex.johnson@email.com",
         "phone": "555-0123",
         "company": "Your Company Name",
@@ -73,7 +73,7 @@ graph LR
     A[🔍 Find Target Location] --> B[📝 Prepare Content]
     B --> C[➕ Insert Content]
     C --> D[✅ Verify Success]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#e8f5e8
@@ -114,7 +114,7 @@ graph LR
 graph LR
     A[🎯 Find Content] --> B[🔄 Replace Text]
     B --> C[✅ Verify Changes]
-    
+
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#e8f5e8
@@ -138,7 +138,7 @@ graph LR
             "backup": true
           },
           {
-            "target": ".contact-email", 
+            "target": ".contact-email",
             "newContent": "support@yourcompany.com"
           }
         ]
@@ -164,6 +164,6 @@ graph LR
 
 **Node documentation:** [Form Filler](/integrations/extension/FormFiller/) • [Insert Content](/integrations/extension/InsertContent/) • [Content Replacer](/integrations/extension/ContentReplacer/)
 
-**More patterns:** [Data Processing](/learning/workflow-patterns/data-processing-patterns/) • [Web Scraping](/learning/workflow-patterns/web-scraping-patterns/) • [Real-World Examples](/learning/workflow-patterns/real-world-examples/)
+**More patterns:** [Data Processing](/learning/workflow-patterns/data-processing-patterns/) • [Web Extraction](/learning/workflow-patterns/web-extraction-patterns/) • [Real-World Examples](/learning/workflow-patterns/real-world-examples/)
 
 **Need help?** [Troubleshooting Guide](/advanced-ai/troubleshooting-guide/) • [Community Support](/usage/help-and-community/help/)

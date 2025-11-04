@@ -1,6 +1,7 @@
 ---
 title: "How Information Flows Through Your Automations"
 description: "Learn how information moves from one step to the next in your automations. Simple explanations with visual examples - no technical background needed!"
+difficulty: "🌱 beginner"
 ---
 
 # How Information Flows Through Your Automations
@@ -46,9 +47,9 @@ Each step (**node**) in your automation:
 - **What it is:** Words, sentences, paragraphs you select from websites
 - **Example:** "The best pizza in Chicago is at Tony's Restaurant"
 
-**📊 Organized Information**  
+**📊 Organized Information**
 - **What it is:** Information arranged in a structured way (like a digital filing cabinet)
-- **Example:** 
+- **Example:**
   ```
   Text: "The best pizza in Chicago is at Tony's Restaurant"
   Word Count: 9 words
@@ -413,7 +414,7 @@ DownloadAsFile ← Filter ← EditFields ← Merge
 **Creating data flow diagrams:**
 
 ```
-[Web Page] 
+[Web Page]
     ↓ (HTML content)
 [GetAllText]
     ↓ (raw text array)
@@ -609,6 +610,6 @@ You now understand how data flows through browser automation workflows. You're r
 
 ---
 
-**Estimated Time:** 35-40 minutes  
-**Difficulty:** Beginner  
+**Estimated Time:** 35-40 minutes
+**Difficulty:** Beginner
 **Prerequisites:** Completed first workflow tutorial

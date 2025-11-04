@@ -45,7 +45,7 @@ Fix problems with node connections, data flow, and execution order.
 Found an issue not covered here? Help us improve this guide:
 
 1. **Report missing solutions** - Let us know what problems you're facing
-2. **Suggest improvements** - Share better solutions or clearer explanations  
+2. **Suggest improvements** - Share better solutions or clearer explanations
 3. **Share success stories** - Tell us what worked for your specific situation
 
 **Contact us**: Use the feedback widget on any page or visit our [community forums](../help-and-community/help/) to share your experience.

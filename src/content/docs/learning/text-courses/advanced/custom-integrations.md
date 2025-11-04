@@ -1,6 +1,7 @@
 ---
 title: "Custom Integration Development"
 description: "Build custom integrations connecting browser workflows with external services, APIs, and enterprise systems."
+difficulty: "🎯 advanced"
 ---
 
 # Custom Integration Development
