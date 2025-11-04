@@ -8,7 +8,7 @@
   - _Requirements: 3.1, 3.2, 6.1, 6.4_
 
 - [ ] 2. Simplify existing learning content
-  - [ ] 2.1 Rewrite `src/content/docs/learning/video-courses/tutoriels.md`
+  - [x] 2.1 Rewrite `src/content/docs/learning/video-courses/tutoriels.md`
     - Simplify language to 8th-grade reading level
     - Replace technical course descriptions with practical outcomes
     - Add skill-level indicators (🌱 🚀 🎯) and time estimates
