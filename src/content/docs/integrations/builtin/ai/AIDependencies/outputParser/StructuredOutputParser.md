@@ -1,52 +1,38 @@
 ---
-title: "StructuredOutputParser"
-description: "Structured output parsing for AI responses with schema validation and type safety."
+title: "Structured Output Parser"
+description: "Make sure AI gives you data in exactly the format you need - no messy, inconsistent responses."
 template: doc
 tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artificial Intelligence"]
 ---
 
-# StructuredOutputParser
+# Structured Output Parser (Format AI Responses)
 
-## Prerequisites
+## What It Does
 
-Before using this node, ensure you have:
+The Structured Output Parser makes sure AI gives you data in exactly the format you want. Instead of getting messy, unpredictable text, you get clean, organized data that's ready to use in your workflows.
 
-- Basic understanding of workflow creation in `Agentic Workflow Studio`
-- Appropriate browser permissions configured (if applicable)
-- Required dependencies installed and configured
+## What Goes In, What Comes Out
 
-## Overview
+### Input
+| Name | Type | Description | Required | Default |
+|------|------|-------------|----------|---------|
+| `ai_response` | Text | Raw AI response to format | Yes | - |
+| `format_type` | Text | How you want the data formatted | Yes | - |
+| `required_fields` | Array | What information must be included | No | [] |
 
-The StructuredOutputParser node provides structured output parsing capabilities for AI responses, enabling schema validation, type safety, and consistent data formatting in AI-powered workflows.
+### Output
+| Name | Type | Description |
+|------|------|-------------|
+| `structured_data` | Object | Clean, formatted data |
+| `validation_status` | Text | Whether formatting was successful |
+| `missing_fields` | Array | Any required information that wasn't found |
 
-### Purpose and Functionality
+## Perfect For
 
-This node enables:
-- Structured parsing of AI model outputs
-- Schema validation and type checking
-- Consistent data formatting across workflows
-- Error handling for malformed responses
-
-### Key Features
-
-- **Schema Validation**: Enforce output structure and data types
-- **Type Safety**: Ensure consistent data formats
-- **Error Handling**: Graceful handling of parsing failures
-- **Flexible Schemas**: Support for multiple output formats including JSON, XML, and structured text
-
-## Parameters
-
-### Required Parameters
-
-| Parameter | Type | Description | Example |
-|-----------|------|-------------|---------|
-| `schema` | `object` | Output schema definition | `{"type": "object"}` |
-
-### Optional Parameters
-
-| Parameter | Type | Default | Description | Example |
-|-----------|------|---------|-------------|---------|
-| `strict` | `boolean` | `true` | Enforce strict schema validation | `false` |
+**📊 Data Extraction**: Turn messy AI responses into clean spreadsheet data  
+**🔄 Workflow Integration**: Get data in the exact format your next step needs  
+**✅ Quality Control**: Make sure AI responses always include required information  
+**📋 Report Generation**: Format AI analysis into consistent report structures
 
 ## Examples
 
@@ -66,12 +52,7 @@ This node enables:
 }
 ```
 
-## Integration Patterns
 
-### Common Workflow Patterns
-
-- **AI Response → StructuredOutputParser → Data Processing**
-- **LLM Chain → StructuredOutputParser → Validation**
 
 ## Troubleshooting
 

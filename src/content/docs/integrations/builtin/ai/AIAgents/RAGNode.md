@@ -1,607 +1,251 @@
 ---
 title: RAG
-description: "Retrieval-Augmented Generation system that combines AI reasoning with knowledge base search for enhanced accuracy and context-aware responses."
+description: "Smart AI that searches your documents first, then gives accurate answers based on what it finds - no more AI hallucinations."
 template: doc
 tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artificial Intelligence"]
 ---
 
-# RAG
+# RAG (Smart Document Search + AI)
 
-## Prerequisites
+## What It Does
 
-Before using this node, ensure you have:
+RAG is like having a research assistant that actually reads your documents before answering questions. Instead of guessing, it searches through your knowledge base, finds relevant information, then uses AI to give you accurate, source-backed answers.
 
-- Basic understanding of workflow creation in `Agentic Workflow Studio`
-- Appropriate browser permissions configured (if applicable)
-- Required dependencies installed and configured
+## What Goes In, What Comes Out
 
-## Overview
+### Input
+| Name | Type | Description | Required | Default |
+|------|------|-------------|----------|---------|
+| `llm` | LLM Connection | Your AI model | Yes | - |
+| `vector_store` | Vector Store | Your document database | Yes | - |
+| `query` | Text | Question to ask | Yes | - |
+| `top_k` | Number | How many documents to search | No | 5 |
+| `similarity_threshold` | Number | How closely documents must match (0-1) | No | 0.7 |
 
-The RAG (Retrieval-Augmented Generation) node represents the cutting edge of AI-powered information processing in browser workflows. This node combines the power of vector search with large language models to provide highly accurate, contextually relevant responses by retrieving relevant information from knowledge bases before generating answers.
+### Output
+| Name | Type | Description |
+|------|------|-------------|
+| `answer` | Text | AI answer based on found documents |
+| `retrieved_documents` | Array | Source documents used |
+| `confidence` | Number | How confident the AI is (0-1) |
+| `sources` | Array | Where the information came from |
 
-### RAG Architecture and Process Flow
+## Real-World Examples
 
-```mermaid
-sequenceDiagram
-    participant Query as User Query
-    participant RAG as RAG Node
-    participant Vector as Vector Store
-    participant Retrieval as Document Retrieval
-    participant LLM as Language Model
-    participant Output as Enhanced Response
-    
-    Query->>RAG: Search query/question
-    RAG->>RAG: Convert query to embedding
-    RAG->>Vector: Semantic search with embedding
-    Vector->>Retrieval: Return similar documents
-    Retrieval->>Retrieval: Rank by similarity score
-    Retrieval->>RAG: Top-k relevant documents
-    RAG->>LLM: Query + Retrieved context
-    LLM->>LLM: Generate contextual response
-    LLM->>RAG: AI response with reasoning
-    RAG->>RAG: Add source attribution
-    RAG->>Output: Response + sources + metadata
-    
-    Note over Vector: Semantic similarity search
-    Note over LLM: Context-grounded generation
-```
+**📚 Company Knowledge Base**: Ask questions about policies, procedures, or documentation
+- *Input*: "What's our vacation policy?"
+- *Output*: Accurate answer with policy references
 
-### Purpose and Functionality
+**🔍 Research Assistant**: Get insights from large document collections  
+- *Input*: "What are the main findings about climate change?"
+- *Output*: Summary with source citations
 
-The RAG node enhances AI capabilities by:
+**💬 Smart Customer Support**: Answer questions using your help documentation
+- *Input*: "How do I reset my password?"
+- *Output*: Step-by-step instructions from your docs
 
-- Combining real-time information retrieval with AI generation for improved accuracy
-- Accessing and searching through large knowledge bases or document collections
-- Providing source-attributed responses with verifiable information
-- Reducing AI hallucinations by grounding responses in actual data
-- Enabling dynamic knowledge integration from web sources and local storage
-
-### Key Features
-
-- **Vector Search Integration**: Uses semantic search to find relevant information before generating responses
-- **Knowledge Base Management**: Connects to multiple knowledge storage systems including vector databases and document stores and vector databases
-- **Source Attribution**: Provides clear references to source materials used in responses
-- **Dynamic Context**: Retrieves up-to-date information for each query
-- **Hybrid Processing**: Combines retrieval accuracy with generative AI flexibility
-
-### Primary Use Cases
-
-- **Knowledge Base Q&A**: Answer questions using company documentation or knowledge bases
-- **Research Assistance**: Combine web research with AI analysis for comprehensive insights
-- **Document Analysis**: Process large document collections with intelligent retrieval
-- **Customer Support**: Provide accurate support responses based on current documentation
-- **Content Verification**: Cross-reference AI responses with authoritative sources
-
-## Parameters & Configuration
-
-### Required Parameters
-
-| Parameter | Type | Description | Example |
-|-----------|------|-------------|---------|
-| `llm` | `LLM Connection` | The language model for response generation | `OpenAI GPT-4` |
-| `vector_store` | `Vector Store Connection` | The knowledge base or vector database to search | `LocalKnowledge` |
-| `query` | `string` | The question or search query to process | `"How do I configure SSL certificates?"` |
-
-### Optional Parameters
-
-| Parameter | Type | Default | Description | Example |
-|-----------|------|---------|-------------|---------|
-| `top_k` | `number` | `5` | Number of relevant documents to retrieve | `3` |
-| `similarity_threshold` | `number` | `0.7` | Minimum similarity score for retrieved documents | `0.8` |
-| `max_context_length` | `number` | `4000` | Maximum characters from retrieved documents | `2000` |
-| `include_metadata` | `boolean` | `true` | Include document metadata in responses | `false` |
-| `rerank_results` | `boolean` | `false` | Re-rank retrieved results for better relevance | `true` |
-
-### Advanced Configuration
-
-```json
-{
-  "llm": "OpenAI GPT-4",
-  "vector_store": "LocalKnowledge",
-  "query": "What are the security best practices for API integration?",
-  "top_k": 4,
-  "similarity_threshold": 0.75,
-  "max_context_length": 3000,
-  "include_metadata": true,
-  "rerank_results": true,
-  "response_template": "Based on the documentation: {context}\n\nAnswer: {response}",
-  "fallback_mode": "llm_only"
-}
-```
-
-## Browser API Integration
-
-### Required Permissions
-
-| Permission | Purpose | Security Impact |
-|------------|---------|-----------------|
-| `storage` | Access local knowledge base and vector storage | Stores and retrieves knowledge base data locally |
-| `activeTab` | Extract content for knowledge base updates | Can read content from active browser tabs |
-
-### Browser APIs Used
-
-- **IndexedDB**: Stores vector embeddings and document chunks locally
-- **Web Workers**: Performs vector similarity calculations without blocking UI
-- **Fetch API**: Retrieves external knowledge sources and updates vector stores
-
-### Cross-Browser Compatibility
-
-| Feature | Chrome | Firefox | Safari | Edge |
-|---------|--------|---------|--------|------|
-| Vector Storage | ✅ Full | ✅ Full | ⚠️ Limited | ✅ Full |
-| Similarity Search | ✅ Full | ✅ Full | ✅ Full | ✅ Full |
-| Knowledge Updates | ✅ Full | ✅ Full | ❌ None | ✅ Full |
-
-### Security Considerations
-
-- **Data Encryption**: Vector embeddings and documents are encrypted in browser storage
-- **Access Control**: Knowledge base access is restricted to authorized workflows
-- **Privacy Protection**: Sensitive information is processed locally when possible
-- **Source Validation**: Retrieved documents are validated for authenticity
-- **Secure Transmission**: All external knowledge retrieval uses HTTPS connections
-
-## Input/Output Specifications
-
-### Input Data Structure
-
-```json
-{
-  "query": "string - The search query or question",
-  "context": "string - Additional context for the query (optional)",
-  "filters": {
-    "document_type": "string - Filter by document type",
-    "date_range": "object - Filter by date range",
-    "source": "string - Filter by source system"
-  },
-  "metadata": {
-    "user_id": "string - User identifier for personalization",
-    "session_id": "string - Session context",
-    "timestamp": "string - Query timestamp"
-  }
-}
-```
-
-### Output Data Structure
-
-```json
-{
-  "answer": "string - The generated response based on retrieved context",
-  "retrieved_documents": [
-    {
-      "content": "string - Relevant document excerpt",
-      "metadata": {
-        "title": "string - Document title",
-        "source": "string - Document source",
-        "url": "string - Source URL if applicable",
-        "timestamp": "string - Document creation/update time"
-      },
-      "similarity_score": "number - Relevance score (0.0-1.0)",
-      "chunk_id": "string - Unique identifier for this content chunk"
-    }
-  ],
-  "confidence": "number - Overall confidence in the response",
-  "metadata": {
-    "timestamp": "2024-01-15T10:30:00Z",
-    "processing_time": 2100,
-    "tokens_used": 450,
-    "retrieval_time": 300,
-    "generation_time": 1800,
-    "source": "rag_node"
-  }
-}
-```
-
-## Practical Examples
-
-### Example 1: Technical Documentation Q&A
-
-**Scenario**: Answer technical questions using company API documentation stored in a knowledge base
-
-**Configuration**:
-```json
-{
-  "llm": "OpenAI GPT-4",
-  "vector_store": "LocalKnowledge",
-  "query": "How do I authenticate API requests using OAuth 2.0?",
-  "top_k": 3,
-  "similarity_threshold": 0.8,
-  "max_context_length": 2500,
-  "include_metadata": true
-}
-```
-
-**Input Data**:
-```json
-{
-  "query": "How do I authenticate API requests using OAuth 2.0?",
-  "filters": {
-    "document_type": "api_documentation",
-    "source": "internal_docs"
-  },
-  "metadata": {
-    "user_id": "dev_user_123",
-    "session_id": "session_456",
-    "timestamp": "2024-01-15T10:00:00Z"
-  }
-}
-```
-
-**Expected Output**:
-```json
-{
-  "answer": "To authenticate API requests using OAuth 2.0, follow these steps:\n\n1. Register your application to obtain client credentials\n2. Request an access token using the authorization code flow\n3. Include the access token in the Authorization header: 'Bearer {token}'\n4. Refresh tokens when they expire using the refresh token\n\nThe token endpoint is https://api.example.com/oauth/token and requires your client_id, client_secret, and authorization code.",
-  "retrieved_documents": [
-    {
-      "content": "OAuth 2.0 Authentication: Register your application to obtain client_id and client_secret. Use authorization code flow for secure token exchange...",
-      "metadata": {
-        "title": "API Authentication Guide",
-        "source": "internal_docs",
-        "url": "https://docs.internal.com/auth",
-        "timestamp": "2024-01-10T15:30:00Z"
-      },
-      "similarity_score": 0.92,
-      "chunk_id": "auth_doc_chunk_1"
-    }
-  ],
-  "confidence": 0.94,
-  "metadata": {
-    "timestamp": "2024-01-15T10:30:00Z",
-    "processing_time": 2100,
-    "tokens_used": 450,
-    "retrieval_time": 300,
-    "generation_time": 1800,
-    "source": "rag_node"
-  }
-}
-```
-
-**Step-by-Step Process**
+## How It Works
 
 ```mermaid
-flowchart TD
-    A[User Query] --> B[RAG Node]
-    B --> C[Generate Query Embedding]
-    C --> D[Vector Store Search]
-    D --> E[Retrieve Similar Documents]
-    E --> F{Filter by Similarity Threshold}
-    F -->|Above Threshold| G[Rank Documents]
-    F -->|Below Threshold| H[Expand Search]
-    G --> I[Select Top-K Documents]
-    I --> J[Combine Query + Context]
-    J --> K[LLM Generation]
-    K --> L[Add Source Attribution]
-    L --> M[Return Enhanced Response]
-    H --> D
+flowchart LR
+    A[❓ Your Question] --> B[🔍 Search Documents]
+    B --> C[📄 Find Relevant Info]
+    C --> D[🤖 AI Analysis]
+    D --> E[✅ Accurate Answer + Sources]
     
-    style B fill:#e1f5fe
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
     style D fill:#fff3e0
-    style K fill:#f3e5f5
-    style M fill:#e8f5e8
+    style E fill:#e8f5e8
 ```
 
-1. Query is converted to vector embedding for semantic search
-2. Vector store is searched for most relevant documentation chunks
-3. Retrieved documents are ranked by similarity and filtered by threshold
-4. LLM generates response using retrieved context and original query
-5. Response includes source attribution and confidence scoring
+**Why RAG is Better Than Regular AI:**
+- 🎯 **More Accurate**: Uses your actual documents, not AI's training data
+- 📚 **Source Citations**: Shows you exactly where answers come from  
+- 🚫 **No Hallucinations**: Can't make up facts because it reads real documents first
+- 🔄 **Always Current**: Uses your latest documents, not outdated training data
 
-### Example 2: Dynamic Knowledge Base Updates
+## Quick Start Example
 
-**Scenario**: Update knowledge base with new web content and answer questions using the latest information
+**Goal**: Create a smart FAQ system for your company docs
 
-**Configuration**:
-```json
-{
-  "llm": "OpenAI GPT-4",
-  "vector_store": "LocalKnowledge",
-  "query": "What are the latest features in version 2.1?",
-  "top_k": 5,
-  "similarity_threshold": 0.7,
-  "rerank_results": true,
-  "response_template": "Based on the latest documentation:\n\n{context}\n\nSummary: {response}"
-}
+**Setup**:
+1. Upload your documents to **Local Knowledge** 
+2. Connect **RAG Node** to search and answer
+3. Ask questions like "What's our return policy?"
+
+**Result**: Get accurate answers with source references, just like having an expert who's read all your documentation.
+
+## Configuration Tips
+
+### Essential Settings
+- **Top K**: Start with 3-5 documents. More isn't always better
+- **Similarity Threshold**: 0.7 is good for most cases, 0.8+ for very specific matches
+- **Include Metadata**: Turn on to see document titles and sources
+
+### Simple Setup Guide
+
+**For General Questions** 💬
+- Search **5 documents** (good balance of speed and coverage)
+- Set similarity to **0.7** (finds related content)
+- Turn on **metadata** (shows document titles and sources)
+
+**For Precise Answers** 🎯
+- Search **3 documents** (faster, more focused)
+- Set similarity to **0.8** (very specific matches only)
+- Use for technical or specific factual questions
+
+**For Research & Exploration** 🔍
+- Search **8 documents** (comprehensive coverage)
+- Set similarity to **0.6** (catches broader connections)
+- Great for discovering related topics and concepts
+
+## Browser Compatibility
+
+Works in all major browsers:
+- ✅ **Chrome**: Full support with fast vector search
+- ✅ **Firefox**: Full support  
+- ⚠️ **Safari**: Limited storage for large document collections
+- ✅ **Edge**: Full support
+
+## Privacy & Security
+
+- 🔒 **Local Storage**: Your documents stay in your browser
+- 🔐 **Encrypted**: Document storage is encrypted for security
+- 🚫 **No External Sharing**: Documents never leave your device
+- ✅ **Source Validation**: Verifies document authenticity
+
+## Step-by-Step Workflow
+
+### 1. Build Your Knowledge Base
+Use **Get All Text From Link** + **Local Knowledge** to create your document collection
+
+### 2. Ask Questions
+Connect **RAG Node** and ask natural language questions
+
+### 3. Get Smart Answers
+Receive answers with source citations and confidence scores
+
+### 4. Verify Sources
+Check the retrieved documents to validate the information
+
+## Try It Yourself
+
+### Example 1: Company FAQ Bot
+
+**What you'll build**: Smart FAQ system that answers questions about your company
+
+**Workflow**:
+```
+Get All Text From Link → Local Knowledge → RAG Node → Edit Fields
 ```
 
-**Workflow Integration**:
+**Setup**:
+1. **Collect Documents**: Use Get All Text to grab your FAQ pages, policies, etc.
+2. **Build Knowledge Base**: Store everything in Local Knowledge
+3. **Configure RAG**: Set similarity_threshold to 0.8 for precise answers
+4. **Ask Questions**: "What's our return policy?" → Get accurate, sourced answers
+
+**Result**: Instant, accurate answers to company questions with source citations.
+
+### Example 2: Research Assistant
+
+**What you'll build**: AI that searches through research papers and gives sourced answers
+
+**Workflow**:
 ```
-GetAllTextFromLink → LocalKnowledge → RAG Node → EditFields
-     ↓                    ↓            ↓           ↓
-  new_content        updated_kb    rag_response  formatted_output
-```
-
-**Complete Example**:
-This pattern enables dynamic knowledge bases that stay current with web content updates, providing accurate responses based on the latest available information.
-
-## Examples
-
-### Basic Usage
-
-This example demonstrates the fundamental usage of the RAGNode node in a typical workflow scenario.
-
-**Configuration:**
-
-```json
-{
-  "prompt": "example_value",
-  "temperature": true
-}
+Upload Documents → Local Knowledge → RAG Node → Download As File
 ```
 
-**Input Data:**
+**Setup**:
+- **Top K**: 5 (to get comprehensive coverage)
+- **Similarity Threshold**: 0.7 (to catch related concepts)
+- **Include Metadata**: Yes (to see paper titles and dates)
 
-```json
-{
-  "data": "sample input data"
-}
-```
+**Result**: Ask "What are the main benefits of renewable energy?" and get a comprehensive answer with citations from your research collection.
 
-**Expected Output:**
+<details>
+<summary>🔍 Advanced Example: Multi-Language Knowledge Base</summary>
 
-```json
-{
-  "result": "processed output data"
-}
-```
+**What you'll build**: Knowledge base that works across multiple languages
 
-### Advanced Usage
+**Setup**:
+- Use embedding models that support multiple languages
+- Store documents in different languages in the same knowledge base
+- RAG will find relevant documents regardless of language
 
-This example shows more complex configuration options and integration patterns.
+**Use case**: International company with documentation in multiple languages.
 
-**Configuration:**
+</details>
 
-```json
-{
-  "parameter1": "advanced_value",
-  "parameter2": false,
-  "advancedOptions": {
-    "option1": "value1",
-    "option2": 100
-  }
-}
-```
 
-### Integration Example
 
-Example showing how this node integrates with other workflow nodes:
+## Best Practices
 
-1. **Previous Node** → **RAGNode** → **Next Node**
-2. Data flows through the workflow with appropriate transformations
-3. Error handling and validation at each step
+### ✅ Do This
+- **Start with quality documents**: Better source material = better answers
+- **Use descriptive document titles**: Helps with source attribution
+- **Test similarity thresholds**: 0.7 is good for most cases, adjust as needed
+- **Keep documents updated**: Remove outdated information regularly
 
-## Integration Patterns
-
-### Common Node Combinations
-
-#### Pattern 1: Knowledge Base Maintenance
-
-- **Nodes**: GetAllTextFromLink → RecursiveCharacterTextSplitter → LocalKnowledge → RAG Node
-- **Use Case**: Continuously update knowledge base with new content and provide Q&A capabilities
-- **Configuration Tips**: Use consistent chunking strategies and update schedules
-
-#### Pattern 2: Multi-Source Research
-
-- **Nodes**: RAG Node → Filter → Basic LLM Chain → EditFields
-- **Use Case**: Initial RAG retrieval followed by additional AI processing and formatting
-- **Data Flow**: Query → Knowledge retrieval → Validation → Enhancement → Output
-
-### Best Practices
-
-- **Performance**: Optimize vector store size and similarity thresholds for speed
-- **Error Handling**: Implement fallback to pure LLM mode when retrieval fails
-- **Data Validation**: Regularly update and validate knowledge base content
-- **Resource Management**: Monitor vector store size and implement cleanup procedures
+### ❌ Avoid This
+- Storing too many irrelevant documents (creates noise)
+- Setting similarity threshold too high (might miss relevant info)
+- Asking questions outside your document scope
+- Ignoring source citations (always verify important answers)
 
 ## Troubleshooting
 
-### Common Issues
+### 🎯 "No Relevant Documents Found"
+**Problem**: RAG can't find documents related to your question  
+**Solution**: Lower similarity_threshold to 0.6 or add more documents to your knowledge base
 
-#### Issue: Poor Retrieval Results
+### 🐌 Slow Search Results
+**Problem**: RAG takes too long to find and process documents  
+**Solution**: Reduce top_k to 3, or clean up your knowledge base to remove irrelevant documents
 
-- **Symptoms**: Retrieved documents are not relevant to the query
-- **Causes**: Low-quality embeddings, inappropriate similarity threshold, or insufficient knowledge base content
-- **Solutions**:
-  1. Lower similarity threshold to retrieve more diverse results
-  2. Improve query phrasing or add context
-  3. Update knowledge base with more relevant content
-  4. Re-embed documents with better embedding models
-- **Prevention**: Regularly evaluate retrieval quality and update embedding strategies
+### 📄 Poor Answer Quality
+**Problem**: Answers don't make sense or miss important information  
+**Solution**: Check if your documents actually contain the information you're asking about
 
-#### Issue: Slow Response Times
+### 💾 "Storage Quota Exceeded"
+**Problem**: Can't add more documents to knowledge base  
+**Solution**: Remove old/irrelevant documents or use document compression
 
-- **Symptoms**: RAG responses take significantly longer than expected
-- **Causes**: Large knowledge base, inefficient vector search, or complex re-ranking
-- **Solutions**:
-  1. Optimize vector store indexing and search algorithms
-  2. Reduce top_k parameter to retrieve fewer documents
-  3. Implement caching for frequently asked questions
-  4. Use more efficient embedding models
-- **Prevention**: Monitor performance metrics and implement optimization strategies
+## Limitations to Know
 
-### Browser-Specific Issues
-
-#### Chrome
-
-- IndexedDB storage limits may affect large knowledge bases; implement data management strategies
-- Use Web Workers for vector calculations to maintain UI responsiveness
-
-#### Firefox
-
-- WebExtension storage API differences may affect vector store performance
-- Ensure proper error handling for storage quota exceeded scenarios
-
-### Performance Issues
-
-- **Memory Usage**: Large vector stores can consume significant browser memory; implement lazy loading
-- **Storage Limits**: Browser storage constraints may limit knowledge base size
-- **Network Latency**: External vector store connections may introduce delays
-
-## Limitations & Constraints
-
-### Technical Limitations
-
-- **Knowledge Base Size**: Browser storage limits constrain local knowledge base capacity
-- **Embedding Quality**: Response accuracy depends on embedding model quality and training
-- **Real-Time Updates**: Knowledge base updates may not be immediately reflected in responses
-
-### Browser Limitations
-
-- **Storage Quotas**: Browser storage limits may restrict knowledge base size
-- **Processing Power**: Complex vector calculations may impact browser performance
-- **Memory Constraints**: Large knowledge bases may cause memory issues in resource-limited environments
-
-### Data Limitations
-
-- **Source Quality**: Response accuracy depends on the quality of knowledge base content
-- **Update Frequency**: Stale knowledge base content may lead to outdated responses
-- **Context Windows**: LLM token limits may restrict the amount of retrieved context used
-
-## Key Terminology
-
-**LLM**: Large Language Model - AI models trained on vast amounts of text data
-
-**RAG**: Retrieval-Augmented Generation - AI technique combining information retrieval with text generation
-
-**Vector Store**: Database optimized for storing and searching high-dimensional vectors
-
-**Embeddings**: Numerical representations of text that capture semantic meaning
-
-**Prompt**: Input text that guides AI model behavior and response generation
-
-**Temperature**: Parameter controlling randomness in AI responses (0.0-1.0)
-
-**Tokens**: Units of text processing used by AI models for input and output measurement
-
-## Search & Discovery
-
-### Keywords
-
-- artificial intelligence
-- machine learning
-- natural language processing
-- LLM
-- AI agent
-- chatbot
-- text generation
-- language model
-
-### Common Search Terms
-
-- "ai"
-- "llm"
-- "gpt"
-- "chat"
-- "generate"
-- "analyze"
-- "understand"
-- "process text"
-- "smart"
-- "intelligent"
-
-### Primary Use Cases
-
-- content analysis
-- text generation
-- question answering
-- document processing
-- intelligent automation
-- knowledge extraction
-
-## Learning Path
-
-### Skill Level: Intermediate
-
-**Prerequisites:**
-- Understand [LocalKnowledge](/integration/builtin/ai/localknowledge)
-- Understand [OllamaEmbeddings](/integration/builtin/ai/ollamaembeddings)
-- Understand [RecursiveCharacterTextSplitter](/integration/builtin/ai/recursivecharactertextsplitter)
-
-## Enhanced Cross-References
-
-### Workflow Patterns
-
-- [AI-Powered Analysis Patterns](/learning/workflow-patterns/ai-analysis-patterns)
-- [Knowledge Base Integration](/learning/workflow-patterns/knowledge-integration)
-- [Intelligent Content Processing](/learning/workflow-patterns/content-processing)
-
-### Related Tutorials
-
-- [Building Your First AI Workflow](/learning/text-courses/beginner/first-ai-workflow)
-- [Advanced AI Integration](/learning/text-courses/advanced/ai-powered-analysis)
-
-### Practical Examples
-
-- [Real-World Use Cases](/learning/examples/)
-- [Integration Examples](/learning/examples/multi-node-automation)
-- [Best Practice Examples](/learning/workflow-patterns/optimization-best-practices)
+- **Document Quality Matters**: RAG is only as good as the documents you feed it
+- **Storage Limits**: Browser storage limits how many documents you can store
+- **Processing Time**: Searching large document collections takes 2-5 seconds
+- **Question Scope**: Can only answer questions about information in your documents
 
 ## Related Nodes
 
-### Similar Functionality
+### 🔄 Similar Nodes
+- **Q&A Node**: Simpler question-answering without document search
+- **Basic LLM Chain**: Basic AI processing without knowledge base
 
-- **QANode**: Use when you need simpler question-answering without complex retrieval
-- **BasicLLMChainNode**: Use when you need basic AI processing without knowledge base integration
+### 🔗 Works Great With
+- **Local Knowledge**: Stores your documents for searching
+- **Recursive Character Text Splitter**: Breaks documents into searchable chunks
+- **Ollama Embeddings**: Creates searchable representations of your documents
 
-### Complementary Nodes
+### 🛠️ Required Setup
+- **Local Knowledge**: Vector database for document storage
+- **Ollama Embeddings**: For creating document embeddings
+- **Ollama or WbeLLM**: AI model for generating answers
 
-- **LocalKnowledge**: Provides the vector store backend for RAG operations
-- **OllamaEmbeddings**: Generates embeddings for vector search functionality
-- **RecursiveCharacterTextSplitter**: Prepares documents for knowledge base ingestion
+## What's Next?
 
-### Required Dependencies
+### 🌱 New to Document Search?
+Start with [Local Knowledge](/integrations/builtin/ai/AIDependencies/vectorStore/LocalKnowledge) to build your first document collection
 
-- **Ollama**: Local LLM provider for AI processing
-- **WbeLLM**: Web-based LLM provider for cloud AI services
-- **LocalKnowledge**: Vector store for knowledge base operations
-- **OllamaEmbeddings**: Local embedding generation for vector search
-
-### Common Workflow Patterns
-
-- **GetAllTextFromLink → RecursiveCharacterTextSplitter → LocalKnowledge → RAGNode**: Build knowledge base from web content for Q&A
-- **RAGNode → Filter → EditFields**: AI-powered information retrieval with validation and formatting
-
-### See Also
-
-- [AI Workflow Builder Tutorial](/advanced-ai/basics/ai-workflow-builder)
-- [Understanding AI Agents](/advanced-ai/examples/understand-agents)
-- [Understanding AI Chains](/advanced-ai/examples/understand-chains)
-- [Understanding Memory](/advanced-ai/examples/understand-memory)
-- [Understanding Tools](/advanced-ai/examples/understand-tools)
-- [Vector Database Guide](/advanced-ai/examples/understand-vector-databases)
-- [LangChain Integration](/advanced-ai/langchain/langchain-n8n)
-- [AI Performance Optimization](/advanced-ai/performance-optimization)
-
-**Decision Guides:**
-- [AI Processing Decision Guide](#ai-processing-decision-guide)
-
-**General Resources:**
-- [Workflow Patterns](/learning/workflow-patterns/)
-- [Integration Examples](/learning/examples/)
-- [Node Types Overview](/integration/builtin/node-types)
-
-## Version History
-
-### Current Version: 1.4.0
-
-- Added re-ranking capabilities for improved retrieval accuracy
-- Enhanced source attribution and metadata handling
-- Improved browser storage optimization
-
-### Previous Versions
-
-- **1.3.0**: Added dynamic knowledge base updates and filtering
-- **1.2.0**: Improved vector search performance and caching
-- **1.1.0**: Enhanced context management and response templates
-- **1.0.0**: Initial release with basic RAG functionality
-
-## Additional Resources
-
-- [RAG Workflow Examples](/advanced-ai/examples/understand-vector-databases)
-- [Vector Store Integration](/advanced-ai/examples/vector-store-website)
-- [Knowledge Base Management](/advanced-ai/examples/intelligent-content-analysis)
-- [AI Performance Optimization](/advanced-ai/performance-optimization)
+### 🚀 Ready for More?
+- Try [Q&A Node](/integrations/builtin/ai/AIAgents/QANode) for simpler question-answering
+- Explore [Vector Database Guide](/advanced-ai/examples/understand-vector-databases)
+- Check out [real-world RAG examples](/learning/examples/)
 
 ---
 
-**Last Updated**: October 19, 2024  
-**Tested With**: Browser Extension v2.1.0  
-**Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested
+**💡 Pro Tip**: Start with a small, focused document collection (10-20 documents) to test your RAG setup, then gradually expand as you get comfortable with the results.

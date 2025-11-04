@@ -1,463 +1,231 @@
 ---
 title: Indexer Node
-description: "Split text into semantic chunks and generate embeddings for vector storage, enabling efficient retrieval-augmented generation (RAG) workflows and semantic search capabilities."
+description: "Break documents into smart chunks and make them searchable - the essential first step for building AI knowledge bases."
 template: doc
-head:
-  - tag: meta
-    name: keywords
-    content: "indexer node, text chunking, embeddings, vector store, RAG, semantic search, text processing, AI retrieval"
 tags: ["AI Agents", "RAG", "Text Processing", "Embeddings", "Vector Storage"]
 ---
 
-# Indexer Node
+# Indexer Node (Document Processor)
 
-## Overview
+## What It Does
 
-The Indexer Node is a specialized AI processing node that transforms raw text into searchable, semantically meaningful chunks with corresponding vector embeddings. This node serves as the foundation for Retrieval-Augmented Generation (RAG) systems, enabling efficient storage and retrieval of textual information based on semantic similarity rather than simple keyword matching.
+The Indexer Node takes long documents and breaks them into smart, searchable chunks. Think of it as a librarian that organizes books into sections and creates a detailed catalog - it makes your documents ready for AI to search through and understand.
 
-### Purpose and Functionality
+## What Goes In, What Comes Out
 
-The Indexer Node performs the critical first step in building knowledge bases for AI applications by:
+### Input
+| Name | Type | Description | Required | Default |
+|------|------|-------------|----------|---------|
+| `inputText` | Text | Document content to process | Yes | - |
+| `embeddingModel` | Text | AI model for creating searchable vectors | Yes | - |
+| `chunkSize` | Number | Maximum characters per chunk | Yes | - |
+| `chunkOverlap` | Number | Characters to overlap between chunks | No | 200 |
+| `separators` | Array | How to split text (paragraphs, sentences) | No | ["\n\n"] |
 
-- Intelligently splitting large text documents into semantically coherent chunks
-- Generating high-dimensional vector embeddings for each text chunk using advanced language models
-- Preparing data for storage in vector databases for efficient similarity search
-- Maintaining metadata and relationships between original documents and their chunks
-- Optimizing chunk sizes and overlap for maximum retrieval effectiveness
+### Output
+| Name | Type | Description |
+|------|------|-------------|
+| `chunks` | Array | Smart text chunks with embeddings |
+| `summary` | Object | Processing statistics and info |
+| `metadata` | Object | Document details and timestamps |
 
-This node is essential for creating robust RAG systems that can provide contextually relevant information to language models, enabling more accurate and informed AI responses.
+## Real-World Examples
 
-### Key Features
+**📚 Knowledge Base Builder**: Turn company docs into searchable AI database
+- *Input*: Employee handbook, policies, procedures
+- *Output*: Searchable chunks ready for Q&A system
 
-- **Intelligent Text Chunking**: Advanced algorithms that respect semantic boundaries and document structure
-- **Multiple Embedding Models**: Support for various embedding models including OpenAI, Sentence Transformers, and custom models
-- **Configurable Chunk Sizes**: Flexible chunk size and overlap settings optimized for different use cases
-- **Metadata Preservation**: Maintains document metadata, source information, and chunk relationships
-- **Batch Processing**: Efficient processing of large documents with progress tracking
-- **Vector Store Integration**: Direct integration with popular vector databases and storage systems
+**🔍 Research Assistant**: Make academic papers searchable by concept
+- *Input*: Research papers and articles  
+- *Output*: Organized chunks that AI can search through
 
-### Primary Use Cases
+**💬 Smart Customer Support**: Index help docs for instant answers
+- *Input*: FAQ pages, user manuals, troubleshooting guides
+- *Output*: Searchable knowledge base for support chatbot
 
-- **Knowledge Base Creation**: Build searchable knowledge bases from documentation, manuals, and reference materials
-- **Document Q&A Systems**: Enable AI systems to answer questions based on large document collections
-- **Content Recommendation**: Create semantic search capabilities for content discovery and recommendation
-- **Research Assistant Tools**: Index academic papers, reports, and research materials for intelligent retrieval
-- **Customer Support Automation**: Index support documentation and FAQs for automated customer assistance
+## How It Works
 
-## Parameters & Configuration
-
-### Required Parameters
-
-| Parameter        | Type     | Description                                                      | Example                    |
-| ---------------- | -------- | ---------------------------------------------------------------- | -------------------------- |
-| `inputText`      | `string` | The raw text content to be chunked and indexed                   | `"{{document.content}}"`   |
-| `embeddingModel` | `string` | The embedding model to use for generating vector representations | `"text-embedding-ada-002"` |
-| `chunkSize`      | `number` | Maximum number of characters per chunk                           | `1000`                     |
-
-### Optional Parameters
-
-| Parameter        | Type      | Default    | Description                                                | Example                |
-| ---------------- | --------- | ---------- | ---------------------------------------------------------- | ---------------------- |
-| `chunkOverlap`   | `number`  | `200`      | Number of characters to overlap between adjacent chunks    | `150`                  |
-| `separators`     | `array`   | `["\n\n"]` | List of separators to use for intelligent chunking         | `["\n\n", "\n", ". "]` |
-| `metadataFields` | `object`  | `{}`       | Additional metadata to attach to each chunk                | `{"source": "manual"}` |
-| `minChunkSize`   | `number`  | `100`      | Minimum chunk size to prevent overly small fragments       | `50`                   |
-| `maxChunks`      | `number`  | `1000`     | Maximum number of chunks to generate (for large documents) | `500`                  |
-| `preserveFormat` | `boolean` | `false`    | Whether to preserve original formatting in chunks          | `true`                 |
-
-### Advanced Configuration
-
-```json
-{
-  "inputText": "{{document.content}}",
-  "embeddingModel": "text-embedding-ada-002",
-  "chunkSize": 1000,
-  "chunkOverlap": 200,
-  "separators": ["\n\n", "\n", ". ", " "],
-  "metadataFields": {
-    "source": "user_manual",
-    "category": "technical_documentation",
-    "version": "2.1.0"
-  },
-  "minChunkSize": 100,
-  "maxChunks": 1000,
-  "preserveFormat": false,
-  "embeddingOptions": {
-    "apiKey": "{{secrets.openai_key}}",
-    "batchSize": 100,
-    "timeout": 30000
-  },
-  "processingOptions": {
-    "removeEmptyChunks": true,
-    "normalizeWhitespace": true,
-    "handleSpecialCharacters": true
-  }
-}
+```mermaid
+flowchart LR
+    A[📄 Long Document] --> B[✂️ Smart Chunking]
+    B --> C[🧠 Create Embeddings]
+    C --> D[📊 Searchable Chunks]
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#e8f5e8
 ```
 
-## Browser API Integration
+**Simple Process:**
+1. **Smart Splitting**: Breaks documents at natural points (paragraphs, sections)
+2. **Create Embeddings**: Converts text chunks into searchable vectors
+3. **Add Metadata**: Keeps track of source, position, and relationships
+4. **Ready for Search**: Chunks are ready for AI knowledge systems
 
-### Required Permissions
+## Configuration Options
 
-The Indexer Node operates within the browser environment and may require specific permissions for optimal functionality:
+### Basic Settings
 
-| Permission   | Purpose                                  | Security Impact                                   |
-| ------------ | ---------------------------------------- | ------------------------------------------------- |
-| `storage`    | Cache embeddings and processing results  | Local storage of processed data for performance   |
-| `background` | Handle long-running embedding operations | Background processing for large document indexing |
+**What to Index** 📄
+- **Input Text**: The content you want to make searchable (from documents, web pages, etc.)
+- **Embedding Model**: The AI model that creates the searchable format (OpenAI recommended)
 
-### Browser APIs Used
+**How to Split Content** ✂️
+- **Chunk Size**: How big each piece should be (1000 characters works well for most content)
+- **Chunk Overlap**: How much pieces should overlap (200 characters prevents losing context)
 
-- **Web Workers API**: For parallel processing of large documents without blocking the main thread
-- **IndexedDB API**: For local caching of embeddings and processed chunks
-- **Fetch API**: For communication with embedding model APIs (OpenAI, Hugging Face, etc.)
-- **Blob API**: For handling large text files and binary embedding data
+**Content Organization** 🏷️
+- **Metadata**: Extra information like document title, date, category
+- **Separators**: Where to split (paragraphs work best for most documents)
 
-### Cross-Browser Compatibility
+## Browser Compatibility
 
-| Feature              | Chrome  | Firefox | Safari     | Edge    |
-| -------------------- | ------- | ------- | ---------- | ------- |
-| Text Chunking        | ✅ Full | ✅ Full | ✅ Full    | ✅ Full |
-| Embedding Generation | ✅ Full | ✅ Full | ✅ Full    | ✅ Full |
-| Web Workers          | ✅ Full | ✅ Full | ✅ Full    | ✅ Full |
-| IndexedDB Storage    | ✅ Full | ✅ Full | ⚠️ Limited | ✅ Full |
+Works in all major browsers:
+- ✅ **Chrome**: Full support with fast processing
+- ✅ **Firefox**: Full support  
+- ⚠️ **Safari**: Limited storage for large documents
+- ✅ **Edge**: Full support
 
-### Security Considerations
+## Privacy & Security
 
-- **API Key Protection**: Embedding model API keys are securely stored and never exposed in client-side code
-- **Data Privacy**: Text content is processed locally when possible, with secure transmission to external APIs
-- **Rate Limiting**: Built-in rate limiting to prevent API abuse and ensure fair usage
-- **Content Validation**: Input text is validated and sanitized to prevent injection attacks
-- **Secure Storage**: Local caching uses encrypted storage mechanisms where available
+- 🔒 **API Keys Protected**: Embedding keys stored securely
+- 🌐 **Secure Processing**: Uses encrypted connections for AI services
+- 💾 **Local Caching**: Processed chunks cached locally for performance
+- ✅ **Content Validation**: Input text validated for security
 
-## Input/Output Specifications
+## Try It Yourself
 
-### Input Data Structure
+### Example 1: Company Knowledge Base
 
-```json
-{
-  "inputText": "string",
-  "documentMetadata": {
-    "title": "string",
-    "source": "string",
-    "author": "string",
-    "created_date": "ISO_8601_string"
-  },
-  "processingOptions": {
-    "chunkSize": "number",
-    "chunkOverlap": "number",
-    "embeddingModel": "string"
-  }
-}
+**What you'll build**: Turn company documents into searchable AI database
+
+**Workflow**:
+```
+Get All Text From Link → Indexer Node → Local Knowledge → RAG Node
 ```
 
-### Output Data Structure
+**Setup**:
+- **Chunk Size**: 1000 (good for general business docs)
+- **Chunk Overlap**: 200 (maintains context)
+- **Embedding Model**: "text-embedding-ada-002"
 
-```json
-{
-  "chunks": [
-    {
-      "id": "string",
-      "text": "string",
-      "embedding": "number[]",
-      "metadata": {
-        "chunk_index": "number",
-        "start_position": "number",
-        "end_position": "number",
-        "source": "string",
-        "created_at": "ISO_8601_string"
-      }
-    }
-  ],
-  "summary": {
-    "total_chunks": "number",
-    "total_characters": "number",
-    "average_chunk_size": "number",
-    "embedding_model": "string",
-    "processing_time": "number_ms"
-  },
-  "metadata": {
-    "document_id": "string",
-    "processing_timestamp": "ISO_8601_string",
-    "node_version": "string"
-  }
-}
+**Result**: Smart, searchable knowledge base ready for employee Q&A system.
+
+### Example 2: Research Paper Collection
+
+**What you'll build**: Searchable academic paper database
+
+**Workflow**:
+```
+Upload Documents → Indexer Node → Local Knowledge → Q&A Node
 ```
 
-## Practical Examples
+**Setup**:
+- **Chunk Size**: 1200 (longer for academic content)
+- **Chunk Overlap**: 300 (important for research context)
+- **Preserve Format**: true (keeps citations and formatting)
 
-### Example 1: Basic Document Indexing
+**Result**: AI-powered research assistant that can find relevant papers and concepts.
 
-**Scenario**: Index a technical documentation file for a customer support RAG system that can answer user questions about product features.
+### Example 3: Customer Support Knowledge Base
 
-**Configuration**:
+**What you'll build**: Smart help documentation system
 
-```json
-{
-  "inputText": "{{document.content}}",
-  "embeddingModel": "text-embedding-ada-002",
-  "chunkSize": 800,
-  "chunkOverlap": 150,
-  "metadataFields": {
-    "source": "product_documentation",
-    "category": "user_guide"
-  }
-}
+**Workflow**:
+```
+Get HTML From Link → Indexer Node → Local Knowledge → RAG Node
 ```
 
-**Input Data**:
+**Setup**:
+- **Chunk Size**: 800 (shorter for quick answers)
+- **Separators**: ["\n\n", "\n", "Q:", "A:"] (respects Q&A format)
 
-```json
-{
-  "inputText": "Product Overview\n\nOur software platform provides comprehensive workflow automation capabilities. Users can create custom workflows using a visual node-based editor...\n\nGetting Started\n\nTo begin using the platform, first create an account and log in to the dashboard. The main interface consists of three primary sections...",
-  "documentMetadata": {
-    "title": "User Guide v2.1",
-    "source": "product_docs",
-    "author": "Documentation Team"
-  }
-}
-```
+**Result**: Instant, accurate customer support powered by your documentation.
 
-**Expected Output**:
+<details>
+<summary>🔍 Advanced Example: Multi-Language Documents</summary>
 
-```json
-{
-  "chunks": [
-    {
-      "id": "chunk_001",
-      "text": "Product Overview\n\nOur software platform provides comprehensive workflow automation capabilities. Users can create custom workflows using a visual node-based editor that supports drag-and-drop functionality.",
-      "embedding": [0.0123, -0.0456, 0.0789, ...],
-      "metadata": {
-        "chunk_index": 0,
-        "start_position": 0,
-        "end_position": 187,
-        "source": "product_documentation",
-        "category": "user_guide",
-        "created_at": "2024-01-15T10:30:00Z"
-      }
-    }
-  ],
-  "summary": {
-    "total_chunks": 15,
-    "total_characters": 12450,
-    "average_chunk_size": 830,
-    "embedding_model": "text-embedding-ada-002",
-    "processing_time": 3200
-  }
-}
-```
+**What you'll build**: Knowledge base supporting multiple languages
 
-**Step-by-Step Process**:
+**Setup**:
+- Use multilingual embedding models
+- Separate chunk processing by language
+- Maintain language metadata for each chunk
 
-1. Input text is analyzed for natural breaking points (paragraphs, sections)
-2. Text is split into chunks respecting semantic boundaries and size limits
-3. Each chunk is sent to the embedding model API for vector generation
-4. Metadata is attached to each chunk including position and source information
-5. Final indexed data structure is returned for storage in vector database
+**Use case**: International company with documentation in multiple languages.
 
-### Example 2: Academic Paper Indexing with Custom Separators
+</details>
 
-**Scenario**: Index research papers for an academic research assistant that needs to maintain citation context and section structure.
 
-**Configuration**:
 
-```json
-{
-  "inputText": "{{paper.fullText}}",
-  "embeddingModel": "sentence-transformers/all-MiniLM-L6-v2",
-  "chunkSize": 1200,
-  "chunkOverlap": 300,
-  "separators": ["\n\n", "\n", ". ", "; "],
-  "metadataFields": {
-    "paper_id": "{{paper.id}}",
-    "authors": "{{paper.authors}}",
-    "journal": "{{paper.journal}}",
-    "publication_year": "{{paper.year}}"
-  },
-  "preserveFormat": true
-}
-```
+## Best Practices
 
-**Workflow Integration**:
+### ✅ Do This
+- **Test chunk sizes**: Start with 1000 characters, adjust based on your content
+- **Use appropriate overlap**: 150-200 characters maintains good context
+- **Choose smart separators**: Respect natural document structure (paragraphs, sections)
+- **Add meaningful metadata**: Include source, category, date for better organization
+- **Process in batches**: Break very large documents into manageable pieces
 
-```
-[PDF Parser] → [Indexer Node] → [Vector Store] → [RAG Query Engine]
-     ↓              ↓              ↓                    ↓
-  raw_text    indexed_chunks   stored_vectors    query_results
-```
-
-**Complete Example**:
-This configuration creates a comprehensive academic paper indexing system that maintains citation context, preserves formatting for mathematical expressions, and enables precise retrieval of relevant research content for AI-powered literature reviews.
-
-## Integration Patterns
-
-### Common Node Combinations
-
-#### Pattern 1: RAG Pipeline Foundation
-
-- **Nodes**: [Document Loader] → [Indexer Node] → [Vector Store Writer]
-- **Use Case**: Building the knowledge base component of RAG systems
-- **Configuration Tips**: Use consistent chunk sizes across your knowledge base for optimal retrieval performance
-
-#### Pattern 2: Multi-Source Knowledge Integration
-
-- **Nodes**: [Multiple Document Sources] → [Content Merger] → [Indexer Node] → [Unified Vector Store]
-- **Use Case**: Combining information from various sources into a single searchable knowledge base
-- **Data Flow**: Merge content while preserving source metadata for attribution
-
-#### Pattern 3: Incremental Index Updates
-
-- **Nodes**: [Change Detector] → [Indexer Node] → [Vector Store Updater]
-- **Use Case**: Maintaining up-to-date knowledge bases with minimal reprocessing
-- **Configuration Tips**: Use document IDs and timestamps to track changes efficiently
-
-### Best Practices
-
-- **Performance**: Use appropriate chunk sizes (800-1200 characters) for optimal embedding quality and retrieval performance
-- **Error Handling**: Implement retry logic for embedding API calls and handle rate limiting gracefully
-- **Data Validation**: Validate input text quality and remove or flag low-quality content before indexing
-- **Resource Management**: Monitor embedding API usage and costs, especially with large document collections
-- **Metadata Strategy**: Design comprehensive metadata schemas to enable effective filtering and attribution
+### ❌ Avoid This
+- Making chunks too small (loses context) or too large (reduces precision)
+- Using zero overlap (can break important connections between chunks)
+- Ignoring document structure (splits sentences or concepts awkwardly)
+- Processing without metadata (makes it hard to track sources later)
 
 ## Troubleshooting
 
-### Common Issues
+### 🚫 "Rate Limit Exceeded" Error
+**Problem**: Too many embedding API requests  
+**Solution**: Reduce batch size, add delays between requests, or upgrade API plan
 
-#### Issue: Embedding API Rate Limits
+### ✂️ Poor Chunk Quality
+**Problem**: Chunks cut off mid-sentence or lose context  
+**Solution**: Adjust chunk size and overlap, customize separators for your document type
 
-- **Symptoms**: "Rate limit exceeded" errors during processing, slow or failed chunk processing
-- **Causes**:
-  - Too many concurrent API requests
-  - Exceeding daily or monthly API quotas
-  - Insufficient API key permissions
-- **Solutions**:
-  1. Reduce batch size in embedding options
-  2. Implement exponential backoff retry logic
-  3. Upgrade API plan or request quota increases
-  4. Process documents in smaller batches
-- **Prevention**: Monitor API usage and implement proper rate limiting from the start
+### 💾 "Out of Memory" Error
+**Problem**: Browser crashes with very large documents  
+**Solution**: Process documents in smaller segments, reduce max chunks limit
 
-#### Issue: Poor Chunk Quality
+### 🐌 Slow Processing
+**Problem**: Indexing takes too long  
+**Solution**: Use smaller documents, reduce chunk overlap, or try local embedding models
 
-- **Symptoms**: Chunks that cut off mid-sentence, lose context, or contain incomplete information
-- **Causes**:
-  - Inappropriate chunk size settings
-  - Poor separator configuration
-  - Complex document formatting
-- **Solutions**:
-  1. Adjust chunk size and overlap parameters
-  2. Customize separators for your document type
-  3. Enable format preservation for structured documents
-  4. Implement custom chunking logic for complex formats
-- **Prevention**: Test chunking with sample documents and validate chunk quality before full processing
+## Limitations to Know
 
-#### Issue: Memory Issues with Large Documents
-
-- **Symptoms**: Browser crashes, slow performance, or out-of-memory errors when processing large documents
-- **Causes**:
-  - Documents too large for browser memory
-  - Inefficient processing algorithms
-  - Too many chunks generated simultaneously
-- **Solutions**:
-  1. Process documents in smaller segments
-  2. Use streaming processing for very large files
-  3. Implement garbage collection between chunks
-  4. Reduce maximum chunk limits
-- **Prevention**: Set appropriate document size limits and implement streaming for large files
-
-### Browser-Specific Issues
-
-#### Chrome
-
-- Excellent performance with Web Workers and IndexedDB
-- May hit memory limits with very large documents (>50MB)
-- Solution: Implement document segmentation for large files
-
-#### Firefox
-
-- Slightly slower embedding processing due to different JavaScript engine optimizations
-- Good overall compatibility with all features
-- Solution: Consider slightly larger batch sizes to compensate for processing overhead
-
-#### Safari
-
-- Limited IndexedDB storage capacity may affect caching
-- Web Workers performance varies across versions
-- Solution: Implement fallback storage mechanisms and test across Safari versions
-
-### Performance Issues
-
-- **Slow Processing**: Optimize chunk sizes, use local embedding models when possible, implement parallel processing
-- **Memory Usage**: Monitor memory consumption, implement streaming for large documents, clear processed data promptly
-- **API Costs**: Use efficient embedding models, implement caching, batch similar content together
-
-## Limitations & Constraints
-
-### Technical Limitations
-
-- **Maximum Document Size**: Individual documents limited to 100MB for browser processing
-- **Embedding Dimensions**: Output vector dimensions depend on chosen embedding model (typically 384-1536 dimensions)
-- **Processing Speed**: Large documents may take several minutes to process depending on size and API response times
-- **Concurrent Processing**: Limited by browser's concurrent request limits and API rate limits
-
-### Browser Limitations
-
-- **Memory Constraints**: Large documents may exceed browser memory limits, especially on mobile devices
-- **Storage Limits**: IndexedDB storage quotas may limit local caching capabilities
-- **Network Dependencies**: Requires stable internet connection for embedding API calls
-
-### Data Limitations
-
-- **Input Size**: Maximum input text size of 100MB per processing operation
-- **Output Format**: Embeddings are stored as floating-point arrays, requiring significant storage space
-- **Processing Time**: Complex documents with many chunks may require extended processing time
-- **Language Support**: Embedding quality depends on model's language training data
+- **Document Size**: Maximum 100MB per document for browser processing
+- **Processing Time**: Large documents may take several minutes to process
+- **API Costs**: Cloud embedding services charge per chunk processed
+- **Memory Usage**: Large documents require significant browser memory
 
 ## Related Nodes
 
-### Similar Functionality
+### 🔗 Works Great With
+- **Local Knowledge**: Stores the processed chunks for searching
+- **RAG Node**: Uses indexed chunks for intelligent question-answering
+- **Recursive Character Text Splitter**: Alternative for simpler text splitting
+- **Ollama Embeddings**: Creates the searchable vectors from text
 
-- **Text Splitter Node**: Basic text chunking without embedding generation
-- **Document Parser Node**: Extracts text from various document formats before indexing
+### 🔄 Essential for RAG Workflows
+Indexer Node is the first step in:
+- Building smart knowledge bases
+- Creating searchable document collections
+- Enabling AI-powered Q&A systems
 
-### Complementary Nodes
+## What's Next?
 
-- **Vector Store Writer**: Stores indexed chunks and embeddings in vector databases
-- **Embedding Query Node**: Retrieves relevant chunks based on semantic similarity
-- **RAG Generator Node**: Uses retrieved chunks to generate contextually informed responses
-- **Document Loader Node**: Loads and preprocesses documents before indexing
+### 🌱 New to Document Processing?
+1. **Start Small**: Try with a single document (5-10 pages)
+2. **Test Chunk Sizes**: Experiment with different chunk sizes for your content
+3. **Build Knowledge Base**: Connect to Local Knowledge to store results
+4. **Add Q&A**: Use RAG Node to create question-answering system
 
-### Workflow Suggestions
-
-- For knowledge base creation, consider combining with: Document Loader, Vector Store Writer, Search Interface
-- For RAG systems, this node works well before: Vector Store Writer, Embedding Query Node, Response Generator
-- For content analysis, follow this node with: Similarity Analyzer, Topic Classifier, Content Summarizer
-
-## Version History
-
-### Current Version: 2.3.0
-
-- Added support for custom embedding models and local processing options
-- Improved chunking algorithms with better semantic boundary detection
-- Enhanced metadata handling and preservation capabilities
-
-### Previous Versions
-
-- **2.2.0**: Introduced batch processing and progress tracking for large documents
-- **2.1.0**: Added support for multiple embedding providers and improved error handling
-- **2.0.0**: Major rewrite with Web Workers support and IndexedDB caching
-- **1.5.0**: Initial release with basic text chunking and OpenAI embedding integration
-
-## Additional Resources
-
-- [Building RAG Systems Tutorial](/learning/tutorials/rag-systems)
-- [Embedding Models Comparison Guide](/learning/guides/embedding-models)
-- [Vector Store Integration Patterns](/integration/patterns/vector-stores)
-- [Text Chunking Best Practices](/learning/best-practices/text-chunking)
-- [RAG Workflow Examples](/learning/examples/rag-workflows)
+### 🚀 Ready for More?
+- Explore [Local Knowledge](/integrations/builtin/ai/AIDependencies/vectorStore/LocalKnowledge) for storing indexed chunks
+- Try [RAG Node](/integrations/builtin/ai/AIAgents/RAGNode) for intelligent document search
+- Check out [embedding examples](/learning/examples/)
 
 ---
 
-**Last Updated**: January 15, 2024  
-**Tested With**: Browser Extension v2.3.0  
-**Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested
+**💡 Pro Tip**: Start with standard settings (1000 character chunks, 200 overlap) and adjust based on your specific content type. Technical docs might need smaller chunks, while narrative content can handle larger ones.

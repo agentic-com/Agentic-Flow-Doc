@@ -22,7 +22,7 @@
     - Include validation checkpoints and expected outcomes
     - _Requirements: 1.1, 1.2, 4.2, 1.3_
 
-- [ ] 3. Simplify existing integration documentation
+- [x] 3. Simplify existing integration documentation
   - [x] 3.1 Rewrite browser extension node documentation in `src/content/docs/integrations/extension/`
     - Transform all `.md` files in `src/content/docs/integrations/extension/` that need to be update
     - Lead with practical use cases instead of technical specifications
@@ -38,18 +38,20 @@
     - Focus on clarity over comprehensiveness
     - _Requirements: 1.2, 5.1, 6.2_
 
-  - [ ] 3.2 Simplify AI integration documentation in `src/content/docs/integrations/builtin/ai/`
-    - Rewrite `IndexerNode.md` and other AI nodes with plain language
+  - [x] 3.2 Simplify AI integration documentation in `src/content/docs/integrations/builtin/ai/`
+    - Rewrite all `.md` files of AI nodes with plain language
     - Keep main content brief - use expandable sections for detailed explanations
     - Include one clear workflow example (not multiple complex ones)
     - Replace technical jargon with accessible explanations
     - Limit page length to prevent overwhelming users
     - _Requirements: 1.1, 1.5, 5.1_
 
-  - [ ] 3.2.1 Create streamlined input/output specifications as first and second sections for AI nodes
-    - Build focused data tables showing only essential fields and one clear example each
+  - [x] 3.2.1 Create concise input/output tables as first and second sections for browser extension nodes when not present
+    - Add simple "What Goes In, What Comes Out" sections with essential data only
+    - Tables should contain Name, type, description, required, and default fields
+    - Focus on clarity over comprehensiveness
     - Create concise troubleshooting tables with top 3-5 common issues only
-    - _Requirements: 1.5, 5.1, 9.1_
+    - _Requirements: 1.2, 1.5, 5.1, 9.1_
 
 - [ ] 4. Transform existing advanced AI content
   - [ ] 4.1 Rewrite `src/content/docs/advanced-ai/examples/` files

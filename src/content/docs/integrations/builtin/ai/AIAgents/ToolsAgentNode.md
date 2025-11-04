@@ -1,118 +1,126 @@
 ---
 title: Tools Agent
-description: "Intelligent AI agent that can dynamically select and execute browser tools and APIs to accomplish complex automation tasks."
+description: "AI that thinks and acts - give it a goal and watch it automatically choose the right tools to get the job done."
 template: doc
 tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artificial Intelligence"]
 ---
 
-# Tools Agent
+# Tools Agent (Smart Automation)
 
-## Overview
+## What It Does
 
-The Tools Agent node represents the most sophisticated AI automation capability in browser workflows. This node creates an intelligent agent that can reason about tasks, select appropriate tools from available browser APIs and workflow nodes, and execute complex multi-step operations autonomously. It bridges the gap between AI reasoning and practical browser automation.
+The Tools Agent is like having an AI assistant that can actually do things. Give it a task like "research competitor pricing" and it will automatically figure out which tools to use, visit websites, extract information, and compile results - all on its own.
 
-### Agent Decision-Making and Tool Execution Flow
+## What Goes In, What Comes Out
+
+### Input
+| Name | Type | Description | Required | Default |
+|------|------|-------------|----------|---------|
+| `llm` | LLM Connection | AI model for reasoning and planning | Yes | - |
+| `task_description` | Text | What you want the agent to accomplish | Yes | - |
+| `available_tools` | Array | Tools the agent can use | Yes | - |
+| `max_iterations` | Number | Maximum steps the agent can take | No | 10 |
+| `planning_mode` | Text | How to approach the task (adaptive/sequential) | No | "adaptive" |
+
+### Output
+| Name | Type | Description |
+|------|------|-------------|
+| `task_result` | Object | Final results of the task |
+| `execution_plan` | Array | Step-by-step log of what the agent did |
+| `agent_reasoning` | Array | AI's decision-making process |
+| `metadata` | Object | Performance stats and timing |
+
+## Real-World Examples
+
+**🔍 Competitive Research**: "Find pricing info from 5 competitor websites"
+- *Agent automatically*: Visits sites, extracts pricing, compares features, creates report
+
+**📊 Market Analysis**: "Research AI startups founded in 2024"  
+- *Agent automatically*: Searches multiple sources, extracts company data, validates information
+
+**📝 Lead Generation**: "Find contact info for tech companies in San Francisco"
+- *Agent automatically*: Searches directories, extracts contacts, validates emails
+
+## How It Works
 
 ```mermaid
-sequenceDiagram
-    participant Task as Task Input
-    participant Agent as Tools Agent
-    participant Planning as AI Planning
-    participant Tools as Available Tools
-    participant Execution as Tool Execution
-    participant Feedback as Result Analysis
+flowchart LR
+    A[🎯 Your Goal] --> B[🤖 AI Planning]
+    B --> C[🛠️ Tool Selection]
+    C --> D[⚡ Execution]
+    D --> E[🔄 Adapt & Continue]
+    E --> F[✅ Final Results]
     
-    Task->>Agent: Task description + constraints
-    Agent->>Planning: Analyze task requirements
-    Planning->>Planning: Create execution plan
-    Planning->>Agent: Step-by-step plan
-    
-    loop For each step
-        Agent->>Agent: Evaluate current state
-        Agent->>Planning: Select best tool for step
-        Planning->>Tools: Choose appropriate tool
-        Tools->>Execution: Execute tool with parameters
-        Execution->>Feedback: Return execution results
-        Feedback->>Agent: Analyze success/failure
-        Agent->>Agent: Update plan if needed
-    end
-    
-    Agent->>Task: Final results + execution log
-    
-    Note over Planning: Dynamic replanning based on results
-    Note over Execution: Error handling & recovery
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#fff3e0
+    style E fill:#f3e5f5
+    style F fill:#e8f5e8
 ```
 
-### Purpose and Functionality
+**What Makes It Smart:**
+- 🧠 **AI Planning**: Breaks complex tasks into logical steps
+- 🎯 **Smart Tool Choice**: Automatically picks the best tool for each step
+- 🔄 **Adaptive**: Changes approach if something doesn't work
+- 📊 **Self-Monitoring**: Tracks progress and adjusts strategy
+- 🛡️ **Error Recovery**: Tries alternative approaches when things fail
 
-The Tools Agent node enables:
+## Quick Start Example
 
-- Autonomous task execution using AI reasoning and tool selection
-- Dynamic integration with browser APIs and extension capabilities
-- Multi-step workflow automation with intelligent decision-making
-- Adaptive problem-solving based on real-time feedback and results
-- Integration of AI planning with practical browser manipulation tools
+**Goal**: Research competitor pricing across 3 websites
 
-### Key Features
-
-- **Tool Selection Intelligence**: AI automatically chooses the best tools for each task
-- **Browser API Integration**: Direct access to browser extension APIs and web manipulation tools
-- **Multi-Step Planning**: Breaks complex tasks into executable steps with tool chains
-- **Error Recovery**: Intelligent error handling and alternative approach selection
-- **Real-Time Adaptation**: Adjusts strategy based on intermediate results and feedback
-
-### Primary Use Cases
-
-- **Complex Web Automation**: Multi-step browser tasks requiring intelligent decision-making
-- **Adaptive Data Extraction**: Dynamic content extraction that adapts to different website structures
-- **Intelligent Form Filling**: Smart form completion with validation and error handling
-- **Research Automation**: Comprehensive research tasks involving multiple sources and tools
-- **Quality Assurance**: Automated testing and validation with intelligent verification
-
-## Parameters & Configuration
-
-### Required Parameters
-
-| Parameter | Type | Description | Example |
-|-----------|------|-------------|---------|
-| `llm` | `LLM Connection` | The language model for agent reasoning and planning | `OpenAI GPT-4` |
-| `task_description` | `string` | Clear description of the task to accomplish | `"Extract contact information from company websites"` |
-| `available_tools` | `array` | List of tools/nodes the agent can use | `["GetHTMLFromLink", "EditFields", "Filter"]` |
-
-### Optional Parameters
-
-| Parameter | Type | Default | Description | Example |
-|-----------|------|---------|-------------|---------|
-| `max_iterations` | `number` | `10` | Maximum number of tool execution steps | `5` |
-| `planning_mode` | `string` | `"adaptive"` | Planning strategy: adaptive, sequential, parallel | `"sequential"` |
-| `error_tolerance` | `string` | `"medium"` | How to handle errors: strict, medium, permissive | `"strict"` |
-| `output_format` | `string` | `"structured"` | Expected output format: structured, natural, custom | `"natural"` |
-| `timeout` | `number` | `300000` | Maximum execution time in milliseconds | `180000` |
-
-### Advanced Configuration
-
+**Setup**:
 ```json
 {
-  "llm": "OpenAI GPT-4",
-  "task_description": "Research and compile information about AI startups founded in 2024",
-  "available_tools": [
-    "GetAllTextFromLink",
-    "GetHTMLFromLink", 
-    "EditFields",
-    "Filter",
-    "BasicLLMChain",
-    "DownloadAsFile"
-  ],
+  "task_description": "Visit competitor websites and extract pricing information",
+  "available_tools": ["GetAllTextFromLink", "BasicLLMChain", "EditFields"],
+  "max_iterations": 8
+}
+```
+
+**What the Agent Does Automatically**:
+1. Plans the research approach
+2. Visits each competitor website
+3. Extracts pricing information
+4. Structures the data consistently
+5. Compiles a comparison report
+
+**Result**: Complete competitive analysis without manual intervention.
+
+## Configuration Tips
+
+### Essential Settings
+- **Task Description**: Be specific about what you want - "Extract pricing from 3 competitor websites" vs "research competitors"
+- **Available Tools**: Only include tools the agent actually needs for the task
+- **Max Iterations**: Start with 5-10 steps, increase if needed for complex tasks
+
+### Common Configurations
+
+**For Research Tasks**:
+```json
+{
+  "available_tools": ["GetAllTextFromLink", "BasicLLMChain", "EditFields"],
   "max_iterations": 8,
-  "planning_mode": "adaptive",
-  "error_tolerance": "medium",
-  "output_format": "structured",
-  "timeout": 240000,
-  "tool_preferences": {
-    "GetAllTextFromLink": "preferred_for_content_extraction",
-    "BasicLLMChain": "use_for_analysis_only"
-  },
-  "success_criteria": "Complete information for at least 5 companies"
+  "planning_mode": "adaptive"
+}
+```
+
+**For Data Collection**:
+```json
+{
+  "available_tools": ["GetHTMLFromLink", "EditFields", "Filter"],
+  "max_iterations": 6,
+  "error_tolerance": "medium"
+}
+```
+
+**For Complex Analysis**:
+```json
+{
+  "available_tools": ["GetAllTextFromLink", "BasicLLMChain", "RAGNode", "EditFields"],
+  "max_iterations": 12,
+  "planning_mode": "adaptive"
 }
 ```
 
@@ -572,100 +580,3 @@ Example showing how this node integrates with other workflow nodes:
 - intelligent automation
 - knowledge extraction
 
-## Learning Path
-
-### Skill Level: Intermediate
-
-**Prerequisites:**
-- Understand [BasicLLMChainNode](/integration/builtin/ai/basicllmchainnode)
-- Understand [Http-Request](/integration/builtin/ai/http-request)
-
-## Enhanced Cross-References
-
-### Workflow Patterns
-
-- [AI-Powered Analysis Patterns](/learning/workflow-patterns/ai-analysis-patterns)
-- [Knowledge Base Integration](/learning/workflow-patterns/knowledge-integration)
-- [Intelligent Content Processing](/learning/workflow-patterns/content-processing)
-
-### Related Tutorials
-
-- [Building Your First AI Workflow](/learning/text-courses/beginner/first-ai-workflow)
-- [Advanced AI Integration](/learning/text-courses/advanced/ai-powered-analysis)
-
-### Practical Examples
-
-- [Real-World Use Cases](/learning/examples/)
-- [Integration Examples](/learning/examples/multi-node-automation)
-- [Best Practice Examples](/learning/workflow-patterns/optimization-best-practices)
-
-## Related Nodes
-
-### Similar Functionality
-
-- **BasicLLMChainNode**: Use when you need different approach to similar functionality
-- **RAGNode**: Use when you need different approach to similar functionality
-
-### Complementary Nodes
-
-- **Http-Request**: Works well together in workflows
-- **Code**: Works well together in workflows
-- **GetAllTextFromLink**: Works well together in workflows
-
-### Required Dependencies
-
-- **Ollama**: Local LLM provider for AI processing
-- **WbeLLM**: Web-based LLM provider for cloud AI services
-
-### Common Workflow Patterns
-
-- **ToolsAgentNode → Http-Request → EditFields**: Common integration pattern
-- **GetAllTextFromLink → ToolsAgentNode → Code**: Common integration pattern
-
-### See Also
-
-- [AI Workflow Builder Tutorial](/advanced-ai/basics/ai-workflow-builder)
-- [Understanding AI Agents](/advanced-ai/examples/understand-agents)
-- [Understanding AI Chains](/advanced-ai/examples/understand-chains)
-- [Understanding Memory](/advanced-ai/examples/understand-memory)
-- [Understanding Tools](/advanced-ai/examples/understand-tools)
-- [Vector Database Guide](/advanced-ai/examples/understand-vector-databases)
-- [LangChain Integration](/advanced-ai/langchain/langchain-n8n)
-- [AI Performance Optimization](/advanced-ai/performance-optimization)
-
-**Decision Guides:**
-- [AI Processing Decision Guide](#ai-processing-decision-guide)
-
-**General Resources:**
-- [Workflow Patterns](/learning/workflow-patterns/)
-- [Integration Examples](/learning/examples/)
-- [Node Types Overview](/integration/builtin/node-types)
-
-## Version History
-
-### Current Version: 1.5.0
-
-- Added adaptive planning modes and improved tool selection
-- Enhanced error recovery and alternative strategy selection
-- Improved browser compatibility and performance optimization
-
-### Previous Versions
-
-- **1.4.0**: Added multi-tab management and cross-tab communication
-- **1.3.0**: Improved agent reasoning and decision logging
-- **1.2.0**: Enhanced tool integration and execution monitoring
-- **1.1.0**: Added error tolerance settings and timeout management
-- **1.0.0**: Initial release with basic agent functionality
-
-## Additional Resources
-
-- [Tools Agent Examples](/advanced-ai/examples/understand-agents)
-- [Agent Workflow Patterns](/advanced-ai/examples/end-to-end-ai-workflows)
-- [Browser Automation Guide](/advanced-ai/examples/intelligent-web-automation)
-- [AI Performance Optimization](/advanced-ai/performance-optimization)
-
----
-
-**Last Updated**: October 19, 2024  
-**Tested With**: Browser Extension v2.1.0  
-**Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

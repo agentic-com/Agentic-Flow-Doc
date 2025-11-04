@@ -1,67 +1,66 @@
 ---
 title: Ollama Embeddings
-description: "Local embedding generation using Ollama models for semantic search and vector operations in browser workflows."
+description: "Convert text into searchable vectors locally - the foundation for smart document search and AI knowledge bases."
 template: doc
 tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artificial Intelligence"]
 ---
 
-# Ollama Embeddings
+# Ollama Embeddings (Text to Vectors)
 
-## Prerequisites
+## What It Does
 
-Before using this node, ensure you have:
+Ollama Embeddings converts text into numerical vectors (embeddings) that capture meaning and context. Think of it as creating a "fingerprint" for text that allows AI to understand similarity and relationships between different pieces of content.
 
-- Basic understanding of workflow creation in `Agentic Workflow Studio`
-- Appropriate browser permissions configured (if applicable)
-- Required dependencies installed and configured
+## What Goes In, What Comes Out
 
-## Overview
+### Input
+| Name | Type | Description | Required | Default |
+|------|------|-------------|----------|---------|
+| `text` | Text | Content to convert to vectors | Yes | - |
+| `model` | Text | Embedding model to use | Yes | - |
+| `ollama_url` | Text | Ollama server location | No | "http://localhost:11434" |
 
-The Ollama Embeddings node provides local embedding generation capabilities using Ollama's embedding models. This node enables semantic search, document similarity, and vector operations directly within browser workflows without requiring external API services, ensuring privacy and reducing latency for embedding-based AI operations.
+### Output
+| Name | Type | Description |
+|------|------|-------------|
+| `embedding` | Array | Vector representation of the text |
+| `model_info` | Object | Details about the embedding model |
+| `processing_time` | Number | Time taken in milliseconds |
 
-### Embedding Generation Process
+## Why Use Local Embeddings?
+
+**🔒 Complete Privacy**: Text processing happens locally on your machine  
+**💰 No API Costs**: No per-request charges or usage limits  
+**⚡ Fast Processing**: No network delays, just local computation  
+**🌐 Works Offline**: Generate embeddings without internet connection  
+**🎛️ Full Control**: Choose exactly which embedding models to use
+
+## How It Works
 
 ```mermaid
-sequenceDiagram
-    participant Input as Text Input
-    participant Embeddings as Ollama Embeddings Node
-    participant Server as Ollama Server
-    participant Model as Embedding Model
-    participant Cache as Embedding Cache
-    participant Output as Vector Output
+flowchart LR
+    A[📝 Your Text] --> B[🧠 Ollama Model]
+    B --> C[🔢 Vector Numbers]
+    C --> D[💾 Ready for Search]
     
-    Input->>Embeddings: Text content for embedding
-    Embeddings->>Cache: Check for cached embedding
-    
-    alt Cache Hit
-        Cache->>Embeddings: Return cached vector
-    else Cache Miss
-        Embeddings->>Server: Request embedding generation
-        Server->>Model: Process text with embedding model
-        Model->>Model: Generate vector representation
-        Model->>Server: Return embedding vector
-        Server->>Embeddings: Embedding response
-        Embeddings->>Cache: Store for future use
-    end
-    
-    Embeddings->>Embeddings: Normalize vector (optional)
-    Embeddings->>Output: Formatted embedding + metadata
-    
-    Note over Server,Model: Local embedding generation
-    Note over Cache: Performance optimization
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#e8f5e8
 ```
 
-### Purpose and Functionality
+**Simple Process:**
+1. **Input Text**: Give it any text content
+2. **AI Processing**: Ollama converts text to numbers that capture meaning
+3. **Vector Output**: Get a list of numbers that represents your text
+4. **Search Ready**: These vectors can be used to find similar content
 
-The Ollama Embeddings node enables:
+## Perfect For
 
-- Local generation of text embeddings using Ollama's embedding models
-- Semantic similarity calculations and document comparison
-- Vector operations for knowledge base and search functionality
-- Privacy-focused embedding generation without external API dependencies
-- Integration with vector stores and RAG (Retrieval-Augmented Generation) systems
-
-### Key Features
+**📚 Building Knowledge Bases**: Convert documents to searchable format  
+**🔍 Finding Similar Content**: Compare documents by meaning, not just keywords  
+**🤖 AI Search Systems**: Essential component for smart document search  
+**📊 Content Organization**: Group similar content automatically
 
 - **Local Processing**: Generate embeddings locally using Ollama without external API calls
 - **Multiple Model Support**: Access multiple embedding models including sentence-transformers and domain-specific models through Ollama
@@ -508,81 +507,3 @@ Example showing how this node integrates with other workflow nodes:
 - intelligent automation
 - knowledge extraction
 
-## Learning Path
-
-### Skill Level: Advanced
-
-## Enhanced Cross-References
-
-### Workflow Patterns
-
-- [AI-Powered Analysis Patterns](/learning/workflow-patterns/ai-analysis-patterns)
-- [Knowledge Base Integration](/learning/workflow-patterns/knowledge-integration)
-- [Intelligent Content Processing](/learning/workflow-patterns/content-processing)
-
-### Related Tutorials
-
-- [Building Your First AI Workflow](/learning/text-courses/beginner/first-ai-workflow)
-- [Advanced AI Integration](/learning/text-courses/advanced/ai-powered-analysis)
-
-### Practical Examples
-
-- [Real-World Use Cases](/learning/examples/)
-- [Integration Examples](/learning/examples/multi-node-automation)
-- [Best Practice Examples](/learning/workflow-patterns/optimization-best-practices)
-
-## Related Nodes
-
-### Complementary Nodes
-
-- **LocalKnowledge**: Works well together in workflows
-- **RAGNode**: Works well together in workflows
-
-### Common Workflow Patterns
-
-- **OllamaEmbeddings → LocalKnowledge → RAGNode**: Common integration pattern
-
-### See Also
-
-- [AI Workflow Builder Tutorial](/advanced-ai/basics/ai-workflow-builder)
-- [Understanding AI Agents](/advanced-ai/examples/understand-agents)
-- [Understanding AI Chains](/advanced-ai/examples/understand-chains)
-- [Understanding Memory](/advanced-ai/examples/understand-memory)
-- [Understanding Tools](/advanced-ai/examples/understand-tools)
-- [Vector Database Guide](/advanced-ai/examples/understand-vector-databases)
-- [LangChain Integration](/advanced-ai/langchain/langchain-n8n)
-- [AI Performance Optimization](/advanced-ai/performance-optimization)
-
-**Decision Guides:**
-- [AI Processing Decision Guide](#ai-processing-decision-guide)
-
-**General Resources:**
-- [Workflow Patterns](/learning/workflow-patterns/)
-- [Integration Examples](/learning/examples/)
-- [Node Types Overview](/integration/builtin/node-types)
-
-## Version History
-
-### Current Version: 1.2.0
-
-- Added batch processing support for improved performance
-- Enhanced caching mechanisms and error handling
-- Improved Ollama server connection management
-
-### Previous Versions
-
-- **1.1.0**: Added embedding normalization and dimension configuration
-- **1.0.0**: Initial release with basic Ollama embedding integration
-
-## Additional Resources
-
-- [Ollama Documentation](https://ollama.com/docs)
-- [Vector Database Integration](/advanced-ai/examples/understand-vector-databases)
-- [RAG Workflow Examples](/advanced-ai/examples/vector-store-website)
-- [Local AI Setup Guide](/advanced-ai/langchain/overview)
-
----
-
-**Last Updated**: October 19, 2024  
-**Tested With**: Browser Extension v2.1.0, Ollama v0.1.32  
-**Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

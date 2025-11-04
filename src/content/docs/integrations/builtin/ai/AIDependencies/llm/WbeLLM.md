@@ -1,15 +1,40 @@
 ---
 title: Web LLM
-description: "Browser-native AI processing using WebLLM for completely local, privacy-focused language model operations without external dependencies."
+description: "Run AI models directly in your browser - no servers, no internet required, complete privacy and instant responses."
 template: doc
 tags: ["AI", "LLM", "Machine Learning", "Natural Language Processing", "Artificial Intelligence"]
 ---
 
-# Web LLM
+# Web LLM (Browser AI)
 
-## Overview
+## What It Does
 
-The Web LLM node provides cutting-edge browser-native AI processing using WebLLM technology, enabling Large Language Models to run entirely within the browser environment. This node offers the ultimate in privacy and accessibility by eliminating all external dependencies while providing powerful AI capabilities directly in the user's browser.
+Web LLM runs AI models completely in your browser using cutting-edge WebAssembly technology. No external servers, no internet required after initial setup, and complete privacy - your data never leaves your browser.
+
+## What Goes In, What Comes Out
+
+### Input
+| Name | Type | Description | Required | Default |
+|------|------|-------------|----------|---------|
+| `model` | Text | AI model to use | Yes | - |
+| `prompt` | Text | Instructions for the AI | Yes | - |
+| `temperature` | Number | How creative the AI should be (0-1) | No | 0.7 |
+| `max_tokens` | Number | Maximum response length | No | 1000 |
+
+### Output
+| Name | Type | Description |
+|------|------|-------------|
+| `response` | Text | AI-generated response |
+| `processing_time` | Number | Time taken in milliseconds |
+| `model_info` | Object | Details about the model used |
+
+## Why Choose Browser AI?
+
+**🔒 Ultimate Privacy**: AI runs entirely in your browser - data never leaves your device  
+**🌐 Works Offline**: No internet needed after initial model download  
+**⚡ Instant Responses**: No network delays, just local processing speed  
+**💰 Zero Costs**: No API fees or usage charges  
+**🚀 Always Available**: Works even when external AI services are down
 
 ### Browser-Native AI Architecture
 
@@ -491,90 +516,3 @@ Example showing how this node integrates with other workflow nodes:
 - intelligent automation
 - knowledge extraction
 
-## Learning Path
-
-### Skill Level: Beginner
-
-## Enhanced Cross-References
-
-### Workflow Patterns
-
-- [AI-Powered Analysis Patterns](/learning/workflow-patterns/ai-analysis-patterns)
-- [Knowledge Base Integration](/learning/workflow-patterns/knowledge-integration)
-- [Intelligent Content Processing](/learning/workflow-patterns/content-processing)
-
-### Related Tutorials
-
-- [Building Your First AI Workflow](/learning/text-courses/beginner/first-ai-workflow)
-- [Advanced AI Integration](/learning/text-courses/advanced/ai-powered-analysis)
-
-### Practical Examples
-
-- [Real-World Use Cases](/learning/examples/)
-- [Integration Examples](/learning/examples/multi-node-automation)
-- [Best Practice Examples](/learning/workflow-patterns/optimization-best-practices)
-
-## Related Nodes
-
-### Similar Functionality
-
-- **Ollama**: Use when you need different approach to similar functionality
-
-### Complementary Nodes
-
-- **BasicLLMChainNode**: Works well together in workflows
-- **RAGNode**: Works well together in workflows
-- **QANode**: Works well together in workflows
-- **ToolsAgentNode**: Works well together in workflows
-
-### Common Workflow Patterns
-
-- **WbeLLM → BasicLLMChainNode → Http-Request**: Common integration pattern
-- **WbeLLM → QANode → EditFields**: Common integration pattern
-
-### See Also
-
-- [AI Workflow Builder Tutorial](/advanced-ai/basics/ai-workflow-builder)
-- [Understanding AI Agents](/advanced-ai/examples/understand-agents)
-- [Understanding AI Chains](/advanced-ai/examples/understand-chains)
-- [Understanding Memory](/advanced-ai/examples/understand-memory)
-- [Understanding Tools](/advanced-ai/examples/understand-tools)
-- [Vector Database Guide](/advanced-ai/examples/understand-vector-databases)
-- [LangChain Integration](/advanced-ai/langchain/langchain-n8n)
-- [AI Performance Optimization](/advanced-ai/performance-optimization)
-
-**Decision Guides:**
-- [AI Processing Decision Guide](#ai-processing-decision-guide)
-
-**General Resources:**
-- [Workflow Patterns](/learning/workflow-patterns/)
-- [Integration Examples](/learning/examples/)
-- [Node Types Overview](/integration/builtin/node-types)
-
-## Version History
-
-### Current Version: 1.4.0
-
-- Added WebGPU acceleration support for improved performance
-- Enhanced model loading and caching mechanisms
-- Improved error handling and fallback strategies
-
-### Previous Versions
-
-- **1.3.0**: Added streaming response support and performance monitoring
-- **1.2.0**: Improved memory management and model selection
-- **1.1.0**: Enhanced browser compatibility and error handling
-- **1.0.0**: Initial release with basic WebLLM integration
-
-## Additional Resources
-
-- [WebLLM Official Documentation](https://webllm.mlc.ai/)
-- [Browser AI Performance Guide](/advanced-ai/browser-ai-limitations)
-- [Privacy-Focused AI Workflows](/usage/licenses-and-privacy/privacy-security/privacy)
-- [Offline AI Applications](/advanced-ai/examples/end-to-end-ai-workflows)
-
----
-
-**Last Updated**: October 19, 2024  
-**Tested With**: Browser Extension v2.1.0, WebLLM v0.2.19  
-**Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested

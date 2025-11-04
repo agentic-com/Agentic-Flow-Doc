@@ -1,53 +1,38 @@
 ---
 title: Character Text Splitter
-description: "Split text into chunks using character-based separators with precise character count control, powered by LangChain's CharacterTextSplitter for consistent text processing in AI workflows."
+description: "Simple text splitter that breaks documents into equal-sized pieces - perfect for basic document processing."
 template: doc
-head:
-  - tag: meta
-    name: keywords
-    content: "character text splitter, langchain, text chunking, character separator, text processing, AI preprocessing, document splitting"
-tags: ["AI Dependencies", "Text Processing", "LangChain", "Text Splitting"]
+tags: ["AI Dependencies", "Text Processing", "Text Splitting"]
 ---
 
-# Character Text Splitter
+# Character Text Splitter (Simple Document Splitter)
 
-## Overview
+## What It Does
 
-The Character Text Splitter is a fundamental text processing node that leverages LangChain's CharacterTextSplitter to divide large text documents into manageable chunks based on character separators. This node provides precise control over chunk sizes measured by character count, making it ideal for preparing text data for AI processing, embedding generation, and other downstream text analysis tasks.
+The Character Text Splitter breaks long documents into smaller, equal-sized pieces. It's like cutting a long article into pages - each piece is roughly the same size, making it easier for AI to process.
 
-### Purpose and Functionality
+## What Goes In, What Comes Out
 
-The Character Text Splitter performs essential text preprocessing by:
+### Input
+| Name | Type | Description | Required | Default |
+|------|------|-------------|----------|---------|
+| `text` | Text | Document to split | Yes | - |
+| `chunk_size` | Number | Size of each piece | Yes | - |
+| `separator` | Text | Where to split (like paragraphs) | No | "\n\n" |
+| `chunk_overlap` | Number | How much pieces should overlap | No | 0 |
 
-- Splitting text using configurable character-based separators (default: "\n\n")
-- Measuring and controlling chunk sizes by exact character count
-- Maintaining text coherence by respecting natural document boundaries
-- Providing consistent chunking behavior across different document types
-- Preparing text data for embedding models, language models, and other AI processing nodes
-- Ensuring chunks fit within token limits of various AI models and APIs
+### Output
+| Name | Type | Description |
+|------|------|-------------|
+| `chunks` | Array | Text pieces ready for AI processing |
+| `chunk_count` | Number | How many pieces were created |
 
-This node is crucial for text preprocessing pipelines where precise character-level control is needed, particularly when working with structured documents or when exact chunk sizes are required for downstream processing.
+## Perfect For
 
-### Key Features
-
-- **LangChain Integration**: Built on the proven LangChain CharacterTextSplitter for reliable text processing
-- **Character-Based Measurement**: Precise chunk size control using character count rather than tokens or words
-- **Configurable Separators**: Flexible separator configuration for different document types and structures
-- **Overlap Control**: Configurable chunk overlap to maintain context between adjacent chunks
-- **Boundary Respect**: Intelligent splitting that respects natural text boundaries when possible
-- **Performance Optimized**: Efficient processing of large documents with minimal memory overhead
-
-### Primary Use Cases
-
-- **Document Preprocessing**: Prepare large documents for AI processing by splitting into manageable chunks
-- **Embedding Pipeline**: Create appropriately sized text chunks for embedding model input requirements
-- **Content Analysis**: Split content for systematic analysis, classification, or sentiment processing
-- **RAG System Preparation**: Prepare knowledge base documents for retrieval-augmented generation systems
-- **API Input Formatting**: Ensure text chunks meet API character or token limits for various AI services
-
-## Parameters & Configuration
-
-### Required Parameters
+**📄 Simple Document Processing**: When you just need to break text into equal pieces  
+**⚡ Quick Setup**: Fastest way to prepare documents for AI  
+**📊 Consistent Sizing**: All pieces are roughly the same size  
+**🔧 Basic Workflows**: Good starting point for document processing
 
 | Parameter   | Type     | Description                              | Example               |
 | ----------- | -------- | ---------------------------------------- | --------------------- |
@@ -409,30 +394,4 @@ This configuration is ideal for processing structured data files where maintaini
 - For RAG systems, this node works well before: Embedding Generator, Vector Store Writer, Similarity Search
 - For content analysis, follow this node with: Text Analyzer, Sentiment Processor, Topic Classifier
 
-## Version History
 
-### Current Version: 2.1.0
-
-- Enhanced separator handling with better Unicode support
-- Improved memory efficiency for large document processing
-- Added metadata preservation and enrichment capabilities
-
-### Previous Versions
-
-- **2.0.0**: Integration with LangChain CharacterTextSplitter for improved reliability
-- **1.5.0**: Added configurable overlap and whitespace handling options
-- **1.0.0**: Initial release with basic character-based text splitting functionality
-
-## Additional Resources
-
-- [Text Splitting Best Practices Guide](/learning/guides/text-splitting-strategies)
-- [LangChain Integration Documentation](/integration/langchain/text-splitters)
-- [RAG System Building Tutorial](/learning/tutorials/building-rag-systems)
-- [Document Processing Workflows](/learning/examples/document-processing)
-- [AI Text Preprocessing Patterns](/learning/patterns/text-preprocessing)
-
----
-
-**Last Updated**: January 15, 2024  
-**Tested With**: Browser Extension v2.1.0  
-**Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested
