@@ -41,5 +41,5 @@ bun astro ...        # Run Astro CLI commands
 ```
 
 ## Environment Variables
-- `VITE_SITE_URL` - Site URL for production builds
+- `PUBLIC_SITE_URL` - Site URL for production builds
 - `VITE_CONTENT_SET_ID` - Feedback component configuration

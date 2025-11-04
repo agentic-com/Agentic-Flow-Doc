@@ -2,6 +2,10 @@
 title: "[Node Name]"
 description: "[Brief, specific description of node functionality and primary use case - avoid generic templates]"
 template: doc
+head:
+  - tag: meta
+    name: keywords
+    content: "[comma-separated list of keywords]"
 ---
 
 # [Node Name]

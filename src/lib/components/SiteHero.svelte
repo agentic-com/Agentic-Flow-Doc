@@ -1,8 +1,33 @@
-<script>
+<script lang="ts">
   import GridPattern from "$lib/components/sv-cn/magic/backgrounds/GridPattern.svelte";
   import Button from "$lib/components/ui/sv-cn/button/button.svelte";
   import { cn } from "$lib/utils";
   import ArrowRight from "@lucide/svelte/icons/arrow-right";
+
+  const {
+    topCTA,
+    title,
+    subtitle,
+    description,
+    button1,
+    button2,
+  }: {
+    topCTA: {
+      href: string;
+      value: string;
+    };
+    title: string;
+    subtitle: string;
+    description: string;
+    button1: {
+      href: string;
+      value: string;
+    };
+    button2: {
+      href: string;
+      value: string;
+    };
+  } = $props();
 </script>
 
 <div>
@@ -21,7 +46,7 @@
           <div class="text-center sm:mx-auto lg:mr-auto lg:mt-0">
             <div>
               <a
-                href="/docs/mcp"
+                href={topCTA.href}
                 class="hover:bg-muted backdrop-blur-xs dark:hover:border-t-border bg-muted dark:bg-muted/60 group mx-auto flex w-fit items-center gap-2 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950"
               >
                 <span class="text-foreground text-sm flex items-center gap-1.5">
@@ -44,7 +69,7 @@
                       stroke-linejoin="round"
                     ></path>
                   </svg>
-                  Introducing MCP Server
+                  {topCTA.value}
                 </span>
                 <div
                   class="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500"
@@ -136,14 +161,14 @@
                   ></path></svg
                 >
               </div>
-              Svelte Shadcn Blocks<br />
-              100+ UI & Marketing Blocks
+
+              {title}<br />
+              {subtitle}
             </h1>
             <p
               class="mx-auto mt-6 md:mt-10 max-w-3xl text-balance text-sm md:text-lg text-muted-foreground"
             >
-              Speed up your workflow with responsive,<br /> Pre-built UI blocks designed
-              for marketing websites.
+              {description}
             </p>
 
             <div
@@ -153,18 +178,22 @@
                 class="bg-foreground border p-0.5"
                 style="border-radius: calc(0.5rem + 0.125rem + 4px);"
               > -->
-              <Button href="/usage/getting-started/quick-starts/quick-intro/" size="lg" class="px-5 text-base">
-                <span class="text-nowrap">Get Started</span>
+              <Button
+                href={button1.href}
+                size="lg"
+                class="px-5 text-base"
+              >
+                <span class="text-nowrap">{button1.value}</span>
               </Button>
               <!-- </div> -->
 
               <Button
-                href="/usage/getting-started/quick-starts/long-intro/"
+                href={button2.href}
                 variant="outline"
                 size="lg"
                 class="border-dashed px-5 dark:border-primary/40 border-primary bg-muted shadow-md"
               >
-                <span class="text-nowrap">Install Extension</span>
+                <span class="text-nowrap">{button2.value}</span>
               </Button>
             </div>
           </div>

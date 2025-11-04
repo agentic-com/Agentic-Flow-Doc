@@ -4,25 +4,46 @@ description: Build AI-powered workflows directly in your browser with intelligen
 template: splash
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-import SiteHero from '$lib/components/SiteHero.svelte';
-import "@styles/home.css"
+import { Card, CardGrid } from "@astrojs/starlight/components";
+import SiteHero from "$lib/components/SiteHero.svelte";
+import "@styles/home.css";
+import { PUBLIC_SITE_URL, PUBLIC_CHROME_EXTENSION_URL } from "astro:env/client";
 
-<SiteHero />
+<SiteHero
+  topCTA={{
+    href: PUBLIC_SITE_URL,
+    value: "Visit our official Website",
+  }}
+  title="Agentic Workflow Studio"
+  subtitle="Create intelligent workflows"
+  description="Build AI-powered workflows directly in your browser with intelligent automation and context manipulation"
+  button1={{
+    href: '/usage/getting-started/quick-starts/quick-intro/',
+    value: "Get Started",
+  }}
+  button2={{
+    href: PUBLIC_CHROME_EXTENSION_URL,
+    value: "Install Extension",
+  }}
+/>
 
 ## Browser Extension Features
 
 <CardGrid stagger>
-	<Card title="Extract Web Content" icon="document">
-		Capture text, HTML, links, and images from any webpage with intelligent selection tools.
-	</Card>
-	<Card title="AI-Powered Processing" icon="rocket">
-		Transform extracted content using advanced AI models and LangChain integrations.
-	</Card>
-	<Card title="Visual Workflow Builder" icon="puzzle">
-		Create complex automation workflows with an intuitive drag-and-drop interface.
-	</Card>
-	<Card title="Browser Context Manipulation" icon="setting">
-		Insert content, interact with forms, and manipulate web pages directly from your workflows.
-	</Card>
+  <Card title="Extract Web Content" icon="document">
+    Capture text, HTML, links, and images from any webpage with intelligent
+    selection tools.
+  </Card>
+  <Card title="AI-Powered Processing" icon="rocket">
+    Transform extracted content using advanced AI models and LangChain
+    integrations.
+  </Card>
+  <Card title="Visual Workflow Builder" icon="puzzle">
+    Create complex automation workflows with an intuitive drag-and-drop
+    interface.
+  </Card>
+  <Card title="Browser Context Manipulation" icon="setting">
+    Insert content, interact with forms, and manipulate web pages directly from
+    your workflows.
+  </Card>
 </CardGrid>

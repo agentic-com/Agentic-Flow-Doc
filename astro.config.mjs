@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 import starlight from "@astrojs/starlight";
 
 import tailwindcss from "@tailwindcss/vite";
@@ -13,15 +13,22 @@ import mermaid from 'astro-mermaid';
 import svelte from "@astrojs/svelte";
 
 // Load environment variables from .env file
-import "dotenv/config";
-const { VITE_SITE_URL } = import.meta.env;
+//import "dotenv/config";
+//const { PUBLIC_SITE_URL } = import.meta.env;
+import { loadEnv } from "vite";
+const { PUBLIC_SITE_URL } = loadEnv(process.env.PUBLIC_SITE_URL, process.cwd(), "");
 
 // https://astro.build/config
 export default defineConfig({
-  site: VITE_SITE_URL,
+  site: PUBLIC_SITE_URL,
   integrations: [mermaid({
     theme: 'forest',
-    autoTheme: true
+    autoTheme: true,
+    mermaidConfig: {
+        startOnLoad: false,
+        logLevel: 'error',
+        securityLevel: 'strict'
+      }
   }), starlight({
     title: "Agentic Workflow Studio",
     description: "Agentic Workflow Studio - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
@@ -183,4 +190,12 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+
+  env: {
+    schema: {
+      PUBLIC_SITE_URL: envField.string({ context: "client", access: "public", optional: false }),
+      PUBLIC_CHROME_EXTENSION_URL: envField.string({ context: "client", access: "public", optional: false }),
+      PUBLIC_FIREFOX_EXTENSION_URL: envField.string({ context: "client", access: "public", optional: false }),
+    }
+  }
 });

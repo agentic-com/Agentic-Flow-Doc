@@ -1,8 +1,6 @@
 ---
 title: Browser Extension Video Tutorials
 description: Comprehensive video courses for mastering Agentic Workflow Studio browser extension workflows.
-video:
-  type: videos
 ---
 
 Learn Agentic Workflow Studio through our comprehensive video tutorial series. These courses are specifically designed for browser extension workflow creation and cover everything from basic setup to advanced AI-powered automation.

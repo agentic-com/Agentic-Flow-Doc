@@ -5,8 +5,6 @@ sidebar:
   order: 0
 ---
 
-# The very quick quickstart
-
 This quickstart gets you started using Agentic Workflow Studio as quickly as possible. It allows you to try out the browser-based workflow builder and introduces two key features: browser context manipulation and workflow creation. It doesn't include detailed explanations or explore concepts in-depth.
 
 ## Quick Start Process
