@@ -3,342 +3,99 @@ title: Text Extraction Node Comparison Guide
 description: "Compare different text extraction methods and choose the right approach for your workflow needs."
 ---
 
-This guide helps you choose the most appropriate text extraction node for your specific use case by comparing capabilities, performance, and ideal scenarios for each option.
+# Text Extraction Node Comparison Guide
 
-## Text Extraction Nodes Overview
+**What this guide does:** Helps you choose the right text extraction node for your specific workflow by comparing the different options available.
 
-Agentic Workflow Studio provides several nodes for extracting text content from web pages, each optimized for different scenarios and use cases.
+## Quick Comparison
 
-```mermaid
-graph TB
-    subgraph "User-Driven Extraction"
-        A[Get Selected Text<br/>User selects specific content]
-        B[Get HTML of Selected Text<br/>User selects with formatting]
-    end
-    
-    subgraph "Automated Extraction"
-        C[Get All Text<br/>Complete page text content]
-        D[Get All HTML<br/>Complete page with structure]
-    end
-    
-    subgraph "Content Types"
-        E[Clean Text<br/>AI Processing, Analysis]
-        F[Structured Content<br/>Formatting, Links, Metadata]
-    end
-    
-    A --> E
-    C --> E
-    B --> F
-    D --> F
-    
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#fff3e0
-    style D fill:#f3e5f5
-```
+| Node | When to Use | User Action Required | Best For |
+|------|-------------|---------------------|----------|
+| **[Get Selected Text](./GetSelectedText.md)** | You want specific text | Yes - highlight text | Focused analysis, quotes |
+| **[Get All Text](./GetAllText.md)** | You want everything | No | Full page analysis, monitoring |
+| **[Get HTML of Selected Text](./GetHTMLofSelectedText.md)** | You want formatted text | Yes - highlight text | Preserving formatting |
+| **[Get All HTML](./GetAllHTML.md)** | You want complete structure | No | Web scraping, archiving |
 
-| Node | Purpose | User Interaction | Content Scope | Best For |
-|------|---------|------------------|---------------|----------|
-| **[Get Selected Text](/integration/extension/GetSelectedText/)** | Extract user-selected text | Required | User selection only | Focused analysis, user-driven workflows |
-| **[Get All Text](/integration/extension/GetAllText/)** | Extract all page text | None | Entire page | Comprehensive analysis, monitoring |
-| **[Get HTML of Selected Text](/integration/extension/GetHTMLofSelectedText/)** | Extract HTML from selection | Required | User selection with formatting | Formatted content, structure preservation |
-| **[Get All HTML](/integration/extension/GetAllHTML/)** | Extract complete HTML | None | Entire page structure | Full page analysis, archiving |
+## Real-World Examples
 
-## Detailed Comparison
+**Research Assistant**
+Use **Get Selected Text** when you want to analyze specific quotes or findings that catch your attention while reading.
 
-### Get Selected Text vs Get All Text
+**Content Monitoring**
+Use **Get All Text** when you want to automatically check if a webpage has changed since your last visit.
 
-#### When to Use Get Selected Text
-**Ideal Scenarios**:
-- User wants to analyze specific content they're interested in
-- Processing focused excerpts from long articles
-- Interactive workflows where user choice matters
-- Quality over quantity - analyzing meaningful selections
+**Content Archiving**
+Use **Get All HTML** when you want to save complete webpages with all their formatting and structure intact.
 
-**Advantages**:
-- ✅ User controls what content is processed
-- ✅ Smaller data size for faster processing
-- ✅ More relevant content for analysis
-- ✅ Better user engagement and control
+## Decision Helper
 
-**Limitations**:
-- ❌ Requires user interaction to select text
-- ❌ Cannot automate without user input
-- ❌ May miss important context outside selection
-- ❌ Inconsistent data size depending on selection
+**Ask yourself these questions:**
 
-**Example Use Cases**:
-```javascript
-// Research workflow: User selects key findings
-Get Selected Text → AI Analysis → Citation Generator → Save to Research Database
+1. **Do you want the user to choose what text to extract?**
+   - Yes → Use **Get Selected Text** or **Get HTML of Selected Text**
+   - No → Use **Get All Text** or **Get All HTML**
 
-// Content enhancement: User selects text to improve
-Get Selected Text → AI Enhancement → Insert Text → User Review
-```
+2. **Do you need to keep formatting (bold, links, etc.)?**
+   - Yes → Use **Get HTML of Selected Text** or **Get All HTML**
+   - No → Use **Get Selected Text** or **Get All Text**
 
-#### When to Use Get All Text
-**Ideal Scenarios**:
-- Automated content monitoring and analysis
-- Comprehensive page analysis without user input
-- Batch processing multiple pages
-- SEO analysis and content auditing
+3. **Are you processing with AI?**
+   - Yes → Use text extraction (cleaner for AI)
+   - No → Either option works
 
-**Advantages**:
-- ✅ Fully automated - no user interaction needed
-- ✅ Consistent, complete content extraction
-- ✅ Ideal for monitoring and batch processing
-- ✅ Captures all available text content
+## Performance Guide
 
-**Limitations**:
-- ❌ May include irrelevant content (navigation, ads)
-- ❌ Larger data size may impact performance
-- ❌ Less focused analysis due to content volume
-- ❌ May exceed processing limits on large pages
+**Speed (fastest to slowest):**
+1. Get Selected Text ⚡ (only selected content)
+2. Get HTML of Selected Text ⚡ (only selected content)
+3. Get All Text 🐌 (entire page)
+4. Get All HTML 🐌🐌 (entire page with formatting)
 
-**Example Use Cases**:
-```javascript
-// Content monitoring: Check for changes
-Get All Text → Compare with Previous → Detect Changes → Send Alert
+**Memory Usage (lightest to heaviest):**
+1. Get Selected Text 📱 (small selections)
+2. Get HTML of Selected Text 📱 (small selections)
+3. Get All Text 💻 (text only)
+4. Get All HTML 💻💻 (complete page data)
 
-// SEO analysis: Analyze complete page content
-Get All Text → Keyword Analysis → Readability Check → SEO Report
-```
+<details>
+<summary>🔍 Technical Details</summary>
 
-### HTML vs Text Extraction
+**Browser Compatibility:**
+- All nodes work in Chrome, Firefox, and Edge
+- Safari has limited support for selection-based nodes
+- HTML extraction may be slower on older browsers
 
-#### When to Choose HTML Extraction
-**Get HTML of Selected Text** or **Get All HTML** when you need:
+**Common Issues:**
+- **No text extracted?** Page might still be loading - add a delay
+- **Missing content?** Some text might be loaded by JavaScript after the page appears
+- **Too slow?** Set length limits or exclude unnecessary page sections
 
-**Structure Preservation**:
-- Maintaining formatting (bold, italic, links)
-- Preserving document hierarchy (headings, lists)
-- Keeping link relationships and references
-- Analyzing content structure and organization
+**Performance Tips:**
+- Use selection-based nodes for better performance
+- Set maximum length limits for large pages
+- Exclude navigation and ads when extracting full pages
 
-**Advanced Processing**:
-- Converting to other formats (Markdown, PDF)
-- Extracting specific HTML elements
-- Analyzing page structure and SEO elements
-- Preserving metadata and attributes
-
-**Example Scenarios**:
-```javascript
-// Content archiving with formatting
-Get All HTML → Clean HTML → Convert to Markdown → Save Archive
-
-// Link analysis with context
-Get HTML of Selected Text → Extract Links → Analyze Context → Generate Report
-```
-
-#### When to Choose Text Extraction
-**Get Selected Text** or **Get All Text** when you need:
-
-**Clean Content Analysis**:
-- AI processing (LLMs work better with clean text)
-- Word count and readability analysis
-- Translation and language processing
-- Simple content comparison
-
-**Performance Optimization**:
-- Faster processing with smaller data size
-- Reduced memory usage
-- Simpler data structures
-- Better compatibility with text-based tools
-
-**Example Scenarios**:
-```javascript
-// AI content analysis
-Get All Text → AI Summarization → Key Points → Generate Insights
-
-// Translation workflow
-Get Selected Text → Language Detection → Translation API → Insert Text
-```
-
-## Decision Tree
-
-Use this decision tree to quickly choose the right text extraction approach:
-
-```mermaid
-flowchart TD
-    A[Content Extraction Need] --> B{Content Scope?}
-    
-    B -->|User-Selected| C[User-Selected Content]
-    B -->|Complete Page| D[Complete Page Content]
-    
-    C --> E{Need Formatting/Structure?}
-    E -->|Yes| F[Get HTML of Selected Text]
-    E -->|No| G[Get Selected Text]
-    
-    D --> H{Need Formatting/Structure?}
-    H -->|Yes| I[Get All HTML]
-    H -->|No| J[Get All Text]
-    
-    D --> K{Performance Critical?}
-    K -->|Yes| L[Get All Text<br/>Smaller, Faster]
-    K -->|No| M[Either Option Works]
-    
-    D --> N{AI Processing?}
-    N -->|Yes| O[Get All Text<br/>Cleaner for AI]
-    N -->|No| P[Get All HTML<br/>More Complete]
-    
-    style A fill:#e1f5fe
-    style F fill:#e8f5e8
-    style G fill:#e8f5e8
-    style I fill:#fff3e0
-    style J fill:#fff3e0
-    style L fill:#f3e5f5
-    style O fill:#f3e5f5
-```
-
-## Performance Comparison
-
-### Processing Speed
-
-| Node | Small Pages (<50KB) | Medium Pages (50-200KB) | Large Pages (>200KB) |
-|------|-------------------|------------------------|-------------------|
-| **Get Selected Text** | ~10ms | ~15ms | ~20ms |
-| **Get All Text** | ~50ms | ~150ms | ~500ms+ |
-| **Get HTML of Selected Text** | ~15ms | ~25ms | ~35ms |
-| **Get All HTML** | ~100ms | ~300ms | ~1000ms+ |
-
-### Memory Usage
-
-| Node | Typical Memory | Peak Memory | Recommendations |
-|------|---------------|-------------|-----------------|
-| **Get Selected Text** | Low (1-10KB) | Moderate | No special considerations |
-| **Get All Text** | Moderate (10-100KB) | High | Set max length limits |
-| **Get HTML of Selected Text** | Low-Moderate (2-20KB) | Moderate | Monitor selection size |
-| **Get All HTML** | High (50KB-1MB+) | Very High | Use exclude selectors |
-
-### Browser Compatibility
-
-| Node | Chrome | Firefox | Edge | Safari | Notes |
-|------|--------|---------|------|--------|-------|
-| **Get Selected Text** | ✅ Full | ✅ Full | ✅ Full | ⚠️ Limited | Selection API limitations |
-| **Get All Text** | ✅ Full | ✅ Full | ✅ Full | ✅ Full | Best compatibility |
-| **Get HTML of Selected Text** | ✅ Full | ✅ Full | ✅ Full | ⚠️ Limited | Range API limitations |
-| **Get All HTML** | ✅ Full | ✅ Full | ✅ Full | ✅ Full | Universal support |
+</details>
 
 ## Common Workflow Patterns
 
-### Pattern 1: User-Driven Analysis
-**Scenario**: User selects content for AI analysis
-
-```javascript
-Workflow: Interactive Content Analysis
-├── Get Selected Text (user selects interesting content)
-├── AI Agent (analyze selected content)
-├── Edit Fields (format results)
-└── Insert Text (show insights on page)
-
-Best Choice: Get Selected Text
-Reason: User engagement and focused analysis
+**Pattern 1: User Research**
+```
+User highlights interesting text → Get Selected Text → AI Analysis → Save insights
 ```
 
-### Pattern 2: Automated Monitoring
-**Scenario**: Monitor web pages for content changes
-
-```javascript
-Workflow: Content Change Detection
-├── Get All Text (capture complete page state)
-├── Filter (compare with previous version)
-├── Edit Fields (identify changes)
-└── HTTP Request (send alert if changes detected)
-
-Best Choice: Get All Text
-Reason: Automated, comprehensive monitoring
+**Pattern 2: Content Monitoring**
+```
+Navigate to page → Get All Text → Compare with previous → Alert if changed
 ```
 
-### Pattern 3: Content Enhancement
-**Scenario**: Improve existing web content with AI
-
-```javascript
-Workflow: AI Content Enhancement
-├── Get HTML of Selected Text (preserve formatting)
-├── AI Agent (enhance content while keeping structure)
-├── Content Replacer (replace with enhanced version)
-└── Highlight changes for user review
-
-Best Choice: Get HTML of Selected Text
-Reason: Structure preservation for enhancement
+**Pattern 3: Content Enhancement**
+```
+User selects text → Get HTML of Selected Text → AI improvement → Replace original
 ```
 
-### Pattern 4: Research Data Collection
-**Scenario**: Collect research data from multiple sources
+## What's Next?
 
-```javascript
-Workflow: Research Data Collection
-├── Navigate to Link (visit research sources)
-├── Get All Text (extract complete content)
-├── AI Agent (extract key findings)
-├── Edit Fields (structure data)
-└── Download as File (save to research database)
-
-Best Choice: Get All Text
-Reason: Comprehensive, automated data collection
-```
-
-## Troubleshooting Guide
-
-### Common Issues and Solutions
-
-#### "No text extracted" Error
-**Possible Causes**:
-- Page hasn't fully loaded
-- Content is in iframes or shadow DOM
-- Text is generated by JavaScript after page load
-
-**Solutions by Node**:
-- **Get Selected Text**: Ensure user has selected text before workflow execution
-- **Get All Text**: Add wait time for dynamic content loading
-- **HTML Extraction**: Check for content in iframes or shadow DOM
-
-#### Performance Issues
-**Symptoms**: Slow extraction, browser freezing, memory errors
-
-**Solutions**:
-- **Large Pages**: Use `maxLength` parameter to limit extraction
-- **Get All Text**: Add exclude selectors for navigation, ads, footers
-- **HTML Extraction**: Use content area selectors to focus on main content
-
-#### Inconsistent Results
-**Symptoms**: Different results on same page, missing content
-
-**Solutions**:
-- **Dynamic Content**: Add delays for JavaScript-generated content
-- **Selection-Based**: Provide clear user instructions for text selection
-- **Cross-Browser**: Test workflows across different browsers
-
-## Best Practices Summary
-
-### Choosing the Right Node
-1. **User Interaction**: If users need to choose content → Get Selected Text
-2. **Automation**: If fully automated → Get All Text or Get All HTML
-3. **AI Processing**: If using AI models → prefer text extraction (cleaner input)
-4. **Structure Needed**: If formatting matters → HTML extraction
-5. **Performance Critical**: If speed matters → text extraction (smaller data)
-
-### Optimization Tips
-1. **Set Limits**: Always configure reasonable length limits for large pages
-2. **Use Filters**: Exclude unnecessary content with CSS selectors
-3. **Cache Results**: Store extracted content to avoid re-processing
-4. **Monitor Performance**: Track extraction times and optimize accordingly
-5. **Handle Errors**: Implement fallbacks for extraction failures
-
-### Security Considerations
-1. **Content Validation**: Validate extracted content before processing
-2. **Size Limits**: Prevent memory issues with reasonable size limits
-3. **Sanitization**: Clean HTML content when using innerHTML methods
-4. **Privacy**: Be transparent about what content is being extracted
-
-## Related Resources
-
-### Documentation
-- **[Get Selected Text](/integration/extension/GetSelectedText/)** - Detailed node documentation
-- **[Get All Text](/integration/extension/GetAllText/)** - Complete feature reference
-- **[Performance Optimization](/learning/workflow-patterns/optimization-best-practices/)** - Workflow optimization guide
-
-### Learning Materials
-- **[Text Extraction Tutorial](/learning/text-courses/beginner/first-workflow/)** - Hands-on learning
-- **[Content Manipulation Patterns](/learning/workflow-patterns/content-manipulation-patterns/)** - Advanced techniques
-- **[Workflow Debugging](/learning/text-courses/intermediate/workflow-debugging/)** - Troubleshooting guide
+- **[Get Selected Text](./GetSelectedText.md)** - Extract user-highlighted text
+- **[Get All Text](./GetAllText.md)** - Extract complete page content
+- **[Get All HTML](./GetAllHTML.md)** - Extract complete page structure
