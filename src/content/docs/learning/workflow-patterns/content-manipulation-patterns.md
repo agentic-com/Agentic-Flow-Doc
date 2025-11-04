@@ -1,560 +1,161 @@
 ---
 title: Content Manipulation Patterns
-description: Comprehensive patterns for modifying, inserting, and manipulating web page content dynamically
+description: Simple patterns for automatically filling forms, inserting content, and modifying web pages to save time and reduce errors
 ---
 
 # Content Manipulation Patterns
 
-Content manipulation enables dynamic modification of web pages, form automation, and interactive content management. This guide covers proven patterns for various content modification scenarios.
+Automate repetitive tasks like filling forms, updating content, and modifying web pages. These patterns help you work faster and avoid manual errors when dealing with web content.
 
-## Form Automation Pattern
+## Why This Matters
 
-### Overview
-Automatically fill, validate, and submit web forms with intelligent data handling and error recovery.
+Manual form filling and content updates are time-consuming and error-prone. Content manipulation patterns automate these tasks, letting you focus on more important work while ensuring consistency and accuracy.
 
-### Use Cases
-- User registration automation
-- Data entry workflows
-- Survey completion
-- E-commerce checkout processes
+## Pattern 1: Automatic Form Filling
 
-### Implementation
+**What it does:** Automatically fills out web forms with your information, saving time and reducing typing errors.
 
-#### Workflow Structure
+**Perfect for:** Job applications, contact forms, surveys, registration forms, and checkout processes.
+
+### Simple Workflow Example
 
 ```mermaid
-flowchart LR
-    A[Navigate to Page] --> B[Detect Form]
-    B --> C[FormFiller Node]
-    C --> D[Validate Fields]
-    D --> E[Submit Form]
-    E --> F[Confirm Success]
-    F --> G[Output Results]
-    
-    D --> H{Validation Failed?}
-    H -->|Yes| I[Retry with Corrections]
-    I --> C
-    H -->|No| E
-    
-    style A fill:#e3f2fd
-    style C fill:#fff3e0
-    style G fill:#e8f5e8
-```
-
-#### Step-by-Step Implementation
-
-1. **Form Detection and Analysis**
-   ```javascript
-   // FormFiller configuration
-   {
-     "formSelector": "form, .form-container",
-     "autoDetectFields": true,
-     "fieldMapping": {
-       "firstName": ["input[name='first_name']", "#firstName", ".first-name"],
-       "lastName": ["input[name='last_name']", "#lastName", ".last-name"],
-       "email": ["input[type='email']", "input[name='email']"],
-       "phone": ["input[type='tel']", "input[name='phone']"]
-     }
-   }
-   ```
-
-2. **Intelligent Data Population**
-   ```javascript
-   // Data population with validation
-   {
-     "fillStrategy": "smart",
-     "dataSource": {
-       "firstName": "{{user.firstName}}",
-       "lastName": "{{user.lastName}}",
-       "email": "{{user.email}}",
-       "phone": "{{user.phone}}"
-     },
-     "fieldValidation": {
-       "email": {
-         "pattern": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
-         "required": true
-       },
-       "phone": {
-         "pattern": "^\\+?[1-9]\\d{1,14}$",
-         "format": "international"
-       }
-     }
-   }
-   ```
-
-3. **Dynamic Field Handling**
-   ```javascript
-   // Handle dynamic form elements
-   {
-     "dynamicFields": {
-       "dropdown": {
-         "selector": "select",
-         "selectionStrategy": "byValue",
-         "waitForOptions": true
-       },
-       "checkbox": {
-         "selector": "input[type='checkbox']",
-         "selectionStrategy": "byLabel"
-       },
-       "radio": {
-         "selector": "input[type='radio']",
-         "selectionStrategy": "byValue"
-       }
-     }
-   }
-   ```
-
-4. **Submission and Confirmation**
-   ```javascript
-   // Form submission handling
-   {
-     "submitButton": "button[type='submit'], .submit-btn",
-     "waitForResponse": true,
-     "successIndicators": [".success-message", ".confirmation"],
-     "errorIndicators": [".error-message", ".field-error"],
-     "timeout": 10000
-   }
-   ```
-
-### Advanced Form Handling
-```javascript
-// Multi-step form automation
-{
-  "multiStepConfig": {
-    "steps": [
-      {
-        "stepSelector": ".step-1",
-        "fields": ["firstName", "lastName", "email"],
-        "nextButton": ".next-step"
-      },
-      {
-        "stepSelector": ".step-2", 
-        "fields": ["address", "city", "zipCode"],
-        "nextButton": ".next-step"
-      },
-      {
-        "stepSelector": ".step-3",
-        "fields": ["paymentMethod", "cardNumber"],
-        "submitButton": ".submit-form"
-      }
-    ]
-  }
-}
-```
-
-## Content Injection Pattern
-
-### Overview
-Dynamically insert content into web pages while preserving existing structure and functionality.
-
-### Use Cases
-- Custom widget insertion
-- Content enhancement
-- Dynamic messaging
-- Real-time data display
-
-### Implementation
-
-#### Workflow Structure
-
-```mermaid
-sequenceDiagram
-    participant W as Workflow
-    participant P as Page Analysis
-    participant C as Content Preparation
-    participant I as InsertContent Node
-    participant V as Validation
-    participant M as Monitor
-    
-    W->>P: Analyze page structure
-    P->>C: Identify insertion points
-    C->>I: Prepare sanitized content
-    I->>V: Insert content dynamically
-    V->>M: Validate insertion success
-    M->>W: Monitor for removal/changes
-    
-    Note over I,V: Content injection with<br/>structure preservation
-    Note over V,M: Continuous monitoring<br/>and re-insertion if needed
-```
-
-#### Step-by-Step Implementation
-
-1. **Page Structure Analysis**
-   ```javascript
-   // Analyze insertion points
-   {
-     "analysisConfig": {
-       "targetSelectors": [".content", "#main", ".article-body"],
-       "insertionPoints": ["before", "after", "inside", "replace"],
-       "preserveStructure": true,
-       "respectCSP": true
-     }
-   }
-   ```
-
-2. **Content Preparation**
-   ```javascript
-   // Prepare content for insertion
-   {
-     "contentConfig": {
-       "type": "html",
-       "sanitize": true,
-       "allowedTags": ["div", "span", "p", "a", "img"],
-       "allowedAttributes": ["class", "id", "href", "src", "alt"],
-       "cssIsolation": true
-     }
-   }
-   ```
-
-3. **Dynamic Content Insertion**
-   ```javascript
-   // InsertContent configuration
-   {
-     "insertionRules": [
-       {
-         "target": ".article-content",
-         "position": "after",
-         "content": "<div class='custom-widget'>{{dynamicContent}}</div>",
-         "conditions": {
-           "pageType": "article",
-           "wordCount": ">500"
-         }
-       }
-     ]
-   }
-   ```
-
-4. **Content Validation and Monitoring**
-   ```javascript
-   // Validate successful insertion
-   {
-     "validationRules": [
-       {
-         "selector": ".custom-widget",
-         "expectedCount": 1,
-         "visibilityCheck": true
-       }
-     ],
-     "monitoring": {
-       "watchForRemoval": true,
-       "reinsertOnRemoval": true,
-       "maxRetries": 3
-     }
-   }
-   ```
-
-## Page Modification Pattern
-
-### Overview
-Modify existing page content, structure, and styling while maintaining page functionality.
-
-### Use Cases
-- Content customization
-- Accessibility improvements
-- UI/UX enhancements
-- Branding modifications
-
-### Implementation
-
-#### Workflow Structure
-
-```mermaid
-graph TD
-    A[Analyze Page Content] --> B[ContentReplacer Node]
-    B --> C[Apply Style Modifications]
-    C --> D[Validate Changes]
-    D --> E[Monitor Stability]
-    
-    B --> B1[Replace Text Content]
-    B --> B2[Replace Media Elements]
-    B --> B3[Update Metadata]
-    
-    C --> C1[Apply CSS Changes]
-    C --> C2[Add Accessibility Features]
-    C --> C3[Update Branding]
-    
-    D --> F{Changes Valid?}
-    F -->|No| G[Rollback Changes]
-    F -->|Yes| E
-    G --> A
+graph LR
+    A[🌐 Navigate to Form] --> B[📝 Fill Fields]
+    B --> C[✅ Submit Form]
+    C --> D[📋 Confirm Success]
     
     style A fill:#e3f2fd
     style B fill:#fff3e0
-    style E fill:#e8f5e8
+    style C fill:#e8f5e8
+    style D fill:#f3e5f5
 ```
 
-#### Step-by-Step Implementation
+### Copy-Paste Ready Configuration
 
-1. **Content Analysis and Targeting**
-   ```javascript
-   // ContentReplacer configuration
-   {
-     "analysisConfig": {
-       "scanSelectors": ["h1", "h2", ".title", ".content"],
-       "identifyPatterns": true,
-       "preserveSemantics": true
-     }
-   }
-   ```
+```json
+{
+  "name": "Auto Form Filler",
+  "nodes": [
+    {
+      "id": "fill_form",
+      "type": "FormFiller",
+      "name": "Fill Contact Form",
+      "settings": {
+        "firstName": "John",
+        "lastName": "Smith", 
+        "email": "john.smith@email.com",
+        "phone": "+1-555-0123",
+        "company": "My Company",
+        "message": "I'm interested in learning more about your services."
+      }
+    }
+  ]
+}
+```
 
-2. **Content Replacement Rules**
-   ```javascript
-   // Replacement strategies
-   {
-     "replacementRules": [
-       {
-         "target": "h1",
-         "operation": "replace",
-         "newContent": "{{customTitle}}",
-         "preserveAttributes": true
-       },
-       {
-         "target": ".old-branding",
-         "operation": "replace",
-         "newContent": "<img src='{{newLogo}}' alt='New Brand'>",
-         "fallback": "hide"
-       }
-     ]
-   }
-   ```
+**Business Impact:** What used to take 5 minutes of careful typing now takes 10 seconds. Perfect for filling out multiple similar forms quickly and accurately.
 
-3. **Style Modifications**
-   ```javascript
-   // CSS modifications
-   {
-     "styleModifications": [
-       {
-         "selector": ".content",
-         "styles": {
-           "font-family": "Arial, sans-serif",
-           "line-height": "1.6",
-           "color": "#333"
-         }
-       },
-       {
-         "selector": ".custom-element",
-         "cssClass": "enhanced-styling"
-       }
-     ]
-   }
-   ```
+## Pattern 2: Smart Content Insertion
 
-4. **Accessibility Enhancements**
-   ```javascript
-   // Accessibility improvements
-   {
-     "accessibilityEnhancements": [
-       {
-         "target": "img:not([alt])",
-         "operation": "addAttribute",
-         "attribute": "alt",
-         "value": "{{generateAltText}}"
-       },
-       {
-         "target": "a:not([title])",
-         "operation": "addAttribute", 
-         "attribute": "title",
-         "value": "{{linkDescription}}"
-       }
-     ]
-   }
-   ```
+**What it does:** Adds custom content, messages, or widgets to web pages automatically.
 
-## Interactive Automation Pattern
+**Perfect for:** Adding notes to websites, inserting custom information, enhancing pages with additional data.
 
-### Overview
-Simulate complex user interactions and automate multi-step processes that require user-like behavior.
-
-### Use Cases
-- Multi-step workflows
-- Interactive tutorials
-- User journey automation
-- Complex navigation patterns
-
-### Implementation
-
-#### Workflow Structure
+### Simple Workflow Example
 
 ```mermaid
-stateDiagram-v2
-    [*] --> Planning: Start Interactive Automation
-    Planning --> Executing: Plan Complete
-    Executing --> Responding: Action Executed
-    Responding --> Adapting: Response Received
-    Adapting --> Executing: Continue Sequence
-    Adapting --> Completed: All Steps Done
-    Completed --> [*]
+graph LR
+    A[🔍 Find Target Location] --> B[📝 Prepare Content]
+    B --> C[➕ Insert Content]
+    C --> D[✅ Verify Success]
     
-    Executing --> ErrorHandling: Action Failed
-    ErrorHandling --> Adapting: Apply Fallback
-    ErrorHandling --> Completed: Max Retries Reached
-    
-    note right of Planning
-        Analyze interaction sequence
-        Identify target elements
-        Plan adaptive strategies
-    end note
-    
-    note right of Adapting
-        Handle dynamic responses
-        Adjust to page changes
-        Apply fallback strategies
-    end note
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#e8f5e8
+    style D fill:#f3e5f5
 ```
 
-#### Step-by-Step Implementation
+### Copy-Paste Ready Configuration
 
-1. **Interaction Planning**
-   ```javascript
-   // Plan complex interaction sequence
-   {
-     "interactionPlan": [
-       {
-         "step": 1,
-         "action": "click",
-         "target": ".menu-button",
-         "waitFor": ".dropdown-menu"
-       },
-       {
-         "step": 2,
-         "action": "hover",
-         "target": ".submenu-item",
-         "waitFor": ".submenu-expanded"
-       },
-       {
-         "step": 3,
-         "action": "click",
-         "target": ".final-option",
-         "waitFor": ".content-loaded"
-       }
-     ]
-   }
-   ```
-
-2. **Adaptive Execution**
-   ```javascript
-   // Handle dynamic responses
-   {
-     "adaptiveConfig": {
-       "retryOnFailure": true,
-       "maxRetries": 3,
-       "adaptToChanges": true,
-       "fallbackStrategies": [
-         {
-           "condition": "elementNotFound",
-           "action": "useAlternativeSelector"
-         },
-         {
-           "condition": "timeout",
-           "action": "increaseWaitTime"
-         }
-       ]
-     }
-   }
-   ```
-
-3. **State Management**
-   ```javascript
-   // Track interaction state
-   {
-     "stateTracking": {
-       "trackPageChanges": true,
-       "saveCheckpoints": true,
-       "rollbackOnError": true,
-       "stateValidation": [
-         {
-           "checkpoint": "afterLogin",
-           "validators": [".user-dashboard", ".logout-button"]
-         }
-       ]
-     }
-   }
-   ```
-
-## Advanced Content Manipulation Techniques
-
-### Dynamic Content Generation
-```javascript
-// Generate content based on page context
+```json
 {
-  "contentGeneration": {
-    "templates": {
-      "productRecommendation": "<div class='recommendation'>Based on {{currentProduct}}, you might like {{relatedProducts}}</div>",
-      "personalizedMessage": "<div class='message'>Welcome back, {{userName}}!</div>"
-    },
-    "dataBinding": {
-      "currentProduct": "{{page.productName}}",
-      "relatedProducts": "{{api.getRelated(productId)}}",
-      "userName": "{{session.user.name}}"
-    }
-  }
-}
-```
-
-### Conditional Modifications
-```javascript
-// Apply modifications based on conditions
-{
-  "conditionalModifications": [
+  "name": "Content Inserter",
+  "nodes": [
     {
-      "condition": "page.url.includes('/product/')",
-      "modifications": [
-        {
-          "action": "insertPriceComparison",
-          "target": ".price-section"
-        }
-      ]
-    },
-    {
-      "condition": "user.isLoggedIn === false",
-      "modifications": [
-        {
-          "action": "showLoginPrompt",
-          "target": ".header"
-        }
-      ]
+      "id": "insert_content",
+      "type": "InsertContent",
+      "name": "Add Custom Message",
+      "settings": {
+        "target": ".main-content",
+        "position": "top",
+        "content": "<div style='background: #f0f8ff; padding: 10px; border-radius: 5px; margin-bottom: 15px;'>📌 <strong>Note:</strong> This information was last updated on {{current_date}}</div>"
+      }
     }
   ]
 }
 ```
 
-### Content Synchronization
-```javascript
-// Keep content synchronized across elements
+**Business Impact:** Automatically add important notices, updates, or custom information to web pages without manual editing.
+
+## Pattern 3: Content Replacement and Updates
+
+**What it does:** Automatically replaces or updates existing content on web pages with new information.
+
+**Perfect for:** Updating outdated information, replacing placeholder text, customizing content for different audiences.
+
+### Simple Workflow Example
+
+```mermaid
+graph LR
+    A[🎯 Find Content] --> B[🔄 Replace Text]
+    B --> C[✅ Verify Changes]
+    
+    style A fill:#e3f2fd
+    style B fill:#fff3e0
+    style C fill:#e8f5e8
+```
+
+### Copy-Paste Ready Configuration
+
+```json
 {
-  "synchronizationRules": [
+  "name": "Content Replacer",
+  "nodes": [
     {
-      "sourceSelector": ".main-title",
-      "targetSelectors": [".breadcrumb-title", ".page-title"],
-      "syncProperty": "textContent",
-      "bidirectional": false
+      "id": "replace_content",
+      "type": "ContentReplacer",
+      "name": "Update Product Prices",
+      "settings": {
+        "replacements": [
+          {
+            "target": ".old-price",
+            "newContent": "$99.99",
+            "backup": true
+          },
+          {
+            "target": ".contact-email", 
+            "newContent": "support@newcompany.com"
+          }
+        ]
+      }
     }
   ]
 }
 ```
 
-## Best Practices
+**Business Impact:** Keep website content current without manual editing. Perfect for price updates, contact information changes, or seasonal content modifications.
 
-### Performance Considerations
-- **Minimize DOM Manipulation**: Batch operations when possible
-- **Use Document Fragments**: For multiple insertions
-- **Optimize Selectors**: Use efficient CSS selectors
-- **Debounce Operations**: Avoid excessive modifications
+## Quick Troubleshooting
 
-### Security and Safety
-- **Content Sanitization**: Always sanitize inserted content
-- **CSP Compliance**: Respect Content Security Policy
-- **XSS Prevention**: Validate and escape user input
-- **Permission Checks**: Verify modification permissions
+**Problem:** Form fields aren't being filled correctly
 
-### User Experience
-- **Preserve Functionality**: Ensure existing features continue working
-- **Maintain Accessibility**: Keep content accessible
-- **Responsive Design**: Ensure modifications work on all devices
-- **Graceful Degradation**: Provide fallbacks for failed modifications
+**Solution:** Check that your field names match the actual form field names. Use browser developer tools to inspect the form and find the correct field identifiers.
 
-### Maintenance and Monitoring
-- **Change Detection**: Monitor for page structure changes
-- **Error Recovery**: Implement robust error handling
-- **Performance Monitoring**: Track modification impact
-- **User Feedback**: Collect feedback on modifications
+**Problem:** Content insertion isn't working
+
+**Solution:** Make sure the target element exists on the page. Try using a more specific CSS selector or wait for the page to fully load before inserting content.
+
+**Problem:** Changes are being overwritten by the website
+
+**Solution:** Some websites dynamically update their content. Try inserting content after the page has finished loading, or use a monitoring approach to re-apply changes when needed.

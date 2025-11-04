@@ -53,8 +53,8 @@
     - Create concise troubleshooting tables with top 3-5 common issues only
     - _Requirements: 1.2, 1.5, 5.1, 9.1_
 
-- [ ] 4. Transform existing advanced AI content
-  - [ ] 4.1 Rewrite `src/content/docs/advanced-ai/examples/` files
+- [x] 4. Transform existing advanced AI content
+  - [x] 4.1 Rewrite `src/content/docs/advanced-ai/examples/` files
     - Update `smart-text-extraction.md` with one clear business scenario
     - Simplify `end-to-end-ai-workflows.md` with concise step-by-step guidance
     - Add brief "Why This Matters" sections (2-3 sentences maximum)
@@ -62,7 +62,7 @@
     - Break long content into separate focused pages if needed
     - _Requirements: 5.1, 5.2, 1.4_
 
-  - [ ] 4.2 Update existing pattern documentation in `src/content/docs/usage/`
+  - [x] 4.2 Update existing pattern documentation in `src/content/docs/usage/`
     - Rewrite `content-manipulation-patterns.md` with one clear practical example per pattern
     - Update `research-automation.md` with concise business value explanations
     - Add simple visual workflow diagrams using Mermaid (avoid complex multi-step diagrams)
