@@ -110,15 +110,15 @@
     - Provide cultural neutrality in examples and scenarios
     - _Requirements: 8.1, 8.2, 8.3_
 
-- [ ] 7. Create essential new content sections (only after existing content is updated)
-  - [ ] 7.1 Add Quick Wins section to `src/content/docs/usage/quick-wins/`
+- [x] 7. Create essential new content sections (only after existing content is updated)
+  - [x] 7.1 Add Quick Wins section to `src/content/docs/usage/quick-wins/`
     - Create focused "Extract product prices from e-commerce sites" tutorial (one page, one goal)
     - Add separate concise pages for "Automate form filling" and "Monitor competitor prices"
     - Add brief "What's Next?" sections (2-3 links maximum)
     - Include simple input/output examples
     - _Requirements: 1.4, 2.2, 4.2, 5.2, 7.1, 3.4_
 
-  - [ ] 7.2 Create How-To guides in `src/content/docs/usage/how-to/`
+  - [x] 7.2 Create How-To guides in `src/content/docs/usage/how-to/`
     - Write concise "Extract data from any website" guide (focus on one clear method)
     - Add streamlined "Create AI-powered content analysis" tutorial
     - Include focused "Build a price monitoring system" project guide
