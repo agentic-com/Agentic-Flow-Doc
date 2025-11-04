@@ -7,6 +7,8 @@ description: "Extract all visible text from a webpage to analyze content, create
 
 **What it does:** Extracts all visible text from a webpage, giving you the complete text content to analyze, summarize, or process with other tools.
 
+**Perfect for:** Content analysis • Research collection • SEO audits • AI text processing
+
 ## What Goes In
 
 | Name | Type | Description | Required | Default |
@@ -104,6 +106,8 @@ Extract all text from webpages to analyze keyword density and content quality.
 
 ## What's Next?
 
-- **[Get Selected Text](./GetSelectedText.md)** - Extract only specific text portions instead of everything
-- **[AI Text Analysis](/advanced-ai/examples/intelligent-content-analysis/)** - Analyze the extracted text with AI
-- **[Content Replacer](./ContentReplacer.md)** - Modify the text content on the page
+**Related nodes:** [Get Selected Text](./GetSelectedText.md) • [Get All HTML](./GetAllHTML.md) • [Content Replacer](./ContentReplacer.md)
+
+**Common workflows:** [Smart Text Extraction](/advanced-ai/examples/smart-text-extraction/) • [Content Analysis](/advanced-ai/examples/intelligent-content-analysis/) • [Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)
+
+**Build a research database**: Combine with [Edit Fields](/integrations/builtin/dataTransformation/EditFields/) to clean and organize extracted content

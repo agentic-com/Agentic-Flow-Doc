@@ -473,14 +473,11 @@ Don't worry if something goes wrong - it happens to everyone! Here are the most 
 3. **Change the file name** to organize your saved content better
 
 ### Ready for More?
-1. **[Learn About Browser Permissions](/learning/text-courses/beginner/browser-permissions/)** - Understand how to safely use automations on different websites
-2. **[Data Flow Basics](/learning/text-courses/beginner/data-flow-basics/)** - Learn how information moves through your automations
-3. **[Build Multi-Step Automations](/learning/examples/multi-node-automation/)** - Create more complex automations with multiple steps
+**Next tutorials:** [Browser Permissions](/learning/text-courses/beginner/browser-permissions/) • [Data Flow Basics](/learning/text-courses/beginner/data-flow-basics/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)
 
-### Explore More Tools
-- **[GetAllText](/integration/extension/GetAllText/)** - Capture ALL text from a webpage (not just selected text)
-- **[GetAllLinks](/integration/extension/GetAllLinks/)** - Collect every link from a webpage
-- **[Form Filling Tools](/integration/extension/FormFiller/)** - Automatically fill out forms on websites
+**Explore more nodes:** [Get All Text](/integrations/extension/GetAllText/) • [Get All Links](/integrations/extension/GetAllLinks/) • [Form Filler](/integrations/extension/FormFiller/)
+
+**Workflow patterns:** [Content Manipulation](/learning/workflow-patterns/content-manipulation-patterns/) • [Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/) • [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns/)
 
 ---
 

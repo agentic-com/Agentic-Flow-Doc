@@ -1,23 +1,13 @@
 ---
 title: IF
-description: "Conditional logic node that routes workflow execution based on data evaluation and boolean expressions."
-template: doc
-tags: ["Workflow Logic", "Conditional Processing", "Data Flow", "Error Handling", "Branching"]
+description: "Make your workflow smart by taking different paths based on conditions - like 'if this, then do that'."
 ---
 
 # IF
 
-## Prerequisites
+**What it does:** Makes your workflow smart by taking different paths based on conditions - like "if this, then do that".
 
-Before using this node, ensure you have:
-
-- Basic understanding of workflow creation in `Agentic Workflow Studio`
-- Appropriate browser permissions configured (if applicable)
-- Required dependencies installed and configured
-
-## Overview
-
-The IF node provides conditional logic capabilities for workflow automation, allowing you to create branching paths based on data evaluation, boolean expressions, and dynamic conditions. This node is essential for building intelligent workflows that adapt their behavior based on input data, user interactions, or external conditions.
+**Perfect for:** Data validation • Error handling • User permissions • Content routing
 
 ```mermaid
 flowchart TD
@@ -46,38 +36,59 @@ flowchart TD
     style E fill:#ffebee
 ```
 
-### Purpose and Functionality
+## How It Works
 
-The IF node evaluates conditions and routes workflow execution down different paths based on the results. It supports complex boolean logic, data comparison operations, and dynamic condition evaluation using JavaScript expressions. The node can handle multiple conditions with AND/OR logic, making it suitable for sophisticated decision-making scenarios in browser automation workflows.
+```mermaid
+graph TD
+    A[📊 Data] --> B[❓ IF Condition]
+    B -->|True| C[✅ Path A]
+    B -->|False| D[❌ Path B]
+    
+    style A fill:#e1f5fe
+    style B fill:#e8f5e8
+    style C fill:#f3e5f5
+    style D fill:#ffebee
+```
 
-### Key Features
+**Simple process:** Data comes in → IF checks condition → Takes different path based on result
 
-- **Boolean Expression Evaluation**: Support for complex JavaScript expressions with logical operators
-- **Multiple Condition Support**: Combine multiple conditions with AND/OR logic for sophisticated decision trees
-- **Data Type Handling**: Automatic type conversion and comparison for strings, numbers, booleans, and objects
-- **Browser Context Integration**: Access to browser state, DOM elements, and page data for conditional logic
+## Common Conditions
 
-### Primary Use Cases
+**Check if data exists**
+```json
+{"condition": "{{data.title}} !== undefined"}
+```
 
-- **Content-Based Routing**: Route workflows based on extracted web content, page structure, or user interactions
-- **Data Validation Workflows**: Validate scraped data quality and completeness before processing
-- **Error Handling Logic**: Implement conditional error handling and recovery strategies based on response codes or data availability
-- **User Permission Checks**: Conditional execution based on browser permissions, login status, or user preferences
+**Compare values**
+```json
+{"condition": "{{data.score}} > 80"}
+```
 
-## Parameters & Configuration
+**Check text content**
+```json
+{"condition": "{{data.status}} === 'success'"}
+```
 
-### Required Parameters
+**Multiple conditions**
+```json
+{"condition": "{{data.score}} > 80 && {{data.verified}} === true"}
+```
 
-| Parameter | Type | Description | Example |
-|-----------|------|-------------|---------|
-| `condition` | `string` | JavaScript expression that evaluates to true/false | `"{{$json.status}} === 'success'"` |
+## Real Example
 
-### Optional Parameters
+**Scenario:** Only process articles that have titles and are longer than 100 characters
 
-| Parameter | Type | Default | Description | Example |
-|-----------|------|---------|-------------|---------|
-| `mode` | `string` | `"expression"` | Evaluation mode: "expression" or "rules" | `"expression"` |
-| `combineOperation` | `string` | `"AND"` | How to combine multiple conditions: "AND" or "OR" | `"OR"` |
+**Input data:**
+```json
+{"title": "Great Article", "content": "This is a long article with lots of useful information...", "author": "John"}
+```
+
+**IF condition:**
+```json
+{"condition": "{{data.title}} && {{data.content.length}} > 100"}
+```
+
+**Result:** Condition is TRUE, so workflow continues to the "true" path and processes the article.
 | `continueOnFail` | `boolean` | `false` | Whether to continue execution if condition evaluation fails | `true` |
 
 ### Advanced Configuration

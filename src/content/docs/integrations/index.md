@@ -1,168 +1,161 @@
 ---
-title: Agentic Workflow Studio Integrations and Browser Nodes
-description: "Explore browser extension nodes and integrations for web content manipulation and AI-powered automation."
+title: Workflow Nodes & Integrations
+description: "Build powerful browser automations with drag-and-drop nodes. Extract data, process content with AI, and automate web tasks."
 ---
 
-Agentic Workflow Studio uses nodes as the building blocks of browser-based workflows. Nodes are specialized components that can extract data from web pages, process content with AI, manipulate browser context, or integrate with external services. Each node is designed to work seamlessly within the browser environment.
+# Build Automations with Workflow Nodes
 
-Browser extension nodes provide unique capabilities for web content manipulation that aren't available in traditional server-based automation tools.
+Nodes are like LEGO blocks for automation. Each node does one specific job - extract text, process data, or save files. Connect them together to create powerful workflows that run in your browser.
 
-## Quick Start Guide
+**What makes browser nodes special:** They work directly with web pages in real-time, letting you extract data and interact with websites in ways traditional tools can't.
 
-### New to Browser Automation?
-1. **[Install the Extension](/usage/getting-started/quick-starts/quick-intro/)** - Get started in minutes
-2. **[Create Your First Workflow](/learning/text-courses/beginner/first-workflow/)** - Learn the basics with text extraction
-3. **[Understand Browser Permissions](/learning/text-courses/beginner/browser-permissions/)** - Essential security concepts
+## 🚀 New to Automation?
 
-### Common Use Cases
-- **Content Analysis**: Extract and analyze web page content with AI
-- **Form Automation**: Automatically fill forms with processed data
-- **Research Workflows**: Collect and organize information from multiple sources
-- **Content Enhancement**: Improve web content with AI-generated insights
+**Start here in 3 steps:**
+1. **[Install Extension](/usage/getting-started/quick-starts/quick-intro/)** (2 minutes)
+2. **[Build Your First Workflow](/learning/text-courses/beginner/first-workflow/)** (15 minutes)  
+3. **[Learn Browser Permissions](/learning/text-courses/beginner/browser-permissions/)** (5 minutes)
 
-## Browser Extension Nodes
+**Popular uses:** Save website text • Fill forms automatically • Monitor prices • Collect research data
 
-Specialized nodes for browser context manipulation and web content processing, designed specifically for the browser environment.
+## 🌐 Browser Extension Nodes
 
-### 🔤 Text Manipulation
-Extract, process, and insert text content with precision and control.
+**What they do:** Work directly with web pages to extract data, fill forms, and interact with content.
 
-| Node | Purpose | Best For |
-|------|---------|----------|
-| **[Get Selected Text](/integration/extension/GetSelectedText/)** | Extract user-selected text | Focused content analysis, user-driven workflows |
-| **[Get All Text](/integration/extension/GetAllText/)** | Extract all page text | Full page analysis, content monitoring |
-| **[Insert Text](/integration/extension/InsertText/)** | Insert text into pages | Form filling, content enhancement |
+### Most Popular Nodes
 
-### 🌐 HTML & Structure
-Work with HTML structure and markup for advanced content manipulation.
+<table role="table" aria-label="Most popular browser extension nodes">
+<thead>
+<tr>
+<th scope="col">Node</th>
+<th scope="col">What It Does</th>
+<th scope="col">Perfect For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="/integration/extension/GetSelectedText/">Get Selected Text</a></strong></td>
+<td>Captures text you highlight</td>
+<td>Research, note-taking</td>
+</tr>
+<tr>
+<td><strong><a href="/integration/extension/GetAllText/">Get All Text</a></strong></td>
+<td>Grabs all text from a page</td>
+<td>Content analysis, monitoring</td>
+</tr>
+<tr>
+<td><strong><a href="/integration/extension/GetAllLinks/">Get All Links</a></strong></td>
+<td>Collects every link on a page</td>
+<td>Site mapping, research</td>
+</tr>
+<tr>
+<td><strong><a href="/integration/extension/FormFiller/">Form Filler</a></strong></td>
+<td>Fills out forms automatically</td>
+<td>Data entry, testing</td>
+</tr>
+</tbody>
+</table>
 
-| Node | Purpose | Best For |
-|------|---------|----------|
-| **[Get All HTML](/integration/extension/GetAllHTML/)** | Extract complete HTML | Structure analysis, content archiving |
-| **[Get HTML of Selected Text](/integration/extension/GetHTMLofSelectedText/)** | Extract HTML from selections | Formatted content extraction |
-| **[Process HTML](/integration/extension/ProcessHTML/)** | Parse and manipulate HTML | Content transformation, cleanup |
+<details>
+<summary>🔍 See All Browser Nodes</summary>
 
-### 🔗 Links & Navigation
-Discover, analyze, and navigate web links programmatically.
+### 🔤 Text Tools
+- **[Insert Text](/integration/extension/InsertText/)** - Add text to web pages
+- **[Get HTML of Selected Text](/integration/extension/GetHTMLofSelectedText/)** - Get formatted text
 
-| Node | Purpose | Best For |
-|------|---------|----------|
-| **[Get All Links](/integration/extension/GetAllLinks/)** | Collect all page links | Site mapping, link validation |
-| **[Navigate to Link](/integration/extension/NavigateToLink/)** | Programmatic navigation | Multi-page workflows, automation |
-| **[Link Analyzer](/integration/extension/LinkAnalyzer/)** | Analyze link patterns | SEO analysis, site structure |
+### 🌐 HTML & Structure  
+- **[Get All HTML](/integration/extension/GetAllHTML/)** - Extract complete page HTML
+- **[Process HTML](/integration/extension/ProcessHTML/)** - Clean and modify HTML
 
 ### 🖼️ Images & Media
-Collect and process visual content from web pages.
-
-| Node | Purpose | Best For |
-|------|---------|----------|
-| **[Get All Images](/integration/extension/GetAllImages/)** | Collect page images | Media analysis, asset collection |
-| **[Image Processor](/integration/extension/ImageProcessor/)** | Process collected images | Optimization, format conversion |
-| **[Media Extractor](/integration/extension/MediaExtractor/)** | Extract various media types | Comprehensive media collection |
+- **[Get All Images](/integration/extension/GetAllImages/)** - Collect page images
+- **[Image Processor](/integration/extension/ImageProcessor/)** - Process images
+- **[Media Extractor](/integration/extension/MediaExtractor/)** - Extract various media
 
 ### ✏️ Content Modification
-Dynamically modify web page content and interact with forms.
+- **[Insert Content](/integration/extension/InsertContent/)** - Add content to pages
+- **[Content Replacer](/integration/extension/ContentReplacer/)** - Replace existing content
+- **[Navigate to Link](/integration/extension/NavigateToLink/)** - Navigate programmatically
+- **[Link Analyzer](/integration/extension/LinkAnalyzer/)** - Analyze link patterns
 
-| Node | Purpose | Best For |
-|------|---------|----------|
-| **[Insert Content](/integration/extension/InsertContent/)** | Insert various content types | Dynamic content updates |
-| **[Content Replacer](/integration/extension/ContentReplacer/)** | Replace existing content | Content enhancement, corrections |
-| **[Form Filler](/integration/extension/FormFiller/)** | Automated form completion | Data entry automation |
+</details>
 
-## Built-in Processing Nodes
+## ⚙️ Processing & AI Nodes
 
-Core processing capabilities for data transformation, flow control, and AI integration.
+**What they do:** Transform data, add intelligence, and control workflow logic.
 
-### 🤖 AI Integration
-| Node Category | Purpose | Key Nodes |
-|---------------|---------|-----------|
-| **[AI Agents](/integration/builtin/ai/AIAgents/)** | LangChain-powered AI processing | Basic LLM Chain, Q&A, RAG, Tools Agent |
-| **[AI Dependencies](/integration/builtin/ai/AIDependencies/)** | AI workflow components | Memory, Embeddings, Vector Stores |
+### Essential Processing Nodes
 
-### ⚙️ Core Processing
-| Node Category | Purpose | Key Nodes |
-|---------------|---------|-----------|
-| **[Core Nodes](/integration/builtin/core/)** | Essential functionality | HTTP Request, Code execution, Web scraping |
-| **[Data Transformation](/integration/builtin/dataTransformation/)** | Data manipulation | Edit Fields, Date/Time, File operations |
-| **[Flow Control](/integration/builtin/flow/)** | Workflow logic | Conditionals, Filters, Merging, Error handling |
+<table role="table" aria-label="Essential processing nodes by category">
+<thead>
+<tr>
+<th scope="col">Category</th>
+<th scope="col">What It Does</th>
+<th scope="col">Key Nodes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="/integration/builtin/ai/">🤖 AI Tools</a></strong></td>
+<td>Add intelligence to workflows</td>
+<td>Chat, Q&A, Smart Analysis</td>
+</tr>
+<tr>
+<td><strong><a href="/integration/builtin/core/">⚙️ Core Tools</a></strong></td>
+<td>Essential functions</td>
+<td>HTTP Request, Code, Web scraping</td>
+</tr>
+<tr>
+<td><strong><a href="/integration/builtin/dataTransformation/">📊 Data Tools</a></strong></td>
+<td>Clean and organize data</td>
+<td>Edit Fields, Dates, Files</td>
+</tr>
+<tr>
+<td><strong><a href="/integration/builtin/flow/">🔀 Flow Control</a></strong></td>
+<td>Control workflow logic</td>
+<td>If/Then, Filters, Merge</td>
+</tr>
+</tbody>
+</table>
 
-## Learning Paths by Experience Level
+## 📚 Learn by Your Experience Level
 
-### 🌱 Beginner Path
-1. **[Installation & Setup](/learning/text-courses/beginner/installation-setup/)** - Get the extension running
-2. **[First Workflow](/learning/text-courses/beginner/first-workflow/)** - Create your first automation
-3. **[Data Flow Basics](/learning/text-courses/beginner/data-flow-basics/)** - Understand how data moves between nodes
-4. **[Browser Permissions](/learning/text-courses/beginner/browser-permissions/)** - Essential security concepts
+### 🌱 New to Automation (Start Here)
+**Goal:** Build your first working automation in 30 minutes
+1. **[Setup Guide](/learning/text-courses/beginner/installation-setup/)** (5 min)
+2. **[First Workflow](/learning/text-courses/beginner/first-workflow/)** (20 min)
+3. **[Understanding Permissions](/learning/text-courses/beginner/browser-permissions/)** (5 min)
 
-### 🚀 Intermediate Path
-1. **[Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)** - Combine multiple nodes effectively
-2. **[Data Transformation](/learning/text-courses/intermediate/data-transformation/)** - Process and manipulate data
-3. **[Workflow Debugging](/learning/text-courses/intermediate/workflow-debugging/)** - Troubleshoot and optimize
-4. **[Performance Optimization](/learning/text-courses/intermediate/performance-optimization/)** - Build efficient workflows
+### 🚀 Ready for More (Build Complex Workflows)  
+**Goal:** Create multi-step automations that solve real problems
+1. **[Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)**
+2. **[Data Processing](/learning/text-courses/intermediate/data-transformation/)**
+3. **[Debugging & Optimization](/learning/text-courses/intermediate/workflow-debugging/)**
 
-### 🎯 Advanced Path
-1. **[AI-Powered Analysis](/learning/text-courses/advanced/ai-powered-analysis/)** - Integrate AI into workflows
-2. **[Complex Web Scraping](/learning/text-courses/advanced/complex-web-scraping/)** - Advanced data extraction
-3. **[Enterprise Patterns](/learning/text-courses/advanced/enterprise-patterns/)** - Scalable workflow design
-4. **[Custom Integrations](/learning/text-courses/advanced/custom-integrations/)** - Connect with external services
+### 🎯 Advanced User (AI & Enterprise)
+**Goal:** Build intelligent, scalable automation systems
+1. **[AI Integration](/learning/text-courses/advanced/ai-powered-analysis/)**
+2. **[Advanced Web Scraping](/learning/text-courses/advanced/complex-web-scraping/)**
+3. **[Enterprise Patterns](/learning/text-courses/advanced/enterprise-patterns/)**
 
-## Popular Workflow Patterns
+## 💡 Popular Workflow Ideas
 
-### 📊 Content Analysis Workflows
-- **[Intelligent Content Analysis](/advanced-ai/examples/intelligent-content-analysis/)** - AI-powered content insights
-- **[Web Content Analysis](/advanced-ai/examples/web-content-analysis/)** - Comprehensive page analysis
-- **[Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)** - Automated research collection
+**Content & Research**
+- **[Smart Content Analysis](/advanced-ai/examples/intelligent-content-analysis/)** - AI analyzes web content
+- **[Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)** - Collect data from multiple sites
 
-### 🤖 AI-Enhanced Workflows
-- **[End-to-End AI Workflows](/advanced-ai/examples/end-to-end-ai-workflows/)** - Complete AI automation
-- **[AI Form Automation](/advanced-ai/examples/ai-form-automation/)** - Intelligent form completion
-- **[Intelligent Web Scraping](/advanced-ai/examples/intelligent-web-scraping/)** - AI-guided data extraction
+**Business & E-commerce**  
+- **[Price Monitoring](/learning/workflow-patterns/real-world-examples/ecommerce-automation/)** - Track competitor prices
+- **[Social Media Automation](/learning/workflow-patterns/real-world-examples/social-media-automation/)** - Schedule and monitor posts
 
-### 🛒 Business Automation
-- **[E-commerce Automation](/learning/workflow-patterns/real-world-examples/ecommerce-automation/)** - Product and pricing workflows
-- **[Social Media Automation](/learning/workflow-patterns/real-world-examples/social-media-automation/)** - Content and engagement workflows
-- **[Content Management](/learning/workflow-patterns/real-world-examples/content-management/)** - Content creation and publishing
+**AI-Powered Workflows**
+- **[Intelligent Form Filling](/advanced-ai/examples/ai-form-automation/)** - AI fills forms smartly
+- **[Smart Web Scraping](/advanced-ai/examples/intelligent-web-scraping/)** - AI-guided data extraction
 
-## Browser Security & Limitations
+## 🎯 What's Next?
 
-Understanding browser security is crucial for effective workflow design:
+**Ready to build?** → **[Create Your First Workflow](/learning/text-courses/beginner/first-workflow/)** (20 minutes)
 
-### Security Considerations
-- **Content Security Policy (CSP)**: Some sites restrict script injection
-- **Cross-Origin Restrictions**: Limited access to external domains
-- **Permission Requirements**: Explicit user consent for sensitive operations
-- **Privacy Protection**: Local processing with user control
+**Need help?** → **[Get Support](/usage/help-and-community/help/)** • **[Browse Examples](/learning/examples/)** • **[Troubleshooting](/advanced-ai/troubleshooting-guide/)**
 
-### Best Practices
-- **Minimal Permissions**: Request only necessary browser permissions
-- **Error Handling**: Graceful handling of security restrictions
-- **User Transparency**: Clear communication about data usage
-- **Performance Optimization**: Efficient resource usage in browser context
-
-## Getting Help
-
-### Documentation Resources
-- **[Node Reference](/integration/builtin/node-types/)** - Complete node documentation
-- **[Workflow Patterns](/learning/workflow-patterns/)** - Proven automation patterns
-- **[Troubleshooting Guide](/advanced-ai/troubleshooting-guide/)** - Common issues and solutions
-
-### Community & Support
-- **[Help & Community](/usage/help-and-community/help/)** - Get assistance and connect with users
-- **[Contributing](/usage/help-and-community/contributing/)** - Contribute to the project
-- **[Examples Library](/learning/examples/)** - Real-world workflow examples
-
-## Where to go next
-
-### Start Building
-* **[Create Your First Workflow](/learning/text-courses/beginner/first-workflow/)** - Hands-on tutorial to get started
-* **[Browser Extension Setup](/usage/getting-started/quick-starts/quick-intro/)** - Installation and configuration guide
-
-### Explore Capabilities
-* **[Browser Extension Nodes](/integration/extension/)** - Unique browser manipulation capabilities
-* **[AI Integration](/integration/builtin/ai/)** - Process content with advanced AI models
-* **[Workflow Patterns](/learning/workflow-patterns/)** - Proven automation strategies
-
-### Advanced Topics
-* **[Advanced AI Workflows](/advanced-ai/)** - Sophisticated AI-powered automation
-* **[Performance Optimization](/learning/workflow-patterns/optimization-best-practices/)** - Build efficient, scalable workflows
-* **[Enterprise Patterns](/learning/text-courses/advanced/enterprise-patterns/)** - Production-ready workflow design
+**Want to explore?** → **[All Browser Nodes](/integration/extension/)** • **[AI Features](/integration/builtin/ai/)** • **[Workflow Patterns](/learning/workflow-patterns/)**

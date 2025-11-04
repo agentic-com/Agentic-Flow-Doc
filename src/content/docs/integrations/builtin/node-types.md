@@ -1,319 +1,138 @@
 ---
 title: Built-in Node Types
-description: Comprehensive guide to all built-in node categories in `Agentic Workflow Studio`, with selection guidance and use case examples.
+description: "Quick guide to choosing the right nodes for your workflows - from web scraping to AI processing to data transformation."
 ---
-
-## Overview
-
-This document provides a comprehensive guide to the different types of nodes available in `Agentic Workflow Studio`, helping you understand their categories, purposes, and when to use each type in your workflows.
 
 # Built-in Node Types
 
-`Agentic Workflow Studio` provides a comprehensive library of built-in nodes organized into six main categories. Each category serves specific workflow automation needs, from basic web interactions to advanced AI-powered processing.
+**What this covers:** All the different types of nodes available and how to choose the right ones for your workflows.
+
+**Perfect for:** New users • Node selection • Workflow planning • Understanding capabilities
+
+## Node Categories Overview
+
+Agentic Workflow Studio organizes nodes into six main categories to help you find what you need:
+
+🤖 **AI Nodes** - Add intelligence to your workflows  
+🌐 **Core Nodes** - Essential web and API interactions  
+🔄 **Data Transformation** - Process and format your data  
+⚡ **Flow Control** - Control how your workflow runs  
+📦 **Lambda Nodes** - Create reusable workflow components  
+🚀 **Trigger Nodes** - Start your workflows automatically
+
+## Quick Decision Guides
+
+### 🌐 Web Scraping & Data Collection
+**Extract text from webpages** → Use [GetAllText](/integrations/builtin/extension/GetAllText/)  
+**Get page HTML** → Use [GetAllHTML](/integrations/builtin/extension/GetAllHTML/)  
+**Extract images** → Use [GetAllImages](/integrations/builtin/extension/GetAllImages/)  
+**Collect links** → Use [GetAllLinks](/integrations/builtin/extension/GetAllLinks/)  
+**Make API calls** → Use [HTTP Request](/integrations/builtin/core/Http-Request/)
+
+### 🤖 AI Processing
+**Simple AI text processing** → Use [Basic LLM Chain](/integrations/builtin/ai/AIAgents/BasicLLMChainNode/)  
+**Question answering** → Use [QA Node](/integrations/builtin/ai/AIAgents/QANode/)  
+**Advanced AI with sources** → Use [RAG Node](/integrations/builtin/ai/AIAgents/RAGNode/)  
+**AI with tools** → Use [Tools Agent](/integrations/builtin/ai/AIAgents/ToolsAgentNode/)
+
+### 🔄 Data Processing
+**Edit/rename fields** → Use [Edit Fields](/integrations/builtin/dataTransformation/EditFields/)  
+**Select specific fields** → Use [Pick Field](/integrations/builtin/dataTransformation/PickField/)  
+**Custom JavaScript** → Use [Code](/integrations/builtin/core/Code/)  
+**Save as file** → Use [Download As File](/integrations/builtin/dataTransformation/DownloadAsFile/)
+
+### ⚡ Workflow Control
+**If/then logic** → Use [If](/integrations/builtin/flow/If/)  
+**Filter data** → Use [Filter](/integrations/builtin/flow/Filter/)  
+**Combine data** → Use [Merge](/integrations/builtin/flow/Merge/)  
+**Handle errors** → Use [Stop & Error](/integrations/builtin/flow/StopAndError/)  
+**Add delays** → Use [Wait](/integrations/builtin/flow/wait/)
+
+## Detailed Category Guide
+
+### 🤖 AI Nodes
+**What they do:** Add artificial intelligence to your workflows  
+**Common uses:** Analyze text, answer questions, summarize content, extract insights  
+**Popular nodes:** Basic LLM Chain, QA Node, RAG Node, Tools Agent  
+**Best for:** Content analysis, intelligent automation, natural language processing
+
+### 🌐 Core Nodes  
+**What they do:** Essential web interactions and API calls  
+**Common uses:** Scrape websites, make HTTP requests, run custom code  
+**Popular nodes:** Get All Text, HTTP Request, Code, Get All HTML  
+**Best for:** Data collection, API integration, custom logic
+
+### 🔄 Data Transformation Nodes
+**What they do:** Process, clean, and format your data  
+**Common uses:** Edit fields, pick specific data, convert formats, save files  
+**Popular nodes:** Edit Fields, Pick Field, Download As File  
+**Best for:** Data cleaning, format conversion, report generation
+
+### ⚡ Flow Control Nodes
+**What they do:** Control how your workflow runs  
+**Common uses:** Add conditions, filter data, handle errors, add delays  
+**Popular nodes:** If, Filter, Merge, Stop & Error, Wait  
+**Best for:** Complex workflow logic, error handling, data routing
+
+### 📦 Lambda Nodes
+**What they do:** Create reusable workflow components  
+**Common uses:** Build modular workflows, create templates  
+**Popular nodes:** Lambda Input, Lambda Output  
+**Best for:** Reusable components, complex workflow organization
+
+### 🚀 Trigger Nodes
+**What they do:** Start your workflows automatically  
+**Common uses:** Page load triggers, scheduled runs, manual buttons  
+**Popular nodes:** When Started  
+**Best for:** Automation, scheduled tasks, event-driven workflows
+
+## Common Workflow Patterns
+
+### 🌐 Web Scraping Workflow
+```
+[When Started] → [Get All Text] → [Edit Fields] → [Download As File]
+```
+**Perfect for:** Extracting and saving website content
+
+### 🤖 AI Content Analysis
+```
+[Get All Text] → [Basic LLM Chain] → [Edit Fields] → [Save Results]
+```
+**Perfect for:** Analyzing and summarizing web content
+
+### 🔄 Data Processing Pipeline
+```
+[HTTP Request] → [Filter] → [Edit Fields] → [If] → [Multiple Outputs]
+```
+**Perfect for:** Processing API data with conditions
+
+### 📦 Reusable Component
+```
+[Lambda Input] → [Processing Nodes] → [Lambda Output]
+```
+**Perfect for:** Creating workflows you can reuse in other workflows
 
-## Prerequisites
+## Getting Started Tips
 
-Before using this node, ensure you have:
+### 🎯 Start Simple
+Begin with basic nodes like Get All Text or HTTP Request before moving to complex AI workflows.
 
-- Basic understanding of workflow creation in `Agentic Workflow Studio`
-- Appropriate browser permissions configured (if applicable)
-- Required dependencies installed and configured
+### 🔗 Chain Nodes Together
+Most workflows use 3-5 nodes connected together. Start with a trigger, process data, then save or display results.
 
-## Decision Guides
+### 🧪 Test Frequently
+Test your workflow after adding each node to make sure it works as expected.
 
-Use these guides to choose the right node for your specific needs:
+### 📚 Use Templates
+Look at existing workflow patterns and examples to learn how nodes work together.
 
-## Text Extraction Decision Guide
+## What's Next?
 
-Choose the right node for your specific needs:
+**Explore specific nodes:** Browse the individual node documentation to learn about specific capabilities and configuration options.
 
-**Extract all visible text from a webpage**
-→ Use **GetAllTextFromLink**
-*Provides clean, readable text content filtered from HTML*
+**Learn workflow patterns:** Check out [Workflow Patterns](/learning/workflow-patterns/) to see how nodes work together in real scenarios.
 
-**Get full HTML structure for parsing**
-→ Use **GetHTMLFromLink**
-*Preserves HTML structure for custom processing*
+**Try examples:** Start with [Integration Examples](/learning/examples/) to see complete workflows in action.
 
-**Extract specific images from a page**
-→ Use **GetImagesFromLink**
-*Specialized for image extraction with metadata*
-
-**Collect all links for crawling**
-→ Use **GetLinksFromLink**
-*Optimized for link discovery and validation*
-
-## AI Processing Decision Guide
-
-Choose the right node for your specific needs:
-
-**Simple text processing with AI**
-→ Use **BasicLLMChainNode**
-*Direct LLM integration for straightforward AI tasks*
-
-**Question-answering with knowledge base**
-→ Use **QANode**
-*Optimized for Q&A scenarios with context retrieval*
-
-**Advanced retrieval with source attribution**
-→ Use **RAGNode**
-*Combines vector search with AI for accurate, sourced responses*
-
-**AI with external tool integration**
-→ Use **ToolsAgentNode**
-*Enables AI to use external APIs and browser functions*
-
-## Data Transformation Decision Guide
-
-Choose the right node for your specific needs:
-
-**Rename, convert, or validate fields**
-→ Use **EditFields**
-*Comprehensive field manipulation with validation*
-
-**Select specific fields only**
-→ Use **PickField**
-*Simple field selection without transformation*
-
-**Complex custom transformations**
-→ Use **Code**
-*Full JavaScript flexibility for complex logic*
-
-**Save processed data as file**
-→ Use **DownloadAsFile**
-*Converts data to downloadable file formats*
-
-## Flow Control Decision Guide
-
-Choose the right node for your specific needs:
-
-**Route workflow based on conditions**
-→ Use **IFNode**
-*Boolean logic for branching workflow paths*
-
-**Filter arrays of data**
-→ Use **Filter**
-*Specialized for array filtering and validation*
-
-**Combine multiple data streams**
-→ Use **Merge**
-*Merges data from multiple workflow branches*
-
-**Handle errors gracefully**
-→ Use **StopAndError**
-*Controlled error handling and workflow termination*
-
-**Add delays or timing control**
-→ Use **WaitNode**
-*Timing control for rate limiting and delays*
-
-## Decision Guides
-
-Use these guides to choose the right node for your specific needs:
-
-## Text Extraction Decision Guide
-
-Choose the right node for your specific needs:
-
-**Extract all visible text from a webpage**
-→ Use **GetAllTextFromLink**
-*Provides clean, readable text content filtered from HTML*
-
-**Get full HTML structure for parsing**
-→ Use **GetHTMLFromLink**
-*Preserves HTML structure for custom processing*
-
-**Extract specific images from a page**
-→ Use **GetImagesFromLink**
-*Specialized for image extraction with metadata*
-
-**Collect all links for crawling**
-→ Use **GetLinksFromLink**
-*Optimized for link discovery and validation*
-
-## AI Processing Decision Guide
-
-Choose the right node for your specific needs:
-
-**Simple text processing with AI**
-→ Use **BasicLLMChainNode**
-*Direct LLM integration for straightforward AI tasks*
-
-**Question-answering with knowledge base**
-→ Use **QANode**
-*Optimized for Q&A scenarios with context retrieval*
-
-**Advanced retrieval with source attribution**
-→ Use **RAGNode**
-*Combines vector search with AI for accurate, sourced responses*
-
-**AI with external tool integration**
-→ Use **ToolsAgentNode**
-*Enables AI to use external APIs and browser functions*
-
-## Data Transformation Decision Guide
-
-Choose the right node for your specific needs:
-
-**Rename, convert, or validate fields**
-→ Use **EditFields**
-*Comprehensive field manipulation with validation*
-
-**Select specific fields only**
-→ Use **PickField**
-*Simple field selection without transformation*
-
-**Complex custom transformations**
-→ Use **Code**
-*Full JavaScript flexibility for complex logic*
-
-**Save processed data as file**
-→ Use **DownloadAsFile**
-*Converts data to downloadable file formats*
-
-## Flow Control Decision Guide
-
-Choose the right node for your specific needs:
-
-**Route workflow based on conditions**
-→ Use **IFNode**
-*Boolean logic for branching workflow paths*
-
-**Filter arrays of data**
-→ Use **Filter**
-*Specialized for array filtering and validation*
-
-**Combine multiple data streams**
-→ Use **Merge**
-*Merges data from multiple workflow branches*
-
-**Handle errors gracefully**
-→ Use **StopAndError**
-*Controlled error handling and workflow termination*
-
-**Add delays or timing control**
-→ Use **WaitNode**
-*Timing control for rate limiting and delays*
-
-## Node Category Overview
-
-### AI Nodes
-
-**Purpose**: Integrate artificial intelligence capabilities into your workflows
-- **AI Agents**: Complete AI workflow components (LLM chains, RAG, Q&A systems, tool-based agents)
-- **AI Dependencies**: Supporting components (memory, embeddings, text splitters, vector stores)
-- **Best for**: Content analysis, intelligent automation, natural language processing, knowledge retrieval
-
-### Core Nodes
-
-**Purpose**: Essential browser and web interaction functionality
-- **Web Scraping**: Extract text, HTML, images, and links from web pages
-- **HTTP Operations**: Make API calls and handle web requests
-- **Code Execution**: Run custom JavaScript within browser context
-- **Best for**: Data collection, API integration, custom logic implementation
-
-### Data Transformation Nodes
-
-**Purpose**: Process, format, and manipulate data within workflows
-- **Field Operations**: Edit, pick, and restructure data fields
-- **Date/Time Processing**: Comprehensive date arithmetic and formatting
-- **File Operations**: Generate and download files from workflow data
-- **Best for**: Data cleaning, format conversion, report generation
-
-### Flow Control Nodes
-
-**Purpose**: Control workflow execution logic and data routing
-- **Conditional Logic**: IF statements, filters, and decision points
-- **Data Merging**: Combine data from multiple sources
-- **Error Handling**: Manage workflow failures and exceptions
-- **Timing Control**: Add delays and manage asynchronous operations
-- **Best for**: Complex workflow logic, error management, data orchestration
-
-### Lambda Nodes
-
-**Purpose**: Create reusable, modular workflow components
-- **Input/Output Management**: Define interfaces for sub-workflows
-- **Workflow Modularity**: Build composable workflow patterns
-- **Best for**: Reusable components, complex workflow organization
-
-### Trigger Nodes
-
-**Purpose**: Initiate workflow execution
-- **Manual Triggers**: User-initiated workflow starts
-- **Event-Based Triggers**: Respond to specific conditions or events
-- **Best for**: Workflow automation, scheduled tasks, event-driven processes
-
-## Node Selection Guide
-
-### For Web Automation
-
-1. **Start with Core nodes** for basic web interactions
-2. **Add Flow Control** for complex navigation logic
-3. **Use Data Transformation** to process extracted content
-4. **Integrate AI nodes** for intelligent content analysis
-
-### For Data Processing
-
-1. **Begin with Data Transformation** nodes for basic operations
-2. **Add Flow Control** for conditional processing
-3. **Use Core nodes** for external data sources
-4. **Apply AI nodes** for advanced analysis and insights
-
-### For AI-Powered Workflows
-
-1. **Start with AI Agent nodes** for main AI functionality
-2. **Configure AI Dependencies** for supporting services
-3. **Use Core nodes** for data input and output
-4. **Add Flow Control** for complex AI workflow logic
-
-### For Modular Workflows
-
-1. **Design with Lambda nodes** for reusable components
-2. **Use Trigger nodes** for flexible initiation
-3. **Combine with other categories** based on functionality needs
-
-## Browser Extension Considerations
-
-### Performance Guidelines
-
-- **Core nodes** are optimized for browser performance
-- **AI nodes** may require additional processing time
-- **Data Transformation** nodes handle large datasets efficiently
-- **Flow Control** nodes minimize execution overhead
-
-### Security Features
-
-- All nodes respect browser security policies
-- **Core nodes** handle cross-origin requests safely
-- **AI nodes** process data locally when possible
-- **Data Transformation** nodes maintain data privacy
-
-### Browser Compatibility
-
-- All node categories support Chrome and Firefox
-- **Core nodes** leverage native browser APIs
-- **AI nodes** use browser-compatible AI libraries
-- **Flow Control** nodes work across all browser environments
-
-## Credentials
-
-External services need a way to identify and authenticate users. This data can range from an API key over an email/password combination to a long multi-line private key. You can save these in Agentic Workflow Studio as [credentials](/glossary.md#credential-Agentic Workflow Studio).
-
-Nodes in Agentic Workflow Studio can then request that credential information. As another layer of security, only node types with specific access rights can access the credentials.
-
-To make sure that the data is secure, credentials are stored encrypted within the browser extension's secure storage. Agentic Workflow Studio uses browser-native encryption mechanisms to protect sensitive authentication data.
-
-To learn more about creating, managing, and sharing credentials, refer to [Manage credentials](/credentials/index.md).
-
-## Community nodes
-
-Agentic Workflow Studio supports custom nodes built by the community. These nodes extend the browser extension's capabilities with additional browser interactions and integrations.
-
-For information about contributing new browser extension nodes or workflow templates, connect with the Agentic Workflow Studio community through our official channels.
-
-## See Also
-
-- [Node Types Overview](/integration/builtin/node-types) - Understanding different node categories
-- [Workflow Patterns](/learning/workflow-patterns) - Common workflow design patterns
-- [Integration Examples](/learning/examples) - Practical integration examples
+**Get help:** Visit the [Learning Center](/learning/) for tutorials and guides on building effective workflows.
 

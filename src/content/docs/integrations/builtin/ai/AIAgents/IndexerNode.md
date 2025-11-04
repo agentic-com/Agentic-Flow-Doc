@@ -215,16 +215,11 @@ Indexer Node is the first step in:
 
 ## What's Next?
 
-### 🌱 New to Document Processing?
-1. **Start Small**: Try with a single document (5-10 pages)
-2. **Test Chunk Sizes**: Experiment with different chunk sizes for your content
-3. **Build Knowledge Base**: Connect to Local Knowledge to store results
-4. **Add Q&A**: Use RAG Node to create question-answering system
+**Related nodes:** [Local Knowledge](/integrations/builtin/ai/AIDependencies/vectorStore/LocalKnowledge/) • [RAG Node](/integrations/builtin/ai/AIAgents/RAGNode/) • [Q&A Node](/integrations/builtin/ai/AIAgents/QANode/)
 
-### 🚀 Ready for More?
-- Explore [Local Knowledge](/integrations/builtin/ai/AIDependencies/vectorStore/LocalKnowledge) for storing indexed chunks
-- Try [RAG Node](/integrations/builtin/ai/AIAgents/RAGNode) for intelligent document search
-- Check out [embedding examples](/learning/examples/)
+**Common workflows:** [AI Knowledge Base](/advanced-ai/examples/intelligent-content-analysis/) • [Document Search](/advanced-ai/examples/end-to-end-ai-workflows/) • [Smart Research](/learning/workflow-patterns/real-world-examples/research-automation/)
+
+**Learn more:** [AI Workflow Builder](/advanced-ai/basics/ai-workflow-builder/) • [Understanding RAG](/advanced-ai/basics/rag-in-n8n/) • [Vector Databases](/advanced-ai/examples/understand-vector-databases/)
 
 ---
 

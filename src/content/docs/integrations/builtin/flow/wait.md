@@ -1,519 +1,128 @@
 ---
 title: Wait
-description: "Timing control node that introduces delays and synchronization points in workflow execution."
-template: doc
-tags: ["Workflow Logic", "Conditional Processing", "Data Flow", "Error Handling", "Branching"]
+description: "Add delays to your workflow to avoid rate limits, wait for pages to load, or control timing between steps."
 ---
 
 # Wait
 
-## Prerequisites
+**What it does:** Pauses your workflow for a specific amount of time or until a condition is met.
 
-Before using this node, ensure you have:
+**Perfect for:** API rate limiting • Page loading delays • Avoiding "too fast" errors • Coordinating workflow timing
 
-- Basic understanding of workflow creation in `Agentic Workflow Studio`
-- Appropriate browser permissions configured (if applicable)
-- Required dependencies installed and configured
+## How It Works
 
-## Overview
+```mermaid
+graph LR
+    A[⏰ Start Wait] --> B[⏳ Counting Down]
+    B --> C[✅ Time Up]
+    C --> D[▶️ Continue Workflow]
+    
+    style A fill:#e1f5fe
+    style B fill:#fff3e0
+    style C fill:#e8f5e8
+    style D fill:#f3e5f5
+```
 
-The Wait node provides precise timing control and synchronization capabilities for workflow automation. It enables controlled delays, rate limiting, and coordination between workflow operations that require specific timing. The node is essential for handling asynchronous operations, respecting API rate limits, and managing browser-based automation timing.
+**Simple process:** Set time → Wait counts down → Time up → Workflow continues
 
-### Purpose and Functionality
+## Basic Configuration
 
-The Wait node introduces configurable delays in workflow execution, supporting both fixed time delays and dynamic waiting based on conditions or external events. It handles multiple timing scenarios including rate limiting for API calls, synchronization with browser operations, and coordination between parallel workflow branches.
-
-### Key Features
-
-- **Flexible Timing Control**: Support for fixed delays, dynamic timing, and condition-based waiting
-- **Rate Limiting Integration**: Built-in support for API rate limiting and request throttling
-- **Browser Synchronization**: Specialized timing for browser operations, page loading, and DOM updates
-- **Asynchronous Operation Support**: Coordination with asynchronous browser APIs and external services
-
-### Primary Use Cases
-
-- **API Rate Limiting**: Implement delays between API calls to respect rate limits and avoid throttling
-- **Browser Operation Timing**: Wait for page loads, DOM updates, or user interactions before proceeding
-- **Workflow Synchronization**: Coordinate timing between parallel workflow branches and operations
-- **Performance Optimization**: Control execution timing to optimize resource usage and system performance
-
-## Parameters & Configuration
-
-### Required Parameters
-
-| Parameter | Type | Description | Example |
-|-----------|------|-------------|---------|
-| `amount` | `number` | Wait duration in specified unit | `5` |
-| `unit` | `string` | Time unit: "seconds", "minutes", "hours", "milliseconds" | `"seconds"` |
-
-### Optional Parameters
-
-| Parameter | Type | Default | Description | Example |
-|-----------|------|---------|-------------|---------|
-| `resumeOnCondition` | `boolean` | `false` | Whether to resume when condition is met | `true` |
-| `condition` | `string` | `""` | JavaScript expression to evaluate for early resume | `"{{$json.status}} === 'ready'"` |
-| `maxWaitTime` | `number` | `0` | Maximum wait time (0 = no limit) | `30` |
-| `checkInterval` | `number` | `1000` | Condition check interval in milliseconds | `500` |
-
-### Advanced Configuration
-
+**Simple wait (most common):**
 ```json
-{
-  "amount": 10,
-  "unit": "seconds",
-  "resumeOnCondition": true,
-  "condition": "{{$json.pageLoaded}} === true && {{$json.elementsReady}} > 0",
-  "maxWaitTime": 60,
-  "checkInterval": 1000,
-  "rateLimiting": {
-    "enabled": true,
-    "requestsPerMinute": 30,
-    "burstAllowed": 5
-  },
-  "browserSync": {
-    "waitForDOM": true,
-    "waitForImages": false,
-    "waitForScripts": true
-  }
-}
+{"amount": 3, "unit": "seconds"}
 ```
 
-## Browser API Integration
+**Common time units:**
+- `"milliseconds"` - For very short delays (1000 = 1 second)
+- `"seconds"` - Most common (1, 2, 5, 10 seconds)
+- `"minutes"` - For longer delays (1, 2, 5 minutes)
+- `"hours"` - For very long delays (rarely used)
 
-### Required Permissions
+## Real Examples
 
-The Wait node may require permissions for browser state monitoring and timing synchronization.
-
-| Permission | Purpose | Security Impact |
-|------------|---------|-----------------|
-| `activeTab` | Monitor page loading and DOM state | Low - read-only access to page state |
-| `storage` | Store timing data and rate limiting information | Low - local timing data storage |
-
-### Browser APIs Used
-
-- **Performance API**: For precise timing measurements and performance monitoring
-- **DOM API**: When waiting for DOM events and element availability
-- **Tabs API**: For monitoring page loading and navigation events
-
-### Cross-Browser Compatibility
-
-| Feature | Chrome | Firefox | Safari | Edge |
-|---------|--------|---------|--------|------|
-| Basic Timing | ✅ Full | ✅ Full | ✅ Full | ✅ Full |
-| Condition Monitoring | ✅ Full | ✅ Full | ⚠️ Limited | ✅ Full |
-| Browser Synchronization | ✅ Full | ✅ Full | ❌ None | ✅ Full |
-| Performance Timing | ✅ Full | ⚠️ Limited | ❌ None | ✅ Full |
-
-### Security Considerations
-
-- **Timing Attacks**: Wait intervals are randomized slightly to prevent timing-based attacks
-- **Resource Management**: Automatic cleanup of timing resources to prevent memory leaks
-- **Browser State Access**: Limited access to browser state for condition monitoring
-- **Rate Limiting**: Secure implementation of rate limiting without exposing sensitive timing data
-
-## Input/Output Specifications
-
-### Input Data Structure
-
+### API Rate Limiting
+**Problem:** Getting "too many requests" errors from APIs
+**Solution:** Add 2-second delays between requests
 ```json
-{
-  "triggerData": "any_type",
-  "waitConditions": {
-    "checkValue": "any_type",
-    "expectedState": "any_type"
-  },
-  "metadata": {
-    "timestamp": "ISO_8601_string",
-    "source": "string"
-  }
-}
+{"amount": 2, "unit": "seconds"}
 ```
 
-### Output Data Structure
-
+### Page Loading
+**Problem:** Trying to scrape data before page finishes loading
+**Solution:** Wait for page to settle
 ```json
-{
-  "waitResult": {
-    "completed": "boolean",
-    "actualWaitTime": "number_ms",
-    "conditionMet": "boolean",
-    "timedOut": "boolean"
-  },
-  "inputData": "original_input_data",
-  "timing": {
-    "startTime": "ISO_8601_string",
-    "endTime": "ISO_8601_string",
-    "duration": "number_ms"
-  },
-  "metadata": {
-    "timestamp": "ISO_8601_string",
-    "waitType": "string"
-  }
-}
+{"amount": 5, "unit": "seconds"}
 ```
 
-## Practical Examples
-
-### Example 1: API Rate Limiting
-
-**Scenario**: Implement delays between API calls to respect rate limits and avoid throttling
-
-**Configuration**:
+### Form Submission
+**Problem:** Submitting forms too quickly causes errors
+**Solution:** Wait after filling before submitting
 ```json
-{
-  "amount": 2,
-  "unit": "seconds",
-  "rateLimiting": {
-    "enabled": true,
-    "requestsPerMinute": 30
-  }
-}
+{"amount": 1, "unit": "seconds"}
 ```
 
-**Input Data**:
-```json
-{
-  "apiResponse": {
-    "data": "response_data",
-    "rateLimit": {
-      "remaining": 25,
-      "resetTime": "2024-01-15T10:31:00Z"
-    }
-  }
-}
+## Common Wait Times
+
+**Web scraping delays:**
+- **1-2 seconds** - Between form fills and submissions
+- **3-5 seconds** - After page navigation, before scraping
+- **10+ seconds** - For very slow-loading pages
+
+**API request delays:**
+- **1 second** - Conservative rate limiting
+- **2-5 seconds** - Moderate rate limiting  
+- **10+ seconds** - Very strict rate limits
+
+**General workflow delays:**
+- **500ms-1s** - Quick pauses between rapid actions
+- **2-3 seconds** - Standard delays for most operations
+- **5+ seconds** - When you need to be extra careful
+
+## Workflow Patterns
+
+**Rate-limited API calls:**
+```
+[HTTP Request] → [Wait 2s] → [HTTP Request] → [Wait 2s] → [Continue...]
 ```
 
-**Expected Output**:
-```json
-{
-  "waitResult": {
-    "completed": true,
-    "actualWaitTime": 2000,
-    "conditionMet": false,
-    "timedOut": false
-  },
-  "inputData": {
-    "apiResponse": {
-      "data": "response_data",
-      "rateLimit": {
-        "remaining": 25,
-        "resetTime": "2024-01-15T10:31:00Z"
-      }
-    }
-  },
-  "timing": {
-    "startTime": "2024-01-15T10:30:00Z",
-    "endTime": "2024-01-15T10:30:02Z",
-    "duration": 2000
-  }
-}
+**Page scraping with delays:**
+```
+[Navigate to Page] → [Wait 3s] → [Get Text] → [Wait 1s] → [Next Page]
 ```
 
-**Step-by-Step Process**:
-1. Receive API response data with rate limiting information
-2. Calculate appropriate delay based on rate limiting configuration
-3. Wait for specified duration before allowing workflow to continue
-
-### Example 2: Browser Page Load Synchronization
-
-**Scenario**: Wait for page elements to load and become available before proceeding with data extraction
-
-**Configuration**:
-```json
-{
-  "amount": 30,
-  "unit": "seconds",
-  "resumeOnCondition": true,
-  "condition": "{{$json.pageState.loaded}} === true && {{$json.elements.count}} > 0",
-  "maxWaitTime": 45,
-  "checkInterval": 500,
-  "browserSync": {
-    "waitForDOM": true,
-    "waitForImages": false,
-    "waitForScripts": true
-  }
-}
+**Form automation:**
+```
+[Fill Field] → [Wait 500ms] → [Fill Next Field] → [Wait 1s] → [Submit]
 ```
 
-**Workflow Integration**:
-```
-Navigate to Page → Wait Node → Extract Content → Process Data
-                     ↓
-              (Wait for page ready)
-```
+## Best Practices
 
-**Complete Example**:
-This configuration ensures that content extraction only begins after the page is fully loaded and required elements are available, preventing extraction errors and improving data quality.
+### ✅ Do This
+- **Start with longer waits** - Better to wait too long than too short
+- **Test with real websites** - Different sites load at different speeds
+- **Use consistent timing** - Same delays for similar operations
+- **Monitor for errors** - Watch for "too fast" or timeout errors
 
-## Examples
+### ❌ Avoid This
+- **Very short waits** (under 500ms) - Often not enough time
+- **Extremely long waits** (over 30s) - Usually indicates a problem
+- **No waits at all** - Causes many automation failures
+- **Random wait times** - Makes debugging difficult
 
-### Basic Usage
+## Quick Troubleshooting
 
-This example demonstrates the fundamental usage of the WaitNode node in a typical workflow scenario.
+**Workflow gets stuck waiting:** Check if your wait time is too long or if there's an infinite wait condition
 
-**Configuration:**
+**"Too fast" errors still happening:** Increase your wait time by 1-2 seconds
 
-```json
-{
-  "condition": "example_value",
-  "enabled": true
-}
-```
+**Workflow running too slowly:** Reduce wait times, but test carefully to avoid errors
 
-**Input Data:**
+**Inconsistent results:** Add waits in more places, especially after navigation or form actions
 
-```json
-{
-  "data": "sample input data"
-}
-```
+## What's Next?
 
-**Expected Output:**
+**Related nodes:** [HTTP Request](/integrations/builtin/core/Http-Request/) • [If](/integrations/builtin/flow/If/) • [Stop & Error](/integrations/builtin/flow/StopAndError/)
 
-```json
-{
-  "result": "processed output data"
-}
-```
+**Common workflows:** [Rate Limiting Patterns](/integrations/builtin/rate-limits/) • [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns/) • [API Integration Patterns](/learning/workflow-patterns/integration-patterns/)
 
-### Advanced Usage
-
-This example shows more complex configuration options and integration patterns.
-
-**Configuration:**
-
-```json
-{
-  "parameter1": "advanced_value",
-  "parameter2": false,
-  "advancedOptions": {
-    "option1": "value1",
-    "option2": 100
-  }
-}
-```
-
-### Integration Example
-
-Example showing how this node integrates with other workflow nodes:
-
-1. **Previous Node** → **WaitNode** → **Next Node**
-2. Data flows through the workflow with appropriate transformations
-3. Error handling and validation at each step
-
-## Integration Patterns
-
-### Common Node Combinations
-
-#### Pattern 1: Rate-Limited API Processing
-
-- **Nodes**: API Request → Wait Node → Next API Request → Process Results
-- **Use Case**: Implement proper rate limiting for external API integrations
-- **Configuration Tips**: Calculate wait times based on API rate limit headers and usage patterns
-
-#### Pattern 2: Browser Automation Synchronization
-
-- **Nodes**: Page Navigation → Wait Node → DOM Interaction → Data Extraction
-- **Use Case**: Ensure proper timing for browser-based automation and data extraction
-- **Data Flow**: Wait for page readiness before attempting DOM manipulation or data extraction
-
-#### Pattern 3: Parallel Workflow Coordination
-
-- **Nodes**: [Branch A, Branch B] → Wait Nodes → Synchronization Point → Merge
-- **Use Case**: Coordinate timing between parallel workflow branches
-- **Configuration Tips**: Use condition-based waiting to synchronize on data availability rather than fixed timing
-
-### Best Practices
-
-- **Performance**: Use condition-based waiting instead of fixed delays when possible for better efficiency
-- **Error Handling**: Always set maximum wait times to prevent indefinite blocking
-- **Data Validation**: Validate timing parameters to prevent excessive delays or resource consumption
-- **Resource Management**: Monitor memory usage during long wait periods and implement cleanup
-
-## Troubleshooting
-
-### Common Issues
-
-#### Issue: Workflow Hangs Indefinitely
-
-- **Symptoms**: Wait node never completes and workflow execution stops
-- **Causes**: Missing or incorrect conditions, unreachable condition criteria, or missing timeout settings
-- **Solutions**: 
-  1. Set appropriate maximum wait times for all wait operations
-  2. Verify condition expressions and data availability
-  3. Test conditions with sample data before deployment
-- **Prevention**: Always configure maximum wait times and test condition logic thoroughly
-
-#### Issue: Premature Wait Completion
-
-- **Symptoms**: Wait node completes too early, before expected conditions are met
-- **Causes**: Incorrect condition expressions, data type mismatches, or overly frequent condition checking
-- **Solutions**: 
-  1. Review condition expressions and data path references
-  2. Adjust check intervals to appropriate frequency
-  3. Validate data types and comparison operations
-- **Prevention**: Test wait conditions with realistic data and timing scenarios
-
-### Browser-Specific Issues
-
-#### Chrome
-
-- Excellent support for all timing features and browser synchronization
-- Full access to performance APIs for precise timing measurements
-
-#### Firefox
-
-- Good timing support with slightly limited performance monitoring
-- May require additional configuration for complex browser synchronization
-
-#### Safari
-
-- Limited browser synchronization capabilities may affect advanced timing features
-- Basic wait functionality works without restrictions
-
-### Performance Issues
-
-- **Memory Usage**: Long wait periods may consume memory for condition monitoring
-- **CPU Usage**: Frequent condition checking can impact browser performance
-- **Rate Limiting**: Overly aggressive rate limiting may slow overall workflow execution
-
-## Limitations & Constraints
-
-### Technical Limitations
-
-- **Maximum Wait Time**: Browser timeouts may limit maximum wait duration to prevent hanging
-- **Condition Complexity**: Very complex condition expressions may impact performance
-
-### Browser Limitations
-
-- **Background Processing**: Browser background processing limits may affect long wait operations
-- **Resource Constraints**: Browser memory and CPU limits may impact wait performance
-
-### Data Limitations
-
-- **Condition Data Size**: Large data objects in conditions may impact checking performance
-- **Output Format**: Wait results always include timing metadata regardless of configuration
-- **Processing Time**: Condition evaluation adds overhead to wait operations
-
-## Key Terminology
-
-**Conditional Logic**: Programming construct that performs different actions based on conditions
-
-**Boolean Expression**: Expression that evaluates to true or false
-
-**Data Flow**: Movement of data through different stages of a workflow
-
-**Error Handling**: Process of catching and managing errors in workflow execution
-
-**Workflow Branch**: Separate execution path in a workflow based on conditions
-
-## Search & Discovery
-
-### Keywords
-
-- workflow logic
-- conditional processing
-- data flow
-- error handling
-- branching
-- control flow
-
-### Common Search Terms
-
-- "if"
-- "condition"
-- "filter"
-- "merge"
-- "branch"
-- "control"
-- "logic"
-- "error"
-- "wait"
-- "delay"
-
-### Primary Use Cases
-
-- workflow control
-- conditional logic
-- error handling
-- data routing
-- process orchestration
-- flow management
-
-## Learning Path
-
-### Skill Level: Intermediate
-
-## Enhanced Cross-References
-
-### Workflow Patterns
-
-- [Flow Control Patterns](/learning/workflow-patterns/flow-control-patterns)
-- [Error Handling Strategies](/learning/workflow-patterns/error-handling)
-- [Conditional Logic Patterns](/learning/workflow-patterns/conditional-logic)
-
-### Related Tutorials
-
-- [Workflow Logic Basics](/learning/text-courses/beginner/workflow-logic)
-- [Advanced Flow Control](/learning/text-courses/intermediate/advanced-flow-control)
-
-### Practical Examples
-
-- [Real-World Use Cases](/learning/examples/)
-- [Integration Examples](/learning/examples/multi-node-automation)
-- [Best Practice Examples](/learning/workflow-patterns/optimization-best-practices)
-
-## Related Nodes
-
-### Complementary Nodes
-
-- **Http-Request**: Works well together in workflows
-- **IFNode**: Works well together in workflows
-
-### Common Workflow Patterns
-
-- **Http-Request → WaitNode → Http-Request (retry pattern)**: Common integration pattern
-- **WaitNode → GetAllTextFromLink (delayed extraction)**: Common integration pattern
-
-### See Also
-
-- [Flow Logic Overview](/usage/key-concepts/flow-logic/)
-- [Error Handling Guide](/usage/key-concepts/flow-logic/error-handling)
-- [Execution Order](/usage/key-concepts/flow-logic/execution-order)
-- [Workflow Debugging](/learning/text-courses/intermediate/workflow-debugging)
-- [Merging Data Streams](/usage/key-concepts/flow-logic/merging)
-
-**Decision Guides:**
-- [Flow Control Decision Guide](#flow-control-decision-guide)
-
-**General Resources:**
-- [Workflow Patterns](/learning/workflow-patterns/)
-- [Integration Examples](/learning/examples/)
-- [Node Types Overview](/integration/builtin/node-types)
-
-## Version History
-
-### Current Version: 1.3.0
-
-- Added condition-based waiting and browser synchronization capabilities
-- Improved rate limiting integration and performance monitoring
-- Enhanced cross-browser compatibility and timing precision
-
-### Previous Versions
-
-- **1.2.0**: Added maximum wait time and condition checking features
-- **1.1.0**: Introduced rate limiting support and browser API integration
-- **1.0.0**: Initial release with basic timing delay functionality
-
-## Additional Resources
-
-- [Timing Control Tutorial](/usage/key-concepts/flow-logic/waiting)
-- [API Rate Limiting Best Practices](/learning/workflow-patterns/integration-patterns)
-- [Browser Automation Timing](/learning/text-courses/intermediate/performance-optimization)
-- [Asynchronous Workflow Patterns](/learning/workflow-patterns/optimization-best-practices)
-
----
-
-**Last Updated**: October 18, 2024  
-**Tested With**: Browser Extension v2.1.0  
-**Validation Status**: ✅ Code Examples Tested | ✅ Browser Compatibility Verified | ✅ User Tested
+**Learn more:** [Flow Control Basics](/learning/text-courses/beginner/data-flow-basics/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/) • [Performance Optimization](/learning/workflow-patterns/optimization-best-practices/)

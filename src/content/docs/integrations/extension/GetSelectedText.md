@@ -7,6 +7,8 @@ description: "Capture text you've highlighted on any webpage to analyze, transla
 
 **What it does:** Captures any text you highlight on a webpage so your workflow can analyze, translate, or process it.
 
+**Perfect for:** Research collection • Quote gathering • Language learning • Content analysis
+
 ## What Goes In
 
 | Name | Type | Description | Required | Default |
@@ -70,6 +72,8 @@ Capture interesting quotes or statistics from articles to use in your own writin
 
 ## What's Next?
 
-- **[Get All Text](./GetAllText.md)** - Capture entire webpage content instead of just selections
-- **[Insert Text](./InsertText.md)** - Add processed text back to webpages  
-- **[AI Text Analysis](/advanced-ai/examples/intelligent-content-analysis/)** - Analyze captured text with AI
+**Related nodes:** [Get All Text](./GetAllText.md) • [Insert Text](./InsertText.md) • [Content Replacer](./ContentReplacer.md)
+
+**Common workflows:** [Smart Text Extraction](/advanced-ai/examples/smart-text-extraction/) • [Research Collection](/learning/workflow-patterns/real-world-examples/research-automation/) • [Content Analysis](/advanced-ai/examples/intelligent-content-analysis/)
+
+**Learn more:** [First Workflow Tutorial](/learning/text-courses/beginner/first-workflow/) • [Text Processing Patterns](/learning/workflow-patterns/data-processing-patterns/)

@@ -7,6 +7,8 @@ description: "Automatically fill out web forms with your data to save time on re
 
 **What it does:** Automatically fills out web forms with your data, saving you time on repetitive tasks like job applications, contact forms, and registrations.
 
+**Perfect for:** Job applications • Event registration • Contact forms • Survey completion
+
 ## What Goes In
 
 | Name | Type | Description | Required | Default |
@@ -100,7 +102,9 @@ Automatically fill contact forms on websites when reaching out to potential clie
 
 ## What's Next?
 
-- **[Navigate to Link](./NavigateToLink.md)** - Go to different pages to fill multiple forms
-- **[Get All Text](./GetAllText.md)** - Extract confirmation messages after form submission
-- **[Content Replacer](./ContentReplacer.md)** - Modify form content before filling
+**Related nodes:** [Navigate to Link](./NavigateToLink.md) • [Insert Text](./InsertText.md) • [Content Replacer](./ContentReplacer.md)
+
+**Common workflows:** [Form Automation Patterns](/learning/workflow-patterns/content-manipulation-patterns/) • [Multi-Page Workflows](/learning/text-courses/intermediate/multi-step-workflows/) • [Business Automation](/learning/workflow-patterns/real-world-examples/ecommerce-automation/)
+
+**Learn more:** [Browser Permissions Guide](/learning/text-courses/beginner/browser-permissions/) • [Workflow Debugging](/learning/text-courses/intermediate/workflow-debugging/)
 

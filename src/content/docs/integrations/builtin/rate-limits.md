@@ -1,216 +1,154 @@
 ---
 title: Rate Limits and Performance
-description: Understanding and managing rate limits, performance considerations, and browser constraints in `Agentic Workflow Studio` workflows.
+description: "Avoid hitting limits and keep your workflows running smoothly with smart rate limiting and performance optimization."
 ---
-
-## Overview
-
-This document explains the rate limiting considerations and best practices for builtin nodes in `Agentic Workflow Studio`, helping you understand how to optimize your workflows for performance and reliability.
 
 # Rate Limits and Performance
 
-Browser-based workflows face unique performance considerations including API rate limits, browser resource constraints, and extension execution limits. Understanding these limitations helps you build efficient, reliable workflows.
+**What this covers:** How to avoid hitting API limits and keep your workflows running fast and reliably.
 
-## Prerequisites
+**Perfect for:** API-heavy workflows • Large data processing • Performance optimization • Avoiding errors
 
-Before using this node, ensure you have:
+## Why This Matters
 
-- Basic understanding of workflow creation in `Agentic Workflow Studio`
-- Appropriate browser permissions configured (if applicable)
-- Required dependencies installed and configured
+Browser workflows can hit limits that cause failures:
+- **API rate limits** - Too many requests too fast
+- **Browser memory limits** - Processing too much data at once
+- **Network timeouts** - Requests taking too long
+- **Extension limits** - Browser restricting background processing
 
-## Understanding Rate Limits
+## Common Rate Limits
 
-### API Rate Limits
+**API Limits**
+- **Per minute:** 60 requests per minute (1 per second)
+- **Per day:** 1000 requests per 24 hours
+- **Concurrent:** 5 requests at the same time
+- **Data size:** 10MB maximum per request
 
-Rate limits restrict request frequency to external services. Common patterns include:
-- **Per-minute limits**: Maximum requests per 60-second window
-- **Per-day quotas**: Total daily request allowances
-- **Concurrent request limits**: Maximum simultaneous connections
-- **Data size limits**: Maximum payload size per request
+**Browser Limits**
+- **Memory:** ~2GB for extension processing
+- **Background processing:** Slower when tab is inactive
+- **Network:** 6 connections per domain
+- **Storage:** 10MB local storage quota
 
-### Browser Extension Limits
+## Spotting Rate Limit Problems
 
-Browser extensions have additional constraints:
-- **Memory limitations**: Available RAM for workflow execution
-- **CPU throttling**: Background processing restrictions
-- **Network concurrency**: Browser connection pooling limits
-- **Storage quotas**: Local data storage restrictions
+**Error messages you'll see:**
+- **"Too Many Requests" (429)** - You're going too fast
+- **"Service Unavailable" (503)** - API is overloaded
+- **"Request timeout"** - Taking too long to respond
+- **"Out of memory"** - Browser can't handle the data size
 
-## Identifying Rate Limit Issues
+**Warning signs:**
+- Workflows suddenly start failing
+- Requests taking much longer than usual
+- Browser becoming slow or unresponsive
+- Getting partial or empty responses
 
-### Common Error Indicators
+## How to Avoid Rate Limits
 
-- **HTTP 429 errors**: "Too Many Requests" responses
-- **HTTP 503 errors**: "Service Unavailable" due to overload
-- **Timeout errors**: Requests exceeding time limits
-- **Memory errors**: Browser extension resource exhaustion
+### Add Delays Between Requests
 
-### Monitoring Performance
-
-```javascript
-// Example: Monitor request timing
-const startTime = Date.now();
-// ... make request ...
-const duration = Date.now() - startTime;
-console.log(`Request took ${duration}ms`);
+Use the [Wait node](/integrations/builtin/flow/wait/) to slow down:
+```json
+{"amount": 2, "unit": "seconds"}
 ```
+**Result:** 2-second pause between each request
 
-## Rate Limit Management Strategies
+### Process Data in Batches
 
-### Using Wait Node for Delays
+1. **[Filter](/integrations/builtin/flow/Filter/)** your data into small groups (5-10 items)
+2. **Process** each group with delays
+3. **[Merge](/integrations/builtin/flow/Merge/)** results back together
 
-The [Wait Node](/integration/builtin/flow/WaitNode/) provides precise timing control:
+### Smart HTTP Requests
 
-```javascript
-// Wait configuration for rate limiting
+Configure [HTTP Request](/integrations/builtin/core/Http-Request/) for reliability:
+```json
 {
-  "waitTime": 1000,  // 1 second delay
-  "unit": "milliseconds"
+  "timeout": 30000,        // 30-second timeout
+  "retryOnFail": true,     // Retry failed requests
+  "maxRetries": 3,         // Try up to 3 times
+  "retryDelay": 5000       // 5-second delay between retries
 }
 ```
 
-### Batch Processing with Flow Control
+## Performance Tips by Node Type
 
-Combine [Filter](/integration/builtin/flow/Filter/) and [Merge](/integration/builtin/flow/Merge/) nodes for efficient batching:
+### 🤖 AI Nodes
+- **Process in batches** - Send multiple items to AI at once
+- **Use local models** when possible to avoid API limits
+- **Clear memory** between large AI operations
 
-1. **Filter** data into smaller chunks
-2. **Process** each chunk with delays
-3. **Merge** results back together
+### 🌐 Web Scraping Nodes
+- **Add 1-2 second delays** between page requests
+- **Keep active tab open** for faster processing
+- **Process smaller chunks** of data at a time
 
-### HTTP Request Optimization
+### 📊 Data Processing Nodes
+- **Break large datasets** into smaller pieces (1000 items max)
+- **Use streaming** for very large files
+- **Cache repeated operations** to save time
 
-The [HTTP Request](/integration/builtin/core/Http-Request/) node includes built-in rate limiting:
+### 🔗 HTTP Request Nodes
+- **Respect API limits** - check documentation for limits
+- **Use exponential backoff** - wait longer after each failure
+- **Batch similar requests** together when possible
 
-```javascript
-// HTTP Request rate limiting configuration
-{
-  "batchSize": 5,           // Process 5 items at once
-  "batchInterval": 2000,    // 2-second delay between batches
-  "timeout": 30000,         // 30-second request timeout
-  "retryOnFail": true,      // Automatic retry on failure
-  "maxRetries": 3           // Maximum retry attempts
-}
-```
+## Smart Retry Strategies
 
-## Browser-Specific Performance Considerations
+**Exponential Backoff** (recommended)
+- Try 1: Wait 1 second
+- Try 2: Wait 2 seconds  
+- Try 3: Wait 4 seconds
+- Try 4: Wait 8 seconds (max)
 
-### Memory Management
-
-- **Large datasets**: Use streaming processing with smaller chunks
-- **AI operations**: Monitor memory usage during LLM processing
-- **File operations**: Process files incrementally to avoid memory spikes
-
-### Background Processing Limits
-
-- **Active tab priority**: Workflows run faster in active tabs
-- **Background throttling**: Inactive tabs may have reduced processing speed
-- **Extension lifecycle**: Workflows pause when extension is disabled
-
-### Network Optimization
-
-- **Connection pooling**: Browser limits concurrent connections per domain
-- **CORS restrictions**: Cross-origin requests require proper headers
-- **Cache utilization**: Leverage browser caching for repeated requests
-
-## Node-Specific Performance Tips
-
-### AI Nodes
-
-- **Local processing**: Use local AI models when possible to avoid API limits
-- **Batch inference**: Process multiple items in single AI requests
-- **Memory management**: Clear AI model caches between large operations
-
-### Core Nodes
-
-- **Web scraping**: Add delays between page requests to avoid blocking
-- **API calls**: Implement exponential backoff for failed requests
-- **File operations**: Stream large files instead of loading entirely into memory
-
-### Data Transformation Nodes
-
-- **Large datasets**: Process data in chunks using pagination patterns
-- **Complex operations**: Break complex transformations into smaller steps
-- **Date operations**: Cache timezone data to improve performance
-
-## Error Handling and Recovery
-
-### Automatic Retry Patterns
-
-```javascript
-// Retry configuration example
+**Simple Retry**
+```json
 {
   "maxRetries": 3,
-  "retryDelay": 1000,      // Start with 1 second
-  "backoffMultiplier": 2,  // Double delay each retry
-  "maxRetryDelay": 10000   // Cap at 10 seconds
+  "retryDelay": 5000
 }
 ```
-
-### Graceful Degradation
-
-- **Fallback APIs**: Configure alternative services for critical operations
-- **Partial processing**: Continue workflow with available data when some requests fail
-- **User notification**: Inform users of rate limit issues and expected delays
-
-### Circuit Breaker Pattern
-
-Implement circuit breakers for unreliable services:
-
-1. **Monitor failure rates** across requests
-2. **Open circuit** when failure threshold is reached
-3. **Retry periodically** to test service recovery
-4. **Close circuit** when service is stable again
 
 ## Best Practices
 
-### Workflow Design
+### ✅ Do This
+- **Start slow** - Begin with longer delays, speed up if needed
+- **Cache results** - Store data locally to avoid repeat requests
+- **Monitor usage** - Track how many requests you're making
+- **Plan for failures** - Always have retry logic
+- **Test with real data** - Use realistic data sizes when testing
 
-- **Plan for limits**: Design workflows assuming rate limits will occur
-- **Implement delays**: Add appropriate delays between requests
-- **Monitor usage**: Track API usage to stay within quotas
-- **Cache results**: Store frequently accessed data locally
+### ❌ Avoid This
+- **Rapid-fire requests** - Don't send requests as fast as possible
+- **Ignoring errors** - Always handle rate limit responses
+- **Processing huge datasets** at once
+- **Running workflows in background** without monitoring
+- **Assuming APIs are always available**
 
-### Performance Optimization
+## Quick Troubleshooting
 
-- **Minimize requests**: Combine multiple operations when possible
-- **Optimize payloads**: Send only necessary data in requests
-- **Use compression**: Enable compression for large data transfers
-- **Parallel processing**: Use concurrent requests within rate limits
+**"Too Many Requests" errors**
+→ Add [Wait nodes](/integrations/builtin/flow/wait/) between requests (2-5 seconds)
 
-### User Experience
+**Browser running slow/crashing**
+→ Process smaller batches of data (100-500 items max)
 
-- **Progress indicators**: Show users workflow progress during delays
-- **Estimated times**: Provide time estimates for long-running workflows
-- **Cancellation options**: Allow users to cancel slow operations
-- **Error recovery**: Provide clear options when rate limits are hit
+**Workflows timing out**
+→ Increase timeout settings and add retry logic
 
-## Troubleshooting Common Issues
+**Inconsistent results**
+→ Add delays and check for proper error handling
 
-### High Memory Usage
+**API quota exceeded**
+→ Spread requests across longer time periods or upgrade API plan
 
-1. **Identify memory-intensive nodes** in your workflow
-2. **Process data in smaller chunks** using batch patterns
-3. **Clear intermediate results** that are no longer needed
-4. **Monitor browser task manager** for extension memory usage
+## What's Next?
 
-### Slow Workflow Execution
+**Related guides:** [HTTP Request Node](/integrations/builtin/core/Http-Request/) • [Wait Node](/integrations/builtin/flow/wait/) • [Error Handling](/integrations/builtin/flow/StopAndError/)
 
-1. **Profile individual nodes** to identify bottlenecks
-2. **Optimize API calls** by reducing request frequency
-3. **Use browser developer tools** to monitor network activity
-4. **Consider workflow redesign** for better performance
+**Workflow patterns:** [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [API Integration Patterns](/learning/workflow-patterns/integration-patterns/) • [Performance Optimization](/learning/workflow-patterns/optimization-best-practices/)
 
-### Rate Limit Exceeded
-
-1. **Implement exponential backoff** in retry logic
-2. **Reduce request frequency** with longer delays
-3. **Consider alternative APIs** with higher rate limits
-4. **Upgrade service plans** if available and cost-effective
-
-## See Also
-
-- [Node Types Overview](/integration/builtin/node-types) - Understanding different node categories
-- [Workflow Patterns](/learning/workflow-patterns) - Common workflow design patterns
-- [Integration Examples](/learning/examples) - Practical integration examples
+**Learn more:** [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/) • [Workflow Debugging](/learning/text-courses/intermediate/workflow-debugging/)
 

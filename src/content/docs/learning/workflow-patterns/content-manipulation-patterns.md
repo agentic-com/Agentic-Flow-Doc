@@ -5,7 +5,9 @@ description: Simple patterns for automatically filling forms, inserting content,
 
 # Content Manipulation Patterns
 
-Automate repetitive tasks like filling forms, updating content, and modifying web pages. These patterns help you work faster and avoid manual errors when dealing with web content.
+Automate repetitive tasks like filling forms, updating content, and modifying web pages. These workflow patterns help you work faster and avoid manual errors when dealing with web content.
+
+**Related patterns:** [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Web Scraping Patterns](/learning/workflow-patterns/web-scraping-patterns/) • [Integration Patterns](/learning/workflow-patterns/integration-patterns/)
 
 ## Why This Matters
 
@@ -16,6 +18,8 @@ Manual form filling and content updates are time-consuming and error-prone. Cont
 **What it does:** Automatically fills out web forms with your information, saving time and reducing typing errors.
 
 **Perfect for:** Job applications, contact forms, surveys, registration forms, and checkout processes.
+
+**Key nodes:** [Form Filler](/integrations/extension/FormFiller/) • [Insert Text](/integrations/extension/InsertText/) • [Navigate to Link](/integrations/extension/NavigateToLink/)
 
 ### Simple Workflow Example
 
@@ -42,11 +46,11 @@ graph LR
       "type": "FormFiller",
       "name": "Fill Contact Form",
       "settings": {
-        "firstName": "John",
-        "lastName": "Smith", 
-        "email": "john.smith@email.com",
-        "phone": "+1-555-0123",
-        "company": "My Company",
+        "firstName": "Alex",
+        "lastName": "Johnson", 
+        "email": "alex.johnson@email.com",
+        "phone": "555-0123",
+        "company": "Your Company Name",
         "message": "I'm interested in learning more about your services."
       }
     }
@@ -135,7 +139,7 @@ graph LR
           },
           {
             "target": ".contact-email", 
-            "newContent": "support@newcompany.com"
+            "newContent": "support@yourcompany.com"
           }
         ]
       }
@@ -148,14 +152,18 @@ graph LR
 
 ## Quick Troubleshooting
 
-**Problem:** Form fields aren't being filled correctly
+**Form fields not filling:** Check field names match the actual form. Use browser developer tools to find correct identifiers.
 
-**Solution:** Check that your field names match the actual form field names. Use browser developer tools to inspect the form and find the correct field identifiers.
+**Content insertion failing:** Ensure target element exists. Use specific CSS selectors and wait for page to load.
 
-**Problem:** Content insertion isn't working
+**Changes being overwritten:** Some sites update content dynamically. Insert after page loads or use monitoring to re-apply changes.
 
-**Solution:** Make sure the target element exists on the page. Try using a more specific CSS selector or wait for the page to fully load before inserting content.
+## Related Resources
 
-**Problem:** Changes are being overwritten by the website
+**Learn the basics:** [First Workflow Tutorial](/learning/text-courses/beginner/first-workflow/) • [Browser Permissions](/learning/text-courses/beginner/browser-permissions/)
 
-**Solution:** Some websites dynamically update their content. Try inserting content after the page has finished loading, or use a monitoring approach to re-apply changes when needed.
+**Node documentation:** [Form Filler](/integrations/extension/FormFiller/) • [Insert Content](/integrations/extension/InsertContent/) • [Content Replacer](/integrations/extension/ContentReplacer/)
+
+**More patterns:** [Data Processing](/learning/workflow-patterns/data-processing-patterns/) • [Web Scraping](/learning/workflow-patterns/web-scraping-patterns/) • [Real-World Examples](/learning/workflow-patterns/real-world-examples/)
+
+**Need help?** [Troubleshooting Guide](/advanced-ai/troubleshooting-guide/) • [Community Support](/usage/help-and-community/help/)

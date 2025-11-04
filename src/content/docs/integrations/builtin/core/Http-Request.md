@@ -7,57 +7,45 @@ tags: ["Web Scraping", "Browser Automation", "HTTP", "DOM", "Content Extraction"
 
 # HTTP Request
 
-## Overview
+## What It Does
 
-The HTTP Request node enables browser workflows to communicate with external APIs and services, allowing seamless integration between browser-extracted data and external systems. This node is essential for sending data to cloud services, validating information, and building comprehensive automation workflows that extend beyond browser boundaries.
+Send data from your browser workflows to external APIs and web services. Perfect for saving extracted data to cloud services, validating information, or triggering actions in other systems.
 
-### HTTP Request Flow Architecture
+**Common uses:** Save to databases • Send to AI services • Trigger webhooks • Validate data
+
+## How It Works
 
 ```mermaid
-sequenceDiagram
-    participant Workflow as Workflow Data
-    participant HTTP as HTTP Request Node
-    participant Auth as Authentication
-    participant API as External API
-    participant Response as Response Handler
+graph LR
+    A[🌐 Browser Data] --> B[📤 HTTP Request]
+    B --> C[🔐 Add Authentication]
+    C --> D[☁️ External API]
+    D --> E[📥 Response Data]
     
-    Workflow->>HTTP: Input data + configuration
-    HTTP->>HTTP: Format request parameters
-    HTTP->>Auth: Apply authentication headers
-    Auth->>HTTP: Authenticated request
-    HTTP->>API: Send HTTP request
-    API->>API: Process request
-    API->>HTTP: Return response
-    HTTP->>Response: Parse response data
-    Response->>Response: Add metadata & timing
-    Response->>Workflow: Structured response output
-    
-    Note over HTTP,API: HTTPS secure connection
-    Note over Response: Error handling & validation
+    style A fill:#e1f5fe
+    style B fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#f3e5f5
 ```
 
-### Purpose and Functionality
+**Simple flow:** Your workflow data → HTTP Request node → External service → Response back to workflow
 
-This node performs HTTP communication by:
-- Making secure HTTP requests to external APIs and web services
-- Supporting all standard HTTP methods (GET, POST, PUT, DELETE, PATCH)
-- Handling authentication, headers, and request parameters
-- Processing responses and integrating data back into workflows
-- Respecting browser security constraints and CORS policies
+<details>
+<summary>🔍 Technical Details</summary>
 
-### Key Features
-
-- **Full HTTP Method Support**: Complete support for GET, POST, PUT, DELETE, PATCH, and HEAD requests
-- **Authentication Integration**: Built-in support for API keys, Bearer tokens, Basic Auth, and OAuth flows
-- **Browser Security Compliance**: Respects CORS policies and Content Security Policy constraints
-- **Response Processing**: Automatic JSON parsing and error handling for robust workflows
+### Full Capabilities
+- **HTTP Methods**: GET, POST, PUT, DELETE, PATCH, HEAD
+- **Authentication**: API keys, Bearer tokens, Basic Auth, OAuth
+- **Security**: CORS compliance, SSL validation, secure headers
+- **Response Handling**: JSON parsing, error handling, metadata
 
 ### Primary Use Cases
+- **API Integration**: Send extracted data to external services
+- **Data Validation**: Verify information against external databases  
+- **Webhook Notifications**: Trigger external systems
+- **Cloud Integration**: Connect with SaaS platforms
 
-- **API Integration**: Send browser-extracted data to external services for processing or storage
-- **Data Validation**: Verify extracted information against external databases or validation services
-- **Webhook Notifications**: Trigger external systems when specific browser events or data extraction occurs
-- **Cloud Service Integration**: Connect browser workflows with cloud platforms and SaaS applications
+</details>
 
 ## Parameters & Configuration
 

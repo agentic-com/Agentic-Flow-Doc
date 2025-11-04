@@ -1,19 +1,20 @@
 ---
 title: Lambda Workflow
-description: "Execute reusable sub-workflows within your main workflow, enabling modular design and workflow composition with typed inputs and outputs."
-template: doc
-head:
-  - tag: meta
-    name: keywords
-    content: "lambda workflow, sub-workflow, modular workflows, workflow composition, reusable workflows, workflow nesting"
-tags: ["Modular Workflows", "Reusability", "Workflow Composition"]
+description: "Run other workflows inside your main workflow to create reusable, modular automation components."
 ---
 
 # Lambda Workflow
 
-## Overview
+**What it does:** Runs other workflows inside your main workflow to create reusable, modular automation components.
 
-The Lambda Workflow node enables you to execute other workflows as reusable components within your main workflow. This powerful feature allows you to create modular, maintainable workflow architectures by breaking complex processes into smaller, focused sub-workflows that can be called and reused across multiple parent workflows.
+**Perfect for:** Reusable components • Complex workflows • Shared logic • Modular design
+
+## What It Does
+
+- **Run sub-workflows** - Execute complete workflows as single steps
+- **Pass data between workflows** - Send data in and get results back
+- **Create reusable components** - Build workflows you can use in multiple places
+- **Organize complex logic** - Break big workflows into smaller, manageable pieces
 
 ### Purpose and Functionality
 

@@ -1,257 +1,134 @@
 ---
-title: Learning Resources
-description: "Master browser-based workflow automation with comprehensive tutorials and examples for web content manipulation."
+title: Learn Workflow Automation
+description: "Master browser automation with step-by-step tutorials, real examples, and hands-on projects. Start building in minutes."
 ---
 
-Welcome to the Agentic Workflow Studio learning center! Here you'll find comprehensive resources to help you master creating AI-powered workflows within your browser.
+# Learn to Build Browser Automations
 
-## 🚀 Quick Start
+Ready to automate your web tasks? Start with simple text extraction and work up to AI-powered workflows. Everything runs in your browser - no coding required.
 
-### New to Agentic Workflow Studio?
-Get up and running in minutes with our streamlined onboarding:
+## 🚀 Start Here (15 Minutes Total)
 
-1. **[Quick Start Guide](/usage/getting-started/quick-starts/quick-intro/)** - Install and create your first workflow (5 minutes)
-2. **[Detailed Setup](/usage/getting-started/quick-starts/long-intro/)** - Comprehensive installation and configuration
-3. **[Learning Path](/usage/getting-started/learning-path/)** - Structured progression through core concepts
+**Complete beginner?** Follow these 3 steps:
 
-### First Steps Checklist
-- [ ] Install browser extension from Chrome/Firefox store
-- [ ] Complete browser permissions setup
-- [ ] Create your first text extraction workflow
-- [ ] Explore the node library and workflow patterns
+1. **[Install Extension](/usage/getting-started/quick-starts/quick-intro/)** (5 min) - Add to your browser
+2. **[Build First Workflow](/learning/text-courses/beginner/first-workflow/)** (10 min) - Save text from websites  
+3. **[Test It Out](#)** - Try it on any website!
 
-## 📚 Learning Paths by Experience Level
+**✅ Success checklist:**
+- [ ] Extension installed and working
+- [ ] First workflow created and tested
+- [ ] Ready to explore more advanced features
 
-### 🌱 Beginner Path (0-2 weeks)
-**Goal**: Master the fundamentals of browser-based workflow automation
+## 📚 Choose Your Learning Path
 
-| Course | Duration | Focus | Next Step |
-|--------|----------|-------|-----------|
-| **[Installation & Setup](/learning/text-courses/beginner/installation-setup/)** | 30 min | Extension setup and permissions | First Workflow |
-| **[Your First Workflow](/learning/text-courses/beginner/first-workflow/)** | 45 min | Text extraction and basic processing | Data Flow |
-| **[Data Flow Basics](/learning/text-courses/beginner/data-flow-basics/)** | 30 min | Understanding node connections | Browser Permissions |
-| **[Browser Permissions](/learning/text-courses/beginner/browser-permissions/)** | 20 min | Security and privacy concepts | Multi-Step Workflows |
+### 🌱 Beginner (Never Built Automation Before)
+**Goal:** Create your first working automation in 2 hours
 
-**Beginner Projects to Try**:
-- Extract article text and save to file
-- Collect all links from a webpage
-- Fill a form with processed data
+**Essential courses:**
+1. **[Setup & Install](/learning/text-courses/beginner/installation-setup/)** (30 min)
+2. **[First Workflow](/learning/text-courses/beginner/first-workflow/)** (45 min) 
+3. **[Data Flow Basics](/learning/text-courses/beginner/data-flow-basics/)** (30 min)
+4. **[Browser Permissions](/learning/text-courses/beginner/browser-permissions/)** (15 min)
 
-### 🚀 Intermediate Path (2-6 weeks)
-**Goal**: Build complex multi-node workflows and integrate external services
+**Try these projects:** Save website text • Collect page links • Fill simple forms
 
-| Course | Duration | Focus | Prerequisites |
-|--------|----------|-------|---------------|
-| **[Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)** | 60 min | Combining multiple nodes effectively | Beginner Path Complete |
-| **[Data Transformation](/learning/text-courses/intermediate/data-transformation/)** | 45 min | Processing and manipulating extracted data | Data Flow Basics |
-| **[Workflow Debugging](/learning/text-courses/intermediate/workflow-debugging/)** | 30 min | Troubleshooting and optimization | Multi-Step Workflows |
-| **[Performance Optimization](/learning/text-courses/intermediate/performance-optimization/)** | 40 min | Efficient resource usage | All Previous |
+### 🚀 Intermediate (Ready for Complex Workflows)
+**Goal:** Build multi-step automations that solve real problems
 
-**Intermediate Projects to Try**:
-- Build a research automation workflow
-- Create a content monitoring system
-- Develop a multi-page data collection workflow
+**Build on your skills:**
+1. **[Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)** (60 min)
+2. **[Data Processing](/learning/text-courses/intermediate/data-transformation/)** (45 min)
+3. **[Debugging & Optimization](/learning/text-courses/intermediate/workflow-debugging/)** (30 min)
 
-### 🎯 Advanced Path (6+ weeks)
-**Goal**: Master AI integration and enterprise-level workflow design
+**Try these projects:** Research automation • Content monitoring • Multi-page data collection
 
-| Course | Duration | Focus | Prerequisites |
-|--------|----------|-------|---------------|
-| **[AI-Powered Analysis](/learning/text-courses/advanced/ai-powered-analysis/)** | 90 min | LangChain integration and AI workflows | Intermediate Path Complete |
-| **[Complex Web Scraping](/learning/text-courses/advanced/complex-web-scraping/)** | 75 min | Advanced data extraction techniques | Performance Optimization |
-| **[Enterprise Patterns](/learning/text-courses/advanced/enterprise-patterns/)** | 60 min | Scalable, maintainable workflow design | AI-Powered Analysis |
-| **[Custom Integrations](/learning/text-courses/advanced/custom-integrations/)** | 45 min | External API and service integration | All Previous |
+### 🎯 Advanced (Want AI & Enterprise Features)  
+**Goal:** Master intelligent automation and scalable design
 
-**Advanced Projects to Try**:
-- Build an AI-powered content analysis system
-- Create enterprise-scale automation workflows
-- Develop custom integrations with business systems
+**Advanced techniques:**
+1. **[AI Integration](/learning/text-courses/advanced/ai-powered-analysis/)** (90 min)
+2. **[Advanced Web Scraping](/learning/text-courses/advanced/complex-web-scraping/)** (75 min)
+3. **[Enterprise Patterns](/learning/text-courses/advanced/enterprise-patterns/)** (60 min)
 
-## 🎯 Learning by Use Case
+**Try these projects:** AI content analysis • Enterprise automation • Custom integrations
 
-### 📊 Content Analysis & Research
-Perfect for researchers, analysts, and content creators
+## 🎯 Learn by What You Want to Build
 
-**Learning Track**:
-1. **[Browser Content Extraction](/learning/examples/browser-content-extraction/)** - Extract text, links, and media
-2. **[Intelligent Content Analysis](/advanced-ai/examples/intelligent-content-analysis/)** - AI-powered content insights
-3. **[Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)** - Automated research workflows
+### 📊 Research & Content Analysis
+**Perfect for:** Researchers, writers, analysts
 
-**Key Skills**: Text extraction, AI analysis, data organization, report generation
+**Start with:** [Content Extraction](/learning/examples/browser-content-extraction/) → [AI Analysis](/advanced-ai/examples/intelligent-content-analysis/) → [Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)
 
-### 🤖 AI-Powered Automation
-Ideal for developers and AI enthusiasts
+### 🛒 Business & E-commerce  
+**Perfect for:** Business owners, marketers, e-commerce
 
-**Learning Track**:
-1. **[AI Workflow Builder](/advanced-ai/basics/ai-workflow-builder/)** - Foundation of AI workflows
-2. **[End-to-End AI Workflows](/advanced-ai/examples/end-to-end-ai-workflows/)** - Complete AI automation
-3. **[LangChain Browser Integration](/advanced-ai/langchain/browser-integration-guide/)** - Advanced AI patterns
+**Start with:** [Form Automation](/learning/examples/multi-node-automation/) → [Price Monitoring](/learning/workflow-patterns/real-world-examples/ecommerce-automation/) → [Social Media Automation](/learning/workflow-patterns/real-world-examples/social-media-automation/)
 
-**Key Skills**: LangChain integration, AI model usage, intelligent automation, context management
+### 🤖 AI & Smart Automation
+**Perfect for:** Developers, AI enthusiasts, tech-savvy users
 
-### 🛒 Business Process Automation
-Great for business users and process improvement specialists
-
-**Learning Track**:
-1. **[Form Automation Basics](/learning/examples/multi-node-automation/)** - Automated form filling
-2. **[E-commerce Automation](/learning/workflow-patterns/real-world-examples/ecommerce-automation/)** - Product and pricing workflows
-3. **[Social Media Automation](/learning/workflow-patterns/real-world-examples/social-media-automation/)** - Content and engagement workflows
-
-**Key Skills**: Form automation, data processing, business logic, integration patterns
+**Start with:** [AI Basics](/advanced-ai/basics/ai-workflow-builder/) → [Smart Workflows](/advanced-ai/examples/end-to-end-ai-workflows/) → [LangChain Integration](/advanced-ai/langchain/browser-integration-guide/)
 
 ### 🔧 Web Development & Testing
-Designed for web developers and QA professionals
+**Perfect for:** Developers, QA testers, web professionals  
 
-**Learning Track**:
-1. **[Web Automation Patterns](/learning/examples/web-automation-patterns/)** - Browser automation fundamentals
-2. **[Complex Web Scraping](/learning/text-courses/advanced/complex-web-scraping/)** - Advanced extraction techniques
-3. **[Performance Optimization](/learning/workflow-patterns/optimization-best-practices/)** - Efficient workflow design
+**Start with:** [Web Automation](/learning/examples/web-automation-patterns/) → [Advanced Scraping](/learning/text-courses/advanced/complex-web-scraping/) → [Performance Optimization](/learning/workflow-patterns/optimization-best-practices/)
 
-**Key Skills**: DOM manipulation, web scraping, performance optimization, testing automation
+## 📖 How Do You Like to Learn?
 
-## 📖 Course Formats
+### 📺 Watch & Learn
+**[Video Tutorials](/learning/video-courses/tutoriels/)** - See workflows built step-by-step  
+**Best for:** Visual learners who like to follow along
 
-### 📺 Video Courses
-Interactive video tutorials with hands-on demonstrations
+### 📝 Read & Build  
+**[Written Guides](/learning/text-courses/beginner/)** - Detailed tutorials with screenshots  
+**Best for:** Self-paced learners who want comprehensive explanations
 
-**Available Courses**:
-- **[Flow Control Basics](/learning/video-courses/beginner/flow/)** - Visual introduction to workflow logic
-- **[Advanced Tutorials](/learning/video-courses/tutoriels/)** - Comprehensive video library
+### 🛠️ Copy & Modify
+**[Working Examples](/learning/examples/)** - Complete workflows you can download and customize  
+**Best for:** Hands-on learners who learn by doing
 
-**Best For**: Visual learners, step-by-step guidance, seeing workflows in action
+## 🎨 Ready-Made Workflow Patterns
 
-### 📝 Text-Based Tutorials
-Comprehensive written guides with code examples and detailed explanations
+### 📋 Common Automation Patterns
+**[Web Scraping](/learning/workflow-patterns/web-scraping-patterns/)** - Extract data from any website  
+**[Data Processing](/learning/workflow-patterns/data-processing-patterns/)** - Clean and organize extracted data  
+**[Content Manipulation](/learning/workflow-patterns/content-manipulation-patterns/)** - Modify web pages automatically  
 
-**Course Categories**:
-- **[Beginner Courses](/learning/text-courses/beginner/)** - Foundation concepts and first workflows
-- **[Intermediate Courses](/learning/text-courses/intermediate/)** - Advanced techniques and optimization
-- **[Advanced Courses](/learning/text-courses/advanced/)** - AI integration and enterprise patterns
+### 🏢 Real Business Examples  
+**[E-commerce Automation](/learning/workflow-patterns/real-world-examples/ecommerce-automation/)** - Monitor prices, track inventory  
+**[Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)** - Collect data from multiple sources  
+**[Social Media Automation](/learning/workflow-patterns/real-world-examples/social-media-automation/)** - Schedule posts, track engagement
 
-**Best For**: Self-paced learning, reference material, detailed technical information
+## 🎯 Track Your Progress
 
-### 🛠️ Practical Examples
-Real-world workflow examples with complete implementations
+### ✅ Beginner Milestones
+- [ ] Built first text extraction workflow
+- [ ] Understand browser permissions  
+- [ ] Created 3-node workflow with data processing
+- [ ] Successfully debugged a workflow error
 
-**Example Categories**:
-- **[Browser Content Extraction](/learning/examples/browser-content-extraction/)** - Text, link, and media extraction
-- **[Multi-Node Automation](/learning/examples/multi-node-automation/)** - Complex workflow patterns
-- **[Web Automation Patterns](/learning/examples/web-automation-patterns/)** - Common automation scenarios
+### ✅ Intermediate Milestones  
+- [ ] Built multi-page data collection workflow
+- [ ] Integrated with external API
+- [ ] Optimized workflow performance
+- [ ] Created reusable workflow template
 
-**Best For**: Learning by example, understanding practical applications, quick implementation
+### ✅ Advanced Milestones
+- [ ] Implemented AI-powered content analysis
+- [ ] Designed enterprise-scale automation
+- [ ] Built custom integration patterns
+- [ ] Contributed to community examples
 
-## 🎨 Workflow Pattern Library
+## 🤝 Get Help & Connect
 
-### 📋 Common Patterns
-Proven workflow designs for frequent use cases
+**Need help?** → **[Support & Community](/usage/help-and-community/help/)**  
+**Want to contribute?** → **[Contributing Guide](/usage/help-and-community/contributing/)**  
+**Looking for inspiration?** → **[Community Examples](/learning/examples/)**
 
-| Pattern Category | Description | Difficulty | Use Cases |
-|------------------|-------------|------------|-----------|
-| **[Web Scraping](/learning/workflow-patterns/web-scraping-patterns/)** | Extract data from websites | Beginner-Intermediate | Research, monitoring, analysis |
-| **[Data Processing](/learning/workflow-patterns/data-processing-patterns/)** | Transform and analyze data | Intermediate | Reporting, analysis, integration |
-| **[Content Manipulation](/learning/workflow-patterns/content-manipulation-patterns/)** | Modify web page content | Intermediate-Advanced | Enhancement, automation, testing |
-| **[Integration Patterns](/learning/workflow-patterns/integration-patterns/)** | Connect with external services | Advanced | Business systems, APIs, databases |
+## 🔗 More Resources
 
-### 🏢 Real-World Applications
-Complete workflow examples from actual business scenarios
-
-| Application | Industry | Complexity | Key Features |
-|-------------|----------|------------|--------------|
-| **[E-commerce Automation](/learning/workflow-patterns/real-world-examples/ecommerce-automation/)** | Retail | Intermediate | Product analysis, pricing, inventory |
-| **[Content Management](/learning/workflow-patterns/real-world-examples/content-management/)** | Publishing | Intermediate | Content creation, SEO, publishing |
-| **[Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)** | Academic/Business | Advanced | Data collection, analysis, reporting |
-| **[Social Media Automation](/learning/workflow-patterns/real-world-examples/social-media-automation/)** | Marketing | Intermediate | Content scheduling, engagement, analytics |
-
-## 🎓 Skill Development Tracks
-
-### 🔧 Technical Skills
-Master the technical aspects of workflow automation
-
-**Core Technical Skills**:
-- **Browser API Integration**: Understanding browser security and capabilities
-- **Data Flow Design**: Efficient node connection and data processing
-- **Error Handling**: Robust workflow design and troubleshooting
-- **Performance Optimization**: Resource-efficient workflow implementation
-
-**Advanced Technical Skills**:
-- **AI Model Integration**: LangChain and AI workflow patterns
-- **Custom Node Development**: Extending workflow capabilities
-- **Enterprise Architecture**: Scalable workflow design patterns
-- **Security Best Practices**: Safe automation in browser environments
-
-### 💼 Business Skills
-Apply workflow automation to solve business problems
-
-**Business Application Skills**:
-- **Process Analysis**: Identifying automation opportunities
-- **ROI Calculation**: Measuring automation value and impact
-- **Change Management**: Implementing automation in organizations
-- **Compliance & Governance**: Ensuring automated processes meet requirements
-
-## 🤝 Community Learning
-
-### 💬 Get Help & Share Knowledge
-Connect with the Agentic Workflow Studio community
-
-**Community Resources**:
-- **[Help & Support](/usage/help-and-community/help/)** - Get assistance with workflows and troubleshooting
-- **[Contributing Guide](/usage/help-and-community/contributing/)** - Contribute examples, documentation, and improvements
-- **Workflow Sharing**: Share your automation creations with the community
-
-### 🏆 Community Challenges
-Participate in learning challenges and showcase your skills
-
-**Monthly Challenges**:
-- **Automation Innovation**: Create novel workflow solutions
-- **Performance Optimization**: Build the most efficient workflows
-- **AI Integration**: Showcase creative AI-powered automation
-- **Business Impact**: Demonstrate real-world business value
-
-## 📈 Progress Tracking
-
-### ✅ Learning Milestones
-Track your progress through structured learning goals
-
-**Beginner Milestones**:
-- [ ] Complete first text extraction workflow
-- [ ] Successfully handle browser permissions
-- [ ] Build a 3-node workflow with data transformation
-- [ ] Debug and fix a workflow error
-
-**Intermediate Milestones**:
-- [ ] Create a multi-page data collection workflow
-- [ ] Integrate with an external API
-- [ ] Optimize workflow performance
-- [ ] Build a reusable workflow template
-
-**Advanced Milestones**:
-- [ ] Implement AI-powered content analysis
-- [ ] Design enterprise-scale automation
-- [ ] Create custom integration patterns
-- [ ] Contribute to community examples
-
-### 🎯 Skill Assessments
-Validate your knowledge with practical assessments
-
-**Assessment Types**:
-- **Practical Projects**: Build workflows to solve specific problems
-- **Code Reviews**: Get feedback on workflow design and implementation
-- **Performance Challenges**: Optimize workflows for efficiency and scale
-- **Innovation Showcases**: Present creative automation solutions
-
-## 🔗 Related Resources
-
-### 📚 Documentation
-- **[Node Reference](/integration/)** - Complete documentation of all available nodes
-- **[Advanced AI Guide](/advanced-ai/)** - Comprehensive AI integration documentation
-- **[Usage Guide](/usage/)** - Application features and functionality
-
-### 🛠️ Tools & Extensions
-- **Browser Extension**: Available for Chrome and Firefox
-- **Workflow Templates**: Pre-built workflows for common use cases
-- **Community Examples**: Shared workflows from other users
-
-### 🌐 External Learning
-- **LangChain Documentation**: Learn about AI framework integration
-- **Browser API References**: Understand browser capabilities and limitations
-- **Web Automation Best Practices**: Industry standards and patterns
+**📚 Complete Documentation:** [Node Reference](/integration/) • [AI Guide](/advanced-ai/) • [Usage Guide](/usage/)  
+**🛠️ Tools:** Browser Extension • Workflow Templates • Community Examples  
+**🌐 External:** LangChain Docs • Browser APIs • Automation Best Practices

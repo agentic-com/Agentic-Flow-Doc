@@ -111,3 +111,11 @@ Here's a complete workflow you can use right away to extract clean article conte
 **Problem:** Text extraction is too slow
 
 **Solution:** Use GetSelectedText instead of GetAllText if you only need specific sections, or add a relevance filter before processing with AI.
+
+## What's Next?
+
+**Related tutorials:** [Intelligent Content Analysis](/advanced-ai/examples/intelligent-content-analysis/) • [Web Content Analysis](/advanced-ai/examples/web-content-analysis/) • [Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/)
+
+**Key nodes used:** [Get All Text](/integrations/extension/GetAllText/) • [AI Agents](/integrations/builtin/ai/AIAgents/) • [Structured Output Parser](/integrations/builtin/ai/AIDependencies/outputParsers/)
+
+**Learn more:** [AI Workflow Builder](/advanced-ai/basics/ai-workflow-builder/) • [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)

@@ -56,17 +56,21 @@ The Merge node processes multiple input streams and combines them according to s
 
 ### Key Features
 
-- **Multiple Input Support**: Combine data from unlimited number of workflow branches and sources
-- **Flexible Merging Strategies**: Support for append, prepend, merge objects, and custom merging logic
-- **Conflict Resolution**: Intelligent handling of data type conflicts and duplicate key resolution
-- **Browser Data Integration**: Specialized merging for web-scraped content, DOM elements, and API responses
+<ul role="list" aria-label="Key features of the Merge node">
+<li><strong>Multiple Input Support</strong>: Combine data from unlimited number of workflow branches and sources</li>
+<li><strong>Flexible Merging Strategies</strong>: Support for append, prepend, merge objects, and custom merging logic</li>
+<li><strong>Conflict Resolution</strong>: Intelligent handling of data type conflicts and duplicate key resolution</li>
+<li><strong>Browser Data Integration</strong>: Specialized merging for web-scraped content, DOM elements, and API responses</li>
+</ul>
 
 ### Primary Use Cases
 
-- **Parallel Processing Results**: Combine results from multiple parallel web scraping or processing operations
-- **Data Source Aggregation**: Merge data from different APIs, databases, or web sources into unified datasets
-- **Workflow Synchronization**: Synchronize multiple workflow branches before proceeding to final processing steps
-- **Content Compilation**: Combine extracted content, metadata, and analysis results into comprehensive reports
+<ul role="list" aria-label="Primary use cases for the Merge node">
+<li><strong>Parallel Processing Results</strong>: Combine results from multiple parallel web scraping or processing operations</li>
+<li><strong>Data Source Aggregation</strong>: Merge data from different APIs, databases, or web sources into unified datasets</li>
+<li><strong>Workflow Synchronization</strong>: Synchronize multiple workflow branches before proceeding to final processing steps</li>
+<li><strong>Content Compilation</strong>: Combine extracted content, metadata, and analysis results into comprehensive reports</li>
+</ul>
 
 ## Parameters & Configuration
 

@@ -1,35 +1,37 @@
 ---
 title: Using Agentic Workflow Studio
-description: "Learn how to use Agentic Workflow Studio browser extension to create intelligent workflows that interact with web content."
+description: "Create intelligent browser automations that extract data, process content with AI, and automate web tasks - all without coding."
 ---
 
-Agentic Workflow Studio is a powerful browser extension that enables you to create AI-powered workflows directly within your web browser. Build automation that understands web content, extracts data intelligently, and performs actions based on what it finds.
+# Build Smart Browser Automations
 
-## Getting Started with Browser Workflows
+Agentic Workflow Studio lets you create powerful automations that run directly in your browser. Extract data from websites, process it with AI, and automate repetitive web tasks - no coding required.
 
-Create workflows that interact with web pages in real-time:
+## What You Can Build
 
-- **Extract content** from any webpage using intelligent selection tools
-- **Process data** with AI models and advanced transformations  
-- **Manipulate browser context** by inserting content and interacting with page elements
-- **Chain operations** to create sophisticated automation sequences
+**Extract & Save Content**
+- Save text, links, and images from any website
+- Collect research data from multiple sources
+- Monitor websites for changes
 
-## Key Workflow Capabilities
+**Process with AI**  
+- Analyze content with smart AI models
+- Generate summaries and insights
+- Make intelligent decisions based on web data
 
-### Content Extraction
-Extract text, HTML, links, and images from web pages with precision. Use selected content or capture entire pages for processing.
+**Automate Web Tasks**
+- Fill forms automatically with processed data
+- Navigate between pages programmatically  
+- Insert content and interact with web elements
 
-### AI Integration
-Leverage advanced AI models to analyze, transform, and generate content based on extracted web data.
+## How It Works
 
-### Browser Manipulation
-Insert content into web forms, interact with page elements, and modify the browser environment as part of your workflows.
+**Visual Workflow Builder:** Drag and drop nodes to create automations  
+**Real-Time Processing:** Works directly with live web pages  
+**Browser Integration:** Runs securely within your browser extension
 
-### Visual Builder
-Design complex workflows using an intuitive drag-and-drop interface that runs entirely in your browser.
+## Get Started
 
-## Next Steps
-
-- [Quick Start Guide](/usage/getting-started/quick-starts/quick-intro/) - Get up and running in minutes
-- [Key Concepts](/usage/key-concepts/) - Understand workflow fundamentals
-- [Browser Extension Nodes](/integration/extension/) - Explore content manipulation capabilities
+**New user?** → **[Quick Setup Guide](/usage/getting-started/quick-starts/quick-intro/)** (5 minutes)  
+**Ready to build?** → **[Create Your First Workflow](/learning/text-courses/beginner/first-workflow/)** (15 minutes)  
+**Need concepts?** → **[Key Concepts](/usage/key-concepts/)** • **[Browser Nodes](/integration/extension/)**
