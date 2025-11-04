@@ -15,7 +15,7 @@
     - Include "What you'll accomplish" sections for each course
     - _Requirements: 1.1, 1.4, 4.1, 6.1_
 
-  - [ ] 2.2 Transform existing tutorial files in `src/content/docs/learning/`
+  - [x] 2.2 Transform existing tutorial files in `src/content/docs/learning/`
     - Rewrite `first-workflow.md` with plain language and real-world examples
     - Update `installation-setup.md` with clearer step-by-step instructions
     - Add inline definitions for technical terms throughout learning content

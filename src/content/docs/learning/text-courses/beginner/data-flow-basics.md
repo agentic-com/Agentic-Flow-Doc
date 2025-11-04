@@ -1,73 +1,102 @@
 ---
-title: "Data Flow Basics"
-description: "Understanding how data moves between nodes in browser workflows with visual examples and practical demonstrations."
+title: "How Information Flows Through Your Automations"
+description: "Learn how information moves from one step to the next in your automations. Simple explanations with visual examples - no technical background needed!"
 ---
 
-# Data Flow Basics
+# How Information Flows Through Your Automations
 
-Understanding how data flows between nodes is fundamental to creating effective browser automation workflows. This tutorial explains data structures, transformation patterns, and debugging techniques with visual examples.
+Think of your automations like a factory assembly line. Information starts at one end, gets processed and improved at each station, and comes out as a finished product at the end. Let's learn how this "information assembly line" works!
 
 ## What You'll Learn
 
-By the end of this tutorial, you'll understand:
-- How data moves between workflow nodes
-- Common data structures in browser automation
-- Data transformation and processing patterns
-- Debugging data flow issues
-- Best practices for efficient data handling
+By the end of this guide, you'll understand:
+- **How information moves** from one automation step to the next (like a conveyor belt)
+- **What happens to your information** as it gets processed (like how raw materials become finished products)
+- **How to see what's happening** when your automation runs (like watching the assembly line work)
+- **How to fix problems** when information doesn't flow correctly
+- **How to make your automations more efficient** and reliable
 
-## Prerequisites
+## Before You Start
 
-- Completed [Your First Workflow](/learning/text-courses/beginner/first-workflow/)
-- Basic understanding of JSON data structures
-- Familiarity with browser extension nodes
+**You should have:**
+- ✅ Built your first automation ([First Workflow guide here](/learning/text-courses/beginner/first-workflow/))
+- ✅ 30 minutes to learn the concepts
+- ✅ Curiosity about how your automations actually work behind the scenes
 
-## Understanding Data Flow Concepts
+**💡 Think of information flow like:** A recipe where each step takes the results from the previous step and does something new with it. Flour + eggs = dough, dough + heat = bread, bread + butter = toast!
 
-### Node-Based Data Processing
+## Understanding Your Information Assembly Line
 
-In Agentic Workflow Studio, data flows through a network of connected nodes:
+### How Information Moves Between Steps
+
+In your automations, information flows like items on a conveyor belt:
 
 ```
-Input Data → Node 1 → Transformed Data → Node 2 → Final Output
+Your Selection → Step 1 → Improved Information → Step 2 → Final Result
 ```
 
-Each node:
-- **Receives** data from previous nodes
-- **Processes** the data according to its configuration
-- **Outputs** transformed data to the next nodes
+Each step (**node**) in your automation:
+- **Receives** information from the previous step
+- **Does something useful** with that information (cleans it, adds to it, organizes it)
+- **Passes the improved information** to the next step
 
-### Data Structure Fundamentals
+### Types of Information Your Automations Handle
 
-**Basic Data Types:**
-- **String:** Text content extracted from web pages
-- **Object:** Structured data with properties
-- **Array:** Lists of items (links, images, text blocks)
-- **Boolean:** True/false values for conditions
-- **Number:** Counts, measurements, calculations
+**📝 Text Information**
+- **What it is:** Words, sentences, paragraphs you select from websites
+- **Example:** "The best pizza in Chicago is at Tony's Restaurant"
 
-**Example data flow:**
-```javascript
-// Input: Raw text selection
-"Hello World! This is a sample text."
+**📊 Organized Information**  
+- **What it is:** Information arranged in a structured way (like a digital filing cabinet)
+- **Example:** 
+  ```
+  Text: "The best pizza in Chicago is at Tony's Restaurant"
+  Word Count: 9 words
+  Date Captured: March 15, 2024
+  Source Website: food-blog.com
+  ```
 
-// After GetSelectedText node:
-{
-  "selectedText": "Hello World! This is a sample text.",
-  "context": "...surrounding text...",
-  "element": { "tagName": "P", "className": "content" },
-  "position": { "start": 0, "end": 37 }
-}
+**📋 Lists of Information**
+- **What it is:** Multiple items collected together
+- **Example:** A list of all links on a webpage, or all images, or all phone numbers
 
-// After EditFields processing:
-{
-  "selectedText": "Hello World! This is a sample text.",
-  "cleanedText": "Hello World This is a sample text",
-  "wordCount": 7,
-  "extractedAt": "2024-01-15T10:30:45.123Z",
-  "context": "...surrounding text...",
-  "element": { "tagName": "P", "className": "content" }
-}
+**🔢 Numbers and Measurements**
+- **What it is:** Counts, calculations, measurements
+- **Example:** Number of words, number of links found, reading time estimate
+
+### Real Example: Watching Information Transform
+
+Let's follow some text through a simple automation:
+
+**🎬 Step 1: You select text**
+```
+"The quick brown fox jumps over the lazy dog."
+```
+
+**🎬 Step 2: Text Grabber captures it**
+```
+Selected Text: "The quick brown fox jumps over the lazy dog."
+Where Found: In a paragraph on the webpage
+Position: Characters 26-70 on the page
+Surrounding Context: "This is a sample paragraph. The quick brown fox jumps over the lazy dog. It contains all letters."
+```
+
+**🎬 Step 3: Text Processor improves it**
+```
+Original Text: "The quick brown fox jumps over the lazy dog."
+Word Count: 9 words
+Character Count: 44 characters
+Contains Numbers: No
+Date Captured: March 15, 2024 at 2:30 PM
+Source: sample-paragraph
+```
+
+**🎬 Step 4: File Saver prepares final result**
+```
+Filename: "text-extraction-2024-03-15.json"
+File Size: 245 bytes
+Ready to Download: Yes
+Contains: All the information from previous steps, organized and ready to save
 ```
 
 ## Visual Data Flow Examples
