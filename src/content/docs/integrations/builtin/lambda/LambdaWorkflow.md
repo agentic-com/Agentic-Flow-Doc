@@ -89,7 +89,7 @@ This node is essential for creating scalable workflow architectures where common
 
 ### Required Permissions
 
-The Lambda Workflow node operates entirely within the Agentic Workflow Studio environment and does not require additional browser permissions beyond those already granted to the main application.
+The Lambda Workflow node operates entirely within the `Agentic WorkFlow` environment and does not require additional browser permissions beyond those already granted to the main application.
 
 ### Browser APIs Used
 

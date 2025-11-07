@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This feature enhances the Agentic Workflow Studio documentation by systematically adding Mermaid diagrams and visual elements to markdown files. The system will make complex workflow concepts, node relationships, and technical processes more intuitive and accessible to users across all skill levels through standardized visual enhancements.
+This feature enhances the `Agentic WorkFlow` documentation by systematically adding Mermaid diagrams and visual elements to markdown files. The system will make complex workflow concepts, node relationships, and technical processes more intuitive and accessible to users across all skill levels through standardized visual enhancements.
 
 ## Glossary
 
-- **Documentation_System**: The Astro-based documentation site for Agentic Workflow Studio with Starlight theme
+- **Documentation_System**: The Astro-based documentation site for `Agentic WorkFlow` with Starlight theme
 - **Mermaid_Diagram**: Interactive diagrams rendered from Mermaid markdown syntax within markdown files
 - **Visual_Enhancement**: Addition of diagrams, flowcharts, sequence diagrams, or interactive elements to explain concepts
 - **Content_File**: Individual markdown files containing documentation in src/content/docs/
@@ -19,7 +19,7 @@ This feature enhances the Agentic Workflow Studio documentation by systematicall
 
 ### Requirement 1
 
-**User Story:** As a developer learning Agentic Workflow Studio, I want visual diagrams in the documentation so that I can quickly understand complex workflow concepts and node relationships.
+**User Story:** As a developer learning `Agentic WorkFlow`, I want visual diagrams in the documentation so that I can quickly understand complex workflow concepts and node relationships.
 
 #### Acceptance Criteria
 

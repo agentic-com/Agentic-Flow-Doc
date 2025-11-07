@@ -1,6 +1,6 @@
 ---
 title: What's an agent in AI?
-description: Understand agents in the context of AI. Learn how Agentic Workflow Studio provides agents.
+description: Understand agents in the context of AI. Learn how `Agentic WorkFlow` provides agents.
 contentType: explanation
 difficulty: "🎯 advanced"
 ---
@@ -31,8 +31,8 @@ sequenceDiagram
     Agent->>LLM: Generate Response with All Context
     LLM-->>Agent: Formatted Response
     Agent-->>User: Deliver Complete Answer
-```# Agents in Agentic Workflow Studio
+```# Agents in `Agentic WorkFlow`
 
-Agentic Workflow Studio provides one Agent node, which can act as different types of agent depending on the settings you choose. Refer to the Agent node documentation for details on the available agent types.
+`Agentic WorkFlow` provides one Agent node, which can act as different types of agent depending on the settings you choose. Refer to the Agent node documentation for details on the available agent types.
 
 When you execute a workflow containing an agent, the agent runs multiple times. For example, it may do an initial setup, followed by a run to call a tool, then another run to evaluate the tool response and respond to the user.

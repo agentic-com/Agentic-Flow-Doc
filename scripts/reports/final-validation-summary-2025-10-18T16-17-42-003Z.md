@@ -25,7 +25,7 @@
 
 ### 2. Terminology (HIGH Priority)
 
-**Action:** Update all deprecated n8n references to Agentic Workflow Studio
+**Action:** Update all deprecated n8n references to `Agentic WorkFlow`
 
 **Details:** Use global find-and-replace to ensure consistent product naming
 
@@ -53,7 +53,7 @@
 
 ### Step 2: Global Terminology Update
 
-**Description:** Run global find-and-replace to update all n8n references to Agentic Workflow Studio
+**`Agentic WorkFlow``
 
 **Time Estimate:** 30 minutes
 

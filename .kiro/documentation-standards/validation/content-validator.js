@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Content Validation System for Agentic Workflow Studio Documentation
+ * Content Validation System for Agentic WorkFlow Documentation
  * 
  * This script validates documentation files for completeness, structure,
  * and adherence to documentation standards.

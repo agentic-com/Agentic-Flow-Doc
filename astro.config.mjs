@@ -32,11 +32,18 @@ export default defineConfig({
         logLevel: "error",
         securityLevel: "strict",
       },
+
+      iconPacks: [
+        {
+          name: 'fa',
+          loader: () => fetch('https://unpkg.com/@iconify-json/fa6-solid@1.2.4/icons.json').then(res => res.json())
+        }
+      ]
     }),
     starlight({
-      title: "Agentic Workflow Studio",
+      title: "Agentic WorkFlow",
       description:
-        "Agentic Workflow Studio - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
+        "Agentic WorkFlow - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
       logo: {
         src: "./src/assets/logo-beige.png",
       },
@@ -106,6 +113,7 @@ export default defineConfig({
               },
               {
                 label: "Quick Wins",
+                collapsed: true,
                 autogenerate: {
                   directory: "usage/quick-wins",
                   collapsed: false,
@@ -113,6 +121,7 @@ export default defineConfig({
               },
               {
                 label: "How-To Guides",
+                collapsed: true,
                 autogenerate: {
                   directory: "usage/how-to",
                   collapsed: false,
@@ -120,10 +129,12 @@ export default defineConfig({
               },
               {
                 label: "Releases",
+                collapsed: true,
                 autogenerate: { directory: "usage/releases", collapsed: true },
               },
               {
                 label: "Help and Community",
+                collapsed: true,
                 autogenerate: {
                   directory: "usage/help-and-community",
                   collapsed: true,
@@ -131,6 +142,7 @@ export default defineConfig({
               },
               {
                 label: "Troubleshooting",
+                collapsed: true,
                 items: [
                   "usage/troubleshooting-decision-guide",
                   {
@@ -144,6 +156,7 @@ export default defineConfig({
               },
               {
                 label: "Licenses and privacy",
+                collapsed: true,
                 autogenerate: {
                   directory: "usage/licenses-and-privacy",
                   collapsed: true,
@@ -213,6 +226,7 @@ export default defineConfig({
               },
               {
                 label: "Examples",
+                collapsed: true,
                 autogenerate: {
                   directory: "advanced-ai/examples",
                   collapsed: true,
@@ -220,6 +234,7 @@ export default defineConfig({
               },
               {
                 label: "Performance & Troubleshooting",
+                collapsed: true,
                 items: [
                   "advanced-ai/performance-optimization",
                   "advanced-ai/troubleshooting-guide",
@@ -236,13 +251,6 @@ export default defineConfig({
             link: "/learning/",
             icon: "open-book",
             items: [
-              {
-                label: "Examples",
-                autogenerate: {
-                  directory: "learning/examples",
-                  collapsed: true,
-                },
-              },
               {
                 label: "Video Courses",
                 autogenerate: {
@@ -264,6 +272,14 @@ export default defineConfig({
                   collapsed: true,
                 },
               },
+              {
+                label: "Examples",
+                collapsed: true,
+                autogenerate: {
+                  directory: "learning/examples",
+                  collapsed: true,
+                },
+              },
             ],
           },
         ]),
@@ -277,8 +293,7 @@ export default defineConfig({
       },
       customCss: [
         // Path to your Tailwind base styles:
-        "./src/styles/global.css",
-        "./src/styles/app.css",
+        "./src/styles/global.css"
       ],
       lastUpdated: true,
     }),

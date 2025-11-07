@@ -38,7 +38,7 @@ Different browsers and versions can cause workflow execution issues. This guide 
 
 **Step-by-step fix:**
 1. Open `chrome://extensions/` in address bar
-2. Find "Agentic Workflow Studio" in the list
+2. Find "`Agentic WorkFlow`" in the list
 3. Ensure the toggle switch is **ON** (blue)
 4. If not visible, click "Load unpacked" for developer versions
 5. Refresh the page where you want to use workflows

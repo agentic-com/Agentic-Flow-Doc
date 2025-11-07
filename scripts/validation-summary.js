@@ -209,7 +209,7 @@ class ValidationSummaryGenerator {
       recommendations.push({
         priority: 'HIGH',
         category: 'Terminology',
-        action: 'Update all deprecated n8n references to Agentic Workflow Studio',
+        action: 'Update all deprecated n8n references to Agentic WorkFlow',
         details: 'Use global find-and-replace to ensure consistent product naming'
       });
     }
@@ -307,7 +307,7 @@ class ValidationSummaryGenerator {
       nextSteps.push({
         step: 2,
         action: 'Global Terminology Update',
-        description: 'Run global find-and-replace to update all n8n references to Agentic Workflow Studio',
+        description: 'Run global find-and-replace to update all n8n references to Agentic WorkFlow',
         timeEstimate: '30 minutes',
         priority: 'HIGH'
       });

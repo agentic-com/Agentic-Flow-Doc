@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
 /**
- * Cross-reference validation for Agentic Workflow Studio documentation
+ * Cross-reference validation for Agentic WorkFlow documentation
  * Validates internal links, navigation consistency, and content structure
  */
 

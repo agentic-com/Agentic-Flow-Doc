@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides comprehensive guidelines for maintaining the Agentic Workflow Studio documentation. It covers processes for keeping browser extension documentation updated, adding new features, and ensuring content quality and consistency.
+This document provides comprehensive guidelines for maintaining the `Agentic WorkFlow` documentation. It covers processes for keeping browser extension documentation updated, adding new features, and ensuring content quality and consistency.
 
 ## Table of Contents
 

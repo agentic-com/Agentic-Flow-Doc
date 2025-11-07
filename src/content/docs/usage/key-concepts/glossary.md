@@ -1,6 +1,6 @@
 ---
-title: Agentic Workflow Studio Glossary
-description: "Essential terminology and concepts for Agentic Workflow Studio browser extension and AI-powered web automation workflows."
+title: `Agentic WorkFlow` Glossary
+description: "Essential terminology and concepts for `Agentic WorkFlow` browser extension and AI-powered web automation workflows."
 ---
 
 #### AI agent
@@ -9,7 +9,7 @@ AI agents are artificial intelligence systems capable of responding to requests,
 
 #### AI chain
 
-AI chains allow you to interact with large language models (LLMs) and other resources in sequences of calls to components. AI chains in Agentic Workflow Studio don't use persistent memory, so you can't use them to reference previous context (use AI agents for this).
+AI chains allow you to interact with large language models (LLMs) and other resources in sequences of calls to components. AI chains in `Agentic WorkFlow` don't use persistent memory, so you can't use them to reference previous context (use AI agents for this).
 
 #### AI completion
 
@@ -33,7 +33,7 @@ Reranking is a technique that refines the order of a list of candidate documents
 
 #### AI memory
 
-In an AI context, memory allows AI tools to persist message context across interactions. This allows you to have a continuing conversations with AI agents, for example, without submitting ongoing context with each message. In Agentic Workflow Studio, AI agent nodes can use memory, but AI chains can't.
+In an AI context, memory allows AI tools to persist message context across interactions. This allows you to have a continuing conversations with AI agents, for example, without submitting ongoing context with each message. In `Agentic WorkFlow`, AI agent nodes can use memory, but AI chains can't.
 
 #### AI retrieval-augmented generation (RAG)
 
@@ -61,15 +61,15 @@ Specialized workflow components that can interact with browser context, such as 
 
 #### Canvas
 
-The main interface for building workflows in Agentic Workflow Studio's browser-based editor. You use the canvas to add and connect nodes to compose browser automation workflows.
+The main interface for building workflows in `Agentic WorkFlow`'s browser-based editor. You use the canvas to add and connect nodes to compose browser automation workflows.
 
-#### cluster node (Agentic Workflow Studio)
+#### cluster node (`Agentic WorkFlow`)
 
-In Agentic Workflow Studio, cluster nodes are groups of nodes that work together to provide functionality in a workflow. They consist of a root node and one or more sub nodes that extend the node's functionality.
+In `Agentic WorkFlow`, cluster nodes are groups of nodes that work together to provide functionality in a workflow. They consist of a root node and one or more sub nodes that extend the node's functionality.
 
 #### Credential
 
-In Agentic Workflow Studio, credentials store authentication information to connect with external apps and services from within the browser environment. Browser security limitations may restrict certain types of authentication methods.
+In `Agentic WorkFlow`, credentials store authentication information to connect with external apps and services from within the browser environment. Browser security limitations may restrict certain types of authentication methods.
 
 #### Data Pinning
 
@@ -77,21 +77,21 @@ Data pinning allows you to temporarily freeze the output data of a node during w
 
 #### Editor
 
-The Agentic Workflow Studio editor runs directly in your browser and allows you to create and manage browser-based workflows. The main area is the canvas, where you can compose workflows by adding, configuring, and connecting nodes. The interface provides access to browser extension nodes, credentials, templates, and execution history.
+The `Agentic WorkFlow` editor runs directly in your browser and allows you to create and manage browser-based workflows. The main area is the canvas, where you can compose workflows by adding, configuring, and connecting nodes. The interface provides access to browser extension nodes, credentials, templates, and execution history.
 
-#### Entitlement (Agentic Workflow Studio)
+#### Entitlement (`Agentic WorkFlow`)
 
-In Agentic Workflow Studio, entitlements grant browser extension instances access to plan-restricted features for a specific period of time.
+In `Agentic WorkFlow`, entitlements grant browser extension instances access to plan-restricted features for a specific period of time.
 
-Floating entitlements are a pool of entitlements that you can distribute among various Agentic Workflow Studio instances. You can re-assign a floating entitlement to transfer its access to a different Agentic Workflow Studio instance.
+Floating entitlements are a pool of entitlements that you can distribute among various `Agentic WorkFlow` instances. You can re-assign a floating entitlement to transfer its access to a different `Agentic WorkFlow` instance.
 
-#### Evaluation (Agentic Workflow Studio)
+#### Evaluation (`Agentic WorkFlow`)
 
-In Agentic Workflow Studio, evaluation allows you to tag and organize execution history and compare it against new executions. You can use this to understand how your workflow performs over time as you make changes. This is particularly useful while developing AI-centered workflows in the browser environment.
+In `Agentic WorkFlow`, evaluation allows you to tag and organize execution history and compare it against new executions. You can use this to understand how your workflow performs over time as you make changes. This is particularly useful while developing AI-centered workflows in the browser environment.
 
 #### Expression
 
-In Agentic Workflow Studio, expressions allow you to populate node parameters dynamically by executing JavaScript code within the browser environment. You can use expressions to process browser context data, manipulate extracted text, or create dynamic values based on web page content.
+In `Agentic WorkFlow`, expressions allow you to populate node parameters dynamically by executing JavaScript code within the browser environment. You can use expressions to process browser context data, manipulate extracted text, or create dynamic values based on web page content.
 
 #### LangChain
 
@@ -103,23 +103,23 @@ Large language models, or LLMs, are AI machine learning models designed to excel
 
 #### Node
 
-In Agentic Workflow Studio, nodes are individual components that you compose to create browser-based workflows. Nodes can extract data from web pages, process browser context information, define flow control logic, and connect with external services within browser security constraints.
+In `Agentic WorkFlow`, nodes are individual components that you compose to create browser-based workflows. Nodes can extract data from web pages, process browser context information, define flow control logic, and connect with external services within browser security constraints.
 
-#### Project (Agentic Workflow Studio)
+#### Project (`Agentic WorkFlow`)
 
-Agentic Workflow Studio projects allow you to separate workflows, variables, and credentials into separate groups for easier management. Projects make it easier for teams to collaborate by sharing and compartmentalizing related resources.
+`Agentic WorkFlow` projects allow you to separate workflows, variables, and credentials into separate groups for easier management. Projects make it easier for teams to collaborate by sharing and compartmentalizing related resources.
 
-#### Root node (Agentic Workflow Studio)
+#### Root node (`Agentic WorkFlow`)
 
-Each Agentic Workflow Studio cluster node contains a single root node that defines the main functionality of the cluster. One or more sub nodes attach to the root node to extend its functionality.
+Each `Agentic WorkFlow` cluster node contains a single root node that defines the main functionality of the cluster. One or more sub nodes attach to the root node to extend its functionality.
 
-#### Sub node (Agentic Workflow Studio)
+#### Sub node (`Agentic WorkFlow`)
 
-Agentic Workflow Studio cluster nodes consist of one or more sub nodes connected to a root node. Sub nodes extend the functionality of the root node, providing access to specific services or resources or offering specific types of dedicated processing, like calculator functionality, for example.
+`Agentic WorkFlow` cluster nodes consist of one or more sub nodes connected to a root node. Sub nodes extend the functionality of the root node, providing access to specific services or resources or offering specific types of dedicated processing, like calculator functionality, for example.
 
 #### Template
 
-Agentic Workflow Studio templates are pre-built browser automation workflows designed by the community. These templates demonstrate common browser context manipulation patterns and can be imported and customized for your specific web automation needs.
+`Agentic WorkFlow` templates are pre-built browser automation workflows designed by the community. These templates demonstrate common browser context manipulation patterns and can be imported and customized for your specific web automation needs.
 
 #### Trigger Node
 
@@ -127,7 +127,7 @@ A trigger node is a special node responsible for executing browser-based workflo
 
 #### Workflow
 
-An Agentic Workflow Studio workflow is a collection of nodes that automate browser-based processes. Workflows can extract data from web pages, process content with AI, and perform complex browser automation tasks.
+An `Agentic WorkFlow` workflow is a collection of nodes that automate browser-based processes. Workflows can extract data from web pages, process content with AI, and perform complex browser automation tasks.
 
 #### Web Page Context
 
@@ -135,7 +135,7 @@ The current state and content of a web page that can be accessed by browser exte
 
 #### Content Security Policy (CSP)
 
-Browser security restrictions that may limit certain workflow operations. Agentic Workflow Studio respects CSP limitations and provides guidance on working within browser security constraints.
+Browser security restrictions that may limit certain workflow operations. `Agentic WorkFlow` respects CSP limitations and provides guidance on working within browser security constraints.
 
 #### DOM Manipulation
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document establishes comprehensive standards for all documentation in the Agentic Workflow Studio project. These standards ensure consistency, quality, and usability across all content types.
+This document establishes comprehensive standards for all documentation in the `Agentic WorkFlow` project. These standards ensure consistency, quality, and usability across all content types.
 
 ## Content Quality Standards
 

@@ -1,6 +1,6 @@
 ---
 title: Complete Web Content Extraction Workflow
-description: "Master browser content extraction techniques with Agentic Workflow Studio extension through practical examples and tutorials."
+description: "Master browser content extraction techniques with `Agentic WorkFlow` extension through practical examples and tutorials."
 sidebar:
   order: 1
 difficulty: "🌱 beginner"

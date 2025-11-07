@@ -1,13 +1,13 @@
 ---
 title: "🚀 Quick Wins"
-description: "Get immediate value from Agentic Workflow Studio with these 5-15 minute tutorials"
+description: "Get immediate value from `Agentic WorkFlow` with these 5-15 minute tutorials"
 template: doc
 difficulty: "🌱 beginner"
 ---
 
 # 🚀 Quick Wins
 
-Get up and running with Agentic Workflow Studio in minutes, not hours. These focused tutorials show you how to solve real problems quickly and build confidence with the platform.
+Get up and running with `Agentic WorkFlow` in minutes, not hours. These focused tutorials show you how to solve real problems quickly and build confidence with the platform.
 
 ## Why Start Here?
 

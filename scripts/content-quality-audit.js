@@ -230,8 +230,8 @@ class ContentQualityAuditor {
     
     // Check for old product names that should be updated
     const oldTerms = [
-      { old: /\bn8n\b/g, correct: 'Agentic Workflow Studio' },
-      { old: /\bN8N\b/g, correct: 'Agentic Workflow Studio' },
+      { old: /\bn8n\b/g, correct: 'Agentic WorkFlow' },
+      { old: /\bN8N\b/g, correct: 'Agentic WorkFlow' },
       { old: /\bworkflow automation\b/gi, correct: 'workflow' },
       { old: /\bautomation tool\b/gi, correct: 'workflow builder' },
       { old: /\bscraping\b/gi, correct: 'extraction' },
@@ -359,7 +359,7 @@ class ContentQualityAuditor {
     
     if (this.stats.terminologyInconsistencies.length > 0) {
       console.log('   📝 Terminology:');
-      console.log('      • Replace "n8n" with "Agentic Workflow Studio"');
+      console.log('      • Replace "n8n" with "Agentic WorkFlow"');
       console.log('      • Use consistent product terminology');
       console.log('      • Update outdated references');
     }

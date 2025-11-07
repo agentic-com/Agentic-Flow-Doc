@@ -1,13 +1,13 @@
 ---
 title: Help
-description: How to get help and support with Agentic Workflow Studio.
+description: How to get help and support with `Agentic WorkFlow`.
 ---
 
-# Get help with Agentic Workflow Studio
+# Get help with `Agentic WorkFlow`
 
 ## Where to get help
 
-Agentic Workflow Studio provides different support options depending on your plan and the nature of your problem.
+`Agentic WorkFlow` provides different support options depending on your plan and the nature of your problem.
 
 ## Getting Help Process
 
@@ -21,7 +21,7 @@ graph TB
     B -->|Feature Request| F[Community Forum]
 
     C --> G[Post in Forum]
-    D --> H[Email help@Agentic Workflow Studio.io]
+    D --> H[Email help@`Agentic WorkFlow`.io]
     E --> I[Create GitHub Issue]
     F --> G
 
@@ -41,24 +41,24 @@ graph TB
     style N fill:#e0f2f1
 ```
 
-Agentic Workflow Studio provides different support options depending on your plan and the nature of your problem.
+`Agentic WorkFlow` provides different support options depending on your plan and the nature of your problem.
 
-### AgentAgentic Workflow StudioWorkflow StudAgentic Workflow Studio provides forum
+### Agent`Agentic WorkFlow`Workflow Stud`Agentic WorkFlow` provides forum
 
-Agentic Workflow Studio provides free community support for all Agentic Workflow Studio users through theAgentic Workflow Studioorum](https://community.Agentic Workflow Studio.io/).
+`Agentic WorkFlow` provides free community support for all `Agentic WorkFlow` users through the`Agentic WorkFlow`orum](https://community.`Agentic WorkFlow`.io/).
 
-This is the best source for answers of all kinds, as both the Agentic Workflow Studio support team and community members can help.
+This is the best source for answers of all kinds, as both the `Agentic WorkFlow` support team and community members can help.
 
 ### Email support
 
-Agentic Workflow Studio offers email support tAgentic Workflow Studiough the [help@Agentic Workflow Studio.io](mailto:help@Agentic Workflow Studio.io) for the following plans:
+`Agentic WorkFlow` offers email support t`Agentic WorkFlow`ugh the [help@`Agentic WorkFlow`.io](mailto:help@`Agentic WorkFlow`.io) for the following plans:
 
-* [Enterprise plans](https://Agentic Workflow Studio/enterprise/) cAgentic Workflow Studiouse email support with an SLA for technical, account, billing, and other inquiries.
-* Other [Cloud plans](https://Agentic Workflow Studio/pricing/) can use email support for admin and billing issues. For technical support, please refer to the forum.
+* [Enterprise plans](https://`Agentic WorkFlow`/enterprise/) c`Agentic WorkFlow`use email support with an SLA for technical, account, billing, and other inquiries.
+* Other [Cloud plans](https://`Agentic WorkFlow`/pricing/) can use email support for admin and billing issues. For technical support, please refer to the forum.
 
 ## What to include in your message
 
-WAgentic Workflow Studio posting to the forum or emailing customer support, youAgentic Workflow Studio get help faster ifAgentic Workflow Studio instance detailsAgentic Workflow Studio your first message about your Agentic Workflow Studio Agentic Workflow Studio instance the iAbout Agentic Workflow Studiontic Workflow StudiAgentic Workflow Studio experienciAbout Agentic Workflow StudioYour Agentic Workflow Studio instAgentic Workflow Studio instance
+W`Agentic WorkFlow` posting to the forum or emailing customer support, you`Agentic WorkFlow` get help faster if`Agentic WorkFlow` instance details`Agentic WorkFlow` your first message about your `Agentic WorkFlow` `Agentic WorkFlow` instance the iAbout `Agentic WorkFlow`ntic Workflow Studi`Agentic WorkFlow` experienciAbout `Agentic WorkFlow`Your `Agentic WorkFlow` inst`Agentic WorkFlow` instance
 
 ## Debug Information Collection Process
 
@@ -72,7 +72,7 @@ sequenceDiagram
 
     U->>P: Open left-side panel
     U->>H: Select "Help"
-    U->>H: Select "About Agentic Workflow Studio"
+    U->>H: Select "About `Agentic WorkFlow`"
     H->>M: Open About modal
     M->>U: Display instance information
     U->>M: Select "Copy debug information"
@@ -80,12 +80,12 @@ sequenceDiagram
     U->>C: Paste in forum/email
 ```
 
-To collect basic information about your Agentic Workflow Studio instance:
+To collect basic information about your `Agentic WorkFlow` instance:
 
 1. Open the left-side panel.
 2. Select **Help**.
-3. Select **About Agentic Workflow Studio**.
-4. The **About Agentic Workflow Studio** modal opens to display your current information.
+3. Select **About `Agentic WorkFlow`**.
+4. The **About `Agentic WorkFlow`** modal opens to display your current information.
 5. Select **Copy debug information** to copy your information.
 6. Include this information in your forum post or support email.
 
@@ -93,8 +93,8 @@ To collect basic information about your Agentic Workflow Studio instance:
 
 To help resolve your issues more efficiently, here are some things you can include to provide more context:
 
-* :video_camera: **Agentic Workflow Studioeenshots or video recordings**: A quick Loom or screen recording that shows what's happeningAgentic Workflow Studio :books: **Relevant documentation**: If you've followed any guides or documentation, include links to Agentic Workflow Studioour message.
-* :cloud: **Agentic Workflow Studio Cloud workspace (if possible)**: If contacting support, pAgentic Workflow Studioe workspace URL for your Agentic Workflow Studio Cloud instance. It looks something like `https://xxxxx.Agentic Workflow Studio.app.cloud`.
+* :video_camera: **`Agentic WorkFlow`eenshots or video recordings**: A quick Loom or screen recording that shows what's happening`Agentic WorkFlow` :books: **Relevant documentation**: If you've followed any guides or documentation, include links to `Agentic WorkFlow`our message.
+* :cloud: **`Agentic WorkFlow` Cloud workspace (if possible)**: If contacting support, p`Agentic WorkFlow`e workspace URL for your `Agentic WorkFlow` Cloud instance. It looks something like `https://xxxxx.`Agentic WorkFlow`.app.cloud`.
 * :memo: **Steps to reproduce the issue**: A simple step-by-step outline of what you did before encountering the issue.
 * :open_file_folder: **Workflow or Configuration files**: Sharing relevant workflows or configuration files can be a huge help.
 

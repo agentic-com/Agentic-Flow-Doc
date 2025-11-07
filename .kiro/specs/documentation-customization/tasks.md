@@ -7,7 +7,7 @@
   - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
 - [x] 2. Transform core landing and navigation pages
-  - [x] 2.1 Update main landing page (index.mdx) with Agentic Workflow Studio branding and messaging
+  - [x] 2.1 Update main landing page (index.mdx) with `Agentic WorkFlow` branding and messaging
     - Replace hero content with browser extension specific tagline and description
     - Update action buttons to point to extension-specific getting started guides
     - Replace placeholder cards with browser extension feature highlights
@@ -97,12 +97,12 @@
 
 - [x] 7. Implement global content transformation and consistency
   - [x] 7.1 Execute systematic product name and terminology replacement
-    - Replace all instances of "n8n" with "Agentic Workflow Studio" where appropriate
+    - Replace all instances of "n8n" with "`Agentic WorkFlow`" where appropriate
     - Update all product descriptions and feature references
     - Ensure consistent terminology throughout documentation
     - _Requirements: 2.1, 6.1, 6.3_
   - [x] 7.2 Update all asset references and branding
-    - Replace logos and images with Agentic Workflow Studio branding
+    - Replace logos and images with `Agentic WorkFlow` branding
     - Update favicon and visual assets
     - Ensure consistent visual identity across documentation
     - _Requirements: 6.2, 6.4_

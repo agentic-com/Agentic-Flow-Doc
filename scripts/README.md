@@ -1,6 +1,6 @@
 # Content Analysis and Transformation Infrastructure
 
-This directory contains the infrastructure for analyzing and transforming the documentation from n8n.io format to Agentic Workflow Studio browser extension format.
+This directory contains the infrastructure for analyzing and transforming the documentation from n8n.io format to `Agentic WorkFlow` browser extension format.
 
 ## Scripts Overview
 
@@ -130,7 +130,7 @@ node scripts/content-transformation.js
     "suggestedTransformations": [
       {
         "pattern": "\\bn8n\\b",
-        "replacement": "Agentic Workflow Studio",
+        "replacement": "`Agentic WorkFlow`",
         "category": "product-name",
         "context": "global",
         "matches": 5,
@@ -154,7 +154,7 @@ node scripts/content-transformation.js
         {
           "message": "Deprecated term 'n8n' found",
           "line": 15,
-          "suggestion": "Use 'Agentic Workflow Studio' instead"
+          "suggestion": "Use '`Agentic WorkFlow`' instead"
         }
       ],
       "warnings": [...],

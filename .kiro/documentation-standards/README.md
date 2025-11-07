@@ -1,6 +1,6 @@
 # Documentation Standards and Audit Framework
 
-This directory contains comprehensive documentation standards, templates, and audit tools for the Agentic Workflow Studio project. The framework ensures consistent, high-quality documentation across all builtin nodes and other content.
+This directory contains comprehensive documentation standards, templates, and audit tools for the `Agentic WorkFlow` project. The framework ensures consistent, high-quality documentation across all builtin nodes and other content.
 
 ## Quick Start
 

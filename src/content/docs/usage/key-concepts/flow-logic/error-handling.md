@@ -1,6 +1,6 @@
 ---
 title: Error Handling
-description: "Learn how to use Agentic Workflow Studio browser extension for error handling with intelligent workflow creation."
+description: "Learn how to use `Agentic WorkFlow` browser extension for error handling with intelligent workflow creation."
 sidebar:
   order: 6
 ---
@@ -40,7 +40,7 @@ Browser error workflows can:
 
 ## Cause a workflow execution failure using Stop And Error
 
-When you create and set an error workflow, Agentic Workflow Studio runs it when an execution fails. In browser environments, this is often due to page content changes, security restrictions, or network issues.
+When you create and set an error workflow, `Agentic WorkFlow` runs it when an execution fails. In browser environments, this is often due to page content changes, security restrictions, or network issues.
 
 You can add the [Stop And Error](/integration/builtin/flow/StopAndError/) node to your workflow to force executions to fail under specific browser conditions, such as:
 * When required page elements are not found

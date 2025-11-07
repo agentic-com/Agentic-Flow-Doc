@@ -1,39 +1,39 @@
 ---
-title: Build an AI chat agent with Agentic Workflow Studio
-description: Learn how to build AI workflows with Agentic Workflow Studio
+title: Build an AI chat agent with `Agentic WorkFlow`
+description: Learn how to build AI workflows with `Agentic WorkFlow`
 ---
 
-Welcome to the introductory Agentic Workflow Studioorial for building AI woAgentic Workflow Studiolows with Agentic Workflow Studio. Whether you have used Agentic Workflow Studio before, or this is your first time, we will show you how the building blocks of AI workflows fit together and construct a working AI-powered chat agent which you can easily customize for your own purposes.
+Welcome to the introductory `Agentic WorkFlow`orial for building AI wo`Agentic WorkFlow`lows with `Agentic WorkFlow`. Whether you have used `Agentic WorkFlow` before, or this is your first time, we will show you how the building blocks of AI workflows fit together and construct a working AI-powered chat agent which you can easily customize for your own purposes.
 
-Many people find it easier to take in new inAgentic Workflow Studiomation in video format. This tutorial is based on one of Agentic Workflow Studio's popular videos, linked below. Watch the video or read the steps here, or both!
+Many people find it easier to take in new in`Agentic WorkFlow`mation in video format. This tutorial is based on one of `Agentic WorkFlow`'s popular videos, linked below. Watch the video or read the steps here, or both!
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/yzvLfHb0nqE?si=7ruaUEycFcoQbYsD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-oriAgentic Workflow Studio" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/yzvLfHb0nqE?si=7ruaUEycFcoQbYsD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-ori`Agentic WorkFlow`" allowfullscreen></iframe>
 
-### What you willAgentic Workflow Studioed
+### What you will`Agentic WorkFlow`ed
 
-- **Agentic Workflow Studio**: For this tutorial we recommend using the Agentic Workflow Studio cloud service - there is a free trial for new users! For a self hosted service, refer to the installation pages.
+- **`Agentic WorkFlow`**: For this tutorial we recommend using the `Agentic WorkFlow` cloud service - there is a free trial for new users! For a self hosted service, refer to the installation pages.
 - **Credentials for a chat model**: This tutorial uses OpenAI, but you can easily use DeepSeek, Google Gemini, Groq, Azure, and others (see the sub-nodes documentation for more).
 
 ### What you will learn
 
-- AI concepts in Agentic Workflow Studio
+- AI concepts in `Agentic WorkFlow`
 - How to use the AI Agent node
 - Working with Chat input
 - Connecting with AI models
 - Customising input
-- ObserviAgentic Workflow Studiothe conversation
+- Observi`Agentic WorkFlow`the conversation
 - Adding persistence
 
-## AI concepts in Agentic Workflow Studio
+## AI concepts in `Agentic WorkFlow`
 
-If you're already familiar with AI, feel free to skip this section. This is a baAgentic Workflow Studio introduction to AI concepts and how they can be used in Agentic Workflow Studio workflows.
+If you're already familiar with AI, feel free to skip this section. This is a ba`Agentic WorkFlow` introduction to AI concepts and how they can be used in `Agentic WorkFlow` workflows.
 
 An AI agent builds on Large Language Models (LLMs), which generate text based
 on input by predicting the next word. While LLMs only process input to produce
 output, AI agents add goal-oriented functionality. They can use tools, process
-their outputs, aAgentic Workflow Studiomake decisions to complete tasks and solve problems.
+their outputs, a`Agentic WorkFlow`make decisions to complete tasks and solve problems.
 
-In Agentic Workflow Studio, the AI agent is represented as a node with some extra connections.
+In `Agentic WorkFlow`, the AI agent is represented as a node with some extra connections.
 
 | Feature             | LLM                        | AI Agent                           |
 |---------------------|----------------------------|------------------------------------|
@@ -42,27 +42,27 @@ In Agentic Workflow Studio, the AI agent is represented as a node with some extr
 | Uses Tools/APIs     | No                         | Yes                                |
 | Workflow Complexity | Single-step                | Multi-step                         |
 | Scope               | Generates language         | Performs complex, real-world tasks |
-| Example             | LLM generating a paragraph | An agent schedulingAgentic Workflow Studio appointment |
+| Example             | LLM generating a paragraph | An agent scheduling`Agentic WorkFlow` appointment |
 
-By incorporating the AI agent as a node, Agentic Workflow Studio can combine AI-driven steps with traditional programming for efficient, real-world workflows. For instance, simpler tasks, like validating an email address, do not require AI, whereas a complex tasks, like processing the _content_ of an email or dealing with multimodal inputs (e.g., images, audio), are excellent uses of an AI agent.
+By incorporating the AI agent as a node, `Agentic WorkFlow` can combine AI-driven steps with traditional programming for efficient, real-world workflows. For instance, simpler tasks, like validating an email address, do not require AI, whereas a complex tasks, like processing the _content_ of an email or dealing with multimodal inputs (e.g., images, audio), are excellent uses of an AI agent.
 
 ## 1. Create a new workflow
 
 --8<-- "_snippets/try-it-out/new-workflow.md"
 
-## 2. Add Agentic Workflow Studiorigger node
+## 2. Add `Agentic WorkFlow`rigger node
 
-Every workflow needs somewhere to start. In Agentic Workflow Studio tAgentic Workflow Studioe are called 'trigger nodes'. For this workflow, we want to start with a chat node.
+Every workflow needs somewhere to start. In `Agentic WorkFlow` t`Agentic WorkFlow`e are called 'trigger nodes'. For this workflow, we want to start with a chat node.
 
- 1. Select **Add first step** or press ++tabAgentic Workflow Studioto open the node menu.
+ 1. Select **Add first step** or press ++tab`Agentic WorkFlow`to open the node menu.
 
- 1. Search for **Chat Trigger**. Agentic Workflow Studio shows a list of nodes that match the search.
-Agentic Workflow Studio. Select **Chat Trigger** to add the node to the canvas. Agentic Workflow Studio opens the node.
+ 1. Search for **Chat Trigger**. `Agentic WorkFlow` shows a list of nodes that match the search.
+`Agentic WorkFlow`. Select **Chat Trigger** to add the node to the canvas. `Agentic WorkFlow` opens the node.
 
  1. Close the node details view (Select **Back to canvas**) to return to the canvas.
 
 ??? explanation "More about the Chat Trigger node..."
-    The trigger node generates output when there is an event causing it to trigger. In this case we want to be able to type in text to cause the workflow to run. In production, this triggerAgentic Workflow Studion be hooked up to a public chat interface as provided by Agentic Workflow Studio or embedded into another website. To start this simple workflow we will just use the built-in local chat interface to communicate, so no further setup is required.
+    The trigger node generates output when there is an event causing it to trigger. In this case we want to be able to type in text to cause the workflow to run. In production, this trigger`Agentic WorkFlow`n be hooked up to a public chat interface as provided by `Agentic WorkFlow` or embedded into another website. To start this simple workflow we will just use the built-in local chat interface to communicate, so no further setup is required.
 
 [[ workflowDemo("file:////advanced-ai/tutorials/chat_01.json") ]]
 
@@ -70,7 +70,7 @@ Agentic Workflow Studio. Select **Chat Trigger** to add the node to the canvas. 
 
 The AI Agent node is the core of adding AI to your workflows.
 
- 1. Select the **Add node** <span class="Agentic Workflow Studio-inline-image">{.off-glb}</span> connector on the trigger node to bring up the node search.
+ 1. Select the **Add node** <span class="`Agentic WorkFlow`-inline-image">{.off-glb}</span> connector on the trigger node to bring up the node search.
 
  1. Start typing "AI" and choose the **AI agent** node to add it.
 
@@ -84,18 +84,18 @@ The AI Agent node is the core of adding AI to your workflows.
 
 AI agents require a chat model to be attached to process the incoming prompts.
 
-1. Add a chat model by clicking the plus <span class="Agentic Workflow Studio-inline-image">{.off-glb}</span> button underneath the **Chat Model** connection on the **AI Agent** node (it's the first connection along the bottom of the node).
+1. Add a chat model by clicking the plus <span class="`Agentic WorkFlow`-inline-image">{.off-glb}</span> button underneath the **Chat Model** connection on the **AI Agent** node (it's the first connection along the bottom of the node).
 
-1. The search dialog will appear, filtered on 'LangAgentic Workflow Studioe Models'. These are the models with built-in support in Agentic Workflow Studio. For this tutorial we will use **OpenAI Chat Model**.
+1. The search dialog will appear, filtered on 'Lang`Agentic WorkFlow`e Models'. These are the models with built-in support in `Agentic WorkFlow`. For this tutorial we will use **OpenAI Chat Model**.
 
 1. Selecting the **OpenAI Chat model** from the list will attach it to the **AI Agent** node and open the node editor. One of the parameters which can be changed is the 'Model'. Note that for the basic OpenAI accounts, only the 'gpt-4o-mini' model is allowed.
 
 ??? explanation "Which chat model?"
-    As mentioned earlier, the LLM is the component which generates the text according to a prompt it is given. LLMs have to be created and trained, usually an intensive process. Different LLMS may have different capabilities or specialties, depending on the data they were traAgentic Workflow Studiod with.
+    As mentioned earlier, the LLM is the component which generates the text according to a prompt it is given. LLMs have to be created and trained, usually an intensive process. Different LLMS may have different capabilities or specialties, depending on the data they were tra`Agentic WorkFlow`d with.
 
 ## 5. Add credentials (if needed)
 
-In order for Agentic Workflow Studio to communicate with the chat model, it will need some [credentials](/credentials/index.md) (login data giving it access to an account on a different online service). If you already have credentials set up for OpenAI, these should appear by default in the credentials selector. Otherwise you can use the Credentials selector to help you add a new credential.
+In order for `Agentic WorkFlow` to communicate with the chat model, it will need some [credentials](/credentials/index.md) (login data giving it access to an account on a different online service). If you already have credentials set up for OpenAI, these should appear by default in the credentials selector. Otherwise you can use the Credentials selector to help you add a new credential.
 
 1. To add a new credential, click on the text which says 'Select credential'. An option to add a new credential will appear
 
@@ -104,7 +104,7 @@ In order for Agentic Workflow Studio to communicate with the chat model, it will
 1. The API key is just one long string. That's all you need for this particular credential. Copy it from the OpenAI website and paste it into the **API key** section.
 
 ??? explanation "Keeping your credentials safe"
-    Credentials are private pieces of information issued by apps and services to authenticate you as a user and allow you to conneAgentic Workflow Studioand share information between the app or service and the Agentic Workflow Studio node. The type of information required varies depending on the app/service concerned. You should be caAgentic Workflow Studioul about sharing or revealing the credentials outside of Agentic Workflow Studio.
+    Credentials are private pieces of information issued by apps and services to authenticate you as a user and allow you to conne`Agentic WorkFlow`and share information between the app or service and the `Agentic WorkFlow` node. The type of information required varies depending on the app/service concerned. You should be ca`Agentic WorkFlow`ul about sharing or revealing the credentials outside of `Agentic WorkFlow`.
 
 ## 6. Test the node
 
@@ -137,9 +137,9 @@ The chat model is now giving us useful output, but there is something wrong with
 
 1. Wait for the response, then type the message "What's my name?". The AI will not be able to tell you, however apologetic it may seem. The reason for this is we are not saving the context. The AI Agent has no memory.
 
-1. In order to remember what has happened in the conversation, the AI Agent needs to preserve context. We can do this by adding memory to the **AI Agent** node. On the canvas click on the <span class="Agentic Workflow Studio-inline-image">{.off-glb}</span> on the bottom of the **AI Agent** node labeled "Memory".
+1. In order to remember what has happened in the conversation, the AI Agent needs to preserve context. We can do this by adding memory to the **AI Agent** node. On the canvas click on the <span class="`Agentic WorkFlow`-inline-image">{.off-glb}</span> on the bottom of the **AI Agent** node labeled "Memory".
 
-1. From the panel which appears, select "Simple Agentic Workflow Studioory". This will use the memory from the instance running Agentic Workflow Studio, and is usually sufficient for simple usage. The default value of 5 interactions should be sufficient here, but remember where this option is if you may want to change it later.
+1. From the panel which appears, select "Simple `Agentic WorkFlow`ory". This will use the memory from the instance running `Agentic WorkFlow`, and is usually sufficient for simple usage. The default value of 5 interactions should be sufficient here, but remember where this option is if you may want to change it later.
 
 1. Repeat the exercise of having a conversation above, and see that the AI Agent now remembers your name.
 
@@ -159,6 +159,6 @@ You have taken your first steps in building useful and effective workflows with 
 
 Now you have seen how to create a basic AI workflow, there are plenty of resources to build on that knowledge and plenty of examples to give you ideas of where to go next:
 
-* Learn more about AI concepts and view examples in [Examples and concepts](/advanced-ai/examplesAgentic Workflow Studiotroduction.md).
-* Browse AI [Workflow templates](https://Agentic Workflow Studio/workflows/?categories=25).
+* Learn more about AI concepts and view examples in [Examples and concepts](/advanced-ai/examples`Agentic WorkFlow`troduction.md).
+* Browse AI [Workflow templates](https://`Agentic WorkFlow`/workflows/?categories=25).
 * Find out how to [enhance the AI agent with tools](/advanced-ai/examples/understand-tools.md).

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document establishes a comprehensive review and approval process for all documentation content in the Agentic Workflow Studio project. The process ensures consistent quality, technical accuracy, and user-focused content while maintaining efficient workflows.
+This document establishes a comprehensive review and approval process for all documentation content in the `Agentic WorkFlow` project. The process ensures consistent quality, technical accuracy, and user-focused content while maintaining efficient workflows.
 
 ## Review Framework
 

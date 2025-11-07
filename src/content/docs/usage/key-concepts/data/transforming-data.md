@@ -3,7 +3,7 @@ title: Transforming data
 description: Processing and transforming browser context data in workflows.
 ---
 
-Agentic Workflow Studio uses a predefined [data structure](/usage/key-concepts/data/data-structure/) that allows all nodes to process browser context data correctly.
+`Agentic WorkFlow` uses a predefined [data structure](/usage/key-concepts/data/data-structure/) that allows all nodes to process browser context data correctly.
 
 Browser extension nodes extract data in various formats depending on the web page content. You may need to transform this data to process it effectively in your workflows.
 

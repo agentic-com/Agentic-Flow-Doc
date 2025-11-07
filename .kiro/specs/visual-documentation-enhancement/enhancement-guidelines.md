@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides guidelines for determining when and where to add Visual_Enhancement elements (Mermaid diagrams) to Content_File elements in the Agentic Workflow Studio documentation. The goal is to strategically enhance comprehension without overwhelming users or duplicating information.
+This document provides guidelines for determining when and where to add Visual_Enhancement elements (Mermaid diagrams) to Content_File elements in the `Agentic WorkFlow` documentation. The goal is to strategically enhance comprehension without overwhelming users or duplicating information.
 
 ## When to Add Visual Enhancements
 

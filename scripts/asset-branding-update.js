@@ -4,7 +4,7 @@ import fs from "fs/promises";
 import path from "path";
 
 /**
- * Asset and branding update script for Agentic Workflow Studio documentation
+ * Asset and branding update script for Agentic WorkFlow documentation
  * Updates asset references and ensures consistent branding throughout the documentation
  */
 
@@ -129,8 +129,8 @@ async function checkAssetBrandingConsistency() {
     const configContent = await fs.readFile("astro.config.mjs", "utf-8");
 
     // Verify title is correct
-    if (configContent.includes('title: "`Agentic Workflow Studio`"')) {
-      console.log('✅ Site title is correctly set to "`Agentic Workflow Studio`"');
+    if (configContent.includes('title: "Agentic WorkFlow"')) {
+      console.log('✅ Site title is correctly set to "Agentic WorkFlow"');
     } else {
       issues.push("Site title may need updating in astro.config.mjs");
     }
@@ -165,7 +165,7 @@ async function checkAssetBrandingConsistency() {
 }
 
 /**
- * Update social links to be appropriate for Agentic Workflow Studio
+ * Update social links to be appropriate for Agentic WorkFlow
  */
 async function updateSocialLinks() {
   try {
@@ -194,7 +194,7 @@ async function updateSocialLinks() {
 
     if (updatedContent !== configContent) {
       await fs.writeFile("astro.config.mjs", updatedContent, "utf-8");
-      console.log("✅ Updated social links for Agentic Workflow Studio");
+      console.log("✅ Updated social links for Agentic WorkFlow");
       return { updated: true };
     } else {
       console.log("⏭️  Social links already appropriate");

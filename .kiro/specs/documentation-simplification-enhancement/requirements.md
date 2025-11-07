@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This specification defines the requirements for simplifying, cleaning, and enhancing the Agentic Workflow Studio documentation content to make it more accessible to non-developers while maintaining technical accuracy. The focus is on content transformation, new page creation, and improved learning experiences using the existing Astro.js/Starlight infrastructure.
+This specification defines the requirements for simplifying, cleaning, and enhancing the `Agentic WorkFlow` documentation content to make it more accessible to non-developers while maintaining technical accuracy. The focus is on content transformation, new page creation, and improved learning experiences using the existing Astro.js/Starlight infrastructure.
 
 ## Glossary
 
-- **Agentic Workflow Studio**: A browser extension that allows users to create AI-powered workflows for web automation
+- **`Agentic WorkFlow`**: A browser extension that allows users to create AI-powered workflows for web automation
 - **Browser Extension Node**: Specialized workflow components that interact with web page content
 - **Workflow**: A collection of connected nodes that automate browser-based processes
 - **Node**: Individual components that perform specific functions in workflows
@@ -25,7 +25,7 @@ This specification defines the requirements for simplifying, cleaning, and enhan
 
 ### Requirement 1: Content Language Simplification
 
-**User Story:** As a non-developer user, I want to understand how to use Agentic Workflow Studio without being overwhelmed by technical jargon, so that I can create useful workflows for my daily tasks.
+**User Story:** As a non-developer user, I want to understand how to use `Agentic WorkFlow` without being overwhelmed by technical jargon, so that I can create useful workflows for my daily tasks.
 
 #### Acceptance Criteria
 
@@ -73,7 +73,7 @@ This specification defines the requirements for simplifying, cleaning, and enhan
 
 ### Requirement 5: Real-World Examples and Use Cases
 
-**User Story:** As a Documentation User, I want to see how Agentic Workflow Studio solves real problems I face, so that I can understand the practical value and immediately apply what I learn.
+**User Story:** As a Documentation User, I want to see how `Agentic WorkFlow` solves real problems I face, so that I can understand the practical value and immediately apply what I learn.
 
 #### Acceptance Criteria
 

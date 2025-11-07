@@ -1,9 +1,9 @@
 ---
 title: Data structure
-description: "Understand data structures and formats used in Agentic Workflow Studio browser extension workflows for web content processing."
+description: "Understand data structures and formats used in `Agentic WorkFlow` browser extension workflows for web content processing."
 ---
 
-In Agentic Workflow Studio, all data passed between nodes is an array of objects. This structure is particularly important when working with browser context data.
+In `Agentic WorkFlow`, all data passed between nodes is an array of objects. This structure is particularly important when working with browser context data.
 
 ## Data Structure Overview
 
@@ -59,7 +59,7 @@ The data structure has the following format:
 ```
 
 /// note | Browser context data handling
-Browser extension nodes automatically format extracted data into the proper structure. When using Code nodes to process browser data, Agentic Workflow Studio automatically adds the `json` key if it's missing and wraps items in an array as needed.
+Browser extension nodes automatically format extracted data into the proper structure. When using Code nodes to process browser data, `Agentic WorkFlow` automatically adds the `json` key if it's missing and wraps items in an array as needed.
 ///
 
 ## Browser Data Types

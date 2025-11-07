@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design outlines the systematic transformation of the existing n8n.io documentation to create comprehensive, browser extension-specific documentation for "Agentic Workflow Studio". The project involves content analysis, strategic replacement, enhancement of browser-specific features, and quality assurance to ensure all documentation accurately reflects the unique capabilities and context of the browser extension.
+This design outlines the systematic transformation of the existing n8n.io documentation to create comprehensive, browser extension-specific documentation for "`Agentic WorkFlow`". The project involves content analysis, strategic replacement, enhancement of browser-specific features, and quality assurance to ensure all documentation accurately reflects the unique capabilities and context of the browser extension.
 
 ## Architecture
 
@@ -35,7 +35,7 @@ src/content/docs/
 **Purpose**: Systematically process documentation files for customization
 
 **Key Functions**:
-- Product name replacement (n8n → Agentic Workflow Studio)
+- Product name replacement (n8n → `Agentic WorkFlow`)
 - Context transformation (server-based → browser-based)
 - Feature mapping (generic workflows → browser context workflows)
 - Reference updating (URLs, links, examples)

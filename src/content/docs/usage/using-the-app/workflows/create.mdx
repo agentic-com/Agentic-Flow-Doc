@@ -1,0 +1,115 @@
+---
+title: Create a Workflow
+description: "Learn how to build workflows in `Agentic WorkFlow` — from opening the app to saving and running automations."
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+A **workflow** is a visual sequence of connected nodes that perform browser-based tasks automatically. In `Agentic WorkFlow`, you build workflows right inside your browser extension.
+
+---
+
+## How to build a new workflow
+
+1. Click the `Agentic WorkFlow` icon in your browser to open the extension.
+2. Choose **Create New Workflow** or **Start from Blank**.
+3. A blank workflow canvas is displayed.
+4. Click **Add first step…** to insert your first node (e.g. “Get Selected Text”).
+5. Configure the node by opening its settings panel (double-click it).
+6. Continue adding nodes, configuring, and connecting them.
+7. To test, make sure you’re on a relevant web page, then click **Execute Workflow**.
+8. The output will appear in each node’s results panel.
+
+You can automate tasks such as:
+
+- Extracting page content
+- Interacting with forms or elements
+- Processing data with AI
+- Branching logic or loops
+- Combining browser and external data
+
+If you’re new, try the [Quick Intro Tutorial](/usage/getting-started/quick-starts/quick-intro/) first to experiment with basic browser nodes.
+
+---
+
+## Running workflows manually vs automatically
+
+### Manual execution
+
+Good for testing or workflows without triggers:
+
+1. Open the page you want to automate.
+2. Open the extension and choose your workflow.
+3. Click **Execute Workflow**.
+4. Nodes will run in order using the current page state.
+
+### Automatic execution (future feature)
+
+When workflows start with a **Trigger node**, they can run automatically when the trigger condition is met. (This is similar to how workflow triggering works in n8n, where you must activate workflows to run automatically.) ([n8n Docs][1])
+
+Until then, manual execution gives you full control and helps with debugging.
+
+---
+
+## Execution context and limitations
+
+- Workflows run in the page you currently view, so they see **real-time content** and page structure.
+- Because they run inside the browser, workflows are subject to **browser security rules** (e.g. cross-origin constraints).
+- Very large workflows or heavy processing may hit browser performance limits (memory, CPU).
+- Workflows are saved locally in your extension — they persist across browser sessions. You can export/import workflows to share or backup them.
+
+---
+
+## Tips for building reliable workflows
+
+- Add nodes gradually; test frequently instead of building many nodes at once.
+- Use **If / conditional nodes** to manage different paths.
+- In each node, inspect execution results (JSON or table view) to understand data shapes.
+- Use meaningful names or notes for nodes — this helps you and others read the flow.
+- Start with templates from the **Marketplace** to learn patterns and best practices.
+
+---
+
+## What’s next?
+
+<CardGrid>
+  <Card
+    title="Quick Intro Tutorial"
+    icon="rocket"
+  >
+    A simple step‑by‑step example using browser extraction and basic processing.
+
+    [Go  →](/usage/getting-started/quick-starts/quick-intro/)
+
+  </Card>
+
+<Card
+title="Learning Path"
+icon="seti:pipeline"
+> 
+See a full roadmap from beginner to advanced workflows.
+
+    [Go  →](/usage/getting-started/learning-path/)
+
+  </Card>
+
+<Card
+title="Browser Nodes Reference"
+icon="puzzle"
+>
+Discover all supported browser interaction nodes (click, scroll, forms, etc.).
+
+    [Go  →](/integration/extension/)
+
+  </Card>
+
+<Card
+title="AI & Local Models"
+icon="laptop"
+>
+Learn how to incorporate LLMs for text processing, summarization, reasoning, and more.
+
+    [Go  →](/usage/local-ai/)
+
+  </Card>
+</CardGrid>

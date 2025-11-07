@@ -5,18 +5,18 @@ sidebar:
 video:
   type: collection
   collection: beginner-browser-flow
-description: Introduction to creating workflows with Agentic Workflow Studio browser extension
+description: Introduction to creating workflows with `Agentic WorkFlow` browser extension
 ---
 
 # Welcome to Browser Extension Workflow Creation
 
-This video series introduces you to creating workflows using the Agentic Workflow Studio browser extension. You'll learn how to build automation that works directly within your browser, manipulating web content and creating intelligent workflows.
+This video series introduces you to creating workflows using the `Agentic WorkFlow` browser extension. You'll learn how to build automation that works directly within your browser, manipulating web content and creating intelligent workflows.
 
 ## What You'll Learn
 
 In this beginner series, you'll discover:
 
-- **Browser Extension Basics**: How to install and navigate the Agentic Workflow Studio interface
+- **Browser Extension Basics**: How to install and navigate the `Agentic WorkFlow` interface
 - **Browser Context Workflows**: Creating workflows that interact with web page content
 - **Essential Browser Nodes**: Using text extraction, HTML processing, and content manipulation nodes
 - **Flow Control**: Managing workflow execution within browser security constraints
@@ -38,6 +38,6 @@ Unlike server-based automation, browser extension workflows offer:
 
 ## Getting Started
 
-Make sure you have the Agentic Workflow Studio browser extension installed from your browser's extension store before beginning this course. Each video builds on the previous one, so we recommend watching them in order.
+Make sure you have the `Agentic WorkFlow` browser extension installed from your browser's extension store before beginning this course. Each video builds on the previous one, so we recommend watching them in order.
 
 Ready to create your first browser workflow? Let's begin!

@@ -20,7 +20,7 @@ By the end of this guide, you'll know:
 ## Before You Start
 
 **You should have:**
-- ✅ Agentic Workflow Studio installed ([Setup guide here](/learning/text-courses/beginner/installation-setup/))
+- ✅ `Agentic WorkFlow` installed ([Setup guide here](/learning/text-courses/beginner/installation-setup/))
 - ✅ 20 minutes to understand the basics
 - ✅ A desire to use automations safely and confidently
 
@@ -160,7 +160,7 @@ General browsing: "When you click the extension" - for occasional use
 
 2. **Check extension settings**
    - Go to `chrome://extensions/` (Chrome) or `about:addons` (Firefox)
-   - Click "Details" on Agentic Workflow Studio
+   - Click "Details" on `Agentic WorkFlow`
    - Review "Site access" settings
 
 3. **Monitor usage patterns**

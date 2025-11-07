@@ -1,13 +1,13 @@
 ---
 title: "📚 How-To Guides"
-description: "Complete project tutorials that teach you to build real solutions with Agentic Workflow Studio"
+description: "Complete project tutorials that teach you to build real solutions with `Agentic WorkFlow`"
 template: doc
 difficulty: "🚀 intermediate"
 ---
 
 # 📚 How-To Guides
 
-Master Agentic Workflow Studio by building complete, real-world projects. These comprehensive guides take you from concept to working solution, teaching you professional techniques along the way.
+Master `Agentic WorkFlow` by building complete, real-world projects. These comprehensive guides take you from concept to working solution, teaching you professional techniques along the way.
 
 ## What Makes These Different?
 

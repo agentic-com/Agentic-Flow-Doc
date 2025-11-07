@@ -14,21 +14,21 @@ class PatternDetector {
       // Product name transformations
       {
         pattern: /\bn8n\b/g,
-        replacement: 'Agentic Workflow Studio',
+        replacement: 'Agentic WorkFlow',
         context: 'global',
         category: 'product-name',
         validation: (content) => !content.includes('n8n.io') // Don't replace if it's a URL
       },
       {
         pattern: /n8n\.io/g,
-        replacement: 'Agentic Workflow Studio',
+        replacement: 'Agentic WorkFlow',
         context: 'global',
         category: 'product-name',
         validation: () => true
       },
       {
         pattern: /n8n community/gi,
-        replacement: 'Agentic Workflow Studio community',
+        replacement: 'Agentic WorkFlow community',
         context: 'global',
         category: 'product-name',
         validation: () => true

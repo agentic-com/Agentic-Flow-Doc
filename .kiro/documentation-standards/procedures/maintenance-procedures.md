@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document establishes comprehensive procedures for maintaining and updating the Agentic Workflow Studio documentation to ensure it remains accurate, current, and valuable to users as the browser extension evolves.
+This document establishes comprehensive procedures for maintaining and updating the `Agentic WorkFlow` documentation to ensure it remains accurate, current, and valuable to users as the browser extension evolves.
 
 ## Maintenance Framework
 

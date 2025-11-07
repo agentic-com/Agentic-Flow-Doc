@@ -1,7 +1,7 @@
 ---
 contentType: overview
 title: Advanced AI examples and concepts
-description: Example workflows and use cases for building AI functionality using Agentic Workflow Studio in browser environments.
+description: Example workflows and use cases for building AI functionality using `Agentic WorkFlow` in browser environments.
 hide:
   - toc
 difficulty: "🎯 advanced"
@@ -9,7 +9,7 @@ difficulty: "🎯 advanced"
 
 # Advanced AI examples and concepts
 
-This section provides explanations of important AI concepts, and workflow templates that highlight those concepts, with explanations and configuration guides. The examples cover common use cases and highlight different features of advanced AI in Agentic Workflow Studio, with a focus on browser context manipulation and web content processing.
+This section provides explanations of important AI concepts, and workflow templates that highlight those concepts, with explanations and configuration guides. The examples cover common use cases and highlight different features of advanced AI in `Agentic WorkFlow`, with a focus on browser context manipulation and web content processing.
 
 <div class="grid cards" markdown>
 

@@ -1,6 +1,6 @@
 # Product Context & Guidelines
 
-**`Agentic Workflow Studio`** is a browser-based framework for building AI-powered workflows. This documentation site serves developers and users creating automation workflows with visual node-based editors.
+**`Agentic WorkFlow`** is a browser-based framework for building AI-powered workflows. This documentation site serves developers and users creating automation workflows with visual node-based editors.
 
 ## Core Product Concepts
 

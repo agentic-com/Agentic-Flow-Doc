@@ -2,7 +2,7 @@
 
 ## Integration Status: ✅ VERIFIED
 
-The astro-mermaid integration is properly configured and working correctly in the Agentic Workflow Studio documentation.
+The astro-mermaid integration is properly configured and working correctly in the `Agentic WorkFlow` documentation.
 
 ## Verification Results
 

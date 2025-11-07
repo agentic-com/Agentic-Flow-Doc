@@ -5,7 +5,7 @@ description: "Quick solutions for common browser extension and workflow issues w
 
 # Troubleshooting Guide
 
-Having trouble with your workflows? This guide provides quick solutions for the most common issues users encounter with Agentic Workflow Studio.
+Having trouble with your workflows? This guide provides quick solutions for the most common issues users encounter with `Agentic WorkFlow`.
 
 ## 🚀 Quick Fix Checklist
 

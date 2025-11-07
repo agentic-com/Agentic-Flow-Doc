@@ -37,7 +37,7 @@ In 5 minutes, you'll create a workflow that automatically extracts product price
 
 ### Step 1: Set Up Your Workflow
 
-1. Open Agentic Workflow Studio in your browser
+1. Open `Agentic WorkFlow` in your browser
 2. Create a new workflow and name it "Price Extractor"
 3. Add these nodes to your canvas:
    - **Get All Text From Link** (for extracting page content)

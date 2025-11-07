@@ -1,12 +1,12 @@
 ---
 title: "Install Your Automation Tool: Step-by-Step Setup"
-description: "Get Agentic Workflow Studio running in your browser in just 10 minutes. Simple instructions with pictures and troubleshooting help."
+description: "Get `Agentic WorkFlow` running in your browser in just 10 minutes. Simple instructions with pictures and troubleshooting help."
 difficulty: "🌱 beginner"
 ---
 
 # Install Your Automation Tool: Step-by-Step Setup
 
-Ready to start automating your web browsing? Let's get Agentic Workflow Studio installed and working in your browser. Think of this as adding a smart assistant to your browser that can help you save time on repetitive tasks.
+Ready to start automating your web browsing? Let's get `Agentic WorkFlow` installed and working in your browser. Think of this as adding a smart assistant to your browser that can help you save time on repetitive tasks.
 
 ## What You Need Before Starting
 
@@ -28,7 +28,7 @@ flowchart TD
     B -->|Firefox| D[🦊 Firefox Add-ons]
     B -->|Edge| E[🔷 Edge Add-ons]
 
-    C --> F[🔍 Search 'Agentic Workflow Studio']
+    C --> F[🔍 Search '`Agentic WorkFlow`']
     D --> F
     E --> F
 
@@ -50,7 +50,7 @@ flowchart TD
    - **✅ Checkpoint:** You should see a page that looks like an app store
 
 2. **Find our extension**
-   - Use the search box to look for "Agentic Workflow Studio"
+   - Use the search box to look for "`Agentic WorkFlow`"
    - Click on the correct result (it should have our logo)
    - **✅ Checkpoint:** You should see a page with an "Add to Chrome" button
 
@@ -67,7 +67,7 @@ flowchart TD
    - **✅ Checkpoint:** You should see the Firefox add-ons page
 
 2. **Find our extension**
-   - Search for "Agentic Workflow Studio"
+   - Search for "`Agentic WorkFlow`"
    - Click on the correct result
    - **✅ Checkpoint:** You should see a page with an "Add to Firefox" button
 
@@ -83,7 +83,7 @@ flowchart TD
    - **✅ Checkpoint:** You should see the Microsoft Edge Add-ons page
 
 2. **Find and install**
-   - Search for "Agentic Workflow Studio"
+   - Search for "`Agentic WorkFlow`"
    - Click "Get" then "Add extension"
    - **✅ Checkpoint:** New icon should appear in your toolbar
 
@@ -216,11 +216,11 @@ Don't worry if you run into issues - these are the most common problems and thei
 1. **Check if it's actually installed**
    - **Chrome:** Type `chrome://extensions/` in your address bar
    - **Firefox:** Type `about:addons` in your address bar
-   - **✅ Test:** You should see "Agentic Workflow Studio" in the list
+   - **✅ Test:** You should see "`Agentic WorkFlow`" in the list
 
 2. **Make the icon visible**
    - Look for a puzzle piece icon in your toolbar (extensions menu)
-   - Click it and find "Agentic Workflow Studio"
+   - Click it and find "`Agentic WorkFlow`"
    - Click the pin icon next to it
    - **✅ Test:** The icon should now appear in your main toolbar
 
@@ -314,7 +314,7 @@ Don't worry if you run into issues - these are the most common problems and thei
 
 ## You're All Set! What's Next?
 
-🎉 **Congratulations!** You now have Agentic Workflow Studio installed and ready to use. Here's what you can do:
+🎉 **Congratulations!** You now have `Agentic WorkFlow` installed and ready to use. Here's what you can do:
 
 ### Immediate Next Steps
 1. **[Build Your First Automation](/learning/text-courses/beginner/first-workflow/)** - Create a simple text-saving automation (takes 30 minutes)

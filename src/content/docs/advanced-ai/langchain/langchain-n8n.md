@@ -1,22 +1,22 @@
 ---
 contentType: explanation
-title: LangChain concepts in Agentic Workflow Studio
-description: How LangChain concepts map to Agentic Workflow Studio, and which browser extension nodes to use.
+title: LangChain concepts in `Agentic WorkFlow`
+description: How LangChain concepts map to `Agentic WorkFlow`, and which browser extension nodes to use.
 ---
 
-# LangChain concepts in Agentic Workflow Studio
+# LangChain concepts in `Agentic WorkFlow`
 
-This page explains how LangChain concepts and features map to Agentic Workflow Studio nodes for browser-based AI workflows.
+This page explains how LangChain concepts and features map to `Agentic WorkFlow` nodes for browser-based AI workflows.
 
-This page includes lists of the LangChain-focused nodes in Agentic Workflow Studio. You can use any browser extension node in a workflow where you interact with LangChain, to link LangChain to web content and browser context manipulation. The LangChain features work seamlessly with browser extension capabilities.
+This page includes lists of the LangChain-focused nodes in `Agentic WorkFlow`. You can use any browser extension node in a workflow where you interact with LangChain, to link LangChain to web content and browser context manipulation. The LangChain features work seamlessly with browser extension capabilities.
 
-/// note | Agentic Workflow Studio implements LangChain JS
-This feature is Agentic Workflow Studio's implementation of [LangChain's JavaScript framework](https://js.langchain.com/docs/get_started/introduction) optimized for browser environments.
+/// note | `Agentic WorkFlow` implements LangChain JS
+This feature is `Agentic WorkFlow`'s implementation of [LangChain's JavaScript framework](https://js.langchain.com/docs/get_started/introduction) optimized for browser environments.
 ///
 
 ## Browser Extension Integration
 
-Agentic Workflow Studio's LangChain implementation includes specialized browser extension nodes that enable AI workflows to interact with web content:
+`Agentic WorkFlow`'s LangChain implementation includes specialized browser extension nodes that enable AI workflows to interact with web content:
 
 ### Browser Context Nodes
 - **Text Extraction Nodes**: Extract selected text or full page content for AI processing
@@ -40,7 +40,7 @@ Browser extension workflows can be triggered by various user interactions:
 
 ## AI Workflow Nodes
 
-Agentic Workflow Studio provides AI nodes that work seamlessly with browser extension capabilities. These nodes can process web content extracted through browser context manipulation.
+`Agentic WorkFlow` provides AI nodes that work seamlessly with browser extension capabilities. These nodes can process web content extracted through browser context manipulation.
 
 ### Primary AI Nodes
 
@@ -87,7 +87,7 @@ Learn more about [Vector stores in LangChain](https://js.langchain.com/docs/conc
 
 Utility nodes.
 
-LangChain Code: import LangChain. This means if there is functionality you need that Agentic Workflow Studio hasn't created a node for, you can still use it.
+LangChain Code: import LangChain. This means if there is functionality you need that `Agentic WorkFlow` hasn't created a node for, you can still use it.
 
 ### Supporting AI Nodes
 
@@ -170,7 +170,7 @@ Available nodes:
 * Recursive Character Text Splitter
 * Token Splitter
 
-Agentic Workflow Studio's text splitter nodes implements parts of [LangChain's text_splitter API](https://js.langchain.com/docs/concepts/text_splitters/).
+`Agentic WorkFlow`'s text splitter nodes implements parts of [LangChain's text_splitter API](https://js.langchain.com/docs/concepts/text_splitters/).
 
 #### Tools
 

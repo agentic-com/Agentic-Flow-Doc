@@ -1,5 +1,5 @@
 ---
-title: Agentic Workflow Studio Advanced AI Documentation and Guides
+title: `Agentic WorkFlow` Advanced AI Documentation and Guides
 description: "Create advanced AI workflows in your browser using LangChain integration and intelligent content processing."
 contentType: overview
 hide:
@@ -7,10 +7,10 @@ hide:
   - kapaButton
 ---
 
-Build AI functionality using Agentic Workflow Studio: from creating browser-based chat bots, to using AI to process web content and data extracted from browser context.
+Build AI functionality using `Agentic WorkFlow`: from creating browser-based chat bots, to using AI to process web content and data extracted from browser context.
 
 /// info | Feature availability
-This feature is available in Agentic Workflow Studio browser extension for Chrome and Firefox.
+This feature is available in `Agentic WorkFlow` browser extension for Chrome and Firefox.
 ///
 
 ## 🚀 Quick Start with AI Workflows
@@ -28,7 +28,7 @@ Get started with AI-powered workflows in minutes:
 
 -   **⚡ Quick Setup**
 
-    Install Agentic Workflow Studio and create your first AI-powered workflow.
+    Install `Agentic WorkFlow` and create your first AI-powered workflow.
 
     [:octicons-arrow-right-24: Getting Started Guide](/usage/getting-started/quick-starts/quick-intro.md)
 
@@ -40,7 +40,7 @@ Get started with AI-powered workflows in minutes:
 
 -   **🔗 LangChain Integration**
 
-    Learn how Agentic Workflow Studio builds on LangChain for browser-based AI workflows.
+    Learn how `Agentic WorkFlow` builds on LangChain for browser-based AI workflows.
 
     [:octicons-arrow-right-24: LangChain Guide](/advanced-ai/langchain/overview.md)
 
@@ -61,7 +61,7 @@ Powerful AI processing capabilities designed for browser environments
 |---------|-------------|-----------|------------|
 | **[LangChain Integration](/advanced-ai/langchain/overview/)** | Full LangChain framework support | Complex AI workflows, memory, tools | Advanced |
 | **[AI Agents](/integration/builtin/ai/AIAgents/)** | Intelligent decision-making agents | Autonomous workflows, problem-solving | Intermediate |
-| **[RAG Workflows](/advanced-ai/basics/rag-in-Agentic Workflow Studio/)** | Retrieval-Augmented Generation | Knowledge-based responses, context-aware AI | Advanced |
+| **[RAG Workflows](/advanced-ai/basics/rag-in-`Agentic WorkFlow`/)** | Retrieval-Augmented Generation | Knowledge-based responses, context-aware AI | Advanced |
 | **[Memory Systems](/advanced-ai/examples/understand-memory/)** | Persistent AI context and learning | Conversational AI, personalized responses | Intermediate |
 
 ### 🌐 Browser-Specific AI Patterns
@@ -98,7 +98,7 @@ AI workflows optimized for browser environments and web content processing
 |--------|----------|-------|---------------|
 | **[Understanding Memory](/advanced-ai/examples/understand-memory/)** | 35 min | AI memory and context | AI Beginner Path |
 | **[Understanding Tools](/advanced-ai/examples/understand-tools/)** | 40 min | AI tool integration | Understanding Memory |
-| **[RAG in Browser](/advanced-ai/basics/rag-in-Agentic Workflow Studio/)** | 60 min | Retrieval-Augmented Generation | Understanding Tools |
+| **[RAG in Browser](/advanced-ai/basics/rag-in-`Agentic WorkFlow`/)** | 60 min | Retrieval-Augmented Generation | Understanding Tools |
 | **[Vector Databases](/advanced-ai/examples/understand-vector-databases/)** | 45 min | Vector storage and retrieval | RAG in Browser |
 
 **Intermediate AI Projects**:
@@ -197,7 +197,7 @@ Browser-based chat and interaction systems
 - **Input**: Questions, document collections
 - **AI Processing**: RAG-based retrieval, answer generation
 - **Output**: Accurate answers, source citations
-- **[Example Workflow](/advanced-ai/basics/rag-in-Agentic Workflow Studio/)**
+- **[Example Workflow](/advanced-ai/basics/rag-in-`Agentic WorkFlow`/)**
 
 ## ⚡ Performance & Optimization
 

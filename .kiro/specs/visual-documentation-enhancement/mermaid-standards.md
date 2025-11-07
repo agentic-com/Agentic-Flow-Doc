@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document establishes standards for consistent Mermaid diagram placement, styling, and usage across the Agentic Workflow Studio documentation. These guidelines ensure Visual_Enhancement elements improve comprehension while maintaining consistency and accessibility.
+This document establishes standards for consistent Mermaid diagram placement, styling, and usage across the `Agentic WorkFlow` documentation. These guidelines ensure Visual_Enhancement elements improve comprehension while maintaining consistency and accessibility.
 
 ## Diagram Types and Usage
 

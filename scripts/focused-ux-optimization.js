@@ -148,7 +148,7 @@ class FocusedUXOptimizer {
 
 Before using this node, ensure you have:
 
-- Basic understanding of workflow creation in `Agentic Workflow Studio`
+- Basic understanding of workflow creation in Agentic WorkFlow
 - Appropriate browser permissions configured (if applicable)
 - Required dependencies installed and configured
 

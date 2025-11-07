@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
 /**
- * Maintenance Runner for Agentic Workflow Studio Documentation
+ * Maintenance Runner for Agentic WorkFlow Documentation
  * Orchestrates various maintenance tasks and provides a unified interface
  */
 
@@ -93,7 +93,7 @@ class MaintenanceRunner {
       dryRun = false
     } = options;
 
-    console.log('🔧 Agentic Workflow Studio Documentation Maintenance');
+    console.log('🔧 Agentic WorkFlow Documentation Maintenance');
     console.log('====================================================\n');
 
     // Determine which tasks to run
@@ -334,7 +334,7 @@ class MaintenanceRunner {
 // CLI Interface
 function showHelp() {
   console.log(`
-Agentic Workflow Studio Documentation Maintenance Runner
+Agentic WorkFlow Documentation Maintenance Runner
 
 Usage:
   node maintenance-runner.js [options]

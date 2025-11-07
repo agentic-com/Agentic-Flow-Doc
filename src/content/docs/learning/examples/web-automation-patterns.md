@@ -1,6 +1,6 @@
 ---
 title: Common Web Automation Workflow Patterns
-description: "Learn common web automation patterns and best practices using Agentic Workflow Studio browser extension."
+description: "Learn common web automation patterns and best practices using `Agentic WorkFlow` browser extension."
 sidebar:
   order: 3
 difficulty: "🌱 beginner"
@@ -8,7 +8,7 @@ difficulty: "🌱 beginner"
 
 # Common Web Automation Workflow Patterns
 
-Learn the most effective workflow patterns for automating common web tasks using the Agentic Workflow Studio browser extension. These patterns have been tested across various websites and use cases.
+Learn the most effective workflow patterns for automating common web tasks using the `Agentic WorkFlow` browser extension. These patterns have been tested across various websites and use cases.
 
 ## Content Monitoring and Alerting Patterns
 

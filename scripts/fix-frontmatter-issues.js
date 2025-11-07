@@ -108,21 +108,21 @@ description: ${description}
     const frontmatterContent = frontmatterMatch[1];
     
     // Check for corrupted text in frontmatter
-    if (frontmatterContent.includes('Agentic Workflow Studiontic Workflow Studio') ||
-        frontmatterContent.includes('Agentic Workflow StudioAgentic Workflow Studio') ||
-        frontmatterContent.includes('Agentic Workflow Studioyour') ||
-        frontmatterContent.includes('Agentic Workflow Studiond') ||
-        frontmatterContent.includes('Agentic Workflow Studioending')) {
+    if (frontmatterContent.includes('Agentic WorkFlowntic Workflow Studio') ||
+        frontmatterContent.includes('Agentic WorkFlowAgentic WorkFlow') ||
+        frontmatterContent.includes('Agentic WorkFlowyour') ||
+        frontmatterContent.includes('Agentic WorkFlownd') ||
+        frontmatterContent.includes('Agentic WorkFlowending')) {
       
       // Fix corrupted frontmatter
       let fixedFrontmatter = frontmatterContent
-        .replace(/Agentic Workflow Studiontic Workflow Studio/g, 'Agentic Workflow Studio')
-        .replace(/Agentic Workflow StudioAgentic Workflow Studio/g, 'Agentic Workflow Studio')
-        .replace(/Agentic Workflow Studioyour/g, 'Agentic Workflow Studio for your')
-        .replace(/Agentic Workflow Studiond/g, 'Agentic Workflow Studio and')
-        .replace(/Agentic Workflow Studioending/g, 'Agentic Workflow Studio depending')
-        .replace(/fAgentic Workflow Studio/g, 'for Agentic Workflow Studio')
-        .replace(/Agentic Workflow StuAgentic Workflow Studio/g, 'Agentic Workflow Studio');
+        .replace(/Agentic WorkFlowntic Workflow Studio/g, 'Agentic WorkFlow')
+        .replace(/Agentic WorkFlowAgentic WorkFlow/g, 'Agentic WorkFlow')
+        .replace(/Agentic WorkFlowyour/g, 'Agentic WorkFlow for your')
+        .replace(/Agentic WorkFlownd/g, 'Agentic WorkFlow and')
+        .replace(/Agentic WorkFlowending/g, 'Agentic WorkFlow depending')
+        .replace(/fAgentic WorkFlow/g, 'for Agentic WorkFlow')
+        .replace(/Agentic WorkFlow StuAgentic WorkFlow/g, 'Agentic WorkFlow');
       
       const newContent = content.replace(frontmatterMatch[1], fixedFrontmatter);
       fs.writeFileSync(filePath, newContent);

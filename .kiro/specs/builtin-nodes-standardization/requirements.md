@@ -2,15 +2,15 @@
 
 ## Introduction
 
-This specification defines the requirements for systematically reviewing, standardizing, and completing all markdown documentation files in the `src/content/docs/integration/builtin` directory for the Agentic Workflow Studio browser extension. The project focuses on ensuring every single node documentation file provides comprehensive, consistent, and practical information following established documentation standards.
+This specification defines the requirements for systematically reviewing, standardizing, and completing all markdown documentation files in the `src/content/docs/integration/builtin` directory for the `Agentic WorkFlow` browser extension. The project focuses on ensuring every single node documentation file provides comprehensive, consistent, and practical information following established documentation standards.
 
 ## Glossary
 
-- **Builtin Nodes**: The core workflow components provided by the Agentic Workflow Studio browser extension, organized in categories like AI, Core, Data Transformation, Flow, Lambda, and Trigger
+- **Builtin Nodes**: The core workflow components provided by the `Agentic WorkFlow` browser extension, organized in categories like AI, Core, Data Transformation, Flow, Lambda, and Trigger
 - **Node Documentation**: Individual markdown files that document specific workflow nodes with their functionality, parameters, examples, and usage patterns
 - **Content Standardization**: The process of ensuring all documentation follows consistent structure, style, and completeness standards
 - **Documentation Completeness**: Each node documentation must include purpose, parameters, examples, integration patterns, troubleshooting, and related nodes sections
-- **Agentic Workflow Studio**: The Chrome and Firefox browser extension that enables users to create AI-powered workflows with browser context manipulation capabilities
+- **`Agentic WorkFlow`**: The Chrome and Firefox browser extension that enables users to create AI-powered workflows with browser context manipulation capabilities
 - **Browser Context Manipulation**: Advanced capabilities including text selection/insertion, HTML extraction, link collection, image gathering, and dynamic content interaction within web pages
 
 ## Requirements

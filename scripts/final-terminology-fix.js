@@ -93,7 +93,7 @@ class FinalTerminologyFixer {
                 const frontmatterEnd = lines.findIndex((line, index) => index > 0 && line === '---');
                 
                 if (frontmatterEnd > 0) {
-                    lines.splice(frontmatterEnd + 1, 0, '', '## Overview', '', 'This document provides a comprehensive guide to the different types of nodes available in `Agentic Workflow Studio`, helping you understand their categories, purposes, and when to use each type in your workflows.');
+                    lines.splice(frontmatterEnd + 1, 0, '', '## Overview', '', 'This document provides a comprehensive guide to the different types of nodes available in Agentic WorkFlow, helping you understand their categories, purposes, and when to use each type in your workflows.');
                     content = lines.join('\n');
                     fs.writeFileSync(nodeTypesPath, content);
                     console.log('✅ Added overview to node-types.md');
@@ -112,7 +112,7 @@ class FinalTerminologyFixer {
                 const frontmatterEnd = lines.findIndex((line, index) => index > 0 && line === '---');
                 
                 if (frontmatterEnd > 0) {
-                    lines.splice(frontmatterEnd + 1, 0, '', '## Overview', '', 'This document explains the rate limiting considerations and best practices for builtin nodes in `Agentic Workflow Studio`, helping you understand how to optimize your workflows for performance and reliability.');
+                    lines.splice(frontmatterEnd + 1, 0, '', '## Overview', '', 'This document explains the rate limiting considerations and best practices for builtin nodes in Agentic WorkFlow, helping you understand how to optimize your workflows for performance and reliability.');
                     content = lines.join('\n');
                     fs.writeFileSync(rateLimitsPath, content);
                     console.log('✅ Added overview to rate-limits.md');

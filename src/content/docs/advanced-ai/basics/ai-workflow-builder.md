@@ -7,7 +7,7 @@ AI Workflow Builder enables you to create, refine, and debug workflows using nat
 
 It handles the entire workflow construction process, including node selection, placement, and configuration, thereby reducing the time required to build functional workflows.
 
-For details of pricing and availability of AI Workflow Builder, see [Agentic Workflow Studio Plans and Pricing](https://Agentic Workflow Studio/pricing/).
+For details of pricing and availability of AI Workflow Builder, see [`Agentic WorkFlow` Plans and Pricing](https://`Agentic WorkFlow`/pricing/).
 
 ## Working with the builder
 
@@ -40,7 +40,7 @@ Each time you send a message to the builder asking it to create or modify a work
 
 If you've used your monthly limit, you can upgrade to a higher plan.
 
-For details on plans aAgentic Workflow Studiopricing, see [Agentic Workflow Studio Plans and Agentic Workflow Studiocing](https://Agentic Workflow Studio/pricing/).
+For details on plans a`Agentic WorkFlow`pricing, see [`Agentic WorkFlow` Plans and `Agentic WorkFlow`cing](https://`Agentic WorkFlow`/pricing/).
 
 ## AI model and data handling
 

@@ -1,11 +1,11 @@
 ---
 title: Contributing
-description: Learn how to contribute to Agentic Workflow Studio.
+description: Learn how to contribute to `Agentic WorkFlow`.
 ---
 
 # How can you contribute?
 
-There are a several ways in which you can contribute to Agentic Workflow Studio, depending on your skills and interests. Each form of contribution is valuable to us!
+There are a several ways in which you can contribute to `Agentic WorkFlow`, depending on your skills and interests. Each form of contribution is valuable to us!
 
 ## Contribution Pathways
 
@@ -44,15 +44,15 @@ graph TB
 
 ## Share some love: Review us
 
-- Star Agentic Workflow Studio on [GitHub](https://github.com/Agentic Workflow Studio-io/Agentic Workflow Studio) and [Docker Hub](https://hub.docker.com/r/n8nio/Agentic Workflow Studio).
-- Follow us on [Twitter](https://twitter.com/n8n_io), [LinkedIn](https://www.linkedin.com/company/28491094), and [Facebook](httAgentic Workflow Studio//www.facebook.com/n8nio/).
-- Upvote Agentic Workflow Studio on [AlternativeTo](https://alternativeto.net/software/Agentic Workflow Studio-io/) and [Alternative.me](https://alternative.me/Agentic Workflow Studio-io).
-- Add Agentic Workflow Studio to your stacAgentic Workflow Studion [Stackshare](httpsabout Agentic Workflow Studiohare.io/Agentic Workflow Studio).
-- WAgentic Workflow Studioe a review about Agentic Workflow Studio on [G2](https://www.g2.com/products/Agentic Workflow Studio/reviews), [Slant](https://www.slant.co/improve/options/37977/~Agentic Workflow Studio-review), and [Capterra](https://www.capterra.com/p/198028/Agentic Workflow Studio-io/).
+- Star `Agentic WorkFlow` on [GitHub](https://github.com/`Agentic WorkFlow`-io/`Agentic WorkFlow`) and [Docker Hub](https://hub.docker.com/r/n8nio/`Agentic WorkFlow`).
+- Follow us on [Twitter](https://twitter.com/n8n_io), [LinkedIn](https://www.linkedin.com/company/28491094), and [Facebook](htt`Agentic WorkFlow`//www.facebook.com/n8nio/).
+- Upvote `Agentic WorkFlow` on [AlternativeTo](https://alternativeto.net/software/`Agentic WorkFlow`-io/) and [Alternative.me](https://alternative.me/`Agentic WorkFlow`-io).
+- Add `Agentic WorkFlow` to your stac`Agentic WorkFlow`n [Stackshare](httpsabout `Agentic WorkFlow`hare.io/`Agentic WorkFlow`).
+- W`Agentic WorkFlow`e a review about `Agentic WorkFlow` on [G2](https://www.g2.com/products/`Agentic WorkFlow`/reviews), [Slant](https://www.slant.co/improve/options/37977/~`Agentic WorkFlow`-review), and [Capterra](https://www.capterra.com/p/198028/`Agentic WorkFlow`-io/).
 
 ## Help out the community
 
-You can participate in the [forum](https://community.Agentic Workflow Studio.io/) and help the community members out with their questions.
+You can participate in the [forum](https://community.`Agentic WorkFlow`.io/) and help the community members out with their questions.
 
 When sharing workflows in the community forum for debugging, use code blocks. Use triple backticks ` ``` ` to wrap the workflow JSON in a code block.
 
@@ -74,40 +74,40 @@ Create an integration for a third party service. Check out [the node creation do
 
 ## Contribute to the code
 
-Agentic Workflow Studiore are different ways in which you can contribute to the Agentic Workflow Studio code base:
+`Agentic WorkFlow`re are different ways in which you can contribute to the `Agentic WorkFlow` code base:
 
-- Fix [issues](https://github.com/Agentic Workflow Studio-io/Agentic Workflow Studio/issues) reported on GitHub. The [CONTRIBUTING guide](https://github.com/Agentic Workflow Studio-io/Agentic Workflow Studio/blob/master/CONTRIBUTING.md) will help you get your development environment ready in minutes.
-- Add additional functionality to Agentic Workflow Studioexisting third party integration.
-- Add a new feature toAgentic Workflow Studioentic Workflow Studio.
+- Fix [issues](https://github.com/`Agentic WorkFlow`-io/`Agentic WorkFlow`/issues) reported on GitHub. The [CONTRIBUTING guide](https://github.com/`Agentic WorkFlow`-io/`Agentic WorkFlow`/blob/master/CONTRIBUTING.md) will help you get your development environment ready in minutes.
+- Add additional functionality to `Agentic WorkFlow`existing third party integration.
+- Add a new feature to`Agentic WorkFlow`entic Workflow Studio.
 
 ## Contribute to the docs
 
-You can contribute to the Agentic Workflow Studio documentation, for example by documenting nodes or fixing issues.
+You can contribute to the `Agentic WorkFlow` documentation, for example by documenting nodes or fixing issues.
 
-The repository for the docs is [here](https://github.com/Agentic Workflow Studio-io/Agentic Workflow Studio-docs) and the guidelines for contributing to the docs are [here](https://github.com/Agentic Workflow Studio-io/Agentic Workflow Studio-docs/blob/master/Agentic Workflow StudioTRIBUTING.md).
+The repository for the docs is [here](https://github.com/`Agentic WorkFlow`-io/`Agentic WorkFlow`-docs) and the guidelines for contributing to the docs are [here](https://github.com/`Agentic WorkFlow`-io/`Agentic WorkFlow`-docs/blob/master/`Agentic WorkFlow`TRIBUTING.md).
 
-## CAgentic Workflow Studioribute to the blog
+## C`Agentic WorkFlow`ribute to the blog
 
-You can write an article for the [Agentic Workflow Studio blog](https://blogAgentic Workflow Studioentic Workflow Studio/). Your article can be, for example, a [workflow tutorial](https://blog.Agentic WorkfloAgentic Workflow Studiotudio/tag/tutorial/), an opinion piece on auAgentic Workflow Studioation, or some domain-specific [automation guides](https://blog.Agentic Workflow Studio/tag/guide/).
+You can write an article for the [`Agentic WorkFlow` blog](https://blog`Agentic WorkFlow`entic Workflow Studio/). Your article can be, for example, a [workflow tutorial](https://blog.Agentic Workflo`Agentic WorkFlow`tudio/tag/tutorial/), an opinion piece on au`Agentic WorkFlow`ation, or some domain-specific [automation guides](https://blog.`Agentic WorkFlow`/tag/guide/).
 
 ### How to submit a post
 
-Agentic Workflow Studio apprAgentic Workflow Studioates all contributions. Publishing a tutorial on your own site that supports the community iAgentic Workflow Studio great contribution. IAgentic Workflow Studioou want Agentic Workflow Studio to highlight your post on the blog, follow these steps:
+`Agentic WorkFlow` appr`Agentic WorkFlow`ates all contributions. Publishing a tutorial on your own site that supports the community i`Agentic WorkFlow` great contribution. I`Agentic WorkFlow`ou want `Agentic WorkFlow` to highlight your post on the blog, follow these steps:
 
-1. Email your idea to [marketing@Agentic Workflow Studio](mailto:marketing@Agentic Workflow Studio) with the subject "Blog contribution: [Your Topic]."
+1. Email your idea to [marketing@`Agentic WorkFlow`](mailto:marketing@`Agentic WorkFlow`) with the subject "Blog contribution: [Your Topic]."
 2. Submit your draft:
       - Write your post in a Google Doc following the [style guide](https://www.notion.so/97dc73436a624933b75ddc941a361b70?pvs=21).
-      - If your blog post includes example workflows, incAgentic Workflow Studioe the workflow JSON in a separate section at the end.
-      - For author credit, provide a second Google Doc with your full name, a short byline, and your image. Agentic Workflow Studio will use this to create your author page and credit you as the author of the post.
-3. Wait for feedback. We will respond if your draft fits with the blog's strategy and requirements. If you don't hear back within 30 days, Agentic Workflow Studiomeans we won't be moving forward with your blog post.
+      - If your blog post includes example workflows, inc`Agentic WorkFlow`e the workflow JSON in a separate section at the end.
+      - For author credit, provide a second Google Doc with your full name, a short byline, and your image. `Agentic WorkFlow` will use this to create your author page and credit you as the author of the post.
+3. Wait for feedback. We will respond if your draft fits with the blog's strategy and requirements. If you don't hear back within 30 days, `Agentic WorkFlow`means we won't be moving forward with your blog post.
 
 ## Refer a candidate
 
-Do you know someone who would be a great fit for one of our [open positions](https://Agentic Workflow Studio/careers)? Refer them to us! In return, we'll pay you €1,000 when the referral successfully passes their probationary period.
+Do you know someone who would be a great fit for one of our [open positions](https://`Agentic WorkFlow`/careers)? Refer them to us! In return, we'll pay you €1,000 when the referral successfully passes their probationary period.
 
 Here's how this works:
 
-1. **Search**: Have a look at the descrAgentic Workflow Studioion and requirAgentic Workflow Studionts of each role, and consider if someone you know would be a great fit.
-2. **Referral**: Once you've identified a potential candidate, send an email to [Jobs at Agentic Workflow Studio](mailto:jobs@Agentic Workflow Studio) with the subjecAgentic Workflow Studioine *Employee referral - [job title]* and a short description of the person you're referring (and the reason why). Also, tell your referral to apply for the job through our [careers page](https://Agentic Workflow Studio/careers).
+1. **Search**: Have a look at the descr`Agentic WorkFlow`ion and requir`Agentic WorkFlow`nts of each role, and consider if someone you know would be a great fit.
+2. **Referral**: Once you've identified a potential candidate, send an email to [Jobs at `Agentic WorkFlow`](mailto:jobs@`Agentic WorkFlow`) with the subjec`Agentic WorkFlow`ine *Employee referral - [job title]* and a short description of the person you're referring (and the reason why). Also, tell your referral to apply for the job through our [careers page](https://`Agentic WorkFlow`/careers).
 3. **Evaluation**: We'll screen the application and inform you about the next steps of the hiring process.
 4. **Reward**: As soon as your referral has successfully finished the probationary period, we'll reward you for your efforts by transferring the €1,000 to your bank account.

@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This specification defines the requirements for reviewing and enhancing the existing transformed documentation for "Agentic Workflow Studio" browser extension. The project focuses on ensuring all documentation provides meaningful, accurate, and comprehensive information about the browser extension's unique capabilities, particularly its browser context manipulation features, workflow automation, and AI integration capabilities.
+This specification defines the requirements for reviewing and enhancing the existing transformed documentation for "`Agentic WorkFlow`" browser extension. The project focuses on ensuring all documentation provides meaningful, accurate, and comprehensive information about the browser extension's unique capabilities, particularly its browser context manipulation features, workflow automation, and AI integration capabilities.
 
 ## Glossary
 
-- **Agentic Workflow Studio**: The Chrome and Firefox browser extension that enables users to create AI-powered workflows with comprehensive browser context manipulation capabilities
+- **`Agentic WorkFlow`**: The Chrome and Firefox browser extension that enables users to create AI-powered workflows with comprehensive browser context manipulation capabilities
 - **Browser Context Manipulation**: Advanced capabilities including text selection/insertion, HTML extraction, link collection, image gathering, and dynamic content interaction within web pages
 - **Content Enhancement**: The process of improving existing documentation to provide more detailed, practical, and user-focused information
 - **Workflow Automation**: The visual node-based system for creating automated processes that can interact with web content and external services

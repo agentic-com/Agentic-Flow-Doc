@@ -1,0 +1,63 @@
+---
+title: Full and Partial Executions Inside the Designer  
+description: "How to manually run workflows or subsets (partial executions) in `Agentic WorkFlow`’s drag‑and‑drop designer."  
+sidebar:
+  order: 1
+---
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+`Agentic WorkFlow` supports both **full executions** (run the whole workflow) and **partial executions** (run just a node plus its prerequisites). These help you test and develop workflows gradually.
+
+---
+
+## Full (Manual) Execution
+
+At any time, you can run the full workflow manually:
+
+- Click **Execute Workflow** (usually in the Editor tab)  
+- The system runs all nodes in sequence, using the current page context  
+- You’ll see each node’s output in its results panel  
+
+This mode is ideal for a complete test to see how the workflow behaves end to end.
+
+---
+
+## Partial Executions (Step-by-Step Testing)
+
+Partial executions let you run a single node (and its dependencies) without executing the entire workflow:
+
+1. Select a node on the canvas.  
+2. Open its detail (configuration) view.  
+3. Click **Execute Step** for that node.  
+   - The system will automatically also run any upstream nodes needed to supply its input data.  
+4. You can temporarily deactivate other nodes in the chain if you don’t want them to run.
+
+Partial execution is especially useful when adjusting or debugging a specific node’s logic.
+
+> Partial executions mirror production logic as much as possible, but are run manually and ad-hoc.
+
+---
+
+## Common Issues with Partial Execution
+
+Here are some pitfalls you might encounter:
+
+> **"The destination node is not connected to any trigger."** 
+
+- Partial execution requires that the workflow has a trigger node. If none is connected, you’ll see this error.  
+- To fix: add a trigger (for development, a manual trigger is common).
+
+
+> **"Please execute the whole workflow … existing execution data is too large."** 
+
+- This occurs when your workflow is very complex or has many branches. Partial execution sends internal workflow structure for testing, which might exceed size constraints.  
+- A workaround is to insert a **Limit** node to reduce output size during testing, then disable it for full runs.
+
+---
+
+## Execution Modes (Manual vs Production)
+
+- **Manual execution** is initiated from the designer; it's meant for development.  
+- **Production execution** runs automatically in response to a trigger (schedule, event, etc.).  
+  - For this, workflows must include a non-manual trigger node and be activated. :contentReference[oaicite:3]{index=3}  
+  - Production runs do *not* respect pinned data — they always execute everything fully.

@@ -56,7 +56,7 @@ template: doc
 
 ### Technical Requirements
 
-- **Browser Extension**: Agentic Workflow Studio v[X.X.X] or later
+- **Browser Extension**: `Agentic WorkFlow` v[X.X.X] or later
 - **Browser Permissions**: [List specific permissions needed]
 - **External Services**: [Any APIs or services required]
 

@@ -1,17 +1,31 @@
 ---
-title: Agentic Workflow Studio
+title: `Agentic WorkFlow`
 description: Automate your web tasks with AI-powered workflows. No coding required - just point, click, and let AI do the work.
 template: splash
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 import "@styles/home.css";
+import SiteHero from "$lib/components/SiteHero.svelte";
+import { PUBLIC_SITE_URL, PUBLIC_CHROME_EXTENSION_URL } from "astro:env/client";
 
-# Agentic Workflow Studio
-
-**Create intelligent workflows** - Build AI-powered workflows directly in your browser with intelligent automation and context manipulation.
-
-[Get Started →](/usage/getting-started/quick-starts/quick-intro/) | [Install Extension →](https://chrome.google.com/webstore)
+<SiteHero
+  topCTA={{
+    href: PUBLIC_SITE_URL,
+    value: "Visit our official Website",
+  }}
+  title="`Agentic WorkFlow`"
+  subtitle="Create intelligent workflows"
+  description="Build AI-powered workflows directly in your browser with intelligent automation and context manipulation"
+  button1={{
+    href: '/usage/getting-started/quick-starts/quick-intro/',
+    value: "Get Started",
+  }}
+  button2={{
+    href: PUBLIC_CHROME_EXTENSION_URL,
+    value: "Install Extension",
+  }}
+/>
 
 ## Browser Extension Features
 
@@ -52,7 +66,7 @@ import "@styles/home.css";
 ## What You Can Build
 
 <CardGrid>
-  <Card title="📊 Price Monitoring" icon="document">
+  <Card title="Price Monitoring" icon="document">
     **Track competitor prices automatically**
 
     Monitor product prices across multiple websites, get alerts when prices change, and export data for analysis.
@@ -60,7 +74,7 @@ import "@styles/home.css";
     *Time to build: 10 minutes* • [Quick Start →](/usage/quick-wins/extract-product-prices/)
   </Card>
 
-  <Card title="📝 Content Research" icon="pencil">
+  <Card title="Content Research" icon="pencil">
     **Gather information from any website**
 
     Extract articles, collect research data, and organize findings automatically with AI-powered analysis.
@@ -68,7 +82,7 @@ import "@styles/home.css";
     *Time to build: 15 minutes* • [Learn How →](/usage/how-to/extract-data-from-any-website/)
   </Card>
 
-  <Card title="🎯 Lead Generation" icon="magnifier">
+  <Card title="Lead Generation" icon="magnifier">
     **Find and qualify prospects**
 
     Scan websites for contact information, verify email addresses, and build targeted prospect lists.
@@ -76,7 +90,7 @@ import "@styles/home.css";
     *Time to build: 20 minutes* • [See Examples →](/learning/workflow-patterns/real-world-examples/)
   </Card>
 
-  <Card title="📱 Social Media Automation" icon="heart">
+  <Card title="Social Media Automation" icon="heart">
     **Automate your social presence**
 
     Schedule posts, monitor mentions, track engagement, and respond to comments across platforms.

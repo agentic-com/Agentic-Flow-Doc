@@ -39,8 +39,8 @@ class ContentFixer {
       
       // Fix terminology inconsistencies
       const terminologyFixes = [
-        { from: /\bn8n\b/g, to: 'Agentic Workflow Studio' },
-        { from: /\bN8N\b/g, to: 'Agentic Workflow Studio' },
+        { from: /\bn8n\b/g, to: 'Agentic WorkFlow' },
+        { from: /\bN8N\b/g, to: 'Agentic WorkFlow' },
         { from: /\bscraping\b/g, to: 'extraction' },
         { from: /\bScraping\b/g, to: 'Extraction' },
         { from: /\bplugin\b/g, to: 'browser extension' },
@@ -84,15 +84,15 @@ class ContentFixer {
       // Clean up corrupted text patterns
       const textFixes = [
         // Fix corrupted product name patterns
-        { from: /Agentic Workflow Studiontic Workflow Studio/g, to: 'Agentic Workflow Studio' },
-        { from: /Use Agentic Workflow Studiontic Workflow Studio/g, to: 'Use Agentic Workflow Studio' },
-        { from: /prAgentic Workflow Studiode/g, to: 'provide' },
-        { from: /uAgentic Workflow Studiothis/g, to: 'use this' },
-        { from: /TheAgentic Workflow Studioxt/g, to: 'The next' },
-        { from: /decAgentic Workflow Studioons/g, to: 'decisions' },
+        { from: /Agentic WorkFlowntic Workflow Studio/g, to: 'Agentic WorkFlow' },
+        { from: /Use Agentic WorkFlowntic Workflow Studio/g, to: 'Use Agentic WorkFlow' },
+        { from: /prAgentic WorkFlowde/g, to: 'provide' },
+        { from: /uAgentic WorkFlowthis/g, to: 'use this' },
+        { from: /TheAgentic WorkFlowxt/g, to: 'The next' },
+        { from: /decAgentic WorkFlowons/g, to: 'decisions' },
         // Fix other corrupted patterns
-        { from: /```Agentic Workflow Studio/g, to: '```' },
-        { from: /--Agentic Workflow Studio---/g, to: '------' }
+        { from: /```Agentic WorkFlow/g, to: '```' },
+        { from: /--Agentic WorkFlow---/g, to: '------' }
       ];
       
       textFixes.forEach(fix => {
@@ -202,7 +202,7 @@ class ContentFixer {
     }
     
     console.log('\n🎯 Summary of fixes applied:');
-    console.log('   • Replaced "n8n" with "Agentic Workflow Studio"');
+    console.log('   • Replaced "n8n" with "Agentic WorkFlow"');
     console.log('   • Updated "scraping" to "extraction"');
     console.log('   • Fixed "plugin" to "browser extension"');
     console.log('   • Removed broken internal links');

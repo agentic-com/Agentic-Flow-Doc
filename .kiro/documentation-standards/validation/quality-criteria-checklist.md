@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document establishes comprehensive quality criteria and validation procedures for builtin node documentation in the Agentic Workflow Studio project. It serves as the definitive guide for ensuring all documentation meets established standards for completeness, accuracy, and usability.
+This document establishes comprehensive quality criteria and validation procedures for builtin node documentation in the `Agentic WorkFlow` project. It serves as the definitive guide for ensuring all documentation meets established standards for completeness, accuracy, and usability.
 
 ## Documentation Quality Levels
 

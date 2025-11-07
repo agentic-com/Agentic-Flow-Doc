@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 /**
- * Content Audit Script for `Agentic Workflow Studio` Documentation
+ * Content Audit Script for Agentic WorkFlow Documentation
  * 
  * This script performs a comprehensive audit of all documentation files
  * to identify completeness gaps, assess quality, and generate enhancement priorities.

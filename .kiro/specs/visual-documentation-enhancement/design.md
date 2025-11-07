@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Visual Documentation Enhancement feature will systematically add Mermaid diagrams to existing markdown files in the Agentic Workflow Studio documentation. This design leverages the already-installed astro-mermaid package to render diagrams directly from standard Mermaid markdown syntax within Content_File elements.
+The Visual Documentation Enhancement feature will systematically add Mermaid diagrams to existing markdown files in the `Agentic WorkFlow` documentation. This design leverages the already-installed astro-mermaid package to render diagrams directly from standard Mermaid markdown syntax within Content_File elements.
 
 The solution focuses on two key areas: identifying where Visual_Enhancement elements would improve comprehension, and directly adding Mermaid_Diagram elements using standard markdown syntax to explain concepts, workflows, and node relationships.
 

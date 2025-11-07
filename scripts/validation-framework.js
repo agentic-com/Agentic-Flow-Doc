@@ -37,7 +37,7 @@ class ValidationFramework {
     return [
       {
         name: 'terminology-consistency',
-        description: 'Check for consistent use of Agentic Workflow Studio terminology',
+        description: 'Check for consistent use of Agentic WorkFlow terminology',
         severity: 'error',
         validator: this.validateTerminology.bind(this)
       },
@@ -92,7 +92,7 @@ class ValidationFramework {
   initializeGlossary() {
     return {
       approved: [
-        'Agentic Workflow Studio',
+        'Agentic WorkFlow',
         'browser extension',
         'browser context',
         'workflow builder',
@@ -255,21 +255,21 @@ class ValidationFramework {
 
     // Check for inconsistent product naming
     const productNameVariations = [
-      /agentic workflow studio/gi,
-      /Agentic workflow studio/gi,
-      /agentic Workflow Studio/gi
+      /Agentic WorkFlow/gi,
+      /Agentic WorkFlow/gi,
+      /Agentic WorkFlow/gi
     ];
 
     productNameVariations.forEach(pattern => {
       const matches = content.match(pattern);
       if (matches) {
         matches.forEach(match => {
-          if (match !== 'Agentic Workflow Studio') {
+          if (match !== 'Agentic WorkFlow') {
             const line = this.findLineNumber(content, match);
             issues.push({
-              message: `Inconsistent product name: "${match}". Should be "Agentic Workflow Studio"`,
+              message: `Inconsistent product name: "${match}". Should be "Agentic WorkFlow"`,
               line,
-              suggestion: 'Use consistent capitalization: "Agentic Workflow Studio"'
+              suggestion: 'Use consistent capitalization: "Agentic WorkFlow"'
             });
           }
         });
@@ -469,7 +469,7 @@ class ValidationFramework {
       issues.push({
         message: 'Frontmatter contains n8n references',
         line: 2,
-        suggestion: 'Update frontmatter to use Agentic Workflow Studio terminology'
+        suggestion: 'Update frontmatter to use Agentic WorkFlow terminology'
       });
     }
 
@@ -632,8 +632,8 @@ class ValidationFramework {
    */
   suggestTerminologyReplacement(term) {
     const replacements = {
-      'n8n': 'Agentic Workflow Studio',
-      'n8n.io': 'Agentic Workflow Studio',
+      'n8n': 'Agentic WorkFlow',
+      'n8n.io': 'Agentic WorkFlow',
       'server deployment': 'browser extension installation',
       'self-hosted': 'browser-based',
       'docker': 'browser extension',

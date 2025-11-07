@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design document outlines the content-focused approach to simplifying, cleaning, and enhancing the Agentic Workflow Studio documentation. The design leverages the existing Astro.js/Starlight infrastructure while focusing on content transformation, new page creation, and improved learning experiences for non-developer users.
+This design document outlines the content-focused approach to simplifying, cleaning, and enhancing the `Agentic WorkFlow` documentation. The design leverages the existing Astro.js/Starlight infrastructure while focusing on content transformation, new page creation, and improved learning experiences for non-developer users.
 
 ## Architecture
 

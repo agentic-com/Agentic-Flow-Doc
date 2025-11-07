@@ -1,6 +1,6 @@
 ---
 title: Security
-description: "Learn how to use Agentic Workflow Studio browser extension for security with intelligent workflow creation."
+description: "Learn how to use `Agentic WorkFlow` browser extension for security with intelligent workflow creation."
 sidebar:
     order: 2
 ---

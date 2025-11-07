@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 /**
- * SEO and meta description update script for Agentic Workflow Studio documentation
+ * SEO and meta description update script for Agentic WorkFlow documentation
  * Updates all page descriptions to be browser extension specific and optimizes SEO metadata
  */
 
@@ -30,38 +30,38 @@ const seoKeywords = [
 const improvedDescriptions = {
   // Main sections
   'src/content/docs/index.mdx': 'Build AI-powered workflows directly in your browser with intelligent automation and context manipulation.',
-  'src/content/docs/usage/index.md': 'Learn how to use Agentic Workflow Studio browser extension to create intelligent workflows that interact with web content.',
+  'src/content/docs/usage/index.md': 'Learn how to use Agentic WorkFlow browser extension to create intelligent workflows that interact with web content.',
   'src/content/docs/integration/index.md': 'Explore browser extension nodes and integrations for web content manipulation and AI-powered automation.',
   'src/content/docs/advanced-ai/index.md': 'Create advanced AI workflows in your browser using LangChain integration and intelligent content processing.',
   'src/content/docs/learning/index.md': 'Master browser-based workflow automation with comprehensive tutorials and examples for web content manipulation.',
   
   // Getting started
-  'src/content/docs/usage/getting-started/learning-path.md': 'Follow the complete learning path to master Agentic Workflow Studio browser extension and create intelligent web automation workflows.',
-  'src/content/docs/usage/getting-started/quick-starts/quick-intro.md': 'Get started quickly with Agentic Workflow Studio browser extension - install and create your first AI-powered web automation workflow.',
-  'src/content/docs/usage/getting-started/quick-starts/long-intro.md': 'Complete installation and setup guide for Agentic Workflow Studio browser extension with detailed workflow creation tutorial.',
+  'src/content/docs/usage/getting-started/learning-path.md': 'Follow the complete learning path to master Agentic WorkFlow browser extension and create intelligent web automation workflows.',
+  'src/content/docs/usage/getting-started/quick-starts/quick-intro.md': 'Get started quickly with Agentic WorkFlow browser extension - install and create your first AI-powered web automation workflow.',
+  'src/content/docs/usage/getting-started/quick-starts/long-intro.md': 'Complete installation and setup guide for Agentic WorkFlow browser extension with detailed workflow creation tutorial.',
   
   // Key concepts
-  'src/content/docs/usage/key-concepts/glossary.md': 'Essential terminology and concepts for Agentic Workflow Studio browser extension and AI-powered web automation workflows.',
-  'src/content/docs/usage/key-concepts/data/data-structure.md': 'Understand data structures and formats used in Agentic Workflow Studio browser extension workflows for web content processing.',
-  'src/content/docs/usage/key-concepts/flow-logic/execution-order.md': 'Learn how workflow execution works in Agentic Workflow Studio browser extension for optimal web automation performance.',
+  'src/content/docs/usage/key-concepts/glossary.md': 'Essential terminology and concepts for Agentic WorkFlow browser extension and AI-powered web automation workflows.',
+  'src/content/docs/usage/key-concepts/data/data-structure.md': 'Understand data structures and formats used in Agentic WorkFlow browser extension workflows for web content processing.',
+  'src/content/docs/usage/key-concepts/flow-logic/execution-order.md': 'Learn how workflow execution works in Agentic WorkFlow browser extension for optimal web automation performance.',
   
   // Extension nodes
-  'src/content/docs/integration/extension/GetSelectedText.md': 'Extract selected text from web pages using Agentic Workflow Studio browser extension for AI processing and automation.',
-  'src/content/docs/integration/extension/GetAllText.md': 'Capture all text content from web pages with Agentic Workflow Studio browser extension for comprehensive content analysis.',
-  'src/content/docs/integration/extension/GetAllHTML.md': 'Extract complete HTML content from web pages using Agentic Workflow Studio browser extension for advanced processing.',
-  'src/content/docs/integration/extension/GetHTMLofSelectedText.md': 'Get HTML markup of selected content with Agentic Workflow Studio browser extension for precise content manipulation.',
-  'src/content/docs/integration/extension/GetAllLinks.md': 'Collect all links from web pages using Agentic Workflow Studio browser extension for comprehensive link analysis and processing.',
-  'src/content/docs/integration/extension/GetAllImages.md': 'Gather all images from web pages with Agentic Workflow Studio browser extension for media processing and analysis.',
+  'src/content/docs/integration/extension/GetSelectedText.md': 'Extract selected text from web pages using Agentic WorkFlow browser extension for AI processing and automation.',
+  'src/content/docs/integration/extension/GetAllText.md': 'Capture all text content from web pages with Agentic WorkFlow browser extension for comprehensive content analysis.',
+  'src/content/docs/integration/extension/GetAllHTML.md': 'Extract complete HTML content from web pages using Agentic WorkFlow browser extension for advanced processing.',
+  'src/content/docs/integration/extension/GetHTMLofSelectedText.md': 'Get HTML markup of selected content with Agentic WorkFlow browser extension for precise content manipulation.',
+  'src/content/docs/integration/extension/GetAllLinks.md': 'Collect all links from web pages using Agentic WorkFlow browser extension for comprehensive link analysis and processing.',
+  'src/content/docs/integration/extension/GetAllImages.md': 'Gather all images from web pages with Agentic WorkFlow browser extension for media processing and analysis.',
   
   // AI examples
-  'src/content/docs/advanced-ai/examples/smart-text-extraction.md': 'Create intelligent text extraction workflows using Agentic Workflow Studio browser extension with AI-powered content analysis.',
-  'src/content/docs/advanced-ai/examples/ai-web-scraping.md': 'Build advanced web scraping workflows with AI processing using Agentic Workflow Studio browser extension.',
-  'src/content/docs/advanced-ai/examples/web-content-analysis.md': 'Analyze web content intelligently using Agentic Workflow Studio browser extension with AI-powered processing workflows.',
+  'src/content/docs/advanced-ai/examples/smart-text-extraction.md': 'Create intelligent text extraction workflows using Agentic WorkFlow browser extension with AI-powered content analysis.',
+  'src/content/docs/advanced-ai/examples/ai-web-scraping.md': 'Build advanced web scraping workflows with AI processing using Agentic WorkFlow browser extension.',
+  'src/content/docs/advanced-ai/examples/web-content-analysis.md': 'Analyze web content intelligently using Agentic WorkFlow browser extension with AI-powered processing workflows.',
   
   // Learning examples
-  'src/content/docs/learning/examples/browser-content-extraction.md': 'Master browser content extraction techniques with Agentic Workflow Studio extension through practical examples and tutorials.',
-  'src/content/docs/learning/examples/web-automation-patterns.md': 'Learn common web automation patterns and best practices using Agentic Workflow Studio browser extension.',
-  'src/content/docs/learning/examples/multi-node-automation.md': 'Create complex multi-step automation workflows with Agentic Workflow Studio browser extension for advanced web manipulation.'
+  'src/content/docs/learning/examples/browser-content-extraction.md': 'Master browser content extraction techniques with Agentic WorkFlow extension through practical examples and tutorials.',
+  'src/content/docs/learning/examples/web-automation-patterns.md': 'Learn common web automation patterns and best practices using Agentic WorkFlow browser extension.',
+  'src/content/docs/learning/examples/multi-node-automation.md': 'Create complex multi-step automation workflows with Agentic WorkFlow browser extension for advanced web manipulation.'
 };
 
 /**
@@ -145,7 +145,7 @@ function generateBrowserExtensionDescription(filePath, currentDescription, title
     currentDescription.includes('browser extension') ||
     currentDescription.includes('browser context') ||
     currentDescription.includes('web automation') ||
-    currentDescription.includes('Agentic Workflow Studio')
+    currentDescription.includes('Agentic WorkFlow')
   )) {
     return currentDescription;
   }
@@ -158,11 +158,11 @@ function generateBrowserExtensionDescription(filePath, currentDescription, title
                  pathParts.includes('learning') ? 'learning' : 'general';
   
   const templates = {
-    usage: `Learn how to use Agentic Workflow Studio browser extension for ${title?.toLowerCase() || 'web automation'} with intelligent workflow creation.`,
+    usage: `Learn how to use Agentic WorkFlow browser extension for ${title?.toLowerCase() || 'web automation'} with intelligent workflow creation.`,
     integration: `Explore ${title || 'browser extension nodes'} for web content manipulation and AI-powered automation workflows.`,
     'advanced-ai': `Create advanced AI workflows using ${title || 'browser extension capabilities'} with LangChain integration and intelligent processing.`,
-    learning: `Master ${title?.toLowerCase() || 'browser automation'} with Agentic Workflow Studio extension through practical examples and tutorials.`,
-    general: `${title || 'Agentic Workflow Studio'} - Build AI-powered workflows directly in your browser with intelligent automation capabilities.`
+    learning: `Master ${title?.toLowerCase() || 'browser automation'} with Agentic WorkFlow extension through practical examples and tutorials.`,
+    general: `${title || 'Agentic WorkFlow'} - Build AI-powered workflows directly in your browser with intelligent automation capabilities.`
   };
   
   return templates[section];
@@ -246,7 +246,7 @@ async function updateSitewideSEO() {
     const currentDescriptionMatch = configContent.match(/description:\s*["'](.*?)["']/);
     const currentDescription = currentDescriptionMatch ? currentDescriptionMatch[1] : '';
     
-    const newDescription = "Agentic Workflow Studio - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.";
+    const newDescription = "Agentic WorkFlow - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.";
     
     if (currentDescription !== newDescription) {
       const updatedContent = configContent.replace(

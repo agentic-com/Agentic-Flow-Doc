@@ -21,7 +21,7 @@ By the end of this tutorial, you'll have created an automation that:
 ## Before You Start
 
 **You'll need:**
-- ✅ Agentic Workflow Studio extension installed ([Setup guide here](/learning/text-courses/beginner/installation-setup/))
+- ✅ `Agentic WorkFlow` extension installed ([Setup guide here](/learning/text-courses/beginner/installation-setup/))
 - ✅ 30 minutes of time
 - ✅ Any website with text (we'll suggest some good ones)
 

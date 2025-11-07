@@ -1,11 +1,11 @@
 ---
 title: Lambda Workflows
-description: "Learn how to use Agentic Workflow Studio browser extension for lambda workflows with intelligent workflow creation."
+description: "Learn how to use `Agentic WorkFlow` browser extension for lambda workflows with intelligent workflow creation."
 sidebar:
   order: 5
 ---
 
-You can call one workflow from another workflow. This allows you to build modular, microservice-like workflows. It can also help if your workflow grows large enough to encounter memory issues. Creating sub-workflows uses the [Execute Workflow](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.executeworkflow.md) and [Execute Sub-workflow Trigger](/integrations/builtin/core-nodes/Agentic Workflow Studio-nodes-base.executeworkflowtrigger.md) nodes.
+You can call one workflow from another workflow. This allows you to build modular, microservice-like workflows. It can also help if your workflow grows large enough to encounter memory issues. Creating sub-workflows uses the [Execute Workflow](/integrations/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.executeworkflow.md) and [Execute Sub-workflow Trigger](/integrations/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.executeworkflowtrigger.md) nodes.
 
 Sub-wokflow executions don't count towards your plan's monthly execution or active workflow limits.
 

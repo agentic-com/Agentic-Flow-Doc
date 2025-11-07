@@ -1,6 +1,6 @@
 ---
 title: Mapping in the UI
-description: "Learn how to use Agentic Workflow Studio browser extension for mapping in the ui with intelligent workflow creation."
+description: "Learn how to use `Agentic WorkFlow` browser extension for mapping in the ui with intelligent workflow creation."
 ---
 
 Data mapping means referencing data from previous nodes. It doesn't include changing (transforming) data, just referencing it.
@@ -98,5 +98,5 @@ Given the following data:
 ]
 ```
 
-Agentic Workflow Studio displays it in table form like this:
+`Agentic WorkFlow` displays it in table form like this:
 

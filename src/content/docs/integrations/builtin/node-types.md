@@ -11,7 +11,7 @@ description: "Quick guide to choosing the right nodes for your workflows - from 
 
 ## Node Categories Overview
 
-Agentic Workflow Studio organizes nodes into six main categories to help you find what you need:
+`Agentic WorkFlow` organizes nodes into six main categories to help you find what you need:
 
 🤖 **AI Nodes** - Add intelligence to your workflows
 🌐 **Core Nodes** - Essential web and API interactions

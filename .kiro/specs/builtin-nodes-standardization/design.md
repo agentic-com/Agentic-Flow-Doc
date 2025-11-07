@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design outlines a systematic approach to standardizing and completing all builtin node documentation in the Agentic Workflow Studio documentation. The project will establish a comprehensive documentation template, audit all existing files, and systematically enhance each node's documentation to provide consistent, detailed, and practical information for users at all skill levels.
+This design outlines a systematic approach to standardizing and completing all builtin node documentation in the `Agentic WorkFlow` documentation. The project will establish a comprehensive documentation template, audit all existing files, and systematically enhance each node's documentation to provide consistent, detailed, and practical information for users at all skill levels.
 
 ## Architecture
 

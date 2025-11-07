@@ -44,7 +44,7 @@ By the end of this tutorial, you will be able to:
 
 ### What You'll Need
 
-- **Browser Extension**: Agentic Workflow Studio v[X.X.X] or later
+- **Browser Extension**: `Agentic WorkFlow` v[X.X.X] or later
 - **Browser**: Chrome or Firefox with required permissions
 - **Additional Tools**: [List any external tools or services]
 

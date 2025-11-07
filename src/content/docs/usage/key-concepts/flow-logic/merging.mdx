@@ -1,0 +1,64 @@
+---
+title: Merging Data Streams  
+description: "Learn how to merge multiple data streams or node outputs in `Agentic WorkFlow` workflows."  
+---
+import { Card, CardGrid } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+import Social from "@images/social.webp";
+
+Merging brings two or more data streams together into one unified output. It’s useful when you’ve split a workflow into branches or gathered data from multiple sources and now need to combine them. The approach you choose depends on how the data is structured and what you want to achieve.  
+
+---
+
+## When to merge  
+- After you’ve split workflow logic using an If Node or Switch Node and need to bring branches back together.  
+- When you have data from **multiple previous nodes** that you want to process or output as a single dataset.  
+- When you need to **compare** datasets and then combine results based on that comparison (for example, add new records, filter duplicates, or enrich data) using the Compare Datasets Node.
+
+
+---
+
+## Methods to merge data  
+
+### 1. Using the Merge node  
+The Merge node allows you to combine inputs in different ways (Append, Combine, Position, SQL Query, and more). Examples of its modes:  
+- **Append**: Combine all items from each input one after another.  
+- **Combine By Matching Fields / Combine By Position**: Merge items based on matching field values or position index.  
+- **Choose Branch**: Output only one of the input streams, if that meets your workflow logic.
+
+### 2. Using a Code or Function node  
+If you have complex logic or multiple executions of nodes (for example loops producing results over time) and you want full control over merging behavior, you can use a custom code node (or function) to collect, merge and output items manually.
+
+### 3. Comparing datasets before merging  
+Use the Compare Datasets node when you’d like to **compare** two input streams (e.g., old vs new) and then merge based on “in A only”, “in B only”, “same”, or “different”. This lets you merge selectively and intelligently.
+
+---
+
+## How to use for split-then-merge workflows  
+1. Build two branches after a conditional logic filter (e.g., If or Switch).  
+2. Use a Merge node at the end to bring both branches back together.  
+3. Configure the mode (Append, Combine, etc.) depending on how you want items to join.  
+4. Test each branch separately using partial execution before full run.  
+5. Finally, run the full workflow to confirm output.
+
+
+---
+
+## Best practices  
+- Give descriptive names to your merge nodes (e.g., “Merge API & DB Results”, “Merge Long vs Short Branches”).  
+- Use Sticky Notes (see [Sticky Notes](/usage/using-the-app/workflows/components/sticky-notes/)) to document the purpose of each merge.  
+- After merging, inspect the output of the merge node to ensure it contains the expected items — this helps avoid unexpected nulls or empty arrays.  
+- If one branch may output zero items, ensure your merge logic handles that — e.g., use “Keep Everything” mode or Add default items to branches.  
+- For workflows that run in loops or have many executions, consider grouping results and merging only after collection is complete.
+
+---
+
+## Caveats and things to watch  
+- In workflows with multiple branches, a Merge node may wait until all connected inputs have reported results—this can mean delay or blocking unless set to “Always Output Data”.  
+- In older versions or legacy workflows, using Merge node with If nodes may cause unexpected behavior (both branches may execute). Confirm your version’s behavior. 
+- If you need to ensure order of items after merging (e.g., sorted by date), you may need to add a Code or Function node after merging to sort the array.
+
+---
+
+## Illustration  
+<Image src={Social} alt="Illustration of merging streams into one workflow" />

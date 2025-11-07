@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document establishes comprehensive standards for all code examples in the Agentic Workflow Studio documentation. These standards ensure that all code examples are accurate, testable, and provide real value to users.
+This document establishes comprehensive standards for all code examples in the `Agentic WorkFlow` documentation. These standards ensure that all code examples are accurate, testable, and provide real value to users.
 
 ## Code Quality Requirements
 

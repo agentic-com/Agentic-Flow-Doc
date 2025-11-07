@@ -1,0 +1,48 @@
+---
+title: Execute from Webpage Contextual Menu
+description: "How to run a workflow directly from the browser’s contextual menu on a page."
+sidebar:
+  order: 3
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+You can execute workflows directly from a web page using its contextual (right‑click) menu. This is useful when you're browsing and want to trigger an automation without switching to the workflow builder first.
+
+---
+
+## How to execute from the contextual menu
+
+1. On any web page, right‑click to open the browser’s context menu.
+2. Look for the **`Agentic WorkFlow`** group or submenu.
+3. Inside that group, click the workflow you want to run (if it is available).
+4. The workflow will execute using the current page context.
+
+This method runs the workflow manually — essentially the same as using **Execute Workflow** from the builder interface.
+
+---
+
+## Behavior & notes
+
+- It runs as a **manual execution** — using the current page’s content as input.
+- Only workflows compatible with that page (e.g. expecting the right context) should be triggered this way.
+- After execution, you can inspect results, logs, or output just like other runs.
+- Use this method when you’re navigating web content and want to trigger the workflow in situ.
+
+For a deeper understanding of manual versus production executions, see the [Executions guide](/usage/using-the-app/workflows/executions/manual-partial-executions/).
+
+If context execution is not showing, ensure:
+
+- The workflow is available/responding in the extension’s menu settings
+- The workflow is properly saved and enabled
+- The current page has elements or data matching the workflow’s nodes
+
+---
+
+## When to use this
+
+- Quickly run a workflow without moving to the builder
+- Trigger a workflow tailored to a given page (for scraping, extraction, etc.)
+- Test workflows in real-world contexts while browsing
+
+If your workflow should run automatically in response to events (rather than via manual triggers), explore **Trigger Nodes** for automation. See [Triggers](/usage/using-the-app/workflows/components/triggers/).

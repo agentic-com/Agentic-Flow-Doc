@@ -222,18 +222,18 @@ class ComprehensiveValidator {
     const terminologyRules = {
       // Product name consistency
       productName: {
-        correct: 'Agentic Workflow Studio',
+        correct: 'Agentic WorkFlow',
         variations: [
-          /agentic workflow studio/gi,
-          /Agentic workflow studio/gi,
-          /agentic Workflow Studio/gi,
-          /AGENTIC WORKFLOW STUDIO/gi
+          /Agentic WorkFlow/gi,
+          /Agentic WorkFlow/gi,
+          /Agentic WorkFlow/gi,
+          /Agentic WorkFlow/gi
         ]
       },
       // Deprecated terms that should be replaced
       deprecated: {
-        'n8n': 'Agentic Workflow Studio',
-        'n8n.io': 'Agentic Workflow Studio documentation',
+        'n8n': 'Agentic WorkFlow',
+        'n8n.io': 'Agentic WorkFlow documentation',
         'self-hosted': 'browser-based',
         'server deployment': 'browser extension installation',
         'docker container': 'browser extension',

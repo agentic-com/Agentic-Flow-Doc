@@ -4,8 +4,8 @@ import fs from 'fs/promises';
 import path from 'path';
 
 /**
- * Global terminology replacement script for Agentic Workflow Studio documentation
- * Systematically replaces n8n references with appropriate Agentic Workflow Studio terminology
+ * Global terminology replacement script for Agentic WorkFlow documentation
+ * Systematically replaces n8n references with appropriate Agentic WorkFlow terminology
  */
 
 // Replacement patterns - order matters for specificity
@@ -13,78 +13,78 @@ const replacementPatterns = [
   // Product name replacements
   {
     pattern: /\bn8n\.io\b/g,
-    replacement: 'Agentic Workflow Studio',
+    replacement: 'Agentic WorkFlow',
     description: 'Replace n8n.io domain references'
   },
   {
     pattern: /\bn8n Cloud\b/g,
-    replacement: 'Agentic Workflow Studio',
+    replacement: 'Agentic WorkFlow',
     description: 'Replace n8n Cloud references'
   },
   {
     pattern: /\bn8n community\b/g,
-    replacement: 'Agentic Workflow Studio community',
+    replacement: 'Agentic WorkFlow community',
     description: 'Replace n8n community references'
   },
   {
     pattern: /\bn8n instance\b/g,
-    replacement: 'Agentic Workflow Studio instance',
+    replacement: 'Agentic WorkFlow instance',
     description: 'Replace n8n instance references'
   },
   {
     pattern: /\bn8n workflow\b/g,
-    replacement: 'Agentic Workflow Studio workflow',
+    replacement: 'Agentic WorkFlow workflow',
     description: 'Replace n8n workflow references'
   },
   {
     pattern: /\bn8n users\b/g,
-    replacement: 'Agentic Workflow Studio users',
+    replacement: 'Agentic WorkFlow users',
     description: 'Replace n8n users references'
   },
   {
     pattern: /\bn8n provides\b/g,
-    replacement: 'Agentic Workflow Studio provides',
+    replacement: 'Agentic WorkFlow provides',
     description: 'Replace n8n provides references'
   },
   {
     pattern: /\bn8n offers\b/g,
-    replacement: 'Agentic Workflow Studio offers',
+    replacement: 'Agentic WorkFlow offers',
     description: 'Replace n8n offers references'
   },
   {
     pattern: /\bwith n8n\b/g,
-    replacement: 'with Agentic Workflow Studio',
+    replacement: 'with Agentic WorkFlow',
     description: 'Replace with n8n references'
   },
   {
     pattern: /\busing n8n\b/g,
-    replacement: 'using Agentic Workflow Studio',
+    replacement: 'using Agentic WorkFlow',
     description: 'Replace using n8n references'
   },
   {
     pattern: /\bUse n8n\b/g,
-    replacement: 'Use Agentic Workflow Studio',
+    replacement: 'Use Agentic WorkFlow',
     description: 'Replace Use n8n references'
   },
   {
     pattern: /\bto n8n\b/g,
-    replacement: 'to Agentic Workflow Studio',
+    replacement: 'to Agentic WorkFlow',
     description: 'Replace to n8n references'
   },
   {
     pattern: /\babout n8n\b/g,
-    replacement: 'about Agentic Workflow Studio',
+    replacement: 'about Agentic WorkFlow',
     description: 'Replace about n8n references'
   },
   {
     pattern: /\bAbout n8n\b/g,
-    replacement: 'About Agentic Workflow Studio',
+    replacement: 'About Agentic WorkFlow',
     description: 'Replace About n8n references'
   },
   // Generic n8n references (be careful with this one)
   {
     pattern: /\bn8n\b(?!\s*-)/g,
-    replacement: 'Agentic Workflow Studio',
+    replacement: 'Agentic WorkFlow',
     description: 'Replace standalone n8n references (excluding technical node names)'
   }
 ];

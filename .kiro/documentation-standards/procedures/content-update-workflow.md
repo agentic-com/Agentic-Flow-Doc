@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document defines the standardized workflow for updating documentation content in the Agentic Workflow Studio project. It ensures consistent quality, proper review processes, and seamless integration with the existing documentation ecosystem.
+This document defines the standardized workflow for updating documentation content in the `Agentic WorkFlow` project. It ensures consistent quality, proper review processes, and seamless integration with the existing documentation ecosystem.
 
 ## Workflow Stages
 

@@ -1,13 +1,13 @@
 ---
 contentType: tutorial
 title: Web Content Analysis with AI
-description: "Analyze web content intelligently using Agentic Workflow Studio browser extension with AI-powered processing workflows."
+description: "Analyze web content intelligently using `Agentic WorkFlow` browser extension with AI-powered processing workflows."
 difficulty: "🎯 advanced"
 ---
 
 # Web Content Analysis with AI
 
-This example demonstrates how to create an AI workflow that analyzes web page content using Agentic Workflow Studio's browser extension capabilities combined with LangChain AI models.
+This example demonstrates how to create an AI workflow that analyzes web page content using `Agentic WorkFlow`'s browser extension capabilities combined with LangChain AI models.
 
 ## Overview
 

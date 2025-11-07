@@ -217,7 +217,7 @@ Indexer Node is the first step in:
 
 **Common workflows:** [AI Knowledge Base](/advanced-ai/examples/intelligent-content-analysis/) • [Document Search](/advanced-ai/examples/end-to-end-ai-workflows/) • [Smart Research](/learning/workflow-patterns/real-world-examples/research-automation/)
 
-**Learn more:** [AI Workflow Builder](/advanced-ai/basics/ai-workflow-builder/) • [Understanding RAG](/advanced-ai/basics/rag-in-Agentic Workflow Studio/) • [Vector Databases](/advanced-ai/examples/understand-vector-databases/)
+**Learn more:** [AI Workflow Builder](/advanced-ai/basics/ai-workflow-builder/) • [Understanding RAG](/advanced-ai/basics/rag-in-`Agentic WorkFlow`/) • [Vector Databases](/advanced-ai/examples/understand-vector-databases/)
 
 ---
 

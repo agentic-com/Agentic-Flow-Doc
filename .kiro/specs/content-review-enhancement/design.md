@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design outlines a comprehensive approach to reviewing and enhancing the existing "Agentic Workflow Studio" documentation to ensure it provides meaningful, detailed, and practical information for users at all levels. The enhancement focuses on improving content quality, adding comprehensive examples, expanding technical documentation, and creating better user learning paths while maintaining the existing Astro/Starlight structure.
+This design outlines a comprehensive approach to reviewing and enhancing the existing "`Agentic WorkFlow`" documentation to ensure it provides meaningful, detailed, and practical information for users at all levels. The enhancement focuses on improving content quality, adding comprehensive examples, expanding technical documentation, and creating better user learning paths while maintaining the existing Astro/Starlight structure.
 
 ## Architecture
 

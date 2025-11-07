@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This specification defines the requirements for customizing the existing n8n.io documentation to be specific to the "Agentic Workflow Studio" browser extension. The project involves systematically reviewing and updating all documentation files to reflect the unique capabilities, context, and use cases of the browser extension, particularly its ability to manipulate browser context and create AI-powered workflows within the browser environment.
+This specification defines the requirements for customizing the existing n8n.io documentation to be specific to the "`Agentic WorkFlow`" browser extension. The project involves systematically reviewing and updating all documentation files to reflect the unique capabilities, context, and use cases of the browser extension, particularly its ability to manipulate browser context and create AI-powered workflows within the browser environment.
 
 ## Glossary
 
-- **Agentic Workflow Studio**: The Chrome and Firefox browser extension that enables users to create AI-powered workflows with browser context manipulation capabilities
+- **`Agentic WorkFlow`**: The Chrome and Firefox browser extension that enables users to create AI-powered workflows with browser context manipulation capabilities
 - **Browser Context Manipulation**: The ability to interact with web page content including text selection, HTML extraction, link collection, image gathering, and content insertion
 - **Documentation System**: The Astro-based documentation site with Starlight theme containing usage guides, integration documentation, and learning materials
 - **Content Transformation**: The process of updating existing n8n.io documentation to be specific to the browser extension's capabilities and use cases
@@ -29,11 +29,11 @@ This specification defines the requirements for customizing the existing n8n.io 
 
 ### Requirement 2
 
-**User Story:** As a user reading the documentation, I want all references to be specific to Agentic Workflow Studio, so that I understand how to use the browser extension effectively.
+**User Story:** As a user reading the documentation, I want all references to be specific to `Agentic WorkFlow`, so that I understand how to use the browser extension effectively.
 
 #### Acceptance Criteria
 
-1. THE Documentation System SHALL replace all instances of "n8n" with "Agentic Workflow Studio" where contextually appropriate
+1. THE Documentation System SHALL replace all instances of "n8n" with "`Agentic WorkFlow`" where contextually appropriate
 2. THE Documentation System SHALL update all product descriptions to reflect browser extension functionality
 3. WHEN describing workflow creation, THE Documentation System SHALL emphasize browser-based execution
 4. THE Documentation System SHALL remove or update references to server-based deployment and hosting
@@ -81,7 +81,7 @@ This specification defines the requirements for customizing the existing n8n.io 
 
 #### Acceptance Criteria
 
-1. THE Documentation System SHALL maintain consistent terminology for "Agentic Workflow Studio" throughout all documentation
+1. THE Documentation System SHALL maintain consistent terminology for "`Agentic WorkFlow`" throughout all documentation
 2. THE Documentation System SHALL update all logos, images, and visual assets to reflect the browser extension branding
 3. WHEN referencing product capabilities, THE Documentation System SHALL use consistent language for browser context features
 4. THE Documentation System SHALL ensure all navigation labels and section titles reflect extension-specific content

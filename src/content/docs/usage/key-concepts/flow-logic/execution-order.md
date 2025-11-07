@@ -1,11 +1,11 @@
 ---
 title: Execution order in multi-branch workflows
-description: "Learn how workflow execution works in Agentic Workflow Studio browser extension for optimal web automation performance."
+description: "Learn how workflow execution works in `Agentic WorkFlow` browser extension for optimal web automation performance."
 sidebar:
   order: 7
 ---
 
-Agentic Workflow Studio executes each branch in turn, completing one branch before starting another. The browser extension orders branches based on their position on the canvas, from topmost to bottommost. If two branches are at the same height, the leftmost branch executes first.
+`Agentic WorkFlow` executes each branch in turn, completing one branch before starting another. The browser extension orders branches based on their position on the canvas, from topmost to bottommost. If two branches are at the same height, the leftmost branch executes first.
 
 ## Execution Order Flow
 
