@@ -1,6 +1,6 @@
 ---
 title: Lambda Input
-description: "Define input parameters and data flow for modular lambda workflows in `Agentic WorkFlow` automation."
+description: "Define input parameters and data flow for modular lambda workflows in <Agentic WorkFlow> automation."
 template: doc
 tags: ["Modular Workflows", "Reusability", "Workflow Triggers", "Event Handling"]
 ---

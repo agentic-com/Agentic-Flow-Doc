@@ -1,7 +1,7 @@
 ---
 contentType: howto
 title: Call an API to fetch data
-description: Use the `Agentic WorkFlow` workflow tool to load data from an API using the HTTP Request node into your AI workflow.
+description: Use the <Agentic WorkFlow> workflow tool to load data from an API using the HTTP Request node into your AI workflow.
 difficulty: "🎯 advanced"
 ---
 

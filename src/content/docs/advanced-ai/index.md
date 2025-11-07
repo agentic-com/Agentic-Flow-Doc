@@ -1,5 +1,5 @@
 ---
-title: `Agentic WorkFlow` Advanced AI Documentation and Guides
+title: <Agentic WorkFlow> Advanced AI Documentation and Guides
 description: "Create advanced AI workflows in your browser using LangChain integration and intelligent content processing."
 contentType: overview
 hide:

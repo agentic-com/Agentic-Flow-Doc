@@ -1,6 +1,6 @@
 ---
-title: RAG in `Agentic WorkFlow`
-description: With Retrieval-Augmented Generation (RAG), you can give your models access to context-specific resources to help generate relevant answers. Learn how it works and how to use RAG in `Agentic WorkFlow`.
+title: RAG in <Agentic WorkFlow>
+description: With Retrieval-Augmented Generation (RAG), you can give your models access to context-specific resources to help generate relevant answers. Learn how it works and how to use RAG in <Agentic WorkFlow>.
 ---
 
 ## What is RAG

@@ -1,6 +1,6 @@
 ---
 title: "📚 How-To Guides"
-description: "Complete project tutorials that teach you to build real solutions with `Agentic WorkFlow`"
+description: "Complete project tutorials that teach you to build real solutions with <Agentic WorkFlow>"
 template: doc
 difficulty: "🚀 intermediate"
 ---

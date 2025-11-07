@@ -1,6 +1,6 @@
 ---
 title: Execution order in multi-branch workflows
-description: "Learn how workflow execution works in `Agentic WorkFlow` browser extension for optimal web automation performance."
+description: "Learn how workflow execution works in <Agentic WorkFlow> browser extension for optimal web automation performance."
 sidebar:
   order: 7
 ---

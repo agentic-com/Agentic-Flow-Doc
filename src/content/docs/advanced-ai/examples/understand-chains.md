@@ -1,6 +1,6 @@
 ---
 title: What's a chain in AI?
-description: Understand chains in the context of AI. Learn about chains in `Agentic WorkFlow`.
+description: Understand chains in the context of AI. Learn about chains in <Agentic WorkFlow>.
 contentType: explanation
 difficulty: "🎯 advanced"
 ---

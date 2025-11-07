@@ -1,6 +1,6 @@
 ---
 title: "🚀 Quick Wins"
-description: "Get immediate value from `Agentic WorkFlow` with these 5-15 minute tutorials"
+description: "Get immediate value from <Agentic WorkFlow> with these 5-15 minute tutorials"
 template: doc
 difficulty: "🌱 beginner"
 ---

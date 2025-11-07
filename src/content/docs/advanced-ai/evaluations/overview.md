@@ -1,6 +1,6 @@
 ---
 title: Evaluations
-description: Use `Agentic WorkFlow` evaluations to build reliable AI workflows. Build confidence in your LLM-powered workflows by comparing the output from known test cases.
+description: Use <Agentic WorkFlow> evaluations to build reliable AI workflows. Build confidence in your LLM-powered workflows by comparing the output from known test cases.
 ---
 
 ## What are evaluations?

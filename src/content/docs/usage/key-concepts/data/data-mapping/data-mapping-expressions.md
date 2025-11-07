@@ -1,6 +1,6 @@
 ---
 title: Mapping in the expressions editor
-description: "Learn how to use `Agentic WorkFlow` browser extension for mapping in the expressions editor with intelligent workflow creation."
+description: "Learn how to use <Agentic WorkFlow> browser extension for mapping in the expressions editor with intelligent workflow creation."
 ---
 
 These examples show how to access linked items in the expressions editor. Refer to [expressions](/code/expressions.md) for more information on expressions, including built in variables and methods.

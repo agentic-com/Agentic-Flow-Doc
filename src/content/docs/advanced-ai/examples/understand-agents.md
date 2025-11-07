@@ -1,6 +1,6 @@
 ---
 title: What's an agent in AI?
-description: Understand agents in the context of AI. Learn how `Agentic WorkFlow` provides agents.
+description: Understand agents in the context of AI. Learn how <Agentic WorkFlow> provides agents.
 contentType: explanation
 difficulty: "🎯 advanced"
 ---

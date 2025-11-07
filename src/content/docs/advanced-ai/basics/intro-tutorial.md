@@ -1,6 +1,6 @@
 ---
-title: Build an AI chat agent with `Agentic WorkFlow`
-description: Learn how to build AI workflows with `Agentic WorkFlow`
+title: Build an AI chat agent with <Agentic WorkFlow>
+description: Learn how to build AI workflows with Agentic WorkFlow
 ---
 
 Welcome to the introductory `Agentic WorkFlow`orial for building AI wo`Agentic WorkFlow`lows with `Agentic WorkFlow`. Whether you have used `Agentic WorkFlow` before, or this is your first time, we will show you how the building blocks of AI workflows fit together and construct a working AI-powered chat agent which you can easily customize for your own purposes.

@@ -1,6 +1,6 @@
 ---
 title: Looping
-description: "Learn how to use `Agentic WorkFlow` browser extension for looping with intelligent workflow creation."
+description: "Learn how to use <Agentic WorkFlow> browser extension for looping with intelligent workflow creation."
 sidebar:
   order: 3
 ---

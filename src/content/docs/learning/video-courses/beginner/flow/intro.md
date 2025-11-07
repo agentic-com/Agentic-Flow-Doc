@@ -5,7 +5,7 @@ sidebar:
 video:
   type: collection
   collection: beginner-browser-flow
-description: Introduction to creating workflows with `Agentic WorkFlow` browser extension
+description: Introduction to creating workflows with <Agentic WorkFlow> browser extension
 ---
 
 # Welcome to Browser Extension Workflow Creation

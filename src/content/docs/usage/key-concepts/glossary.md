@@ -1,6 +1,6 @@
 ---
-title: `Agentic WorkFlow` Glossary
-description: "Essential terminology and concepts for `Agentic WorkFlow` browser extension and AI-powered web automation workflows."
+title: <Agentic WorkFlow> Glossary
+description: "Essential terminology and concepts for <Agentic WorkFlow> browser extension and AI-powered web automation workflows."
 ---
 
 #### AI agent

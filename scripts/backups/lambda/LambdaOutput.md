@@ -1,6 +1,6 @@
 ---
 title: Lambda Output
-description: "Define output structure and data flow for modular lambda workflows in `Agentic WorkFlow` automation."
+description: "Define output structure and data flow for modular lambda workflows in <Agentic WorkFlow> automation."
 template: doc
 tags: ["Modular Workflows", "Reusability", "Workflow Triggers", "Event Handling"]
 ---

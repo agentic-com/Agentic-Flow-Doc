@@ -1,6 +1,6 @@
 ---
 title: Waiting
-description: "Learn how to use `Agentic WorkFlow` browser extension for waiting with intelligent workflow creation."
+description: "Learn how to use <Agentic WorkFlow> browser extension for waiting with intelligent workflow creation."
 sidebar:
   order: 4
 ---

@@ -1,6 +1,6 @@
 ---
 title: Contributing
-description: Learn how to contribute to `Agentic WorkFlow`.
+description: Learn how to contribute to <Agentic WorkFlow>.
 ---
 
 # How can you contribute?

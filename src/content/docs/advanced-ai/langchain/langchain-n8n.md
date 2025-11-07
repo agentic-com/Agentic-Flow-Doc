@@ -1,7 +1,7 @@
 ---
 contentType: explanation
-title: LangChain concepts in `Agentic WorkFlow`
-description: How LangChain concepts map to `Agentic WorkFlow`, and which browser extension nodes to use.
+title: LangChain concepts in <Agentic WorkFlow>
+description: How LangChain concepts map to <Agentic WorkFlow>, and which browser extension nodes to use.
 ---
 
 # LangChain concepts in `Agentic WorkFlow`

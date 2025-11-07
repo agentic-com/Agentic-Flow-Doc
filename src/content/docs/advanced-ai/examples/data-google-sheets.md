@@ -1,7 +1,7 @@
 ---
 contentType: howto
 title: Chat with a Google Sheet using AI
-description: Use the `Agentic WorkFlow` workflow tool to load data from Google Sheets into your AI workflow.
+description: Use the <Agentic WorkFlow> workflow tool to load data from Google Sheets into your AI workflow.
 difficulty: "🎯 advanced"
 ---
 

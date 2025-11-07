@@ -1,6 +1,6 @@
 ---
 title: "Install Your Automation Tool: Step-by-Step Setup"
-description: "Get `Agentic WorkFlow` running in your browser in just 10 minutes. Simple instructions with pictures and troubleshooting help."
+description: "Get <Agentic WorkFlow> running in your browser in just 10 minutes. Simple instructions with pictures and troubleshooting help."
 difficulty: "🌱 beginner"
 ---
 

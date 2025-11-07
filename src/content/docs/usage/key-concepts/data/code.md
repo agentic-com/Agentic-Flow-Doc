@@ -1,6 +1,6 @@
 ---
 title: Processing data with code
-description: "Learn how to use `Agentic WorkFlow` browser extension for processing data with code with intelligent workflow creation."
+description: "Learn how to use <Agentic WorkFlow> browser extension for processing data with code with intelligent workflow creation."
 ---
 
 ## Function

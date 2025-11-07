@@ -1,6 +1,6 @@
 ---
 title: Privacy
-description: "Learn how to use `Agentic WorkFlow` browser extension for privacy with intelligent workflow creation."
+description: "Learn how to use <Agentic WorkFlow> browser extension for privacy with intelligent workflow creation."
 sidebar:
     order: 1
 ---

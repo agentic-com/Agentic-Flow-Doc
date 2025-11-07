@@ -1,6 +1,6 @@
 ---
 title: Binary data
-description: Understand and use binary data in `Agentic WorkFlow`.
+description: Understand and use binary data in <Agentic WorkFlow>.
 ---
 
 Binary data is any file-type data, such as image files or documents.

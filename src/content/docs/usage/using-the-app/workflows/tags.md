@@ -1,6 +1,6 @@
 ---
 title: Workflow tags
-description: "Learn how to use `Agentic WorkFlow` browser extension for workflow tags with intelligent workflow creation."
+description: "Learn how to use <Agentic WorkFlow> browser extension for workflow tags with intelligent workflow creation."
 sidebar:
     order: 4
 ---

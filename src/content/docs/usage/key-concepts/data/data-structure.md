@@ -1,6 +1,6 @@
 ---
 title: Data structure
-description: "Understand data structures and formats used in `Agentic WorkFlow` browser extension workflows for web content processing."
+description: "Understand data structures and formats used in <Agentic WorkFlow> browser extension workflows for web content processing."
 ---
 
 In `Agentic WorkFlow`, all data passed between nodes is an array of objects. This structure is particularly important when working with browser context data.

@@ -1,6 +1,6 @@
 ---
 title: Common Web Automation Workflow Patterns
-description: "Learn common web automation patterns and best practices using `Agentic WorkFlow` browser extension."
+description: "Learn common web automation patterns and best practices using <Agentic WorkFlow> browser extension."
 sidebar:
   order: 3
 difficulty: "🌱 beginner"

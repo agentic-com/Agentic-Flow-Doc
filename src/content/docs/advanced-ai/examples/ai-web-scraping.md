@@ -1,7 +1,7 @@
 ---
 contentType: tutorial
 title: AI-Powered Web Extraction
-description: "Build advanced web extraction workflows with AI processing using `Agentic WorkFlow` browser extension."
+description: "Build advanced web extraction workflows with AI processing using <Agentic WorkFlow> browser extension."
 difficulty: "🎯 advanced"
 ---
 

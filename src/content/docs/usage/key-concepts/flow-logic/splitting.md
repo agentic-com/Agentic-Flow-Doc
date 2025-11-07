@@ -1,6 +1,6 @@
 ---
 title: Splitting
-description: "Learn how to use `Agentic WorkFlow` browser extension for splitting with intelligent workflow creation."
+description: "Learn how to use <Agentic WorkFlow> browser extension for splitting with intelligent workflow creation."
 sidebar:
   order: 1
 ---

@@ -1,6 +1,6 @@
 ---
 title: Help
-description: How to get help and support with `Agentic WorkFlow`.
+description: How to get help and support with <Agentic WorkFlow>.
 ---
 
 # Get help with `Agentic WorkFlow`

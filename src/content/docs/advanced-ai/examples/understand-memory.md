@@ -1,6 +1,6 @@
 ---
 title: What's memory in AI?
-description: Understand memory in the context of AI. Learn what's special about memory in `Agentic WorkFlow`.
+description: Understand memory in the context of AI. Learn what's special about memory in <Agentic WorkFlow>.
 contentType: explanation
 difficulty: "🎯 advanced"
 ---

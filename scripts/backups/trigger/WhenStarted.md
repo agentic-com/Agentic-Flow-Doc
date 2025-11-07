@@ -1,6 +1,6 @@
 ---
 title: When Started
-description: "Initiate workflow execution automatically when specific conditions are met in `Agentic WorkFlow` automation."
+description: "Initiate workflow execution automatically when specific conditions are met in <Agentic WorkFlow> automation."
 template: doc
 tags: ["Modular Workflows", "Reusability", "Workflow Triggers", "Event Handling"]
 ---

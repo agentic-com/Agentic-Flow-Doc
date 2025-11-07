@@ -1,7 +1,7 @@
 ---
 contentType: overview
 title: Advanced AI examples and concepts
-description: Example workflows and use cases for building AI functionality using `Agentic WorkFlow` in browser environments.
+description: Example workflows and use cases for building AI functionality using <Agentic WorkFlow> in browser environments.
 hide:
   - toc
 difficulty: "🎯 advanced"

@@ -1,7 +1,7 @@
 ---
 contentType: overview
-title: LangChain in `Agentic WorkFlow`
-description: Understand how `Agentic WorkFlow` uses LangChain to provide advanced AI functionality in browser environments.
+title: LangChain in <Agentic WorkFlow>
+description: Understand how <Agentic WorkFlow> uses LangChain to provide advanced AI functionality in browser environments.
 hide:
   - toc
 ---

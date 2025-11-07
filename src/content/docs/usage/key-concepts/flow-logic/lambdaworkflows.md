@@ -1,6 +1,6 @@
 ---
 title: Lambda Workflows
-description: "Learn how to use `Agentic WorkFlow` browser extension for lambda workflows with intelligent workflow creation."
+description: "Learn how to use <Agentic WorkFlow> browser extension for lambda workflows with intelligent workflow creation."
 sidebar:
   order: 5
 ---

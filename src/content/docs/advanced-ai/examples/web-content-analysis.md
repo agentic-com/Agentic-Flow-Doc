@@ -1,7 +1,7 @@
 ---
 contentType: tutorial
 title: Web Content Analysis with AI
-description: "Analyze web content intelligently using `Agentic WorkFlow` browser extension with AI-powered processing workflows."
+description: "Analyze web content intelligently using <Agentic WorkFlow> browser extension with AI-powered processing workflows."
 difficulty: "🎯 advanced"
 ---
 

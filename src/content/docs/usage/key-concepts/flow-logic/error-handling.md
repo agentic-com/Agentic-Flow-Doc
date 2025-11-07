@@ -1,6 +1,6 @@
 ---
 title: Error Handling
-description: "Learn how to use `Agentic WorkFlow` browser extension for error handling with intelligent workflow creation."
+description: "Learn how to use <Agentic WorkFlow> browser extension for error handling with intelligent workflow creation."
 sidebar:
   order: 6
 ---
