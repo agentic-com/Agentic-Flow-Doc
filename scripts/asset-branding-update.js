@@ -46,8 +46,8 @@ async function updateFavicon() {
 async function verifyLogoAssets() {
   const logoFiles = [
     "src/assets/logo.png",
-    "src/assets/logo-beige.png",
-    "src/assets/logo-black.png",
+    "src/assets/logo.png",
+    "src/assets/logo.png",
   ];
 
   const results = [];
@@ -97,7 +97,7 @@ async function updateHeroImage() {
       // Suggest using a logo as hero image instead
       const updatedContent = indexContent.replace(
         /file: \.\.\/\.\.\/assets\/houston\.webp/,
-        "file: ../../assets/logo-beige.png"
+        "file: ../../assets/logo.png"
       );
 
       if (updatedContent !== indexContent) {
@@ -106,7 +106,7 @@ async function updateHeroImage() {
           updatedContent,
           "utf-8"
         );
-        console.log("✅ Updated hero image to use logo-beige.png");
+        console.log("✅ Updated hero image to use logo.png");
         return { updated: true, change: "hero-image-to-logo" };
       }
     }

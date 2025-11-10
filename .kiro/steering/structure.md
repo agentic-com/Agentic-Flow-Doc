@@ -61,7 +61,7 @@ src/content/docs/
 
 - Images for content: `src/assets/` (processed by Astro)
 - Static assets: `public/` (served directly)
-- Logo variants available: `logo.png`, `logo-beige.png`, `logo-black.png`
+- Logo variants available: `logo.png`, `logo.png`, `logo.png`
 
 ## Code Style Guidelines
 

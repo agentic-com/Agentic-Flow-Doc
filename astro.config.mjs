@@ -45,7 +45,7 @@ export default defineConfig({
       description:
         "Agentic WorkFlow - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
       logo: {
-        src: "./src/assets/logo-beige.png",
+        src: "./src/assets/logo.png",
       },
       favicon: "./src/assets/logo.png",
       social: [

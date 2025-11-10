@@ -10,41 +10,44 @@ Looping is useful when you want to process multiple items or perform an action r
 ## Using loops in `Agentic WorkFlow`
 
 ```mermaid
-graph TB
-    A[Input Items] --> B[Node Processing]
-    B --> C[Output Items]
+flowchart TB
+ subgraph s1["Outputs"]
+        A1["Item 1"]
+        A2["Item 2"]
+        A3["Item 3"]
+        A4["Item N..."]
+  end
+ subgraph s2["Output 2"]
+        C1["Result 1"]
+        C2["Result 2"]
+        C3["Result 3"]
+        C4["Result N..."]
+  end
+    A["Action 1"] L_A_s1_0@--> s1
+    B["Node Processing"] L_B_s2_0@--> s2
+    s1 L_s1_B_0@--> B
+    A1 x--x A2
+    A2 x--x A3
+    A3 x--x A4
+    n2[" "] L_n2_A_0@--> A
+    C1 x--x C2
+    C2 x--x C3
+    C3 x--x C4
 
-    A --> A1[Item 1]
-    A --> A2[Item 2]
-    A --> A3[Item 3]
-    A --> A4[Item N...]
-
-    A1 --> B
-    A2 --> B
-    A3 --> B
-    A4 --> B
-
-    B --> C1[Result 1]
-    B --> C2[Result 2]
-    B --> C3[Result 3]
-    B --> C4[Result N...]
-
+    n2@{ icon: "fa:circle-play", pos: "b"}
     style A fill:#e3f2fd
     style B fill:#e8f5e8
-    style C fill:#fff3e0
+
+    L_A_s1_0@{ animation: slow } 
+    L_B_s2_0@{ animation: slow } 
+    L_s1_B_0@{ animation: slow } 
+    L_n2_A_0@{ animation: slow } 
 ```
 
 `Agentic WorkFlow` nodes take any number of items as input, process these items, and output the results. You can think of each item as a single data point, or a single row in the output table of a node.
 
-Nodes usually run once for each item. For example, if you wanted to send the name and notes of the customers in the Customer Datastore node as a message on Slack, you would:
+Nodes usually run once for each item. 
 
-1. Connect the Slack node to the Customer Datastore node.
-2. Configure the parameters.
-3. Execute the node.
-
-You would receive five messages: one for each item.
-
-This is how you can process multiple items without having to explicitly connect nodes in a loop.
 
 ### Executing nodes once
 
@@ -59,26 +62,31 @@ Coming soon
 ### Loop until a condition is met
 
 ```mermaid
-graph TB
-    A[Start] --> B[Process Node]
-    B --> C[IF Node]
-    C -->|Condition Met| D[Continue Workflow]
-    C -->|Condition Not Met| B
+flowchart TB
+    A["Start"] L_A_B_0@--> B["Process Node"]
+    B L_B_C_0@--> C["IF Node"]
+    C L_C_D_0@-- Condition Met --> D["Continue Workflow"]
+    C L_C_B_0@-- Condition Not Met --> B
 
+    A@{ shape: rounded}
+    B@{ shape: rounded}
+    C@{ shape: rounded}
+    D@{ shape: rounded}
     style A fill:#e3f2fd
     style B fill:#e8f5e8
     style C fill:#fff3e0
     style D fill:#f3e5f5
+
+    L_A_B_0@{ animation: slow } 
+    L_B_C_0@{ animation: slow } 
+    L_C_D_0@{ animation: slow } 
+    L_C_B_0@{ animation: slow } 
 ```
 
-To create a loop in an `Agentic WorkFlow` workflow, connect the output of one node to the input of a previous node. Add an [IF](/integrations/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.if.md) node to check when to stop the loop.
-
-Here is an [exampl`Agentic WorkFlow`orkflow](https://`Agentic WorkFlow`/workflows/1130) that implements a loop with an `IF` node:
+To create a loop in an `Agentic WorkFlow` workflow, connect the output of one node to the input of a previous node. Add an [IF](/integrations/builtin/core/flow/if) node to check when to stop the loop.
 
 ### Loop until all items are processed
 
-Use the [Loop Over Items](/integrations/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.splitinbatches.md) node when you want to loop until all items are processed. To process each item individually, set **Batch Size** to `1`.
-
-You can batch the data in groups and process these batches. This approach is useful for avoiding API rate limits when processing large incoming data or when you want to process a specific group of returned items.
-
-The Loop Over Items node stops executing after all the incoming items get divided into batches and passed on to the next node in the workflow so it's not necessary to add an IF node to stop the loop.
+:::caution
+Coming soon
+:::
