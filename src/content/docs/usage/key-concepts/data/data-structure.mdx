@@ -1,0 +1,94 @@
+---
+title: Data structure
+description: "Understand how data is organized and passed between nodes in Agentic WorkFlow for reliable web automation."
+sidebar:
+  order: 1
+---
+
+import { Image } from "astro:assets";
+import Social from "@images/social.webp";
+
+<Image src={Social} alt="Data structure illustration" />
+
+All workflows in **Agentic WorkFlow** move data between nodes in a consistent, structured way.  
+Understanding this helps you connect nodes correctly and predict how your data will look at each step.
+
+---
+
+## How data flows between nodes
+
+Every node in a workflow **receives data**, processes it, and **outputs data** for the next node.
+
+Each piece of data passed between nodes is stored as an **object**, and when multiple pieces of data exist, they’re stored as an **array of objects**.
+
+```json
+[
+  {
+    "name": "Alice",
+    "email": "alice@example.com"
+  },
+  {
+    "name": "Bob",
+    "email": "bob@example.com"
+  }
+]
+````
+
+When a node processes multiple objects, it automatically **loops** over them, running its operation for each one.
+
+---
+
+## Multiple inputs and data merging
+
+Some nodes can receive data from **more than one input**.
+When this happens, Agentic WorkFlow combines the data into **all possible input combinations** (a “Cartesian product”).
+
+```mermaid
+flowchart TB
+    B["Node 1"] L_B_D_0@--> D["Node 3"]
+    C["Node 2"] L_C_D_0@--> D
+    n1[" "] L_n1_B_0@--> B & C
+
+    B@{ shape: rounded}
+    D@{ shape: rounded}
+    C@{ shape: rounded}
+    n1@{ icon: "fa:circle-play", pos: "b"}
+
+    L_B_D_0@{ animation: slow } 
+    L_C_D_0@{ animation: slow } 
+    L_n1_B_0@{ animation: slow } 
+    L_n1_C_0@{ animation: slow } 
+
+
+```
+
+If **Node 1** outputs *n* items and **Node 2** outputs *m* items,
+then **Node 3** receives a total of **n × m** combined items.
+
+---
+
+## Example
+
+| Node                    | Output                                                                                            |
+| ----------------------- | ------------------------------------------------------------------------------------------------- |
+| Node 1                  | `[{"id":1}, {"id":2}]`                                                                            |
+| Node 2                  | `[{"color":"red"}, {"color":"blue"}]`                                                             |
+| Node 3 (combined input) | `[{"Node 1": {"id":1}, "Node 2": {"color":"red"}}, {"Node 1": {"id":1}, "Node 2": {"color":"blue"}}, {"Node 1": {"id":2}, "Node 2": {"color":"red"}}, {"Node 1": {"id":2}, "Node 2": {"color":"blue"}}]` |
+
+This combination makes it easy to test all possible data matches or merge information from multiple sources.
+
+---
+
+## Tips for building data-driven workflows
+
+* Use **[Set nodes](/usage/key-concepts/data/set-nodes/)** to create or modify data structures.
+* Use **[Merge nodes](/usage/key-concepts/data/merging/)** to combine outputs from multiple branches.
+* Check your data at any step with the **Node preview panel** in the workflow editor.
+
+---
+
+## Related topics
+
+* [Data types](/usage/key-concepts/data/data-types/)
+* [Merge data sources](/usage/key-concepts/data/merging/)
+* [Flow logic basics](/usage/key-concepts/flow-logic/)

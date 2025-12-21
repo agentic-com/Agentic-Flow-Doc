@@ -1,0 +1,98 @@
+---
+title: Processing data with code
+description: "Learn how to process and transform data using code inside Agentic WorkFlow."
+sidebar:
+  order: 2
+---
+
+import { Image } from "astro:assets";
+import Social from "@images/social.webp";
+
+<Image src={Social} alt="Code-based data processing illustration" />
+
+---
+
+## Why use code to process data
+
+Most workflows can be built visually using nodes.  
+However, some situations require custom logic — for example:
+
+- Calculating or transforming data dynamically  
+- Filtering or mapping items based on conditions  
+- Combining or formatting complex objects  
+
+In **Agentic WorkFlow**, you can write small pieces of **Python code** to handle these advanced cases inside a workflow.
+
+---
+
+## The Code node
+
+The [Code node](/integrations/builtin/core-nodes/code/) allows you to write and execute **Python snippets** directly inside your workflow.  
+It runs securely in the browser using **[Pyodide](https://pyodide.org/en/stable/index.html)** — a WebAssembly-based Python runtime.
+
+You can use this node to:
+- Create or modify fields in your data  
+- Validate or filter results before sending them to another node  
+- Perform calculations or aggregations  
+
+---
+
+## Accessing workflow data
+
+The Code node automatically receives all input data from the previous node(s).  
+You can access and manipulate it using standard Python syntax.
+
+### Example: Add a calculated field
+
+```python
+# Access the input data
+items = input_data
+
+# Add a new field to each item
+for item in items:
+    value = item.get("price", 0)
+    item["tax_included"] = value * 1.2  # Add 20% tax
+
+# Return the modified data
+return items
+````
+
+This example takes an array of objects with a `price` field and adds a new `tax_included` field to each one.
+
+---
+
+## Using variables and references
+
+You can reference values from other nodes using the standard templating syntax:
+
+```python
+# Example using a value from another node
+def compute_total():
+    base = {{ $('FetchPrices').item.price }}
+    return { "total": base * 1.2 }
+
+compute_total()
+```
+
+When executed, this code retrieves the value from the **FetchPrices** node and performs a simple computation.
+
+---
+
+## Best practices
+
+When using the Code node:
+
+* Keep code small and focused on a single task
+* Always return data in the same structure as input (list of objects)
+* Use comments to explain complex logic
+* Test each change incrementally
+
+If your logic becomes complex, consider breaking it into smaller workflows and use **[Lambda Workflows](/usage/key-concepts/flow-logic/lambdaworkflows/)**.
+
+---
+
+## Related topics
+
+* [Data structure](/usage/key-concepts/data/data-structure/)
+* [Merge data sources](/usage/key-concepts/flow-logic/merging/)
+* [Error handling](/usage/key-concepts/flow-logic/error-handling/)
