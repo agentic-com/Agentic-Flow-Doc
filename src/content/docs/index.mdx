@@ -1,36 +1,108 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: <Agentic WorkFlow>
+description: Automate your web tasks with AI-powered workflows. No coding required - just point, click, and let AI do the work.
 template: splash
-hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
-  actions:
-    - text: Example Guide
-      link: /guides/example/
-      icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid } from "@astrojs/starlight/components";
+import "@styles/home.css";
+import SiteHero from "$lib/components/SiteHero.svelte";
+import { PUBLIC_SITE_URL, PUBLIC_CHROME_EXTENSION_URL } from "astro:env/client";
 
-## Next steps
+<SiteHero
+  topCTA={{
+    href: PUBLIC_SITE_URL,
+    value: "Visit our official Website",
+  }}
+  title="Agentic WorkFlow"
+  subtitle="Create intelligent workflows"
+  description="Build AI-powered workflows directly in your browser with intelligent automation and context manipulation"
+  button1={{
+    href: '/usage/getting-started/quick-starts/quick-intro/',
+    value: "Get Started",
+  }}
+  button2={{
+    href: PUBLIC_CHROME_EXTENSION_URL,
+    value: "Install Extension",
+  }}
+/>
+
+## Browser Extension Features
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
+  <Card title="🌱 I'm New to Automation" icon="star">
+    **Perfect for beginners** - Learn automation basics with simple 5-minute tutorials.
+
+    Start with: Extract product prices, monitor websites, automate form filling.
+
+    [Begin Learning →](/usage/getting-started/learning-path/)
+  </Card>
+
+  <Card title="💼 I Want Business Solutions" icon="rocket">
+    **Ready-to-use workflows** - Solve common business problems immediately.
+
+    Popular uses: Price monitoring, competitor research, content creation, social media automation.
+
+    [See Solutions →](/learning/workflow-patterns/)
+  </Card>
+
+  <Card title="🔧 I'm a Developer" icon="puzzle">
+    **Technical documentation** - Build advanced integrations and custom workflows.
+
+    Explore: API integrations, custom nodes, advanced patterns, LangChain development.
+
+    [Technical Docs →](/integrations/)
+  </Card>
+
+  <Card title="🤖 I Want AI Features" icon="setting">
+    **AI-powered automation** - Create intelligent workflows that understand content.
+
+    Build: Smart content analysis, automated research, AI-driven decision making.
+
+    [AI Workflows →](/advanced-ai/)
+  </Card>
 </CardGrid>
+
+## What You Can Build
+
+<CardGrid>
+  <Card title="Price Monitoring" icon="document">
+    **Track competitor prices automatically**
+
+    Monitor product prices across multiple websites, get alerts when prices change, and export data for analysis.
+
+    *Time to build: 10 minutes* • [Quick Start →](/usage/quick-wins/extract-product-prices/)
+  </Card>
+
+  <Card title="Content Research" icon="pencil">
+    **Gather information from any website**
+
+    Extract articles, collect research data, and organize findings automatically with AI-powered analysis.
+
+    *Time to build: 15 minutes* • [Learn How →](/usage/how-to/extract-data-from-any-website/)
+  </Card>
+
+  <Card title="Lead Generation" icon="magnifier">
+    **Find and qualify prospects**
+
+    Scan websites for contact information, verify email addresses, and build targeted prospect lists.
+
+    *Time to build: 20 minutes* • [See Examples →](/learning/workflow-patterns/real-world-examples/)
+  </Card>
+
+  <Card title="Social Media Automation" icon="heart">
+    **Automate your social presence**
+
+    Schedule posts, monitor mentions, track engagement, and respond to comments across platforms.
+
+    *Time to build: 25 minutes* • [Get Started →](/usage/quick-wins/automate-form-filling/)
+  </Card>
+</CardGrid>
+
+## Quick Navigation
+
+**🚀 Ready to start?** [5-Minute Quick Wins](/usage/quick-wins/) • [Complete Tutorials](/learning/text-courses/beginner/)
+
+**🔧 Need help?** [Troubleshooting Guide](/usage/troubleshooting/) • [Community Support](/usage/help-and-community/help/)
+
+**📚 Want to learn more?** [Workflow Patterns](/learning/workflow-patterns/) • [AI Integration](/advanced-ai/basics/)

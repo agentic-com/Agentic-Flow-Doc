@@ -1,0 +1,73 @@
+---
+title: Error Handling
+description: "Learn how to manage and recover from errors in your Agentic Workflow Studio workflows."
+sidebar:
+  order: 6
+---
+
+import { Image } from "astro:assets";
+import Social from "@images/social.webp";
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+When building workflows in **Agentic Workflow Studio**, you may encounter situations where a step fails — for example, a web request might time out, a page element might not load, or an API might reject a request.  
+Error handling lets your workflows recover gracefully instead of stopping completely.
+
+<Image src={Social} alt="illustration" />
+
+---
+
+## Common Workflow Errors
+
+Here are some common error types you may encounter in browser automation or API workflows:
+
+- **Content Security Policy (CSP) violations**: Some websites block actions from browser extensions.
+- **DOM element not found**: When a webpage layout changes and selectors no longer match.
+- **Cross-origin restrictions**: Accessing data from other domains may fail.
+- **Page loading or timeout errors**: Slow network conditions or missing elements cause timeouts.
+- **Permission errors**: Browser or API credentials may lack the necessary access rights.
+
+---
+
+## Create an Error Path
+
+Each node can have an **error path** — a dedicated branch that runs when that node fails.  
+This allows your workflow to handle issues intelligently, such as retrying, sending a notification, or logging the error.
+
+For example:
+
+```mermaid
+flowchart LR
+    A["Fetch Data"] L_A_B_0@-- Success --> B["Process Data"]
+    A L_A_C_0@-- Error --> C["Send Alert Email"]
+    n1[" "] L_n1_A_0@--> A
+    n1@{ icon: "fa:circle-play", pos: "b"}
+    L_A_B_0@{ animation: slow } 
+    L_A_C_0@{ animation: slow } 
+    L_n1_A_0@{ animation: slow }
+```
+
+In this example, if “Fetch Data” fails, the workflow continues through the error path to “Send Alert Email”.
+
+Learn more about node configuration in the [Nodes Overview](/usage/using-the-app/workflows/components/) section.
+
+---
+
+## Best Practices for Error Handling
+
+- **Use retries wisely**: Add delay or exponential backoff when retrying failed requests.
+- **Log and monitor errors**: Capture context about failures for debugging.
+- **Handle expected errors**: For example, use conditional nodes to catch known API failure responses.
+- **Use the Error Trigger node**: To start workflows when any other workflow fails.
+
+---
+
+## Debugging Browser Workflows
+
+If your browser-based workflow fails:
+
+1. Open your **Execution History** in Agentic Workflow Studio.
+2. Check the **Browser Console Logs** for JavaScript or network errors.
+3. Verify that the target page still contains the same elements or structure.
+4. Confirm that your extension permissions are correctly configured.
+
+These steps can help identify whether the issue is with your workflow logic or external factors.

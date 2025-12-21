@@ -1,0 +1,64 @@
+---
+title: Export and Import Workflows
+description: "Different ways to export, backup, and share workflows in <Agentic WorkFlow>."
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+`Agentic WorkFlow` saves workflows in JSON format.  
+You can **export** your workflows (as JSON files) or **import** JSON files into your workflow library.
+
+---
+
+## Exporting workflows
+
+There are multiple ways to export a workflow:
+
+### Copy-and-Paste
+
+- In the editor canvas, select one or more nodes (`Ctrl + C` or `Cmd + C`).
+- Paste them into another canvas or file (`Ctrl + V` or `Cmd + V`).
+- This method is fast for sharing parts of a workflow.
+
+### Using the Editor UI Menu
+
+- In the workflow editor, click the menu (three dots ⋮) in the top-right.
+- You’ll see options such as:
+  - **Download** – saves the current workflow as a JSON file.
+  - **Export from URL** – pull workflow JSON from a URL.
+  - **Import from File** – upload a JSON file to load a workflow.
+
+---
+
+## Importing workflows
+
+To import a workflow:
+
+- Use **Import from File** to upload a JSON file from your computer.
+- Or **Import from URL** to load a JSON file hosted on the web.
+- After importing, review and adjust node configuration (especially credentials) before running.
+
+<Aside type="caution" title="Sensitive information">
+When sharing workflow JSON files, be cautious:
+
+- They may include credential names or IDs.
+- Sensitive information (like tokens) may require cleaning before sharing.  
+</Aside>
+
+---
+
+## Why this matters
+
+- Back up your workflows periodically by exporting them.
+- Share workflow templates easily with teammates or the community.
+- Migrate workflows between environments (development → production) by importing.
+- When importing into a new system, check that any credentials or connections are valid and secure.
+
+---
+
+## Best Practices
+
+- Before sharing workflows, remove or anonymize sensitive info (credentials, URLs).
+- Keep a backup copy of your JSON exports in a version-control system or cloud storage.
+- After import, test the workflow manually (see [Manual Executions](/usage/using-the-app/workflows/executions/manual-partial-executions/)) to ensure it runs correctly.
+- Maintain clarity: rename nodes, clean unused nodes, add Sticky Notes to explain logic (see [Sticky Notes](/usage/using-the-app/workflows/components/sticky-notes/)).
