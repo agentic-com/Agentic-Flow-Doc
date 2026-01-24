@@ -646,7 +646,7 @@ You've now mastered multi-step workflow integration! You're ready to:
 
 ## Additional Resources
 
-- **[HTTP Request Node Documentation](/integration/builtin/core/Http-Request/)** - Complete API integration guide
+- **[HTTP Request Node Documentation](/nodes/builtin/core/Http-Request/)** - Complete API integration guide
 - **[Error Handling Patterns](/usage/key-concepts/flow-logic/error-handling/)** - Advanced error handling strategies
 - **[Workflow Performance Guide](/learning/examples/web-automation-patterns/)** - Performance optimization techniques
 

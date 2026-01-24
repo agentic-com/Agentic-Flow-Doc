@@ -604,9 +604,9 @@ You now understand how data flows through browser automation workflows. You're r
 
 ## Additional Resources
 
-- **[EditFields Node Reference](/integration/builtin/dataTransformation/EditFields/)** - Complete data transformation documentation
-- **[Filter Node Guide](/integration/builtin/flow/Filter/)** - Data filtering and validation
-- **[Merge Node Documentation](/integration/builtin/flow/Merge/)** - Combining data from multiple sources
+- **[EditFields Node Reference](/nodes/builtin/dataTransformation/EditFields/)** - Complete data transformation documentation
+- **[Filter Node Guide](/nodes/builtin/flow/Filter/)** - Data filtering and validation
+- **[Merge Node Documentation](/nodes/builtin/flow/Merge/)** - Combining data from multiple sources
 
 ---
 

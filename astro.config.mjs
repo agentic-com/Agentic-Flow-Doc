@@ -110,22 +110,6 @@ export default defineConfig({
               },
             },
             {
-              label: "Quick Wins",
-              collapsed: true,
-              autogenerate: {
-                directory: "usage/quick-wins",
-                collapsed: false,
-              },
-            },
-            {
-              label: "How-To Guides",
-              collapsed: true,
-              autogenerate: {
-                directory: "usage/how-to",
-                collapsed: false,
-              },
-            },
-            {
               label: "Releases",
               collapsed: true,
               autogenerate: { directory: "usage/releases", collapsed: true },
@@ -141,53 +125,39 @@ export default defineConfig({
             {
               label: "Troubleshooting",
               collapsed: true,
-              items: [
-                "usage/troubleshooting-decision-guide",
-                {
-                  label: "Common Issues",
-                  autogenerate: {
-                    directory: "usage/troubleshooting",
-                    collapsed: false,
-                  },
-                },
-              ],
-            },
-            {
-              label: "Licenses and privacy",
-              collapsed: true,
               autogenerate: {
-                directory: "usage/licenses-and-privacy",
-                collapsed: true,
+                directory: "usage/troubleshooting",
+                collapsed: false,
               },
-            },
+            }
           ],
         },
         {
           label: {
-            en: "Integrations",
-            fr: "Integrations",
+            en: "Nodes",
+            fr: "Nœuds",
           },
-          link: "/integrations/",
+          link: "/nodes/",
           icon: "puzzle",
           items: [
             {
               label: "Built-in nodes",
               autogenerate: {
-                directory: "integrations/builtin",
+                directory: "nodes/builtin",
                 collapsed: true,
               },
             },
             {
               label: "Applications",
               autogenerate: {
-                directory: "integrations/apps",
+                directory: "nodes/apps",
                 collapsed: true,
               },
             },
             {
               label: "Extension specific",
               autogenerate: {
-                directory: "integrations/extension",
+                directory: "nodes/extension",
                 collapsed: true,
               },
             },
@@ -285,7 +255,7 @@ export default defineConfig({
     ],
     components: {
       // Override the default `Sidebar` component with a custom one.
-      Sidebar: "./src/components/(override)/Sidebar.astro",
+      //Sidebar: "./src/components/(override)/Sidebar.astro",
       Pagination: "./src/components/(override)/Pagination.astro",
     },
     customCss: [

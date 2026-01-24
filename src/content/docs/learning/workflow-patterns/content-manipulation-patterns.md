@@ -19,7 +19,7 @@ Manual form filling and content updates are time-consuming and error-prone. Cont
 
 **Perfect for:** Job applications, contact forms, surveys, registration forms, and checkout processes.
 
-**Key nodes:** [Form Filler](/integrations/extension/FormFiller/) • [Insert Text](/integrations/extension/InsertText/) • [Navigate to Link](/integrations/extension/NavigateToLink/)
+**Key nodes:** [Form Filler](/nodes/extension/FormFiller/) • [Insert Text](/nodes/extension/InsertText/) • [Navigate to Link](/nodes/extension/NavigateToLink/)
 
 ### Simple Workflow Example
 
@@ -162,7 +162,7 @@ graph LR
 
 **Learn the basics:** [First Workflow Tutorial](/learning/text-courses/beginner/first-workflow/) • [Browser Permissions](/learning/text-courses/beginner/browser-permissions/)
 
-**Node documentation:** [Form Filler](/integrations/extension/FormFiller/) • [Insert Content](/integrations/extension/InsertContent/) • [Content Replacer](/integrations/extension/ContentReplacer/)
+**Node documentation:** [Form Filler](/nodes/extension/FormFiller/) • [Insert Content](/nodes/extension/InsertContent/) • [Content Replacer](/nodes/extension/ContentReplacer/)
 
 **More patterns:** [Data Processing](/learning/workflow-patterns/data-processing-patterns/) • [Web Extraction](/learning/workflow-patterns/web-extraction-patterns/) • [Real-World Examples](/learning/workflow-patterns/real-world-examples/)
 

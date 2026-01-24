@@ -1,6 +1,6 @@
 ---
 contentType: howto
-title: Use LangSmith with <Agentic WorkFlow>
+title: Use LangSmith
 description: How to enable LangSmith for your <Agentic WorkFlow> instance.
 ---
 

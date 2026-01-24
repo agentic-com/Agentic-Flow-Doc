@@ -22,7 +22,7 @@ Metrics can be deterministic functions (such as the distance between two strings
 ## How it works
 
 /// note | Credentials for Google Sheets
-Evaluations use data tables or Google Sheets to store the test dataset. To use Google Sheets as a dataset source, configure a [Google Sheets credential](/integrations/builtin/credentials/google/index.md).
+Evaluations use data tables or Google Sheets to store the test dataset. To use Google Sheets as a dataset source, configure a [Google Sheets credential](/nodes/builtin/credentials/google/index.md).
 ///
 
 1. Set up [light evaluation](/advanced-ai/evaluations/light-evaluations.md)
@@ -55,7 +55,7 @@ For example:
 
 * [RAG document relevance](https://`Agentic WorkFlow`/workflows/4273): when working with a vector database, whether the documents retrieved are relevant to the question.
 
-Calculating metrics can add latency and cost, so you may only want to do it when running an evaluation and avoid it when making a production execution. You can do this by putting the metric logic after a ['check if evaluating' operation](/integrations/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.evaluation.md#check-if-evaluating).
+Calculating metrics can add latency and cost, so you may only want to do it when running an evaluation and avoid it when making a production execution. You can do this by putting the metric logic after a ['check if evaluating' operation](/nodes/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.evaluation.md#check-if-evaluating).
 
 ### 3. Run evaluation and view results
 

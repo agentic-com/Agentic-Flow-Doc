@@ -23,4 +23,4 @@ To add memory to your AI workflow you can use either:
 
 If you need to do advanced AI memory management in your workflows, use the Chat Memory Manager node.
 
---8<-- "_snippets/integrations/builtin/cluster-nodes/langchain-sub-nodes/chat-memory-manager-purpose.md"
+--8<-- "_snippets/nodes/builtin/cluster-nodes/langchain-sub-nodes/chat-memory-manager-purpose.md"

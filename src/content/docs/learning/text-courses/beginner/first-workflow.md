@@ -476,7 +476,7 @@ Don't worry if something goes wrong - it happens to everyone! Here are the most 
 ### Ready for More?
 **Next tutorials:** [Browser Permissions](/learning/text-courses/beginner/browser-permissions/) • [Data Flow Basics](/learning/text-courses/beginner/data-flow-basics/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)
 
-**Explore more nodes:** [Get All Text](/integrations/extension/GetAllText/) • [Get All Links](/integrations/extension/GetAllLinks/) • [Form Filler](/integrations/extension/FormFiller/)
+**Explore more nodes:** [Get All Text](/nodes/extension/GetAllText/) • [Get All Links](/nodes/extension/GetAllLinks/) • [Form Filler](/nodes/extension/FormFiller/)
 
 **Workflow patterns:** [Content Manipulation](/learning/workflow-patterns/content-manipulation-patterns/) • [Research Automation](/learning/workflow-patterns/real-world-examples/research-automation/) • [Web Extraction Patterns](/learning/workflow-patterns/web-extraction-patterns/)
 

@@ -129,6 +129,6 @@ Ready to automate your web tasks? Start with simple text extraction and work up 
 
 ## 🔗 More Resources
 
-**📚 Complete Documentation:** [Node Reference](/integration/) • [AI Guide](/advanced-ai/) • [Usage Guide](/usage/)
+**📚 Complete Documentation:** [Node Reference](/nodes/) • [AI Guide](/advanced-ai/) • [Usage Guide](/usage/)
 **🛠️ Tools:** Browser Extension • Workflow Templates • Community Examples
 **🌐 External:** LangChain Docs • Browser APIs • Automation Best Practices

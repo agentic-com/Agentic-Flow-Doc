@@ -322,7 +322,7 @@ Don't worry if you run into issues - these are the most common problems and thei
 3. **[Understand How Information Flows](/learning/text-courses/beginner/data-flow-basics/)** - Learn how data moves through your automations
 
 ### When You're Ready for More
-- **[Extension Tools Reference](/integration/extension/)** - See all the tools available for automation
+- **[Extension Tools Reference](/nodes/extension/)** - See all the tools available for automation
 - **[Get Help](/usage/help-and-community/help/)** - Find solutions to common questions
 - **[Join the Community](/usage/help-and-community/contributing/)** - Connect with other users
 

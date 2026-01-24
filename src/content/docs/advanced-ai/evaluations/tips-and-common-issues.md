@@ -5,7 +5,7 @@ description: "Create advanced AI workflows using Tips and common issues with Lan
 
 ## Combining multiple triggers
 
-If you have another trigger in the workflow already, you have two potential starting points: that trigger and the [evaluation trigger](/integrations/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.evaluationtrigger.md). To make sure your workflow works as expected no matter which trigger executes, you will need to merge these branches together.
+If you have another trigger in the workflow already, you have two potential starting points: that trigger and the [evaluation trigger](/nodes/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.evaluationtrigger.md). To make sure your workflow works as expected no matter which trigger executes, you will need to merge these branches together.
 
 <figure markdown="span">
 
@@ -19,18 +19,18 @@ To do so:
     * Open it and navigate to the JSON view of its output pane.
     * Click the **copy** button on the right.
 2. **Re-shape the evaluation trigger data to match**:
-    * Insert an [Edit Fields (Set) node](/integrations/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.set.md) after the evaluation trigger and connect them together.
+    * Insert an [Edit Fields (Set) node](/nodes/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.set.md) after the evaluation trigger and connect them together.
     * Change its mode to **JSON**.
     * Paste your data into the 'JSON' field, removing the `[` and `]` on the first and last lines.
     * Switch the field type to **Expression**.
     * Map in the data from the trigger by dragging it from the input pane.
     * For strings, make sure to replace the entire value (including the quotes) and add `.toJsonString()` to the end of the expression.
-3. **Merge the branches using a 'No-op' node**: Insert a [No-op node](/integrations/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.noop.md) and wire both the other trigger and the Set node up to it. The 'No-op' node just outputs whatever input it receives.
+3. **Merge the branches using a 'No-op' node**: Insert a [No-op node](/nodes/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.noop.md) and wire both the other trigger and the Set node up to it. The 'No-op' node just outputs whatever input it receives.
 4. **Reference the 'No-op' node outputs in the rest of the workflow**: Since both paths will flow through this node with the same format, you can be sure that your input data will always be there.
 
 ## Avoiding evaluation breaking the chat
 
-`Agentic WorkFlow`'s internal chat reads the output data of the last executed node in the workflow. After adding an evaluation node with the ['set outputs' operation](/integrations/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.evaluation.md#set-outputs), this data may not be in the expected format, or even contain the chat response.
+`Agentic WorkFlow`'s internal chat reads the output data of the last executed node in the workflow. After adding an evaluation node with the ['set outputs' operation](/nodes/builtin/core-nodes/`Agentic WorkFlow`-nodes-base.evaluation.md#set-outputs), this data may not be in the expected format, or even contain the chat response.
 
 The solution is to add an extra branch coming out of your agent. [Lower branches execute later](/flow-logic/execution-order.md) in `Agentic WorkFlow`, which means any node you attach to this branch will execute last. You can use a no-op node here since it only needs to pass the agent output through.
 

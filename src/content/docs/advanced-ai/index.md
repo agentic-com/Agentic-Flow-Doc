@@ -1,5 +1,5 @@
 ---
-title: <Agentic WorkFlow> Advanced AI Documentation and Guides
+title: Advanced AI Documentation and Guides
 description: "Create advanced AI workflows in your browser using LangChain integration and intelligent content processing."
 contentType: overview
 hide:
@@ -60,7 +60,7 @@ Powerful AI processing capabilities designed for browser environments
 | Feature | Description | Use Cases | Complexity |
 |---------|-------------|-----------|------------|
 | **[LangChain Integration](/advanced-ai/langchain/overview/)** | Full LangChain framework support | Complex AI workflows, memory, tools | Advanced |
-| **[AI Agents](/integration/builtin/ai/AIAgents/)** | Intelligent decision-making agents | Autonomous workflows, problem-solving | Intermediate |
+| **[AI Agents](/nodes/builtin/ai/AIAgents/)** | Intelligent decision-making agents | Autonomous workflows, problem-solving | Intermediate |
 | **[RAG Workflows](/advanced-ai/basics/rag-in-`Agentic WorkFlow`/)** | Retrieval-Augmented Generation | Knowledge-based responses, context-aware AI | Advanced |
 | **[Memory Systems](/advanced-ai/examples/understand-memory/)** | Persistent AI context and learning | Conversational AI, personalized responses | Intermediate |
 
@@ -129,28 +129,28 @@ Essential building blocks for AI workflows
 #### Core AI Agents
 | Node | Purpose | Input | Output | Complexity |
 |------|---------|-------|--------|------------|
-| **[Basic LLM Chain](/integration/builtin/ai/AIAgents/BasicLLMChainNode/)** | Simple AI text processing | Text prompt | AI response | Beginner |
-| **[Q&A Agent](/integration/builtin/ai/AIAgents/QANode/)** | Question answering | Question + context | Answer | Beginner |
-| **[RAG Agent](/integration/builtin/ai/AIAgents/RAGNode/)** | Knowledge-based responses | Query + knowledge base | Contextual answer | Intermediate |
-| **[Tools Agent](/integration/builtin/ai/AIAgents/ToolsAgentNode/)** | AI with external tools | Task description | Tool-assisted result | Advanced |
+| **[Basic LLM Chain](/nodes/builtin/ai/AIAgents/BasicLLMChainNode/)** | Simple AI text processing | Text prompt | AI response | Beginner |
+| **[Q&A Agent](/nodes/builtin/ai/AIAgents/QANode/)** | Question answering | Question + context | Answer | Beginner |
+| **[RAG Agent](/nodes/builtin/ai/AIAgents/RAGNode/)** | Knowledge-based responses | Query + knowledge base | Contextual answer | Intermediate |
+| **[Tools Agent](/nodes/builtin/ai/AIAgents/ToolsAgentNode/)** | AI with external tools | Task description | Tool-assisted result | Advanced |
 
 #### AI Dependencies
 | Component | Purpose | Use Cases | Configuration |
 |-----------|---------|-----------|---------------|
-| **[Memory Systems](/integration/builtin/ai/AIDependencies/chatMemories/)** | Conversation context | Chat bots, personalization | Memory type, retention |
-| **[Embeddings](/integration/builtin/ai/AIDependencies/embeddings/)** | Text vectorization | Similarity search, RAG | Model selection, dimensions |
-| **[Vector Stores](/integration/builtin/ai/AIDependencies/vectorStore/)** | Knowledge storage | Document search, RAG | Storage type, indexing |
-| **[Text Splitters](/integration/builtin/ai/AIDependencies/textSplitter/)** | Document processing | Large text handling | Chunk size, overlap |
+| **[Memory Systems](/nodes/builtin/ai/AIDependencies/chatMemories/)** | Conversation context | Chat bots, personalization | Memory type, retention |
+| **[Embeddings](/nodes/builtin/ai/AIDependencies/embeddings/)** | Text vectorization | Similarity search, RAG | Model selection, dimensions |
+| **[Vector Stores](/nodes/builtin/ai/AIDependencies/vectorStore/)** | Knowledge storage | Document search, RAG | Storage type, indexing |
+| **[Text Splitters](/nodes/builtin/ai/AIDependencies/textSplitter/)** | Document processing | Large text handling | Chunk size, overlap |
 
 ### 🌐 Browser Integration Components
 Specialized nodes for browser-AI integration
 
 | Component | Purpose | AI Integration | Browser Capability |
 |-----------|---------|----------------|-------------------|
-| **[Get Selected Text](/integration/extension/GetSelectedText/)** | Extract user selections | AI analysis input | User interaction |
-| **[Get All Text](/integration/extension/GetAllText/)** | Full page content | Comprehensive AI analysis | Complete content access |
-| **[Insert Text](/integration/extension/InsertText/)** | AI response insertion | AI output to page | Dynamic content modification |
-| **[Content Replacer](/integration/extension/ContentReplacer/)** | AI-powered content updates | Intelligent content enhancement | Selective content modification |
+| **[Get Selected Text](/nodes/extension/GetSelectedText/)** | Extract user selections | AI analysis input | User interaction |
+| **[Get All Text](/nodes/extension/GetAllText/)** | Full page content | Comprehensive AI analysis | Complete content access |
+| **[Insert Text](/nodes/extension/InsertText/)** | AI response insertion | AI output to page | Dynamic content modification |
+| **[Content Replacer](/nodes/extension/ContentReplacer/)** | AI-powered content updates | Intelligent content enhancement | Selective content modification |
 
 ## 🎯 AI Use Case Scenarios
 
@@ -326,8 +326,8 @@ Participate in AI workflow competitions and showcases
 ## 🔗 Related Documentation
 
 ### 📖 Core Documentation
-- **[Browser Extension Nodes](/integration/extension/)** - Browser context manipulation for AI workflows
-- **[Built-in AI Nodes](/integration/builtin/ai/)** - Complete AI node reference
+- **[Browser Extension Nodes](/nodes/extension/)** - Browser context manipulation for AI workflows
+- **[Built-in AI Nodes](/nodes/builtin/ai/)** - Complete AI node reference
 - **[Workflow Patterns](/learning/workflow-patterns/)** - Proven AI workflow designs
 
 ### 🛠️ Technical References

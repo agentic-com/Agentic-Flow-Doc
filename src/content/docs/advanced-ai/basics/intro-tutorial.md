@@ -1,5 +1,5 @@
 ---
-title: Build an AI chat agent with <Agentic WorkFlow>
+title: Build an AI chat agent
 description: Learn how to build AI workflows with Agentic WorkFlow
 ---
 

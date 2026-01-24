@@ -1,0 +1,191 @@
+---
+title: "Code"
+description: "Run custom Python code in browser workflows for data processing, analysis, and automation."
+template: doc
+tags: ["Web Extraction", "Browser Automation", "Data Processing", "Python"]
+---
+
+import { Image } from "astro:assets";
+import Social from '@images/social.webp'; 
+
+The **Code node** lets you run custom Python scripts directly inside your browser workflow.  
+It is ideal for data analysis, text processing, scientific calculations, and building custom automation logic.
+
+This node uses **Pyodide**, a Python runtime compiled to WebAssembly, allowing Python to run safely in your browser without installing anything locally.
+
+---
+
+## What This Node Does
+
+- Runs Python code inside your workflow
+- Processes input from other nodes
+- Returns structured results for further use
+- Can use popular Python libraries like NumPy, Pandas, and Matplotlib
+
+Use it whenever built-in nodes are not enough and you need **custom processing**.
+
+---
+
+## How It Works
+
+```mermaid
+flowchart LR
+    A[Previous Node Data] --> B[Code Node]
+    B --> C[Initialize Pyodide Runtime]
+    C --> D{Install Required Packages?}
+    D -->|Yes| E[Install Packages via micropip]
+    D -->|No| F[Execute Python Code]
+    E --> F
+    F --> G[Process Input Data]
+    G --> H[Generate Results]
+    H --> I[Return Structured Output]
+````
+
+The workflow always:
+
+1. Receives input data
+2. Prepares Python environment
+3. Runs your code
+4. Returns results, including logs and execution metadata
+
+---
+
+## Main Settings
+
+### Required
+
+| Parameter | Description            | Example                                       |
+| --------- | ---------------------- | --------------------------------------------- |
+| `code`    | Python code to execute | `"import pandas as pd\nreturn df.describe()"` |
+
+### Optional
+
+| Parameter     | Default   | Description                     | Example               |
+| ------------- | --------- | ------------------------------- | --------------------- |
+| `timeout`     | `30000`   | Maximum time (ms) for execution | `10000`               |
+| `returnType`  | `"auto"`  | Expected output type            | `"json"`              |
+| `packages`    | `[]`      | Python packages to install      | `["numpy", "pandas"]` |
+| `memoryLimit` | `"100MB"` | Max memory for Python execution | `"256MB"`             |
+
+> Tip: Only install necessary packages to avoid long load times and high memory usage.
+
+---
+
+## Examples
+
+### 1. Analyze Text Content
+
+Count words, sentences, and reading time.
+
+```json
+{
+  "code": "text = input_data['PreviousNode']['text']\nwords = text.split()\nsentences = len([s for s in text.split('.') if s.strip()])\nreading_time = len(words) / 200\nresult = {'word_count': len(words), 'sentences': sentences, 'reading_time': round(reading_time)}\nresult",
+  "timeout": 5000,
+  "returnType": "json"
+}
+```
+
+Input data from previous node:
+
+```json
+{
+  "PreviousNode": {
+    "text": "This is a sample article. It has multiple sentences."
+  }
+}
+```
+
+Output:
+
+```json
+{
+  "word_count": 10,
+  "sentences": 2,
+  "reading_time": 1
+}
+```
+
+---
+
+### 2. Simple Data Analysis with Pandas
+
+```json
+{
+  "code": "import pandas as pd\ndata = input_data['PreviousNode']['records']\ndf = pd.DataFrame(data)\nsummary = df.describe().to_dict()\nsummary",
+  "packages": ["pandas"],
+  "returnType": "json"
+}
+```
+
+Use this for structured data analysis, generating summaries, and further processing.
+
+---
+
+### 3. Machine Learning Processing
+
+```json
+{
+  "code": "import pandas as pd\nfrom sklearn.cluster import KMeans\nX = pd.DataFrame(input_data['PreviousNode']['records'])\nkmeans = KMeans(n_clusters=3).fit(X)\nlabels = kmeans.labels_\nlabels.tolist()",
+  "packages": ["pandas", "scikit-learn"],
+  "returnType": "json"
+}
+```
+
+This example performs unsupervised clustering on dataset inputs.
+
+---
+
+## Best Practices
+
+* **Keep code simple and clear** for maintainability
+* **Validate input data** before processing
+* **Use try-except blocks** to handle runtime errors
+* **Limit installed packages** to reduce memory and load times
+* **Set memory limits and timeout** according to dataset size
+
+---
+
+## Troubleshooting
+
+| Issue             | Cause                        | Solution                                         |
+| ----------------- | ---------------------------- | ------------------------------------------------ |
+| Code fails to run | Package not installed        | Add the package to `packages`                    |
+| Out of memory     | Dataset too large            | Increase `memoryLimit` or split data into chunks |
+| Slow execution    | Large libraries or long code | Optimize code, install fewer packages            |
+
+---
+
+## Security Considerations
+
+* Runs in a **sandboxed Pyodide environment**
+* No access to your system files
+* Package installation limited to verified Python packages
+* Execution time and memory can be limited to prevent overload
+
+---
+
+## Related Nodes
+
+* [Get All Page Text](/nodes/browser-actions/get-all-page-text/) – feed content into Code node
+* [Edit Fields](/nodes/data/edit-fields/) – clean or format results
+* [Download as File](/nodes/output/save-to-file/) – save results to your device
+
+---
+
+## Learning Resources
+
+* [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns)
+* [Machine Learning Workflows](/learning/examples/ai-data-analysis)
+* [Python in Browser with Pyodide](https://pyodide.org/en/stable/usage/index.html)
+
+---
+
+## Next Steps
+
+* Start with text analysis examples
+* Gradually add Pandas or NumPy for structured data
+* Explore ML workflows with Scikit-learn for advanced use cases
+
+---
+
+<Image src={Social} alt="Code node illustration" />

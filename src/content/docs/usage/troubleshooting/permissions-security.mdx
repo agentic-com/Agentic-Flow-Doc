@@ -1,0 +1,202 @@
+---
+title: Permissions & Security
+description: Fix permission and security issues that prevent workflows from accessing or interacting with websites.
+---
+
+import { Image } from "astro:assets";
+import Social from "@images/social.webp";
+
+Sometimes a workflow cannot run because the browser blocks access to a website or part of a page.  
+This is usually caused by **browser security rules**, not by a broken workflow.
+
+This page explains:
+- Why permissions are needed
+- The most common permission problems
+- How to fix them step by step
+
+No technical knowledge is required.
+
+---
+
+## Why Permissions Matter
+
+Agentic Workflow Studio runs inside your browser.  
+For security reasons, browsers **do not automatically allow extensions to access every website**.
+
+Permissions are used to:
+- Read page content
+- Click buttons or fill forms
+- Extract text, links, or data
+- Run workflows on specific sites
+
+If permission is missing, the workflow may:
+- Fail immediately
+- Stop without clear results
+- Work on some websites but not others
+
+---
+
+## Most Common Permission Issues
+
+### The Workflow Cannot Access the Website
+
+You may see errors like:
+- “Cannot access this page”
+- “Permission denied”
+- Workflow does nothing after starting
+
+**Most common causes:**
+- The extension is not allowed on this site
+- The site is opened in a special browser page
+- The browser is in private / incognito mode
+
+---
+
+## Allowing the Extension on a Website
+
+To allow access to a website:
+
+1. Open the website where the workflow should run
+2. Click the **extension icon** in your browser toolbar
+3. Choose **Allow on this site**
+4. Refresh the page
+5. Run the workflow again
+
+This fixes most permission problems.
+
+---
+
+## Special Pages That Do Not Work
+
+Some browser pages **cannot be accessed by any extension**, for security reasons.
+
+Examples:
+- New Tab page
+- Browser settings pages
+- Extension store pages
+- PDF viewer pages
+
+**What to do instead:**
+- Navigate to a normal website page
+- Reload the content in a regular tab
+- Then start the workflow
+
+---
+
+## Private / Incognito Mode Issues
+
+By default, extensions are disabled in private browsing.
+
+If you are using incognito mode:
+- Workflows may fail
+- Pages may appear inaccessible
+
+**How to fix it:**
+1. Open your browser’s extension settings
+2. Find Agentic Workflow Studio
+3. Enable **Allow in incognito**
+4. Restart the incognito window
+
+If possible, use a normal browsing window instead.
+
+---
+
+## Websites With Strong Security
+
+Some websites intentionally limit automation and data access.
+
+Common examples:
+- Banking and financial platforms
+- Government portals
+- Internal company tools
+- Social networks
+
+On these sites:
+- Some elements may not be accessible
+- Data extraction may be limited
+- Workflows may partially work or fail
+
+This is expected behavior and not a bug.
+
+---
+
+## What You Can Try on Secure Websites
+
+If a workflow does not work on a secure site:
+
+- Extract only visible text, not the full page  
+- Avoid full HTML extraction  
+- Add a **Wait for Element** step before extracting  
+- Simplify the workflow  
+
+Helpful pages:
+- [Wait for Element](/nodes/browser-actions/wait-for-element/)
+- [Performance Optimization](/usage/troubleshooting/performance-optimization/)
+- [Known Limitations](/usage/limitations/)
+
+---
+
+## Company or Managed Computers
+
+If you are using:
+- A work computer
+- A school laptop
+- A managed browser profile
+
+Your organization may block:
+- Extensions
+- Certain websites
+- Script execution
+- Downloads or data export
+
+In this case:
+- You may not be able to fix the issue yourself
+- Contact your IT administrator
+- Ask whether browser extensions are allowed
+
+---
+
+## Recommended Permission Practices
+
+Use the minimum access needed:
+- Allow the extension only on sites you trust
+- Avoid “Allow on all sites” unless required
+- Remove access from sites you no longer use
+
+This keeps your browser secure and predictable.
+
+---
+
+## When a Workflow Still Does Not Work
+
+If you have allowed permissions and the workflow still fails:
+
+- Try the workflow on a simpler website
+- Test it in another browser
+- Disable other browser extensions temporarily
+- Reduce the number of workflow steps
+
+Related help:
+- [Workflow Debugging](/usage/troubleshooting/workflow-debugging/)
+- [Browser Compatibility](/usage/troubleshooting/browser-compatibility/)
+
+---
+
+## Visual Guide (Optional)
+
+<Image src={Social} alt="Illustration showing how to allow an extension on a website" />
+
+---
+
+## Summary
+
+Most permission issues come from:
+- The extension not being allowed on a site
+- Using special or restricted browser pages
+- Strong security rules on certain websites
+- Company-managed browser restrictions
+
+In most cases, the fix is simple:
+**allow the extension on the site and reload the page**.
+
+If the browser blocks access, it is usually by design — not a workflow error.

@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-Splitting uses the [IF](/integrations/builtin/core-nodes/if) or [Switch](/integrations/builtin/core-nodes/switch) nodes. It turns a single-branch workflow into a multi-branch workflow. This is a key piece of representing complex logic in `Agentic WorkFlow`.
+Splitting uses the [IF](/nodes/builtin/core-nodes/if) or [Switch](/nodes/builtin/core-nodes/switch) nodes. It turns a single-branch workflow into a multi-branch workflow. This is a key piece of representing complex logic in `Agentic WorkFlow`.
 
 Compare these workflows:
 
@@ -42,4 +42,4 @@ flowchart LR
 
 This is the power of splitting and conditional nodes in `Agentic WorkFlow`.
 
-Refer to the [IF](/integrations/builtin/core-nodes/if) or [Switch](/integrations/builtin/core-nodes/switch) documentation for usage details.
+Refer to the [IF](/nodes/builtin/core-nodes/if) or [Switch](/nodes/builtin/core-nodes/switch) documentation for usage details.
