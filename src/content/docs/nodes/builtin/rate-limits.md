@@ -3,8 +3,6 @@ title: Rate Limits and Performance
 description: "Avoid hitting limits and keep your workflows running smoothly with smart rate limiting and performance optimization."
 ---
 
-# Rate Limits and Performance
-
 **What this covers:** How to avoid hitting API limits and keep your workflows running fast and reliably.
 
 **Perfect for:** API-heavy workflows • Large data processing • Performance optimization • Avoiding errors

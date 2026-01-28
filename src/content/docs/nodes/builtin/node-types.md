@@ -3,8 +3,6 @@ title: Built-in Node Types
 description: "Quick guide to choosing the right nodes for your workflows - from web extraction to AI processing to data transformation."
 ---
 
-# Built-in Node Types
-
 **What this covers:** All the different types of nodes available and how to choose the right ones for your workflows.
 
 **Perfect for:** New users • Node selection • Workflow planning • Understanding capabilities

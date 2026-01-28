@@ -1,0 +1,115 @@
+---
+title: Character Text Splitter
+description: Break long documents into smaller, manageable pieces for AI processing - like cutting a book into chapters.
+sidebar:
+  label: Character Text Splitter
+---
+
+import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+import { Code } from "@astrojs/starlight/components";
+import Social from "@images/social.webp";
+
+The **Character Text Splitter** breaks long documents into smaller, equal-sized pieces. Think of it like cutting a long article into pages - each piece is roughly the same size, making it easier for AI to process and understand.
+
+This is the simplest way to prepare documents for AI workflows. While other splitters use smart rules, this one just counts characters and splits at regular intervals.
+
+<Image
+  src={Social}
+  alt="Illustration of splitting text into equal-sized chunks"
+/>
+
+## How it works
+
+The splitter takes your text and divides it based on character count. You can choose where it prefers to split (like at paragraph breaks) and how much overlap you want between pieces to maintain context.
+
+```mermaid
+graph LR
+  Text[Long Document] --> Splitter{Character Splitter}
+  Splitter --> Chunk1[Chunk 1]
+  Splitter --> Chunk2[Chunk 2]
+  Splitter --> Chunk3[Chunk 3]
+  style Splitter fill:#6d28d9,stroke:#fff,color:#fff
+```
+
+## Setup guide
+
+<Steps>
+
+1. **Connect Your Text**: Provide the document you want to split. This usually comes from a "Get All Text From Link" or similar node.
+2. **Set Chunk Size**: Choose how many characters each piece should contain (typically 500-1500 characters).
+3. **Choose Split Points**: Decide where to split - at paragraph breaks ("\n\n") works well for most documents.
+4. **Add Overlap**: Set how many characters should overlap between chunks to maintain context (usually 100-200 characters).
+
+</Steps>
+
+## Practical example: Research article processing
+
+Let's say you want to process a long research article for AI analysis.
+
+<Tabs>
+  <TabItem label="Input (Long Article)">
+    <Code
+      code={`{
+  "text": "Introduction\\n\\nThis research explores the impact of renewable energy on economic growth. The study analyzes data from 50 countries over a 20-year period...\\n\\nMethodology\\n\\nWe used statistical analysis to examine the relationship between renewable energy adoption and GDP growth...",
+  "chunk_size": 800,
+  "separator": "\\n\\n",
+  "chunk_overlap": 100
+}`}
+      lang="json"
+    />
+  </TabItem>
+  <TabItem label="Output (Split Chunks)">
+    <Code
+      code={`{
+  "chunks": [
+    {
+      "text": "Introduction\\n\\nThis research explores the impact of renewable energy on economic growth. The study analyzes data from 50 countries over a 20-year period...",
+      "index": 0,
+      "character_count": 247
+    },
+    {
+      "text": "...over a 20-year period...\\n\\nMethodology\\n\\nWe used statistical analysis to examine the relationship between renewable energy adoption and GDP growth...",
+      "index": 1,
+      "character_count": 220
+    }
+  ],
+  "total_chunks": 2,
+  "total_characters": 467
+}`}
+      lang="json"
+    />
+  </TabItem>
+</Tabs>
+
+## Common settings
+
+| Setting | Purpose | Recommended Value |
+|---------|---------|-------------------|
+| **Chunk Size** | How many characters per piece | 800-1200 for most documents |
+| **Separator** | Where to prefer splitting | "\n\n" for paragraphs, "\n" for lines |
+| **Chunk Overlap** | Characters shared between chunks | 100-200 to maintain context |
+
+<Aside type="tip" title="Perfect for beginners">
+  This splitter is ideal when you're just getting started with AI document processing. It's simple, predictable, and works well for most text types.
+</Aside>
+
+## When to use this splitter
+
+**Perfect for:**
+- Simple document processing workflows
+- When you need consistent chunk sizes
+- Processing plain text documents
+- Getting started with AI text analysis
+
+**Consider alternatives for:**
+- Complex documents with varied structure
+- When you need to respect semantic boundaries
+- Processing code or structured data
+
+## Troubleshooting
+
+- **Chunks too small**: Increase the chunk size or check if your separator appears frequently in the text
+- **Important information split**: Increase chunk overlap or use paragraph separators ("\n\n") instead of sentence separators
+- **No splitting occurs**: Make sure your separator actually exists in the text, or try a simpler separator like " " (space)
+

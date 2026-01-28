@@ -3,8 +3,6 @@ title: Unknown Node
 description: "What to do when you see an 'Unknown Node' in your workflow - usually means a node type isn't available anymore."
 ---
 
-# Unknown Node
-
 **What it is:** A placeholder that appears when your workflow contains a node type that can't be found or loaded.
 
 **Perfect for:** Troubleshooting • Workflow migration • Browser extension issues • Version compatibility

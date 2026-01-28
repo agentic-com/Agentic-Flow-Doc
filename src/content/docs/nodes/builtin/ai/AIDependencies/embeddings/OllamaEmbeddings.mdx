@@ -1,0 +1,140 @@
+---
+title: Ollama Embeddings
+description: Convert text into searchable vectors locally - the foundation for smart document search and AI knowledge bases.
+sidebar:
+  label: Ollama Embeddings
+---
+
+import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+import { Code } from "@astrojs/starlight/components";
+import Social from "@images/social.webp";
+
+The **Ollama Embeddings** node converts text into numerical vectors (embeddings) that capture meaning and context. Think of it as creating a "fingerprint" for text that allows AI to understand similarity and relationships between different pieces of content.
+
+This is the foundation for building smart document search systems and AI knowledge bases that work completely locally on your machine.
+
+<Image
+  src={Social}
+  alt="Illustration of text being converted into searchable vector embeddings"
+/>
+
+## How it works
+
+The node takes your text content and uses a local Ollama model to convert it into a list of numbers (vectors) that represent the meaning of the text. These vectors can then be used to find similar content or build searchable databases.
+
+```mermaid
+graph LR
+  Text[Your Text] --> Ollama[Ollama Model]
+  Ollama --> Vectors[Number Vectors]
+  Vectors --> Search[Searchable Database]
+  style Ollama fill:#6d28d9,stroke:#fff,color:#fff
+```
+
+## Setup guide
+
+<Steps>
+
+1. **Install Ollama**: Download and install Ollama on your computer from [ollama.com](https://ollama.com).
+
+2. **Download Embedding Model**: Run `ollama pull nomic-embed-text` to get a good embedding model.
+
+3. **Start Ollama Server**: Run `ollama serve` to start the local server.
+
+4. **Configure Node**: Set the Ollama URL and model name in your workflow.
+
+</Steps>
+
+## Practical example: Building searchable knowledge base
+
+Let's convert website content into searchable vectors for a knowledge base.
+
+<Tabs>
+  <TabItem label="Basic Setup">
+    <Code
+      code={`{
+  "ollamaUrl": "http://localhost:11434",
+  "model": "nomic-embed-text",
+  "text": "Your content to convert"
+}`}
+      lang="json"
+    />
+  </TabItem>
+  <TabItem label="Batch Processing">
+    <Code
+      code={`{
+  "ollamaUrl": "http://localhost:11434",
+  "model": "nomic-embed-text",
+  "texts": ["Text 1", "Text 2", "Text 3"],
+  "batchSize": 5
+}`}
+      lang="json"
+    />
+  </TabItem>
+  <TabItem label="Custom Configuration">
+    <Code
+      code={`{
+  "ollamaUrl": "http://localhost:11434",
+  "model": "nomic-embed-text",
+  "text": "Content to embed",
+  "normalize": true,
+  "timeout": 30000
+}`}
+      lang="json"
+    />
+  </TabItem>
+</Tabs>
+
+## Why use local embeddings
+
+| Local Embeddings (Ollama) | Cloud Embeddings |
+|---------------------------|------------------|
+| Complete privacy - data never leaves your machine | Data sent to external servers |
+| No ongoing costs | Pay per API call |
+| Works offline | Requires internet connection |
+| No rate limits | API rate limits apply |
+| Full control over models | Limited model choices |
+
+## Popular embedding models
+
+| Model | Best For | Size | Speed |
+|-------|----------|------|-------|
+| **nomic-embed-text** | General purpose, good quality | ~270MB | Fast |
+| **all-minilm** | Lightweight, fast processing | ~90MB | Very Fast |
+| **bge-large** | High quality, detailed embeddings | ~1.3GB | Slower |
+
+<Aside type="tip" title="Start with nomic-embed-text">
+  The nomic-embed-text model provides excellent quality for most use cases while being reasonably fast and not too large.
+</Aside>
+
+## Real-world examples
+
+### Document similarity search
+Create embeddings to find similar documents:
+```
+Input: "How to optimize website performance"
+Output: [0.123, -0.456, 0.789, ...] (768 numbers)
+Use: Find documents with similar vector patterns
+```
+
+### Knowledge base creation
+Convert company docs into searchable format:
+```
+Process: Company policies → Ollama Embeddings → Local Knowledge
+Result: Smart search through all company documentation
+```
+
+### Content recommendation
+Find related articles or content:
+```
+Process: User reads article → Get embedding → Find similar embeddings
+Result: "You might also like these articles"
+```
+
+## Troubleshooting
+
+- **"Connection failed" errors**: Make sure Ollama is running (`ollama serve`) and the URL is correct.
+- **"Model not found" errors**: Download the model first with `ollama pull nomic-embed-text`.
+- **Slow processing**: Try a smaller/faster model like `all-minilm` or reduce batch size.
+- **Out of memory errors**: Use smaller batch sizes or try a lighter embedding model.
+

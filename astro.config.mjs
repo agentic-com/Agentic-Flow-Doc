@@ -172,9 +172,9 @@ export default defineConfig({
           icon: "seti:illustrator",
           items: [
             {
-              label: "Basics",
+              label: "Concepts",
               autogenerate: {
-                directory: "advanced-ai/basics",
+                directory: "advanced-ai/concepts",
                 collapsed: true,
               },
             },
@@ -184,72 +184,9 @@ export default defineConfig({
                 directory: "advanced-ai/langchain",
                 collapsed: true,
               },
-            },
-            {
-              label: "Evaluations",
-              autogenerate: {
-                directory: "advanced-ai/evaluations",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Examples",
-              collapsed: true,
-              autogenerate: {
-                directory: "advanced-ai/examples",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Performance & Troubleshooting",
-              collapsed: true,
-              items: [
-                "advanced-ai/performance-optimization",
-                "advanced-ai/troubleshooting-guide",
-                "advanced-ai/browser-ai-limitations",
-              ],
-            },
+            }
           ],
-        },
-        {
-          label: {
-            en: "Learning",
-            fr: "Apprendre",
-          },
-          link: "/learning/",
-          icon: "open-book",
-          items: [
-            {
-              label: "Video Courses",
-              autogenerate: {
-                directory: "learning/video-courses",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Text Courses",
-              autogenerate: {
-                directory: "learning/text-courses",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Workflow Patterns",
-              autogenerate: {
-                directory: "learning/workflow-patterns",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Examples",
-              collapsed: true,
-              autogenerate: {
-                directory: "learning/examples",
-                collapsed: true,
-              },
-            },
-          ],
-        },
+        }
       ]),
       starlightVideos()
     ],

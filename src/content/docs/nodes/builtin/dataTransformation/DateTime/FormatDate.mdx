@@ -1,0 +1,140 @@
+---
+title: "Format Date"
+description: "Convert dates into different display formats for user interfaces, reports, and data export."
+---
+
+import { Image } from "astro:assets";
+import Social from '@images/social.webp';
+
+**What it does:** Converts dates into different display formats for user interfaces, reports, and data export.
+
+**Perfect for:** User-friendly displays • Report generation • API formatting • Localization
+
+## What It Does
+
+- **Change date formats** - Convert between different date string formats
+- **Localize dates** - Display dates in different languages and regions
+- **Custom patterns** - Create your own date format patterns
+- **Timezone conversion** - Apply timezone changes during formatting
+
+<Image src={Social} alt="Format Date conversion illustration" />
+
+## How It Works
+
+```mermaid
+graph LR
+    A[Raw Date] --> B[Format Date]
+    B --> C[Formatted Display]
+
+    style A fill:#e1f5fe
+    style B fill:#e8f5e8
+    style C fill:#f3e5f5
+```
+
+**Simple process:** Raw Date → Format Date → User-friendly display
+
+## Common Format Examples
+
+**User-friendly display**
+```
+Input:  "2024-01-15T14:30:45Z"
+Output: "January 15, 2024 at 2:30 PM"
+```
+
+**Short date format**
+```
+Input:  "2024-01-15T14:30:45Z"
+Output: "1/15/24"
+```
+
+**Custom business format**
+```
+Input:  "2024-01-15T14:30:45Z"
+Output: "Mon, Jan 15, 2024"
+```
+
+**ISO standard format**
+```
+Input:  "January 15, 2024"
+Output: "2024-01-15"
+```
+
+## Format Presets
+
+| Preset | Example Output | Best For |
+|--------|----------------|----------|
+| `"human"` | "January 15, 2024 at 2:30 PM" | User interfaces |
+| `"short"` | "1/15/24" | Compact displays |
+| `"medium"` | "Jan 15, 2024" | Reports |
+| `"long"` | "January 15, 2024" | Formal documents |
+| `"ISO"` | "2024-01-15T14:30:45Z" | APIs and databases |
+| `"date_only"` | "2024-01-15" | Date without time |
+| `"time_only"` | "2:30 PM" | Time without date |
+
+## Custom Format Patterns
+
+**Create your own formats using these tokens:**
+
+| Token | Description | Example |
+|-------|-------------|---------|
+| `YYYY` | 4-digit year | 2024 |
+| `MM` | 2-digit month | 01 |
+| `DD` | 2-digit day | 15 |
+| `MMMM` | Full month name | January |
+| `MMM` | Short month name | Jan |
+| `dddd` | Full day name | Monday |
+| `HH` | 24-hour format | 14 |
+| `hh` | 12-hour format | 02 |
+| `mm` | Minutes | 30 |
+| `A` | AM/PM | PM |
+
+**Example custom pattern:**
+```json
+{
+  "output_format": "dddd, MMMM D, YYYY [at] h:mm A"
+}
+```
+**Result:** "Monday, January 15, 2024 at 2:30 PM"
+
+## Localization Examples
+
+**English (US):**
+```
+"January 15, 2024"
+```
+
+**French:**
+```
+"15 janvier 2024"
+```
+
+**Spanish:**
+```
+"15 de enero de 2024"
+```
+
+**German:**
+```
+"15. Januar 2024"
+```
+
+## Common Use Cases
+
+**User interfaces** - Display dates in a friendly format for users
+**Reports and exports** - Format dates consistently across documents
+**API responses** - Convert dates to required formats for external services
+**Multi-language apps** - Show dates in user's preferred language
+
+## Quick Troubleshooting
+
+**Format not working:** Check that your pattern tokens are correct (YYYY not yyyy)
+**Wrong language:** Specify the locale parameter for non-English formats
+**Timezone issues:** Set timezone parameter if dates appear in wrong time zone
+
+## What's Next?
+
+**Related nodes:** [Extract Part Of A Date](/nodes/builtin/dataTransformation/DateTime/ExtractPartOfADate/) • [Get Current Date](/nodes/builtin/dataTransformation/DateTime/GetCurrentDate/) • [Edit Fields](/nodes/builtin/dataTransformation/EditFields/)
+
+**Common workflows:** [Report Generation](/learning/workflow-patterns/real-world-examples/content-management/) • [User Interface Display](/learning/workflow-patterns/data-processing-patterns/) • [Multi-language Apps](/learning/workflow-patterns/integration-patterns/)
+
+**Learn more:** [Date Handling Guide](/learning/text-courses/intermediate/data-transformation/) • [Localization Patterns](/learning/text-courses/intermediate/multi-step-workflows/)

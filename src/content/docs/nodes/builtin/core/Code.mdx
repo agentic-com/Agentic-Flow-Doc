@@ -1,191 +1,128 @@
 ---
-title: "Code"
-description: "Run custom Python code in browser workflows for data processing, analysis, and automation."
-template: doc
-tags: ["Web Extraction", "Browser Automation", "Data Processing", "Python"]
+title: Python Code
+description: Learn how to use the Python Code node to transform data using Pyodide directly in your browser.
+sidebar:
+  label: Python Code
+  badge:
+    text: Core
+    variant: note
 ---
 
+import {
+  Steps,
+  Aside,
+  Tabs,
+  TabItem
+} from "@astrojs/starlight/components";
 import { Image } from "astro:assets";
-import Social from '@images/social.webp'; 
+import { Code } from "@astrojs/starlight/components";
+import Social from "@images/social.webp";
 
-The **Code node** lets you run custom Python scripts directly inside your browser workflow.  
-It is ideal for data analysis, text processing, scientific calculations, and building custom automation logic.
+The **Python Code** node allows you to write and execute Python scripts directly within your workflow. Unlike traditional automation tools that require a server, this node runs entirely inside your browser using **Pyodide**.
 
-This node uses **Pyodide**, a Python runtime compiled to WebAssembly, allowing Python to run safely in your browser without installing anything locally.
+This is perfect for cleaning data, performing calculations, or using advanced math libraries without your data ever leaving your computer.
 
----
+  <Image
+    src={Social}
+    alt="Illustration of Python code running in a browser environment"
+  />
 
-## What This Node Does
+## How it works
 
-- Runs Python code inside your workflow
-- Processes input from other nodes
-- Returns structured results for further use
-- Can use popular Python libraries like NumPy, Pandas, and Matplotlib
-
-Use it whenever built-in nodes are not enough and you need **custom processing**.
-
----
-
-## How It Works
+The node receives data from the previous step as a list of items. You can modify these items, create new ones, or filter them out using standard Python syntax. Because it uses Pyodide, you have access to the standard Python library and several powerful scientific packages.
 
 ```mermaid
-flowchart LR
-    A[Previous Node Data] --> B[Code Node]
-    B --> C[Initialize Pyodide Runtime]
-    C --> D{Install Required Packages?}
-    D -->|Yes| E[Install Packages via micropip]
-    D -->|No| F[Execute Python Code]
-    E --> F
-    F --> G[Process Input Data]
-    G --> H[Generate Results]
-    H --> I[Return Structured Output]
-````
+graph LR
+  A --> B{Python Code Node}
+  B --> C
+  style B fill:#ffd43b,stroke:#333,stroke-width:2px
 
-The workflow always:
-
-1. Receives input data
-2. Prepares Python environment
-3. Runs your code
-4. Returns results, including logs and execution metadata
-
----
-
-## Main Settings
-
-### Required
-
-| Parameter | Description            | Example                                       |
-| --------- | ---------------------- | --------------------------------------------- |
-| `code`    | Python code to execute | `"import pandas as pd\nreturn df.describe()"` |
-
-### Optional
-
-| Parameter     | Default   | Description                     | Example               |
-| ------------- | --------- | ------------------------------- | --------------------- |
-| `timeout`     | `30000`   | Maximum time (ms) for execution | `10000`               |
-| `returnType`  | `"auto"`  | Expected output type            | `"json"`              |
-| `packages`    | `[]`      | Python packages to install      | `["numpy", "pandas"]` |
-| `memoryLimit` | `"100MB"` | Max memory for Python execution | `"256MB"`             |
-
-> Tip: Only install necessary packages to avoid long load times and high memory usage.
-
----
-
-## Examples
-
-### 1. Analyze Text Content
-
-Count words, sentences, and reading time.
-
-```json
-{
-  "code": "text = input_data['PreviousNode']['text']\nwords = text.split()\nsentences = len([s for s in text.split('.') if s.strip()])\nreading_time = len(words) / 200\nresult = {'word_count': len(words), 'sentences': sentences, 'reading_time': round(reading_time)}\nresult",
-  "timeout": 5000,
-  "returnType": "json"
-}
 ```
 
-Input data from previous node:
+## Setup guide
 
-```json
-{
-  "PreviousNode": {
-    "text": "This is a sample article. It has multiple sentences."
-  }
-}
+<Steps>
+
+1. **Add the node**: Locate the **Python Code** node under the "Core" category and add it to your workflow canvas.
+2. **Write your script**: Enter your Python code in the editor. By default, the node provides a template to help you get started.
+3. **Access data**: Use the built-in `items` variable to interact with the data flowing into the node.
+4. **Return results**: Your script must return a list of dictionaries (objects) so the next node can understand the data.
+
+</Steps>
+
+## Basic example
+
+If you want to add a new field to every item passing through, you can use a simple loop.
+
+<Tabs>
+<TabItem label="The Code">
+<Code code={`# 'items' is a list of dictionaries provided by the previous node
+new_items =
+
+for item in items:
+
+# Add a new field called 'processed'
+
+item['status'] = 'processed'
+item['grand_total'] = item['price'] \* 1.2
+new_items.append(item)
+
+# Always return the modified list
+
+return new_items`} lang="python" title="transform.py" />
+
+</TabItem>
+<TabItem label="Input Data">
+<Code code={`} lang="json" /> </TabItem> <TabItem label="Output Result"> <Code code={`} lang="json" />
+</TabItem>
+</Tabs>
+
+## Using powerful libraries
+
+One of the biggest advantages of the Python Code node is the support for heavy-duty data libraries. These are pre-loaded and ready to use:
+
+| Library        | Best for                                      |
+| -------------- | --------------------------------------------- |
+| **Pandas**     | Complex table manipulation and data analysis. |
+| **NumPy**      | High-performance mathematical operations.     |
+| **Matplotlib** | Generating charts and visualizations.         |
+
+<Aside type="tip">
+  To use these, simply add `import pandas as pd` or `import numpy as np` at the
+  top of your script.
+</Aside>
+
+## Common tasks
+
+### Filtering items
+
+You can easily remove items that don't meet a specific condition.
+
+```python
+# Only keep items where the price is greater than 50
+return [item for item in items if item['price'] > 50]
+
 ```
 
-Output:
+### Formatting text
 
-```json
-{
-  "word_count": 10,
-  "sentences": 2,
-  "reading_time": 1
-}
+Clean up names or labels before sending them to a database.
+
+```python
+for item in items:
+    item['name'] = item['name'].strip().title()
+return items
+
 ```
 
----
+## Important limitations
 
-### 2. Simple Data Analysis with Pandas
+<Aside type="caution" title="Memory usage">
+  Since the Python engine runs entirely in your browser's memory, processing
+  extremely large datasets (e.g., hundreds of thousands of rows) might slow down
+  your browser tab. For massive data, consider splitting your workflow into
+  smaller chunks.
+</Aside>
 
-```json
-{
-  "code": "import pandas as pd\ndata = input_data['PreviousNode']['records']\ndf = pd.DataFrame(data)\nsummary = df.describe().to_dict()\nsummary",
-  "packages": ["pandas"],
-  "returnType": "json"
-}
-```
-
-Use this for structured data analysis, generating summaries, and further processing.
-
----
-
-### 3. Machine Learning Processing
-
-```json
-{
-  "code": "import pandas as pd\nfrom sklearn.cluster import KMeans\nX = pd.DataFrame(input_data['PreviousNode']['records'])\nkmeans = KMeans(n_clusters=3).fit(X)\nlabels = kmeans.labels_\nlabels.tolist()",
-  "packages": ["pandas", "scikit-learn"],
-  "returnType": "json"
-}
-```
-
-This example performs unsupervised clustering on dataset inputs.
-
----
-
-## Best Practices
-
-* **Keep code simple and clear** for maintainability
-* **Validate input data** before processing
-* **Use try-except blocks** to handle runtime errors
-* **Limit installed packages** to reduce memory and load times
-* **Set memory limits and timeout** according to dataset size
-
----
-
-## Troubleshooting
-
-| Issue             | Cause                        | Solution                                         |
-| ----------------- | ---------------------------- | ------------------------------------------------ |
-| Code fails to run | Package not installed        | Add the package to `packages`                    |
-| Out of memory     | Dataset too large            | Increase `memoryLimit` or split data into chunks |
-| Slow execution    | Large libraries or long code | Optimize code, install fewer packages            |
-
----
-
-## Security Considerations
-
-* Runs in a **sandboxed Pyodide environment**
-* No access to your system files
-* Package installation limited to verified Python packages
-* Execution time and memory can be limited to prevent overload
-
----
-
-## Related Nodes
-
-* [Get All Page Text](/nodes/browser-actions/get-all-page-text/) – feed content into Code node
-* [Edit Fields](/nodes/data/edit-fields/) – clean or format results
-* [Download as File](/nodes/output/save-to-file/) – save results to your device
-
----
-
-## Learning Resources
-
-* [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns)
-* [Machine Learning Workflows](/learning/examples/ai-data-analysis)
-* [Python in Browser with Pyodide](https://pyodide.org/en/stable/usage/index.html)
-
----
-
-## Next Steps
-
-* Start with text analysis examples
-* Gradually add Pandas or NumPy for structured data
-* Explore ML workflows with Scikit-learn for advanced use cases
-
----
-
-<Image src={Social} alt="Code node illustration" />
+- **Browser Only**: This code executes on your machine. If you share a workflow, the recipient's browser will run the code when they trigger it.
+- **External Requests**: Standard Python `requests` are not supported. Use our(/nodes/builtin/browser/click/) or(/nodes/builtin/core/http/) to fetch data from the web.

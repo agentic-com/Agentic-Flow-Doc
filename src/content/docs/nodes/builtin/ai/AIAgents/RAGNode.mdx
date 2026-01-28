@@ -1,0 +1,141 @@
+---
+title: RAG
+description: Smart AI that searches your documents first, then gives accurate answers based on what it finds - no more AI hallucinations.
+sidebar:
+  label: RAG
+---
+
+import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+import { Code } from "@astrojs/starlight/components";
+import Social from "@images/social.webp";
+
+The **RAG** node is like having a research assistant that actually reads your documents before answering questions. Instead of guessing or making things up, it searches through your knowledge base, finds relevant information, then uses AI to give you accurate, source-backed answers.
+
+This eliminates AI "hallucinations" by grounding responses in your actual documents.
+
+<Image
+  src={Social}
+  alt="Illustration of AI searching through documents to provide accurate answers"
+/>
+
+## How it works
+
+When you ask a question, RAG first searches your document collection to find relevant information, then uses AI to analyze those specific documents and provide an answer with source citations.
+
+```mermaid
+graph LR
+  Question[Your Question] --> Search[Search Documents]
+  Search --> Find[Find Relevant Info]
+  Find --> AI{RAG Node}
+  AI --> Answer[Answer + Sources]
+  style AI fill:#6d28d9,stroke:#fff,color:#fff
+```
+
+## Setup guide
+
+<Steps>
+
+1. **Build Your Knowledge Base**: Use the Indexer Node to prepare your documents for searching.
+
+2. **Connect Document Storage**: Link to your Local Knowledge database containing the indexed documents.
+
+3. **Ask Your Questions**: Write natural language questions about information in your documents.
+
+4. **Configure Search Settings**: Set how many documents to search and how closely they must match your question.
+
+</Steps>
+
+## Practical example: Company FAQ system
+
+Let's create a smart FAQ system that answers questions using your company documentation.
+
+<Tabs>
+  <TabItem label="General Questions">
+    <Code
+      code={`{
+  "topK": 5,
+  "similarityThreshold": 0.7,
+  "includeMetadata": true
+}`}
+      lang="json"
+    />
+  </TabItem>
+  <TabItem label="Precise Answers">
+    <Code
+      code={`{
+  "topK": 3,
+  "similarityThreshold": 0.8,
+  "answerStyle": "concise"
+}`}
+      lang="json"
+    />
+  </TabItem>
+  <TabItem label="Research Mode">
+    <Code
+      code={`{
+  "topK": 8,
+  "similarityThreshold": 0.6,
+  "includeSourceExcerpts": true
+}`}
+      lang="json"
+    />
+  </TabItem>
+</Tabs>
+
+## Why RAG is better than regular AI
+
+| Regular AI | RAG (Smart Search + AI) |
+|------------|-------------------------|
+| May make up facts | Only uses your actual documents |
+| No source citations | Shows exactly where answers come from |
+| Uses outdated training data | Uses your latest documents |
+| Can "hallucinate" information | Cannot invent facts not in your documents |
+
+## Configuration settings
+
+| Setting | Purpose | Recommended Values |
+|---------|---------|-------------------|
+| **Top K** | How many documents to search | 3-5 for focused answers, 8+ for comprehensive |
+| **Similarity Threshold** | How closely documents must match | 0.7 for general use, 0.8+ for precise matches |
+| **Include Metadata** | Show document titles and sources | Always recommended |
+
+<Aside type="tip" title="Start with balanced settings">
+  Use 5 documents with 0.7 similarity threshold for most questions. Adjust based on whether you need more precision or broader coverage.
+</Aside>
+
+## Real-world examples
+
+### Employee knowledge base
+Answer HR and policy questions instantly:
+```
+Question: "What's our vacation policy?"
+Top K: 3 (focused search)
+Similarity: 0.8 (precise matches)
+Result: Accurate policy info with source citations
+```
+
+### Technical documentation search
+Find specific technical information:
+```
+Question: "How do I configure SSL certificates?"
+Top K: 5 (comprehensive coverage)
+Similarity: 0.7 (related concepts)
+Result: Step-by-step instructions with documentation links
+```
+
+### Research assistant
+Discover insights across multiple papers:
+```
+Question: "What are the main benefits of renewable energy?"
+Top K: 8 (broad research)
+Similarity: 0.6 (catch related concepts)
+Result: Comprehensive answer with multiple source citations
+```
+
+## Troubleshooting
+
+- **"No relevant documents found"**: Lower the similarity threshold to 0.6 or add more documents to your knowledge base.
+- **Slow search results**: Reduce the number of documents searched (Top K) or clean up your knowledge base.
+- **Poor answer quality**: Check if your documents actually contain the information you're asking about.
+- **Storage quota exceeded**: Remove old or irrelevant documents, or use document compression techniques.
