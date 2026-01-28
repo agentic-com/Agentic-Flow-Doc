@@ -7,7 +7,9 @@ sidebar:
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-Nodes are the building blocks of workflows. Each node performs one action or step, such as extracting data, processing content, branching logic, or interacting with external systems.
+Nodes are the steps in your workflow.
+
+Each node does one thing, like extracting text from a page, clicking a button, or formatting data.
 
 ---
 
@@ -21,10 +23,10 @@ graph TB
   WorkflowNodes --> Logic[Flow & Logic Nodes]
 ```
 
-- **Browser Nodes** — interact with the web page (e.g. extract HTML, click elements, scroll)
-- **Processing / Built-In Nodes** — transform data, call APIs, handle JSON, etc.
-- **AI Nodes** — analyze or summarize text using local or embedded models
-- **Logic / Flow Nodes** — manage branches, loops, error handling
+- **Browser nodes** — work with the page you’re on (extract text/HTML, click, scroll, fill forms)
+- **Built‑in nodes** — transform data, call APIs, work with files, etc.
+- **AI nodes** — summarize, classify, or analyze content
+- **Logic nodes** — choose different paths (If), wait, handle errors
 
 You can browse all available node types in the [Node Library](/usage/node-library/) or by category:
 
@@ -61,7 +63,7 @@ Common workflows often chain patterns like:
 
 ## Node Controls & Actions
 
-Hover or right-click a node to see its controls:
+Hover or right-click a node to see common actions:
 
 - **Execute Step** — run that node immediately
 - **Deactivate** — temporarily disable (without deleting)
@@ -74,7 +76,7 @@ Hover or right-click a node to see its controls:
 
 ## Behavior of Browser Nodes
 
-Browser-specific nodes behave differently:
+Browser nodes behave a little differently because they depend on the page:
 
 - They operate on the **current page state**, extracting real-time content
 - They respect browser security rules, cross-origin limits, and sandboxing
@@ -107,7 +109,9 @@ Browser nodes may have extra settings:
 
 ## Data Flow & Node Outputs
 
-Nodes pass structured data in the form of _items_ (arrays of JSON objects). Each node’s output becomes the next node’s input.
+Nodes pass data to the next node.
+
+Most of the time, the data is shown as JSON in the output panel.
 
 - A node can emit zero, one, or many items
 - Fields in the items can be manipulated via expressions (e.g. `{{ $json.text.length }}`)
@@ -150,7 +154,7 @@ icon="seti:svg"
 
 Understand how to build branching, loops, and conditional logic in workflows.
 
-    [Go  →](/key-concepts/flow-logic/)
+    [Go  →](/usage/key-concepts/flow-logic/)
 
   </Card>
 </CardGrid>

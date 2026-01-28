@@ -54,8 +54,8 @@ You expected text or data, but the result is empty.
 Add a **Wait for Element** node *before* the extraction step.
 
 See:
-- [Wait for Element](/nodes/browser-actions/wait-for-element/)
-- [Browser Interaction Nodes](/nodes/browser-actions/)
+- [Wait node](/nodes/builtin/flow/wait/)
+- [Browser extension nodes](/nodes/extension/)
 
 ---
 
@@ -75,9 +75,8 @@ You see some results, but not everything.
 - Extract after scrolling is complete
 
 See:
-- [Scroll Node](/nodes/browser-actions/scroll/)
-- [Extract Links](/nodes/extraction/extract-links/)
-- [Extract Images](/nodes/extraction/extract-images/)
+- [Extract links (Get All Links)](/nodes/extension/GetAllLinks/)
+- [Extract images (Get All Images)](/nodes/extension/GetAllImages/)
 
 ---
 
@@ -97,8 +96,8 @@ This is normal. Web pages are built for humans, not data.
 - Let an LLM node reformat the result if needed
 
 See:
-- [Get Page Text](/nodes/extraction/get-page-text/)
-- [Run Local LLM](/nodes/llm/local-models/)
+- [Get page text (Get All Text)](/nodes/extension/GetAllText/)
+- [LLM nodes](/nodes/builtin/ai/)
 
 ---
 
@@ -182,7 +181,7 @@ Skipping the “wait” step is the most common mistake.
 See:
 
 * [Browser Compatibility](/usage/troubleshooting/browser-compatibility/)
-* [Workflow Debugging](/usage/troubleshooting/workflow-debugging/)
+* [Troubleshooting Guide](/usage/troubleshooting/)
 
 ---
 

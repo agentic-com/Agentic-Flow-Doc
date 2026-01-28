@@ -6,7 +6,9 @@ import { Card, CardGrid } from "@astrojs/starlight/components";
 import { Image } from "astro:assets";
 import Social from "@images/social.webp";
 
-Merging brings two or more data streams together into one unified output. It’s useful when you’ve split a workflow into branches or gathered data from multiple sources and now need to combine them. The approach you choose depends on how the data is structured and what you want to achieve.  
+Merging means “bring results back together”.
+
+You use merging when your workflow has multiple branches (or multiple sources) and you want one combined output at the end.
 
 ---
 
@@ -21,10 +23,12 @@ Merging brings two or more data streams together into one unified output. It’s
 ## Methods to merge data  
 
 ### 1. Using the Merge node  
-The Merge node allows you to combine inputs in different ways (Append, Combine, Position, SQL Query, and more). Examples of its modes:  
+The Merge node lets you combine two inputs in different ways. Common modes:
 - **Append**: Combine all items from each input one after another.  
 - **Combine By Matching Fields / Combine By Position**: Merge items based on matching field values or position index.  
 - **Choose Branch**: Output only one of the input streams, if that meets your workflow logic.
+
+See the node reference: [Merge node](/nodes/builtin/flow/Merge/).
 
 ### 2. Using a Code or Function node  
 If you have complex logic or multiple executions of nodes (for example loops producing results over time) and you want full control over merging behavior, you can use a custom code node (or function) to collect, merge and output items manually.

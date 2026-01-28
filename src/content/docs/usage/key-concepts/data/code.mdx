@@ -14,20 +14,21 @@ import Social from "@images/social.webp";
 
 ## Why use code to process data
 
-Most workflows can be built visually using nodes.  
-However, some situations require custom logic — for example:
+Most workflows can be built visually using nodes.
+
+Sometimes, a small bit of code is the simplest way to do a custom transformation, for example:
 
 - Calculating or transforming data dynamically  
 - Filtering or mapping items based on conditions  
 - Combining or formatting complex objects  
 
-In **Agentic WorkFlow**, you can write small pieces of **Python code** to handle these advanced cases inside a workflow.
+In **Agentic WorkFlow**, you can write small pieces of **Python** inside a workflow.
 
 ---
 
 ## The Code node
 
-The [Code node](/nodes/builtin/core-nodes/code/) allows you to write and execute **Python snippets** directly inside your workflow.  
+The [Code node](/nodes/builtin/core/Code/) lets you write and run **Python** directly inside your workflow.
 It runs securely in the browser using **[Pyodide](https://pyodide.org/en/stable/index.html)** — a WebAssembly-based Python runtime.
 
 You can use this node to:
@@ -39,8 +40,9 @@ You can use this node to:
 
 ## Accessing workflow data
 
-The Code node automatically receives all input data from the previous node(s).  
-You can access and manipulate it using standard Python syntax.
+The Code node receives the input data from the previous node(s).
+
+You can read it, modify it, and return the new result.
 
 ### Example: Add a calculated field
 
@@ -63,7 +65,7 @@ This example takes an array of objects with a `price` field and adds a new `tax_
 
 ## Using variables and references
 
-You can reference values from other nodes using the standard templating syntax:
+You can also reference values from other nodes using the standard templating syntax:
 
 ```python
 # Example using a value from another node

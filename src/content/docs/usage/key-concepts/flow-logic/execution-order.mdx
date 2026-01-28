@@ -10,15 +10,21 @@ import Social from "@images/social.webp";
 
 <Image src={Social} alt="Workflow execution order illustration" />
 
-When you design a workflow, it's important to understand how **Agentic WorkFlow** decides the order in which nodes execute.  
-This ensures your data moves correctly from one step to the next, especially in workflows with multiple branches.
+In a workflow with branches, you may wonder: “Which node runs first?”
+
+Understanding execution order helps you avoid surprises, especially when two branches need to finish before a later node can run.
 
 ---
 
 ## Execution overview
 
-Agentic WorkFlow executes nodes using a **breadth-first search (BFS)** order.  
-That means all nodes at the same level (connected to the same upstream node) are executed before moving deeper into the workflow chain.
+Agentic WorkFlow uses a “level by level” execution order (often called **breadth‑first**).
+
+In plain terms:
+
+- It starts from the trigger
+- It runs the first set of connected nodes
+- Then it moves one step deeper and runs the next set
 
 ```mermaid
 flowchart TB
@@ -44,10 +50,10 @@ flowchart TB
     L_n1_C_0@{ animation: slow } 
 ````
 
-### How this works
+### Step-by-step
 
 1. The workflow starts from the **trigger node**.
-2. Agentic WorkFlow identifies all directly connected nodes and executes them one by one.
+2. Agentic WorkFlow finds all nodes directly connected to it and runs them.
 3. Once all first-level nodes finish, it proceeds to their connected nodes.
 4. The process repeats until all reachable nodes complete execution.
 
@@ -89,7 +95,7 @@ flowchart TB
 
 In this example:
 
-* “Extract user data” and “Fetch order history” will firstly be executed (the order depends of the creation order).
+* “Extract user data” and “Fetch order history” run first (the exact order can depend on how the nodes were created).
 * “Combine results” will wait for **both** branches to finish before running.
 * “Send report” will only execute after “Combine results” completes.
 
@@ -133,11 +139,11 @@ flowchart TB
 
 ## Browser context considerations
 
-When your workflow runs inside a browser environment, keep these factors in mind:
+When your workflow runs inside a browser, keep these in mind:
 
 * **Page state changes**: Some nodes interact with a webpage (clicks, scrolls) — ensure timing is handled properly.
 * **Timing dependencies**: Wait for page updates (e.g., after form submissions) before the next step.
-* **Performance constraints**: Browser-based workflows have limited resources; plan execution to avoid heavy parallel operations.
+* **Performance constraints**: Your browser has limited CPU/memory; avoid doing too many heavy things at the same time.
 
 ---
 

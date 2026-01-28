@@ -9,8 +9,15 @@ import { Image } from "astro:assets";
 import Social from "@images/social.webp";
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-When building workflows in **Agentic Workflow Studio**, you may encounter situations where a step fails — for example, a web request might time out, a page element might not load, or an API might reject a request.  
-Error handling lets your workflows recover gracefully instead of stopping completely.
+Sometimes a workflow step fails.
+
+Examples:
+
+- A website element doesn’t exist (button/text changed)
+- A request times out
+- A service rejects an API call
+
+Error handling helps your workflow react instead of stopping immediately.
 
 <Image src={Social} alt="illustration" />
 
@@ -48,7 +55,7 @@ flowchart LR
 
 In this example, if “Fetch Data” fails, the workflow continues through the error path to “Send Alert Email”.
 
-Learn more about node configuration in the [Nodes Overview](/usage/using-the-app/workflows/components/) section.
+Learn more about nodes in [Nodes](/usage/using-the-app/workflows/components/nodes/).
 
 ---
 
@@ -57,7 +64,7 @@ Learn more about node configuration in the [Nodes Overview](/usage/using-the-app
 - **Use retries wisely**: Add delay or exponential backoff when retrying failed requests.
 - **Log and monitor errors**: Capture context about failures for debugging.
 - **Handle expected errors**: For example, use conditional nodes to catch known API failure responses.
-- **Use the Error Trigger node**: To start workflows when any other workflow fails.
+- **Fail on purpose when needed**: if the workflow should stop with a clear message, use nodes like [Stop and Error](/nodes/builtin/flow/StopAndError/).
 
 ---
 

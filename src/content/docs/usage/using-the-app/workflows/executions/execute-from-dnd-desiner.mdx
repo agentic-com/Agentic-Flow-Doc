@@ -6,41 +6,43 @@ sidebar:
 ---
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-`Agentic WorkFlow` supports both **full executions** (run the whole workflow) and **partial executions** (run just a node plus its prerequisites). These help you test and develop workflows gradually.
+When you’re building a workflow, you usually want to test it as you go.
+
+Agentic WorkFlow gives you two ways to do that:
+
+- **Run the whole workflow** (end-to-end)
+- **Run one step** (and only what’s needed before it)
 
 ---
 
-## Full (Manual) Execution
+## Run the whole workflow (full run)
 
-At any time, you can run the full workflow manually:
+Use this when you want to see the complete result from start to finish.
 
-- Click **Execute Workflow** (usually in the Editor tab)  
-- The system runs all nodes in sequence, using the current page context  
-- You’ll see each node’s output in its results panel  
-
-This mode is ideal for a complete test to see how the workflow behaves end to end.
-
----
-
-## Partial Executions (Step-by-Step Testing)
-
-Partial executions let you run a single node (and its dependencies) without executing the entire workflow:
-
-1. Select a node on the canvas.  
-2. Open its detail (configuration) view.  
-3. Click **Execute Step** for that node.  
-   - The system will automatically also run any upstream nodes needed to supply its input data.  
-4. You can temporarily deactivate other nodes in the chain if you don’t want them to run.
-
-Partial execution is especially useful when adjusting or debugging a specific node’s logic.
-
-> Partial executions mirror production logic as much as possible, but are run manually and ad-hoc.
+1. Open the page you want the workflow to work on.
+2. In the designer, click **Execute Workflow**.
+3. The workflow runs node by node.
+4. Click a node to see its output.
 
 ---
 
-## Common Issues with Partial Execution
+## Run one step (partial run)
 
-Here are some pitfalls you might encounter:
+Use this when you’re adjusting one node and want fast feedback.
+
+When you run a step, Agentic WorkFlow will also run any steps *before it* that are required to provide input.
+
+1. Click the node you want to test.
+2. Open its configuration panel.
+3. Click **Execute Step**.
+
+If you don’t want parts of the workflow to run while testing, temporarily disable those nodes.
+
+---
+
+## Common issues
+
+---
 
 > **"The destination node is not connected to any trigger."** 
 
@@ -59,5 +61,5 @@ Here are some pitfalls you might encounter:
 
 - **Manual execution** is initiated from the designer; it's meant for development.  
 - **Production execution** runs automatically in response to a trigger (schedule, event, etc.).  
-  - For this, workflows must include a non-manual trigger node and be activated. :contentReference[oaicite:3]{index=3}  
+  - For this, workflows must include a non-manual trigger node and be activated.
   - Production runs do *not* respect pinned data — they always execute everything fully.

@@ -57,8 +57,8 @@ Extracting the **entire page text or full HTML** can be very slow, especially on
 - Avoid full HTML unless absolutely necessary
 
 See:
-- [Get Page Text](/nodes/extraction/get-page-text/)
-- [Get Full Page HTML](/nodes/extraction/get-full-html/)
+- [Get page text (Get All Text)](/nodes/extension/GetAllText/)
+- [Get full page HTML (Get All HTML)](/nodes/extension/GetAllHTML/)
 
 ---
 
@@ -93,7 +93,7 @@ If your workflow starts too early, it will wait or retry.
 Always add a **Wait for Element** step before extracting.
 
 See:
-- [Wait for Element](/nodes/browser-actions/wait-for-element/)
+- [Wait node](/nodes/builtin/flow/wait/)
 
 ---
 
@@ -128,7 +128,7 @@ Avoid unnecessary scrolling.
 
 See:
 
-* [Scroll Node](/nodes/browser-actions/scroll/)
+* [Browser extension nodes](/nodes/extension/)
 
 ---
 
@@ -146,8 +146,7 @@ This dramatically improves speed.
 
 See:
 
-* [Local LLM Nodes](/nodes/llm/local-models/)
-* [RAG and Knowledge Bases](/usage/knowledge-base/)
+* [LLM nodes](/nodes/builtin/ai/)
 
 ---
 
@@ -217,6 +216,5 @@ If the workflow is still slow:
 
 See:
 
-* [Workflow Debugging](/usage/troubleshooting/workflow-debugging/)
-* [Known Limitations](/usage/limitations/)
+* [Troubleshooting Guide](/usage/troubleshooting/)
 * [Workflow Marketplace](/marketplace/)

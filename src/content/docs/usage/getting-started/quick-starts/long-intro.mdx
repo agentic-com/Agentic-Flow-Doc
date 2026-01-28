@@ -2,17 +2,19 @@
 title: Long Intro
 description: "A more complete walkthrough: build a browser automation that extracts links, processes text, and branches logic."
 sidebar:
-  oder: 2
+  order: 2
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-This tutorial expands on the quick intro and shows how to build a browser workflow that:
+This tutorial builds on the Quick Intro and shows a slightly more “real” workflow.
+
+You’ll create an automation that:
 
 - Extracts links and text from a web page
 - Processes and analyzes the extracted content
-- Uses conditional logic (If) to branch based on content
-- Generates different outputs depending on the content type
+- Uses a simple rule (an **If** step) to choose what to do next
+- Produces different output depending on the page content
 
 As before, everything runs entirely in your browser — no server required.
 
@@ -36,7 +38,7 @@ graph TB
 - Use an If node to branch into “Long” or “Short” paths
 - Format the final report accordingly
 
-This shows how workflows can adapt based on web content.
+This shows the main idea behind workflows: they can react to what they find on the page.
 
 ---
 
@@ -53,7 +55,9 @@ This shows how workflows can adapt based on web content.
 1. Click **Add first step**.
 2. Search for **Get All Links** and insert it.
 3. By default, it extracts all `<a>` link URLs and labels from the current page.
-4. Click **Execute Step** to test it, see the output of links.
+4. Click **Execute Step** to test it.
+
+You’ll see the list of links in the node output.
 
 This shows how to gather all hyperlinks on the page.
 
@@ -63,7 +67,7 @@ This shows how to gather all hyperlinks on the page.
 
 1. From **Get All Links**, click **Add node**.
 2. Search for **Get All Text** and add it.
-3. Run **Execute Step** to fetch full page text (everything visible).
+3. Run **Execute Step** to fetch the full page text.
 4. From **Get All Text**, click **Add node** again.
 5. Insert **Edit Fields** to analyze the text.
 6. Configure these fields:
@@ -73,7 +77,7 @@ This shows how to gather all hyperlinks on the page.
 
 7. Execute to see analysis results.
 
-This lets you count words, characters, and make a short preview.
+This gives you a quick “profile” of the page: how long it is, plus a short preview.
 
 ---
 
@@ -95,7 +99,7 @@ graph TB
 
 4. Execute the If node. You’ll see two branches: those above 500 words, and those below.
 
-Now your workflow can respond differently based on content size.
+Now your workflow can take different paths based on content length.
 
 ---
 
@@ -135,7 +139,7 @@ Then execute the full workflow. The final output will differ based on whether th
 
 1. Navigate to a web page with substantial text (e.g. a news article).
 2. In the builder, click **Execute Workflow** (runs from first node onward).
-3. Watch as:
+3. Watch as the workflow runs step-by-step:
    - Links are extracted
    - Full text is fetched
    - Text is analyzed
@@ -150,7 +154,7 @@ You now have a branching, content‑aware automation built entirely in the brows
 
 ## What to try next
 
-- Add an **AI / LLM node** to do sentiment analysis or content summarization
+- Add an **AI / LLM node** to summarize the page or detect sentiment
 - Extract images or metadata (see [Browser Nodes](/nodes/extension/))
 - Use **Wait / Click / Scroll** nodes to navigate and extract multiple pages
 - Share your workflow in the **Marketplace** and study community templates

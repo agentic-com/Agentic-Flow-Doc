@@ -114,13 +114,15 @@ Safari support may be reconsidered in the future, but it is not on the current r
 ### Click or Fill Nodes Fail
 
 - The page may load content dynamically  
-  → Add a **Wait for Element** node
+  → Add a **Wait** step before the action
 - The website may block automation  
   → Try a different selector or browser
 
-See:  
-[Page Interaction Nodes](/nodes/browser-actions/)  
-[Wait for Element](/nodes/browser-actions/wait-for-element/)
+See:
+[Wait node](/nodes/builtin/flow/wait/)
+
+You can also explore the available browser automation nodes here:
+[Browser extension nodes](/nodes/extension/)
 
 ---
 
@@ -173,8 +175,7 @@ Before reporting an issue, check:
 - Whether the page loads content dynamically
 
 Useful links:
-- [Workflow Debugging Guide](/usage/troubleshooting/workflow-debugging/)
-- [Known Limitations](/usage/limitations/)
+- [Full Troubleshooting Flowchart](/usage/troubleshooting/troubleshooting-decision-guide/)
 - <a href="https://community.awflow.io" target="_blank">Community Forum</a>
 
 ---
