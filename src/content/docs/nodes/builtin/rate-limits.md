@@ -83,7 +83,7 @@ Configure [HTTP Request](/nodes/builtin/core/Http-Request/) for reliability:
 - **Keep active tab open** for faster processing
 - **Process smaller chunks** of data at a time
 
-### 📊 Data Processing Nodes
+### Data Processing Nodes
 - **Break large datasets** into smaller pieces (1000 items max)
 - **Use streaming** for very large files
 - **Cache repeated operations** to save time

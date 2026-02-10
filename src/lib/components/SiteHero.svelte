@@ -126,7 +126,7 @@
               <div
                 class="absolute -top-10 -right-24 dark:text-teal-400 hidden w-fit rotate-12 gap-1 border-b border-dashed border-teal-500 text-sm font-normal text-teal-600 bg-teal-100 dark:bg-teal-900/40 rounded-t-sm pr-1 pl-1.5 pt-0.5 underline-offset-3 lg:flex"
               >
-                CLI Support<svg
+                Build-in Nodes<svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -145,7 +145,7 @@
               <div
                 class="absolute top-14 -right-28 dark:text-orange-400 hidden w-fit rotate-12 gap-1 border-b border-dashed border-orange-500 bg-orange-100 dark:bg-orange-900/40 text-sm font-normal text-orange-500 rounded-t-sm pr-1 pl-1.5 pt-0.5 underline-offset-3 lg:flex"
               >
-                Responsive<svg
+                Integrations<svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"

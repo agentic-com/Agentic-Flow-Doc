@@ -79,9 +79,9 @@ export default defineConfig({
           label: "English",
           lang: "en",
         },
-        fr: {
+        /*fr: {
           label: "Français",
-        },
+        },*/
       },
       plugins: [
         starlightSidebarTopics([
