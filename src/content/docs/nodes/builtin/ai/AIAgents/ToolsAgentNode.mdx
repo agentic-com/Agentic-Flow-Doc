@@ -51,38 +51,20 @@ graph LR
 
 Let's create an agent that automatically researches competitor pricing across multiple websites.
 
-<Tabs>
-  <TabItem label="Research Task">
-    <Code
-      code={`{
-  "taskDescription": "Visit 3 competitor websites and extract their pricing information",
-  "availableTools": ["GetAllTextFromLink", "BasicLLMChain", "EditFields"],
-  "maxIterations": 8
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Data Collection">
-    <Code
-      code={`{
-  "taskDescription": "Extract contact information from tech company websites",
-  "availableTools": ["GetHTMLFromLink", "EditFields", "Filter"],
-  "maxIterations": 6
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Content Analysis">
-    <Code
-      code={`{
-  "taskDescription": "Analyze product reviews and summarize key insights",
-  "availableTools": ["GetAllTextFromLink", "BasicLLMChain", "QANode"],
-  "maxIterations": 10
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Task 1: Research Prices**
+- **Instruction**: "Visit 3 competitor websites and extract their pricing information."
+- **Tools Given**: `Get All Text`, `AI Text Processor`, `Field Editor`.
+- **Limit**: 8 steps maximum.
+
+**Task 2: Lead Collection**
+- **Instruction**: "Extract contact information from tech company websites."
+- **Tools Given**: `Get HTML`, `Field Editor`, `Filter`.
+- **Limit**: 6 steps maximum.
+
+**Task 3: Analyze Reviews**
+- **Instruction**: "Analyze product reviews and summarize key insights."
+- **Tools Given**: `Get All Text`, `AI Text Processor`, `Questions & Answers`.
+- **Limit**: 10 steps maximum.
 
 ## What makes it smart
 

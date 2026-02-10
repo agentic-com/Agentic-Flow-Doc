@@ -35,46 +35,26 @@ graph LR
 
 ## Common Field Selections
 
-**Basic fields**
-```json
-["name", "email", "phone"]
-```
-
-**Nested fields**
-```json
-["user.name", "user.profile.email", "settings.theme"]
-```
-
-**Array elements**
-```json
-["posts[0].title", "reviews[*].rating"]
-```
-
-**Exclude sensitive data**
-```json
-{"mode": "exclude", "fields": ["password", "ssn", "internal_id"]}
-```
+- **Basic Fields**: Just pick `name`, `email`, and `phone`.
+- **Nested Fields**: Grab data deep inside an object, like `user.profile.email`.
+- **Arrays**: Get the title of the first post (`posts[0].title`) or the rating of *every* review (`reviews[*].rating`).
+- **Exclude Mode**: Instead of picking what to *keep*, you can choose what to *remove* (like passwords or sensitive IDs).
 
 ## Real Example
 
-**Before (large API response):**
-```json
-{
-  "user": {
-    "id": "user123",
-    "name": "Alice Johnson",
-    "email": "alice@company.com",
-    "phone": "+1987654321",
-    "address": "123 Main St",
-    "ssn": "123-45-6789",
-    "internal_notes": "VIP customer"
-  },
-  "preferences": {"theme": "dark", "notifications": true},
-  "admin_data": {"created_by": "admin", "last_login": "2024-01-15"}
-}
-```
+**Before (Too Much Data):**
+You get a huge response from an API containing the user's ID, full address, social security number, admin notes, marketing preferences, and more.
+*Example: `{"user": {"ssn": "123", "internal_notes": "VIP", "name": "Alice"...}}`*
 
-**After (only needed fields):**
+**The Selection:**
+You only ask for:
+- User's Name
+- Email
+- Phone
+- Theme Preference
+
+**After (Just What You Need):**
+The node discards everything else, leaving you with a clean, safe, and small object:
 ```json
 {
   "user": {
@@ -82,11 +62,11 @@ graph LR
     "email": "alice@company.com",
     "phone": "+1987654321"
   },
-  "preferences": {"theme": "dark"}
+  "preferences": {
+    "theme": "dark"
+  }
 }
 ```
-
-**Fields selected:** `["user.name", "user.email", "user.phone", "preferences.theme"]`
 
 ## Common Use Cases
 

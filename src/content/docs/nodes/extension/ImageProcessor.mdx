@@ -47,42 +47,18 @@ graph LR
 
 Let's optimize images from a webpage to improve loading speed and performance.
 
-<Tabs>
-  <TabItem label="Input (Processing Settings)">
-    <Code
-      code={`{
-  "imageData": [], // From Get All Images node
-  "operation": "optimize",
-  "outputFormat": "webp",
-  "quality": 80,
-  "maxWidth": 1200,
-  "maxHeight": 800
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Processing Results)">
-    <Code
-      code={`{
-  "processedImages": [
-    {
-      "originalUrl": "https://example.com/large-image.jpg",
-      "processedUrl": "blob:processed-image-1.webp",
-      "originalSize": "2.4MB",
-      "newSize": "245KB",
-      "compressionRatio": 0.9,
-      "format": "webp"
-    }
-  ],
-  "totalOriginalSize": "15.2MB",
-  "totalNewSize": "1.8MB",
-  "overallCompression": 0.88,
-  "imagesProcessed": 12
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**What you configure:**
+- **Operation**: Choose what to do (e.g., optimize, resize, or convert).
+- **Format**: Select the output file type (like WebP for web use).
+- **Quality**: Set the balance between file size and image clarity (e.g., 80%).
+- **Dimensions**: Optional max width and height constraints.
+
+**What you get:**
+- **Processed Images**: The new image files ready to use.
+- **Details**:
+    - **Savings**: How much file size was reduced (e.g., "2.4MB" down to "245KB").
+    - **Format**: The final file type.
+    - **Stats**: Overall compression ratio and total size saved.
 
 ## Common settings
 

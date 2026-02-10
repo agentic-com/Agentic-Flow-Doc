@@ -49,24 +49,16 @@ graph LR
 
 Suppose you want to collect all product photos from a specific category page on an e-commerce site.
 
-<Tabs>
-<TabItem label="The Link">
-In the node settings, you would provide the category link:
-`https://shop.example.com/laptops`
-</TabItem>
-<TabItem label="Input">
-<Code
-code={`{ &quot;url&quot;: &quot;https://shop.example.com/laptops&quot; }`}
-lang="json"
-/>
-</TabItem>
-<TabItem label="Output (Result)">
-<Code
-code={`{ &quot;images&quot;:, &quot;totalImages&quot;: 2 }`}
-lang="json"
-/>
-</TabItem>
-</Tabs>
+Suppose you want to collect all product photos from a specific category page on an e-commerce site.
+
+**What you configure:**
+- **Link**: The URL of the category page (e.g., `https://shop.example.com/laptops`).
+- **Filters**: Set a minimum size (like 200px) to skip tiny icons.
+
+**What you get:**
+- **Images List**: A collection of found images.
+- **Details**: For each image, you get the URL, description (alt text), and dimensions.
+- **Count**: Total number of images found (e.g., 12).
 
 ## Common settings
 
@@ -97,6 +89,6 @@ You can use this node to quickly find images that are missing **Alt Text**. Imag
 
 ## Related nodes
 
-* (/nodes/builtin/browser/get-html/) — To see the full code behind the images.
-* (/nodes/builtin/core/getalltextfromlink/) — To read the articles surrounding the images.
-* [Python Code](https://www.google.com/search?q=/nodes/builtin/core/code/) — To filter or rename your image list using custom logic. 
+* [Get HTML From Link](/nodes/builtin/core/GetHTMLFromLink/) — To see the full code behind the images.
+* [Get All Text From Link](/nodes/builtin/core/GetAllTextFromLink/) — To read the articles surrounding the images.
+* [Python Code](/nodes/builtin/core/Code/) — To filter or rename your image list using custom logic.

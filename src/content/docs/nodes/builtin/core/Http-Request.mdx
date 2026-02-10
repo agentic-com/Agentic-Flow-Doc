@@ -68,10 +68,9 @@ You don't need to be a coder to set this up. Here are the main settings you'll i
 
 - **URL (Address):** The web link provided by the service you want to connect to.
 - **Method (Action):**
-- **GET:** Use this when you want to _pull_ information from a service.
-- **POST:** Use this when you want to _send_ information (like text you just scraped) to a service.
-
-- **Body:** This is where you put the data you want to send. You can use data from previous nodes, like(../manipulation/get-selected-text), by clicking the plus icon next to the field.
+  - **GET:** Use this when you want to _pull_ information from a service.
+  - **POST:** Use this when you want to _send_ information (like text you just scraped) to a service.
+- **Body:** This is where you put the data you want to send. You can insert values from previous nodes (for example [Get Selected Text](/nodes/extension/GetSelectedText/)) by clicking the plus icon next to the field.
 
 ### Authentication (Keys & Passwords)
 
@@ -85,23 +84,12 @@ Most apps require a "Key" or "Token" to prove it's you. You usually put these in
   OpenAI). They will always tell you exactly what "Header" or "Key" they need.
 </Aside>
 
-## Security & Permissions
-
-Because this node allows the extension to send data to other websites, your browser might ask for permission.
-
-- **Host Permissions:** You must tell the Agentic Workflow Studio which websites it is allowed to talk to.
-- **Privacy:** Since the extension runs locally in your browser, your data is only sent to the specific address you provide. It never passes through our servers.
-
 ## Pro Tips for Success
 
 <Steps>
-  1. **Test your connection:** Use the "Test Node" button to see if the external
-  app responds correctly before running the whole workflow. 2. **Wait for it:**
-  If you are sending data to a slow AI service, increase the **Timeout** setting
-  so the workflow doesn't give up too early. 3. **Use Edit Fields:** Often,
-  external apps want data in a specific format. Use the [Edit
-  Fields](https://www.google.com/search?q=../logic/edit-fields) node before this
-  one to clean up your text.
+  1. **Test your connection:** Use the "Test Node" button to see if the external app responds correctly before running the whole workflow.
+  2. **Wait for it:** If you are sending data to a slow AI service, increase the **Timeout** setting so the workflow doesn't give up too early.
+  3. **Use Edit Fields:** Often, external apps want data in a specific format. Use the [Edit Fields](/nodes/builtin/dataTransformation/EditFields/) node before this one to clean up your text.
 </Steps>
 
 ## Common Issues
@@ -111,6 +99,7 @@ Because this node allows the extension to send data to other websites, your brow
 
 ## Related Nodes
 
-- **[Get Selected Text](../manipulation/get-selected-text):** Perfect for grabbing the content you want to send.
-- **[Run Local LLM](../ai/run-local-llm):** If you want to use AI without sending data to an external URL, use the local node instead!
-- **[Marketplace](https://www.google.com/search?q=../community/marketplace):** Look for templates that already have the HTTP Request node configured for popular apps.
+- **[Get Selected Text](/nodes/extension/GetSelectedText/):** Perfect for grabbing the content you want to send.
+- **[Edit Fields](/nodes/builtin/dataTransformation/EditFields/):** Format and reshape your data before sending it.
+- **[AI nodes](/nodes/builtin/ai/):** If you want AI processing in your workflow.
+- **[Marketplace](/marketplace/):** Look for templates that already use HTTP Request for popular apps.

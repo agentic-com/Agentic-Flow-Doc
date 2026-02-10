@@ -49,42 +49,21 @@ graph LR
 
 Let's create a workflow that automatically extracts key information whenever you visit any news article.
 
-<Tabs>
-  <TabItem label="Page Load Trigger">
-    <Code
-      code={`{
-  "triggerType": "pageLoad",
-  "urlPattern": "https://*.com/article/*",
-  "delay": 3000,
-  "cooldownPeriod": 10000
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Manual Button Trigger">
-    <Code
-      code={`{
-  "triggerType": "manual",
-  "urlPattern": "*",
-  "buttonText": "Extract Article Data"
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Scheduled Trigger">
-    <Code
-      code={`{
-  "triggerType": "scheduled",
-  "interval": 1800000,
-  "activeHours": {
-    "start": "09:00",
-    "end": "17:00"
-  }
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+Let's create a workflow that automatically extracts key information whenever you visit any news article.
+
+**Option 1: Automatic Page Load**
+- **Trigger**: When page finishes loading.
+- **Where**: Any URL matching `https://*.com/article/*`.
+- **Timing**: Wait 3 seconds after load, then run. But wait at least 10 seconds before running again (cooldown).
+
+**Option 2: Manual Button**
+- **Trigger**: You click a button in the browser extension popup.
+- **Button Text**: "Extract Article Data".
+- **Where**: Works on any page (`*`).
+
+**Option 3: Regular Schedule**
+- **Trigger**: Runs automatically in the background.
+- **Timing**: Every 30 minutes, but only during business hours (9-5).
 
 ## Common trigger types
 

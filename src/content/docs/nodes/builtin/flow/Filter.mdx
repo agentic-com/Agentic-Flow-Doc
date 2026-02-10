@@ -50,46 +50,22 @@ graph LR
 
 Let's say you're collecting news articles from various sources, but you only want high-quality articles that are complete and substantial.
 
-<Tabs>
-  <TabItem label="Before Filtering">
-    <Code
-      code={`[
-  {
-    "title": "Breaking News: Major Discovery",
-    "content": "Scientists have made an incredible breakthrough in renewable energy technology. The new solar panel design increases efficiency by 40% while reducing manufacturing costs...",
-    "author": "Sarah Johnson",
-    "wordCount": 450
-  },
-  {
-    "title": "",
-    "content": "Short snippet",
-    "author": "",
-    "wordCount": 12
-  },
-  {
-    "title": "Weather Update",
-    "content": "Today will be sunny with temperatures reaching 75°F. Perfect weather for outdoor activities and weekend plans...",
-    "author": "Mike Weather",
-    "wordCount": 85
-  }
-]`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="After Filtering">
-    <Code
-      code={`[
-  {
-    "title": "Breaking News: Major Discovery",
-    "content": "Scientists have made an incredible breakthrough in renewable energy technology. The new solar panel design increases efficiency by 40% while reducing manufacturing costs...",
-    "author": "Sarah Johnson",
-    "wordCount": 450
-  }
-]`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+Let's say you're collecting news articles from various sources, but you only want high-quality articles that are complete and substantial.
+
+**Input Data:**
+Imagine you have three articles:
+1. **"Breaking News"**: A full article with an author and 450 words.
+2. **(Empty Title)**: Just a "snippet" with no author and 12 words.
+3. **"Weather Update"**: A short 85-word update.
+
+**Filter Conditions:**
+You set the node to keep items only if:
+- Title is not empty.
+- Author is not empty.
+- Word count is at least 100.
+
+**Result:**
+Only the first article ("Breaking News") is kept. The other two are removed from the workflow because they didn't meet all your criteria.
 
 In this example, the filter kept only articles that have:
 - A title (not empty)

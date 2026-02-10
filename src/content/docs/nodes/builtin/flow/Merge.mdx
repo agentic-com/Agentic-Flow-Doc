@@ -50,58 +50,18 @@ graph TD
 
 Let's say you're collecting product information from multiple sources - basic details from one API, pricing from another, and customer reviews from a third source.
 
-<Tabs>
-  <TabItem label="Path A: Basic Info">
-    <Code
-      code={`{
-  "productId": "ABC123",
-  "name": "Wireless Headphones",
-  "brand": "TechSound",
-  "category": "Electronics"
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Path B: Pricing">
-    <Code
-      code={`{
-  "productId": "ABC123",
-  "price": 89.99,
-  "currency": "USD",
-  "discount": 15
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Path C: Reviews">
-    <Code
-      code={`{
-  "productId": "ABC123",
-  "averageRating": 4.5,
-  "totalReviews": 1247,
-  "topReview": "Great sound quality and comfortable fit!"
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Merged Result">
-    <Code
-      code={`{
-  "productId": "ABC123",
-  "name": "Wireless Headphones",
-  "brand": "TechSound",
-  "category": "Electronics",
-  "price": 89.99,
-  "currency": "USD",
-  "discount": 15,
-  "averageRating": 4.5,
-  "totalReviews": 1247,
-  "topReview": "Great sound quality and comfortable fit!"
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+Let's say you're collecting product information from multiple sources - basic details from one API, pricing from another, and customer reviews from a third source.
+
+**Input Sources:**
+- **Path A (Basic Info)**: Gives you the Name ("Wireless Headphones") and Brand ("TechSound").
+- **Path B (Pricing)**: Gives you the Price ($89.99) and Discount (15%).
+- **Path C (Reviews)**: Gives you the Rating (4.5 stars).
+
+**The Merge:**
+The node combines all these separate pieces of information into one single "Product" item.
+
+**Result:**
+You get one complete record containing the Name, Brand, Price, Discount, AND Rating, all together.
 
 ## Merge strategies
 

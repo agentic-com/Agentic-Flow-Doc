@@ -40,40 +40,37 @@ graph TD
   <TabItem label="Information Gathering">
     **Purpose:** Collect data from various sources
     
-    **Tools:**
-    - GetAllTextFromLink (extract text content)
-    - GetHTMLFromLink (get structured data)
-    - GetImagesFromLink (collect visual content)
-    - Http-Request (API data retrieval)
+    **Examples:**
+    - Reading text from a web page
+    - Extracting links or images
+    - Getting data from an API
     
     **Agent reasoning:**
-    "I need product information. Let me check if this is a simple text page (use GetAllTextFromLink) or if I need structured data (use GetHTMLFromLink)."
+    "I need product information. I'll read the text on this page to find descriptions and prices."
   </TabItem>
   
   <TabItem label="Content Processing">
     **Purpose:** Analyze and transform information
     
-    **Tools:**
-    - BasicLLMChain (text analysis and generation)
-    - QANode (question answering)
-    - EditFields (data transformation)
-    - Code (custom processing logic)
+    **Examples:**
+    - AI summarization
+    - Answering questions based on text
+    - Reformatting dates or currencies
     
     **Agent reasoning:**
-    "I have raw text data. Do I need to answer specific questions (QANode) or generate new content (BasicLLMChain)?"
+    "I have raw text. I'll use AI to summarize the key points and format the price as a number."
   </TabItem>
   
   <TabItem label="Flow Control">
-    **Purpose:** Make decisions and control workflow logic
+    **Purpose:** Make decisions and control where the workflow goes next
     
-    **Tools:**
-    - If (conditional branching)
-    - Filter (data filtering)
-    - Merge (combine data streams)
-    - StopAndError (error handling)
+    **Examples:**
+    - "If" logic (e.g., If price > $100)
+    - Filtering lists
+    - Stopping on errors
     
     **Agent reasoning:**
-    "Based on the data quality, should I continue processing (If) or filter out bad data (Filter) first?"
+    "The price is missing on this page. I should skip it and try the next one instead of crashing."
   </TabItem>
 </Tabs>
 

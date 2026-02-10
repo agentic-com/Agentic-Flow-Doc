@@ -12,7 +12,7 @@ import Social from "@images/social.webp";
 
 The **Get HTML From Link** node allows you to "peek behind the curtain" of a website. It takes a web address (URL) and retrieves the entire underlying source code (HTML) of that page.
 
-While the [Get All Text From Link](/nodes/builtin/core/getalltextfromlink/) node is better for reading content, this node is essential when you need to see the structure of a site to find hidden data, metadata, or specific elements that aren't visible as plain text.
+While the [Get All Text From Link](/nodes/builtin/core/GetAllTextFromLink/) node is better for reading content, this node is essential when you need to see the structure of a site to find hidden data, metadata, or specific elements that aren't visible as plain text.
 
 <Image
   src={Social}
@@ -46,20 +46,15 @@ graph LR
 
 Suppose you want to see if a product page contains hidden "Stock Level" data that isn't written in plain text but is hidden in the code.
 
-<Tabs>
-  <TabItem label="Input (The Link)">
-    <Code
-      code={`{ &quot;url&quot;: &quot;https://shop.example.com/product/12345&quot; }`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (The Result)">
-    <Code
-      code={`{ &quot;html&quot;: &quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;...&lt;/head&gt;&lt;body&gt;&lt;div class=&#39;price&#39;&gt;$99&lt;/div&gt;...&lt;/body&gt;&lt;/html&gt;&quot;, &quot;metadata&quot;: { &quot;title&quot;: &quot;Product Title - Tech Store&quot;, &quot;url&quot;: &quot;https://shop.example.com/product/12345&quot;, &quot;pageLoadTime&quot;: 1200 } }`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+Suppose you want to see if a product page contains hidden "Stock Level" data that isn't written in plain text but is hidden in the code.
+
+**What you configure:**
+- **Link**: The URL of the product page (e.g., `https://shop.example.com/product/123`).
+- **Settings**: Turn on "Wait for Load" to make sure all data is present.
+
+**What you get:**
+- **HTML**: The full code of the page (`<html>...</html>`).
+- **Metadata**: Found details like the page title ("Product Title - Tech Store") and load time.
 
 ## Common settings
 
@@ -71,8 +66,7 @@ Suppose you want to see if a product page contains hidden "Stock Level" data tha
 
 <Aside type="tip" title="Use with the Python Code node">
   Raw HTML is often very "noisy." We recommend passing the output of this node
-  into a [Python
-  Code](https://www.google.com/search?q=/nodes/builtin/core/code/) node using
+  into a [Python Code](/nodes/builtin/core/Code/) node using
   the **BeautifulSoup** or **Pandas** libraries to easily find the specific data
   you need.
 </Aside>

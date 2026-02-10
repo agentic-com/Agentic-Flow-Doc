@@ -103,7 +103,7 @@ Large language models, or LLMs, are AI machine learning models designed to excel
 
 #### Node
 
-In `Agentic WorkFlow`, nodes are individual components that you compose to create browser-based workflows. Nodes can extract data from web pages, process browser context information, define flow control logic, and connect with external services within browser security constraints.
+A node is a single step in your workflow. It performs a specific action, like "Get Text", "Summarize with AI", or "Click Button". You connect nodes together to build your automation.
 
 #### Project (`Agentic WorkFlow`)
 
@@ -123,11 +123,11 @@ Each `Agentic WorkFlow` cluster node contains a single root node that defines th
 
 #### Trigger Node
 
-A trigger node is a special node responsible for executing browser-based workflows in response to certain conditions. In the browser environment, triggers can respond to page events, user interactions, or manual execution.
+A trigger node is the starting point of your workflow. It tells the automation *when* to run—for example, "When page loads", "When I click this element", or "When I press a keyboard shortcut".
 
 #### Workflow
 
-An `Agentic WorkFlow` workflow is a collection of nodes that automate browser-based processes. Workflows can extract data from web pages, process content with AI, and perform complex browser automation tasks.
+A workflow is your complete automation recipe. It's a collection of nodes connected together to perform a task, from start (Trigger) to finish.
 
 #### Web Page Context
 

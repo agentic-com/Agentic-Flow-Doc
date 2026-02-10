@@ -47,32 +47,15 @@ graph LR
 
 Let's add an interactive alert banner with styling to the top of a webpage.
 
-<Tabs>
-  <TabItem label="Input (Content Settings)">
-    <Code
-      code={`{
-  "content": "<div style='background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; padding: 15px; text-align: center; border-radius: 8px; margin: 10px 0;'><strong>Special Offer!</strong> Get 30% off today only. <a href='#offer' style='color: #fff; text-decoration: underline;'>Learn More</a></div>",
-  "contentType": "html",
-  "targetElement": "body",
-  "insertPosition": "after"
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Insertion Result)">
-    <Code
-      code={`{
-  "success": true,
-  "insertedContent": "<div style='background: linear-gradient...'></div>",
-  "targetElement": "body",
-  "contentType": "html",
-  "elementsAdded": 1,
-  "hasInteractivity": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**What you configure:**
+- **Content**: The HTML code, image URL, or video link you want to insert.
+- **Type**: Specify if it's HTML, Image, or Video.
+- **Location**: Use a "selector" to pick where it goes (e.g., `body` for the main page).
+- **Position**: Choose to put it "before", "after", or "inside" the selected spot.
+
+**What happens:**
+- The node injects your content into the page.
+- It confirms if the insertion was successful and how many elements were added.
 
 ## Common settings
 

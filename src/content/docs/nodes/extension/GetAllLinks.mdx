@@ -10,18 +10,27 @@ import { Image } from "astro:assets";
 import { Code } from "@astrojs/starlight/components";
 import Social from "@images/social.webp";
 
-The **Get All Links** node extracts all links from a webpage, giving you URLs and link text for analysis, navigation, or research. Think of it as a digital detective that finds every clickable connection on a page and organizes them for you.
+## What it does
 
-This is perfect for competitor analysis, site mapping, building automated navigation workflows, or discovering related content across websites.
+The **Get All Links** node collects the links on the page you’re currently viewing.
+
+It returns a list of URLs (and usually the clickable text), so you can analyze them, filter them, or visit them in the next steps.
 
 <Image
   src={Social}
   alt="Illustration of extracting all links from a webpage"
 />
 
+## When to use it
+
+- You want to build a simple “site map” of a page.
+- You want to find all outbound links (partners, social links, ads).
+- You want to collect article/product links and then visit each link.
+- You want to check which pages a website links to.
+
 ## How it works
 
-The node scans the entire webpage looking for clickable links, extracts their URLs and visible text, then categorizes them as internal (same website) or external (other websites). It gives you a complete map of all connections from that page.
+The node scans the page for clickable links and returns them as a list. It can label links as **internal** (same website) or **external** (other websites).
 
 ```mermaid
 graph LR
@@ -35,10 +44,10 @@ graph LR
 
 <Steps>
 
-1. **Navigate to Target Page**: Make sure you're on the webpage containing the links you want to extract.
-2. **Choose Link Types**: Select whether to extract internal links, external links, or both.
-3. **Set Extraction Limits**: Choose how many links to extract (useful for large pages with hundreds of links).
-4. **Run Extraction**: The node finds all links and categorizes them for easy processing.
+1. **Open the page** you want to scan.
+2. **Choose what to include** (internal links, external links, or both).
+3. **Set a max limit** if the page has lots of links.
+4. **Run the workflow** and use the output list in the next step.
 
 </Steps>
 
@@ -46,42 +55,19 @@ graph LR
 
 Let's extract all links from a competitor's website to understand their content strategy and partnerships.
 
-<Tabs>
-  <TabItem label="Input (Extraction Settings)">
-    <Code
-      code={`{
-  "includeExternalLinks": true,
-  "includeInternalLinks": true,
-  "maxLinks": 200,
-  "includeAnchorText": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Found Links)">
-    <Code
-      code={`{
-  "links": [
-    {
-      "url": "https://competitor.com/products",
-      "text": "Our Products",
-      "type": "internal"
-    },
-    {
-      "url": "https://partner-site.com",
-      "text": "Strategic Partner",
-      "type": "external"
-    }
-  ],
-  "totalLinks": 47,
-  "internalLinks": 32,
-  "externalLinks": 15,
-  "categories": ["navigation", "content", "footer"]
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+Let's extract all links from a competitor's website to understand their content strategy and partnerships.
+
+**What you can configure:**
+- **Link Types**: Choose to include internal links (same site) and/or external links (other sites).
+- **Max Links**: Set a limit on how many links to gather (e.g., 200).
+- **Anchor Text**: Capture the clickable text for each link.
+
+**What you get:**
+- A list of all found links, including:
+    - **URL**: The web address (e.g., `https://competitor.com/products`).
+    - **Text**: The clickable text (e.g., "Our Products").
+    - **Type**: Whether it's internal or external.
+- A summary count of total, internal, and external links found.
 
 ## Common settings
 
@@ -97,6 +83,6 @@ Let's extract all links from a competitor's website to understand their content 
 
 ## Troubleshooting
 
-- **No links found**: The page might use JavaScript navigation - try waiting for the page to fully load before extraction
-- **Missing some links**: Dynamic menus or hidden navigation may not be captured - try scrolling or interacting with the page first
-- **Too many irrelevant links**: Set a lower max limit or use other nodes to filter results by relevance
+- **No links found**: the page might still be loading. Try running again after the page finishes loading.
+- **Missing some links**: some menus appear only after scrolling or hovering. Open the menu first, then run the workflow.
+- **Too many irrelevant links**: lower `maxLinks`, then filter the results (for example, keep only URLs that contain `/blog/`).

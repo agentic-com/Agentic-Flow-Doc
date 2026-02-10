@@ -47,34 +47,15 @@ graph LR
 
 Let's clean HTML content by removing ads and scripts while extracting the main article content.
 
-<Tabs>
-  <TabItem label="Input (Processing Settings)">
-    <Code
-      code={`{
-  "htmlContent": "<html><head><script>...</script></head><body><div class='ads'>...</div><article class='main-content'><h1>Article Title</h1><p>Article content...</p></article></body></html>",
-  "operation": "clean",
-  "targetElements": "article, .main-content",
-  "outputFormat": "html",
-  "removeScripts": true,
-  "removeAds": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Processed Content)">
-    <Code
-      code={`{
-  "processedContent": "<article class='main-content'><h1>Article Title</h1><p>Article content...</p></article>",
-  "extractedElements": ["article"],
-  "originalSize": 1247,
-  "processedSize": 89,
-  "elementsRemoved": ["script", "div.ads"],
-  "compressionRatio": 0.93
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**What you configure:**
+- **Content**: The raw HTML code you want to work on.
+- **Operation**: Choose "clean" to remove things or "extract" to find things.
+- **Targets**: Use selectors (like `.main-content`) to focus on specific parts.
+- **Filters**: Choose to remove scripts, ads, or other unwanted elements.
+
+**What you get:**
+- **Processed Content**: The clean, simplified HTML code.
+- **Stats**: How much the file size was reduced and what elements were removed.
 
 ## Common settings
 

@@ -46,42 +46,19 @@ graph LR
 
 Let's automatically fill out a job application form with your professional information.
 
-<Tabs>
-  <TabItem label="Input (Your Data)">
-    <Code
-      code={`{
-  "firstName": "Sarah",
-  "lastName": "Johnson",
-  "email": "sarah.johnson@email.com",
-  "phone": "555-0123",
-  "experience": "5 years",
-  "coverLetter": "I am excited to apply for this position because...",
-  "submitAfterFill": false,
-  "simulateHumanInput": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Fill Result)">
-    <Code
-      code={`{
-  "success": true,
-  "fieldsCompleted": [
-    "firstName",
-    "lastName", 
-    "email",
-    "phone",
-    "experience",
-    "coverLetter"
-  ],
-  "fieldsFailed": [],
-  "formSubmitted": false,
-  "totalFields": 6
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+Let's automatically fill out a job application form with your professional information.
+
+**What you provide:**
+- **Personal Info**: Name, email, phone number.
+- **Professional Details**: Years of experience, cover letter text.
+- **Settings**: 
+    - **Submit After Fill**: Choose whether to click the submit button automatically.
+    - **Simulate Human Input**: Type like a real person to avoid detection.
+
+**What happens:**
+- The node finds the "First Name", "Email", and other matching fields on the page.
+- It fills them with the data you provided.
+- It reports which fields were successfully filled and which (if any) were missed.
 
 ## Common settings
 

@@ -49,38 +49,20 @@ graph LR
 
 Let's analyze product reviews to find specific information about customer experiences.
 
-<Tabs>
-  <TabItem label="Extract Key Info">
-    <Code
-      code={`{
-  "question": "What are the main benefits customers mention?",
-  "confidenceThreshold": 0.8,
-  "maxAnswerLength": 300
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Find Problems">
-    <Code
-      code={`{
-  "question": "What complaints do customers have about this product?",
-  "confidenceThreshold": 0.7,
-  "answerStyle": "bullet-points"
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Compare Features">
-    <Code
-      code={`{
-  "question": "How does this product compare to competitors mentioned in the review?",
-  "confidenceThreshold": 0.8,
-  "maxAnswerLength": 500
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Goal 1: Extract Key Info**
+- **Question**: "What are the main benefits customers mention?"
+- **Confidence**: High (0.8) - Start with only very sure answers.
+- **Length**: Medium summary.
+
+**Goal 2: Find Problems**
+- **Question**: "What complaints do customers have about this product?"
+- **Style**: Bullet points list.
+- **Confidence**: Medium (0.7) - Catch more potential issues.
+
+**Goal 3: Compare Features**
+- **Question**: "How does this product compare to competitors mentioned?"
+- **Length**: Long detailed answer.
+- **Confidence**: High (0.8).
 
 ## Common question types
 

@@ -50,38 +50,20 @@ graph LR
 
 Let's create a smart FAQ system that answers questions using your company documentation.
 
-<Tabs>
-  <TabItem label="General Questions">
-    <Code
-      code={`{
-  "topK": 5,
-  "similarityThreshold": 0.7,
-  "includeMetadata": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Precise Answers">
-    <Code
-      code={`{
-  "topK": 3,
-  "similarityThreshold": 0.8,
-  "answerStyle": "concise"
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Research Mode">
-    <Code
-      code={`{
-  "topK": 8,
-  "similarityThreshold": 0.6,
-  "includeSourceExcerpts": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Scenario 1: General Questions**
+- search 5 documents.
+- match threshold 0.7 (standard matching).
+- **Result**: Good for answering general questions like "What are your support hours?".
+
+**Scenario 2: Precise Answers**
+- search 3 documents (only the best matches).
+- match threshold 0.8 (strict matching).
+- **Result**: Perfect for specific policy questions like "How many vacation days do I get?".
+
+**Scenario 3: Deep Research**
+- search 8 documents (broad search).
+- match threshold 0.6 (fuzzy matching).
+- **Result**: Best for exploring topics like "What is our company's history with renewable energy?".
 
 ## Why RAG is better than regular AI
 

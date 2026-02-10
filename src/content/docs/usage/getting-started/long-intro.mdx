@@ -70,12 +70,12 @@ This shows how to gather all hyperlinks on the page.
 3. Run **Execute Step** to fetch the full page text.
 4. From **Get All Text**, click **Add node** again.
 5. Insert **Edit Fields** to analyze the text.
-6. Configure these fields:
-   - `word_count`: `{{ $json.text.split(' ').length }}`
-   - `character_count`: `{{ $json.text.length }}`
-   - `summary`: `{{ $json.text.substring(0, 200) }}...`
+7. Configure these fields by copying the values below:
+   - **word_count**: `{{ $json.text.split(' ').length }}`
+   - **character_count**: `{{ $json.text.length }}`
+   - **summary**: `{{ $json.text.substring(0, 200) }}...`
 
-7. Execute to see analysis results.
+8. Execute to see analysis results.
 
 This gives you a quick “profile” of the page: how long it is, plus a short preview.
 
@@ -93,11 +93,11 @@ graph TB
 1. From the Edit Fields node, click **Add node**.
 2. Search and insert **If**.
 3. Configure it:
-   - Use the field `word_count`
-   - Operator: “Number > Larger”
-   - Compare it to `500`
+   - **Input**: `word_count` (select this from the previous node's output)
+   - **Operator**: "Number > Larger"
+   - **Value**: `500`
 
-4. Execute the If node. You’ll see two branches: those above 500 words, and those below.
+4. Execute the If node. You’ll see two potential paths: "true" (longer than 500 words) and "false" (shorter).
 
 Now your workflow can take different paths based on content length.
 

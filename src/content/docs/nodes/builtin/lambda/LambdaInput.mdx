@@ -49,44 +49,28 @@ graph LR
 
 Let's create a reusable workflow that can extract content from any website. The Lambda Input defines what information callers must provide.
 
-<Tabs>
-  <TabItem label="Lambda Input Setup">
-    <Code
-      code={`{
-  "parameterName": "websiteData",
-  "inputSchema": {
-    "type": "object",
-    "properties": {
-      "url": {"type": "string"},
-      "waitTime": {"type": "number", "default": 5}
-    },
-    "required": ["url"]
-  }
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Calling Workflow Sends">
-    <Code
-      code={`{
-  "url": "https://news.example.com/article/123",
-  "waitTime": 10
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Your Workflow Receives">
-    <Code
-      code={`{
+Let's create a reusable workflow that can extract content from any website. The Lambda Input defines what information callers must provide.
+
+**Input Setup:**
+You define a parameter called `websiteData` that expects:
+- **url** (Required): The link to the page.
+- **waitTime** (Optional): How long to wait for the page to load (default: 5 seconds).
+
+**Calling the Workflow:**
+When another workflow calls this one, it sends:
+- `url`: `https://news.example.com/article/123`
+- `waitTime`: `10`
+
+**Workflow Receives:**
+Your workflow starts with this data ready for use:
+```json
+{
   "websiteData": {
     "url": "https://news.example.com/article/123",
     "waitTime": 10
   }
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+}
+```
 
 ## Common input types
 

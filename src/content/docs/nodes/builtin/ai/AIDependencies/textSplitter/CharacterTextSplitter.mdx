@@ -47,40 +47,16 @@ graph LR
 
 Let's say you want to process a long research article for AI analysis.
 
-<Tabs>
-  <TabItem label="Input (Long Article)">
-    <Code
-      code={`{
-  "text": "Introduction\\n\\nThis research explores the impact of renewable energy on economic growth. The study analyzes data from 50 countries over a 20-year period...\\n\\nMethodology\\n\\nWe used statistical analysis to examine the relationship between renewable energy adoption and GDP growth...",
-  "chunk_size": 800,
-  "separator": "\\n\\n",
-  "chunk_overlap": 100
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Split Chunks)">
-    <Code
-      code={`{
-  "chunks": [
-    {
-      "text": "Introduction\\n\\nThis research explores the impact of renewable energy on economic growth. The study analyzes data from 50 countries over a 20-year period...",
-      "index": 0,
-      "character_count": 247
-    },
-    {
-      "text": "...over a 20-year period...\\n\\nMethodology\\n\\nWe used statistical analysis to examine the relationship between renewable energy adoption and GDP growth...",
-      "index": 1,
-      "character_count": 220
-    }
-  ],
-  "total_chunks": 2,
-  "total_characters": 467
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Input Configuration:**
+- **Chunk Size**: 800 characters per piece.
+- **Separator**: Split at empty lines (`\n\n`) to keep paragraphs together.
+- **Overlap**: 100 characters to keep context.
+
+**Resulting Split:**
+1. **Chunk 1**: "Introduction... (content)..." (Length: 800 chars)
+2. **Chunk 2**: "...(overlap from chunk 1)... Methodology..." (Length: 800 chars)
+
+Total: 2 chunks created from the article.
 
 ## Common settings
 

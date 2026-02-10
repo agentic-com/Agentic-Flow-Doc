@@ -46,31 +46,15 @@ graph LR
 
 Let's build a workflow that compares prices for the same product across different e-commerce sites.
 
-<Tabs>
-  <TabItem label="Input (Navigation Settings)">
-    <Code
-      code={`{
-  "targetUrl": "https://store2.example.com/product/laptop-xyz",
-  "navigationMethod": "current-tab",
-  "waitForLoad": true,
-  "timeout": 10000
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Navigation Result)">
-    <Code
-      code={`{
-  "success": true,
-  "finalUrl": "https://store2.example.com/product/laptop-xyz",
-  "pageTitle": "Laptop XYZ - Store 2",
-  "loadTime": 2340,
-  "redirectCount": 0
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**What you configure:**
+- **URL**: The web address you want to go to (e.g., `https://store.example.com`).
+- **Method**: Choose "Current Tab" to move there, or "New Tab" to keep your current page open.
+- **Wait**: Decide if the workflow should pause until the new page is fully loaded.
+
+**What happens:**
+- The browser navigates to the new page.
+- It reports when the page has loaded and how long it took.
+- Your workflow continues running on the new page.
 
 ## Common settings
 

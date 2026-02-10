@@ -10,18 +10,27 @@ import { Image } from "astro:assets";
 import { Code } from "@astrojs/starlight/components";
 import Social from "@images/social.webp";
 
-The **Get All Text** node extracts all visible text from a webpage, giving you the complete text content for analysis, research, or AI processing. Think of it as a digital reader that captures every word on the page and organizes it for you.
+## What it does
 
-This is perfect for content analysis, research collection, SEO audits, or feeding text into AI workflows. Instead of manually copying and pasting, the node does all the text extraction work automatically.
+The **Get All Text** node captures the readable text from the page you’re currently viewing.
+
+Use it when you want the page content as plain text (for example, to summarize it with AI or save it as notes).
 
 <Image
   src={Social}
   alt="Illustration of extracting all text content from a webpage"
 />
 
+## When to use it
+
+- You want to summarize an article.
+- You want to store page content in a local knowledge base.
+- You want to analyze or classify a page (topics, sentiment, etc.).
+- You want a “copy everything” step without manually selecting text.
+
 ## How it works
 
-The node scans the entire webpage and extracts all visible text content, excluding navigation menus, ads, and other non-essential elements when possible. It gives you clean, readable text that's ready for analysis or processing.
+The node scans the page and returns the text it can read. It also returns basic stats like word and character count.
 
 ```mermaid
 graph LR
@@ -35,10 +44,10 @@ graph LR
 
 <Steps>
 
-1. **Navigate to Target Page**: Make sure you're on the webpage containing the text you want to extract.
-2. **Configure Options**: Choose whether to include hidden text, set length limits, or include link URLs.
-3. **Run Extraction**: The node automatically extracts all visible text from the page.
-4. **Process Results**: Use the extracted text for analysis, AI processing, or storage.
+1. **Open the page** you want to extract text from.
+2. **Add this node** to your workflow.
+3. **Run the workflow**.
+4. **Use the output** in the next node (for example: Filter, Edit Fields, or an AI node).
 
 </Steps>
 
@@ -46,32 +55,15 @@ graph LR
 
 Let's extract all text from a news article to analyze its content and key topics.
 
-<Tabs>
-  <TabItem label="Input (Extraction Settings)">
-    <Code
-      code={`{
-  "includeHiddenText": false,
-  "maxLength": 50000,
-  "includeLinks": true,
-  "cleanFormatting": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Extracted Text)">
-    <Code
-      code={`{
-  "fullText": "Breaking News: Scientists Discover New Solar Technology\\n\\nResearchers at the University of Technology have developed a revolutionary solar panel that increases efficiency by 40%...",
-  "wordCount": 1247,
-  "characterCount": 7892,
-  "pageTitle": "Revolutionary Solar Technology Breakthrough",
-  "pageUrl": "https://news.example.com/solar-breakthrough",
-  "extractionTime": 1200
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**What you configure:**
+- **Include Hidden Text**: Decide if you want text that isn't visible on screen.
+- **Max Length**: Limit text size if you only need a portion.
+- **Clean Formatting**: Remove extra spaces and special characters for cleaner output.
+
+**What you get:**
+- **Full Text**: The readable content of the page.
+- **Stats**: Total word count and character count.
+- **Page Info**: Title and URL of the source page.
 
 ## Common settings
 
@@ -87,6 +79,6 @@ Let's extract all text from a news article to analyze its content and key topics
 
 ## Troubleshooting
 
-- **No text extracted**: The page might still be loading - try adding a wait step before extraction, or the content might be dynamically loaded
-- **Too much irrelevant text**: The extraction includes navigation and footer text - consider using AI filtering to focus on main content
-- **Missing some content**: Dynamic content that loads after the page may not be captured - ensure the page is fully loaded first
+- **No text extracted**: the page may still be loading, or the content appears after a delay. Try running again after the page finishes loading.
+- **Too much irrelevant text**: some pages include menus and footers. You can filter or summarize the text in a later step.
+- **Missing content**: if the page loads content dynamically, try scrolling the page first so the content appears before you run the workflow.

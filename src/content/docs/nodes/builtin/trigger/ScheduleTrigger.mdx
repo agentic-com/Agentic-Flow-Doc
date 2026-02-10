@@ -50,43 +50,22 @@ graph LR
 
 Let's create a workflow that automatically generates a daily summary report every weekday morning.
 
-<Tabs>
-  <TabItem label="Daily at Specific Time">
-    <Code
-      code={`{
-  "scheduleType": "daily",
-  "time": "09:00",
-  "timezone": "America/New_York",
-  "weekdaysOnly": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Every 30 Minutes">
-    <Code
-      code={`{
-  "scheduleType": "interval",
-  "intervalMinutes": 30,
-  "activeHours": {
-    "start": "08:00",
-    "end": "18:00"
-  }
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Weekly Report">
-    <Code
-      code={`{
-  "scheduleType": "weekly",
-  "dayOfWeek": "friday",
-  "time": "17:00",
-  "timezone": "UTC"
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+Let's create a workflow that automatically generates a daily summary report every weekday morning.
+
+**Example 1: Daily at 9:00 AM**
+- Frequency: Daily
+- Time: 9:00 AM New York time
+- Constraint: Monday to Friday only
+
+**Example 2: Every 30 Minutes**
+- Frequency: Interval
+- Time: Every 30 minutes
+- Constraint: Between 8:00 AM and 6:00 PM
+
+**Example 3: Weekly Report**
+- Frequency: Weekly
+- Day: Every Friday
+- Time: 5:00 PM UTC
 
 ## Common schedule types
 
@@ -123,35 +102,13 @@ Let's create a workflow that automatically generates a daily summary report ever
 ## Real-world examples
 
 ### Price monitoring
-Monitor product prices every 2 hours during business hours:
-```json
-{
-  "scheduleType": "interval",
-  "intervalMinutes": 120,
-  "activeHours": {"start": "09:00", "end": "17:00"},
-  "weekdaysOnly": true
-}
-```
+Check product prices **every 2 hours** between 9:00 AM and 5:00 PM on weekdays.
 
 ### Daily backup
-Create daily backups at 2 AM:
-```json
-{
-  "scheduleType": "daily",
-  "time": "02:00",
-  "timezone": "America/New_York"
-}
-```
+Create automatically a backup **every day at 2:00 AM** when traffic is low.
 
 ### Weekly summary
-Generate weekly reports every Friday at 5 PM:
-```json
-{
-  "scheduleType": "weekly",
-  "dayOfWeek": "friday",
-  "time": "17:00"
-}
-```
+Generate and email a performance report **every Friday at 5:00 PM**.
 
 ## Troubleshooting
 

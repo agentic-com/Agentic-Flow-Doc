@@ -46,50 +46,23 @@ graph LR
 
 Let's build a searchable collection of research articles about renewable energy.
 
-<Tabs>
-  <TabItem label="Creating Database">
-    <Code
-      code={`{
-  "database_name": "renewable_energy_research",
-  "action": "create",
-  "embedding_dimension": 768
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Adding Documents">
-    <Code
-      code={`{
-  "database_name": "renewable_energy_research",
-  "action": "insert",
-  "document": {
-    "title": "Solar Panel Efficiency Study 2024",
-    "content": "Recent advances in photovoltaic technology have increased solar panel efficiency to 22.8%. This study examines the impact of new materials...",
-    "metadata": {
-      "source": "Journal of Renewable Energy",
-      "date": "2024-01-15",
-      "category": "solar"
-    }
-  }
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Searching Documents">
-    <Code
-      code={`{
-  "database_name": "renewable_energy_research",
-  "action": "search",
-  "query": {
-    "text": "What are the latest improvements in solar technology?",
-    "max_results": 5,
-    "similarity_threshold": 0.7
-  }
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Action 1: Creating Database**
+- **Action**: Create
+- **Name**: `renewable_energy_research`
+- **Settings**: Standard dimension (768).
+
+**Action 2: Adding Documents**
+- **Action**: Insert
+- **Target**: `renewable_energy_research`
+- **Content**: The text of your article (e.g., "Solar Panel Efficiency Study...").
+- **Metadata**: Add details like source ("Journal of Renewable Energy") and date.
+
+**Action 3: Searching Documents**
+- **Action**: Search
+- **Target**: `renewable_energy_research`
+- **Query**: "What are the latest improvements in solar technology?"
+- **Limit**: Top 5 results.
+- **Accuracy**: 0.7 threshold.
 
 ## Common actions
 

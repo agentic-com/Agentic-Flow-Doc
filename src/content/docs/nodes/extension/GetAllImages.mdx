@@ -10,18 +10,27 @@ import { Image } from "astro:assets";
 import { Code } from "@astrojs/starlight/components";
 import Social from "@images/social.webp";
 
-The **Get All Images** node finds and extracts all images from a webpage, giving you URLs, descriptions, and details about every visual element. Think of it as a digital curator that automatically catalogs every image for analysis, downloading, or content auditing.
+## What it does
 
-This is perfect for content audits, competitor analysis, media collection, or understanding how websites use visual content. Instead of manually searching for images, the node finds them all automatically.
+The **Get All Images** node collects the images on the page you’re currently viewing.
+
+It returns a list with image URLs and useful details (like size and alt text) so you can audit, download, or analyze images.
 
 <Image
   src={Social}
   alt="Illustration of extracting all images from a webpage"
 />
 
+## When to use it
+
+- You want to check if images are missing **alt text** (accessibility audit).
+- You want to collect product photos from a page.
+- You want to compare how competitors use images.
+- You want to build an image list and then download/process each image.
+
 ## How it works
 
-The node scans the entire webpage looking for images - regular images, background images, icons, and graphics. It extracts their URLs, alt text, dimensions, and other details, giving you a complete inventory of all visual content.
+The node scans the page for images (including background images if enabled) and returns them as a list.
 
 ```mermaid
 graph LR
@@ -36,10 +45,10 @@ graph LR
 
 <Steps>
 
-1. **Navigate to Target Page**: Make sure you're on the webpage containing the images you want to extract.
-2. **Configure Image Types**: Choose whether to include hidden images, background images, or both.
-3. **Set Extraction Limits**: Choose how many images to extract (useful for pages with hundreds of images).
-4. **Run Extraction**: The node finds all images and provides detailed information about each one.
+1. **Open the page** you want to scan.
+2. **Choose what to include** (background images, hidden images).
+3. **Set a max limit** if the page has lots of images.
+4. **Run the workflow** and use the output list in the next step.
 
 </Steps>
 
@@ -47,49 +56,18 @@ graph LR
 
 Let's extract all images from a website to check for missing alt text and oversized files.
 
-<Tabs>
-  <TabItem label="Input (Extraction Settings)">
-    <Code
-      code={`{
-  "includeHiddenImages": true,
-  "includeBackgroundImages": true,
-  "maxImages": 100,
-  "includeAltText": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Found Images)">
-    <Code
-      code={`{
-  "images": [
-    {
-      "url": "https://example.com/hero-image.jpg",
-      "altText": "Solar panels on modern home roof",
-      "width": 1200,
-      "height": 600,
-      "format": "JPEG",
-      "estimatedSize": "245KB",
-      "type": "regular"
-    },
-    {
-      "url": "https://example.com/bg-pattern.png",
-      "altText": "",
-      "width": 400,
-      "height": 400,
-      "format": "PNG",
-      "estimatedSize": "67KB",
-      "type": "background"
-    }
-  ],
-  "totalImages": 23,
-  "imageTypes": {"JPEG": 15, "PNG": 6, "SVG": 2},
-  "totalEstimatedSize": "2.1MB"
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**What you configure:**
+- **Hidden & Background Images**: Decide if you want images that aren't immediately visible.
+- **Max Images**: Limit how many images to collect (e.g., 100).
+- **Include Alt Text**: Capture the text description associated with each image.
+
+**What you get:**
+- A list of images with details including:
+    - **URL**: The link to the image file.
+    - **Alt Text**: The description used for accessibility.
+    - **Size**: Width, height, and estimated file size.
+    - **Type**: Whether it's a regular image or part of the background.
+- A summary of total images found and their file types (JPG, PNG, etc.).
 
 ## Common settings
 
@@ -105,6 +83,6 @@ Let's extract all images from a website to check for missing alt text and oversi
 
 ## Troubleshooting
 
-- **No images found**: The page might still be loading - try waiting before extraction, or images might be loaded dynamically
-- **Missing some images**: Enable "Include Hidden Images" and "Include Background Images" to capture all visual content
-- **Too many results**: Set a lower "Max Images" limit or filter results by image type or size
+- **No images found**: the page may still be loading. Try running again after images appear.
+- **Missing some images**: some sites load images only after scrolling. Scroll the page first, then run the workflow.
+- **Too many results**: lower `maxImages`, then filter by size or file type.

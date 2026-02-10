@@ -47,45 +47,18 @@ graph LR
 
 Let's analyze the internal linking structure of a website to find SEO improvement opportunities.
 
-<Tabs>
-  <TabItem label="Input (Analysis Settings)">
-    <Code
-      code={`{
-  "linkData": [], // From Get All Links node
-  "analysisDepth": "comprehensive",
-  "includeSEOAnalysis": true,
-  "checkBrokenLinks": true,
-  "analyzeAnchorText": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Analysis Results)">
-    <Code
-      code={`{
-  "linkQuality": {
-    "overallScore": 78,
-    "internalLinkRatio": 0.65,
-    "externalLinkRatio": 0.35,
-    "recommendations": ["Add more internal links to key pages", "Diversify anchor text"]
-  },
-  "seoInsights": {
-    "anchorTextDiversity": "Good",
-    "linkDepthDistribution": "Needs improvement",
-    "keyPagesCoverage": 85,
-    "opportunityPages": ["about-us", "services", "contact"]
-  },
-  "brokenLinks": [],
-  "patterns": {
-    "mostLinkedPages": ["/products", "/blog", "/home"],
-    "underlinkedPages": ["/testimonials", "/case-studies"],
-    "commonAnchorTexts": ["click here", "read more", "learn more"]
-  }
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**What you configure:**
+- **Source**: Feed in the links you collected (usually from a "Get All Links" node).
+- **Depth**: Choose "comprehensive" for a full audit.
+- **Checks**: Enable "SEO Analysis" and "Check Broken Links".
+
+**What you get:**
+- **Quality Score**: A rating (e.g., 78/100) based on link health.
+- **Insights**:
+    - **Ratios**: Balance between internal and external links.
+    - **Anchors**: Diversity of the text used in links.
+    - **Opportunities**: Pages that need more links.
+- **Patterns**: Lists of your most linked and under-linked pages to help balance your site structure.
 
 ## Common settings
 

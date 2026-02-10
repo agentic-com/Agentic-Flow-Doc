@@ -49,41 +49,19 @@ graph LR
 
 Let's convert website content into searchable vectors for a knowledge base.
 
-<Tabs>
-  <TabItem label="Basic Setup">
-    <Code
-      code={`{
-  "ollamaUrl": "http://localhost:11434",
-  "model": "nomic-embed-text",
-  "text": "Your content to convert"
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Batch Processing">
-    <Code
-      code={`{
-  "ollamaUrl": "http://localhost:11434",
-  "model": "nomic-embed-text",
-  "texts": ["Text 1", "Text 2", "Text 3"],
-  "batchSize": 5
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Custom Configuration">
-    <Code
-      code={`{
-  "ollamaUrl": "http://localhost:11434",
-  "model": "nomic-embed-text",
-  "text": "Content to embed",
-  "normalize": true,
-  "timeout": 30000
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Option 1: Basic Setup**
+- **Server**: `http://localhost:11434`
+- **Model**: `nomic-embed-text`
+- **Content**: The single text block you want to process.
+
+**Option 2: Batch Processing**
+- **Goal**: Process multiple texts at once for speed.
+- **Input**: List of text strings.
+- **Batch Size**: 5 items at a time.
+
+**Option 3: Custom Configuration**
+- **Normalize**: Enable to improve vector math consistency.
+- **Timeout**: 30 seconds (give it more time for longer texts).
 
 ## Why use local embeddings
 

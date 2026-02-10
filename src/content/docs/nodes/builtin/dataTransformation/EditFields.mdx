@@ -35,47 +35,29 @@ graph LR
 
 ## Common Operations
 
-**Rename Fields**
-```json
-{"action": "rename", "from": "user_name", "to": "username"}
-```
-
-**Convert Types**
-```json
-{"action": "convert", "field": "age", "type": "number"}
-```
-
-**Clean Values**
-```json
-{"action": "transform", "field": "email", "function": "toLowerCase"}
-```
-
-**Add New Fields**
-```json
-{"action": "add", "field": "timestamp", "value": "{{now}}"}
-```
+- **Rename Fields**: Change `user_name` to `username`.
+- **Convert Types**: Turn a text "25" into the number `25`.
+- **Clean Values**: Fix capitalization (e.g., change "ALICE" to "Alice").
+- **Add Fields**: Create a new field to stamp the current time (`{{now}}`).
 
 ## Real Example
 
-**Before (messy data):**
-```json
-{
-  "user_name": "Alice Smith",
-  "age": "28",
-  "email": "ALICE@COMPANY.COM"
-}
-```
+**Before (Messy Data):**
+You have a user record with inconsistent naming and formatting:
+- `user_name`: "Alice Smith"
+- `age`: "28" (stored as text)
+- `email`: "ALICE@COMPANY.COM" (all caps)
 
-**After (clean data):**
-```json
-{
-  "username": "Alice Smith",
-  "age": 28,
-  "email": "alice@company.com"
-}
-```
+**The Fix:**
+You ask the node to do three things:
+1. **Rename** `user_name` to `username`.
+2. **Convert** `age` from text to a number.
+3. **Clean** `email` by making it lowercase.
 
-**What happened:** Renamed "user_name" to "username", converted age from text to number, and made email lowercase.
+**After (Clean Data):**
+- `username`: "Alice Smith"
+- `age`: 28 (now a usable number)
+- `email`: "alice@company.com"
 
 ## Common Use Cases
 

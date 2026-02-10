@@ -45,29 +45,21 @@ graph LR
 
 Imagine you have a list of blog post links and you want to summarize them using an AI.
 
-<Tabs>
-<TabItem label="Setting the URL">
-In the node settings, you would point to the link found in a previous step:
+Imagine you have a list of blog post links and you want to summarize them using an AI.
 
-```
-`Link URL: {{ $json.link }}`
+**What you configure:**
+- **Link URL**: The web address of the blog post (e.g., `https://example.com/blog`).
+- **Options**: Choose whether to include headers or footers, or just the main content.
 
-```
-
-</TabItem>
-<TabItem label="Input (The Link)">
-<Code code={`{ &quot;link&quot;: &quot;https://example.com/blog/how-to-automate&quot; }`} lang="json" />
-</TabItem>
-<TabItem label="Output (The Result)">
-<Code code={`{ &quot;text&quot;: &quot;How to Automate Your Workflow. Automation is the key to productivity... In this guide, we will explore the best tools for 2026...&quot; }`} lang="json" />
-</TabItem>
-</Tabs>
+**What you get:**
+- **Text**: A clean block of text containing the article content.
+- **Result**: "How to Automate Your Workflow. Automation is the key to productivity... In this guide, we will explore..."
 
 ## Useful tips
 
 <Aside type="tip">
   If you are extracting text to send to an AI model, combine this node with the
-  [Python Code](https://www.google.com/search?q=/nodes/builtin/core/code/) node
+  [Python Code](/nodes/builtin/core/Code/) node
   to trim the text length. This helps you save on "tokens" and stay within the
   AI's memory limits.
 </Aside>

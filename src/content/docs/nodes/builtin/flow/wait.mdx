@@ -49,46 +49,21 @@ graph LR
 
 Let's say you're extracting product information from an e-commerce site. Without delays, you might get blocked for making requests too quickly.
 
-<Tabs>
-  <TabItem label="Without Wait (Problems)">
-    <Code
-      code={`1. Navigate to product page
-2. Extract product info ← Too fast!
-3. Navigate to next page ← Too fast!
-4. Extract product info ← BLOCKED!
+Let's say you're extracting product information from an e-commerce site. Without delays, you might get blocked for making requests too quickly.
 
-Result: "Too many requests" error`}
-      lang="text"
-    />
-  </TabItem>
-  <TabItem label="With Wait (Success)">
-    <Code
-      code={`1. Navigate to product page
-2. Wait 3 seconds
-3. Extract product info ← Page fully loaded
-4. Wait 2 seconds  
-5. Navigate to next page ← Respectful timing
-6. Wait 3 seconds
-7. Extract product info ← Success!
+**Without a "Wait":**
+1. Navigate to page 1.
+2. *Immediately* try to grab data (might fail if page isn't loaded).
+3. *Immediately* jump to page 2.
+4. **Result**: The website thinks you are a bot attack and blocks you.
 
-Result: All data collected successfully`}
-      lang="text"
-    />
-  </TabItem>
-  <TabItem label="Wait Configuration">
-    <Code
-      code={`{
-  "amount": 3,
-  "unit": "seconds"
-}
-
-// Alternative configurations:
-// { "amount": 2000, "unit": "milliseconds" }
-// { "amount": 1, "unit": "minutes" }`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**With a "Wait":**
+1. Navigate to page 1.
+2. **Wait 3 seconds** (let the page finish loading).
+3. Extract data safely.
+4. **Wait 2 seconds** (be polite before moving on).
+5. Navigate to page 2.
+6. **Result**: All data is collected successfully without errors.
 
 ## Common timing guidelines
 

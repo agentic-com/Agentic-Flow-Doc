@@ -49,46 +49,28 @@ graph LR
 
 Let's say your workflow analyzes website content and you want to return the key findings in a structured way.
 
-<Tabs>
-  <TabItem label="Your Workflow Produces">
-    <Code
-      code={`{
-  "extractedText": "This article discusses renewable energy trends...",
-  "wordCount": 1247,
-  "processingTime": 3200,
-  "keywords": ["renewable", "energy", "solar", "wind"]
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Lambda Output Setup">
-    <Code
-      code={`{
-  "outputSchema": {
-    "type": "object",
-    "properties": {
-      "content": {"type": "string"},
-      "wordCount": {"type": "number"},
-      "keywords": {"type": "array"},
-      "analyzedAt": {"type": "string"}
-    }
-  }
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Calling Workflow Receives">
-    <Code
-      code={`{
+Let's say your workflow analyzes website content and you want to return the key findings in a structured way.
+
+**Workflow Results:**
+Your workflow has finished and produced details like extracted text (1247 words) and keywords ("renewable", "energy").
+
+**Output Configuration:**
+You define the output schema to ensure consistent delivery:
+- `content`: Text (String)
+- `wordCount`: Number
+- `keywords`: List (Array)
+- `analyzedAt`: Timestamp (String)
+
+**Calling Workflow Receives:**
+The main workflow gets a clean package of results:
+```json
+{
   "content": "This article discusses renewable energy trends...",
   "wordCount": 1247,
   "keywords": ["renewable", "energy", "solar", "wind"],
   "analyzedAt": "2024-01-17T10:30:15Z"
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+}
+```
 
 ## Common output patterns
 

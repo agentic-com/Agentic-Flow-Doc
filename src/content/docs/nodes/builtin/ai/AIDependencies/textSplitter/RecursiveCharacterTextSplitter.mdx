@@ -49,38 +49,20 @@ graph LR
 
 Let's split a technical document into chunks perfect for AI search and retrieval.
 
-<Tabs>
-  <TabItem label="General Documents">
-    <Code
-      code={`{
-  "chunkSize": 1000,
-  "chunkOverlap": 200,
-  "separators": ["\\n\\n", "\\n", ". ", " "]
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Technical Docs">
-    <Code
-      code={`{
-  "chunkSize": 800,
-  "chunkOverlap": 150,
-  "separators": ["\\n\\n", "\\n", ". ", "!", "?", " "]
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Code Documentation">
-    <Code
-      code={`{
-  "chunkSize": 1200,
-  "chunkOverlap": 300,
-  "separators": ["```\\n", "\\n\\n", "\\n", ". "]
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Option 1: General Documents**
+- **Chunk Size**: 1000 characters.
+- **Overlap**: 200 characters.
+- **Best For**: Business documents, articles, stories.
+
+**Option 2: Technical Docs**
+- **Chunk Size**: 800 characters (smaller for precision).
+- **Separators**: Paragraphs, then sentences, then punctuation.
+- **Best For**: Manuals, instructions, specs.
+
+**Option 3: Code Documentation**
+- **Chunk Size**: 1200 characters (larger to keep code blocks intact).
+- **Separators**: Code blocks (` ``` `), then paragraphs.
+- **Best For**: API docs, tutorials with code.
 
 ## Why use smart splitting
 

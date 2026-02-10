@@ -50,32 +50,20 @@ graph LR
 
 Let's say you have a specialized workflow that analyzes any text content, and you want to use it in multiple different workflows.
 
-<Tabs>
-  <TabItem label="Main Workflow Data">
-    <Code
-      code={`{
-  "articleUrl": "https://blog.example.com/post/123",
-  "extractedText": "Artificial intelligence is transforming how we work..."
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Lambda Workflow Setup">
-    <Code
-      code={`{
-  "workflowId": "text-analyzer-v2",
-  "inputData": {
-    "content": "{{extractedText}}",
-    "analysisType": "comprehensive"
-  },
-  "timeout": 30000
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Results Available">
-    <Code
-      code={`{
+Let's say you have a specialized workflow that analyzes any text content, and you want to use it in multiple different workflows.
+
+**Main Workflow Data:**
+Your main workflow has found an article and extracted some text:
+- `extractedText`: "Artificial intelligence is transforming how we work..."
+
+**Calling the Sub-Workflow:**
+You use the Lambda Workflow node to call a sub-workflow named **"text-analyzer-v2"**.
+You pass the `extractedText` as input.
+
+**The Results:**
+The sub-workflow runs, does its magic, and returns a detailed analysis:
+```json
+{
   "analysis": {
     "sentiment": "positive",
     "keyTopics": ["AI", "automation", "productivity"],
@@ -83,11 +71,9 @@ Let's say you have a specialized workflow that analyzes any text content, and yo
     "wordCount": 847
   },
   "processingTime": 2300
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+}
+```
+Now your main workflow can use this data to make decisions or save reports.
 
 ## Common use cases
 

@@ -50,49 +50,18 @@ graph LR
 
 Let's say you're processing articles from a website, but you want to stop if the articles are incomplete or too short to be useful.
 
-<Tabs>
-  <TabItem label="Input Data">
-    <Code
-      code={`{
-  "title": "",
-  "content": "Short text",
-  "author": "John Doe",
-  "wordCount": 15
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Error Configuration">
-    <Code
-      code={`{
-  "message": "Article quality check failed: Missing title and content too short (15 words, minimum 100 required)",
-  "errorType": "validation_error",
-  "includeData": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Error Display">
-    <Code
-      code={`❌ WORKFLOW STOPPED
+Let's say you're processing articles from a website, but you want to stop if the articles are incomplete or too short to be useful.
 
-Article quality check failed: Missing title and content too short (15 words, minimum 100 required)
+**The Situation:**
+Your workflow encounters an article that has no title and only 15 words of text.
 
-Error Type: validation_error
-Timestamp: 2024-01-25 14:30:15
-Node: Stop and Error
+** The Error Trigger:**
+You configured the node to stop if "Title is missing" OR "Word count is less than 100".
 
-Data that caused the error:
-{
-  "title": "",
-  "content": "Short text",
-  "author": "John Doe",
-  "wordCount": 15
-}`}
-      lang="text"
-    />
-  </TabItem>
-</Tabs>
+**What Happens:**
+1. The workflow stops immediately.
+2. It displays your custom message: **"Article quality check failed: Missing title and content too short."**
+3. It shows you exactly which data caused the problem so you can fix it.
 
 ## Common use cases
 

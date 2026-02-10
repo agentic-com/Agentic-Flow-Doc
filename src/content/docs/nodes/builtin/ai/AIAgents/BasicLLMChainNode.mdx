@@ -49,38 +49,20 @@ graph LR
 
 Let's create a workflow that automatically summarizes any news article into key points.
 
-<Tabs>
-  <TabItem label="Basic Setup">
-    <Code
-      code={`{
-  "prompt": "Summarize this article in 3 key bullet points",
-  "temperature": 0.3,
-  "maxTokens": 300
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Information Extraction">
-    <Code
-      code={`{
-  "prompt": "Extract the title, main topic, and key findings from this content",
-  "temperature": 0.1,
-  "maxTokens": 500
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Content Generation">
-    <Code
-      code={`{
-  "prompt": "Create a social media post based on this article content",
-  "temperature": 0.7,
-  "maxTokens": 200
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Option 1: Summarize**
+- **Goal**: Get a quick overview.
+- **Instruction**: "Summarize this article in 3 key bullet points."
+- **Settings**: Low creativity (0.3) to keep it factual.
+
+**Option 2: Extract Info**
+- **Goal**: Pull out specific data.
+- **Instruction**: "Extract the title, main topic, and key findings from this content."
+- **Settings**: Very low creativity (0.1) for maximum accuracy.
+
+**Option 3: Create Content**
+- **Goal**: Write something new.
+- **Instruction**: "Create a social media post based on this article content."
+- **Settings**: High creativity (0.7) to make it engaging.
 
 ## Common use cases
 

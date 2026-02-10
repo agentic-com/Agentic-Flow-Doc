@@ -50,40 +50,22 @@ graph LR
 
 Let's create an AI assistant that remembers your conversation history.
 
-<Tabs>
-  <TabItem label="Store Message">
-    <Code
-      code={`{
-  "memoryKey": "user_chat_session",
-  "action": "store",
-  "message": {
-    "role": "user",
-    "content": "What's the weather like today?"
-  }
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Retrieve Context">
-    <Code
-      code={`{
-  "memoryKey": "user_chat_session",
-  "action": "retrieve",
-  "maxMessages": 10
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Clear Memory">
-    <Code
-      code={`{
-  "memoryKey": "user_chat_session",
-  "action": "clear"
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Action 1: Store Message**
+- **Goal**: Save what the user said.
+- **Key**: `user_chat_session`
+- **Action**: Store
+- **Content**: "What's the weather like today?" (User role).
+
+**Action 2: Retrieve Context**
+- **Goal**: Get history to send to AI.
+- **Key**: `user_chat_session`
+- **Action**: Retrieve
+- **Limit**: Last 10 messages.
+
+**Action 3: Clear Memory**
+- **Goal**: Start fresh.
+- **Key**: `user_chat_session`
+- **Action**: Clear.
 
 ## Common memory actions
 

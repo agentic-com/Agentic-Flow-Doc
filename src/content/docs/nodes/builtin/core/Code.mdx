@@ -56,24 +56,33 @@ If you want to add a new field to every item passing through, you can use a simp
 
 <Tabs>
 <TabItem label="The Code">
-<Code code={`# 'items' is a list of dictionaries provided by the previous node
-new_items =
+<Code code={`# 'items' is the list of data coming from the previous step
+new_items = []
 
 for item in items:
-
-# Add a new field called 'processed'
-
-item['status'] = 'processed'
-item['grand_total'] = item['price'] \* 1.2
-new_items.append(item)
+    # Add a new field called 'status'
+    item['status'] = 'processed'
+    
+    # Calculate a new total price
+    item['grand_total'] = item['price'] * 1.2
+    
+    # Add the updated item to our list
+    new_items.append(item)
 
 # Always return the modified list
-
 return new_items`} lang="python" title="transform.py" />
 
 </TabItem>
-<TabItem label="Input Data">
-<Code code={`} lang="json" /> </TabItem> <TabItem label="Output Result"> <Code code={`} lang="json" />
+<TabItem label="What happens to the data">
+
+**Input Data:**
+Imagine you have a list of products, each with a `price`.
+
+**Output Result:**
+After the code runs, each product will still have its price, but now it also has:
+- A `status` field set to "processed".
+- A `grand_total` field calculated as 1.2 times the price.
+
 </TabItem>
 </Tabs>
 

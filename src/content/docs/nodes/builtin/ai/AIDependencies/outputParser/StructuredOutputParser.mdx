@@ -45,48 +45,22 @@ graph LR
 
 Let's say you're using AI to analyze product descriptions and want consistent data for a spreadsheet.
 
-<Tabs>
-  <TabItem label="AI Response (Messy)">
-    <Code
-      code={`"This is a great laptop! It's called the TechBook Pro and costs around $1,299. It has 16GB of RAM and comes in silver or black colors. The screen is 15.6 inches and it's really fast for gaming."`}
-      lang="text"
-    />
-  </TabItem>
-  <TabItem label="Schema (What You Want)">
-    <Code
-      code={`{
-  "schema": {
-    "type": "object",
-    "properties": {
-      "product_name": {"type": "string"},
-      "price": {"type": "number"},
-      "ram": {"type": "string"},
-      "screen_size": {"type": "string"},
-      "colors": {"type": "array", "items": {"type": "string"}}
-    },
-    "required": ["product_name", "price"]
-  }
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Output (Clean Data)">
-    <Code
-      code={`{
-  "structured_data": {
-    "product_name": "TechBook Pro",
-    "price": 1299,
-    "ram": "16GB",
-    "screen_size": "15.6 inches",
-    "colors": ["silver", "black"]
-  },
-  "validation_status": "success",
-  "missing_fields": []
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Step 1: The Input (Messy AI Text)**
+"This is a great laptop! It's called the TechBook Pro and costs around $1,299. It has 16GB of RAM and comes in silver or black colors."
+
+**Step 2: The Schema (Your Requirements)**
+You tell the parser you want:
+- **product_name**: Text
+- **price**: Number
+- **ram**: Text
+- **colors**: List of text items
+
+**Step 3: The Output (Clean Data)**
+The node converts the text into actionable data:
+- **product_name**: "TechBook Pro"
+- **price**: 1,299
+- **ram**: "16GB"
+- **colors**: ["silver", "black"]
 
 ## Common schema types
 

@@ -49,40 +49,20 @@ graph TD
 
 Let's say you're collecting articles from websites, but you only want to keep articles that are complete and substantial enough to be useful.
 
-<Tabs>
-  <TabItem label="Input Data">
-    <Code
-      code={`{
-  "title": "Amazing Discovery in Science",
-  "content": "Scientists have made a breakthrough in renewable energy technology. This new solar panel design increases efficiency by 40% while reducing manufacturing costs. The research team spent three years developing this innovative approach...",
-  "author": "Dr. Sarah Johnson",
-  "wordCount": 450
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Condition Setup">
-    <Code
-      code={`Check if:
-- Title exists (not empty)
-- Content has at least 100 words
-- Author is specified
+Let's say you're collecting articles from websites, but you only want to keep articles that are complete and substantial enough to be useful.
 
-Condition: title exists AND wordCount >= 100 AND author exists`}
-      lang="text"
-    />
-  </TabItem>
-  <TabItem label="Result">
-    <Code
-      code={`Condition Result: TRUE
+**Input Data:**
+You have an article titled "Amazing Discovery" with 450 words by Dr. Sarah Johnson.
 
-Action: Article passes quality check
-→ Continue to "Process Article" path
-→ Article will be saved and processed`}
-      lang="text"
-    />
-  </TabItem>
-</Tabs>
+**The Test:**
+You ask the node to check three things:
+1. Is there a title?
+2. Is the content longer than 100 words?
+3. Is an author listed?
+
+**The Result:**
+Since all three answers are "Yes", the Condition Result is **TRUE**.
+The workflow will follow the "True" path, meaning the article passes your quality check and continues to be processed.
 
 ## Common condition types
 

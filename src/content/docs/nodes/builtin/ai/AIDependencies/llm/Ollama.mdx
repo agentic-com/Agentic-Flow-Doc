@@ -49,40 +49,20 @@ graph LR
 
 Let's set up local AI processing for analyzing sensitive documents.
 
-<Tabs>
-  <TabItem label="Basic Setup">
-    <Code
-      code={`{
-  "ollamaUrl": "http://localhost:11434",
-  "model": "llama2:7b",
-  "temperature": 0.3
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Creative Writing">
-    <Code
-      code={`{
-  "ollamaUrl": "http://localhost:11434",
-  "model": "mistral:7b",
-  "temperature": 0.8,
-  "maxTokens": 1000
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Code Analysis">
-    <Code
-      code={`{
-  "ollamaUrl": "http://localhost:11434",
-  "model": "codellama:7b",
-  "temperature": 0.1,
-  "maxTokens": 800
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+**Option 1: Basic Setup**
+- **Server URL**: `http://localhost:11434` (Default local address)
+- **Model**: `llama2:7b` (Good balance of speed and quality)
+- **Creativity**: Low (0.3) for consistent answers.
+
+**Option 2: Creative Writing**
+- **Model**: `mistral:7b` (Known for good writing)
+- **Creativity**: High (0.8) for more varied output.
+- **Length**: Up to 1000 tokens (longer responses).
+
+**Option 3: Code Analysis**
+- **Model**: `codellama:7b` (Specialized for code)
+- **Creativity**: Very low (0.1) for precision.
+- **Length**: Up to 800 tokens.
 
 ## Why choose local AI
 

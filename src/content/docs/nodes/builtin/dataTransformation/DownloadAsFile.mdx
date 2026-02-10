@@ -35,46 +35,23 @@ graph LR
 
 ## Common File Formats
 
-**CSV (Spreadsheet data)**
-```json
-{"format": "csv", "filename": "report.csv"}
-```
-
-**JSON (Structured data)**
-```json
-{"format": "json", "filename": "data_backup.json"}
-```
-
-**TXT (Plain text)**
-```json
-{"format": "txt", "filename": "content.txt"}
-```
-
-**Custom filename with date**
-```json
-{"filename": "report_{{date}}.csv"}
-```
+- **CSV (Spreadsheet)**: Best for data you want to open in Excel or Google Sheets.
+- **JSON**: Best for structured data backup or use in other apps.
+- **TXT**: Best for saving simple notes or content.
+- **Custom Filenames**: You can use variables like `{{date}}` to automatically name your files (e.g., `report_2024.csv`).
 
 ## Real Example
 
-**Input data (from your workflow):**
-```json
-[
-  {"name": "Alice Johnson", "email": "alice@company.com", "score": 95},
-  {"name": "Bob Smith", "email": "bob@company.com", "score": 87},
-  {"name": "Carol Davis", "email": "carol@company.com", "score": 92}
-]
-```
+**Input Data:**
+You have a list of three users (Alice, Bob, Carol) with their email addresses and scores.
 
 **Configuration:**
-```json
-{
-  "format": "csv",
-  "filename": "user_scores_{{date}}"
-}
-```
+- **Format**: CSV (Spreadsheet)
+- **Filename**: `user_scores_{{date}}` (this will automatically add today's date)
 
-**Downloaded file (user_scores_2024-01-17.csv):**
+**The Result:**
+A file named `user_scores_2024-01-17.csv` is downloaded to your computer.
+Inside, it looks like a standard spreadsheet:
 ```
 name,email,score
 Alice Johnson,alice@company.com,95

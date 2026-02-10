@@ -47,40 +47,24 @@ graph LR
 
 ## Practical example: Company knowledge base
 
-Let's create a searchable knowledge base from your company documentation.
 
-<Tabs>
-  <TabItem label="Basic Setup">
-    <Code
-      code={`{
-  "chunkSize": 1000,
-  "chunkOverlap": 200,
-  "embeddingModel": "text-embedding-ada-002"
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Technical Documents">
-    <Code
-      code={`{
-  "chunkSize": 800,
-  "chunkOverlap": 150,
-  "separators": ["\\n\\n", "\\n", ".", "!"]
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Research Papers">
-    <Code
-      code={`{
-  "chunkSize": 1200,
-  "chunkOverlap": 300,
-  "preserveFormatting": true
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
+
+Let's create a searchable knowledge base depending on what kind of documents you have.
+
+**For General Business Docs:**
+- **Chunk Size**: 1000 characters (about 2-3 paragraphs).
+- **Overlap**: 200 characters (helps keep context between chunks).
+- **Best For**: Policies, procedures, and FAQs.
+
+**For Technical Manuals:**
+- **Chunk Size**: 800 characters (smaller chunks for specific instructions).
+- **Overlap**: 150 characters.
+- **Separators**: Split by paragraphs or new lines.
+
+**For Research Papers:**
+- **Chunk Size**: 1200 characters (larger chunks to keep complex ideas together).
+- **Overlap**: 300 characters.
+- **Goal**: Detailed analysis and understanding.
 
 ## Common configurations
 
