@@ -1,51 +1,109 @@
 ---
 title: Troubleshooting Guide
-description: "Quick solutions for common browser extension and workflow issues with step-by-step fixes and diagnostic tools."
+description: Quick solutions for common extension and workflow issues in Agentic Workflow Studio.
 ---
 
-# Troubleshooting Guide
+If your workflow isn’t behaving as expected, this guide helps you diagnose and fix common problems quickly.
 
-Having trouble with your workflows? This guide provides quick solutions for the most common issues users encounter with `Agentic WorkFlow`.
+---
 
-## 🚀 Quick Fix Checklist
+## Start with These Basic Checks
 
-Before diving into detailed troubleshooting, try these common solutions:
+Before diving into detailed troubleshooting, confirm:
 
-- ✅ **Refresh the page** - Many issues resolve with a simple page reload
-- ✅ **Check extension permissions** - Ensure the extension has access to the current site
-- ✅ **Wait for page load** - Let dynamic content finish loading before running workflows
-- ✅ **Clear browser cache** - Old cached data can interfere with workflows
-- ✅ **Restart browser** - Resolves extension memory issues
+- The browser page has fully loaded before running a workflow.
+- The extension has the required permissions for the site.
+- You’ve refreshed the page and restarted the browser.
+- Your workflow is valid and all required inputs are provided.
 
-## 📋 Common Issues & Solutions
+These simple steps fix many issues without further steps.
 
-### 🔧 [Browser Compatibility Problems](./browser-compatibility/)
-Fix issues with different browsers, versions, and settings that affect workflow execution.
+---
 
-### 🛡️ [Permission & Security Issues](./permissions-security/)
-Resolve browser security restrictions, permission denials, and access problems.
+## Common Problems & How to Fix Them
 
-### ⚡ [Performance & Speed Issues](./performance-optimization/)
-Optimize slow workflows, reduce timeouts, and improve execution speed.
+### Browser Compatibility Issues
 
-### 📊 [Data Extraction Problems](./data-extraction/)
-Troubleshoot content extraction failures, missing data, and formatting issues.
+Your workflow may not run properly if:
 
-### 🔗 [Workflow Connection Issues](./workflow-connections/)
-Fix problems with node connections, data flow, and execution order.
+- The browser blocks certain scripting or permissions.
+- The site uses strict security headers.
 
-## 🆘 Need More Help?
+**Tips for resolution:**
 
-**Can't find your issue?** Try our [comprehensive decision guide](../troubleshooting-decision-guide/) for systematic problem-solving.
+- Try a different browser (Chrome, Firefox).
+- Ensure you enabled the extension for the current site.
+- Re-load page elements before your automation steps.
 
-**Still stuck?** Visit our [help and community section](../help-and-community/) to get assistance from other users and developers.
+See a more detailed overview on the [Browser Compatibility reference page](/usage/troubleshooting/browser-compatibility/).
 
-## 💬 Feedback & Improvements
+---
 
-Found an issue not covered here? Help us improve this guide:
+### Permissions & Security Blocks
 
-1. **Report missing solutions** - Let us know what problems you're facing
-2. **Suggest improvements** - Share better solutions or clearer explanations
-3. **Share success stories** - Tell us what worked for your specific situation
+If actions like clicking or extracting content fail:
 
-**Contact us**: Use the feedback widget on any page or visit our [community forums](../help-and-community/help/) to share your experience.
+- Confirm the extension has access to run on the site.
+- Some sites block scripts on sensitive pages (e.g., banking sites).
+
+**Fixes:**
+
+- Enable full extension permissions for that domain.
+- If a workflow fails due to popups or dialogs, add a “Wait for Element” step before actions.
+
+For specific permission problems, see our [Permissions & Security guide](/usage/troubleshooting/permissions-security/).
+
+---
+
+### Slow or Unresponsive Workflows
+
+Performance issues can cause steps to time out.
+
+- Increase wait times for actions on slow pages.
+- Break workflows into smaller chunks.
+- Reduce heavy extraction tasks into separate workflows.
+
+More tips can be found on the [Performance Optimization page](/usage/troubleshooting/performance-optimization/).
+
+---
+
+### Data Extraction Problems
+
+If workflows return empty text or missing values:
+
+- Ensure the selectors are specific and correct.
+- Use “Wait for Element” before extraction steps.
+- Try filtering or verifying the extraction pattern.
+
+See our detailed troubleshooting examples on the [Data Extraction page](/usage/troubleshooting/data-extraction/).
+
+---
+
+### Node Connection Issues
+
+If data doesn’t flow between steps:
+
+- Check that each node is connected correctly.
+- Ensure key inputs are provided for the next node.
+- Verify that you are using the right node type for your goal.
+
+For help with workflow structure, see [Workflow Connections reference](/usage/troubleshooting/workflow-connections/).
+
+---
+
+## Systematic Troubleshooting
+
+If the issue is unclear, use our decision guide to isolate where the problem occurs. The [Full Troubleshooting Flowchart](/usage/troubleshooting/troubleshooting-decision-guide/) walks you through checking each part of your workflow.
+
+---
+
+## Still Stuck?
+
+If you cannot find a solution:
+
+- Search or post in the <a href="https://community.agenticflow.com" target="_blank" rel="noopener noreferrer">community forum</a> describing what you see.
+- Include step details, screenshots, and (if possible) exported workflow JSON.
+
+Providing clear context helps others diagnose issues faster.
+
+See also [Where to Get Help](/usage/help-and-community/help/) for more ways to reach support resources.

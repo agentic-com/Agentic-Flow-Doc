@@ -1,0 +1,113 @@
+---
+title: "Add To A Date"
+description: "Add time periods to dates for deadline calculations, scheduling, and future date planning."
+---
+
+import { Image } from "astro:assets";
+import Social from '@images/social.webp';
+
+**What it does:** Adds time periods (days, weeks, months, years) to dates to calculate future dates and deadlines.
+
+**Perfect for:** Project deadlines • Subscription renewals • Appointment scheduling • Future date calculations
+
+## What It Does
+
+- **Add time periods** - Add days, weeks, months, or years to any date
+- **Handle business days** - Skip weekends and holidays in calculations
+- **Multiple time units** - Work with years, months, weeks, days, hours, minutes
+- **Smart date handling** - Properly handle month boundaries and leap years
+
+<Image src={Social} alt="Add To A Date calculation illustration" />
+
+## How It Works
+
+```mermaid
+graph LR
+    A[Start Date] --> B[Add Time Period]
+    B --> C[Future Date]
+
+    style A fill:#e1f5fe
+    style B fill:#e8f5e8
+    style C fill:#f3e5f5
+```
+
+**Simple process:** Start Date + Time Period = Future Date
+
+## Common Time Additions
+
+**Add 30 days**
+```json
+{"amount": 30, "unit": "days"}
+```
+
+**Add 3 months**
+```json
+{"amount": 3, "unit": "months"}
+```
+
+**Add 2 weeks (business days only)**
+```json
+{"amount": 10, "unit": "days", "business_days_only": true}
+```
+
+**Add 1 year**
+```json
+{"amount": 1, "unit": "years"}
+```
+
+## Real Example
+
+**Calculate Project Deadline:**
+You start a project on January 15 and have 45 days to finish it.
+
+**Input:**
+- **Start Date**: Jan 15, 2024
+- **Add**: 45 days
+
+**Result:**
+The node calculates the exact deadline:
+- **Deadline**: February 29, 2024 (It automatically handles leap years!)
+
+## Business Day Example
+
+**Calculate work deadline (excluding weekends):**
+
+**Input:**
+- Start date: Monday, January 15, 2024
+- Add: 10 business days
+- Skip: Weekends and holidays
+
+**Result:**
+- Deadline: Monday, January 29, 2024 (skipped 4 weekend days)
+
+**Configuration:**
+```json
+{
+  "input_date": "2024-01-15",
+  "amount": 10,
+  "unit": "days",
+  "business_days_only": true,
+  "holidays": ["2024-01-15"]
+}
+```
+
+## Common Use Cases
+
+**Project planning** - Calculate project milestones and deadlines
+**Subscription management** - Determine renewal dates and expiration times
+**Appointment scheduling** - Schedule follow-up appointments and reminders
+**Contract management** - Calculate contract end dates and review periods
+
+## Quick Troubleshooting
+
+**Wrong month calculations:** Month additions can vary due to different month lengths (Jan 31 + 1 month = Feb 28/29)
+**Business day issues:** Make sure holidays are in YYYY-MM-DD format
+**Timezone problems:** Specify timezone if working across different time zones
+
+## What's Next?
+
+**Related nodes:** [Subtract From A Date](/nodes/builtin/dataTransformation/DateTime/SubstractFromDate/) • [Get Current Date](/nodes/builtin/dataTransformation/DateTime/GetCurrentDate/) • [Format Date](/nodes/builtin/dataTransformation/DateTime/FormatDate/)
+
+**Common workflows:** [Project Management](/learning/workflow-patterns/real-world-examples/content-management/) • [Scheduling Automation](/learning/workflow-patterns/data-processing-patterns/) • [Deadline Tracking](/learning/workflow-patterns/optimization-best-practices/)
+
+**Learn more:** [Date Handling Guide](/learning/text-courses/intermediate/data-transformation/) • [Business Logic Workflows](/learning/text-courses/intermediate/multi-step-workflows/)

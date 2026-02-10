@@ -68,7 +68,7 @@ This document provides comprehensive guidelines for maintaining the `Agentic Wor
 When adding a new browser extension feature, ensure the following documentation is created or updated:
 
 #### 1. Feature Documentation
-- **Location**: `src/content/docs/integration/extension/`
+- **Location**: `src/content/docs/nodes/extension/`
 - **Required Sections**:
   - Feature overview and purpose
   - Installation/setup requirements
@@ -87,7 +87,7 @@ When adding a new browser extension feature, ensure the following documentation 
   - Best practices and tips
 
 #### 3. API Documentation
-- **Location**: `src/content/docs/integration/builtin/`
+- **Location**: `src/content/docs/nodes/builtin/`
 - **Requirements**:
   - Complete API reference
   - Parameter descriptions

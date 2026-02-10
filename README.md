@@ -1,49 +1,53 @@
-# Starlight Starter Kit: Basics
+# Agentic Workflow - Browser-Native Automation. Local-First Intelligence.
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+**Agentic Workflow** is a powerful, privacy-focused browser extension that redefines workflow automation by running entirely within the client's browser. It combines the robust, node-based flexibility of platforms like n8n.io and make.com with a unique set of capabilities for deep, on-page interaction and local, private AI processing.
 
-```
-bun create astro@latest -- --template starlight
-```
+By executing workflows in the browser's sandbox, Agentic Workflow ensures **maximum data privacy** and enables seamless automation of tasks that require direct manipulation of web pages, from data scraping and form filling to complex, multi-step user journeys.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Key Capabilities
 
-## 🚀 Project Structure
+*   **Browser-Native Execution**: Unlike traditional platforms that rely on external servers, Agentic Workflow runs your entire automation logic client-side. This eliminates latency for on-page tasks and keeps your data local.
+*   **Local-First Privacy**: All workflow data, execution logs, and AI models are processed and stored locally in your browser's cache. Your sensitive information never leaves your device.
+*   **Advanced Browser Interaction Nodes**: Go beyond simple API calls with a specialized suite of nodes designed for deep interaction with the Document Object Model (DOM). Automate complex user actions with precision.
+*   **On-Device AI & Knowledge Base**: Leverage the power of local Large Language Models (LLMs) for private, real-time data processing. Create and query local Vector Knowledge Bases directly in your browser for powerful Retrieval-Augmented Generation (RAG) workflows.
+*   **Community Marketplace**: Share your custom workflows with the community or download templates from a dedicated marketplace, accelerating your automation journey.
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+## Core Node Functionality
 
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
-```
+Agentic Workflow includes all the standard nodes and logic nodes you expect from a professional automation platform, plus a specialized category of nodes for browser and local AI manipulation.
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+| Category | Example Nodes | Description |
+| :--- | :--- | :--- |
+| **Browser Manipulation** | `Click Element`, `Fill Form Field`, `Scroll`, `Wait for Element`, `Hover Over Element` | Automate user interactions on any webpage using selectors, text, or coordinates. |
+| **Data Extraction** | `Get Selected Text`, `Get HTML of Selected Range`, `Get All Page Text`, `Extract Links`, `Extract Images`, `Extract Table Data` | Precisely extract content from the current page, turning unstructured web data into structured information. |
+| **Page Metadata** | `Get Page Metadata`, `Get URL Parameters` | Retrieve essential information about the current page, such as title, description, and URL query parameters. |
+| **Local LLM & Data** | `Run Local LLM`, `Save LLM Conversation`, `Create Vector Knowledge Base` | Execute various LLMs locally for private processing, store conversation history, and build local RAG systems for context-aware automation. |
+| **Utility & Logic** | *All standard n8n/make.com nodes* | Includes HTTP requests, data transformation, conditional logic, loops, and integrations with external APIs. |
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+## Quick Start
 
-Static assets, like favicons, can be placed in the `public/` directory.
+Agentic Workflow is available as a browser extension for all major Chromium and Firefox-based browsers.
 
-## 🧞 Commands
+1.  **Install the Extension**:
+    *   [Chrome Web Store Link]()
+    *   [Firefox Add-ons Link]()
+2.  **Open the Editor**: Click the Agentic Workflow icon in your browser toolbar to open the visual workflow editor.
+3.  **Build Your First Workflow**: Drag and drop nodes to connect a trigger (e.g., `On Page Load` or `Click Element`) to an action (e.g., `Extract Table Data` and `Send to Google Sheet`).
+4.  **Activate**: Toggle the workflow to "Active" to begin automating tasks on the fly.
 
-All commands are run from the root of the project, from a terminal:
+## Resources
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+*   📚 [Full Documentation]() - Comprehensive guides and node reference.
+*   💡 [Example Workflows]() - A gallery of pre-built automations to get you started.
+*   👥 [Community Forum]() - Get support, share ideas, and connect with other Agentic Workflow users.
+*   🌐 [Marketplace]() - Share and download community-created workflows.
 
-## 👀 Want to learn more?
+## Contributing
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+We welcome contributions from the community! We welcome contributions to our documentation, bug reports, and feature suggestions. Please check out our [Contributing Guide]() for details on how to help.
+
+## License
+
+Agentic Workflow is a **proprietary software product**. The source code is private and closed-source. Use of the extension is governed by our [End-User License Agreement (EULA)].
+
+[End-User License Agreement (EULA)]()

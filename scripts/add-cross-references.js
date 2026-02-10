@@ -12,7 +12,7 @@ import path from 'path';
 import { crossReferences, generateCrossReferenceContent } from './cross-reference-mapping.js';
 
 // Base directory for builtin nodes
-const BUILTIN_DIR = 'src/content/docs/integration/builtin';
+const BUILTIN_DIR = 'src/content/docs/nodes/builtin';
 
 // File paths for all node documentation
 const nodePaths = {

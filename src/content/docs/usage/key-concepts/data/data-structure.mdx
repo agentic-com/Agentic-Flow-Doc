@@ -10,16 +10,27 @@ import Social from "@images/social.webp";
 
 <Image src={Social} alt="Data structure illustration" />
 
-All workflows in **Agentic WorkFlow** move data between nodes in a consistent, structured way.  
-Understanding this helps you connect nodes correctly and predict how your data will look at each step.
+In Agentic WorkFlow, every node takes some input data and produces output data.
+
+If you understand the “shape” of that data, it becomes much easier to:
+
+- Connect nodes correctly
+- Know what the next node will receive
+- Debug when something looks wrong
 
 ---
 
 ## How data flows between nodes
 
-Every node in a workflow **receives data**, processes it, and **outputs data** for the next node.
+Every node:
 
-Each piece of data passed between nodes is stored as an **object**, and when multiple pieces of data exist, they’re stored as an **array of objects**.
+1. Receives data
+2. Does its job
+3. Outputs new data for the next node
+
+Most nodes output a **list** of items.
+
+Each item is a **JSON object** (think: one “record” with fields).
 
 ```json
 [
@@ -34,14 +45,17 @@ Each piece of data passed between nodes is stored as an **object**, and when mul
 ]
 ````
 
-When a node processes multiple objects, it automatically **loops** over them, running its operation for each one.
+If there are multiple items, the next node runs once per item.
 
 ---
 
 ## Multiple inputs and data merging
 
 Some nodes can receive data from **more than one input**.
-When this happens, Agentic WorkFlow combines the data into **all possible input combinations** (a “Cartesian product”).
+
+When that happens, Agentic WorkFlow combines items into **all possible combinations**.
+
+In plain terms: if one side has 2 items and the other side has 3 items, you’ll get 6 combined items.
 
 ```mermaid
 flowchart TB
@@ -62,8 +76,7 @@ flowchart TB
 
 ```
 
-If **Node 1** outputs *n* items and **Node 2** outputs *m* items,
-then **Node 3** receives a total of **n × m** combined items.
+If **Node 1** outputs *n* items and **Node 2** outputs *m* items, then **Node 3** receives **n × m** combined items.
 
 ---
 
@@ -75,20 +88,20 @@ then **Node 3** receives a total of **n × m** combined items.
 | Node 2                  | `[{"color":"red"}, {"color":"blue"}]`                                                             |
 | Node 3 (combined input) | `[{"Node 1": {"id":1}, "Node 2": {"color":"red"}}, {"Node 1": {"id":1}, "Node 2": {"color":"blue"}}, {"Node 1": {"id":2}, "Node 2": {"color":"red"}}, {"Node 1": {"id":2}, "Node 2": {"color":"blue"}}]` |
 
-This combination makes it easy to test all possible data matches or merge information from multiple sources.
+This is useful when you want to “pair up” data from two sources.
 
 ---
 
 ## Tips for building data-driven workflows
 
-* Use **[Set nodes](/usage/key-concepts/data/set-nodes/)** to create or modify data structures.
-* Use **[Merge nodes](/usage/key-concepts/data/merging/)** to combine outputs from multiple branches.
-* Check your data at any step with the **Node preview panel** in the workflow editor.
+* Check your data at any step with the node output/preview panel in the workflow editor.
+* If you need to reshape data, use transformation nodes (for example “Edit Fields”).
+* When combining multiple branches, see the flow logic pages.
 
 ---
 
 ## Related topics
 
-* [Data types](/usage/key-concepts/data/data-types/)
-* [Merge data sources](/usage/key-concepts/data/merging/)
+* [Data mapping](/usage/key-concepts/data/data-mapping/)
+* [Code](/usage/key-concepts/data/code/)
 * [Flow logic basics](/usage/key-concepts/flow-logic/)

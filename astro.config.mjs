@@ -5,7 +5,6 @@ import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
-import starlightAutoSidebar from "starlight-auto-sidebar";
 import starlightVideos from "starlight-videos";
 import mermaid from "astro-mermaid";
 
@@ -19,281 +18,267 @@ import mdx from "@astrojs/mdx";
 const { PUBLIC_SITE_URL } = loadEnv(process.env.NODE_ENV, process.cwd(), "");
 //const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL;
 
-
 // https://astro.build/config
 export default defineConfig({
   site: PUBLIC_SITE_URL,
-  integrations: [mermaid({
-    theme: "forest",
-    autoTheme: true,
-    mermaidConfig: {
-      startOnLoad: false,
-      logLevel: "error",
-      securityLevel: "strict",
-    },
+  integrations: [
+    mermaid({
+      theme: "forest",
+      autoTheme: true,
+      mermaidConfig: {
+        startOnLoad: false,
+        logLevel: "error",
+        securityLevel: "strict",
+      },
 
-    iconPacks: [
-      {
-        name: 'fa',
-        loader: () => fetch('https://unpkg.com/@iconify-json/fa6-solid@1.2.4/icons.json').then(res => res.json())
-      }
-    ]
-  }), starlight({
-    title: "Agentic WorkFlow",
-    description:
-      "Agentic WorkFlow - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
-    logo: {
-      src: "./src/assets/logo.png",
-    },
-    favicon: "./src/assets/logo.png",
-    social: [
-      {
-        icon: "codeberg",
-        label: "Codeberg",
-        href: "https://codeberg.org/knut",
-      },
-      {
-        icon: "discord",
-        label: "Discord",
-        href: "https://discord.gg/agentic-workflow-studio",
-      },
-      {
-        icon: "github",
-        label: "GitHub",
-        href: "https://github.com/agentic-workflow-studio",
-      },
-      { icon: "gitlab", label: "GitLab", href: "https://gitlab.com/delucis" },
-      {
-        icon: "mastodon",
-        label: "Mastodon",
-        href: "https://mastodon.social/@agentic-workflow-studio",
-      },
-    ],
-    defaultLocale: "root",
-    locales: {
-      // English docs in `src/content/docs/en/`
-      root: {
-        label: "English",
-        lang: "en",
-      },
-      fr: {
-        label: "Français",
-      },
-    },
-    plugins: [
-      starlightAutoSidebar(),
-      starlightSidebarTopics([
+      iconPacks: [
         {
-          label: "How To Use",
-          link: "/usage/",
-          icon: "rocket",
-          items: [
-            {
-              label: "Getting started",
-              autogenerate: {
-                directory: "usage/getting-started",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Using the app",
-              autogenerate: {
-                directory: "usage/using-the-app",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Key concepts",
-              autogenerate: {
-                directory: "usage/key-concepts",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Quick Wins",
-              collapsed: true,
-              autogenerate: {
-                directory: "usage/quick-wins",
-                collapsed: false,
-              },
-            },
-            {
-              label: "How-To Guides",
-              collapsed: true,
-              autogenerate: {
-                directory: "usage/how-to",
-                collapsed: false,
-              },
-            },
-            {
-              label: "Releases",
-              collapsed: true,
-              autogenerate: { directory: "usage/releases", collapsed: true },
-            },
-            {
-              label: "Help and Community",
-              collapsed: true,
-              autogenerate: {
-                directory: "usage/help-and-community",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Troubleshooting",
-              collapsed: true,
-              items: [
-                "usage/troubleshooting-decision-guide",
-                {
-                  label: "Common Issues",
-                  autogenerate: {
-                    directory: "usage/troubleshooting",
-                    collapsed: false,
-                  },
+          name: "fa",
+          loader: () =>
+            fetch(
+              "https://unpkg.com/@iconify-json/fa6-solid@1.2.4/icons.json",
+            ).then((res) => res.json()),
+        },
+      ],
+    }),
+    starlight({
+      title: "Agentic WorkFlow",
+      description:
+        "Agentic WorkFlow - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
+      logo: {
+        src: "./src/assets/logo.png",
+      },
+      favicon: "./src/assets/logo.png",
+      social: [
+        {
+          icon: "codeberg",
+          label: "Codeberg",
+          href: "https://codeberg.org/knut",
+        },
+        {
+          icon: "discord",
+          label: "Discord",
+          href: "https://discord.gg/agentic-workflow-studio",
+        },
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "https://github.com/agentic-workflow-studio",
+        },
+        { icon: "gitlab", label: "GitLab", href: "https://gitlab.com/delucis" },
+        {
+          icon: "mastodon",
+          label: "Mastodon",
+          href: "https://mastodon.social/@agentic-workflow-studio",
+        },
+      ],
+      defaultLocale: "root",
+      locales: {
+        // English docs in `src/content/docs/en/`
+        root: {
+          label: "English",
+          lang: "en",
+        },
+        fr: {
+          label: "Français",
+        },
+      },
+      plugins: [
+        starlightSidebarTopics([
+          {
+            label: "How To Use",
+            link: "/usage/",
+            icon: "rocket",
+            items: [
+              {
+                label: "Getting started",
+                autogenerate: {
+                  directory: "usage/getting-started",
+                  collapsed: true,
                 },
-              ],
-            },
-            {
-              label: "Licenses and privacy",
-              collapsed: true,
-              autogenerate: {
-                directory: "usage/licenses-and-privacy",
-                collapsed: true,
               },
-            },
-          ],
-        },
-        {
-          label: {
-            en: "Integrations",
-            fr: "Integrations",
+              {
+                label: "Using the app",
+                items: [
+                  {
+                    label: "Workflows",
+                    items: [
+                      {
+                        label: "Create",
+                        link: "usage/using-the-app/workflows/create",
+                      },
+                      {
+                        label: "Export/Import",
+                        link: "usage/using-the-app/workflows/export-import",
+                      },
+                      {
+                        label: "History",
+                        link: "usage/using-the-app/workflows/history",
+                      },
+                      {
+                        label: "Publishing",
+                        link: "usage/using-the-app/workflows/publishing",
+                      },
+                      {
+                        label: "Tags",
+                        link: "usage/using-the-app/workflows/tags",
+                      },
+                      {
+                        label: "Components",
+                        autogenerate: {
+                          directory: "usage/using-the-app/workflows/components",
+                          collapsed: true,
+                        },
+                      },
+                      {
+                        label: "Executions",
+                        autogenerate: {
+                          directory: "usage/using-the-app/workflows/executions",
+                          collapsed: true,
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    label: "Credentials",
+                    autogenerate: {
+                      directory: "usage/using-the-app/credentials",
+                      collapsed: true,
+                    },
+                  },
+                ],
+              },
+              {
+                label: "Key concepts",
+                items: [
+                  {
+                    label: "Data",
+                    items: [
+                      {
+                        label: "Data Mapping",
+                        autogenerate: {
+                          directory: "usage/key-concepts/data/data-mapping",
+                          collapsed: true,
+                        },
+                      },
+                      {
+                        label: "Code",
+                        link: "usage/key-concepts/data/code",
+                      },
+                      {
+                        label: "Data Structure",
+                        link: "usage/key-concepts/data/data-structure",
+                      },
+                    ],
+                  },
+                  {
+                    label: "Flow Logic",
+                    autogenerate: {
+                      directory: "usage/key-concepts/flow-logic",
+                      collapsed: true,
+                    },
+                  },
+                  {
+                    label: "Glossary",
+                    link: "usage/key-concepts/glossary",
+                  },
+                ],
+              },
+              {
+                label: "Releases",
+                collapsed: true,
+                autogenerate: { directory: "usage/releases", collapsed: true },
+              },
+              {
+                label: "Help and Community",
+                collapsed: true,
+                autogenerate: {
+                  directory: "usage/help-and-community",
+                  collapsed: true,
+                },
+              },
+              {
+                label: "Troubleshooting",
+                collapsed: true,
+                autogenerate: {
+                  directory: "usage/troubleshooting",
+                  collapsed: false,
+                },
+              },
+            ],
           },
-          link: "/integrations/",
-          icon: "puzzle",
-          items: [
-            {
-              label: "Built-in nodes",
-              autogenerate: {
-                directory: "integrations/builtin",
-                collapsed: true,
-              },
+          {
+            label: {
+              en: "Nodes",
+              fr: "Nœuds",
             },
-            {
-              label: "Applications",
-              autogenerate: {
-                directory: "integrations/apps",
-                collapsed: true,
+            link: "/nodes/",
+            icon: "puzzle",
+            items: [
+              {
+                label: "Built-in nodes",
+                autogenerate: {
+                  directory: "nodes/builtin",
+                  collapsed: true,
+                },
               },
-            },
-            {
-              label: "Extension specific",
-              autogenerate: {
-                directory: "integrations/extension",
-                collapsed: true,
+              {
+                label: "Applications",
+                autogenerate: {
+                  directory: "nodes/apps",
+                  collapsed: true,
+                },
               },
-            },
-          ],
-        },
-        {
-          label: {
-            en: "Advanced AI",
-            fr: "Marché",
+              {
+                label: "Extension specific",
+                autogenerate: {
+                  directory: "nodes/extension",
+                  collapsed: true,
+                },
+              },
+            ],
           },
-          link: "/advanced-ai/",
-          icon: "seti:illustrator",
-          items: [
-            {
-              label: "Basics",
-              autogenerate: {
-                directory: "advanced-ai/basics",
-                collapsed: true,
+          {
+            label: {
+              en: "Advanced AI",
+              fr: "Marché",
+            },
+            link: "/advanced-ai/",
+            icon: "seti:illustrator",
+            items: [
+              {
+                label: "Concepts",
+                autogenerate: {
+                  directory: "advanced-ai/concepts",
+                  collapsed: true,
+                },
               },
-            },
-            {
-              label: "LangChain",
-              autogenerate: {
-                directory: "advanced-ai/langchain",
-                collapsed: true,
+              {
+                label: "LangChain",
+                autogenerate: {
+                  directory: "advanced-ai/langchain",
+                  collapsed: true,
+                },
               },
-            },
-            {
-              label: "Evaluations",
-              autogenerate: {
-                directory: "advanced-ai/evaluations",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Examples",
-              collapsed: true,
-              autogenerate: {
-                directory: "advanced-ai/examples",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Performance & Troubleshooting",
-              collapsed: true,
-              items: [
-                "advanced-ai/performance-optimization",
-                "advanced-ai/troubleshooting-guide",
-                "advanced-ai/browser-ai-limitations",
-              ],
-            },
-          ],
-        },
-        {
-          label: {
-            en: "Learning",
-            fr: "Apprendre",
+            ],
           },
-          link: "/learning/",
-          icon: "open-book",
-          items: [
-            {
-              label: "Video Courses",
-              autogenerate: {
-                directory: "learning/video-courses",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Text Courses",
-              autogenerate: {
-                directory: "learning/text-courses",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Workflow Patterns",
-              autogenerate: {
-                directory: "learning/workflow-patterns",
-                collapsed: true,
-              },
-            },
-            {
-              label: "Examples",
-              collapsed: true,
-              autogenerate: {
-                directory: "learning/examples",
-                collapsed: true,
-              },
-            },
-          ],
-        },
-      ]),
-      starlightVideos()
-    ],
-    components: {
-      // Override the default `Sidebar` component with a custom one.
-      Sidebar: "./src/components/(override)/Sidebar.astro",
-      Pagination: "./src/components/(override)/Pagination.astro",
-    },
-    customCss: [
-      // Path to your Tailwind base styles:
-      "./src/styles/global.css"
-    ],
-    lastUpdated: true,
-  }), svelte(), mdx()],
+        ]),
+        starlightVideos(),
+      ],
+      components: {
+        // Override the default `Sidebar` component with a custom one.
+        //Sidebar: "./src/components/(override)/Sidebar.astro",
+        Pagination: "./src/components/(override)/Pagination.astro",
+      },
+      customCss: [
+        // Path to your Tailwind base styles:
+        "./src/styles/global.css",
+      ],
+      lastUpdated: true,
+    }),
+    svelte(),
+    mdx(),
+  ],
 
   vite: {
     plugins: [tailwindcss()],

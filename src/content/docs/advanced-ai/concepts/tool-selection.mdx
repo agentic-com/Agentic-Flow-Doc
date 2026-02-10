@@ -1,0 +1,231 @@
+---
+title: Tool Selection & Orchestration
+description: "How AI agents intelligently choose and coordinate multiple tools to accomplish complex tasks automatically."
+---
+
+import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+import Social from "@images/social.webp";
+
+Tool selection is how AI agents decide which tools to use and when to use them. Instead of you manually connecting nodes, intelligent agents can automatically choose the right combination of tools to accomplish their goals.
+
+Think of it like having a smart assistant who knows when to use a screwdriver vs. a hammer vs. a drill - they pick the right tool for each part of the job.
+
+<Image src={Social} alt="AI agent selecting and orchestrating different tools for a complex task" />
+
+## How agents choose tools
+
+Agents don't just randomly pick tools. They follow a reasoning process:
+
+```mermaid
+graph TD
+    Goal[Task Goal] --> Analyze[Analyze Requirements]
+    Analyze --> Available[Check Available Tools]
+    Available --> Match[Match Tools to Needs]
+    Match --> Plan[Create Execution Plan]
+    Plan --> Execute[Execute with Tools]
+    Execute --> Evaluate[Evaluate Results]
+    Evaluate --> Success{Goal Achieved?}
+    Success -->|No| Replan[Adjust Plan]
+    Success -->|Yes| Complete[Task Complete]
+    Replan --> Match
+    
+    style Analyze fill:#6d28d9,stroke:#fff,color:#fff
+    style Match fill:#6d28d9,stroke:#fff,color:#fff
+```
+
+## Tool categories
+
+<Tabs>
+  <TabItem label="Information Gathering">
+    **Purpose:** Collect data from various sources
+    
+    **Examples:**
+    - Reading text from a web page
+    - Extracting links or images
+    - Getting data from an API
+    
+    **Agent reasoning:**
+    "I need product information. I'll read the text on this page to find descriptions and prices."
+  </TabItem>
+  
+  <TabItem label="Content Processing">
+    **Purpose:** Analyze and transform information
+    
+    **Examples:**
+    - AI summarization
+    - Answering questions based on text
+    - Reformatting dates or currencies
+    
+    **Agent reasoning:**
+    "I have raw text. I'll use AI to summarize the key points and format the price as a number."
+  </TabItem>
+  
+  <TabItem label="Flow Control">
+    **Purpose:** Make decisions and control where the workflow goes next
+    
+    **Examples:**
+    - "If" logic (e.g., If price > $100)
+    - Filtering lists
+    - Stopping on errors
+    
+    **Agent reasoning:**
+    "The price is missing on this page. I should skip it and try the next one instead of crashing."
+  </TabItem>
+</Tabs>
+
+## Tool orchestration patterns
+
+### Sequential processing
+Tools used one after another in a logical sequence:
+
+```mermaid
+graph LR
+    A[GetAllTextFromLink] --> B[BasicLLMChain]
+    B --> C[EditFields]
+    C --> D[DownloadAsFile]
+    
+    style A fill:#e1f5fe
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+```
+
+**Example:** Research workflow
+1. Extract content from competitor websites
+2. Analyze content for key insights
+3. Format findings into structured data
+4. Export as report file
+
+### Parallel processing
+Multiple tools working simultaneously on different aspects:
+
+```mermaid
+graph TD
+    Start[Input Data] --> Split{Split Task}
+    Split --> Tool1[GetAllTextFromLink]
+    Split --> Tool2[GetImagesFromLink]
+    Split --> Tool3[GetLinksFromLink]
+    Tool1 --> Merge[Merge Results]
+    Tool2 --> Merge
+    Tool3 --> Merge
+    Merge --> Final[Combined Output]
+```
+
+**Example:** Comprehensive site analysis
+- Extract text content (Tool 1)
+- Collect images (Tool 2)  
+- Gather all links (Tool 3)
+- Combine into complete site profile
+
+### Conditional branching
+Different tools based on conditions or results:
+
+```mermaid
+graph TD
+    Input[Data Input] --> Check{Check Data Type}
+    Check -->|Text| TextTool[BasicLLMChain]
+    Check -->|HTML| HTMLTool[GetHTMLFromLink]
+    Check -->|API| APITool[Http-Request]
+    TextTool --> Process[Process Results]
+    HTMLTool --> Process
+    APITool --> Process
+```
+
+## Smart tool selection examples
+
+### Content extraction agent
+**Goal:** Extract product information from any e-commerce site
+
+**Agent reasoning:**
+1. "Let me first get the page content to understand the structure"
+2. "This looks like a product page with structured data - I'll use GetHTMLFromLink"
+3. "Now I need to extract specific product details - I'll use QANode with targeted questions"
+4. "The data needs formatting - I'll use EditFields to structure it properly"
+
+### Research automation agent
+**Goal:** Gather competitive intelligence from multiple sources
+
+**Agent reasoning:**
+1. "I have a list of competitor URLs - I'll use GetAllTextFromLink for each"
+2. "The content varies in quality - I'll use Filter to remove low-quality data"
+3. "Now I need to analyze for key insights - BasicLLMChain for analysis"
+4. "I should combine findings from all sources - Merge to consolidate"
+5. "Finally, create a summary report - BasicLLMChain for report generation"
+
+### Quality control agent
+**Goal:** Monitor content quality across multiple websites
+
+**Agent reasoning:**
+1. "I need to check multiple pages - GetAllTextFromLink for content"
+2. "Each page needs quality assessment - QANode with quality criteria"
+3. "Some pages might fail checks - If node to handle different outcomes"
+4. "Failed pages need different processing - conditional tool selection"
+5. "Results need to be organized - EditFields for structured output"
+
+<Steps>
+
+1. **Define clear objectives**: Agents need specific goals to choose appropriate tools
+
+2. **Provide relevant tools**: Only include tools that could be useful for the task
+
+3. **Set reasonable limits**: Prevent infinite loops with maximum step counts
+
+4. **Monitor tool usage**: Watch how agents combine tools and optimize the selection
+
+5. **Refine over time**: Adjust available tools based on agent performance
+
+</Steps>
+
+## Tool selection best practices
+
+### Start with essential tools
+Don't overwhelm agents with too many options:
+
+**Good tool set for content analysis:**
+- GetAllTextFromLink (data collection)
+- BasicLLMChain (analysis)
+- EditFields (formatting)
+- If (decision making)
+
+**Avoid:** Giving agents 20+ tools for a simple task
+
+### Provide clear tool descriptions
+Help agents understand when to use each tool:
+
+```
+GetAllTextFromLink: "Extract readable text content from web pages"
+GetHTMLFromLink: "Get structured HTML data when you need specific elements"
+BasicLLMChain: "Analyze, summarize, or generate text content"
+```
+
+### Monitor and optimize
+Watch how agents use tools and refine the selection:
+
+- Which tools are used most frequently?
+- Are agents choosing appropriate tools for tasks?
+- Do certain tool combinations work better than others?
+- Are there missing tools that would improve performance?
+
+<Aside type="tip" title="Less is often more">
+  Agents perform better with a focused set of relevant tools rather than access to every possible tool. Start small and add tools as needed.
+</Aside>
+
+## Common orchestration challenges
+
+### Tool conflicts
+When multiple tools could accomplish the same task:
+- **Solution:** Provide clear guidance on when to use each tool
+- **Example:** GetAllTextFromLink vs. GetHTMLFromLink - specify use cases
+
+### Inefficient sequences
+Agents choosing suboptimal tool combinations:
+- **Solution:** Monitor patterns and provide better tool descriptions
+- **Example:** Using multiple small tools instead of one comprehensive tool
+
+### Missing capabilities
+Agents unable to complete tasks due to tool limitations:
+- **Solution:** Add missing tools or combine existing tools creatively
+- **Example:** Need for data validation tools in quality control workflows
+
+Tool selection and orchestration transform individual tools into powerful, coordinated systems that can tackle complex, multi-step challenges automatically.

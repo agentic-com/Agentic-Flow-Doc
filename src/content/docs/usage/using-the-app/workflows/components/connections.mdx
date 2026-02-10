@@ -7,7 +7,9 @@ sidebar:
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-Connections define how data flows from one node to another. When you connect nodes, you route output data from one node into the input of another.
+Connections are the lines between nodes.
+
+They tell the workflow what to run next, and what data to pass along.
 
 ---
 
@@ -17,20 +19,20 @@ Connections define how data flows from one node to another. When you connect nod
 2. Drag from that output port to the **input port** (dot) on another node.
 3. The arrow establishes the data path.
 
-If you drag to an empty area, the “Add node” panel may open so you can insert a new node inline.
+Tip: if you drag to an empty area, the “Add node” panel may open so you can insert a new step in the middle.
 
 ---
 
 ## Removing a connection
 
-Hover over an existing connection arrow until controls appear. Then click the **Delete** control to remove the link between nodes.
+Hover over a connection arrow until controls appear, then click **Delete** to remove it.
 
 ---
 
 ## Best practices and tips
 
-- Don’t connect nodes in circular loops unless you explicitly need that pattern.
-- After connecting, test the workflow step by step to verify the data shape flowing through.
-- Use nodes like **Edit Fields** or **If** to transform or filter the data before connecting to further steps.
+- Keep the flow easy to read (left to right works well).
+- After you connect nodes, test step by step to make sure the output looks right.
+- Use nodes like **Edit Fields** or **If** to clean or filter data before sending it to the next step.
 
 If you’re unfamiliar with how node output and input data is structured, refer to [Key Concepts: Data Flow](/usage/key-concepts/) for a deeper explanation.

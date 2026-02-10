@@ -19,7 +19,7 @@ node .kiro/documentation-standards/run-audit.js content-validation
 ### Validate Specific File
 ```bash
 # Validate a specific documentation file
-node .kiro/documentation-standards/validation/content-validator.js src/content/docs/integration/builtin/core/Http-Request.md
+node .kiro/documentation-standards/validation/content-validator.js src/content/docs/nodes/builtin/core/Http-Request.md
 ```
 
 ## Directory Structure

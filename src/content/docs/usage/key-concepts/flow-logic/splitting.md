@@ -5,7 +5,11 @@ sidebar:
   order: 1
 ---
 
-Splitting uses the [IF](/integrations/builtin/core-nodes/if) or [Switch](/integrations/builtin/core-nodes/switch) nodes. It turns a single-branch workflow into a multi-branch workflow. This is a key piece of representing complex logic in `Agentic WorkFlow`.
+Splitting means taking one workflow path and turning it into multiple paths.
+
+The most common way to split is with an **If** node.
+
+It lets your workflow do different things depending on a condition (for example: “is this text longer than 500 characters?”).
 
 Compare these workflows:
 
@@ -40,6 +44,6 @@ flowchart LR
     L_n3_B_0@{ animation: slow } 
 ```
 
-This is the power of splitting and conditional nodes in `Agentic WorkFlow`.
+This is the basic idea: one input → different actions depending on what you find.
 
-Refer to the [IF](/integrations/builtin/core-nodes/if) or [Switch](/integrations/builtin/core-nodes/switch) documentation for usage details.
+See the node reference: [If](/nodes/builtin/flow/If/).

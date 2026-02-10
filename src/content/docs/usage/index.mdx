@@ -1,113 +1,81 @@
 ---
-title: Agentic WorkFlow
+title: Agentic WorkFlow Platform Guide
 description: "Automate your browser tasks, extract data, and build AI-powered workflows — all without writing a single line of code."
 ---
+
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-`Agentic WorkFlow` lets you build powerful, browser-based automations that can interact with any web page, process information with AI, and save your results locally — all from a simple, visual interface.
+Agentic WorkFlow lets you automate things you do on websites (copying info, clicking buttons, filling forms, extracting data, summarizing content with AI) using a visual, drag-and-drop builder.
 
-No setup. No coding. Just drag, connect, and run.
-
----
-
-## What You Can Do
-
-### Extract & Save Data  
-- Capture selected text, full-page content, or HTML  
-- Collect links, images, and table data  
-- Save data to your browser, a file, or send it to another workflow  
-
-### Use AI in Your Browser  
-- Run local LLMs directly — no cloud required  
-- Summarize pages, classify text, or generate content  
-- Build local knowledge bases and use RAG (Retrieval-Augmented Generation)  
-- Chat with your local AI and store the history securely in your browser  
-
-### Automate Web Interactions  
-- Click buttons, fill out forms, and submit them automatically  
-- Wait for or scroll to specific elements  
-- Extract metadata, URLs, or any structured data from web pages  
-- Chain multiple actions to fully automate repetitive browser tasks  
-
-### Share & Collaborate  
-- Publish your workflows to the Workflow Marketplace  
-- Browse, download, and adapt community-made templates  
-- Build faster by reusing existing workflows  
-
----
+You don’t need to be a developer.
 
 ## How It Works
 
-`Agentic WorkFlow` runs entirely inside your browser.  
-No server, no external data storage — everything happens locally for speed and privacy.
+Agentic WorkFlow runs entirely inside your browser. That means it’s fast, private, and can directly interact with the page you’re currently viewing.
 
-1. **Visual Workflow Builder** – Create workflows by dragging and connecting “nodes” (actions and triggers).  
-2. **Browser Nodes** – Use special nodes for web automation (click, fill, scroll, extract, etc.).  
-3. **AI Nodes** – Connect to local LLMs for reasoning, summarization, or automation logic.  
-4. **Triggers** – Run workflows from a webpage, button click, or custom event.  
-5. **Marketplace** – Import prebuilt workflows and customize them in seconds.  
+Here’s the mental model:
 
----
+**1. You build a workflow**
+Connect blocks (called “nodes”) to describe what should happen.
+
+**2. A trigger starts it**
+For example: you run it manually, a page loads, you click a button, or you use the page context menu.
+
+**3. Nodes do the work**
+Nodes can extract data from the page (text, links, tables), interact with the page (click, scroll, fill fields), or process data (format, filter, summarize with AI).
+
+**4. You review the result**
+You can see outputs step-by-step and adjust your workflow until it matches what you want.
 
 ## Example Workflows
 
-| Goal             | Example Workflow                                                         |
-|-------------------|-------------------------------------------------------------------------|
-| Research Helper   | Extract page text → Summarize with local LLM → Save as Markdown         |
-| Form Auto-Filler  | Get user data → Fill form → Submit automatically                        |
-| Content Collector | Visit list of URLs → Extract images and links → Save to local database  |
-| Web Monitor       | Wait for element → Capture new content → Notify you instantly           |
+| Goal | Description | Complexity |
+|------|-------------|------------|
+| **Research Helper** | Extract text, summarize with AI, and save notes | Beginner |
+| **Smart Form Filler** | Analyze a form and fill it intelligently | Intermediate |
+| **Content Monitor** | Watch sites for changes and notify you | Intermediate |
+| **Research Agent** | Plan research, visit sites, and write a report | Advanced |
+| **Multi-Agent System** | Coordinate multiple AI agents for complex tasks | Expert |
+
+## What makes it different
+
+- It runs in your browser (so it can work with the page you’re on).
+- You can automate both “reading” (extracting) and “doing” (clicking, typing, submitting).
+- You can use AI locally (private/offline) or connect a cloud AI provider.
+
+## Core Platform Features
+
+### Workflow Builder
+- **Visual editor**: build by dragging and connecting nodes
+- **Node library**: pick actions and triggers like building blocks
+- **Test as you go**: run one step or the full workflow
+- **Safe iteration**: adjust parameters and rerun until it works
+
+### Browser automation
+- **Extract data**: selected text, full page text, links, images, tables, metadata
+- **Interact with the page**: click, scroll, hover, fill fields, submit forms
+- **Wait for conditions**: e.g. “wait until this element appears”
+
+### AI & knowledge
+- **Local models**: run AI privately (when available)
+- **Cloud models**: connect to external AI services if you choose
+- **Knowledge base**: store information locally and search it (RAG)
+- **AI reasoning**: turn raw page content into useful output
+
+### 📊 Data Processing
+- **Data Transformation**: Clean, format, and structure data
+- **API Integration**: Connect to external services and databases
+- **File Operations**: Save, load, and process various file formats
+- **Conditional Logic**: Smart branching and decision making
 
 ---
 
-## Why It’s Different
+## Start here
 
-| Feature                     | `Agentic WorkFlow` | Others (e.g., Make, n8n) |
-|-----------------------------|-------------------------|---------------------------|
-| Runs fully in browser       | Yes                     | No                        |
-| AI & LLM integration        | Local or remote         | Limited                   |
-| Works directly with web pages | Native browser access   | Server-side only          |
-| Privacy by design           | Data stays local        | Cloud-based               |
-| Shareable workflows         | Built-in marketplace    | External or add-on        |
+- **New to Agentic WorkFlow?** Start with [Quick Intro](/usage/getting-started/quick-starts/quick-intro/).
+- **Want a full walkthrough?** Follow [Long Intro](/usage/getting-started/quick-starts/long-intro/).
+- **Prefer a guided plan?** Use the [Learning Path](/usage/getting-started/learning-path/).
 
 ---
 
-## Get Started
-
-<CardGrid>
-  <Card title="Setup Guide" icon="rocket">
-    Install and start using the extension in minutes
-
-    [Quick Setup Guide](/usage/getting-started/quick-starts/quick-intro/)
-  </Card>
-
-  <Card title="First Workflow" icon="pencil">
-    Learn to build and run your first automation
-
-    [Create Your First Workflow](/learning/text-courses/beginner/first-workflow/)
-  </Card>
-
-  <Card title="Key Concepts" icon="telegram">
-    Understand triggers, nodes, and data flow
-
-    [Key Concepts](/usage/key-concepts/data-structure)
-  </Card>
-
-  <Card title="Browser Nodes" icon="magnifier">
-    Discover browser-specific automation features
-
-    [Browser Nodes](/integrations/extension/getallhtml/)
-  </Card>
-</CardGrid>
----
-
-## Tip  
-You don’t need to be a developer.  
-If you can describe what you want in plain language, you can automate it with `Agentic WorkFlow`.
-
----
-
-## Next Steps  
-- [Explore the Node Library](/usage/node-library/)  
-- [Discover Marketplace Workflows](/marketplace/)  
-- [Learn About Local AI Setup](/usage/local-ai/)  
+**Remember:** if you can explain the steps (“get this text”, “click that button”, “summarize this page”), you can usually turn it into a workflow.

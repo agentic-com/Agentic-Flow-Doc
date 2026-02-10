@@ -1,275 +1,190 @@
 ---
-title: Browser Compatibility Problems
-description: "Solve browser-specific issues, version conflicts, and compatibility problems that prevent workflows from running properly."
+title: Browser Compatibility
+description: Understand which browsers work with Agentic Workflow Studio and how to fix common compatibility issues.
 ---
 
-# Browser Compatibility Problems
+Agentic Workflow Studio runs **entirely inside your browser**.  
+Because of this, browser choice and settings directly affect how workflows behave.
 
-Different browsers and versions can cause workflow execution issues. This guide helps you identify and fix browser-specific problems.
+This page explains:
+- Which browsers are supported
+- Known limitations
+- Simple steps to fix common issues
 
-## 🌐 Supported Browsers
+---
 
-| Browser | Minimum Version | Status | Notes |
-|---------|----------------|--------|-------|
-| Chrome | 88+ | ✅ Fully Supported | Recommended browser |
-| Edge | 88+ | ✅ Fully Supported | Chromium-based versions |
-| Firefox | 78+ | ⚠️ Limited Support | Some features may not work |
-| Safari | 14+ | ❌ Not Supported | WebExtensions limitations |
+## Supported Browsers
 
-## 🔍 Common Browser Issues
+Agentic Workflow Studio relies on modern browser APIs for automation, DOM access, and local AI execution.
 
-### Chrome/Edge Issues
+| Browser | Support Level | Notes |
+|-------|---------------|------|
+| **Google Chrome** | Fully supported | Recommended |
+| **Microsoft Edge** | Fully supported | Chromium-based |
+| **Firefox** | Partial support | Some automation nodes may not work |
+| **Safari** | Not supported | Technical limitations |
 
-#### Extension Not Loading
+<aside>
+Chrome or Edge is strongly recommended for the best experience.
+</aside>
 
-**Symptoms:**
-- Extension icon not visible in toolbar
-- No workflow options in right-click menu
-- Extension appears disabled
+---
 
-**Solutions:**
+## Why Browser Choice Matters
 
-| Problem | Cause | Fix |
-|---------|-------|-----|
-| Extension disabled | User accidentally disabled | Go to `chrome://extensions/` → Enable extension |
-| Extension crashed | Memory or code error | Click "Reload" in extension management |
-| Outdated version | Old extension version | Update from Chrome Web Store |
-| Developer mode conflict | Multiple versions installed | Remove duplicate extensions |
+Some workflow nodes require advanced browser capabilities, such as:
+- Accessing page content and HTML
+- Simulating clicks and form input
+- Waiting for elements to appear
+- Running local AI models
+- Storing workflows and knowledge locally
 
-**Step-by-step fix:**
-1. Open `chrome://extensions/` in address bar
-2. Find "`Agentic WorkFlow`" in the list
-3. Ensure the toggle switch is **ON** (blue)
-4. If not visible, click "Load unpacked" for developer versions
-5. Refresh the page where you want to use workflows
+Not all browsers expose these features in the same way.
 
-#### Manifest V3 Issues
+---
 
-**Symptoms:**
-- "Service worker inactive" errors
-- Workflows start but don't complete
-- Intermittent connection failures
+## Chrome and Edge (Recommended)
 
-**Solutions:**
-```javascript
-// Check service worker status
-chrome.runtime.getBackgroundPage((backgroundPage) => {
-  if (backgroundPage) {
-    console.log("Service worker active");
-  } else {
-    console.log("Service worker inactive - reload extension");
-  }
-});
-```
+These browsers provide full support for:
+- Page interaction nodes (click, fill, scroll, submit)
+- Data extraction nodes
+- Triggering workflows from any webpage
+- Local storage, vector databases, and RAG
+- Marketplace workflows
 
-**Quick fixes:**
-1. **Reload extension**: Go to `chrome://extensions/` → Click reload button
-2. **Restart browser**: Close all Chrome windows and restart
-3. **Clear extension data**: Remove and reinstall extension
-4. **Check for updates**: Ensure you have the latest version
+### If the Extension Does Not Appear
 
-### Firefox Issues
+If you do not see Agentic Workflow Studio in your toolbar or right-click menu:
 
-#### Limited WebExtensions Support
+1. Open the extension manager  
+   `chrome://extensions/` or `edge://extensions/`
+2. Make sure **Agentic Workflow Studio** is enabled
+3. Refresh the webpage you are working on
 
-**Symptoms:**
-- Some nodes don't work as expected
-- Content script injection failures
-- Cross-origin access denied
+If the issue persists:
+- Disable other automation extensions temporarily
+- Restart the browser
 
-**Workarounds:**
+---
 
-| Feature | Chrome Behavior | Firefox Limitation | Workaround |
-|---------|----------------|-------------------|------------|
-| Content Scripts | Full access | Restricted CSP | Use alternative extraction methods |
-| Cross-Origin | Configurable | Strict policy | Process data on same domain |
-| File Downloads | Direct download | Permission required | Manual download trigger |
+## Firefox (Limited Support)
 
-**Firefox-specific settings:**
-1. Open `about:config` in Firefox
-2. Search for `extensions.webextensions.restrictedDomains`
-3. Remove restricted domains if needed (advanced users only)
-4. Restart Firefox
+Firefox uses stricter security rules that limit what extensions can do on webpages.
 
-#### Content Security Policy Conflicts
+### What May Not Work Properly
 
-**Symptoms:**
-- "Content Security Policy" errors in console
-- Scripts fail to inject
-- Workflows stop at extraction nodes
+Some workflows may:
+- Fail to click elements
+- Stop when extracting page content
+- Not detect dynamic elements
+- Be blocked on certain websites
 
-**Solutions:**
-1. **Check console errors**: Look for specific CSP violations
-2. **Use alternative methods**: Try different extraction approaches
-3. **Disable strict CSP**: Use Firefox developer tools to bypass (testing only)
+These are browser limitations, not workflow errors.
 
-### Safari Issues
+### Recommendation
 
-#### WebExtensions Not Supported
+If a workflow does not behave as expected in Firefox:
+- Try the same workflow in **Chrome or Edge**
+- Use Firefox only for simple workflows or testing
 
-**Current Status:** Safari uses a different extension system that's not compatible with Chrome-style WebExtensions.
+---
 
-**Alternatives:**
-- **Use Chrome or Edge**: Recommended for full functionality
-- **Web-based version**: Use browser-based workflow builder (if available)
-- **Mobile alternatives**: iOS shortcuts app for basic automation
+## Safari (Not Supported)
 
-## 🛠️ Diagnostic Tools
+Safari does not currently support the extension APIs required to run Agentic Workflow Studio.
 
-### Browser Console Debugging
+### What You Can Do Instead
 
-**Check Extension Status:**
-```javascript
-// Verify extension is loaded
-if (typeof chrome !== 'undefined' && chrome.runtime) {
-  console.log('Extension loaded:', chrome.runtime.id);
-} else {
-  console.log('Extension not detected');
-}
+- Use **Chrome or Edge** on macOS
+- Build workflows in another browser and share them
+- Follow workflow execution via exported data
 
-// Check for content script injection
-if (window.workflowStudio) {
-  console.log('Content scripts loaded');
-} else {
-  console.log('Content scripts missing');
-}
-```
+Safari support may be reconsidered in the future, but it is not on the current roadmap.
 
-**Monitor Extension Messages:**
-```javascript
-// Listen for extension messages
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('Extension message:', message);
-  return true; // Keep message channel open
-});
-```
+---
 
-### Version Compatibility Check
+## Common Problems and Quick Fixes
 
-**Check Browser Version:**
-```javascript
-// Get browser info
-const browserInfo = {
-  userAgent: navigator.userAgent,
-  vendor: navigator.vendor,
-  platform: navigator.platform
-};
+### Workflows Do Not Start
 
-console.log('Browser info:', browserInfo);
+- Refresh the page
+- Make sure the extension is enabled
+- Check that the workflow trigger matches the page
 
-// Check for specific features
-const features = {
-  serviceWorker: 'serviceWorker' in navigator,
-  webExtensions: typeof chrome !== 'undefined',
-  contentScripts: typeof chrome?.scripting !== 'undefined'
-};
+### Click or Fill Nodes Fail
 
-console.log('Feature support:', features);
-```
+- The page may load content dynamically  
+  → Add a **Wait** step before the action
+- The website may block automation  
+  → Try a different selector or browser
 
-## ⚙️ Browser-Specific Settings
+See:
+[Wait node](/nodes/builtin/flow/wait/)
 
-### Chrome Optimization
+You can also explore the available browser automation nodes here:
+[Browser extension nodes](/nodes/extension/)
 
-**Performance Settings:**
-1. **Enable hardware acceleration**: Settings → Advanced → System → Use hardware acceleration
-2. **Increase memory limit**: Add `--max-old-space-size=4096` to Chrome shortcut
-3. **Disable unnecessary extensions**: Keep only essential extensions active
+---
 
-**Security Settings:**
-1. **Allow extension on all sites**: Extension details → "Allow on all sites"
-2. **Enable developer mode**: For testing and debugging
-3. **Manage site permissions**: Ensure target sites allow extension access
+### Data Extraction Returns Empty Results
 
-### Edge Configuration
+- The content may not be visible yet
+- The page may be protected
+- The browser may block access
 
-**Extension Sync:**
-1. **Enable extension sync**: Settings → Profiles → Sync → Extensions
-2. **Import from Chrome**: Use built-in Chrome extension importer
-3. **Manage permissions**: Edge-specific permission management
+Try:
+- Adding a delay or wait node
+- Running the workflow manually step by step
+- Testing in Chrome or Edge
 
-### Firefox Adjustments
+---
 
-**Privacy Settings:**
-1. **Adjust tracking protection**: May interfere with content extraction
-2. **Configure CSP handling**: about:config → security.csp.enable
-3. **Extension permissions**: Manage per-site permissions carefully
+## Permissions and Access
 
-## 🔧 Advanced Troubleshooting
+Some websites restrict extension access.
 
-### Extension Debugging Mode
+If a workflow does not work on a specific site:
 
-**Enable Debug Logging:**
-```javascript
-// Add to extension background script
-chrome.storage.local.set({debugMode: true});
+1. Open the extension settings
+2. Allow access to the current website
+3. Reload the page
 
-// Check debug status
-chrome.storage.local.get(['debugMode'], (result) => {
-  if (result.debugMode) {
-    console.log('Debug mode enabled');
-  }
-});
-```
+This is required for:
+- Form filling
+- Page scraping
+- Trigger-based workflows
 
-### Network Debugging
+---
 
-**Monitor Extension Requests:**
-1. Open Developer Tools (F12)
-2. Go to Network tab
-3. Filter by "Extension" or look for extension ID
-4. Monitor for failed requests or timeouts
+## Performance Tips
 
-### Memory Debugging
+For smoother execution:
+- Close unused tabs
+- Disable heavy extensions temporarily
+- Avoid running many workflows at once
+- Prefer Chrome or Edge with default settings
 
-**Check Extension Memory Usage:**
-1. Open `chrome://system/` (Chrome) or `about:memory` (Firefox)
-2. Look for extension memory usage
-3. Restart browser if memory usage is excessive
+---
 
-## 📞 Getting Help
+## When to Ask for Help
 
-### Before Reporting Issues
-
-**Gather Information:**
+Before reporting an issue, check:
 - Browser name and version
-- Extension version
-- Operating system
-- Specific error messages
-- Steps to reproduce the problem
+- Whether the issue happens in Chrome
+- Which node fails
+- Whether the page loads content dynamically
 
-**Test in Different Browser:**
-- Try the same workflow in Chrome/Edge
-- Compare behavior across browsers
-- Note any differences in functionality
+Useful links:
+- [Full Troubleshooting Flowchart](/usage/troubleshooting/troubleshooting-decision-guide/)
+- <a href="https://community.awflow.io" target="_blank">Community Forum</a>
 
-### Reporting Browser-Specific Bugs
+---
 
-**Include in Bug Report:**
-1. **Browser details**: Version, platform, settings
-2. **Extension version**: Check in extension management
-3. **Console errors**: Copy exact error messages
-4. **Screenshots**: Show any visual issues
-5. **Reproduction steps**: Detailed steps to recreate issue
+## Summary
 
-**Where to Report:**
-- **GitHub Issues**: For technical bugs and feature requests
-- **Community Forums**: For usage questions and workarounds
-- **Extension Store Reviews**: For general feedback (less detailed)
+- Chrome and Edge offer full compatibility
+- Firefox works with limitations
+- Safari is not supported
+- Most issues are browser-related, not workflow-related
 
-## 🔄 Regular Maintenance
-
-### Keep Everything Updated
-
-**Monthly Checklist:**
-- [ ] Update browser to latest version
-- [ ] Update extension from store
-- [ ] Clear browser cache and cookies
-- [ ] Review and clean up extensions
-- [ ] Test critical workflows
-
-**Performance Monitoring:**
-- Monitor workflow execution times
-- Check for new browser console errors
-- Verify all features still work as expected
-- Update any browser-specific workarounds
+Choosing the right browser is the first step to reliable automation.

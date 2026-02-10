@@ -491,7 +491,7 @@ window.fetch = function (...args) {
 
 ### Documentation Resources
 
-- **[Node Reference](/integration/)** - Complete node documentation
+- **[Node Reference](/nodes/)** - Complete node documentation
 - **[Workflow Patterns](/learning/workflow-patterns/)** - Proven workflow designs
 - **[Performance Guide](/learning/workflow-patterns/optimization-best-practices/)** - Optimization techniques
 

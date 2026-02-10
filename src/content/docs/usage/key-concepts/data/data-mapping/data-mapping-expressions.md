@@ -3,9 +3,7 @@ title: Mapping in the expressions editor
 description: "Learn how to use <Agentic WorkFlow> browser extension for mapping in the expressions editor with intelligent workflow creation."
 ---
 
-These examples show how to access linked items in the expressions editor. Refer to [expressions](/code/expressions.md) for more information on expressions, including built in variables and methods.
-
-For information on errors with mapping and linking items, refer to [Item linking errors](/data/data-mapping/data-item-linking/item-linking-errors.md).
+This page shows a few common examples you can use in the expressions editor to reference data.
 
 ## Access the linked item in a previous node's output
 
@@ -85,7 +83,7 @@ As a longer example, consider a scenario where the current node has the followin
 ]
 ```
 
-To extract the name, you'd normally use drag-and-drop [Data mapping](/data/data-mapping/index.md), but you could also write the following expression:
+To extract the name, you can use drag-and-drop mapping in the UI, or write the following expression:
 
 ```js
 {{$input.item.json.name}}

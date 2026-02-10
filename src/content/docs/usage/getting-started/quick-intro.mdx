@@ -1,0 +1,158 @@
+---
+title: Quick Intro
+description: "Get started quickly with <Agentic WorkFlow> — install and build your first browser automation."
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+This quick intro helps you get your first automation running in a few minutes.
+
+You’ll:
+
+- Install the extension
+- Create a simple workflow (a workflow is a sequence of steps)
+- Add your first “node” (a node is one step in the workflow)
+- Run it and see the result
+
+---
+
+## Quick Start Overview
+
+```mermaid
+graph TB
+  A[Install Extension] --> B[Open Workflow Builder]
+  B --> C[Create First Workflow]
+  C --> D[Add Get Selected Text Node]
+  D --> E[Select Text on Page]
+  E --> F[Execute Workflow]
+  F --> G[Add Processing Node]
+  G --> H[Configure Step]
+  H --> I[Run Workflow End to End]
+  I --> J[Workflow Complete]
+```
+
+---
+
+## Step 1: Install the Browser Extension
+
+`Agentic WorkFlow` works directly in your browser — there’s nothing to install on a server.
+
+1. Install from your browser’s extension store:
+   - **Chrome**: Chrome Web Store
+   - **Firefox**: Firefox Add-ons
+   - **Edge**: Microsoft Edge Add-ons
+
+2. After installing, click the extension icon in your toolbar to open the Workflow Builder.
+
+> Once open, you can navigate to [Key Concepts](/usage/key-concepts/) to get familiar with workflows, nodes, and triggers.
+
+---
+
+## Step 2: Create Your First Workflow
+
+1. In the workflow builder, click **Add first step**.
+2. Search for **Get Selected Text** and add it as the first node.
+3. Open any webpage with text.
+4. Highlight (select) a sentence or paragraph.
+5. Go back to the Workflow Builder.
+6. Click **Execute Workflow**.
+
+You should now see the selected text as the output of that node.
+
+---
+
+## Step 3: Add Text Processing
+
+Now let’s make the result easier to reuse by creating a formatted output.
+
+1. From the Get Selected Text node, click **Add node**.
+2. Search and add **Edit Fields**.
+3. In its configuration:
+   - Add a field name like `processed_text`
+   - Copy and paste this template into the editor:
+
+     ```
+     Text: {{ $json.text }}
+     Length: {{ $json.text.length }} characters
+     ```
+
+4. Run **Execute Workflow** again — now you see processed output.
+
+---
+
+## What You’ve Done
+
+You’ve built a simple two‑node workflow that:
+
+- Extracts selected text from a web page (using [Get Selected Text](/nodes/extension/GetSelectedText/))
+- Processes that text with [Edit Fields](/nodes/builtin/dataTransformation/EditFields/)
+
+This is the basic pattern you’ll use again and again:
+
+Get something from the page → transform it → use or save the result.
+
+---
+
+## What’s next?
+
+<CardGrid>
+  <Card
+    title="Longer Intro Tutorial"
+    icon="open-book"
+  >
+    A more complete walkthrough including AI and branching logic.
+
+    [Go  →](/usage/getting-started/quick-starts/long-intro/)
+
+  </Card>
+
+<Card
+title="Browser Nodes"
+icon="puzzle"
+
+>
+
+Explore all the browser automation actions (clicks, scroll, extract, etc.).
+
+    [Go  →](/nodes/extension/getallhtml/)
+
+  </Card>
+
+<Card
+title="AI & Local Models"
+icon="laptop"
+
+>
+
+Learn how to combine your workflows with intelligent reasoning and summarization.
+
+    [Go  →](/usage/local-ai/)
+
+  </Card>
+
+<Card
+title="Key Concepts"
+icon="list-format"
+
+>
+
+Understand workflow structure, triggers, data flow, and debugging.
+
+    [Go  →](/usage/key-concepts/)
+
+  </Card>
+</CardGrid>
+
+---
+
+## Tips & Advice
+
+- Try the simplest workflow first: extract a bit of text and confirm you can see the output.
+- Add one node at a time, then run again.
+- If something doesn’t work, check the output of the last node that ran.
+- Everything runs locally in your browser, so you can experiment safely.
+- After this, try a workflow with multiple browser actions (click, scroll, wait) and then an AI step.
+
+Once you’re comfortable here, move on to building intermediate workflows in your **Learning Path** or dive into AI workflows.

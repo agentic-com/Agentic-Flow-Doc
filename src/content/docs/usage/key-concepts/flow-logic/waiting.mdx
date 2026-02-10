@@ -9,9 +9,11 @@ import { Card, CardGrid } from "@astrojs/starlight/components";
 import { Image } from "astro:assets";
 import Social from "@images/social.webp";
 
-In many real-world automation scenarios you’ll need a workflow to **pause**, then resume later—perhaps after waiting a set time, or when an external event happens.  
-The Wait node makes this possible in Agentic Workflow Studio.  
-(Adapted from similar concepts in [n8n docs](https://docs.n8n.io/flow-logic/waiting/?utm_source=chatgpt.com))
+Sometimes your workflow needs to **pause** and continue later.
+
+For example: wait for a page to finish loading, wait 10 minutes, or wait for an approval.
+
+The **Wait** node lets you do that.
 
 ---
 
@@ -32,19 +34,19 @@ Here are the main ways you can configure waiting:
 
 | Mode                    | Description                                                                                                               |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **After Time Interval** | Waits a specified amount of time (seconds, minutes, hours, days) before continuing. :contentReference[oaicite:0]{index=0} |
-| **At Specified Time**   | Waits until a specific date and time to resume. :contentReference[oaicite:1]{index=1}                                     |
-| **On Webhook Call**     | Pauses until a unique resume-URL is called externally. :contentReference[oaicite:2]{index=2}                              |
+| **After Time Interval** | Waits a specified amount of time (seconds, minutes, hours, days) before continuing. |
+| **At Specified Time**   | Waits until a specific date and time to resume. |
+| **On Webhook Call**     | Pauses until a unique resume-URL is called externally. |
 
 ---
 
 ## How to set up a Wait node
 
-1. On your canvas, add the Wait node after a previous action that produces data.
-2. Open the node’s settings and choose your “Resume Condition” mode (Time interval / specified time / webhook).
+1. Add the Wait node to your canvas after an action that produces data.
+2. Open the node’s settings and choose how you want the workflow to resume (Time interval, specified time, or webhook).
 3. For example, select “After Time Interval” and set “10 minutes”.
-4. If you choose “On Webhook Call”, you’ll get a variable like `{{ $execution.resumeUrl }}` which you can send externally.
-5. Save and test by executing. The workflow will pause at that node and resume when the condition is met.
+4. If you choose "On Webhook Call", you’ll get a URL that you can send to an external system to resume the workflow.
+5. Save and test your workflow. It will pause at the Wait node and resume when the condition is met.
 
 <Image src={Social} alt="Illustration of Wait node usage" />
 
@@ -57,3 +59,5 @@ Here are the main ways you can configure waiting:
 - Beware of many concurrent waiting workflows – they hold state and may impact performance.
 - Use meaningful naming (e.g., “Wait for Approval”, “Wait 10 Minutes”) and documentation via sticky notes. See [Sticky Notes](/usage/using-the-app/workflows/components/sticky-notes/) for annotations.
 - After a wait, always test the downstream branch or logic – sometimes unexpected states after long waits can cause issues.
+
+If you want the full node reference, see [Wait node](/nodes/builtin/flow/wait/).

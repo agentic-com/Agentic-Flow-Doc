@@ -1,0 +1,76 @@
+---
+title: Process HTML
+description: Parse, clean, and transform HTML content to extract specific elements, remove unwanted code, or convert formats - like having a web developer clean up messy code.
+sidebar:
+  label: Process HTML
+---
+
+import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Image } from "astro:assets";
+import { Code } from "@astrojs/starlight/components";
+import Social from "@images/social.webp";
+
+The **Process HTML** node takes HTML content and processes it by extracting specific elements, cleaning unwanted code, converting formats, or restructuring the content. Think of it as having a web developer clean up messy code and extract exactly what you need.
+
+This is perfect for content cleaning, data extraction, format conversion, or preparing HTML content for use in other systems or workflows.
+
+<Image
+  src={Social}
+  alt="Illustration of processing and cleaning HTML code"
+/>
+
+## How it works
+
+The node takes raw HTML content and applies various processing operations to clean, extract, convert, or restructure it. You can focus on specific elements or process the entire HTML document according to your needs.
+
+```mermaid
+graph LR
+  HTML[Raw HTML] --> Processor{HTML Processor}
+  Processor --> Clean[Clean Code]
+  Processor --> Extract[Extract Elements]
+  Processor --> Convert[Convert Format]
+  style Processor fill:#6d28d9,stroke:#fff,color:#fff
+```
+
+## Setup guide
+
+<Steps>
+
+1. **Get HTML Content**: Use Get All HTML node or provide HTML content from other sources.
+2. **Choose Processing Operation**: Select extract, clean, convert, or restructure based on your needs.
+3. **Set Target Elements**: Specify which parts of the HTML to focus on using CSS selectors (optional).
+4. **Select Output Format**: Choose HTML, text, or Markdown for the processed results.
+
+</Steps>
+
+## Practical example: Content cleaning
+
+Let's clean HTML content by removing ads and scripts while extracting the main article content.
+
+**What you configure:**
+- **Content**: The raw HTML code you want to work on.
+- **Operation**: Choose "clean" to remove things or "extract" to find things.
+- **Targets**: Use selectors (like `.main-content`) to focus on specific parts.
+- **Filters**: Choose to remove scripts, ads, or other unwanted elements.
+
+**What you get:**
+- **Processed Content**: The clean, simplified HTML code.
+- **Stats**: How much the file size was reduced and what elements were removed.
+
+## Common settings
+
+| Setting | Purpose | When to Use |
+|---------|---------|-------------|
+| **Extract** | Pull out specific elements or content sections | When you need only certain parts of the HTML |
+| **Clean** | Remove unwanted elements, scripts, and attributes | For content purification and security |
+| **Convert** | Transform HTML to other formats (Markdown, text) | For cross-platform content use |
+
+<Aside type="tip" title="Perfect for content work">
+  This node is essential for content management, data extraction, and preparing HTML content for use in different systems while maintaining quality and security.
+</Aside>
+
+## Troubleshooting
+
+- **No results**: Check that your target elements exist in the HTML using the correct CSS selectors
+- **Missing content**: Try using broader CSS selectors or process the entire HTML without targeting specific elements
+- **Formatting issues**: Different output formats handle styling differently - choose the format that best suits your needs

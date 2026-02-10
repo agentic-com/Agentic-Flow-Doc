@@ -7,24 +7,26 @@ sidebar:
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-On the workflows list view, each workflow row includes an **Actions** menu (· · ·). You can execute a workflow directly from there:
+You can run a workflow without opening the editor.
 
-- Click the three‑dots (⋮) for a workflow
-- Select **Execute** from the menu
-- The workflow runs immediately in the context of your browser (if applicable)
+In the workflow list, each workflow row has an **Actions** menu (three dots).
 
-This is a convenient shortcut to run workflows you’ve built without navigating into the editor.
+1. Open the **Workflows** list.
+2. Find the workflow you want to run.
+3. Click the **three dots (⋮)**.
+4. Click **Execute**.
+
+The workflow runs using your current browser context (the page you’re on), when applicable.
 
 ---
 
 ## Key Notes and Behavior
 
-- Executing from the table is equivalent to a **manual run** — it triggers the workflow with its current configuration.
-- The workflow must be suitable to run standalone (i.e. it should include any required trigger node or start condition).
-- After execution, you can inspect results (in execution history or logs) just like with runs initiated from within the editor.
-- Use this method for quick testing or re‑running a workflow without going deeper into it.
+- This is a **manual run** (same idea as clicking **Execute Workflow** inside the editor).
+- If your workflow expects something on the page (like a specific button or selected text), make sure you’re on the right page before running.
+- After the run, you can inspect results and logs just like any other execution.
 
-If you're unfamiliar with **manual executions vs full or automatic (production) executions**, see our [Executions guide](/usage/using-the-app/workflows/executions/manual-partial-executions/) for more context.
+To understand full runs vs step-by-step tests, see [Full and Partial Executions Inside the Designer](/usage/using-the-app/workflows/executions/execute-from-dnd-desiner/).
 
 ---
 
@@ -34,4 +36,4 @@ If you're unfamiliar with **manual executions vs full or automatic (production) 
 - You want to re-run it after updates
 - You want to trigger workflows when they are already saved and configured
 
-But if you need to run workflows based on web events or triggers, use trigger nodes and activate workflows instead. See [Triggers](/usage/using-the-app/workflows/components/triggers/) for more details.
+But if you want the workflow to start automatically (for example, when a page loads or on a schedule), add a trigger node such as [When Started](/nodes/builtin/trigger/WhenStarted/).

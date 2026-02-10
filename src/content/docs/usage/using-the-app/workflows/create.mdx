@@ -5,20 +5,28 @@ description: "Learn how to build workflows in <Agentic WorkFlow> — from openin
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-A **workflow** is a visual sequence of connected nodes that perform browser-based tasks automatically. In `Agentic WorkFlow`, you build workflows right inside your browser extension.
+A **workflow** is a set of steps (nodes) connected together.
+
+Each step does one thing, like:
+
+- Get text from the page
+- Click a button
+- Fill a form field
+- Clean or format the data
+- Send the result somewhere
 
 ---
 
 ## How to build a new workflow
 
-1. Click the `Agentic WorkFlow` icon in your browser to open the extension.
-2. Choose **Create New Workflow** or **Start from Blank**.
-3. A blank workflow canvas is displayed.
-4. Click **Add first step…** to insert your first node (e.g. “Get Selected Text”).
-5. Configure the node by opening its settings panel (double-click it).
-6. Continue adding nodes, configuring, and connecting them.
-7. To test, make sure you’re on a relevant web page, then click **Execute Workflow**.
-8. The output will appear in each node’s results panel.
+1. Click the `Agentic WorkFlow` icon in your browser.
+2. Choose **Create New Workflow** (or **Start from Blank**).
+3. Click **Add first step…**.
+4. Search for a node you want (for example **Get Selected Text**) and add it.
+5. Click the node to open its settings and choose the options you want.
+6. Add more nodes and connect them.
+7. To test, open the page you want to automate, then click **Execute Workflow**.
+8. Click each node to see its output.
 
 You can automate tasks such as:
 
@@ -32,11 +40,11 @@ If you’re new, try the [Quick Intro Tutorial](/usage/getting-started/quick-sta
 
 ---
 
-## Running workflows manually vs automatically
+## Run workflows manually vs automatically
 
 ### Manual execution
 
-Good for testing or workflows without triggers:
+Best for testing, or when you want to decide exactly when to run:
 
 1. Open the page you want to automate.
 2. Open the extension and choose your workflow.
@@ -45,9 +53,17 @@ Good for testing or workflows without triggers:
 
 ### Automatic execution (future feature)
 
-When workflows start with a **Trigger node**, they can run automatically when the trigger condition is met. (This is similar to how workflow triggering works in n8n, where you must activate workflows to run automatically.) ([n8n Docs][1])
+If your workflow starts with a **trigger node**, it can start automatically.
 
-Until then, manual execution gives you full control and helps with debugging.
+Examples:
+
+- Start when a page loads
+- Start on a schedule
+- Start when you click a built-in button
+
+To learn more about triggers, see [When Started](/nodes/builtin/trigger/WhenStarted/) and [Schedule Trigger](/nodes/builtin/trigger/ScheduleTrigger/).
+
+Even when you use triggers, manual runs are still useful for testing.
 
 ---
 
@@ -56,15 +72,15 @@ Until then, manual execution gives you full control and helps with debugging.
 - Workflows run in the page you currently view, so they see **real-time content** and page structure.
 - Because they run inside the browser, workflows are subject to **browser security rules** (e.g. cross-origin constraints).
 - Very large workflows or heavy processing may hit browser performance limits (memory, CPU).
-- Workflows are saved locally in your extension — they persist across browser sessions. You can export/import workflows to share or backup them.
+- Workflows are saved locally in your extension — they persist across browser sessions. You can export/import workflows to share or back them up.
 
 ---
 
 ## Tips for building reliable workflows
 
-- Add nodes gradually; test frequently instead of building many nodes at once.
+- Add nodes gradually. Test often instead of building everything at once.
 - Use **If / conditional nodes** to manage different paths.
-- In each node, inspect execution results (JSON or table view) to understand data shapes.
+- In each node, inspect results to understand what data you have.
 - Use meaningful names or notes for nodes — this helps you and others read the flow.
 - Start with templates from the **Marketplace** to learn patterns and best practices.
 
@@ -99,7 +115,7 @@ icon="puzzle"
 >
 Discover all supported browser interaction nodes (click, scroll, forms, etc.).
 
-    [Go  →](/integration/extension/)
+    [Go  →](/nodes/extension/)
 
   </Card>
 

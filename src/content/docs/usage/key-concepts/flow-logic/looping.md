@@ -5,7 +5,11 @@ sidebar:
   order: 3
 ---
 
-Looping is useful when you want to process multiple items or perform an action repeatedly, such as sending a message to every contact in your address book. `Agentic WorkFlow` handles this repetitive processing automatically, meaning you don't need to specifically build loops into your workflows.
+Looping is useful when you want to repeat an action.
+
+Example: send a message to every contact in a list.
+
+In many cases, you don’t need to build a manual loop: if a node receives multiple items, it usually runs once per item automatically.
 
 ## Using loops in `Agentic WorkFlow`
 
@@ -44,9 +48,11 @@ flowchart TB
     L_n2_A_0@{ animation: slow } 
 ```
 
-`Agentic WorkFlow` nodes take any number of items as input, process these items, and output the results. You can think of each item as a single data point, or a single row in the output table of a node.
+Nodes can take any number of items as input, process them, and output results.
 
-Nodes usually run once for each item. 
+You can think of each item as one row in the output table.
+
+Nodes usually run once for each item.
 
 
 ### Executing nodes once
@@ -83,7 +89,7 @@ flowchart TB
     L_C_B_0@{ animation: slow } 
 ```
 
-To create a loop in an `Agentic WorkFlow` workflow, connect the output of one node to the input of a previous node. Add an [IF](/integrations/builtin/core/flow/if) node to check when to stop the loop.
+To create a loop in an `Agentic WorkFlow` workflow, connect the output of one node back into a previous node. Use an [If](/nodes/builtin/flow/If/) node to decide when to stop.
 
 ### Loop until all items are processed
 

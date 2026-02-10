@@ -7,9 +7,15 @@ import { Card, CardGrid } from "@astrojs/starlight/components";
 import { Image } from "astro:assets";
 import Social from "@images/social.webp";
 
-In Agentic Workflow Studio you can have one workflow **call another workflow**—creating modular, reusable components of automation.  
-This helps you break large automations into smaller pieces, reuse logic, and keep workflows easier to manage.  
-(This aligns with the sub-workflow concept from [n8n docs](https://docs.n8n.io/flow-logic/subworkflows/?utm_source=chatgpt.com))
+Sometimes you’ll want to reuse the same set of steps in multiple workflows.
+
+Modular (lambda) workflows let one workflow **run another workflow**.
+
+This helps you:
+
+- Keep workflows smaller and easier to understand
+- Reuse the same “module” in multiple places
+- Update the module once instead of updating many workflows
 
 ---
 
@@ -23,19 +29,20 @@ This helps you break large automations into smaller pieces, reuse logic, and kee
 
 ## How it works
 
-### Step 1: Create the sub-workflow
+### Step 1: Create the reusable workflow
 
 - Create a new workflow to act as a reusable piece.
-- At the start of it, include an **Execute Sub-workflow Trigger** node (also called “When executed by another workflow”).
-- Define its input fields or structure in the trigger configuration.
+- Set it up to accept input from another workflow.
 - Build the internal logic, test and save the sub-workflow.
 
-### Step 2: Call the sub-workflow from a parent workflow
+### Step 2: Call it from a parent workflow
 
-- In the parent workflow, use the **Execute Workflow** (or “Execute Sub-workflow”) node.
-- Select the workflow to call (or reference it via an ID or URL).
-- Map input data from the parent into the sub-workflow’s input format.
-- Configure whether the parent waits for a result or continues asynchronously.
+- In the parent workflow, add a node that calls the other workflow.
+- Choose which workflow to run.
+- Pass in the data you want the sub-workflow to process.
+- Use the output as the input for the next step.
+
+Node reference: [Lambda Workflow](/nodes/builtin/lambda/LambdaWorkflow/).
 
 ### How data passes between workflows
 
@@ -60,7 +67,7 @@ In this sequence:
 - The parent workflow sends data into the sub-workflow trigger.
 - The sub-workflow processes data and returns output.
 - The parent workflow resumes with the returned output.
-  This ensures you can define clear **input** and **output** formats via the “Lambda Input” (trigger) and “Lambda Output” (last step) nodes, making modules predictable and reusable.
+  To keep things predictable, decide what input fields the sub-workflow expects and what output it returns.
 
 <Image src={Social} alt="Illustration of parent-sub-workflow relationship" />
 

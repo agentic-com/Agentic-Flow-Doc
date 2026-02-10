@@ -3,7 +3,9 @@ title: Mapping in the UI
 description: "Learn how to use <Agentic WorkFlow> browser extension for mapping in the ui with intelligent workflow creation."
 ---
 
-Data mapping means referencing data from previous nodes. It doesn't include changing (transforming) data, just referencing it.
+Data mapping means “use data from a previous step”.
+
+It does not change the data — it just inserts the value into a field.
 
 ## Data Mapping Process
 
@@ -32,9 +34,7 @@ graph TB
 You can map data in the following ways:
 
 * Using the expressions editor.
-* By dragging and dropping data from the **INPUT** into parameters. This generates the expression for you.
-
-For information on errors with mapping and linking items, refer to [Item linking errors](/data/data-mapping/data-item-linking/item-linking-errors.md).
+* By dragging and dropping data from the **INPUT** panel into a field (this generates the expression for you).
 
 ## How to drag and drop data
 
@@ -100,3 +100,25 @@ Given the following data:
 
 `Agentic WorkFlow` displays it in table form like this:
 
+
+### Mapping nested fields
+
+Nested fields are values inside another object.
+
+In the example above, `nested` contains two fields:
+
+- `nested.example-number-field`
+- `nested.example-string-field`
+
+To map a nested field, drag the nested key into your target field.
+
+For example:
+
+- Drag `example-string-field` from inside `nested`
+- The expression will look like `{{ $json.nested["example-string-field"] }}` (or similar)
+
+---
+
+## What’s next
+
+If you prefer typing expressions manually, see [Mapping in the expressions editor](/usage/key-concepts/data/data-mapping/data-mapping-expressions/).
