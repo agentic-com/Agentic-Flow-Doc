@@ -51,25 +51,29 @@ export default defineConfig({
       favicon: "./src/assets/logo.png",
       social: [
         {
-          icon: "codeberg",
-          label: "Codeberg",
-          href: "https://codeberg.org/knut",
+          icon: "x.com",
+          label: "X.com",
+          href: "https://x.com/awflow_io",
         },
         {
-          icon: "discord",
-          label: "Discord",
-          href: "https://discord.gg/agentic-workflow-studio",
+          icon: "blueSky",
+          label: "BlueSky",
+          href: "https://bsky.app/profile/awflow.io",
         },
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/agentic-workflow-studio",
+          href: "https://github.com/awflow",
         },
-        { icon: "gitlab", label: "GitLab", href: "https://gitlab.com/delucis" },
+        {
+          icon: "youtube",
+          label: "YouTube",
+          href: "https://www.youtube.com/@awflow",
+        },
         {
           icon: "mastodon",
           label: "Mastodon",
-          href: "https://mastodon.social/@agentic-workflow-studio",
+          href: "https://mastodon.social/@awflow",
         },
       ],
       defaultLocale: "root",
