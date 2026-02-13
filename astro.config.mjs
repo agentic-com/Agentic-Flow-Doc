@@ -227,9 +227,9 @@ export default defineConfig({
                 },
               },
               {
-                label: "Applications",
+                label: "Integrations",
                 autogenerate: {
-                  directory: "nodes/apps",
+                  directory: "nodes/integrations",
                   collapsed: true,
                 },
               },
