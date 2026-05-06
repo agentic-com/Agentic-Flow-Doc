@@ -1,107 +1,95 @@
 ---
 title: Data structure
-description: "Understand how data is organized and passed between nodes in Agentic WorkFlow for reliable web automation."
+description: "Understand items, fields, lists, and node outputs in Agentic WorkFlow."
 sidebar:
   order: 1
 ---
 
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+Most workflow problems are data-shape problems. A node may be working correctly, but the next node cannot use the result because the value is nested in a different field, because there are many items instead of one, or because two branches are combined differently than expected.
 
-<Image src={Social} alt="Data structure illustration" />
+This page explains the mental model to use before reaching for expressions or custom code.
 
-In Agentic WorkFlow, every node takes some input data and produces output data.
+## The basic unit: an item
 
-If you understand the “shape” of that data, it becomes much easier to:
+Agentic WorkFlow passes data as **items**. An item is one JSON-like object with named fields.
 
-- Connect nodes correctly
-- Know what the next node will receive
-- Debug when something looks wrong
+```json
+{
+  "title": "Quarterly report",
+  "url": "https://example.com/report",
+  "summary": "Revenue increased across three regions."
+}
+```
 
----
-
-## How data flows between nodes
-
-Every node:
-
-1. Receives data
-2. Does its job
-3. Outputs new data for the next node
-
-Most nodes output a **list** of items.
-
-Each item is a **JSON object** (think: one “record” with fields).
+Most nodes receive a list of items and return a new list of items. A list can contain one item, many items, or no items.
 
 ```json
 [
-  {
-    "name": "Alice",
-    "email": "alice@example.com"
-  },
-  {
-    "name": "Bob",
-    "email": "bob@example.com"
-  }
+  { "title": "Page A", "url": "https://example.com/a" },
+  { "title": "Page B", "url": "https://example.com/b" }
 ]
-````
+```
 
-If there are multiple items, the next node runs once per item.
+When a downstream node receives two items, it usually runs once for each item. That is why a workflow that starts with ten links can produce ten HTTP requests, ten AI summaries, or ten rows in an integration.
 
----
+## Fields are contracts
 
-## Multiple inputs and data merging
+Every node has a simple contract:
 
-Some nodes can receive data from **more than one input**.
+```mermaid
+flowchart LR
+  Input["Input items"] --> Node["Node settings + logic"]
+  Node --> Output["Output items"]
+  Output --> Next["Next node"]
 
-When that happens, Agentic WorkFlow combines items into **all possible combinations**.
+  style Node fill:#e8f5e9,stroke:#2e7d32
+```
 
-In plain terms: if one side has 2 items and the other side has 3 items, you’ll get 6 combined items.
+The next node does not know what you meant. It only sees field names and values. If the previous node returns `pageText` but the next node expects `text`, you must map or rename the field.
+
+Use [Edit Fields](/nodes/builtin/datatransformation/editfields/) when you need to create, rename, or reshape fields. Use [Pick Field](/nodes/builtin/datatransformation/pickfield/) when you want to pass only a smaller part of the item forward.
+
+## One item vs many items
+
+The most important question is: **how many items does this node output?**
+
+| Output shape | What it means | Common example |
+| --- | --- | --- |
+| One item | The workflow has one record to continue with | A page screenshot result |
+| Many items | The next node repeats for each record | A list of links or images |
+| Empty list | Nothing continues on that branch | A filter removed every item |
+| Nested data | One item contains an array or object inside it | A response with `items: [...]` |
+
+Nested arrays are not the same thing as multiple workflow items. If a node returns `{ "links": [...] }`, the next node receives one item with a `links` field. If it returns `[{ "url": "..." }, { "url": "..." }]`, the next node receives two items.
+
+## Branches and combined input
+
+When a node has multiple incoming connections, Agentic WorkFlow keeps the data from each parent separate so the downstream node can tell where each value came from.
 
 ```mermaid
 flowchart TB
-    B["Node 1"] L_B_D_0@--> D["Node 3"]
-    C["Node 2"] L_C_D_0@--> D
-    n1[" "] L_n1_B_0@--> B & C
+  A["Get All Links\n2 items"] --> C["Combine or use together"]
+  B["Get Page Metadata\n1 item"] --> C
+  C --> D["Next node receives linked data"]
 
-    B@{ shape: rounded}
-    D@{ shape: rounded}
-    C@{ shape: rounded}
-    n1@{ icon: "fa:circle-play", pos: "b"}
-
-    L_B_D_0@{ animation: slow } 
-    L_C_D_0@{ animation: slow } 
-    L_n1_B_0@{ animation: slow } 
-    L_n1_C_0@{ animation: slow } 
-
-
+  style C fill:#e1f5fe,stroke:#0277bd
 ```
 
-If **Node 1** outputs *n* items and **Node 2** outputs *m* items, then **Node 3** receives **n × m** combined items.
+If one branch produces two items and another produces one item, the downstream step may need to pair them, merge them, or choose one side as the source of truth. Use [Merge](/nodes/builtin/flow/merge/) when you want explicit control over how branches are combined.
 
----
+## Inspect before you map
 
-## Example
+Before writing an expression, inspect the previous node output and answer these questions:
 
-| Node                    | Output                                                                                            |
-| ----------------------- | ------------------------------------------------------------------------------------------------- |
-| Node 1                  | `[{"id":1}, {"id":2}]`                                                                            |
-| Node 2                  | `[{"color":"red"}, {"color":"blue"}]`                                                             |
-| Node 3 (combined input) | `[{"Node 1": {"id":1}, "Node 2": {"color":"red"}}, {"Node 1": {"id":1}, "Node 2": {"color":"blue"}}, {"Node 1": {"id":2}, "Node 2": {"color":"red"}}, {"Node 1": {"id":2}, "Node 2": {"color":"blue"}}]` |
-
-This is useful when you want to “pair up” data from two sources.
-
----
-
-## Tips for building data-driven workflows
-
-* Check your data at any step with the node output/preview panel in the workflow editor.
-* If you need to reshape data, use transformation nodes (for example “Edit Fields”).
-* When combining multiple branches, see the flow logic pages.
-
----
+1. Is the value on the current item or inside a nested object?
+2. Is there one item or many items?
+3. Does each item have the same fields?
+4. Did the data come from one parent node or multiple parent nodes?
+5. Should the next node repeat per item, or should the list be combined first?
 
 ## Related topics
 
-* [Data mapping](/usage/key-concepts/data/data-mapping/)
-* [Code](/usage/key-concepts/data/code/)
-* [Flow logic basics](/usage/key-concepts/flow-logic/)
+- [Item linking and mapping](/usage/key-concepts/data/item-linking/)
+- [Data mapping UI](/usage/key-concepts/data/data-mapping/data-mapping-ui/)
+- [Expressions](/usage/key-concepts/data/data-mapping/data-mapping-expressions/)
+- [Merge](/nodes/builtin/flow/merge/)

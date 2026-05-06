@@ -1,125 +1,49 @@
 ---
-title: Indexer Node
-description: Break documents into smart chunks and make them searchable - the essential first step for building AI knowledge bases.
+title: "Indexer"
+description: "Splitting text into chunks and embedding them into a vector store"
 sidebar:
-  label: Indexer Node
+  label: "Indexer"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Indexer
 
-The **Indexer Node** is like a smart librarian that takes long documents and organizes them into searchable sections. It breaks your content into manageable chunks and prepares them for AI to search through and understand.
+Splitting text into chunks and embedding them into a vector store
 
-This is the essential first step for building any AI knowledge base or document search system.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of documents being organized and indexed for AI search"
-/>
+Indexer belongs to the **AI Agents** palette group. Its canonical node id is `indexer` and its source documentation link is `/nodes/builtin/ai/aiagents/indexernode/`.
 
-## How it works
+## When to use it
 
-The node takes your documents, intelligently splits them at natural break points (like paragraphs), and converts each chunk into a searchable format that AI can understand and find relevant information from.
+Use Indexer as part of an AI workflow, either as an agent node or as a dependency connected to an agent.
 
-```mermaid
-graph LR
-  Document[Long Document] --> Split[Smart Splitting]
-  Split --> Index[Create Search Index]
-  Index --> Ready[Searchable Chunks]
-  style Index fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| Input | Source-backed field from the node schema. |
 
-<Steps>
+## Outputs
 
-1. **Provide Your Content**: Connect documents, web pages, or any text content you want to make searchable.
+Returns node-specific output described by the implementation and visible in workflow execution data.
 
-2. **Choose Chunk Size**: Decide how big each searchable piece should be (1000 characters works well for most content).
+## Dependencies and credentials
 
-3. **Set Overlap**: Choose how much chunks should overlap to maintain context between sections.
+- No explicit credential or node dependency is declared in the node description.
 
-4. **Select AI Model**: Choose an embedding model to convert text into searchable format.
+## Example workflow
 
-</Steps>
-
-## Practical example: Company knowledge base
-
-
-
-Let's create a searchable knowledge base depending on what kind of documents you have.
-
-**For General Business Docs:**
-- **Chunk Size**: 1000 characters (about 2-3 paragraphs).
-- **Overlap**: 200 characters (helps keep context between chunks).
-- **Best For**: Policies, procedures, and FAQs.
-
-**For Technical Manuals:**
-- **Chunk Size**: 800 characters (smaller chunks for specific instructions).
-- **Overlap**: 150 characters.
-- **Separators**: Split by paragraphs or new lines.
-
-**For Research Papers:**
-- **Chunk Size**: 1200 characters (larger chunks to keep complex ideas together).
-- **Overlap**: 300 characters.
-- **Goal**: Detailed analysis and understanding.
-
-## Common configurations
-
-| Content Type | Chunk Size | Overlap | Best For |
-|--------------|------------|---------|----------|
-| **General Business Docs** | 1000 | 200 | Policies, procedures, FAQs |
-| **Technical Documentation** | 800 | 150 | User manuals, API docs |
-| **Research Papers** | 1200 | 300 | Academic content, detailed analysis |
-| **Customer Support** | 600 | 100 | Quick answers, troubleshooting |
-
-## Configuration settings
-
-| Setting | Purpose | Recommended Values |
-|---------|---------|-------------------|
-| **Chunk Size** | How big each searchable piece is | 800-1200 characters |
-| **Chunk Overlap** | How much pieces overlap | 150-300 characters |
-| **Separators** | Where to split content | Paragraphs, sentences, sections |
-| **Embedding Model** | AI model for search capability | OpenAI text-embedding-ada-002 |
-
-<Aside type="tip" title="Start with standard settings">
-  Use 1000 character chunks with 200 character overlap for most content types. Adjust based on your specific needs after testing.
-</Aside>
-
-## Real-world examples
-
-### Employee handbook search
-Make company policies instantly searchable:
-```
-Input: Employee handbook PDF
-Chunk Size: 1000 (good for policy sections)
-Overlap: 200 (maintains context)
-Result: Searchable HR knowledge base
-```
-
-### Technical documentation
-Create searchable API documentation:
-```
-Input: Technical documentation
-Chunk Size: 800 (shorter for specific instructions)
-Separators: ["##", "###", "\n\n"] (respects heading structure)
-Result: Instant technical support system
-```
-
-### Research database
-Build searchable academic paper collection:
-```
-Input: Research papers and articles
-Chunk Size: 1200 (longer for academic context)
-Overlap: 300 (important for research continuity)
-Result: AI-powered research assistant
-```
+Connect Indexer to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
 
 ## Troubleshooting
 
-- **Poor chunk quality**: Adjust chunk size and overlap settings, or customize separators for your document type.
-- **Slow processing**: Reduce document size, process in smaller batches, or use local embedding models.
-- **Missing context**: Increase chunk overlap to maintain better connections between sections.
-- **Memory issues**: Process large documents in smaller segments or reduce the maximum number of chunks.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)

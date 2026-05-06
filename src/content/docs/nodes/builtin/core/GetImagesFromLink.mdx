@@ -1,94 +1,54 @@
 ---
-title: Get Images From Link
-description: Automatically discover and extract image URLs, alt text, and dimensions from any web page.
+title: "Get Images from Link"
+description: "Get the Images content of a page from a given URL"
 sidebar:
-  label: Get Images From Link
+  label: "Get Images from Link"
 ---
 
-import { Steps, Aside, Tabs, TabItem, Code } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+# Get Images from Link
 
-The **Get Images From Link** node is a powerful tool for media collection and web research. It scans a specific web address (URL) and provides you with a clean list of every image it finds on that page, including their descriptions and sizes. [1, 2]
+Get the Images content of a page from a given URL
 
-Whether you are building a product gallery, conducting a visual audit, or gathering assets for a presentation, this node automates the tedious task of "right-click, save as."
+## What it does
 
-<Image src={Social} alt="Illustration of extracting images from a website" />
+Get Images from Link belongs to the **Core** palette group. Its canonical node id is `getImagesFromLinkNode` and its source documentation link is `/nodes/builtin/core/getimagesfromlink/`.
 
-## How it works
+## When to use it
 
-When the workflow reaches this node, it visits the provided link in a background browser tab. It scans the page's structure for `<img>` tags, high-resolution source sets, and even icons. [3, 4] By using your current browser session, it can often find images on pages where you are already logged in. [5, 6]
+Use Get Images from Link for generic workflow operations such as requests, code, or URL content retrieval.
 
-```mermaid
-graph LR
-  URL --> Node{Get Images Node}
-  Node --> List
-  Node --> Meta
-  style Node fill:#6d28d9,stroke:#fff,color:#fff
+## Inputs and settings
 
-```
-
-## Setup guide
-
-<Steps>
-
-1. **Identify the Link**: Provide the URL of the page you want to scan. You can type this in or pull it from a previous node. 
-
-
-2. **Apply Size Filters**: To avoid cluttering your results with tiny icons or invisible tracking pixels, set a **Minimum Width** or **Height** (e.g., 200px).
-3. **Wait for Load**: If the website uses "Lazy Loading" (where images only appear as you scroll), ensure **Wait For Load** is enabled to give the page time to fully render. 
-
-
-4. **Run the Workflow**: The node will output a list of image objects containing the URL, "Alt Text" (description), and dimensions. 
-
-
-
-</Steps>
-
-## Practical example: Product Research
-
-Suppose you want to collect all product photos from a specific category page on an e-commerce site.
-
-Suppose you want to collect all product photos from a specific category page on an e-commerce site.
-
-**What you configure:**
-- **Link**: The URL of the category page (e.g., `https://shop.example.com/laptops`).
-- **Filters**: Set a minimum size (like 200px) to skip tiny icons.
-
-**What you get:**
-- **Images List**: A collection of found images.
-- **Details**: For each image, you get the URL, description (alt text), and dimensions.
-- **Count**: Total number of images found (e.g., 12).
-
-## Common settings
-
-| Setting | Purpose |
+| Setting | Notes |
 | --- | --- |
-| **Minimum Width/Height** | Prevents the node from picking up small buttons, arrows, or decorative icons. |
-| **Max Images** | Limits the number of results (e.g., "only give me the first 10 images"). |
-| **Include Data URLs** | If enabled, this will capture the image content itself as a string of code. Use this sparingly as it can make your workflow very slow. 
+| URL | Source-backed field from the node schema. |
+| Output field name | Source-backed field from the node schema. |
+| Timeout | Source-backed field from the node schema. |
+| Headers | Source-backed field from the node schema. |
+| Include input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
- |
-| **Wait For Load** | Keeps the node "watching" the page until slow-loading images appear. 
+## Outputs
 
- |
+Returns node-specific output described by the implementation and visible in workflow execution data.
 
-<Aside type="tip" title="Use for Accessibility Audits">
-You can use this node to quickly find images that are missing **Alt Text**. Images without descriptions are difficult for visually impaired users to understand, and this node makes it easy to spot them in bulk.
-</Aside>
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+Connect data into Get Images from Link, configure the settings above, and use the output in the next workflow step.
 
 ## Troubleshooting
 
-* **Missing Images**: If you see images in your browser but the node doesn't find them, the site might be using "Lazy Loading." Try increasing the **Timeout** or ensuring **Wait For Load** is checked. 
-
-
-* **Access Blocked**: Some sites prevent automated tools from seeing images. Since Agentic Workflow Studio runs in your own browser, you can often bypass this by opening the website in another tab first to "wake up" your session. 
-
-
-* **Memory Issues**: Extracting hundreds of high-resolution images at once can use a lot of computer memory. If your browser feels slow, use the **Max Images** filter to limit the count.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 
-* [Get HTML From Link](/nodes/builtin/core/GetHTMLFromLink/) — To see the full code behind the images.
-* [Get All Text From Link](/nodes/builtin/core/GetAllTextFromLink/) — To read the articles surrounding the images.
-* [Python Code](/nodes/builtin/core/Code/) — To filter or rename your image list using custom logic.
+- [Code](/nodes/builtin/core/code/)
+- [Http Request](/nodes/builtin/core/http-request/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)

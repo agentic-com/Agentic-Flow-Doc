@@ -1,0 +1,47 @@
+---
+title: "Browser Startup"
+description: "Run the flow when the browser starts."
+sidebar:
+  label: "Browser Startup"
+---
+
+# Browser Startup
+
+Run the flow when the browser starts.
+
+## What it does
+
+Browser Startup belongs to the **Trigger** palette group. Its canonical node id is `browserStartup` and its source documentation link is `/nodes/builtin/trigger/browserstartup/`.
+
+## When to use it
+
+Use Browser Startup when a workflow should start from this event instead of only from another node.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Node form | This node uses the default workflow node configuration. |
+
+## Outputs
+
+Starts the workflow and passes trigger context to downstream nodes when context is available.
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+Create a workflow with Browser Startup as the first node, then connect it to the action nodes that should run after the trigger fires.
+
+## Troubleshooting
+
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Node types overview](/nodes/builtin/node-types/)

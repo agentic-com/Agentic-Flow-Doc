@@ -1,96 +1,49 @@
 ---
-title: Structured Output Parser
-description: Transform messy AI responses into clean, organized data that's ready to use in your workflows - no more unpredictable text formats.
+title: "Structured Output Parser"
+description: "Return data in a defined JSON format"
 sidebar:
-  label: Structured Output Parser
+  label: "Structured Output Parser"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Structured Output Parser
 
-The **Structured Output Parser** transforms messy AI responses into clean, organized data. Think of it as a translator that takes whatever format the AI gives you and converts it into exactly the structure you need for your workflow.
+Return data in a defined JSON format
 
-Instead of getting unpredictable text that you have to manually clean up, this node ensures you always receive data in a consistent, usable format - perfect for feeding into spreadsheets, databases, or other workflow steps.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of converting unstructured AI text into organized data"
-/>
+Structured Output Parser belongs to the **Output Parser** palette group. Its canonical node id is `structuredOutputParser` and its source documentation link is `/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/`.
 
-## How it works
+## When to use it
 
-The parser takes raw AI output and applies a "schema" (a blueprint) that defines exactly what data you want and how it should be formatted. It validates the response and extracts only the information you need in the structure you specify.
+Use Structured Output Parser as part of an AI workflow, either as an agent node or as a dependency connected to an agent.
 
-```mermaid
-graph LR
-  AI[🤖 AI Response] --> Parser{Output Parser}
-  Parser --> Clean[📊 Clean Data]
-  style Parser fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| JSON Output Example | Source-backed field from the node schema. |
 
-<Steps>
+## Outputs
 
-1. **Define Your Schema**: Specify what data fields you want (name, age, category, etc.) and their types (text, number, true/false).
-2. **Connect AI Output**: Link the raw response from your AI node (like Basic LLM Chain or Q&A Node).
-3. **Set Validation Rules**: Choose whether missing fields should cause errors or just warnings.
-4. **Get Clean Data**: The output will be a structured object with exactly the fields you requested.
+Returns an output parser dependency used to structure model responses.
 
-</Steps>
+## Dependencies and credentials
 
-## Practical example: Extract product information
+- No explicit credential or node dependency is declared in the node description.
 
-Let's say you're using AI to analyze product descriptions and want consistent data for a spreadsheet.
+## Example workflow
 
-**Step 1: The Input (Messy AI Text)**
-"This is a great laptop! It's called the TechBook Pro and costs around $1,299. It has 16GB of RAM and comes in silver or black colors."
-
-**Step 2: The Schema (Your Requirements)**
-You tell the parser you want:
-- **product_name**: Text
-- **price**: Number
-- **ram**: Text
-- **colors**: List of text items
-
-**Step 3: The Output (Clean Data)**
-The node converts the text into actionable data:
-- **product_name**: "TechBook Pro"
-- **price**: 1,299
-- **ram**: "16GB"
-- **colors**: ["silver", "black"]
-
-## Common schema types
-
-| Data Type | Purpose | Example |
-|-----------|---------|---------|
-| **string** | Text information | Names, descriptions, categories |
-| **number** | Numeric values | Prices, quantities, ratings |
-| **boolean** | True/false values | In stock, featured, recommended |
-| **array** | Lists of items | Colors, features, tags |
-| **object** | Nested data | Address with street, city, zip |
-
-<Aside type="tip" title="Start simple">
-  Begin with just 2-3 fields in your schema. Once that works reliably, you can add more complex data structures and validation rules.
-</Aside>
-
-## When to use this parser
-
-**Perfect for:**
-- Extracting data from AI analysis for spreadsheets
-- Creating consistent reports from AI research
-- Building databases from AI-processed content
-- Ensuring reliable data flow between workflow steps
-
-**Skip if:**
-- You want the AI's natural language response as-is
-- You're doing creative writing or content generation
-- The AI output doesn't contain structured information
+Connect Structured Output Parser to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
 
 ## Troubleshooting
 
-- **"Schema validation failed"**: The AI didn't provide data in the expected format. Try simplifying your schema or improving your AI prompt
-- **"Missing required fields"**: The AI response didn't include essential information. Make your AI prompt more specific about what data to include
-- **"Parsing error"**: The AI response wasn't in a format the parser could understand. Check that your AI is producing structured output
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)

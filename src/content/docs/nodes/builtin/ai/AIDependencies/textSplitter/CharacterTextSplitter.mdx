@@ -1,91 +1,51 @@
 ---
-title: Character Text Splitter
-description: Break long documents into smaller, manageable pieces for AI processing - like cutting a book into chapters.
+title: "Character Text Splitter"
+description: "Breaks down text into smaller parts."
 sidebar:
-  label: Character Text Splitter
+  label: "Character Text Splitter"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Character Text Splitter
 
-The **Character Text Splitter** breaks long documents into smaller, equal-sized pieces. Think of it like cutting a long article into pages - each piece is roughly the same size, making it easier for AI to process and understand.
+Breaks down text into smaller parts.
 
-This is the simplest way to prepare documents for AI workflows. While other splitters use smart rules, this one just counts characters and splits at regular intervals.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of splitting text into equal-sized chunks"
-/>
+Character Text Splitter belongs to the **Text Splitter** palette group. Its canonical node id is `characterTextSplitter` and its source documentation link is `/nodes/builtin/ai/aidependencies/textsplitter/charactertextsplitter/`.
 
-## How it works
+## When to use it
 
-The splitter takes your text and divides it based on character count. You can choose where it prefers to split (like at paragraph breaks) and how much overlap you want between pieces to maintain context.
+Use Character Text Splitter as part of an AI workflow, either as an agent node or as a dependency connected to an agent.
 
-```mermaid
-graph LR
-  Text[Long Document] --> Splitter{Character Splitter}
-  Splitter --> Chunk1[Chunk 1]
-  Splitter --> Chunk2[Chunk 2]
-  Splitter --> Chunk3[Chunk 3]
-  style Splitter fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| Chunk Size | Source-backed field from the node schema. |
+| Separator | Source-backed field from the node schema. |
+| Chunk Overlap | Source-backed field from the node schema. |
 
-<Steps>
+## Outputs
 
-1. **Connect Your Text**: Provide the document you want to split. This usually comes from a "Get All Text From Link" or similar node.
-2. **Set Chunk Size**: Choose how many characters each piece should contain (typically 500-1500 characters).
-3. **Choose Split Points**: Decide where to split - at paragraph breaks ("\n\n") works well for most documents.
-4. **Add Overlap**: Set how many characters should overlap between chunks to maintain context (usually 100-200 characters).
+Returns a text splitter dependency used before indexing or retrieval.
 
-</Steps>
+## Dependencies and credentials
 
-## Practical example: Research article processing
+- No explicit credential or node dependency is declared in the node description.
 
-Let's say you want to process a long research article for AI analysis.
+## Example workflow
 
-**Input Configuration:**
-- **Chunk Size**: 800 characters per piece.
-- **Separator**: Split at empty lines (`\n\n`) to keep paragraphs together.
-- **Overlap**: 100 characters to keep context.
-
-**Resulting Split:**
-1. **Chunk 1**: "Introduction... (content)..." (Length: 800 chars)
-2. **Chunk 2**: "...(overlap from chunk 1)... Methodology..." (Length: 800 chars)
-
-Total: 2 chunks created from the article.
-
-## Common settings
-
-| Setting | Purpose | Recommended Value |
-|---------|---------|-------------------|
-| **Chunk Size** | How many characters per piece | 800-1200 for most documents |
-| **Separator** | Where to prefer splitting | "\n\n" for paragraphs, "\n" for lines |
-| **Chunk Overlap** | Characters shared between chunks | 100-200 to maintain context |
-
-<Aside type="tip" title="Perfect for beginners">
-  This splitter is ideal when you're just getting started with AI document processing. It's simple, predictable, and works well for most text types.
-</Aside>
-
-## When to use this splitter
-
-**Perfect for:**
-- Simple document processing workflows
-- When you need consistent chunk sizes
-- Processing plain text documents
-- Getting started with AI text analysis
-
-**Consider alternatives for:**
-- Complex documents with varied structure
-- When you need to respect semantic boundaries
-- Processing code or structured data
+Connect Character Text Splitter to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
 
 ## Troubleshooting
 
-- **Chunks too small**: Increase the chunk size or check if your separator appears frequently in the text
-- **Important information split**: Increase chunk overlap or use paragraph separators ("\n\n") instead of sentence separators
-- **No splitting occurs**: Make sure your separator actually exists in the text, or try a simpler separator like " " (space)
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
+## Related nodes
+
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)

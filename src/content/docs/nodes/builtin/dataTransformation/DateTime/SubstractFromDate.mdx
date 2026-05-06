@@ -1,169 +1,52 @@
 ---
 title: "Subtract From A Date"
-description: "Subtract time periods from dates to calculate past dates, deadlines, and historical analysis."
+description: "Subtract a number of days from a date"
+sidebar:
+  label: "Subtract From A Date"
 ---
 
-import { Image } from "astro:assets";
-import Social from '@images/social.webp';
+# Subtract From A Date
 
-**What it does:** Subtracts time periods (days, weeks, months, years) from dates to calculate past dates and historical analysis.
+Subtract a number of days from a date
 
-**Perfect for:** Historical analysis • Data retention • Deadline tracking • Past date calculations
+## What it does
 
-## What It Does
+Subtract From A Date belongs to the **Data Transformation** palette group. Its canonical node id is `subtractFromDate` and its source documentation link is `/nodes/builtin/datatransformation/datetime/substractfromdate/`.
 
-- **Subtract time periods** - Remove days, weeks, months, or years from any date
-- **Handle business days** - Skip weekends and holidays in calculations
-- **Multiple time units** - Work with years, months, weeks, days, hours, minutes
-- **Smart date handling** - Properly handle month boundaries and leap years
+## When to use it
 
-<Image src={Social} alt="Subtract From A Date calculation illustration" />
+Use Subtract From A Date to reshape workflow data before sending it to another node.
 
-## How It Works
+## Inputs and settings
 
-```mermaid
-graph LR
-    A[Start Date] --> B[Subtract Time Period]
-    B --> C[Past Date]
+| Setting | Notes |
+| --- | --- |
+| Date to subtract from | Source-backed field from the node schema. |
+| Time unit to subtract | Source-backed field from the node schema. |
+| Duration | Source-backed field from the node schema. |
+| Output field name | Source-backed field from the node schema. |
+| Include input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#f3e5f5
-```
+## Outputs
 
-**Simple process:** Start Date - Time Period = Past Date
+Returns transformed data for downstream nodes.
 
-## Common Time Subtractions
+## Dependencies and credentials
 
-**Subtract 30 days**
-```json
-{"amount": 30, "unit": "days"}
-```
+- No explicit credential or node dependency is declared in the node description.
 
-**Subtract 3 months**
-```json
-{"amount": 3, "unit": "months"}
-```
+## Example workflow
 
-**Subtract 2 weeks (business days only)**
-```json
-{"amount": 10, "unit": "days", "business_days_only": true}
-```
+Connect data into Subtract From A Date, configure the settings above, and use the output in the next workflow step.
 
-**Subtract 1 year**
-```json
-{"amount": 1, "unit": "years"}
-```
+## Troubleshooting
 
-## Real Examples
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
-**Calculate Data Retention Cutoff:**
-Verify which data is older than 90 days and needs to be deleted.
+## Related nodes
 
-**Input:**
-- **Current Date**: Jan 15, 2024
-- **Subtract**: 90 days
-
-**Result:**
-- **Cutoff Date**: October 17, 2023 (Any data created before this date is older than 90 days).
-
-## Business Day Example
-
-**Calculate project start date (excluding weekends):**
-
-**Input:**
-- Deadline: Friday, January 31, 2024
-- Subtract: 15 business days
-- Skip: Weekends and holidays
-
-**Result:**
-- Start date: Monday, January 8, 2024 (skipped 6 weekend days)
-
-**Configuration:**
-```json
-{
-  "input_date": "2024-01-31",
-  "amount": 15,
-  "unit": "days",
-  "business_days_only": true,
-  "holidays": ["2024-01-15", "2024-01-29"]
-}
-```
-
-## Common Use Cases
-
-**Data cleanup** - Calculate cutoff dates for data retention policies
-**Historical analysis** - Find dates in the past for trend analysis
-**Project planning** - Determine start dates based on known deadlines
-**Compliance** - Calculate dates for regulatory requirements
-
-## Configuration Examples
-
-**Basic subtraction:**
-```json
-{
-  "input_date": "2024-01-15T10:00:00Z",
-  "amount": 7,
-  "unit": "days"
-}
-```
-
-**Business days with holidays:**
-```json
-{
-  "input_date": "2024-01-31T17:00:00",
-  "amount": 10,
-  "unit": "days",
-  "business_days_only": true,
-  "holidays": ["2024-01-15", "2024-01-29"]
-}
-```
-
-**Multiple time units:**
-```json
-{
-  "input_date": "2024-06-15",
-  "amount": 6,
-  "unit": "months"
-}
-```
-
-## Time Unit Options
-
-| Unit | Description | Example |
-|------|-------------|---------|
-| `years` | Calendar years | Subtract 2 years |
-| `months` | Calendar months | Subtract 6 months |
-| `weeks` | 7-day periods | Subtract 4 weeks |
-| `days` | Calendar days | Subtract 30 days |
-| `hours` | Hours | Subtract 24 hours |
-| `minutes` | Minutes | Subtract 120 minutes |
-| `seconds` | Seconds | Subtract 3600 seconds |
-
-## Business Day Features
-
-**Weekend exclusion:**
-- Automatically skips Saturdays and Sundays
-- Configurable weekend days (default: Saturday=6, Sunday=0)
-
-**Holiday exclusion:**
-- Skip specific holiday dates
-- Holidays must be in YYYY-MM-DD format
-
-**Combined exclusions:**
-- Skip both weekends and holidays
-- Ensures accurate business day calculations
-
-## Quick Troubleshooting
-
-**Wrong month calculations:** Month subtractions can vary due to different month lengths (Mar 31 - 1 month = Feb 28/29)
-**Business day issues:** Make sure holidays are in YYYY-MM-DD format
-**Timezone problems:** Specify timezone if working across different time zones
-
-## What's Next?
-
-**Related nodes:** [Add To A Date](/nodes/builtin/dataTransformation/DateTime/AddToADate/) • [Get Current Date](/nodes/builtin/dataTransformation/DateTime/GetCurrentDate/) • [Format Date](/nodes/builtin/dataTransformation/DateTime/FormatDate/)
-
-**Common workflows:** [Data Retention](/learning/workflow-patterns/data-processing-patterns/) • [Historical Analysis](/learning/workflow-patterns/real-world-examples/research-automation/) • [Project Planning](/learning/workflow-patterns/optimization-best-practices/)
-
-**Learn more:** [Date Handling Guide](/learning/text-courses/intermediate/data-transformation/) • [Business Logic Workflows](/learning/text-courses/intermediate/multi-step-workflows/)
+- [Node types overview](/nodes/builtin/node-types/)

@@ -1,90 +1,92 @@
 ---
-title: Mapping in the expressions editor
-description: "Learn how to use <Agentic WorkFlow> browser extension for mapping in the expressions editor with intelligent workflow creation."
+title: Mapping with expressions
+description: "Use expressions when drag-and-drop mapping is not enough."
 ---
 
-This page shows a few common examples you can use in the expressions editor to reference data.
+Expressions let you reference values from the current item, previous nodes, or linked items. Use them when a field needs dynamic text, a fallback, or a value nested inside an object.
 
-## Access the linked item in a previous node's output
+For most workflows, start with the visual mapping UI. Use expressions when you need more control.
 
-When you use this, `Agentic WorkFlow` works back up the item linking chain, to find the parent item in the given node.
+## Expression mental model
 
-```js
-// Returns the linked item
-{{$("<node-name>").item}}
+```mermaid
+flowchart LR
+  Prev["Previous node output"] --> Current["Current node input item"]
+  Current --> Expr["Expression"]
+  Expr --> Field["Configured field value"]
 ```
 
-As a longer example, consider a scenario where a node earlier in the workflow has the following output data:
+An expression is evaluated while the node runs. If the node runs for ten items, the expression is evaluated ten times, once for each current item.
+
+## Current item values
+
+Use the current input item when the value should come from the item being processed now.
+
+```js
+{{$input.item.json.title}}
+```
+
+If the current item is:
 
 ```json
-[
-  {
-    "id": "23423532",
-    "name": "Jay Gatsby",
-  },
-  {
-    "id": "23423533",
-    "name": "José Arcadio Buendía",
-  },
-  {
-    "id": "23423534",
-    "name": "Max Sendak",
-  },
-  {
-    "id": "23423535",
-    "name": "Zaphod Beeblebrox",
-  },
-  {
-    "id": "23423536",
-    "name": "Edmund Pevensie",
-  }
-]
+{
+  "title": "Pricing page",
+  "url": "https://example.com/pricing"
+}
 ```
 
-To extract the name, use the following expression:
+the expression resolves to:
+
+```txt
+Pricing page
+```
+
+## Previous node values
+
+Use a previous node reference when the value should come from a specific earlier step.
 
 ```js
-{{$("<node-name>").item.json.name}}
+{{$("Get Page Metadata").item.json.title}}
 ```
 
-### Access the linked item in the current node's input
+This follows item linking where possible, so the workflow uses the previous item related to the current item.
 
-In this case, the item linking is within the node: find the input item that the node links to an output item.
+## Combine static text and dynamic values
+
+Expressions are useful for prompts, messages, filenames, and API payloads.
+
+```txt
+Summarize the page at {{$input.item.json.url}}.
+Title: {{$input.item.json.title}}
+```
+
+## Fallback values
+
+When page data may be missing, include a fallback before passing values to an AI or integration node.
 
 ```js
-// Returns the linked item
-{{$input.item}}
+{{$input.item.json.title || "Untitled page"}}
 ```
 
-As a longer example, consider a scenario where the current node has the following input data:
+## Nested values
 
-```json
-[
-  {
-    "id": "23423532",
-    "name": "Jay Gatsby",
-  },
-  {
-    "id": "23423533",
-    "name": "José Arcadio Buendía",
-  },
-  {
-    "id": "23423534",
-    "name": "Max Sendak",
-  },
-  {
-    "id": "23423535",
-    "name": "Zaphod Beeblebrox",
-  },
-  {
-    "id": "23423536",
-    "name": "Edmund Pevensie",
-  }
-]
-```
-
-To extract the name, you can use drag-and-drop mapping in the UI, or write the following expression:
+If a node returns nested output, reference the full path.
 
 ```js
-{{$input.item.json.name}}
+{{$input.item.json.metadata.description}}
 ```
+
+If the shape is uncertain, inspect the previous node output before writing the expression.
+
+## Good expression habits
+
+- Prefer clear field names from [Edit Fields](/nodes/builtin/datatransformation/editfields/) over long nested expressions.
+- Keep expressions small. If logic grows, use the [Code](/nodes/builtin/core/code/) node.
+- Add fallbacks for values extracted from browser pages.
+- Test expressions with more than one item so item linking issues show up early.
+
+## Related topics
+
+- [Data structure](/usage/key-concepts/data/data-structure/)
+- [Item linking](/usage/key-concepts/data/item-linking/)
+- [Data mapping UI](/usage/key-concepts/data/data-mapping/data-mapping-ui/)

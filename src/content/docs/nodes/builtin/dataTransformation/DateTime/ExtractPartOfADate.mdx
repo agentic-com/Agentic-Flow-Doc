@@ -1,130 +1,51 @@
 ---
 title: "Extract Part Of A Date"
-description: "Extract specific parts from dates like year, month, day, or day of week for filtering and analysis."
+description: "Extract a part of a date"
+sidebar:
+  label: "Extract Part Of A Date"
 ---
 
-import { Image } from "astro:assets";
-import Social from '@images/social.webp';
+# Extract Part Of A Date
 
-**What it does:** Extracts specific parts from dates like year, month, day, hour, or day of the week for filtering and analysis.
+Extract a part of a date
 
-**Perfect for:** Date filtering • Analytics • Conditional logic • Time-based sorting
+## What it does
 
-## What It Does
+Extract Part Of A Date belongs to the **Data Transformation** palette group. Its canonical node id is `extractPartOfADate` and its source documentation link is `/nodes/builtin/datatransformation/datetime/extractpartofadate/`.
 
-- **Extract date parts** - Get year, month, day, hour, minute from any date
-- **Get day names** - Extract day of week (Monday, Tuesday, etc.)
-- **Calculate derived values** - Get quarter, week number, day of year
-- **Multiple extractions** - Get several date parts at once
+## When to use it
 
-<Image src={Social} alt="Extract Part Of A Date analysis illustration" />
+Use Extract Part Of A Date to reshape workflow data before sending it to another node.
 
-## How It Works
+## Inputs and settings
 
-```mermaid
-graph LR
-    A[Full Date] --> B[Extract Parts]
-    B --> C[Individual Components]
+| Setting | Notes |
+| --- | --- |
+| Date to extract part from | Source-backed field from the node schema. |
+| Part of date to extract | Source-backed field from the node schema. |
+| Output field name | Source-backed field from the node schema. |
+| Include input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#f3e5f5
-```
+## Outputs
 
-**Simple process:** Full Date → Extract specific parts → Individual date components
+Returns transformed data for downstream nodes.
 
-## Common Extractions
+## Dependencies and credentials
 
-**Basic date parts**
-```json
-["year", "month", "day"]
-```
+- No explicit credential or node dependency is declared in the node description.
 
-**Time components**
-```json
-["hour", "minute", "second"]
-```
+## Example workflow
 
-**Text-based parts**
-```json
-["month_name", "day_name"]
-```
+Connect data into Extract Part Of A Date, configure the settings above, and use the output in the next workflow step.
 
-**Calculated values**
-```json
-["quarter", "week_of_year", "day_of_year"]
-```
+## Troubleshooting
 
-## Real Example
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
-**Input Date:**
-January 15, 2024 at 2:30 PM (which falls on a Monday).
+## Related nodes
 
-**The Extraction:**
-You ask the node to pull out:
-- Year
-- Month
-- Day
-- Day Name
-- Hour
-
-**Result:**
-```json
-{
-  "year": 2024,
-  "month": 1,
-  "day": 15,
-  "day_name": "Monday",
-  "hour": 14
-}
-```
-
-## Practical Use Cases
-
-**Filter by weekday:**
-- Extract `day_name` to filter only weekday data
-- Skip weekend entries in business reports
-
-**Seasonal analysis:**
-- Extract `quarter` to group data by business quarters
-- Extract `month_name` for monthly comparisons
-
-**Time-based sorting:**
-- Extract `hour` to analyze peak usage times
-- Extract `week_of_year` for weekly trends
-
-## Available Date Parts
-
-| Part | Description | Example |
-|------|-------------|---------|
-| `year` | Four-digit year | 2024 |
-| `month` | Month number (1-12) | 1 |
-| `month_name` | Full month name | "January" |
-| `day` | Day of month | 15 |
-| `day_name` | Full day name | "Monday" |
-| `hour` | Hour (0-23) | 14 |
-| `minute` | Minute (0-59) | 30 |
-| `quarter` | Quarter (1-4) | 1 |
-| `week_of_year` | Week number | 3 |
-| `is_weekend` | True/false | false |
-
-## Common Use Cases
-
-**Business analytics** - Extract quarters and months for financial reporting
-**User behavior analysis** - Extract hours and days to find usage patterns
-**Content filtering** - Extract day names to show only weekday content
-**Seasonal campaigns** - Extract months to trigger seasonal marketing
-
-## Quick Troubleshooting
-
-**Wrong timezone results:** Specify timezone if your dates are in different time zones
-**Missing parts:** Check that the date format is recognized (use ISO format when possible)
-**Locale issues:** Specify locale for month/day names in different languages
-
-## What's Next?
-
-**Related nodes:** [Format Date](/nodes/builtin/dataTransformation/DateTime/FormatDate/) • [Get Current Date](/nodes/builtin/dataTransformation/DateTime/GetCurrentDate/) • [Filter](/nodes/builtin/flow/Filter/)
-
-**Common workflows:** [Analytics Dashboards](/learning/workflow-patterns/data-processing-patterns/) • [Time-Based Filtering](/learning/workflow-patterns/content-manipulation-patterns/) • [Business Intelligence](/learning/workflow-patterns/real-world-examples/research-automation/)
-
-**Learn more:** [Date Handling Guide](/learning/text-courses/intermediate/data-transformation/) • [Conditional Logic](/learning/text-courses/intermediate/multi-step-workflows/)
+- [Node types overview](/nodes/builtin/node-types/)

@@ -1,210 +1,109 @@
 ---
-title: RAG (Smart Document Search)
-description: "Give AI access to your documents so it can provide accurate, source-backed answers instead of making things up."
+title: RAG
+description: "Understand Retrieval-Augmented Generation and how to design source-grounded AI workflows."
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+import { Aside } from "@astrojs/starlight/components";
 
-RAG (Retrieval-Augmented Generation) is like giving AI a research library. Instead of relying on what it learned during training, RAG first searches through your documents to find relevant information, then uses that information to provide accurate, source-backed answers.
+RAG means **Retrieval-Augmented Generation**. It is a pattern where the workflow searches trusted content first, then gives the matching content to the model before asking it to answer.
 
-This eliminates AI "hallucinations" by grounding responses in your actual documents and data.
+Use RAG when an answer must be grounded in specific documents, page content, policies, product data, or knowledge that may not be in the model.
 
-<Image src={Social} alt="AI searching through documents to provide accurate, source-backed answers" />
+## Why RAG exists
 
-## Why RAG matters
+A chat model answers from the context it can see and from patterns learned during training. If your workflow asks about private, recent, or highly specific information without providing that information, the model may guess.
 
-Regular AI can make up facts or provide outdated information. RAG ensures AI only uses information from your documents:
+RAG changes the question from:
 
-<Tabs>
-  <TabItem label="Regular AI">
-    **User:** "What's our vacation policy?"
-    
-    **AI Response:** "Most companies offer 2-3 weeks vacation..." *(generic, possibly wrong)*
-    
-    **Problems:**
-    - May not match your actual policy
-    - Could be outdated information
-    - No source to verify accuracy
-  </TabItem>
-  
-  <TabItem label="RAG AI">
-    **User:** "What's our vacation policy?"
-    
-    **AI Response:** "According to the Employee Handbook (Section 4.2), full-time employees receive 15 days vacation in their first year, increasing to 20 days after 2 years of service."
-    
-    **Benefits:**
-    - Uses your actual policy document
-    - Provides specific, accurate details
-    - Includes source citation for verification
-  </TabItem>
-</Tabs>
+> “What do you know about this?”
 
-## How RAG works
+to:
 
-RAG follows a simple process: search first, then answer:
+> “Using these retrieved sources, answer this question.”
+
+## The RAG pipeline
 
 ```mermaid
-graph LR
-    Question[Your Question] --> Search[Search Documents]
-    Search --> Find[Find Relevant Info]
-    Find --> Context[Add Context to AI]
-    Context --> Answer[AI Answer + Sources]
-    
-    style Search fill:#6d28d9,stroke:#fff,color:#fff
-    style Find fill:#6d28d9,stroke:#fff,color:#fff
+flowchart TD
+  Docs["Source documents or page text"] --> Split["Split into chunks"]
+  Split --> Embed["Create embeddings"]
+  Embed --> Store["Store in vector store"]
+  Question["User question"] --> QEmbed["Embed question"]
+  QEmbed --> Search["Search vector store"]
+  Store --> Search
+  Search --> Context["Top matching chunks"]
+  Context --> Prompt["Prompt with sources"]
+  Prompt --> Model["Chat model"]
+  Model --> Answer["Answer with source grounding"]
+
+  style Store fill:#e8f5e9,stroke:#2e7d32
+  style Search fill:#e1f5fe,stroke:#0277bd
+  style Answer fill:#fff3e0,stroke:#ef6c00
 ```
 
-## Building a RAG system
+There are two phases: indexing and answering. Indexing prepares the knowledge. Answering searches that knowledge and asks the model to respond from the retrieved context.
 
-<Steps>
+## Indexing decisions
 
-1. **Prepare your documents**: Convert documents into searchable format using embeddings
+| Decision | Tradeoff |
+| --- | --- |
+| Chunk size | Smaller chunks improve precision; larger chunks preserve context |
+| Chunk overlap | Helps avoid cutting important meaning at boundaries |
+| Metadata | Lets you filter by source, date, page, category, or customer |
+| Embedding model | Affects search quality and cost |
+| Re-index schedule | Keeps answers current when source content changes |
 
-2. **Store in vector database**: Use Local Knowledge or similar vector store
+Bad indexing leads to bad retrieval. If the correct source never appears in search results, the model cannot reliably answer from it.
 
-3. **Set up search**: Configure how many documents to search and similarity thresholds
+## Answering decisions
 
-4. **Connect to AI**: Use RAG Node or Tools Agent with vector store access
+| Decision | Tradeoff |
+| --- | --- |
+| Number of results | Too few misses context; too many adds noise |
+| Similarity threshold | Higher thresholds reduce weak matches but may return nothing |
+| Prompt wording | Should tell the model to answer only from provided sources |
+| Citation format | Helps users verify the answer |
+| Fallback behavior | Defines what to do when retrieval finds nothing useful |
 
-5. **Test and refine**: Adjust search parameters based on answer quality
+## What “grounded” means
 
-</Steps>
-
-## RAG workflow patterns
-
-### Document preparation
-Transform your documents into searchable format:
+A grounded answer should be traceable to retrieved context. It should not add unsupported facts just because they sound plausible.
 
 ```mermaid
-graph TD
-    Docs[Your Documents] --> Split[Split into Chunks]
-    Split --> Embed[Create Embeddings]
-    Embed --> Store[Store in Vector DB]
-    
-    style Split fill:#e1f5fe
-    style Embed fill:#e8f5e8
-    style Store fill:#fff3e0
+flowchart LR
+  Retrieved["Retrieved source text"] --> Claim["Answer claim"]
+  Claim --> Verify{"Can the claim be traced?"}
+  Verify -->|Yes| Keep["Keep in answer"]
+  Verify -->|No| Remove["Remove or mark unknown"]
 ```
 
-**Key decisions:**
-- **Chunk size**: Smaller chunks (200-500 words) for precise answers, larger chunks (500-1000 words) for more context
-- **Overlap**: 10-20% overlap between chunks to maintain context
-- **Metadata**: Add document titles, dates, categories for better filtering
+## Common failure modes
 
-### Query processing
-How RAG handles user questions:
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| Answer is generic | No relevant context was retrieved | Improve chunking, metadata, or query |
+| Answer mixes sources incorrectly | Too many unrelated chunks | Lower result count or add filters |
+| Answer invents details | Prompt allows guessing | Require “not found in sources” fallback |
+| Correct source is missing | Index is stale or incomplete | Re-index source content |
+| Answer ignores source | Prompt is too broad | Put source-grounding rules near the task |
 
-```mermaid
-graph TD
-    Query[User Question] --> Embed2[Convert to Embedding]
-    Embed2 --> Search[Search Vector DB]
-    Search --> Rank[Rank by Similarity]
-    Rank --> Select[Select Top Results]
-    Select --> AI[Send to AI with Context]
-    AI --> Response[Final Answer]
-    
-    style Search fill:#6d28d9,stroke:#fff,color:#fff
-    style AI fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Agentic WorkFlow pattern
 
-## RAG implementation options
+For a browser-based RAG workflow:
 
-<Tabs>
-  <TabItem label="RAG Node">
-    **Best for:** Simple question-answering workflows
-    
-    **Setup:**
-    - Connect to Local Knowledge vector store
-    - Set search parameters (top K, similarity threshold)
-    - Ask questions in natural language
-    
-    **Example use:** Company FAQ system, document Q&A
-  </TabItem>
-  
-  <TabItem label="Tools Agent + Vector Store">
-    **Best for:** Complex workflows requiring multiple tools
-    
-    **Setup:**
-    - Add vector store as a tool for Tools Agent
-    - Agent decides when to search documents
-    - Can combine document search with other actions
-    
-    **Example use:** Research assistant, customer support bot
-  </TabItem>
-  
-  <TabItem label="Custom Workflow">
-    **Best for:** Specialized RAG implementations
-    
-    **Setup:**
-    - Use Local Knowledge node directly
-    - Combine with Q&A Node or Basic LLM Chain
-    - Custom logic for search and response generation
-    
-    **Example use:** Content analysis, specialized domain applications
-  </TabItem>
-</Tabs>
+1. Extract content with [Get All Text](/nodes/extension/getalltext/) or URL content nodes.
+2. Split text with a text splitter dependency.
+3. Create embeddings with an embeddings dependency.
+4. Store content in [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/).
+5. Ask with [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) or a Tools Agent connected to retrieval.
 
-## Real-world RAG examples
-
-### Company knowledge base
-**Documents:** Employee handbook, policies, procedures
-**Use case:** HR chatbot that answers employee questions
-**Benefits:** Always current information, reduces HR workload
-
-### Technical documentation
-**Documents:** API docs, troubleshooting guides, FAQs  
-**Use case:** Developer support system
-**Benefits:** Faster problem resolution, consistent answers
-
-### Research assistant
-**Documents:** Research papers, reports, industry analysis
-**Use case:** Automated research and insight generation
-**Benefits:** Comprehensive analysis, source tracking
-
-### Customer support
-**Documents:** Product manuals, support tickets, knowledge articles
-**Use case:** Automated customer service
-**Benefits:** 24/7 availability, consistent quality
-
-## Optimizing RAG performance
-
-### Search quality
-- **Similarity threshold**: 0.7 for general use, 0.8+ for precise matches
-- **Result count**: Start with 3-5 documents. Too few might miss answers; too many can confuse the AI.
-- **Metadata filtering**: Combine semantic search with traditional filters
-
-### Answer quality
-- **Context window**: Balance between enough context and token limits
-- **Source citation**: Always include document sources in responses
-- **Confidence scoring**: Indicate how confident the AI is in its answer
-
-### Performance tuning
-- **Embedding model**: Choose based on your content type and accuracy needs
-- **Chunk strategy**: Optimize for your specific document types
-- **Caching**: Store frequently accessed embeddings for faster search
-
-<Aside type="tip" title="Start simple, then optimize">
-  Begin with default settings and basic document preparation. Monitor answer quality and gradually refine search parameters, chunk sizes, and embedding models based on real usage.
+<Aside type="tip" title="Design the fallback first">
+  Decide what the workflow should say when it cannot find enough source material. A clear fallback is one of the simplest ways to reduce hallucinations.
 </Aside>
 
-## Common RAG challenges
+## Related topics
 
-### Document quality
-- **Problem**: Poor quality documents lead to poor answers
-- **Solution**: Clean and structure documents before indexing
-
-### Search relevance
-- **Problem**: RAG finds irrelevant documents for queries
-- **Solution**: Adjust similarity thresholds, improve document metadata
-
-### Context limits
-- **Problem**: Reading too many documents at once can overwhelm the AI.
-- **Solution**: Search for fewer, more relevant documents or summarize them first.
-
-### Outdated information
-- **Problem**: Documents become stale over time
-- **Solution**: Regular document updates, version tracking
-
-RAG transforms AI from a general knowledge system into a specialized expert on your specific documents and data, providing accurate, verifiable, and up-to-date information.
+- [Embeddings and vectors](/advanced-ai/concepts/embeddings-vectors/)
+- [Prompting and structured outputs](/advanced-ai/concepts/prompting-and-outputs/)
+- [Memory and context](/advanced-ai/concepts/memory-context/)
+- [Evaluation and testing](/advanced-ai/concepts/evaluation-testing/)

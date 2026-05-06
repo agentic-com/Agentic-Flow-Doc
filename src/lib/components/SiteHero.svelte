@@ -126,7 +126,7 @@
               <div
                 class="absolute -top-10 -right-24 dark:text-teal-400 hidden w-fit rotate-12 gap-1 border-b border-dashed border-teal-500 text-sm font-normal text-teal-600 bg-teal-100 dark:bg-teal-900/40 rounded-t-sm pr-1 pl-1.5 pt-0.5 underline-offset-3 lg:flex"
               >
-                Build-in Nodes<svg
+                Built-in Nodes<svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -200,7 +200,7 @@
         </div>
       </div>
     </section>
-    <section class="bg-background pb-0 pt-0 md:pb-10">
+    <!-- <section class="bg-background pb-0 pt-0 md:pb-10">
       <div class="relative m-auto max-w-5xl px-6">
         <div class="mx-auto mt-4 mt-10 max-w-2xl flex justify-center gap-4">
           <div
@@ -260,6 +260,6 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
   </main>
 </div>
