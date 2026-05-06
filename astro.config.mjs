@@ -15,7 +15,6 @@ import svelte from "@astrojs/svelte";
 //const { PUBLIC_SITE_URL } = import.meta.env;
 import { loadEnv } from "vite";
 import mdx from "@astrojs/mdx";
-import sitemap from "@astrojs/sitemap";
 const { DOCS_SITE_URL } = loadEnv(process.env.NODE_ENV, process.cwd(), "");
 //const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL;
 
@@ -337,7 +336,7 @@ export default defineConfig({
       "./src/styles/global.css",
     ],
     lastUpdated: true,
-  }), svelte(), mdx(), sitemap()],
+  }), svelte(), mdx()],
 
   vite: {
     plugins: [tailwindcss()],
