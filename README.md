@@ -1,4 +1,4 @@
-# Agentic Workflow - Browser-Native Automation. Local-First Intelligence.
+# Agentic Workflow - Browser-Native Automation. Local-First Intelligence. 
 
 **Agentic Workflow** is a powerful, privacy-focused browser extension that redefines workflow automation by running entirely within the client's browser. It combines the robust, node-based flexibility of platforms like n8n.io and make.com with a unique set of capabilities for deep, on-page interaction and local, private AI processing.
 
