@@ -1,0 +1,50 @@
+---
+title: "Loop"
+description: "Execute a set of actions repeatedly based on conditions"
+sidebar:
+  label: "Loop"
+---
+
+# Loop
+
+Execute a set of actions repeatedly based on conditions
+
+## What it does
+
+Loop belongs to the **Flow** palette group. Its canonical node id is `loop` and its source documentation link is `/nodes/builtin/flow/loop/`.
+
+## When to use it
+
+Use Loop to control execution order, branching, waiting, looping, or error handling.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Max Iterations | Source-backed field from the node schema. |
+| Conditions | Source-backed field from the node schema. |
+
+## Outputs
+
+Returns the original input, filtered input, branched output, merged items, loop state, or an intentional error depending on the node.
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+Place Loop between data-producing nodes and downstream actions to control which data continues through the workflow.
+
+## Troubleshooting
+
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Filter](/nodes/builtin/flow/filter/)
+- [Merge](/nodes/builtin/flow/merge/)
+- [Wait](/nodes/builtin/flow/wait/)

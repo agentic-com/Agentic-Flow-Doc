@@ -1,105 +1,47 @@
 ---
-title: Lambda Workflow
-description: Run other workflows inside your main workflow to create reusable, modular automation components.
+title: "Lambda Workflow"
+description: "Runs a reusable workflow as a node. Its input schema is derived from the selected lambda workflow input node."
 sidebar:
-  label: Lambda Workflow
+  label: "Lambda Workflow"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Lambda Workflow
 
-The **Lambda Workflow** node lets you run complete workflows as single steps within other workflows. Think of it like calling a specialized helper that knows how to do a specific task perfectly every time.
+Runs a reusable workflow as a node. Its input schema is derived from the selected lambda workflow input node.
 
-This is incredibly powerful for building complex automations from smaller, reusable pieces. Instead of rebuilding the same logic over and over, you create it once and use it everywhere.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of a workflow calling another workflow as a component"
-/>
+Lambda Workflow belongs to the **Lambda** palette group. Its canonical node id is `???` and its source documentation link is `/nodes/builtin/lambda/lambdaworkflow/`.
 
-## How it works
+## When to use it
 
-When your workflow reaches a Lambda Workflow node, it pauses, runs the specified sub-workflow with the data you provide, waits for it to complete, and then continues with the results.
+Use Lambda Workflow to define or reuse a small workflow contract inside larger workflows.
 
-```mermaid
-graph LR
-  Main[Main Workflow] --> Call{Lambda Workflow}
-  Call --> Sub[Sub-Workflow]
-  Sub --> Results[Return Results]
-  Results --> Continue[Continue Main]
-  style Call fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| Node form | This node uses the default workflow node configuration. |
 
-<Steps>
+## Outputs
 
-1. **Choose Your Workflow**: Select which workflow you want to run. This workflow must have a Lambda Input node to receive data.
+Passes data into or out of a lambda workflow, or exposes a lambda workflow as a reusable node.
 
-2. **Prepare the Data**: Map the data from your current workflow to match what the sub-workflow expects to receive.
+## Dependencies and credentials
 
-3. **Configure Options**: Set timeout limits and decide how to handle errors if the sub-workflow fails.
+- No explicit credential or node dependency is declared in the node description.
 
-4. **Connect the Results**: The sub-workflow's output becomes available for the next steps in your main workflow.
+## Example workflow
 
-</Steps>
-
-## Practical example: Content processing pipeline
-
-Let's say you have a specialized workflow that analyzes any text content, and you want to use it in multiple different workflows.
-
-Let's say you have a specialized workflow that analyzes any text content, and you want to use it in multiple different workflows.
-
-**Main Workflow Data:**
-Your main workflow has found an article and extracted some text:
-- `extractedText`: "Artificial intelligence is transforming how we work..."
-
-**Calling the Sub-Workflow:**
-You use the Lambda Workflow node to call a sub-workflow named **"text-analyzer-v2"**.
-You pass the `extractedText` as input.
-
-**The Results:**
-The sub-workflow runs, does its magic, and returns a detailed analysis:
-```json
-{
-  "analysis": {
-    "sentiment": "positive",
-    "keyTopics": ["AI", "automation", "productivity"],
-    "readingLevel": "intermediate",
-    "wordCount": 847
-  },
-  "processingTime": 2300
-}
-```
-Now your main workflow can use this data to make decisions or save reports.
-
-## Common use cases
-
-| Scenario | Why Use Lambda Workflow | Example |
-|----------|-------------------------|---------|
-| **Repeated Logic** | Same processing needed in multiple workflows | Text analysis, data validation, format conversion |
-| **Complex Operations** | Break big workflows into manageable pieces | Multi-step data processing, content generation |
-| **Specialized Tasks** | Reuse expert workflows across projects | AI analysis, web scraping, API integrations |
-| **Team Collaboration** | Share workflow components between team members | Standard data processing, company-specific validations |
-
-<Aside type="tip" title="Start with simple sub-workflows">
-  Begin by creating sub-workflows that do one thing really well. You can always combine multiple Lambda Workflow nodes to handle complex scenarios.
-</Aside>
-
-## Configuration options
-
-| Setting | Purpose | Recommended Value |
-|---------|---------|-------------------|
-| **Workflow ID** | Which sub-workflow to run | Use descriptive names like "email-validator" |
-| **Timeout** | How long to wait before giving up | 30 seconds for most tasks, longer for AI processing |
-| **Retry Attempts** | How many times to try if it fails | 1-2 retries for network issues |
-| **Error Handling** | What to do if the sub-workflow fails | Continue with default values or stop the main workflow |
+Connect data into Lambda Workflow, configure the settings above, and use the output in the next workflow step.
 
 ## Troubleshooting
 
-- **"Workflow not found" errors**: Check that the workflow ID exists and is published. Make sure you have permission to run it.
-- **Input validation failures**: Verify that your input data matches exactly what the sub-workflow's Lambda Input node expects.
-- **Timeout errors**: Increase the timeout value or optimize the sub-workflow to run faster.
-- **Unexpected results**: Check that the sub-workflow's Lambda Output node is returning data in the format you expect.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Node types overview](/nodes/builtin/node-types/)

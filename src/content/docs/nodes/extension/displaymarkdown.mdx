@@ -1,0 +1,49 @@
+---
+title: "Display Markdown"
+description: "Display markdown content in the UI"
+sidebar:
+  label: "Display Markdown"
+---
+
+# Display Markdown
+
+Display markdown content in the UI
+
+## What it does
+
+Display Markdown belongs to the **In Page Action** palette group. Its canonical node id is `displayMarkdownNode` and its source documentation link is `/nodes/extension/displaymarkdown/`.
+
+## When to use it
+
+Use Display Markdown when the workflow needs to read from, write to, or interact with the currently open browser page.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Title | Source-backed field from the node schema. |
+| Content | Source-backed field from the node schema. |
+
+## Outputs
+
+Returns the extracted page data or the result of the page interaction.
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+Run Display Markdown after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+
+## Troubleshooting
+
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Http Request](/nodes/builtin/core/http-request/)

@@ -1,81 +1,50 @@
 ---
-title: "Download As File"
-description: "Save your workflow data as downloadable files in various formats like CSV, JSON, or text files."
+title: "Download as file"
+description: "Download the input data as a file"
+sidebar:
+  label: "Download as file"
 ---
 
-import { Image } from "astro:assets";
-import Social from '@images/social.webp';
+# Download as file
 
-**What it does:** Saves your workflow data as downloadable files in various formats like CSV, JSON, or text files.
+Download the input data as a file
 
-**Perfect for:** Report generation • Data export • Content delivery • Backup creation
+## What it does
 
-## What It Does
+Download as file belongs to the **Data Transformation** palette group. Its canonical node id is `downloadAsFile` and its source documentation link is `/nodes/builtin/datatransformation/downloadasfile/`.
 
-- **Save data as files** - Convert workflow results into downloadable files
-- **Multiple formats** - Support for CSV, JSON, TXT, and more
-- **Automatic downloads** - Files download directly to your computer
-- **Custom naming** - Name files with dates, timestamps, or custom text
+## When to use it
 
-<Image src={Social} alt="Download As File workflow illustration" />
+Use Download as file to reshape workflow data before sending it to another node.
 
-## How It Works
+## Inputs and settings
 
-```mermaid
-graph LR
-    A[Workflow Data] --> B[Download As File]
-    B --> C[Downloaded File]
+| Setting | Notes |
+| --- | --- |
+| File type | Source-backed field from the node schema. |
+| File name | Source-backed field from the node schema. |
+| Return input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#f3e5f5
-```
+## Outputs
 
-**Simple process:** Workflow data → Download As File → File saved to your computer
+Returns transformed data for downstream nodes.
 
-## Common File Formats
+## Dependencies and credentials
 
-- **CSV (Spreadsheet)**: Best for data you want to open in Excel or Google Sheets.
-- **JSON**: Best for structured data backup or use in other apps.
-- **TXT**: Best for saving simple notes or content.
-- **Custom Filenames**: You can use variables like `{{date}}` to automatically name your files (e.g., `report_2024.csv`).
+- No explicit credential or node dependency is declared in the node description.
 
-## Real Example
+## Example workflow
 
-**Input Data:**
-You have a list of three users (Alice, Bob, Carol) with their email addresses and scores.
+Connect data into Download as file, configure the settings above, and use the output in the next workflow step.
 
-**Configuration:**
-- **Format**: CSV (Spreadsheet)
-- **Filename**: `user_scores_{{date}}` (this will automatically add today's date)
+## Troubleshooting
 
-**The Result:**
-A file named `user_scores_2024-01-17.csv` is downloaded to your computer.
-Inside, it looks like a standard spreadsheet:
-```
-name,email,score
-Alice Johnson,alice@company.com,95
-Bob Smith,bob@company.com,87
-Carol Davis,carol@company.com,92
-```
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
-## Common Use Cases
+## Related nodes
 
-**Generate reports** - Create CSV or Excel files from workflow data
-**Export data** - Save processed data for external analysis
-**Create backups** - Download JSON files of important data
-**Content delivery** - Provide users with generated files
-
-## Quick Troubleshooting
-
-**Download not starting:** Check if browser is blocking downloads or requires user interaction
-**File too large:** Enable compression or split data into smaller files
-**Wrong format:** Verify your data structure matches the chosen file format
-
-## What's Next?
-
-**Related nodes:** [Edit Fields](/nodes/builtin/dataTransformation/EditFields/) • [Pick Field](/nodes/builtin/dataTransformation/PickField/) • [Filter](/nodes/builtin/flow/Filter/)
-
-**Common workflows:** [Report Generation](/learning/workflow-patterns/real-world-examples/content-management/) • [Data Export Patterns](/learning/workflow-patterns/data-processing-patterns/) • [Backup Workflows](/learning/workflow-patterns/optimization-best-practices/)
-
-**Learn more:** [Data Processing Guide](/learning/text-courses/intermediate/data-transformation/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)
+- [Node types overview](/nodes/builtin/node-types/)

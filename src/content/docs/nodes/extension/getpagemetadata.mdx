@@ -1,0 +1,48 @@
+---
+title: "Get Page Metadata"
+description: "Get metadata from the opened page"
+sidebar:
+  label: "Get Page Metadata"
+---
+
+# Get Page Metadata
+
+Get metadata from the opened page
+
+## What it does
+
+Get Page Metadata belongs to the **In Page Action** palette group. Its canonical node id is `getPageMetadataNode` and its source documentation link is `/nodes/extension/getpagemetadata/`.
+
+## When to use it
+
+Use Get Page Metadata when the workflow needs to read from, write to, or interact with the currently open browser page.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Node form | This node uses the default workflow node configuration. |
+
+## Outputs
+
+Returns the extracted page data or the result of the page interaction.
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+Run Get Page Metadata after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+
+## Troubleshooting
+
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Http Request](/nodes/builtin/core/http-request/)

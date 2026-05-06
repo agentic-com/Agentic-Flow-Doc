@@ -1,63 +1,116 @@
 ---
-title: Agentic WorkFlow
-description: Automate your web tasks with AI-powered workflows. No coding required - just point, click, and let AI do the work.
+title: Agentic WorkFlow Documentation
+description: Learn how to build browser-native automations, connect nodes, work with page data, and add AI safely to Agentic WorkFlow.
 template: splash
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 import "@styles/home.css";
 import SiteHero from "$lib/components/SiteHero.svelte";
-import { PUBLIC_SITE_URL, PUBLIC_CHROME_EXTENSION_URL } from "astro:env/client";
+import { PUBLIC_SITE_URL } from "astro:env/client";
 
 <SiteHero
   topCTA={{
     href: PUBLIC_SITE_URL,
-    value: "Visit our official Website",
+    value: "Visit the official website",
   }}
   title="Agentic WorkFlow"
-  subtitle="Create intelligent workflows"
-  description="Build AI-powered workflows directly in your browser with intelligent automation and context manipulation"
+  subtitle="Documentation"
+  description="Build browser-native workflows that read pages, transform data, call services, and use AI models through a visual node system."
   button1={{
-    href: "/usage/",
-    value: "Get Started",
+    href: "/usage/getting-started/quick-intro/",
+    value: "Start Learning",
   }}
   button2={{
-    href: PUBLIC_CHROME_EXTENSION_URL,
-    value: "Install Extension",
+    href: "/nodes/",
+    value: "Browse Nodes",
   }}
 />
 
-## Platform Capabilities
+## What You Can Build
 
 <CardGrid stagger>
-  <Card title="Browser-Native Automation" icon="puzzle">
-    - **Direct web page access** - Work with any website in real-time
-    - **Smart content extraction** - Text, images, links, structured data
-    - **Intelligent form filling** - AI-powered form completion
-    - **Adaptive navigation** - Handle dynamic websites that change
+  <Card title="Browser Workflows" icon="puzzle">
+    Read the current page, extract selected text, inspect metadata, collect links and images, fill forms, click controls, wait for page changes, and display results back in the browser.
   </Card>
 
-  <Card title="AI & Intelligence" icon="seti:bicep">
-    - **Local AI models** - Run AI completely offline and private
-    - **Cloud AI integration** - Connect to OpenAI, Anthropic, and others
-    - **Smart document search** - RAG systems for knowledge bases
-    - **Intelligent agents** - AI that plans and executes complex tasks
+  <Card title="Data Pipelines" icon="pkl">
+    Move items between nodes, map fields, branch with conditions, merge streams, loop through records, format values, and send clean output to APIs or integrations.
   </Card>
-  <Card title="Visual Workflow Builder" icon="pkl">
-    - **Drag-and-drop interface** - No coding required
-    - **100+ pre-built nodes** - Ready-made automation components
-    - **Real-time testing** - See results as you build
-    - **Workflow sharing** - Export and import automation templates
+
+  <Card title="AI Systems" icon="seti:bicep">
+    Connect chat models, embeddings, vector stores, memory, output parsers, and agent nodes to summarize, classify, answer questions, or reason over page content.
   </Card>
-  <Card title="Advanced Processing" icon="rocket">
-    - **Data transformation** - Clean, format, and structure information
-    - **API integration** - Connect to external services
-    - **Conditional logic** - Smart branching and decision making
-    - **Error handling** - Robust automation that handles edge cases
+
+  <Card title="Service Automation" icon="rocket">
+    Combine browser context with HTTP requests and integrations such as Google Sheets, Gmail, Notion, Slack, Airtable, and Google Drive.
   </Card>
 </CardGrid>
----
 
-**💡 Remember:** You don't need to be a developer. If you can describe what you want in plain language, you can automate it with Agentic WorkFlow.
+## How Agentic WorkFlow Thinks About Automation
 
-Start your automation journey today - from simple web scraping to sophisticated AI agents that think and adapt!
+Every workflow is a small execution graph. A trigger starts the run, each node receives data from previous nodes, and the workflow either updates the browser, transforms data, calls an external service, or asks an AI model to produce an answer.
+
+```mermaid
+flowchart LR
+  Trigger["Trigger"] --> Context["Browser or input context"]
+  Context --> Action["Node actions"]
+  Action --> Data["Structured items"]
+  Data --> Decision{"Branch, merge, or loop"}
+  Decision --> Output["Output, page update, API call, or AI response"]
+```
+
+The most reliable workflows keep this graph explicit: know what starts the run, what data each node outputs, where the browser state can change, and where failures should stop or branch.
+
+## Start With The Right Section
+
+<CardGrid>
+  <Card title="First Workflow" icon="open-book">
+    New to the app? Start with the quick intro, then build a small workflow that reads a page and returns a visible result.
+
+    [Open the quick intro](/usage/getting-started/quick-intro/)
+  </Card>
+
+  <Card title="Key Concepts" icon="list-tree">
+    Learn the mental models behind workflow lifecycle, execution order, browser context, item linking, data mapping, loops, merges, waiting, and errors.
+
+    [Study the concepts](/usage/key-concepts/flow-logic/workflow-lifecycle/)
+  </Card>
+
+  <Card title="Node Reference" icon="boxes">
+    Use the source-aligned node reference when you need exact node behavior, inputs, outputs, credentials, dependencies, and troubleshooting notes.
+
+    [Browse all nodes](/nodes/)
+  </Card>
+
+  <Card title="Advanced AI" icon="brain">
+    Learn when to use model dependencies, agents, RAG, memory, structured outputs, tool selection, and evaluation patterns.
+
+    [Explore AI concepts](/advanced-ai/concepts/)
+  </Card>
+</CardGrid>
+
+## Node Palette Map
+
+The node documentation follows the same group order as the app palette:
+
+1. [Trigger](/nodes/builtin/trigger/whenstarted/) - start a workflow manually, from the browser, or from a page event.
+2. [Lambda](/nodes/builtin/lambda/lambdainput/) - package reusable workflow logic behind clear inputs and outputs.
+3. [In Page Action](/nodes/extension/) - read, inspect, display, or interact with the active browser page.
+4. [Flow](/nodes/builtin/flow/if/) - branch, wait, merge, loop, and stop workflows.
+5. [Data Transformation](/nodes/builtin/datatransformation/editfields/) - edit fields, pick values, format dates, and download output.
+6. [Core](/nodes/builtin/core/http-request/) - run code, make HTTP requests, read URLs, and process feeds.
+7. [AI](/nodes/builtin/ai/) - build model chains, agents, RAG workflows, and reusable AI dependencies.
+8. [Integrations](/nodes/builtin/integration/google-sheets/) - connect workflow output to external services.
+
+## Practical Learning Path
+
+Use this order when you are learning or debugging:
+
+1. Build a simple browser workflow with [Get Selected Text](/nodes/extension/getselectedtext/) or [Get All Text](/nodes/extension/getalltext/).
+2. Read [Data Structure](/usage/key-concepts/data/data-structure/) and [Item Linking](/usage/key-concepts/data/item-linking/) so mappings make sense.
+3. Add control flow with [If](/nodes/builtin/flow/if/), [Merge](/nodes/builtin/flow/merge/), [Loop](/nodes/builtin/flow/loop/), and [Wait](/nodes/builtin/flow/wait/).
+4. Add AI only after the data shape is stable. Start with [Model Dependencies](/advanced-ai/concepts/model-dependencies/) and [Prompting and Structured Outputs](/advanced-ai/concepts/prompting-and-outputs/).
+5. When something breaks, use the [Troubleshooting Guide](/usage/troubleshooting/) to isolate whether the issue is browser state, data mapping, credentials, timing, or model output.
+
+Agentic WorkFlow is easiest to learn when each workflow stays observable: run small sections, inspect node outputs, name important fields clearly, and keep browser actions separated from data processing whenever possible.

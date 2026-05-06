@@ -1,9 +1,9 @@
 ---
 title: Browser Compatibility
-description: Understand which browsers work with Agentic Workflow Studio and how to fix common compatibility issues.
+description: Understand which browsers work with Agentic WorkFlow Studio and how to fix common compatibility issues.
 ---
 
-Agentic Workflow Studio runs **entirely inside your browser**.  
+Agentic WorkFlow Studio runs **entirely inside your browser**.  
 Because of this, browser choice and settings directly affect how workflows behave.
 
 This page explains:
@@ -15,7 +15,7 @@ This page explains:
 
 ## Supported Browsers
 
-Agentic Workflow Studio relies on modern browser APIs for automation, DOM access, and local AI execution.
+Agentic WorkFlow Studio relies on modern browser APIs for automation, DOM access, and local AI execution.
 
 | Browser | Support Level | Notes |
 |-------|---------------|------|
@@ -54,11 +54,11 @@ These browsers provide full support for:
 
 ### If the Extension Does Not Appear
 
-If you do not see Agentic Workflow Studio in your toolbar or right-click menu:
+If you do not see Agentic WorkFlow Studio in your toolbar or right-click menu:
 
 1. Open the extension manager  
    `chrome://extensions/` or `edge://extensions/`
-2. Make sure **Agentic Workflow Studio** is enabled
+2. Make sure **Agentic WorkFlow Studio** is enabled
 3. Refresh the webpage you are working on
 
 If the issue persists:
@@ -91,7 +91,7 @@ If a workflow does not behave as expected in Firefox:
 
 ## Safari (Not Supported)
 
-Safari does not currently support the extension APIs required to run Agentic Workflow Studio.
+Safari does not currently support the extension APIs required to run Agentic WorkFlow Studio.
 
 ### What You Can Do Instead
 
@@ -151,7 +151,7 @@ If a workflow does not work on a specific site:
 
 This is required for:
 - Form filling
-- Page scraping
+- Page extraction
 - Trigger-based workflows
 
 ---

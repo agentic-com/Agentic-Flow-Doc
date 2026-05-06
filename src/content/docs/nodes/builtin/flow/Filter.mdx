@@ -1,94 +1,48 @@
 ---
-title: Filter
-description: Keep only the data you want by filtering out items that don't meet your criteria.
+title: "Filter"
+description: "Accept items matching the conditions"
 sidebar:
-  label: Filter
+  label: "Filter"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Filter
 
-The **Filter** node acts like a smart sieve for your data. It examines each piece of information and keeps only the items that meet your specific requirements, while discarding everything else.
+Accept items matching the conditions
 
-Think of it like sorting through a pile of photos - you might want to keep only the ones that are in focus, from a certain date, or contain specific people. The Filter node does the same thing with your workflow data.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of data filtering process"
-/>
+Filter belongs to the **Flow** palette group. Its canonical node id is `filter` and its source documentation link is `/nodes/builtin/flow/filter/`.
 
-## How it works
+## When to use it
 
-The Filter node examines each item in your data collection one by one. For each item, it checks whether it meets your specified conditions. Items that pass the test are kept, while items that fail are removed from the results.
+Use Filter to control execution order, branching, waiting, looping, or error handling.
 
-```mermaid
-graph LR
-  Input[All Data Items] --> Filter{Filter Node}
-  Filter -->|Meets Criteria| Keep[✅ Keep Item]
-  Filter -->|Fails Criteria| Remove[❌ Remove Item]
-  Keep --> Output[Filtered Results]
-  style Filter fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| Conditions | Source-backed field from the node schema. |
 
-<Steps>
+## Outputs
 
-1. **Connect your data**: Link the Filter node to a previous step that provides the data you want to filter.
+Returns the original input, filtered input, branched output, merged items, loop state, or an intentional error depending on the node.
 
-2. **Choose filter type**: Select whether you want to filter by specific values, ranges, text content, or custom conditions.
+## Dependencies and credentials
 
-3. **Set your criteria**: Define what makes an item worth keeping. For example, "keep articles longer than 100 words" or "keep products under $50".
+- No explicit credential or node dependency is declared in the node description.
 
-4. **Test the filter**: Run a small sample to make sure you're getting the results you expect.
+## Example workflow
 
-</Steps>
-
-## Practical example: Article quality control
-
-Let's say you're collecting news articles from various sources, but you only want high-quality articles that are complete and substantial.
-
-Let's say you're collecting news articles from various sources, but you only want high-quality articles that are complete and substantial.
-
-**Input Data:**
-Imagine you have three articles:
-1. **"Breaking News"**: A full article with an author and 450 words.
-2. **(Empty Title)**: Just a "snippet" with no author and 12 words.
-3. **"Weather Update"**: A short 85-word update.
-
-**Filter Conditions:**
-You set the node to keep items only if:
-- Title is not empty.
-- Author is not empty.
-- Word count is at least 100.
-
-**Result:**
-Only the first article ("Breaking News") is kept. The other two are removed from the workflow because they didn't meet all your criteria.
-
-In this example, the filter kept only articles that have:
-- A title (not empty)
-- An author (not empty)  
-- At least 100 words of content
-
-## Common filter conditions
-
-| Condition Type | Example | Purpose |
-|----------------|---------|---------|
-| **Has Content** | Title is not empty | Remove incomplete items |
-| **Minimum Length** | Content has at least 100 characters | Ensure substantial content |
-| **Specific Values** | Status equals "published" | Keep only certain types |
-| **Number Ranges** | Price between $10 and $100 | Filter by numeric criteria |
-| **Date Ranges** | Created after January 1, 2024 | Keep recent items only |
-| **Contains Text** | Description contains "urgent" | Find items with keywords |
-
-<Aside type="tip" title="Start with simple filters">
-  Begin with one simple condition and test it. Once you see it working correctly, you can add more complex criteria. This makes it easier to troubleshoot if something goes wrong.
-</Aside>
+Place Filter between data-producing nodes and downstream actions to control which data continues through the workflow.
 
 ## Troubleshooting
 
-- **No items pass the filter**: Your criteria might be too strict. Try relaxing one condition at a time to see which one is blocking everything.
-- **Too many items still getting through**: Add additional filter conditions to be more selective about what you keep.
-- **Filter runs slowly**: If you're processing thousands of items, consider filtering in smaller batches or simplifying your conditions.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Merge](/nodes/builtin/flow/merge/)
+- [Wait](/nodes/builtin/flow/wait/)

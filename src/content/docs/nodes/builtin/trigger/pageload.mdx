@@ -1,0 +1,47 @@
+---
+title: "Page Load"
+description: "Run the flow when a matching browser tab finishes loading."
+sidebar:
+  label: "Page Load"
+---
+
+# Page Load
+
+Run the flow when a matching browser tab finishes loading.
+
+## What it does
+
+Page Load belongs to the **Trigger** palette group. Its canonical node id is `pageLoad` and its source documentation link is `/nodes/builtin/trigger/pageload/`.
+
+## When to use it
+
+Use Page Load when a workflow should start from this event instead of only from another node.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| URL Patterns | Source-backed field from the node schema. |
+
+## Outputs
+
+Starts the workflow and passes trigger context to downstream nodes when context is available.
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+Create a workflow with Page Load as the first node, then connect it to the action nodes that should run after the trigger fires.
+
+## Troubleshooting
+
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Node types overview](/nodes/builtin/node-types/)

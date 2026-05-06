@@ -1,0 +1,52 @@
+---
+title: "Form Fill"
+description: "Fill a form on the opened web page"
+sidebar:
+  label: "Form Fill"
+---
+
+# Form Fill
+
+Fill a form on the opened web page
+
+## What it does
+
+Form Fill belongs to the **In Page Action** palette group. Its canonical node id is `formFillNode` and its source documentation link is `/nodes/extension/ui/form-fill/`.
+
+## When to use it
+
+Use Form Fill when the workflow needs to read from, write to, or interact with the currently open browser page.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Form | Source-backed field from the node schema. |
+| Mode | Source-backed field from the node schema. |
+| Field ID | Source-backed field from the node schema. |
+| Value | Source-backed field from the node schema. |
+| Values | Source-backed field from the node schema. |
+
+## Outputs
+
+Returns the extracted page data or the result of the page interaction.
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+Run Form Fill after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+
+## Troubleshooting
+
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Http Request](/nodes/builtin/core/http-request/)

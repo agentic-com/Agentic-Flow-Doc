@@ -75,8 +75,8 @@ You see some results, but not everything.
 - Extract after scrolling is complete
 
 See:
-- [Extract links (Get All Links)](/nodes/extension/GetAllLinks/)
-- [Extract images (Get All Images)](/nodes/extension/GetAllImages/)
+- [Extract links (Get All Links)](/nodes/extension/getalllinks/)
+- [Extract images (Get All Images)](/nodes/extension/getallimages/)
 
 ---
 
@@ -96,7 +96,7 @@ This is normal. Web pages are built for humans, not data.
 - Let an LLM node reformat the result if needed
 
 See:
-- [Get page text (Get All Text)](/nodes/extension/GetAllText/)
+- [Get page text (Get All Text)](/nodes/extension/getalltext/)
 - [LLM nodes](/nodes/builtin/ai/)
 
 ---

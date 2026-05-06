@@ -1,92 +1,47 @@
 ---
-title: Lambda Output
-description: Define what data your reusable workflow components return to other workflows.
+title: "Lambda Output"
+description: "Define the outputs for the lambda workflow."
 sidebar:
-  label: Lambda Output
+  label: "Lambda Output"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Lambda Output
 
-The **Lambda Output** node is the "exit door" for reusable workflows. It packages up the results of your workflow and sends them back to whichever workflow called it, like a function returning its answer.
+Define the outputs for the lambda workflow.
 
-This node ensures that your reusable workflows always return data in a consistent, predictable format that other workflows can easily use.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of processed data flowing out of a reusable workflow component"
-/>
+Lambda Output belongs to the **Lambda** palette group. Its canonical node id is `lambdaOutput` and its source documentation link is `/nodes/builtin/lambda/lambdaoutput/`.
 
-## How it works
+## When to use it
 
-After your workflow processes data, the Lambda Output node takes the final results, formats them according to your specifications, and returns them to the workflow that originally called yours.
+Use Lambda Output to define or reuse a small workflow contract inside larger workflows.
 
-```mermaid
-graph LR
-  Process[Workflow Processing] --> Output{Lambda Output}
-  Output --> Format[Format Results]
-  Format --> Return[Return to Caller]
-  style Output fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| Outputs | Source-backed field from the node schema. |
 
-<Steps>
+## Outputs
 
-1. **Connect Your Data**: Link the Lambda Output node to receive data from the final processing step in your workflow.
+Passes data into or out of a lambda workflow, or exposes a lambda workflow as a reusable node.
 
-2. **Define Output Format**: Specify exactly what fields you want to return and what type of data each field should contain.
+## Dependencies and credentials
 
-3. **Map Your Results**: Connect the processed data from your workflow to the appropriate output fields.
+- No explicit credential or node dependency is declared in the node description.
 
-4. **Test the Output**: Run your workflow to verify that the output format matches what calling workflows expect.
+## Example workflow
 
-</Steps>
-
-## Practical example: Content analysis results
-
-Let's say your workflow analyzes website content and you want to return the key findings in a structured way.
-
-Let's say your workflow analyzes website content and you want to return the key findings in a structured way.
-
-**Workflow Results:**
-Your workflow has finished and produced details like extracted text (1247 words) and keywords ("renewable", "energy").
-
-**Output Configuration:**
-You define the output schema to ensure consistent delivery:
-- `content`: Text (String)
-- `wordCount`: Number
-- `keywords`: List (Array)
-- `analyzedAt`: Timestamp (String)
-
-**Calling Workflow Receives:**
-The main workflow gets a clean package of results:
-```json
-{
-  "content": "This article discusses renewable energy trends...",
-  "wordCount": 1247,
-  "keywords": ["renewable", "energy", "solar", "wind"],
-  "analyzedAt": "2024-01-17T10:30:15Z"
-}
-```
-
-## Common output patterns
-
-| Output Type | When to Use | Example Setup |
-|-------------|-------------|---------------|
-| **Simple Result** | When returning just one piece of information | `{"outputSchema": {"type": "string"}}` |
-| **Success/Failure** | When you need to indicate if the process worked | `{"outputSchema": {"type": "object", "properties": {"success": {"type": "boolean"}, "message": {"type": "string"}}}}` |
-| **Processed Data** | When returning transformed or analyzed information | See the content analysis example above |
-| **List of Results** | When your workflow produces multiple items | `{"outputSchema": {"type": "array", "items": {"type": "string"}}}` |
-
-<Aside type="tip" title="Keep it clean">
-  Only return the data that calling workflows actually need. Extra fields make the output harder to use and can slow down processing.
-</Aside>
+Connect data into Lambda Output, configure the settings above, and use the output in the next workflow step.
 
 ## Troubleshooting
 
-- **"Output validation failed" errors**: Check that your workflow data matches the output schema format exactly.
-- **Calling workflows get unexpected data**: Verify that your output schema matches what other workflows are expecting to receive.
-- **Missing output fields**: Make sure all the fields defined in your output schema are actually being provided by your workflow data.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Node types overview](/nodes/builtin/node-types/)

@@ -1,155 +1,85 @@
 ---
-title: Execution order in multi-branch workflows
-description: "Understand how workflow execution order works in Agentic WorkFlow for consistent and predictable results."
+title: Execution order
+description: "Understand when nodes run, when branches wait, and how browser state affects workflow execution."
 sidebar:
-  order: 7
+  order: 1
 ---
 
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+Execution order answers one question: **when is a node allowed to run?**
 
-<Image src={Social} alt="Workflow execution order illustration" />
+Agentic WorkFlow follows the connections in the workflow. A node can run after its required upstream nodes have finished and produced the data it needs. In simple workflows this feels linear. In branching workflows, it becomes important to understand waiting, joining, and page state.
 
-In a workflow with branches, you may wonder: “Which node runs first?”
-
-Understanding execution order helps you avoid surprises, especially when two branches need to finish before a later node can run.
-
----
-
-## Execution overview
-
-Agentic WorkFlow uses a “level by level” execution order (often called **breadth‑first**).
-
-In plain terms:
-
-- It starts from the trigger
-- It runs the first set of connected nodes
-- Then it moves one step deeper and runs the next set
+## The simple case
 
 ```mermaid
-flowchart TB
-    B["Extract Data"] L_B_D_0@--> D["Transform Data"]
-    C["Load Config"] L_C_D_0@--> D
-    D L_D_E_0@--> E["Send Email"]
-    n1[" "] L_n1_B_0@--> B & C
-
-    B@{ shape: rounded}
-    D@{ shape: rounded}
-    C@{ shape: rounded}
-    E@{ shape: rounded}
-    n1@{ icon: "fa:circle-play", pos: "b"}
-    style B fill:#E8F5E9
-    style D fill:#E1F5FE
-    style C fill:#FFF3E0
-    style E fill:#E8EAF6
-
-    L_B_D_0@{ animation: slow } 
-    L_C_D_0@{ animation: slow } 
-    L_D_E_0@{ animation: slow } 
-    L_n1_B_0@{ animation: slow } 
-    L_n1_C_0@{ animation: slow } 
-````
-
-### Step-by-step
-
-1. The workflow starts from the **trigger node**.
-2. Agentic WorkFlow finds all nodes directly connected to it and runs them.
-3. Once all first-level nodes finish, it proceeds to their connected nodes.
-4. The process repeats until all reachable nodes complete execution.
-
----
-
-## Execution priority
-
-Each node waits for all its **predecessors** to finish before running.
-If one of the required nodes fails or is skipped, dependent nodes won't execute until all prerequisites are completed.
-
-This helps maintain **data consistency** across the workflow and prevents nodes from running with incomplete inputs.
-
----
-
-## Example: multi-branch workflow
-
-```mermaid
-flowchart TB
-    n2["Extract user data"] L_n2_n4_0@--> n4["Combine results"]
-    n3["Fetch order history"] L_n3_n4_0@--> n4
-    n4 L_n4_n5_0@--> n5["Send report"]
-    n6[" "] L_n6_n2_0@--> n2 & n3
-
-    n2@{ shape: rounded}
-    n4@{ shape: rounded}
-    n3@{ shape: rounded}
-    n5@{ shape: rounded}
-    n6@{ icon: "fa:circle-play", pos: "b"}
-    style n4 stroke:#00C853,fill:#C8E6C9
-
-    L_n2_n4_0@{ animation: slow } 
-    L_n3_n4_0@{ animation: slow } 
-    L_n4_n5_0@{ animation: slow } 
-    L_n6_n2_0@{ animation: slow } 
-    L_n6_n3_0@{ animation: slow } 
-
-
+flowchart LR
+  T["When Started"] --> A["Get All Text"]
+  A --> B["Basic LLM Chain"]
+  B --> C["Display Markdown"]
 ```
 
-In this example:
+This workflow runs from left to right. Each node receives the output of the previous node.
 
-* “Extract user data” and “Fetch order history” run first (the exact order can depend on how the nodes were created).
-* “Combine results” will wait for **both** branches to finish before running.
-* “Send report” will only execute after “Combine results” completes.
+## Branches run independently
 
----
-
-### Example: complex multi-branch workflow
+When one node connects to multiple downstream nodes, each branch can do its own work.
 
 ```mermaid
 flowchart TB
-    B["1"] L_B_B1_0@--> B1["4"] & n2["5"]
-    D2["6"] L_D2_E_0@--> E["7"]
-    E L_E_F_0@--> F["Continue Workflow"]
-    n1[" "] L_n1_B_0@--> B & D["3"] & C["2"]
-    B1 L_B1_E_0@--> E
-    C L_C_E_0@--> E
-    D L_D_D2_0@--> D2
-
-    B@{ shape: rounded}
-    B1@{ shape: rounded}
-    n2@{ shape: rounded}
-    D2@{ shape: rounded}
-    E@{ shape: rounded}
-    n1@{ icon: "fa:circle-play", pos: "b"}
-    D@{ shape: rounded}
-    C@{ shape: rounded}
-    style E stroke:#00C853,fill:#C8E6C9
-
-    L_B_B1_0@{ animation: slow } 
-    L_B_n2_0@{ animation: slow } 
-    L_D2_E_0@{ animation: slow } 
-    L_E_F_0@{ animation: slow } 
-    L_n1_B_0@{ animation: slow } 
-    L_n1_D_0@{ animation: slow } 
-    L_n1_C_0@{ animation: slow } 
-    L_B1_E_0@{ animation: slow } 
-    L_C_E_0@{ animation: slow } 
-    L_D_D2_0@{ animation: slow } 
+  T["When Started"] --> A["Get All Text"]
+  T --> B["Get Page Metadata"]
+  A --> C["Summarize text"]
+  B --> D["Format metadata"]
+  C --> E["Merge"]
+  D --> E
 ```
 
----
+The text branch and metadata branch do not depend on each other. The merge step is the point where they must be brought back together.
 
-## Browser context considerations
+## Join points wait for parents
 
-When your workflow runs inside a browser, keep these in mind:
+A node with multiple incoming connections is a **join point**. It should not be treated like a normal single-input step. The node needs enough upstream context to decide what input it should use.
 
-* **Page state changes**: Some nodes interact with a webpage (clicks, scrolls) — ensure timing is handled properly.
-* **Timing dependencies**: Wait for page updates (e.g., after form submissions) before the next step.
-* **Performance constraints**: Your browser has limited CPU/memory; avoid doing too many heavy things at the same time.
+```mermaid
+flowchart LR
+  A["Branch A done"] --> J["Join node"]
+  B["Branch B still running"] --> J
+  J --> N["Next step"]
 
----
+  style J fill:#fff3e0,stroke:#ef6c00
+```
+
+If the downstream step needs data from both branches, use [Merge](/nodes/builtin/flow/merge/) explicitly. If the downstream step only needs one branch, keep the connections separate to avoid accidental cross-input behavior.
+
+## Browser actions are stateful
+
+In-page actions do not just pass data. They can change the active page.
+
+```mermaid
+sequenceDiagram
+  participant W as Workflow
+  participant P as Browser page
+  W->>P: Click button
+  P-->>P: DOM updates asynchronously
+  W->>P: Read result too early
+  P-->>W: Old or incomplete data
+```
+
+When a node clicks, submits, scrolls, or changes the page, add a [Wait](/nodes/builtin/flow/wait/) or [Wait For Element](/nodes/extension/ui/wait-for-element/) before reading the next page state.
+
+## Practical rules
+
+- Put data-producing nodes before data-consuming nodes.
+- Use [Filter](/nodes/builtin/flow/filter/) before expensive steps like AI or external API calls.
+- Use [Merge](/nodes/builtin/flow/merge/) when two branches must be joined intentionally.
+- Use [Loop](/nodes/builtin/flow/loop/) when a branch should repeat until a condition is reached.
+- Use [Stop and Error](/nodes/builtin/flow/stopanderror/) when continuing would create bad data.
+- Add waits around browser actions that trigger page changes.
 
 ## Related topics
 
-* [Splitting workflows](/usage/key-concepts/flow-logic/splitting/)
-* [Merging data streams](/usage/key-concepts/flow-logic/merging/)
-* [Error handling](/usage/key-concepts/flow-logic/error-handling/)
-* [Waiting and delays](/usage/key-concepts/flow-logic/waiting/)
+- [Workflow lifecycle](/usage/key-concepts/flow-logic/workflow-lifecycle/)
+- [Splitting workflows](/usage/key-concepts/flow-logic/splitting/)
+- [Merging data streams](/usage/key-concepts/flow-logic/merging/)
+- [Waiting and delays](/usage/key-concepts/flow-logic/waiting/)
+- [Error handling](/usage/key-concepts/flow-logic/error-handling/)

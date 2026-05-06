@@ -492,8 +492,8 @@ window.fetch = function (...args) {
 ### Documentation Resources
 
 - **[Node Reference](/nodes/)** - Complete node documentation
-- **[Workflow Patterns](/learning/workflow-patterns/)** - Proven workflow designs
-- **[Performance Guide](/learning/workflow-patterns/optimization-best-practices/)** - Optimization techniques
+- **[Workflow Lifecycle](/usage/key-concepts/flow-logic/workflow-lifecycle/)** - How runs move from trigger to output
+- **[Performance Guide](/usage/troubleshooting/performance-optimization/)** - Optimization techniques
 
 ### Community Support
 
@@ -511,12 +511,12 @@ window.fetch = function (...args) {
 
 ### Troubleshooting Guides
 
-- **[AI Troubleshooting](/advanced-ai/troubleshooting-guide/)** - AI-specific issues
-- **[Performance Optimization](/learning/workflow-patterns/optimization-best-practices/)** - Performance problems
-- **[Workflow Debugging](/learning/text-courses/intermediate/workflow-debugging/)** - General debugging techniques
+- **[Model Dependencies](/advanced-ai/concepts/model-dependencies/)** - AI dependency and credential issues
+- **[Performance Optimization](/usage/troubleshooting/performance-optimization/)** - Performance problems
+- **[Workflow Connections](/usage/troubleshooting/workflow-connections/)** - General debugging techniques
 
 ### Best Practices
 
-- **[Security Best Practices](/usage/licenses-and-privacy/privacy-security/security/)** - Security guidelines
-- **[Performance Best Practices](/learning/workflow-patterns/optimization-best-practices/)** - Performance optimization
-- **[Workflow Design Patterns](/learning/workflow-patterns/)** - Proven design approaches
+- **[Permissions and Security](/usage/troubleshooting/permissions-security/)** - Security guidelines
+- **[Performance Best Practices](/usage/troubleshooting/performance-optimization/)** - Performance optimization
+- **[Flow Logic](/usage/key-concepts/flow-logic/)** - Proven execution patterns

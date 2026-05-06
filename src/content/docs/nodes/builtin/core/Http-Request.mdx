@@ -1,105 +1,62 @@
 ---
-title: "HTTP Request"
-description: "Send or receive data between your browser and external apps or services."
-template: doc
+title: "Http Request"
+description: "Makes a HTTP request and returns the response data"
+sidebar:
+  label: "Http Request"
 ---
 
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
-import {
-  Card,
-  CardGrid,
-  Aside,
-  Steps,
-  Tabs,
-  TabItem,
-} from "@astrojs/starlight/components";
+# Http Request
 
-The **HTTP Request** node is the bridge between your browser and the outside world. It allows your workflow to "talk" to other apps, databases, or AI services that have a web address (API).
+Makes a HTTP request and returns the response data
 
-<Image
-  src={Social}
-  alt="illustration of data moving from a browser to a cloud icon"
-/>
+## What it does
 
-## What can you do with this?
+Http Request belongs to the **Core** palette group. Its canonical node id is `httpRequest` and its source documentation link is `/nodes/builtin/core/http-request/`.
 
-This node is incredibly versatile. You will mostly use it when you want your workflow to interact with tools outside of the web page you are currently viewing.
+## When to use it
 
-<CardGrid>
-  <Card title="Connect to AI" icon="rocket">
-    Send text you found on a page to ChatGPT or Claude to summarize it or
-    analyze the sentiment.
-  </Card>
-  <Card title="Save to Databases" icon="add-document">
-    Send scraped product info or contact details directly to your own database
-    or a Google Sheet.
-  </Card>
-  <Card title="Trigger Alerts" icon="notification">
-    Send a message to Slack or Discord when a specific price drops or an element
-    changes on a page.
-  </Card>
-</CardGrid>
+Use Http Request for generic workflow operations such as requests, code, or URL content retrieval.
 
-## How it Works
+## Inputs and settings
 
-Think of an HTTP Request like sending a letter:
+| Setting | Notes |
+| --- | --- |
+| Method | Source-backed field from the node schema. |
+| URL | Source-backed field from the node schema. |
+| Authentication | Source-backed field from the node schema. |
+| Headers | Source-backed field from the node schema. |
+| Query Params | Source-backed field from the node schema. |
+| Body Content Type | Source-backed field from the node schema. |
+| Body | Source-backed field from the node schema. |
+| Follow redirects | Source-backed field from the node schema. |
+| Max redirects | Source-backed field from the node schema. |
+| Redirects | Source-backed field from the node schema. |
+| Include response header and status | Source-backed field from the node schema. |
+| Response format | Source-backed field from the node schema. |
+| Response | Source-backed field from the node schema. |
+| Timeout (ms) | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-1. **The Address (URL):** Where the letter is going.
-2. **The Action (Method):** Are you asking for information (GET) or delivering a package (POST)?
-3. **The Content (Body):** The actual data or message you are sending.
+## Outputs
 
-```mermaid
-graph LR
-    A --> B{HTTP Request}
-    B --> C[External App/API]
-    C --> B
-    B --> D
+Returns node-specific output described by the implementation and visible in workflow execution data.
 
-    style B fill:#f9f,stroke:#333,stroke-width:2px
+## Dependencies and credentials
 
-```
+- No explicit credential or node dependency is declared in the node description.
 
-## Setting Up Your Request
+## Example workflow
 
-You don't need to be a coder to set this up. Here are the main settings you'll interact with:
+Connect data into Http Request, configure the settings above, and use the output in the next workflow step.
 
-### Basic Settings
+## Troubleshooting
 
-- **URL (Address):** The web link provided by the service you want to connect to.
-- **Method (Action):**
-  - **GET:** Use this when you want to _pull_ information from a service.
-  - **POST:** Use this when you want to _send_ information (like text you just scraped) to a service.
-- **Body:** This is where you put the data you want to send. You can insert values from previous nodes (for example [Get Selected Text](/nodes/extension/GetSelectedText/)) by clicking the plus icon next to the field.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
-### Authentication (Keys & Passwords)
+## Related nodes
 
-Most apps require a "Key" or "Token" to prove it's you. You usually put these in the **Headers** section. It often looks like this:
-
-- **Key:** `Authorization`
-- **Value:** `Bearer YOUR_SECRET_TOKEN`
-
-<Aside type="tip">
-  Check the documentation of the app you are connecting to (like Airtable or
-  OpenAI). They will always tell you exactly what "Header" or "Key" they need.
-</Aside>
-
-## Pro Tips for Success
-
-<Steps>
-  1. **Test your connection:** Use the "Test Node" button to see if the external app responds correctly before running the whole workflow.
-  2. **Wait for it:** If you are sending data to a slow AI service, increase the **Timeout** setting so the workflow doesn't give up too early.
-  3. **Use Edit Fields:** Often, external apps want data in a specific format. Use the [Edit Fields](/nodes/builtin/dataTransformation/EditFields/) node before this one to clean up your text.
-</Steps>
-
-## Common Issues
-
-- **Connection Blocked (CORS):** Some websites are very strict and don't allow "outside" requests. If you see a CORS error, you might need to use a service that is specifically designed to work with browser extensions.
-- **Wrong Address:** Double-check your URL. Even a missing `/` at the end can sometimes cause a request to fail.
-
-## Related Nodes
-
-- **[Get Selected Text](/nodes/extension/GetSelectedText/):** Perfect for grabbing the content you want to send.
-- **[Edit Fields](/nodes/builtin/dataTransformation/EditFields/):** Format and reshape your data before sending it.
-- **[AI nodes](/nodes/builtin/ai/):** If you want AI processing in your workflow.
-- **[Marketplace](/marketplace/):** Look for templates that already use HTTP Request for popular apps.
+- [Code](/nodes/builtin/core/code/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)

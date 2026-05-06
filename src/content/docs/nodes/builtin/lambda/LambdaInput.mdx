@@ -1,92 +1,47 @@
 ---
-title: Lambda Input
-description: Define what data your reusable workflow components need to receive from other workflows.
+title: "Lambda Input"
+description: "Define the inputs for the lambda workflow."
 sidebar:
-  label: Lambda Input
+  label: "Lambda Input"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Lambda Input
 
-The **Lambda Input** node acts as the "front door" for reusable workflows. It defines what information your workflow needs to receive when another workflow calls it, like specifying what ingredients a recipe requires.
+Define the inputs for the lambda workflow.
 
-Think of it as creating a template that says "to use this workflow, you must provide these specific pieces of information." This makes your workflows reusable across different projects and situations.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of data flowing into a reusable workflow component"
-/>
+Lambda Input belongs to the **Lambda** palette group. Its canonical node id is `lambdaInput` and its source documentation link is `/nodes/builtin/lambda/lambdainput/`.
 
-## How it works
+## When to use it
 
-When you create a workflow that other workflows will use, the Lambda Input node defines the "contract" - what data must be provided and in what format. It validates incoming data and makes it available to the rest of your workflow.
+Use Lambda Input to define or reuse a small workflow contract inside larger workflows.
 
-```mermaid
-graph LR
-  Caller[Other Workflow] --> Input{Lambda Input}
-  Input --> Validate[Validate Data]
-  Validate --> Start[Start Workflow]
-  style Input fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| Inputs | Source-backed field from the node schema. |
 
-<Steps>
+## Outputs
 
-1. **Name Your Input**: Give your input parameter a clear name like "websiteUrl" or "userText" that describes what data you're expecting.
+Passes data into or out of a lambda workflow, or exposes a lambda workflow as a reusable node.
 
-2. **Define the Format**: Specify what type of data you need - text, numbers, or more complex structures with multiple fields.
+## Dependencies and credentials
 
-3. **Set Requirements**: Mark which fields are required and which are optional. You can also set default values for optional fields.
+- No explicit credential or node dependency is declared in the node description.
 
-4. **Test Your Input**: Run a test to make sure the data validation works as expected before using it in other workflows.
+## Example workflow
 
-</Steps>
-
-## Practical example: Website content extractor
-
-Let's create a reusable workflow that can extract content from any website. The Lambda Input defines what information callers must provide.
-
-Let's create a reusable workflow that can extract content from any website. The Lambda Input defines what information callers must provide.
-
-**Input Setup:**
-You define a parameter called `websiteData` that expects:
-- **url** (Required): The link to the page.
-- **waitTime** (Optional): How long to wait for the page to load (default: 5 seconds).
-
-**Calling the Workflow:**
-When another workflow calls this one, it sends:
-- `url`: `https://news.example.com/article/123`
-- `waitTime`: `10`
-
-**Workflow Receives:**
-Your workflow starts with this data ready for use:
-```json
-{
-  "websiteData": {
-    "url": "https://news.example.com/article/123",
-    "waitTime": 10
-  }
-}
-```
-
-## Common input types
-
-| Input Type | When to Use | Example Setup |
-|------------|-------------|---------------|
-| **Simple Text** | When you need just one piece of text | `{"parameterName": "userMessage", "inputSchema": {"type": "string"}}` |
-| **Number** | For quantities, timeouts, or calculations | `{"parameterName": "maxResults", "inputSchema": {"type": "number"}}` |
-| **Multiple Fields** | When you need several related pieces of data | See the website extractor example above |
-| **Optional Fields** | When some data is nice-to-have but not required | Add `"default"` values to make fields optional |
-
-<Aside type="tip" title="Start simple">
-  Begin with basic text or number inputs. You can always make them more complex later as your workflow grows.
-</Aside>
+Connect data into Lambda Input, configure the settings above, and use the output in the next workflow step.
 
 ## Troubleshooting
 
-- **"Parameter not found" errors**: Make sure the parameter name in your Lambda Input matches exactly what you're using in other nodes of your workflow.
-- **Validation failures**: Check that the calling workflow is sending data in the exact format you specified in your input schema.
-- **Missing data**: Verify that all required fields are marked as required in your schema, and that calling workflows provide them.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Node types overview](/nodes/builtin/node-types/)

@@ -12,7 +12,7 @@ This page explains how to make workflows **faster, smoother, and more stable**, 
 
 ## How Workflow Performance Works
 
-Agentic Workflow Studio runs:
+Agentic WorkFlow Studio runs:
 - Directly inside your browser
 - On the current webpage
 - Using your computer’s memory and CPU
@@ -57,8 +57,8 @@ Extracting the **entire page text or full HTML** can be very slow, especially on
 - Avoid full HTML unless absolutely necessary
 
 See:
-- [Get page text (Get All Text)](/nodes/extension/GetAllText/)
-- [Get full page HTML (Get All HTML)](/nodes/extension/GetAllHTML/)
+- [Get page text (Get All Text)](/nodes/extension/getalltext/)
+- [Get full page HTML (Get All HTML)](/nodes/extension/getallhtml/)
 
 ---
 
@@ -108,7 +108,7 @@ flowchart TD
     A[Page Opens] --> B[Wait for Element]
     B --> C[Extract Data]
     C --> D[Process or Analyze]
-````
+```
 
 Waiting for the right element is faster than retrying failed steps.
 
@@ -212,9 +212,9 @@ If the workflow is still slow:
 * Test it on a simpler page
 * Disable other extensions temporarily
 * Split one large workflow into two smaller ones
-* Look for a similar workflow in the marketplace
+* Compare your design with smaller examples or exported workflows from the community
 
 See:
 
 * [Troubleshooting Guide](/usage/troubleshooting/)
-* [Workflow Marketplace](/marketplace/)
+* [Workflow Connections](/usage/troubleshooting/workflow-connections/)

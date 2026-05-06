@@ -1,155 +1,117 @@
 ---
 title: AI Agents
-description: "Intelligent assistants that can think, plan, and use tools to accomplish complex tasks automatically."
+description: "Understand when to use AI agents, how they reason, and how to keep them bounded in workflows."
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-AI agents are like having smart assistants that can think through problems, make plans, and use different tools to get things done. Unlike simple automation that follows fixed steps, agents can adapt their approach based on what they encounter.
+An AI agent is a workflow step that can reason about a goal, choose tools, inspect results, and decide what to do next. It is useful when the path to the answer is not always the same.
 
-Think of an agent as a problem-solver that can figure out the best way to accomplish your goals, even when things don't go as expected.
+Do not use an agent just because a workflow uses AI. Use an agent when the workflow needs **decision-making**. For predictable transformations, a direct LLM chain is usually simpler and easier to test.
 
-<Image src={Social} alt="AI agent thinking and selecting tools to complete tasks" />
+## Agent loop
 
-## How agents think
-
-Agents follow a reasoning process similar to how humans approach complex tasks:
+Most agents follow the same loop:
 
 ```mermaid
-graph TD
-    Goal[Your Goal] --> Think[Agent Thinks]
-    Think --> Plan[Creates Plan]
-    Plan --> Tool[Selects Tool]
-    Tool --> Execute[Executes Action]
-    Execute --> Check[Checks Result]
-    Check --> Success{Success?}
-    Success -->|Yes| Next[Next Step]
-    Success -->|No| Adapt[Adapts Plan]
-    Adapt --> Tool
-    Next --> Done{Task Complete?}
-    Done -->|No| Think
-    Done -->|Yes| Result[Final Result]
-    
-    style Think fill:#6d28d9,stroke:#fff,color:#fff
-    style Plan fill:#6d28d9,stroke:#fff,color:#fff
+flowchart TD
+  Goal["Goal + instructions"] --> Observe["Observe available data"]
+  Observe --> Decide["Decide next action"]
+  Decide --> Tool{"Need a tool?"}
+  Tool -->|Yes| Call["Call tool"]
+  Call --> Result["Read tool result"]
+  Result --> Decide
+  Tool -->|No| Answer["Return final answer"]
+  Decide --> Stop{"Limit reached or unsafe?"}
+  Stop -->|Yes| Fallback["Stop with partial result or error"]
+
+  style Decide fill:#e1f5fe,stroke:#0277bd
+  style Stop fill:#ffebee,stroke:#c62828
 ```
 
-## Types of agents
+The loop is powerful, but it must be bounded. Give agents clear goals, tool access, stopping conditions, and output expectations.
+
+## Agent types in Agentic WorkFlow
 
 <Tabs>
-  <TabItem label="Tools Agent">
-    **Best for:** Complex tasks requiring multiple tools
-    
-    The Tools Agent can use any combination of available tools to accomplish goals. It's like having a Swiss Army knife - it picks the right tool for each part of the job.
-    
-    **Example:** "Research competitor pricing and create a comparison report"
-    - Uses web scraping tools to visit competitor sites
-    - Uses AI analysis to extract pricing information  
-    - Uses data tools to organize findings into a report
+  <TabItem label="Basic LLM Chain">
+    Use this when the model should transform known input into known output: summarize text, classify content, draft a message, or rewrite a field.
+
+    It is not really an agent loop. It is the best default for predictable AI steps.
   </TabItem>
-  
+
   <TabItem label="Q&A Agent">
-    **Best for:** Answering questions about specific content
-    
-    The Q&A Agent specializes in reading through content and answering specific questions about what it finds.
-    
-    **Example:** "What are the main benefits mentioned in these product reviews?"
-    - Reads through all the review content
-    - Identifies benefit-related information
-    - Summarizes the key advantages customers mention
+    Use this when the user asks a question about provided context. The quality depends on whether the workflow passes the right context into the node.
+
+    It is a good fit for page Q&A, document Q&A, and support-style answers.
   </TabItem>
-  
+
   <TabItem label="RAG Agent">
-    **Best for:** Knowledge-based tasks with large document collections
-    
-    The RAG Agent searches through your document database first, then uses that information to provide accurate, source-backed answers.
-    
-    **Example:** "How do we handle customer refunds according to our policies?"
-    - Searches company policy documents
-    - Finds relevant refund procedures
-    - Provides accurate answer with policy citations
+    Use this when the answer should be grounded in a vector store or local knowledge source.
+
+    It is the right choice when the model should search before answering.
+  </TabItem>
+
+  <TabItem label="Tools Agent">
+    Use this when the model must choose between tools, such as searching, extracting page content, querying Wikipedia, or calling a service.
+
+    It is the most flexible pattern, and also the one that needs the clearest limits.
   </TabItem>
 </Tabs>
 
-## Agent vs traditional automation
+## When to use an agent
 
-| Traditional Automation | AI Agents |
-|------------------------|-----------|
-| Follows fixed sequence | Adapts plan based on results |
-| Breaks when things change | Tries alternative approaches |
-| Requires manual updates | Learns from new situations |
-| One-size-fits-all approach | Customizes approach per task |
+Use an agent when:
 
-## Real-world agent examples
+- The workflow does not know in advance which tool is needed.
+- The task needs multiple steps and intermediate decisions.
+- The model should inspect results before continuing.
+- The workflow can tolerate some variability.
 
-### Research assistant
-**Goal:** "Find contact information for tech startups in San Francisco"
+Avoid an agent when:
 
-**Agent approach:**
-1. Plans to search startup directories and company websites
-2. Uses web scraping to gather company lists
-3. Visits individual company sites to find contact details
-4. Adapts when some sites have different layouts
-5. Compiles results into organized contact list
+- The workflow is a fixed transformation.
+- The output must follow a strict schema and no tool choice is needed.
+- A wrong action would be expensive or destructive.
+- The task can be solved with a direct node chain.
 
-### Content monitor
-**Goal:** "Track mentions of our company across news sites"
+## Agent design checklist
 
-**Agent approach:**
-1. Plans to check multiple news sources regularly
-2. Uses web scraping to gather recent articles
-3. Uses AI analysis to identify company mentions
-4. Adapts search terms based on what it finds
-5. Summarizes findings and sentiment analysis
+| Design question | Why it matters |
+| --- | --- |
+| What is the exact goal? | Vague goals produce wandering tool calls |
+| What data can the agent see? | Missing context leads to guesses |
+| Which tools can it use? | Too many tools increase wrong choices |
+| When should it stop? | Prevents loops and runaway execution |
+| What should the output look like? | Makes downstream nodes reliable |
+| How will you evaluate it? | Catches regressions and hallucinations |
 
-### Customer support
-**Goal:** "Help customers find answers in our documentation"
+## Example: research workflow
 
-**Agent approach:**
-1. Understands the customer's question
-2. Searches through knowledge base for relevant information
-3. Finds multiple related documents
-4. Synthesizes information into helpful answer
-5. Provides source links for further reading
+```mermaid
+flowchart LR
+  Trigger["User starts research"] --> Agent["Tools Agent"]
+  Agent --> Text["Get page text"]
+  Agent --> Wiki["Wikipedia Query"]
+  Agent --> Http["Http Request"]
+  Agent --> Final["Structured report"]
 
-<Aside type="tip" title="Start with clear goals">
-  Agents work best when you give them specific, measurable goals rather than vague instructions. Instead of "help with research," try "find pricing information for 5 competitors in the SaaS space."
+  style Agent fill:#e1f5fe,stroke:#0277bd
+```
+
+The agent should not be told “research this.” A stronger instruction is:
+
+> Find three source-backed facts about this company. Use page text first, then Wikipedia if the page lacks enough context. Return a short report with source URLs.
+
+That instruction gives the agent a goal, tool preference, stopping condition, and output shape.
+
+<Aside type="tip" title="Keep agents narrow">
+  A narrow agent with two or three relevant tools is usually more reliable than a broad agent with every tool available.
 </Aside>
 
-## Building effective agents
+## Related topics
 
-<Steps>
-
-1. **Define clear objectives**: What specific outcome do you want?
-
-2. **Choose appropriate tools**: Give agents access to tools they'll need for the task
-
-3. **Set reasonable limits**: Prevent infinite loops with maximum step counts
-
-4. **Test with simple tasks**: Start small and gradually increase complexity
-
-5. **Monitor and refine**: Watch how agents work and adjust their instructions
-
-</Steps>
-
-## Common agent patterns
-
-### Information gathering
-- Web scraping + AI analysis + data organization
-- Perfect for market research, lead generation, competitive analysis
-
-### Content processing  
-- Document reading + question answering + summarization
-- Great for analyzing reports, reviews, research papers
-
-### Decision making
-- Data analysis + rule evaluation + action selection
-- Useful for content moderation, quality control, routing decisions
-
-### Workflow orchestration
-- Task planning + tool coordination + progress monitoring
-- Ideal for complex multi-step business processes
-
-Agents represent the next evolution of automation - from rigid scripts to intelligent assistants that can think, adapt, and solve problems creatively.
+- [Tool selection](/advanced-ai/concepts/tool-selection/)
+- [Prompting and structured outputs](/advanced-ai/concepts/prompting-and-outputs/)
+- [RAG](/advanced-ai/concepts/rag/)
+- [Evaluation and testing](/advanced-ai/concepts/evaluation-testing/)

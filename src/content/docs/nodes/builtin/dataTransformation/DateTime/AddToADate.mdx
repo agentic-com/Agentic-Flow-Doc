@@ -1,113 +1,52 @@
 ---
 title: "Add To A Date"
-description: "Add time periods to dates for deadline calculations, scheduling, and future date planning."
+description: "Add a number of days to a date"
+sidebar:
+  label: "Add To A Date"
 ---
 
-import { Image } from "astro:assets";
-import Social from '@images/social.webp';
+# Add To A Date
 
-**What it does:** Adds time periods (days, weeks, months, years) to dates to calculate future dates and deadlines.
+Add a number of days to a date
 
-**Perfect for:** Project deadlines • Subscription renewals • Appointment scheduling • Future date calculations
+## What it does
 
-## What It Does
+Add To A Date belongs to the **Data Transformation** palette group. Its canonical node id is `addToADate` and its source documentation link is `/nodes/builtin/datatransformation/datetime/addtoadate/`.
 
-- **Add time periods** - Add days, weeks, months, or years to any date
-- **Handle business days** - Skip weekends and holidays in calculations
-- **Multiple time units** - Work with years, months, weeks, days, hours, minutes
-- **Smart date handling** - Properly handle month boundaries and leap years
+## When to use it
 
-<Image src={Social} alt="Add To A Date calculation illustration" />
+Use Add To A Date to reshape workflow data before sending it to another node.
 
-## How It Works
+## Inputs and settings
 
-```mermaid
-graph LR
-    A[Start Date] --> B[Add Time Period]
-    B --> C[Future Date]
+| Setting | Notes |
+| --- | --- |
+| Date to add to | Source-backed field from the node schema. |
+| Time unit to add | Source-backed field from the node schema. |
+| Duration | Source-backed field from the node schema. |
+| Output field name | Source-backed field from the node schema. |
+| Include input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#f3e5f5
-```
+## Outputs
 
-**Simple process:** Start Date + Time Period = Future Date
+Returns transformed data for downstream nodes.
 
-## Common Time Additions
+## Dependencies and credentials
 
-**Add 30 days**
-```json
-{"amount": 30, "unit": "days"}
-```
+- No explicit credential or node dependency is declared in the node description.
 
-**Add 3 months**
-```json
-{"amount": 3, "unit": "months"}
-```
+## Example workflow
 
-**Add 2 weeks (business days only)**
-```json
-{"amount": 10, "unit": "days", "business_days_only": true}
-```
+Connect data into Add To A Date, configure the settings above, and use the output in the next workflow step.
 
-**Add 1 year**
-```json
-{"amount": 1, "unit": "years"}
-```
+## Troubleshooting
 
-## Real Example
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
-**Calculate Project Deadline:**
-You start a project on January 15 and have 45 days to finish it.
+## Related nodes
 
-**Input:**
-- **Start Date**: Jan 15, 2024
-- **Add**: 45 days
-
-**Result:**
-The node calculates the exact deadline:
-- **Deadline**: February 29, 2024 (It automatically handles leap years!)
-
-## Business Day Example
-
-**Calculate work deadline (excluding weekends):**
-
-**Input:**
-- Start date: Monday, January 15, 2024
-- Add: 10 business days
-- Skip: Weekends and holidays
-
-**Result:**
-- Deadline: Monday, January 29, 2024 (skipped 4 weekend days)
-
-**Configuration:**
-```json
-{
-  "input_date": "2024-01-15",
-  "amount": 10,
-  "unit": "days",
-  "business_days_only": true,
-  "holidays": ["2024-01-15"]
-}
-```
-
-## Common Use Cases
-
-**Project planning** - Calculate project milestones and deadlines
-**Subscription management** - Determine renewal dates and expiration times
-**Appointment scheduling** - Schedule follow-up appointments and reminders
-**Contract management** - Calculate contract end dates and review periods
-
-## Quick Troubleshooting
-
-**Wrong month calculations:** Month additions can vary due to different month lengths (Jan 31 + 1 month = Feb 28/29)
-**Business day issues:** Make sure holidays are in YYYY-MM-DD format
-**Timezone problems:** Specify timezone if working across different time zones
-
-## What's Next?
-
-**Related nodes:** [Subtract From A Date](/nodes/builtin/dataTransformation/DateTime/SubstractFromDate/) • [Get Current Date](/nodes/builtin/dataTransformation/DateTime/GetCurrentDate/) • [Format Date](/nodes/builtin/dataTransformation/DateTime/FormatDate/)
-
-**Common workflows:** [Project Management](/learning/workflow-patterns/real-world-examples/content-management/) • [Scheduling Automation](/learning/workflow-patterns/data-processing-patterns/) • [Deadline Tracking](/learning/workflow-patterns/optimization-best-practices/)
-
-**Learn more:** [Date Handling Guide](/learning/text-courses/intermediate/data-transformation/) • [Business Logic Workflows](/learning/text-courses/intermediate/multi-step-workflows/)
+- [Node types overview](/nodes/builtin/node-types/)

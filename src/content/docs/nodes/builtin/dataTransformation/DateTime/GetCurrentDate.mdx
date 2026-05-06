@@ -1,141 +1,49 @@
 ---
 title: "Get Current Date"
-description: "Get the current date and time for timestamping, scheduling, and time-based workflow logic."
+description: "Get the current date"
+sidebar:
+  label: "Get Current Date"
 ---
 
-import { Image } from "astro:assets";
-import Social from '@images/social.webp';
+# Get Current Date
 
-**What it does:** Gets the current date and time for timestamping, scheduling, and time-based workflow logic.
+Get the current date
 
-**Perfect for:** Timestamping • Audit trails • Scheduling logic • Time-based conditions
+## What it does
 
-## What It Does
+Get Current Date belongs to the **Data Transformation** palette group. Its canonical node id is `getCurrentDate` and its source documentation link is `/nodes/builtin/datatransformation/datetime/getcurrentdate/`.
 
-- **Get current time** - Retrieve the exact current date and time
-- **Timezone handling** - Get time in your local timezone or any specified timezone
-- **Multiple formats** - Output as ISO string, timestamp, or structured object
-- **High precision** - Get time down to milliseconds when needed
+## When to use it
 
-<Image src={Social} alt="Get Current Date timestamp illustration" />
+Use Get Current Date to reshape workflow data before sending it to another node.
 
-## How It Works
+## Inputs and settings
 
-```mermaid
-graph LR
-    A[Workflow Trigger] --> B[Get Current Date]
-    B --> C[Current Timestamp]
+| Setting | Notes |
+| --- | --- |
+| Output field name | Source-backed field from the node schema. |
+| Include input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#f3e5f5
-```
+## Outputs
 
-**Simple process:** Workflow runs → Get Current Date → Current timestamp available
+Returns transformed data for downstream nodes.
 
-## Output Format Options
+## Dependencies and credentials
 
-- **ISO String (Best for Data)**: `2024-01-15T14:30:45.123Z`
-- **Human Readable Object**:
-    ```json
-    { "year": 2024, "month": 1, "day": 15, "hour": 14, "minute": 30 }
-    ```
-- **Unix Timestamp**: `1705329045123` (Number of milliseconds since 1970)
-- **Formatted Text**: "January 15, 2024 at 2:30 PM"
+- No explicit credential or node dependency is declared in the node description.
 
-## Real Examples
+## Example workflow
 
-**Add timestamp to user actions:**
-```json
-{
-  "user_id": "user123",
-  "action": "login",
-  "timestamp": "2024-01-15T14:30:45Z"
-}
-```
+Connect data into Get Current Date, configure the settings above, and use the output in the next workflow step.
 
-**Schedule future events:**
-```json
-{
-  "meeting_scheduled": "2024-01-15T14:30:45Z",
-  "meeting_time": "2024-01-16T10:00:00Z"
-}
-```
+## Troubleshooting
 
-**Audit trail logging:**
-```json
-{
-  "record_id": "rec456",
-  "modified_by": "user123",
-  "modified_at": "2024-01-15T14:30:45Z"
-}
-```
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
-## Timezone Examples
+## Related nodes
 
-**Auto-detect browser timezone:**
-```json
-{
-  "timezone": "auto"
-}
-```
-
-**Specific timezone:**
-```json
-{
-  "timezone": "America/New_York"
-}
-```
-
-**Multiple timezone outputs:**
-```json
-{
-  "utc_time": "2024-01-15T14:30:45Z",
-  "local_time": "2024-01-15T09:30:45-05:00",
-  "timezone": "America/New_York"
-}
-```
-
-## Common Use Cases
-
-**Audit logging** - Add timestamps to track when actions occurred
-**Data validation** - Check if data is current or expired
-**Scheduling** - Calculate future dates based on current time
-**Performance tracking** - Measure how long processes take
-
-## Configuration Options
-
-**Basic setup (no configuration needed):**
-```json
-{}
-```
-
-**With timezone:**
-```json
-{
-  "timezone": "Europe/London",
-  "format": "ISO"
-}
-```
-
-**High precision:**
-```json
-{
-  "precision": "millisecond",
-  "format": "object"
-}
-```
-
-## Quick Troubleshooting
-
-**Wrong timezone:** Check that timezone string is valid (like "America/New_York")
-**Time seems off:** Browser time might be incorrect - this node uses browser's system time
-**Format issues:** Verify the format parameter matches your needs (ISO, timestamp, object)
-
-## What's Next?
-
-**Related nodes:** [Add To A Date](/nodes/builtin/dataTransformation/DateTime/AddToADate/) • [Format Date](/nodes/builtin/dataTransformation/DateTime/FormatDate/) • [Extract Part Of A Date](/nodes/builtin/dataTransformation/DateTime/ExtractPartOfADate/)
-
-**Common workflows:** [Audit Trails](/learning/workflow-patterns/data-processing-patterns/) • [Scheduling Systems](/learning/workflow-patterns/real-world-examples/content-management/) • [Time-Based Logic](/learning/workflow-patterns/optimization-best-practices/)
-
-**Learn more:** [Date Handling Guide](/learning/text-courses/intermediate/data-transformation/) • [Workflow Timing](/learning/text-courses/intermediate/multi-step-workflows/)
+- [Node types overview](/nodes/builtin/node-types/)

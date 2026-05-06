@@ -1,95 +1,56 @@
 ---
-title: Get Links From Link
-description: Automatically discover and extract all hyperlinks from any web address for site mapping or automated navigation.
+title: "Get Links from Link"
+description: "Get the Links content of a page from a given URL"
 sidebar:
-  label: Get Links From Link
+  label: "Get Links from Link"
 ---
 
-import { Steps, Aside, Tabs, TabItem, Code } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+# Get Links from Link
 
-The **Get Links From Link** node is a discovery tool that scans a website and finds every clickable link on the page. It categorizes these links so you can easily distinguish between pages on the same site (Internal) and links leading elsewhere (External). [1, 2]
+Get the Links content of a page from a given URL
 
-This node is ideal for building site crawlers, checking for broken links, or creating automated navigation paths.
+## What it does
 
-<Image src={Social} alt="Illustration of extracting hyperlinks from a webpage" />
+Get Links from Link belongs to the **Core** palette group. Its canonical node id is `getLinksFromLinkNode` and its source documentation link is `/nodes/builtin/core/getlinksfromlink/`.
 
-## How it works
+## When to use it
 
-When the node runs, it visits the target URL in a background browser context. It looks for all `<a>` tags and other link elements, extracting the destination address and the "Anchor Text" (the clickable text you see on the screen). [3, 4]
+Use Get Links from Link for generic workflow operations such as requests, code, or URL content retrieval.
 
-```mermaid
-graph LR
-  URL --> Node{Get Links Node}
-  Node --> Internal[Internal Links]
-  Node --> External[External Links]
-  Node --> Files
-  style Node fill:#6d28d9,stroke:#fff,color:#fff
+## Inputs and settings
 
-```
-
-## Setup guide
-
-<Steps>
-
-1. **Identify the Link**: Provide the URL of the page you want to scan. You can type it manually or pull it from a previous step. 
-
-
-2. **Set Filters**: Choose whether you want to capture **Internal** links (same domain), **External** links (other sites), or both.
-3. **Validate Links (Optional)**: If enabled, the node will check if each link actually works (slower but more accurate). 
-
-
-4. **Run the Node**: The output will be a structured list of all found links, including their text and type. 
-
-
-
-</Steps>
-
-## Practical example: Site Audit
-
-Imagine you want to find all the social media profiles linked from a company's homepage.
-
-Imagine you want to find all the social media profiles linked from a company's homepage.
-
-**What you configure:**
-- **URL**: The homepage address (e.g., `https://example.com`).
-- **Filters**: Look for external links to find other sites they mention.
-
-**What you get:**
-- **Links List**: A collection of found links.
-- **Details**:
-    - **URL**: `https://twitter.com/example`
-    - **Text**: "Follow on X"
-    - **Type**: "external" (leads to another site)
-- **Count**: Total number of links found.
-
-## Common settings
-
-| Setting | Purpose |
+| Setting | Notes |
 | --- | --- |
-| **Max Links** | Limits the number of links returned (default is 200) to keep the workflow fast. |
-| **Validate Links** | Briefly pings each link to see if it leads to a real page or a "404 Not Found" error. 
+| URL | Source-backed field from the node schema. |
+| Output field name | Source-backed field from the node schema. |
+| Timeout | Source-backed field from the node schema. |
+| Filter domains | Source-backed field from the node schema. |
+| Exclude domains | Source-backed field from the node schema. |
+| Headers | Source-backed field from the node schema. |
+| Include input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
- |
-| **Filter Patterns** | Tell the node to ignore specific links, like those containing "mailto:" or "tel:". |
+## Outputs
 
-<Aside type="tip" title="Building a Crawler">
-You can build a simple "Spider" by connecting this node to a [Filter](/nodes/builtin/flow/Filter/) node. Use the filter to keep only "Internal" links, and then loop back to another **Get Links From Link** node to explore the next page.
-</Aside>
+Returns node-specific output described by the implementation and visible in workflow execution data.
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+Connect data into Get Links from Link, configure the settings above, and use the output in the next workflow step.
 
 ## Troubleshooting
 
-* **Missing Links**: If some links aren't appearing, the website might be generating them after the page loads. Try adding a [Wait](/nodes/builtin/flow/wait/) node before this step.
-
-
-* **Access Blocked**: Some sites block automated link extraction. Since this node runs in your browser, try visiting the site in a normal tab first to ensure you aren't blocked by a security challenge. 
-
-
-* **Performance**: Validating hundreds of links can take a long time. If you only need the URLs, keep **Validate Links** turned off.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 
-* [Get HTML From Link](/nodes/builtin/core/GetHTMLFromLink/) — To see the full source code where the links are located.
-* [Get All Text From Link](/nodes/builtin/core/GetAllTextFromLink/) — To read the content of the pages you find.
-* [Python Code](/nodes/builtin/core/Code/) — To perform advanced URL cleaning or domain analysis.
+- [Code](/nodes/builtin/core/code/)
+- [Http Request](/nodes/builtin/core/http-request/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)

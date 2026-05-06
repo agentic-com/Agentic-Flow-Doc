@@ -1,0 +1,51 @@
+---
+title: "Get Structured Data"
+description: "Extract structured data from a table or list in the opened tab"
+sidebar:
+  label: "Get Structured Data"
+---
+
+# Get Structured Data
+
+Extract structured data from a table or list in the opened tab
+
+## What it does
+
+Get Structured Data belongs to the **In Page Action** palette group. Its canonical node id is `getStructuredDataNode` and its source documentation link is `/nodes/extension/getstructureddata/`.
+
+## When to use it
+
+Use Get Structured Data when the workflow needs to read from, write to, or interact with the currently open browser page.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Mode | Source-backed field from the node schema. |
+| List Format | Source-backed field from the node schema. |
+| Table first row is header | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
+
+## Outputs
+
+Returns the extracted page data or the result of the page interaction.
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+Run Get Structured Data after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+
+## Troubleshooting
+
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Http Request](/nodes/builtin/core/http-request/)

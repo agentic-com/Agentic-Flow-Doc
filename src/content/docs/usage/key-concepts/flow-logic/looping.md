@@ -89,7 +89,7 @@ flowchart TB
     L_C_B_0@{ animation: slow } 
 ```
 
-To create a loop in an `Agentic WorkFlow` workflow, connect the output of one node back into a previous node. Use an [If](/nodes/builtin/flow/If/) node to decide when to stop.
+To create a loop in an `Agentic WorkFlow` workflow, connect the output of one node back into a previous node. Use an [If](/nodes/builtin/flow/if/) node to decide when to stop.
 
 ### Loop until all items are processed
 
