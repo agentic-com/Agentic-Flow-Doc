@@ -1,0 +1,42 @@
+---
+title: Version 0.3.0
+description: Release notes for Agentic WorkFlow v0.3.0.
+sidebar:
+  order: 2
+---
+
+Published: **April 23, 2026**
+
+## Highlights
+
+Version 0.3.0 improves node execution behavior with parameter handling, retry logic, and error handling. These changes make workflow runs easier to reason about and more resilient when a node fails or receives unexpected input.
+
+## Node Parameters
+
+Improved parameter handling makes node configuration more predictable during execution. This matters when settings use mapped values from previous nodes or expressions that depend on the current item.
+
+Relevant docs:
+
+- [Data mapping expressions](/usage/key-concepts/data/data-mapping/data-mapping-expressions/)
+- [Data structure](/usage/key-concepts/data/data-structure/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+
+## Retry Logic
+
+Retry logic helps workflows recover from temporary failures, especially browser timing issues, slow pages, or services that briefly reject a request. Retries should be paired with clear waits and small input data so failures remain diagnosable.
+
+Relevant docs:
+
+- [Wait](/nodes/builtin/flow/wait/)
+- [Wait For Element](/nodes/extension/ui/wait-for-element/)
+- [Execution order](/usage/key-concepts/flow-logic/execution-order/)
+
+## Error Handling
+
+Error handling improvements make it easier to decide whether a workflow should stop, continue, or pass error information downstream. Use this when a missing field, empty extraction, or service failure should lead to a controlled fallback instead of a silent wrong result.
+
+Relevant docs:
+
+- [Error handling](/usage/key-concepts/flow-logic/error-handling/)
+- [Full and partial executions](/usage/using-the-app/workflows/executions/execute-from-dnd-designer/)
+- [Stop and Error](/nodes/builtin/flow/stopanderror/)

@@ -1,77 +1,54 @@
 ---
-title: Get HTML From Link
-description: Extract the complete HTML source code from any web address for advanced analysis or data extraction.
+title: "Get HTML from Link"
+description: "Get the HTML content from a given URL"
 sidebar:
-  label: Get HTML From Link
+  label: "Get HTML from Link"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Get HTML from Link
 
-The **Get HTML From Link** node allows you to "peek behind the curtain" of a website. It takes a web address (URL) and retrieves the entire underlying source code (HTML) of that page.
+Get the HTML content from a given URL
 
-While the [Get All Text From Link](/nodes/builtin/core/GetAllTextFromLink/) node is better for reading content, this node is essential when you need to see the structure of a site to find hidden data, metadata, or specific elements that aren't visible as plain text.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of fetching source code from a web link"
-/>
+Get HTML from Link belongs to the **Core** palette group. Its canonical node id is `getHTMLFromLinkNode` and its source documentation link is `/nodes/builtin/core/gethtmlfromlink/`.
 
-## How it works
+## When to use it
 
-When you provide a link, the node visits the page in the background. It can wait for the page to finish loading (including content that appears after a delay) and then captures every line of code from the top to the bottom.
+Use Get HTML from Link for generic workflow operations such as requests, code, or URL content retrieval.
 
-```mermaid
-graph LR
-  URL --> Node{Get HTML Node}
-  Node --> Output
-  style Node fill:#6d28d9,stroke:#fff,color:#fff
+## Inputs and settings
 
-```
+| Setting | Notes |
+| --- | --- |
+| URL | Source-backed field from the node schema. |
+| Output field name | Source-backed field from the node schema. |
+| Timeout | Source-backed field from the node schema. |
+| Headers | Source-backed field from the node schema. |
+| Include input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-## Setup guide
+## Outputs
 
-<Steps>
+Returns node-specific output described by the implementation and visible in workflow execution data.
 
-1. **Enter the Link**: In the node settings, provide the URL of the website you want to analyze. You can type it manually or map it from a previous step.
-2. **Wait for Load**: If the website uses modern "loading" animations or takes a while to display data, ensure the **Wait For Load** option is enabled.
-3. **Set a Timeout**: Decide how long the node should try to reach the site before giving up (default is 30 seconds).
-4. **Run the node**: The output will contain a text field named `html` containing the full source code.
+## Dependencies and credentials
 
-</Steps>
+- No explicit credential or node dependency is declared in the node description.
 
-## Practical example: E-commerce data
+## Example workflow
 
-Suppose you want to see if a product page contains hidden "Stock Level" data that isn't written in plain text but is hidden in the code.
-
-Suppose you want to see if a product page contains hidden "Stock Level" data that isn't written in plain text but is hidden in the code.
-
-**What you configure:**
-- **Link**: The URL of the product page (e.g., `https://shop.example.com/product/123`).
-- **Settings**: Turn on "Wait for Load" to make sure all data is present.
-
-**What you get:**
-- **HTML**: The full code of the page (`<html>...</html>`).
-- **Metadata**: Found details like the page title ("Product Title - Tech Store") and load time.
-
-## Common settings
-
-| Setting               | Purpose                                                                                                                    |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| **Wait For Load**     | Keeps the browser open until the page is fully ready. Turn this on for "Single Page Apps" like dashboards or modern shops. |
-| **Sanitize HTML**     | Cleans the code to remove potentially harmful scripts. Recommended if you plan to display the HTML elsewhere.              |
-| **Include Resources** | Captures the styling (CSS) and scripts (JS) inside the HTML. This makes the file much larger but preserves the exact look. |
-
-<Aside type="tip" title="Use with the Python Code node">
-  Raw HTML is often very "noisy." We recommend passing the output of this node
-  into a [Python Code](/nodes/builtin/core/Code/) node using
-  the **BeautifulSoup** or **Pandas** libraries to easily find the specific data
-  you need.
-</Aside>
+Connect data into Get HTML from Link, configure the settings above, and use the output in the next workflow step.
 
 ## Troubleshooting
 
-- **Missing Content**: If the HTML you get looks like it's missing the middle of the page, try increasing the **Timeout** or ensuring **Wait For Load** is checked. Some sites wait for data to load after the initial page appears.
-- **Access Denied**: Some websites block automated tools. Since Agentic Workflow Studio runs in your browser, you can often bypass this by being logged into the site in another tab.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Code](/nodes/builtin/core/code/)
+- [Http Request](/nodes/builtin/core/http-request/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)

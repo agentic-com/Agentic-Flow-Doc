@@ -81,8 +81,8 @@ Tools used one after another in a logical sequence:
 
 ```mermaid
 graph LR
-    A[GetAllTextFromLink] --> B[BasicLLMChain]
-    B --> C[EditFields]
+    A[Get All Text from Link] --> B[Basic LLM Chain]
+    B --> C[Edit Fields]
     C --> D[DownloadAsFile]
     
     style A fill:#e1f5fe
@@ -103,7 +103,7 @@ Multiple tools working simultaneously on different aspects:
 ```mermaid
 graph TD
     Start[Input Data] --> Split{Split Task}
-    Split --> Tool1[GetAllTextFromLink]
+    Split --> Tool1[Get All Text from Link]
     Split --> Tool2[GetImagesFromLink]
     Split --> Tool3[GetLinksFromLink]
     Tool1 --> Merge[Merge Results]
@@ -124,8 +124,8 @@ Different tools based on conditions or results:
 ```mermaid
 graph TD
     Input[Data Input] --> Check{Check Data Type}
-    Check -->|Text| TextTool[BasicLLMChain]
-    Check -->|HTML| HTMLTool[GetHTMLFromLink]
+    Check -->|Text| TextTool[Basic LLM Chain]
+    Check -->|HTML| HTMLTool[Get HTML from Link]
     Check -->|API| APITool[Http-Request]
     TextTool --> Process[Process Results]
     HTMLTool --> Process
@@ -139,29 +139,29 @@ graph TD
 
 **Agent reasoning:**
 1. "Let me first get the page content to understand the structure"
-2. "This looks like a product page with structured data - I'll use GetHTMLFromLink"
+2. "This looks like a product page with structured data - I'll use Get HTML from Link"
 3. "Now I need to extract specific product details - I'll use QANode with targeted questions"
-4. "The data needs formatting - I'll use EditFields to structure it properly"
+4. "The data needs formatting - I'll use Edit Fields to structure it properly"
 
 ### Research automation agent
 **Goal:** Gather competitive intelligence from multiple sources
 
 **Agent reasoning:**
-1. "I have a list of competitor URLs - I'll use GetAllTextFromLink for each"
+1. "I have a list of competitor URLs - I'll use Get All Text from Link for each"
 2. "The content varies in quality - I'll use Filter to remove low-quality data"
-3. "Now I need to analyze for key insights - BasicLLMChain for analysis"
+3. "Now I need to analyze for key insights - Basic LLM Chain for analysis"
 4. "I should combine findings from all sources - Merge to consolidate"
-5. "Finally, create a summary report - BasicLLMChain for report generation"
+5. "Finally, create a summary report - Basic LLM Chain for report generation"
 
 ### Quality control agent
 **Goal:** Monitor content quality across multiple websites
 
 **Agent reasoning:**
-1. "I need to check multiple pages - GetAllTextFromLink for content"
+1. "I need to check multiple pages - Get All Text from Link for content"
 2. "Each page needs quality assessment - QANode with quality criteria"
 3. "Some pages might fail checks - If node to handle different outcomes"
 4. "Failed pages need different processing - conditional tool selection"
-5. "Results need to be organized - EditFields for structured output"
+5. "Results need to be organized - Edit Fields for structured output"
 
 <Steps>
 
@@ -183,9 +183,9 @@ graph TD
 Don't overwhelm agents with too many options:
 
 **Good tool set for content analysis:**
-- GetAllTextFromLink (data collection)
-- BasicLLMChain (analysis)
-- EditFields (formatting)
+- Get All Text from Link (data collection)
+- Basic LLM Chain (analysis)
+- Edit Fields (formatting)
 - If (decision making)
 
 **Avoid:** Giving agents 20+ tools for a simple task
@@ -194,9 +194,9 @@ Don't overwhelm agents with too many options:
 Help agents understand when to use each tool:
 
 ```
-GetAllTextFromLink: "Extract readable text content from web pages"
-GetHTMLFromLink: "Get structured HTML data when you need specific elements"
-BasicLLMChain: "Analyze, summarize, or generate text content"
+Get All Text from Link: "Extract readable text content from web pages"
+Get HTML from Link: "Get structured HTML data when you need specific elements"
+Basic LLM Chain: "Analyze, summarize, or generate text content"
 ```
 
 ### Monitor and optimize
@@ -216,7 +216,7 @@ Watch how agents use tools and refine the selection:
 ### Tool conflicts
 When multiple tools could accomplish the same task:
 - **Solution:** Provide clear guidance on when to use each tool
-- **Example:** GetAllTextFromLink vs. GetHTMLFromLink - specify use cases
+- **Example:** Get All Text from Link vs. Get HTML from Link - specify use cases
 
 ### Inefficient sequences
 Agents choosing suboptimal tool combinations:

@@ -1,0 +1,60 @@
+---
+title: "Unknown"
+description: "Represents a workflow node whose original implementation is not available in the current node registry."
+sidebar:
+  label: "Unknown"
+---
+
+# Unknown
+
+Represents a workflow node whose original implementation is not available in the current node registry.
+
+## What it does
+
+Unknown is a compatibility placeholder. It appears when a workflow references a node type that the current app build cannot resolve from the active node registry.
+
+This can happen when a workflow was imported from another version of Agentic WorkFlow, a custom node is missing, or an older workflow still contains a node that has been renamed or removed.
+
+## When to use it
+
+Do not add this node manually when building a new workflow. Use it as a signal that an imported or migrated workflow needs maintenance.
+
+Replace it with the current node that performs the same job, then rerun the workflow from the previous known-good step.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Target Node Type | The unresolved node type the workflow was trying to load. |
+
+## Outputs
+
+Unknown should not be treated as a reliable producer of workflow data. Any downstream node that depends on it should be reviewed after you replace the missing node.
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+
+## Example workflow
+
+An imported workflow contains:
+
+```mermaid
+flowchart LR
+  Trigger["When Started"] --> Missing["Unknown"]
+  Missing --> Next["Edit Fields"]
+```
+
+Open the Unknown node, check the target node type, then replace it with the current equivalent from the [node reference](/nodes/). After replacement, inspect the output shape before keeping downstream mappings.
+
+## Troubleshooting
+
+- Confirm the workflow was created with the same app version you are using now.
+- Check whether the missing behavior now lives under [In Page Action](/nodes/extension/), [Flow](/nodes/builtin/flow/if/), [Data Transformation](/nodes/builtin/datatransformation/editfields/), [Core](/nodes/builtin/core/http-request/), [AI](/nodes/builtin/ai/), or [Integrations](/nodes/builtin/integration/google-sheets/).
+- If downstream mappings reference fields from the missing node, update those mappings after choosing the replacement.
+- If the node came from a custom extension or plugin, reinstall that dependency before running the workflow.
+
+## Related nodes
+
+- [Node types overview](/nodes/builtin/node-types/)
+- [Workflow import and export](/usage/using-the-app/workflows/export-import/)

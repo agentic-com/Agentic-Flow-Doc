@@ -46,4 +46,4 @@ flowchart LR
 
 This is the basic idea: one input → different actions depending on what you find.
 
-See the node reference: [If](/nodes/builtin/flow/If/).
+See the node reference: [If](/nodes/builtin/flow/if/).

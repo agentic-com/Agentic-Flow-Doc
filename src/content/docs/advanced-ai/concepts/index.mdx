@@ -1,98 +1,104 @@
 ---
 title: AI Concepts Overview
-description: "Master the fundamental concepts behind intelligent workflows - from AI agents and embeddings to memory systems and evaluation."
+description: "Understand the AI building blocks used in Agentic WorkFlow: models, prompts, retrieval, memory, tools, and evaluation."
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
 
-Understanding AI concepts is the foundation for building truly intelligent workflows. These concepts work together to create systems that can think, learn, and adapt rather than just follow fixed rules.
+AI workflows are not magic boxes. They are systems made from several smaller parts: a model, a prompt, data context, optional memory, optional tools, and a way to check whether the result is good enough.
 
-<Image src={Social} alt="Overview of AI concepts working together in intelligent workflows" />
+This section explains those parts so you can design AI workflows deliberately instead of debugging vague model behavior after the fact.
 
-## Core AI concepts
+## The AI workflow stack
+
+```mermaid
+flowchart TB
+  Goal["User goal"] --> Prompt["Prompt and instructions"]
+  Data["Workflow data"] --> Context["Context window"]
+  Retrieval["RAG / vector search"] --> Context
+  Memory["Memory"] --> Context
+  Prompt --> Model["Chat model"]
+  Context --> Model
+  Model --> Output["Generated output"]
+  Output --> Parser["Optional parser / validation"]
+  Parser --> Action["Next workflow action"]
+  Tools["Tools"] <--> Model
+
+  style Model fill:#e1f5fe,stroke:#0277bd
+  style Context fill:#e8f5e9,stroke:#2e7d32
+  style Parser fill:#fff3e0,stroke:#ef6c00
+```
+
+Use this stack as a checklist. If an AI step behaves poorly, identify which layer is weak: unclear prompt, missing context, wrong model, noisy retrieval, no parser, or missing evaluation.
+
+## Core concepts
 
 <CardGrid>
   <Card title="AI Agents" icon="star">
-    Intelligent assistants that can think, plan, and use tools to accomplish complex tasks automatically.
-    
-    [Learn about AI Agents →](./ai-agents)
+    Agents coordinate reasoning, tool use, and multi-step decisions.
+
+    [Learn about AI agents →](./ai-agents)
   </Card>
-  
+
+  <Card title="Models & Dependencies" icon="laptop">
+    Chat models, embeddings, vector stores, memory, tools, parsers, and splitters are dependency nodes.
+
+    [Understand dependencies →](./model-dependencies)
+  </Card>
+
+  <Card title="Prompting & Outputs" icon="document">
+    Prompts define the task. Parsers and schemas make outputs usable by later workflow nodes.
+
+    [Design prompts and outputs →](./prompting-and-outputs)
+  </Card>
+
   <Card title="Embeddings & Vectors" icon="puzzle">
-    Transform text into searchable numbers that capture meaning - the foundation of smart document search.
-    
-    [Explore Embeddings →](./embeddings-vectors)
+    Embeddings convert meaning into vectors so documents can be searched semantically.
+
+    [Explore embeddings →](./embeddings-vectors)
   </Card>
-  
-  <Card title="RAG (Smart Search)" icon="document">
-    Give AI access to your documents so it provides accurate, source-backed answers instead of making things up.
-    
+
+  <Card title="RAG" icon="document">
+    Retrieval-Augmented Generation gives the model source material before it answers.
+
     [Understand RAG →](./rag)
   </Card>
-  
+
   <Card title="Memory & Context" icon="laptop">
-    Give your AI workflows the ability to remember past interactions and maintain context across conversations.
-    
-    [Discover Memory →](./memory-context)
+    Memory preserves useful conversation state. Context is what the model can see right now.
+
+    [Learn memory and context →](./memory-context)
   </Card>
-  
+
   <Card title="Tool Selection" icon="setting">
-    How AI agents intelligently choose and coordinate multiple tools to accomplish complex tasks automatically.
-    
-    [Master Tool Selection →](./tool-selection)
+    Tool selection explains when an agent should search, extract, transform, call APIs, or stop.
+
+    [Master tool selection →](./tool-selection)
   </Card>
-  
+
   <Card title="Workflow Intelligence" icon="rocket">
-    Transform simple automation into adaptive systems that learn, reason, and make intelligent decisions.
-    
-    [Build Intelligence →](./workflow-intelligence)
+    Intelligent workflows combine branching, retrieval, AI reasoning, and feedback loops.
+
+    [Build workflow intelligence →](./workflow-intelligence)
   </Card>
-  
+
   <Card title="Evaluation & Testing" icon="approve-check">
-    Ensure your AI workflows work reliably by testing their performance, accuracy, and behavior.
-    
-    [Learn Evaluation →](./evaluation-testing)
+    Evaluation checks whether AI outputs are correct, useful, grounded, and stable.
+
+    [Learn evaluation →](./evaluation-testing)
   </Card>
 </CardGrid>
 
-## How concepts work together
+## Common design paths
 
-These concepts don't exist in isolation - they combine to create powerful intelligent systems:
+| Goal | Start with | Add next |
+| --- | --- | --- |
+| Summarize page text | Basic LLM Chain | Prompting and output structure |
+| Answer questions from docs | RAG Agent | Embeddings, vector store, evaluation |
+| Research across websites | Tools Agent | Browser context, tool selection, rate limits |
+| Keep conversation context | Q&A Agent | Local Memory, context boundaries |
+| Produce rows or JSON | Structured Output Parser | Validation and fallback handling |
 
-### Smart document assistant
-- **Embeddings** convert documents into searchable format
-- **RAG** finds relevant information for user questions  
-- **Memory** remembers conversation context
-- **Agents** coordinate the entire process intelligently
+## Rule of thumb
 
-### Adaptive research workflow
-- **Tool Selection** chooses the right data collection methods
-- **Workflow Intelligence** adapts to different website structures
-- **Memory** builds knowledge over time
-- **Evaluation** ensures quality and accuracy
-
-### Intelligent content processor
-- **Agents** plan multi-step content analysis
-- **Embeddings** enable semantic content matching
-- **Memory** maintains context across processing steps
-- **Evaluation** validates output quality
-
-## Learning path
-
-**Start here:** [AI Agents](./ai-agents) - Understand how intelligent automation thinks and acts
-
-**Then explore:** [Embeddings & Vectors](./embeddings-vectors) - Learn the foundation of semantic search
-
-**Build knowledge:** [RAG](./rag) - Create AI that uses your documents accurately
-
-**Add persistence:** [Memory & Context](./memory-context) - Make AI remember and learn
-
-**Scale complexity:** [Tool Selection](./tool-selection) - Coordinate multiple tools intelligently
-
-**Create adaptability:** [Workflow Intelligence](./workflow-intelligence) - Build truly adaptive systems
-
-**Ensure quality:** [Evaluation & Testing](./evaluation-testing) - Validate and improve performance
-
-Each concept builds on the others, creating increasingly sophisticated and capable AI workflows.
+If the answer must be based on source material, use retrieval. If the answer must trigger downstream automation, structure the output. If the task requires choosing between actions, use an agent. If the workflow must be reliable, evaluate it with realistic examples.

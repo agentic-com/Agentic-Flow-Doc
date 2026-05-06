@@ -1,103 +1,48 @@
 ---
-title: Local Knowledge
-description: Create a smart document database right in your browser - store and search through documents using natural language, completely offline and private.
+title: "Local Knowledge"
+description: "Local knowledge"
 sidebar:
-  label: Local Knowledge
+  label: "Local Knowledge"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Local Knowledge
 
-The **Local Knowledge** node creates a smart document database right in your browser. Think of it as your personal search engine for documents - you can store articles, PDFs, notes, and then ask questions or search for specific information using natural language.
+Local knowledge
 
-Unlike traditional search that only finds exact word matches, this creates a "smart" database that understands meaning and context, all while keeping your documents completely private on your device.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of a local knowledge database with documents and search"
-/>
+Local Knowledge belongs to the **Vector Store** palette group. Its canonical node id is `localKnowledge` and its source documentation link is `/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/`.
 
-## How it works
+## When to use it
 
-The node stores your documents in your browser's local storage and converts them into searchable "vectors" (mathematical representations of meaning). When you search, it finds documents that are conceptually similar to your query, even if they don't contain the exact words.
+Use Local Knowledge as part of an AI workflow, either as an agent node or as a dependency connected to an agent.
 
-```mermaid
-graph LR
-  Docs[📄 Your Documents] --> Store[💾 Local Storage]
-  Store --> Search[🔍 Smart Search]
-  Search --> Results[📋 Relevant Results]
-  style Store fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| Knowledge | Source-backed field from the node schema. |
 
-<Steps>
+## Outputs
 
-1. **Create Database**: Choose a name for your knowledge base (like "research_docs" or "company_kb").
-2. **Set Action**: Choose what you want to do - "create" for new database, "insert" to add documents, "search" to find information.
-3. **Add Documents**: When inserting, provide the document text, title, and any metadata you want to store.
-4. **Search Smart**: Use natural language queries to find relevant documents based on meaning, not just keywords.
+Returns a vector store dependency for retrieval and RAG workflows.
 
-</Steps>
+## Dependencies and credentials
 
-## Practical example: Personal research database
+- No explicit credential or node dependency is declared in the node description.
 
-Let's build a searchable collection of research articles about renewable energy.
+## Example workflow
 
-**Action 1: Creating Database**
-- **Action**: Create
-- **Name**: `renewable_energy_research`
-- **Settings**: Standard dimension (768).
-
-**Action 2: Adding Documents**
-- **Action**: Insert
-- **Target**: `renewable_energy_research`
-- **Content**: The text of your article (e.g., "Solar Panel Efficiency Study...").
-- **Metadata**: Add details like source ("Journal of Renewable Energy") and date.
-
-**Action 3: Searching Documents**
-- **Action**: Search
-- **Target**: `renewable_energy_research`
-- **Query**: "What are the latest improvements in solar technology?"
-- **Limit**: Top 5 results.
-- **Accuracy**: 0.7 threshold.
-
-## Common actions
-
-| Action | Purpose | When to Use |
-|--------|---------|-------------|
-| **create** | Set up a new knowledge base | First time creating a database |
-| **insert** | Add documents to the database | Adding new articles, notes, or content |
-| **search** | Find relevant documents | Looking for information or answers |
-| **update** | Modify existing documents | Correcting or updating stored content |
-| **delete** | Remove documents or database | Cleaning up or removing outdated content |
-
-<Aside type="tip" title="Complete privacy">
-  All your documents stay in your browser - they're never uploaded anywhere. You can search through thousands of documents completely offline while keeping everything private.
-</Aside>
-
-## Why use Local Knowledge?
-
-**Perfect for:**
-- Building personal research collections
-- Creating company knowledge bases
-- Organizing study materials
-- Building smart FAQ systems
-- Storing and searching through any text content
-
-**Key benefits:**
-- Works completely offline
-- Keeps all data private in your browser
-- Searches by meaning, not just keywords
-- No storage limits (beyond browser capacity)
-- Instant search results
+Connect Local Knowledge to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
 
 ## Troubleshooting
 
-- **"Database not found"**: Make sure you've created the database first using the "create" action
-- **No search results**: Try lowering the similarity threshold to 0.6 or check if your documents actually contain related content
-- **Storage quota exceeded**: Delete old documents or unused databases to free up space
-- **Slow performance**: Reduce the number of documents or use more specific search terms
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
+## Related nodes
+
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)

@@ -1,10 +1,39 @@
 ---
 title: Workflow Nodes & Integrations
-description: "Build powerful browser automations with drag-and-drop nodes. Extract data, process content with AI, and automate web tasks."
+description: Source-aligned reference for every Agentic WorkFlow node.
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+# Workflow Nodes & Integrations
 
-Nodes are like LEGO blocks for automation. Each node does one specific job - extract text, process data, or save files. Connect them together to create powerful workflows that run in your browser.
+This section mirrors the current node registry from `src/lib/Nodes-Blocks`. Use it as the source-aligned reference for triggers, browser page actions, flow control, data transformation, core utilities, AI nodes, and integrations.
 
-**What makes browser nodes special:** They work directly with web pages in real-time, letting you extract data and interact with websites in ways traditional tools can't.
+## How To Read Node Pages
+
+Each reference page is written around the same questions:
+
+- What the node does.
+- When to use it.
+- Which inputs, settings, dependencies, and credentials it expects.
+- What output it returns to downstream nodes.
+- Which errors or edge cases to check first.
+
+Use the reference after you know the workflow concept you are applying. For example, read [Item Linking](/usage/key-concepts/data/item-linking/) before debugging a mapping issue, then open the exact node page to confirm output fields.
+
+## Palette order
+
+1. [Trigger](/nodes/builtin/trigger/whenstarted/)
+2. [Lambda](/nodes/builtin/lambda/lambdainput/)
+3. [In Page Action](/nodes/extension/getselectedtext/)
+4. [Flow](/nodes/builtin/flow/if/)
+5. [Data Transformation](/nodes/builtin/datatransformation/editfields/)
+6. [Core](/nodes/builtin/core/http-request/)
+7. [AI](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+8. [Integrations](/nodes/builtin/integration/google-sheets/)
+
+## Common Starting Points
+
+- Use [When Started](/nodes/builtin/trigger/whenstarted/) for a simple manual workflow.
+- Use [Get Selected Text](/nodes/extension/getselectedtext/) or [Get All Text](/nodes/extension/getalltext/) to start with page content.
+- Use [Edit Fields](/nodes/builtin/datatransformation/editfields/) to shape data for later nodes.
+- Use [If](/nodes/builtin/flow/if/), [Loop](/nodes/builtin/flow/loop/), and [Merge](/nodes/builtin/flow/merge/) when the workflow path depends on data.
+- Use [AI](/nodes/builtin/ai/) only after the input data shape is stable.

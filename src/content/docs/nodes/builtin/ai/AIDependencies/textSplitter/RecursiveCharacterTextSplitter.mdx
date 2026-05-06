@@ -1,123 +1,52 @@
 ---
-title: Recursive Character Text Splitter
-description: Smart document splitter that breaks long texts into perfect chunks for AI processing - keeps related content together.
+title: "Recursive Character Text Splitter"
+description: "Breaks down text into smaller parts."
 sidebar:
-  label: Recursive Character Text Splitter
+  label: "Recursive Character Text Splitter"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Recursive Character Text Splitter
 
-The **Recursive Character Text Splitter** intelligently breaks long documents into smaller, manageable chunks while keeping related content together. It's like having a smart librarian who knows exactly where to split a book so each section makes sense on its own.
+Breaks down text into smaller parts.
 
-This is the go-to choice for preparing documents for AI processing, knowledge bases, and search systems.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of documents being intelligently split into meaningful chunks"
-/>
+Recursive Character Text Splitter belongs to the **Text Splitter** palette group. Its canonical node id is `recursiveCharacterTextSplitter` and its source documentation link is `/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/`.
 
-## How it works
+## When to use it
 
-The splitter tries different ways to break your text, starting with natural boundaries like paragraphs, then sentences, and finally individual words if needed. It ensures each chunk is the right size while preserving meaning.
+Use Recursive Character Text Splitter as part of an AI workflow, either as an agent node or as a dependency connected to an agent.
 
-```mermaid
-graph LR
-  Document[Long Document] --> Analyze[Find Break Points]
-  Analyze --> Split[Smart Splitting]
-  Split --> Chunks[Perfect Chunks]
-  style Split fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| Chunk Size | Source-backed field from the node schema. |
+| Chunk Overlap | Source-backed field from the node schema. |
+| Separators | Source-backed field from the node schema. |
+| Language | Source-backed field from the node schema. |
 
-<Steps>
+## Outputs
 
-1. **Set Chunk Size**: Choose how big each piece should be (1000 characters works well for most AI models).
+Returns a text splitter dependency used before indexing or retrieval.
 
-2. **Add Overlap**: Set how much chunks should overlap to maintain context between sections.
+## Dependencies and credentials
 
-3. **Choose Separators**: Pick where to split (paragraphs, sentences, or let it decide automatically).
+- No explicit credential or node dependency is declared in the node description.
 
-4. **Process Your Text**: The splitter will create perfectly sized chunks ready for AI processing.
+## Example workflow
 
-</Steps>
-
-## Practical example: Preparing documents for AI knowledge base
-
-Let's split a technical document into chunks perfect for AI search and retrieval.
-
-**Option 1: General Documents**
-- **Chunk Size**: 1000 characters.
-- **Overlap**: 200 characters.
-- **Best For**: Business documents, articles, stories.
-
-**Option 2: Technical Docs**
-- **Chunk Size**: 800 characters (smaller for precision).
-- **Separators**: Paragraphs, then sentences, then punctuation.
-- **Best For**: Manuals, instructions, specs.
-
-**Option 3: Code Documentation**
-- **Chunk Size**: 1200 characters (larger to keep code blocks intact).
-- **Separators**: Code blocks (` ``` `), then paragraphs.
-- **Best For**: API docs, tutorials with code.
-
-## Why use smart splitting
-
-| Smart Splitting (Recursive) | Simple Splitting |
-|-----------------------------|------------------|
-| Keeps related content together | May break sentences mid-way |
-| Respects document structure | Ignores natural boundaries |
-| Maintains context between chunks | Can lose important connections |
-| Works with different content types | One-size-fits-all approach |
-
-## Configuration settings
-
-| Setting | Purpose | Recommended Values |
-|---------|---------|-------------------|
-| **Chunk Size** | Maximum characters per chunk | 800-1200 for most AI models |
-| **Chunk Overlap** | Characters shared between chunks | 150-300 to maintain context |
-| **Separators** | Where to split text | Start with paragraphs, then sentences |
-
-<Aside type="tip" title="Start with defaults">
-  Use 1000 character chunks with 200 character overlap for most documents. Adjust based on your specific AI model requirements.
-</Aside>
-
-## Real-world examples
-
-### Knowledge base preparation
-Split company documentation for AI search:
-```
-Input: Employee handbook, policies, procedures
-Chunk Size: 1000 (good for general business content)
-Overlap: 200 (maintains policy context)
-Result: Searchable knowledge base chunks
-```
-
-### Research paper processing
-Prepare academic papers for analysis:
-```
-Input: Research papers and articles
-Chunk Size: 1200 (longer for academic context)
-Overlap: 300 (important for research continuity)
-Result: AI-ready research database
-```
-
-### Technical documentation
-Process API docs and technical guides:
-```
-Input: Technical documentation with code examples
-Chunk Size: 800 (shorter for specific instructions)
-Separators: Respect code blocks and sections
-Result: Precise technical search system
-```
+Connect Recursive Character Text Splitter to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
 
 ## Troubleshooting
 
-- **Chunks too large or small**: Adjust chunk size based on your AI model's requirements and content type.
-- **Lost context between chunks**: Increase overlap to preserve more connections between sections.
-- **Poor splitting quality**: Customize separators to better match your document structure.
-- **Slow processing**: Reduce chunk overlap or process documents in smaller batches.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
+## Related nodes
+
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)

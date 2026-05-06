@@ -1,90 +1,47 @@
 ---
 title: "Pick Field"
-description: "Select only the data fields you need from complex objects to simplify and speed up your workflows."
+description: "Pick a specific field from the input data"
+sidebar:
+  label: "Pick Field"
 ---
 
-import { Image } from "astro:assets";
-import Social from '@images/social.webp';
+# Pick Field
 
-**What it does:** Selects only the data fields you need from complex objects, making your data simpler and workflows faster.
+Pick a specific field from the input data
 
-**Perfect for:** API response filtering • Data privacy • Performance optimization • Focused processing
+## What it does
 
-## What It Does
+Pick Field belongs to the **Data Transformation** palette group. Its canonical node id is `pickField` and its source documentation link is `/nodes/builtin/datatransformation/pickfield/`.
 
-- **Select specific fields** - Choose exactly which data you want to keep
-- **Remove sensitive data** - Exclude private information before sharing
-- **Reduce data size** - Make workflows faster by processing less data
-- **Handle nested objects** - Access deep data structures easily
+## When to use it
 
-<Image src={Social} alt="Pick Field data selection illustration" />
+Use Pick Field to reshape workflow data before sending it to another node.
 
-## How It Works
+## Inputs and settings
 
-```mermaid
-graph LR
-    A[Complex Data] --> B[Pick Field]
-    B --> C[Selected Fields Only]
+| Setting | Notes |
+| --- | --- |
+| Output field name | Source-backed field from the node schema. |
 
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#f3e5f5
-```
+## Outputs
 
-**Simple process:** Complex data → Pick Field selects what you want → Clean, focused data
+Returns transformed data for downstream nodes.
 
-## Common Field Selections
+## Dependencies and credentials
 
-- **Basic Fields**: Just pick `name`, `email`, and `phone`.
-- **Nested Fields**: Grab data deep inside an object, like `user.profile.email`.
-- **Arrays**: Get the title of the first post (`posts[0].title`) or the rating of *every* review (`reviews[*].rating`).
-- **Exclude Mode**: Instead of picking what to *keep*, you can choose what to *remove* (like passwords or sensitive IDs).
+- No explicit credential or node dependency is declared in the node description.
 
-## Real Example
+## Example workflow
 
-**Before (Too Much Data):**
-You get a huge response from an API containing the user's ID, full address, social security number, admin notes, marketing preferences, and more.
-*Example: `{"user": {"ssn": "123", "internal_notes": "VIP", "name": "Alice"...}}`*
+Connect data into Pick Field, configure the settings above, and use the output in the next workflow step.
 
-**The Selection:**
-You only ask for:
-- User's Name
-- Email
-- Phone
-- Theme Preference
+## Troubleshooting
 
-**After (Just What You Need):**
-The node discards everything else, leaving you with a clean, safe, and small object:
-```json
-{
-  "user": {
-    "name": "Alice Johnson",
-    "email": "alice@company.com",
-    "phone": "+1987654321"
-  },
-  "preferences": {
-    "theme": "dark"
-  }
-}
-```
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
-## Common Use Cases
+## Related nodes
 
-**API response filtering** - Extract only relevant data from large API responses
-**Data privacy** - Remove sensitive fields before sharing data externally
-**Performance optimization** - Reduce data size to speed up processing
-**Focused processing** - Create clean datasets for specific workflow needs
-
-## Quick Troubleshooting
-
-**Missing field errors:** Check field names are spelled correctly and exist in your data
-**Nested fields not working:** Use dot notation like "user.profile.name" for nested data
-**Array access issues:** Use [0] for first item, [*] for all items in arrays
-
-## What's Next?
-
-**Related nodes:** [Edit Fields](/nodes/builtin/dataTransformation/EditFields/) • [Filter](/nodes/builtin/flow/Filter/) • [HTTP Request](/nodes/builtin/core/Http-Request/)
-
-**Common workflows:** [Data Processing Patterns](/learning/workflow-patterns/data-processing-patterns/) • [API Integration](/learning/workflow-patterns/integration-patterns/) • [Privacy-Safe Workflows](/learning/workflow-patterns/optimization-best-practices/)
-
-**Learn more:** [Data Transformation Guide](/learning/text-courses/intermediate/data-transformation/) • [Multi-Step Workflows](/learning/text-courses/intermediate/multi-step-workflows/)
+- [Node types overview](/nodes/builtin/node-types/)

@@ -1,0 +1,124 @@
+---
+title: Version 0.4.0
+description: Release notes for Agentic WorkFlow v0.4.0.
+sidebar:
+  order: 1
+---
+
+Published: **May 6, 2026**
+
+## Highlights
+
+Version 0.4.0 is a large node and workflow capability release. It adds browser UI automation, looping, new in-page action nodes, trigger nodes, structured extraction, form tooling, notification support, and plan-based workflow limits.
+
+## UI Automation
+
+UI Automation adds browser interaction steps for workflows that need to do more than read page content. Use it when a workflow must click, type, submit, wait for page elements, or manipulate visible elements before extracting data.
+
+Relevant docs:
+
+- [UI Automation](/nodes/extension/ui/automation/)
+- [Wait For Element](/nodes/extension/ui/wait-for-element/)
+- [Browser context](/usage/key-concepts/flow-logic/browser-context/)
+
+## Loop Node
+
+The Loop node makes repeated processing a first-class workflow pattern. Use it when each item, row, link, or page result needs the same downstream steps. Keep the loop body focused and inspect item output before adding browser actions inside the loop.
+
+Relevant docs:
+
+- [Loop node](/nodes/builtin/flow/loop/)
+- [Looping and iteration](/usage/key-concepts/flow-logic/looping/)
+- [Item linking](/usage/key-concepts/data/item-linking/)
+
+## Delete UI Elements
+
+Delete Elements supports workflows that need to clean up a page before reading or displaying content. This is useful when overlays, banners, cookie notices, or repeated elements get in the way of extraction or screenshots.
+
+Relevant docs:
+
+- [Delete Elements](/nodes/extension/ui/delete-elements/)
+- [Screenshot Page](/nodes/extension/screenshotpage/)
+- [In Page Action overview](/nodes/extension/)
+
+## Forms Schema
+
+Get Forms Schema helps a workflow inspect forms before attempting to fill them. It gives downstream nodes a structured view of the page form, which is easier to reason about than raw HTML.
+
+Relevant docs:
+
+- [Get Forms Schema](/nodes/extension/getformsschema/)
+- [Form Fill](/nodes/extension/ui/form-fill/)
+- [Data structure](/usage/key-concepts/data/data-structure/)
+
+## Form Fill
+
+Form Fill adds a higher-level form automation step. Use it after the workflow has enough structured data to decide what values belong in each field.
+
+Relevant docs:
+
+- [Form Fill](/nodes/extension/ui/form-fill/)
+- [Get Forms Schema](/nodes/extension/getformsschema/)
+- [Prompting and structured outputs](/advanced-ai/concepts/prompting-and-outputs/)
+
+## Structured Data Extraction
+
+Structured data extraction improves page-reading workflows that need machine-readable facts instead of plain text. Use it when downstream nodes need fields, entities, metadata, or embedded schema values.
+
+Relevant docs:
+
+- [Get Structured Data](/nodes/extension/getstructureddata/)
+- [Get Page Metadata](/nodes/extension/getpagemetadata/)
+- [Data mapping expressions](/usage/key-concepts/data/data-mapping/data-mapping-expressions/)
+
+## Bulk Node Implementation
+
+This release added a group of new node implementations across the browser and workflow palette. The practical effect is a broader set of ready-made steps, especially around page inspection, UI manipulation, triggers, and data display.
+
+Relevant docs:
+
+- [Node reference](/nodes/)
+- [Built-in nodes](/nodes/builtin/)
+- [In Page Action nodes](/nodes/extension/)
+
+## Trigger Nodes
+
+New trigger nodes expand the ways a workflow can start. This makes it easier to run automations from page load, browser startup, context menu actions, schedules, or manual execution.
+
+Relevant docs:
+
+- [Trigger nodes](/nodes/builtin/trigger/whenstarted/)
+- [Page Load](/nodes/builtin/trigger/pageload/)
+- [Context Menu](/nodes/builtin/trigger/contextmenu/)
+- [Browser Startup](/nodes/builtin/trigger/browserstartup/)
+- [Schedule](/nodes/builtin/trigger/schedule/)
+
+## Show Notification
+
+Show Notification lets a workflow report a result without requiring the user to inspect the builder. Use it for completion messages, reminders, extracted values, or warnings when a workflow branch needs attention.
+
+Relevant docs:
+
+- [Show Notification](/nodes/extension/shownotification/)
+- [Display Object](/nodes/extension/displayobject/)
+- [Display Markdown](/nodes/extension/displaymarkdown/)
+
+## Workflow Node Limits
+
+Workflow node limits help keep runs within the active user plan and prevent workflows from growing beyond supported execution boundaries. If a workflow hits a limit, split it into smaller workflows or simplify repeated sections.
+
+Relevant docs:
+
+- [Rate limits](/nodes/builtin/rate-limits/)
+- [Workflow lifecycle](/usage/key-concepts/flow-logic/workflow-lifecycle/)
+- [Performance optimization](/usage/troubleshooting/performance-optimization/)
+
+## Uploaded Text Size Limits
+
+Uploaded text size limits protect browser performance and AI calls from oversized input. For AI workflows, send the smallest relevant text instead of full pages or large documents.
+
+Relevant docs:
+
+- [Performance optimization](/usage/troubleshooting/performance-optimization/)
+- [Prompting and structured outputs](/advanced-ai/concepts/prompting-and-outputs/)
+- [RAG](/advanced-ai/concepts/rag/)

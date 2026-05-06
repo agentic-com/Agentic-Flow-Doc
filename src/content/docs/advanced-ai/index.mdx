@@ -1,98 +1,87 @@
 ---
 title: Advanced AI Workflows
-description: "Build intelligent automation with AI agents, smart document search, and adaptive workflows that think and learn."
+description: "Use AI models, RAG, agents, memory, tools, and structured outputs inside reliable Agentic WorkFlow automations."
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-Transform your workflows from simple automation to intelligent systems that can think, adapt, and make decisions. Advanced AI workflows combine multiple AI techniques to create powerful automation that goes beyond basic scripting.
+Advanced AI workflows are normal workflows with one extra responsibility: they must keep model behavior observable and constrained. Use this section to decide when to add an LLM, how to pass it clean context, how to ground answers in retrieved data, and how to keep agent behavior testable.
 
 <CardGrid>
   <Card title="AI Concepts" icon="star">
-    Master the fundamentals: AI agents, embeddings, RAG, memory systems, and workflow intelligence patterns.
+    Learn the design ideas behind agents, embeddings, RAG, memory, model dependencies, prompting, and evaluation.
     
     [Explore Concepts →](/advanced-ai/concepts/)
   </Card>
   <Card title="LangChain Integration" icon="puzzle">
-    Build sophisticated AI applications using proven LangChain patterns, components, and workflows.
+    Understand how LangChain-style components fit into Agentic WorkFlow nodes and dependencies.
     
     [Learn LangChain →](/advanced-ai/langchain/)
   </Card>
   <Card title="Browser AI Automation" icon="laptop">
-    Combine AI intelligence with browser automation for adaptive web workflows that understand content.
+    Combine page extraction, browser actions, and model calls without losing track of page state.
     
     [See Browser Integration →](/advanced-ai/langchain/browser-integration-guide)
   </Card>
   <Card title="Multi-Agent Systems" icon="rocket">
-    Orchestrate multiple AI agents working together to accomplish complex, multi-step tasks.
+    Use agent patterns only when the workflow needs planning, tool choice, or iterative decisions.
     
     [Advanced Patterns →](/advanced-ai/langchain/advanced-patterns)
   </Card>
 </CardGrid>
 
-## What makes workflows "intelligent"?
+## When AI Belongs In A Workflow
 
-Traditional automation follows fixed rules: "If this happens, do that." Intelligent workflows can reason, adapt, and make decisions based on context and goals.
+Use AI when the workflow needs judgment over language or messy content. Do not use AI for work that a deterministic node can do more clearly, such as formatting a date, filtering a known field, or checking whether a number is greater than a threshold.
 
-**Traditional Workflow:**
-1.  Go to web page
-2.  Extract specific text
-3.  Save to file
+```mermaid
+flowchart TD
+  Need["Workflow need"] --> Known{"Can rules solve it?"}
+  Known -->|Yes| Deterministic["Use flow, mapping, code, or transformation nodes"]
+  Known -->|No| Language{"Is the input language-heavy or ambiguous?"}
+  Language -->|Yes| AI["Use an AI node with constrained context"]
+  Language -->|No| Redesign["Clarify data shape before adding AI"]
+  AI --> Check["Validate output before downstream actions"]
+```
 
-**Intelligent Workflow:**
-1.  **Analyze** the web page content
-2.  **Decide** what information is actually important
-3.  **Extract** only the relevant insights
-4.  **Categorize** and store the results intelligently
+Good AI steps usually have:
 
-## Learning path for intelligent automation
+- A clear task, such as summarize, classify, extract, answer, rank, or decide.
+- Clean input fields from previous nodes.
+- A model dependency that matches the task.
+- A structured output or parser when later nodes depend on the result.
+- A fallback path for empty context, model errors, or low-confidence answers.
 
-### 1. Foundation Concepts
-Start with the building blocks of AI workflows:
-- **[AI Agents](/advanced-ai/concepts/ai-agents)** - Intelligent assistants that think and plan
-- **[Embeddings & Vectors](/advanced-ai/concepts/embeddings-vectors)** - Transform text into searchable meaning
-- **[RAG (Smart Search)](/advanced-ai/concepts/rag)** - AI that uses your documents accurately
+## Learning Path
 
-### 2. Advanced Capabilities  
-Add sophisticated features to your workflows:
-- **[Memory & Context](/advanced-ai/concepts/memory-context)** - AI that remembers and learns
-- **[Tool Selection](/advanced-ai/concepts/tool-selection)** - Intelligent coordination of multiple tools
-- **[Workflow Intelligence](/advanced-ai/concepts/workflow-intelligence)** - Adaptive, self-improving systems
+1. Start with [Model Dependencies](/advanced-ai/concepts/model-dependencies/) so you understand chat models, embeddings, vector stores, memory, parsers, and tools.
+2. Read [Prompting and Structured Outputs](/advanced-ai/concepts/prompting-and-outputs/) before wiring model output into later automation.
+3. Use [Embeddings and Vectors](/advanced-ai/concepts/embeddings-vectors/) when you need semantic search.
+4. Use [RAG](/advanced-ai/concepts/rag/) when answers must be grounded in retrieved documents or page content.
+5. Use [AI Agents](/advanced-ai/concepts/ai-agents/) and [Tool Selection](/advanced-ai/concepts/tool-selection/) when the model must choose actions.
+6. Add [Evaluation and Testing](/advanced-ai/concepts/evaluation-testing/) before relying on the workflow for repeated production tasks.
 
-### 3. LangChain Implementation
-Build with proven AI patterns:
-- **[Getting Started](/advanced-ai/langchain/getting-started)** - Your first LangChain workflow
-- **[Components Guide](/advanced-ai/langchain/components)** - All available LangChain building blocks
-- **[Workflow Patterns](/advanced-ai/langchain/workflow-patterns)** - Proven approaches to common tasks
+## Common Patterns
 
-### 4. Advanced Integration
-Master complex AI systems:
-- **[Browser Integration](/advanced-ai/langchain/browser-integration-guide)** - AI-powered web automation
-- **[Advanced Patterns](/advanced-ai/langchain/advanced-patterns)** - Multi-agent orchestration and optimization
-- **[Evaluation & Testing](/advanced-ai/concepts/evaluation-testing)** - Ensure your AI works reliably
+| Pattern | Use it for | Main risk |
+| --- | --- | --- |
+| Extract then summarize | Turning page text into a shorter result | Sending noisy or incomplete page content |
+| Classify then branch | Routing records based on language meaning | Vague categories that overlap |
+| Retrieve then answer | Answering from a knowledge base or page collection | Unsupported answers when retrieval is weak |
+| Agent with tools | Multi-step tasks where the next action depends on results | Too many tools or unclear stop conditions |
+| Structured output | Passing model results into later nodes | Missing schema validation or fallback behavior |
 
-## Key capabilities you'll master
+## Design Checklist
 
-**Smart Document Processing**: AI that understands content meaning, not just text patterns - perfect for analyzing articles, extracting insights, and processing any written content intelligently.
+- Keep the browser extraction step separate from the AI step.
+- Trim page content before sending it to a model.
+- Prefer structured output for anything used by another node.
+- Ground factual answers with retrieved context or source text.
+- Add an error path for empty input, credential failure, rate limits, and invalid output.
+- Test with short, long, irrelevant, and malformed inputs.
 
-**Adaptive Decision Making**: Workflows that adjust behavior based on results and context - your automation gets smarter over time and handles unexpected situations gracefully.
+## Where To Go Next
 
-**Intelligent Data Extraction**: AI that knows what information is valuable and relevant - no more rigid selectors that break when websites change.
-
-**Contextual Memory**: Systems that remember and learn from previous interactions - build AI assistants that get better at helping you over time.
-
-**Goal-Oriented Automation**: AI agents that work toward objectives, not just execute steps - describe what you want accomplished and let AI figure out how to do it.
-
-**Multi-Agent Coordination**: Orchestrate multiple AI specialists working together - research agents, analysis agents, and writing agents collaborating on complex projects.
-
-## Real-world applications
-
-**Intelligent Research Assistant**: AI that can plan research strategies, gather information from multiple sources, analyze findings, and create comprehensive reports.
-
-**Adaptive Content Monitor**: Systems that understand what content changes actually matter, filtering out noise and highlighting important updates.
-
-**Smart Customer Support**: AI that searches your knowledge base, understands customer intent, and provides accurate answers with source citations.
-
-**Dynamic Competitive Intelligence**: Agents that monitor competitors, adapt to website changes, and provide ongoing strategic insights.
-
-Start your journey into intelligent automation - where AI doesn't just follow instructions, but understands goals and figures out the best way to achieve them.
+- For exact available AI nodes, see the [AI node reference](/nodes/builtin/ai/).
+- For browser-specific AI patterns, see [Browser Integration](/advanced-ai/langchain/browser-integration-guide/).
+- For implementation building blocks, see [LangChain Components](/advanced-ai/langchain/components/).

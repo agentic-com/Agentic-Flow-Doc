@@ -1,88 +1,51 @@
 ---
-title: Get All Images
-description: Find and extract all images from any webpage - like having a digital curator that catalogs every visual element for analysis or collection.
+title: "Get All Images"
+description: "Get all the images from the page of the actual openend tab"
 sidebar:
-  label: Get All Images
+  label: "Get All Images"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Get All Images
+
+Get all the images from the page of the actual openend tab
 
 ## What it does
 
-The **Get All Images** node collects the images on the page you’re currently viewing.
-
-It returns a list with image URLs and useful details (like size and alt text) so you can audit, download, or analyze images.
-
-<Image
-  src={Social}
-  alt="Illustration of extracting all images from a webpage"
-/>
+Get All Images belongs to the **In Page Action** palette group. Its canonical node id is `getAllImagesNode` and its source documentation link is `/nodes/extension/getallimages/`.
 
 ## When to use it
 
-- You want to check if images are missing **alt text** (accessibility audit).
-- You want to collect product photos from a page.
-- You want to compare how competitors use images.
-- You want to build an image list and then download/process each image.
+Use Get All Images when the workflow needs to read from, write to, or interact with the currently open browser page.
 
-## How it works
+## Inputs and settings
 
-The node scans the page for images (including background images if enabled) and returns them as a list.
+| Setting | Notes |
+| --- | --- |
+| Output field name | Source-backed field from the node schema. |
+| Max images | Source-backed field from the node schema. |
+| Include input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-```mermaid
-graph LR
-  Page[Web Page] --> Extractor{Image Extractor}
-  Extractor --> Regular[Regular Images]
-  Extractor --> Background[Background Images]
-  Extractor --> Icons[Icons & Graphics]
-  style Extractor fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Outputs
 
-## Setup guide
+Returns the extracted page data or the result of the page interaction.
 
-<Steps>
+## Dependencies and credentials
 
-1. **Open the page** you want to scan.
-2. **Choose what to include** (background images, hidden images).
-3. **Set a max limit** if the page has lots of images.
-4. **Run the workflow** and use the output list in the next step.
+- No explicit credential or node dependency is declared in the node description.
 
-</Steps>
+## Example workflow
 
-## Practical example: Content audit
-
-Let's extract all images from a website to check for missing alt text and oversized files.
-
-**What you configure:**
-- **Hidden & Background Images**: Decide if you want images that aren't immediately visible.
-- **Max Images**: Limit how many images to collect (e.g., 100).
-- **Include Alt Text**: Capture the text description associated with each image.
-
-**What you get:**
-- A list of images with details including:
-    - **URL**: The link to the image file.
-    - **Alt Text**: The description used for accessibility.
-    - **Size**: Width, height, and estimated file size.
-    - **Type**: Whether it's a regular image or part of the background.
-- A summary of total images found and their file types (JPG, PNG, etc.).
-
-## Common settings
-
-| Setting | Purpose | When to Use |
-|---------|---------|-------------|
-| **Include Hidden Images** | Find images not visible on screen | For complete content audits |
-| **Include Background Images** | Extract CSS background images | For design analysis and visual inventory |
-| **Max Images** | Limit number of results | For large pages with many images |
-
-<Aside type="tip" title="Perfect for audits">
-  This node is invaluable for website audits, accessibility checks, and understanding how competitors use visual content in their designs.
-</Aside>
+Run Get All Images after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
 
 ## Troubleshooting
 
-- **No images found**: the page may still be loading. Try running again after images appear.
-- **Missing some images**: some sites load images only after scrolling. Scroll the page first, then run the workflow.
-- **Too many results**: lower `maxImages`, then filter by size or file type.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+
+## Related nodes
+
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Http Request](/nodes/builtin/core/http-request/)

@@ -1,121 +1,51 @@
 ---
 title: "Format Date"
-description: "Convert dates into different display formats for user interfaces, reports, and data export."
+description: "Format a date"
+sidebar:
+  label: "Format Date"
 ---
 
-import { Image } from "astro:assets";
-import Social from '@images/social.webp';
+# Format Date
 
-**What it does:** Converts dates into different display formats for user interfaces, reports, and data export.
+Format a date
 
-**Perfect for:** User-friendly displays • Report generation • API formatting • Localization
+## What it does
 
-## What It Does
+Format Date belongs to the **Data Transformation** palette group. Its canonical node id is `formatDate` and its source documentation link is `/nodes/builtin/datatransformation/datetime/formatdate/`.
 
-- **Change date formats** - Convert between different date string formats
-- **Localize dates** - Display dates in different languages and regions
-- **Custom patterns** - Create your own date format patterns
-- **Timezone conversion** - Apply timezone changes during formatting
+## When to use it
 
-<Image src={Social} alt="Format Date conversion illustration" />
+Use Format Date to reshape workflow data before sending it to another node.
 
-## How It Works
+## Inputs and settings
 
-```mermaid
-graph LR
-    A[Raw Date] --> B[Format Date]
-    B --> C[Formatted Display]
+| Setting | Notes |
+| --- | --- |
+| Date to format | Source-backed field from the node schema. |
+| Format | Source-backed field from the node schema. |
+| Output field name | Source-backed field from the node schema. |
+| Include input fields | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#f3e5f5
-```
+## Outputs
 
-**Simple process:** Raw Date → Format Date → User-friendly display
+Returns transformed data for downstream nodes.
 
-## Common Format Examples
+## Dependencies and credentials
 
-- **User Friendly**: Convert `2024-01-15T14:30:00Z` to **"January 15, 2024 at 2:30 PM"**.
-- **Short Date**: Convert it to **"1/15/24"**.
-- **Formal**: Convert to **"Monday, January 15, 2024"**.
-- **Standard (ISO)**: Convert "January 15, 2024" back to machine-readable **"2024-01-15"**.
+- No explicit credential or node dependency is declared in the node description.
 
-## Format Presets
+## Example workflow
 
-| Preset | Example Output | Best For |
-|--------|----------------|----------|
-| `"human"` | "January 15, 2024 at 2:30 PM" | User interfaces |
-| `"short"` | "1/15/24" | Compact displays |
-| `"medium"` | "Jan 15, 2024" | Reports |
-| `"long"` | "January 15, 2024" | Formal documents |
-| `"ISO"` | "2024-01-15T14:30:45Z" | APIs and databases |
-| `"date_only"` | "2024-01-15" | Date without time |
-| `"time_only"` | "2:30 PM" | Time without date |
+Connect data into Format Date, configure the settings above, and use the output in the next workflow step.
 
-## Custom Format Patterns
+## Troubleshooting
 
-**Create your own formats using these tokens:**
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
-| Token | Description | Example |
-|-------|-------------|---------|
-| `YYYY` | 4-digit year | 2024 |
-| `MM` | 2-digit month | 01 |
-| `DD` | 2-digit day | 15 |
-| `MMMM` | Full month name | January |
-| `MMM` | Short month name | Jan |
-| `dddd` | Full day name | Monday |
-| `HH` | 24-hour format | 14 |
-| `hh` | 12-hour format | 02 |
-| `mm` | Minutes | 30 |
-| `A` | AM/PM | PM |
+## Related nodes
 
-**Example custom pattern:**
-```json
-{
-  "output_format": "dddd, MMMM D, YYYY [at] h:mm A"
-}
-```
-**Result:** "Monday, January 15, 2024 at 2:30 PM"
-
-## Localization Examples
-
-**English (US):**
-```
-"January 15, 2024"
-```
-
-**French:**
-```
-"15 janvier 2024"
-```
-
-**Spanish:**
-```
-"15 de enero de 2024"
-```
-
-**German:**
-```
-"15. Januar 2024"
-```
-
-## Common Use Cases
-
-**User interfaces** - Display dates in a friendly format for users
-**Reports and exports** - Format dates consistently across documents
-**API responses** - Convert dates to required formats for external services
-**Multi-language apps** - Show dates in user's preferred language
-
-## Quick Troubleshooting
-
-**Format not working:** Check that your pattern tokens are correct (YYYY not yyyy)
-**Wrong language:** Specify the locale parameter for non-English formats
-**Timezone issues:** Set timezone parameter if dates appear in wrong time zone
-
-## What's Next?
-
-**Related nodes:** [Extract Part Of A Date](/nodes/builtin/dataTransformation/DateTime/ExtractPartOfADate/) • [Get Current Date](/nodes/builtin/dataTransformation/DateTime/GetCurrentDate/) • [Edit Fields](/nodes/builtin/dataTransformation/EditFields/)
-
-**Common workflows:** [Report Generation](/learning/workflow-patterns/real-world-examples/content-management/) • [User Interface Display](/learning/workflow-patterns/data-processing-patterns/) • [Multi-language Apps](/learning/workflow-patterns/integration-patterns/)
-
-**Learn more:** [Date Handling Guide](/learning/text-courses/intermediate/data-transformation/) • [Localization Patterns](/learning/text-courses/intermediate/multi-step-workflows/)
+- [Node types overview](/nodes/builtin/node-types/)

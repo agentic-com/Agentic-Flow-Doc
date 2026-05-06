@@ -1,152 +1,51 @@
 ---
-title: Web LLM
-description: Run AI models directly in your browser - no servers, no internet required, complete privacy and instant responses.
+title: "Web LLM"
+description: "Use LLM locally directly on your device"
 sidebar:
-  label: Web LLM
+  label: "Web LLM"
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import { Code } from "@astrojs/starlight/components";
-import Social from "@images/social.webp";
+# Web LLM
 
-The **Web LLM** node runs AI models completely in your browser using cutting-edge WebAssembly technology. No external servers, no internet required after initial setup, and complete privacy - your data never leaves your browser.
+Use LLM locally directly on your device
 
-This is the ultimate in privacy-focused AI processing, perfect for sensitive data or when you need guaranteed offline functionality.
+## What it does
 
-<Image
-  src={Social}
-  alt="Illustration of AI models running directly in the browser"
-/>
+Web LLM belongs to the **Chat LLM** palette group. Its canonical node id is `webLLM` and its source documentation link is `/nodes/builtin/ai/aidependencies/llm/wbellm/`.
 
-## How it works
+## When to use it
 
-Web LLM downloads and runs AI models directly in your browser using WebAssembly and WebGPU acceleration. Everything happens locally in your browser tab with no external dependencies.
+Use Web LLM as part of an AI workflow, either as an agent node or as a dependency connected to an agent.
 
-```mermaid
-graph LR
-  Browser[Your Browser] --> WASM[WebAssembly]
-  WASM --> GPU[WebGPU Acceleration]
-  GPU --> Model[AI Model]
-  Model --> Response[Instant Response]
-  style WASM fill:#6d28d9,stroke:#fff,color:#fff
-```
+## Inputs and settings
 
-## Setup guide
+| Setting | Notes |
+| --- | --- |
+| Model | Source-backed field from the node schema. |
+| Temperature | Source-backed field from the node schema. |
+| Options | Source-backed field from the node schema. |
 
-<Steps>
+## Outputs
 
-1. **Choose a Model**: Select from available browser-compatible AI models.
+Returns a chat model dependency that can be connected to AI agent nodes.
 
-2. **Wait for Download**: The model downloads and caches in your browser (one-time process).
+## Dependencies and credentials
 
-3. **Start Processing**: Once loaded, the AI runs instantly with no network delays.
+- No explicit credential or node dependency is declared in the node description.
 
-4. **Enjoy Privacy**: All processing happens locally - your data never leaves the browser.
+## Example workflow
 
-</Steps>
-
-## Practical example: Ultra-private document analysis
-
-Let's set up completely private AI processing that works offline.
-
-<Tabs>
-  <TabItem label="General Analysis">
-    <Code
-      code={`{
-  "model": "Llama-2-7b-chat-hf-q4f16_1",
-  "temperature": 0.3,
-  "maxTokens": 500
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Creative Writing">
-    <Code
-      code={`{
-  "model": "Llama-2-7b-chat-hf-q4f16_1",
-  "temperature": 0.8,
-  "maxTokens": 1000
-}`}
-      lang="json"
-    />
-  </TabItem>
-  <TabItem label="Precise Tasks">
-    <Code
-      code={`{
-  "model": "Llama-2-7b-chat-hf-q4f16_1",
-  "temperature": 0.1,
-  "maxTokens": 300
-}`}
-      lang="json"
-    />
-  </TabItem>
-</Tabs>
-
-## Why choose browser AI
-
-| Browser AI (Web LLM) | Cloud AI | Local AI (Ollama) |
-|----------------------|----------|-------------------|
-| Runs in browser | Requires internet | Requires installation |
-| Ultimate privacy | Data sent externally | Local but needs setup |
-| Works offline | Always online | Works offline |
-| No installation | No installation | Requires software |
-| Instant startup | API delays | Server startup time |
-
-## Available models
-
-| Model | Size | Best For | Performance |
-|-------|------|----------|-------------|
-| **Llama-2-7b-chat-hf-q4f16_1** | ~4GB | General tasks | Good balance |
-| **TinyLlama-1.1B-Chat-v0.4-q4f16_1** | ~700MB | Quick responses | Very fast |
-| **Phi-2-q4f16_1** | ~1.6GB | Reasoning tasks | Fast |
-
-<Aside type="tip" title="Start with TinyLlama for testing">
-  TinyLlama downloads quickly and runs fast, perfect for testing Web LLM functionality before trying larger models.
-</Aside>
-
-## Browser requirements
-
-### Minimum requirements
-- **Modern browser** (Chrome 113+, Firefox 117+, Edge 113+)
-- **4GB RAM** available to browser
-- **WebAssembly support** (automatic in modern browsers)
-
-### Recommended setup
-- **8GB+ RAM** for larger models
-- **WebGPU support** for acceleration (Chrome/Edge)
-- **Fast internet** for initial model download
-
-## Real-world examples
-
-### Maximum privacy document processing
-Process highly sensitive documents with zero external access:
-```
-Use case: Legal documents, medical records, personal data
-Benefit: Guaranteed privacy - nothing leaves your browser
-Model: Llama-2-7b-chat-hf-q4f16_1 with temperature 0.2
-```
-
-### Offline AI assistant
-Create AI workflows that work without internet:
-```
-Use case: Field work, remote locations, air-gapped systems
-Benefit: Complete offline functionality after initial setup
-Model: TinyLlama for fast responses, Llama-2 for quality
-```
-
-### Educational AI tools
-Build AI learning tools with no external dependencies:
-```
-Use case: Student projects, classroom environments, demos
-Benefit: No API keys, no costs, works anywhere
-Model: Phi-2 for reasoning tasks, TinyLlama for speed
-```
+Connect Web LLM to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
 
 ## Troubleshooting
 
-- **Model won't load**: Check available browser memory and try a smaller model like TinyLlama.
-- **Slow performance**: Enable WebGPU in browser settings or try a smaller model.
-- **Out of memory errors**: Close other browser tabs and try a lighter model.
-- **Download fails**: Check internet connection and browser storage permissions.
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
+## Related nodes
+
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)

@@ -156,6 +156,10 @@ export default defineConfig({
                 label: "Key concepts",
                 items: [
                   {
+                    label: "Overview",
+                    link: "usage/key-concepts",
+                  },
+                  {
                     label: "Data",
                     items: [
                       {
@@ -172,6 +176,10 @@ export default defineConfig({
                       {
                         label: "Data Structure",
                         link: "usage/key-concepts/data/data-structure",
+                      },
+                      {
+                        label: "Item Linking",
+                        link: "usage/key-concepts/data/item-linking",
                       },
                     ],
                   },
@@ -220,25 +228,76 @@ export default defineConfig({
             icon: "puzzle",
             items: [
               {
-                label: "Built-in nodes",
+                label: "Built-in Overview",
+                link: "nodes/builtin",
+              },
+              {
+                label: "Trigger",
                 autogenerate: {
-                  directory: "nodes/builtin",
+                  directory: "nodes/builtin/trigger",
+                  collapsed: true,
+                },
+              },
+              {
+                label: "Lambda",
+                autogenerate: {
+                  directory: "nodes/builtin/lambda",
+                  collapsed: true,
+                },
+              },
+              {
+                label: "In Page Action",
+                autogenerate: {
+                  directory: "nodes/extension",
+                  collapsed: true,
+                },
+              },
+              {
+                label: "Flow",
+                autogenerate: {
+                  directory: "nodes/builtin/flow",
+                  collapsed: true,
+                },
+              },
+              {
+                label: "Data Transformation",
+                autogenerate: {
+                  directory: "nodes/builtin/datatransformation",
+                  collapsed: true,
+                },
+              },
+              {
+                label: "Core",
+                autogenerate: {
+                  directory: "nodes/builtin/core",
+                  collapsed: true,
+                },
+              },
+              {
+                label: "AI",
+                autogenerate: {
+                  directory: "nodes/builtin/ai",
                   collapsed: true,
                 },
               },
               {
                 label: "Integrations",
                 autogenerate: {
-                  directory: "nodes/integrations",
+                  directory: "nodes/builtin/integration",
                   collapsed: true,
                 },
               },
               {
-                label: "Extension specific",
-                autogenerate: {
-                  directory: "nodes/extension",
-                  collapsed: true,
-                },
+                label: "Node Types Overview",
+                link: "nodes/builtin/node-types",
+              },
+              {
+                label: "Rate Limits",
+                link: "nodes/builtin/rate-limits",
+              },
+              {
+                label: "Unknown Node",
+                link: "nodes/builtin/unknownode",
               },
             ],
           },
