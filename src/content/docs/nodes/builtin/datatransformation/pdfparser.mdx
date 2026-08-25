@@ -1,0 +1,48 @@
+---
+title: "PDF Parser"
+description: "Extract text from a PDF"
+sidebar:
+  label: "PDF Parser"
+---
+
+# PDF Parser
+
+Extract text from a PDF.
+
+## What it does
+
+Reads a PDF from the input and returns its text content. It runs entirely in the browser.
+
+## When to use it
+
+Use this node to turn an uploaded or fetched PDF into text you can search, summarise, feed to an AI node, or store.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Input field | The field holding the PDF data. Accepts base64, a `data:` URL, an ArrayBuffer/typed array, or a byte array. Defaults to `data`. |
+| Output field name | The field the extracted text is written to. Defaults to `text`. |
+| Merge pages | When on (default), all pages are joined into one text string. When off, the output is an array with one string per page. |
+
+## Outputs
+
+Returns `{ [outputFieldName]: text, pageCount }`, where `text` is a single string (merge pages on) or an array of per-page strings (merge pages off), and `pageCount` is the number of pages.
+
+## Dependencies and credentials
+
+- No credential is required. Parsing runs in the browser.
+
+## Example workflow
+
+Fetch or upload a PDF so its bytes land in a field, connect it into PDF Parser, then pass the extracted `text` to an AI Agent to summarise, or to Edit Fields for further processing.
+
+## Troubleshooting
+
+- If parsing fails, check that the input field actually contains the PDF (base64, a `data:` URL, or raw bytes) — an undecodable value throws an error.
+- Scanned PDFs that contain images rather than real text will return little or no text; use an OCR step upstream for those.
+
+## Related nodes
+
+- [Download as File](/nodes/builtin/datatransformation/downloadasfile/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
