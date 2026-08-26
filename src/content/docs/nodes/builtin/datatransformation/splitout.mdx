@@ -1,35 +1,33 @@
 ---
 title: "Split Out"
-description: "Turn a list inside an item into separate items"
+description: "Turn one item with an array field into many items"
 sidebar:
   label: "Split Out"
 ---
 
 # Split Out
 
-Turn a list inside an item into separate items.
+Turn one item with an array field into many items.
 
 ## What it does
 
-Reads a field on the incoming item whose value is an array, and emits **one output item per element** of that array. It is the exact inverse of [Aggregate](/nodes/builtin/datatransformation/aggregate/): splitting a field out and aggregating it back returns the original array.
-
-For example, the item `{ tags: ["a", "b", "c"], id: 1 }` split out on `tags` produces three items — `{ tags: "a" }`, `{ tags: "b" }`, `{ tags: "c" }` — each additionally carrying `id: 1` when **Include Other Fields** is enabled.
+Takes a field on the input item whose value is a list, and emits one output item for each element of that list. Optionally carries the item's other fields onto each output.
 
 ## When to use it
 
-Use this node to act once per element rather than once per list: to fan an array stored on one item into individual items for downstream nodes, to iterate over an API response that nests its records inside an array field, or to normalize "one row with many values" into "many rows with one value".
+Use this node when an upstream step returns a list packed inside a single item (e.g. a `tags` array, a list of results, or rows nested under a key) and you want the rest of the workflow to process each element separately.
 
 ## Inputs and settings
 
 | Setting | Notes |
 | --- | --- |
-| Field To Split Out | Dot path to the array field to split out (for example `tags` or `data.tags`). Required. |
-| Output field name | The name each element is placed under. Defaults to the last segment of the path being split out. |
-| Include Other Fields | Off by default. When **on**, the remaining input fields are carried onto every output item; only the top-level key of the split path is removed. |
+| Field to split out | Dot-notation path to the array field on the input item (e.g. `tags` or `data.items`). |
+| Output field name | Name each element is stored under on the output items. Defaults to the last segment of the path. |
+| Include other fields | When on, the item's remaining top-level fields are copied onto every output item. Defaults to off. |
 
 ## Outputs
 
-Returns one item per element of the array. Each item stores the element under **Output field name** (or the last segment of the split path). When the field holds a single, non-array value, the node emits that as one item rather than failing.
+Emits one item per array element: `{ [outputFieldName]: element }`, plus the carried-over fields when **Include other fields** is enabled. An empty array produces no items; a value that is not an array passes through as a single item.
 
 ## Dependencies and credentials
 
@@ -37,16 +35,15 @@ Returns one item per element of the array. Each item stores the element under **
 
 ## Example workflow
 
-A node returns `{ items: [ { name: "A" }, { name: "B" } ], source: "feed" }`. Connect it into Split Out, set **Field To Split Out** to `items` and enable **Include Other Fields**, and the node emits two items — `{ items: { name: "A" }, source: "feed" }` and `{ items: { name: "B" }, source: "feed" }` — that downstream nodes then process one at a time.
+An HTTP request returns `{ results: [ {...}, {...}, {...} ] }`. Point Split Out at `results`, and each result becomes its own item so the next node runs once per result.
 
 ## Troubleshooting
 
-- The field named in **Field To Split Out** must exist on the input item. A path that cannot be reached is an error naming the missing field — check the exact spelling and the dot path.
-- Split Out takes a single input item. If nothing is connected upstream, it reports that no source node is connected.
-- To gather split items back into one item, use [Aggregate](/nodes/builtin/datatransformation/aggregate/).
+- If nothing splits, confirm **Field to split out** points at an actual array. A non-array value is passed through unchanged as a single item.
+- Referencing a field that does not exist on the input throws an error — check the path and the upstream data shape.
 
 ## Related nodes
 
-- [Aggregate](/nodes/builtin/datatransformation/aggregate/)
-- [Sort](/nodes/builtin/datatransformation/sort/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Limit](/nodes/builtin/datatransformation/limit/)
+- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
