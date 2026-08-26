@@ -1,0 +1,57 @@
+---
+title: "Rename Keys"
+description: "Rename and move keys on an item"
+sidebar:
+  label: "Rename Keys"
+---
+
+# Rename Keys
+
+Rename and move keys on an item.
+
+## What it does
+
+Renames the keys of an item. You can rename keys you name one by one — including nested keys addressed by a dot path — or rewrite every key at once with a pattern. Because dots address nesting, renaming a key to a dot path *moves* its value to that place in the object.
+
+## When to use it
+
+Use this node to fix the one wrong field name on a twenty-field scraped object without retyping the other nineteen, to strip a prefix from every key, or to normalise a whole object from camelCase to snake_case. It is the quick alternative to rebuilding an object by hand in Edit Fields.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Mode | How keys are chosen: `Named keys` (rename the ones you list) or `Pattern` (rewrite every key that matches). Defaults to `Named keys`. |
+| Renames | Used by **Named keys**: a list of `From` → `To` pairs. In `From`, dots address nested keys (`user.firstName`); in `To`, dots move the value to a different place (`first_name`). |
+| Pattern | Used by **Pattern**: a regular expression matched against each key name, for example `^data_` to strip a prefix. |
+| Replacement | Used by **Pattern**: what the matched part becomes. Use `$1` for groups. Leaving it empty removes the matched part. |
+| Ignore Case | Used by **Pattern**: match the pattern regardless of case. Off by default. |
+| Apply To Nested Keys | Used by **Pattern**: off rewrites only the top-level keys; on rewrites every key at every depth, including inside arrays of objects. Off by default. |
+| On Collision | What to do when a new name is already taken: `Fail` (the default), `Overwrite`, or `Keep the existing key`. |
+
+## Outputs
+
+The same item (or collection) with its keys renamed. Values are preserved; only the key names — and, when you rename to a dot path, the place a value sits — change.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+A scraper emits objects whose keys are all prefixed `data_`. Connect them into Rename Keys, set **Mode** to `Pattern`, **Pattern** to `^data_` and leave **Replacement** empty. Every key loses the prefix in one step. To instead rename a single nested field, switch to `Named keys` and add `user.firstName` → `first_name`, which both renames and lifts the value to the top level.
+
+## Troubleshooting
+
+- **A missing key is not an error.** Renaming a field that only some items carry is normal for scraped data, so an absent key is simply left alone rather than failing the run.
+- **Collisions fail by default.** If a rename would land on a key that already exists, the node stops with a message rather than silently destroying the existing value. Choose `Overwrite` or `Keep the existing key` on **On Collision** if that is what you want. A destination that is itself being renamed away does *not* count as a collision — it is about to be vacated.
+- **Swaps are safe.** Renames are decided against the original item, so `a` → `b` together with `b` → `a` keeps both values rather than depending on which rename ran first.
+- **A rewrite that would empty a key name keeps the original** key instead, so you never end up with an unaddressable blank field.
+- **Patterns are safe on untrusted key names.** Pattern mode runs through the same bounded matcher as the Regex node, so a runaway pattern reports a timeout instead of freezing the tab. Each distinct key is matched once, so a deeply nested object with a repeated key costs one match, not one per occurrence.
+
+## Related nodes
+
+- [Regex](/nodes/builtin/datatransformation/regex/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Code](/nodes/builtin/core/code/)
+- [Node types overview](/nodes/builtin/node-types/)

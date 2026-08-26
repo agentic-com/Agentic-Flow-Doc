@@ -152,6 +152,10 @@ export default defineConfig({
                   label: "Assistant Notch",
                   link: "usage/using-the-app/assistant-notch",
                 },
+                {
+                  label: "Data store",
+                  link: "usage/using-the-app/data-store",
+                },
               ],
             },
             {

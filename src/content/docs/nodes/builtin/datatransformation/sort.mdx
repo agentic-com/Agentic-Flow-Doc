@@ -1,0 +1,67 @@
+---
+title: "Sort"
+description: "Order the incoming items by one or more fields, or shuffle them randomly"
+sidebar:
+  label: "Sort"
+---
+
+# Sort
+
+Order the incoming items by one or more fields, or shuffle them randomly.
+
+## What it does
+
+Reorders the whole collection of incoming items. In **By fields** mode you add one or more sort keys, each pointing at a field, with its own direction and its own way of comparing values. Keys apply in order: the second key only breaks ties left by the first. In **Random (shuffle)** mode the items are placed in a random order and no keys are used.
+
+Ordering is stable, so items that compare equal keep their original relative order. That makes it safe to sort by one field and then, in a later Sort node, by another.
+
+## When to use it
+
+Use this node to present results newest-first or cheapest-first, to feed a [Limit](/nodes/builtin/datatransformation/limit/) node a meaningful "top N" rather than an arbitrary one, or to sample a collection by shuffling it.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Mode | `By fields` sorts by the keys you define, `Random (shuffle)` puts the items in a random order. Defaults to `By fields`. |
+| Sort By | The ordered list of sort keys, applied first to last. Later keys only break ties left by earlier ones. Empty by default. Each key has the three fields below. |
+| Field | The field to sort by, addressed by dot path for nested fields, e.g. `user.profile.name`. |
+| Direction | `Ascending` or `Descending` for this key. Defaults to `Ascending`. |
+| Compare As | How values in this field are compared: `Automatic`, `Number`, `Text`, `Text (natural)`, or `Date`. Defaults to `Automatic`. |
+
+### How values are compared
+
+- **Automatic** inspects the pair of values it is comparing and picks a strategy: it prefers **numbers over dates**, so a plain numeric field such as `2` is treated as a number rather than misread as a timestamp, and falls back to natural text otherwise.
+- **Text (natural)** keeps `item 2` ahead of `item 10` by reading the digit runs as numbers. This is the fallback the automatic strategy uses for text.
+- **Text** is a plain lexical comparison, for data where the natural ordering would be wrong (for example, codes that must sort strictly by character).
+- **Number** and **Date** force those interpretations for the key.
+
+### Missing values
+
+A value that is `undefined`, `null`, or an empty string (`''`) carries no ordering information, so it is always placed **last** — in both ascending and descending order. This keeps empty rows at the bottom rather than letting a descending sort float them to the top. A field path that cannot be reached is treated the same way: it is not an error, the item simply sorts last.
+
+## Outputs
+
+Returns the same items in their new order. No items are added or removed, and the upstream collection is never reordered in place.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Connect a node that returns a list of products into Sort. Add one key on `price` with **Compare As** `Number` and **Direction** `Ascending`, then a second key on `name` to break ties. Feed the result into [Limit](/nodes/builtin/datatransformation/limit/) with **Max items** `5` to keep the five cheapest.
+
+## Troubleshooting
+
+- Sort operates on the whole collection at once. If it seems to have no effect, make sure the upstream node emits multiple items rather than a single object.
+- A key with no **Field** set is ignored, and if none of the keys have a field the collection passes through untouched.
+- If everything empty ends up at the bottom rather than where you expect, that is by design: missing, `null`, and empty-string values always sort last regardless of direction.
+- If numeric strings sort in an odd order, set **Compare As** to `Number`; if text with numbers sorts as `10` before `2`, use `Text (natural)`.
+
+## Related nodes
+
+- [Limit](/nodes/builtin/datatransformation/limit/)
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/)
+- [Aggregate](/nodes/builtin/datatransformation/aggregate/)
+- [Node types overview](/nodes/builtin/node-types/)

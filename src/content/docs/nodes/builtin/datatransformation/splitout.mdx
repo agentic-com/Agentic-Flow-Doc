@@ -1,0 +1,52 @@
+---
+title: "Split Out"
+description: "Turn a list inside an item into separate items"
+sidebar:
+  label: "Split Out"
+---
+
+# Split Out
+
+Turn a list inside an item into separate items.
+
+## What it does
+
+Reads a field on the incoming item whose value is an array, and emits **one output item per element** of that array. It is the exact inverse of [Aggregate](/nodes/builtin/datatransformation/aggregate/): splitting a field out and aggregating it back returns the original array.
+
+For example, the item `{ tags: ["a", "b", "c"], id: 1 }` split out on `tags` produces three items — `{ tags: "a" }`, `{ tags: "b" }`, `{ tags: "c" }` — each additionally carrying `id: 1` when **Include Other Fields** is enabled.
+
+## When to use it
+
+Use this node to act once per element rather than once per list: to fan an array stored on one item into individual items for downstream nodes, to iterate over an API response that nests its records inside an array field, or to normalize "one row with many values" into "many rows with one value".
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Field To Split Out | Dot path to the array field to split out (for example `tags` or `data.tags`). Required. |
+| Output field name | The name each element is placed under. Defaults to the last segment of the path being split out. |
+| Include Other Fields | Off by default. When **on**, the remaining input fields are carried onto every output item; only the top-level key of the split path is removed. |
+
+## Outputs
+
+Returns one item per element of the array. Each item stores the element under **Output field name** (or the last segment of the split path). When the field holds a single, non-array value, the node emits that as one item rather than failing.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+A node returns `{ items: [ { name: "A" }, { name: "B" } ], source: "feed" }`. Connect it into Split Out, set **Field To Split Out** to `items` and enable **Include Other Fields**, and the node emits two items — `{ items: { name: "A" }, source: "feed" }` and `{ items: { name: "B" }, source: "feed" }` — that downstream nodes then process one at a time.
+
+## Troubleshooting
+
+- The field named in **Field To Split Out** must exist on the input item. A path that cannot be reached is an error naming the missing field — check the exact spelling and the dot path.
+- Split Out takes a single input item. If nothing is connected upstream, it reports that no source node is connected.
+- To gather split items back into one item, use [Aggregate](/nodes/builtin/datatransformation/aggregate/).
+
+## Related nodes
+
+- [Aggregate](/nodes/builtin/datatransformation/aggregate/)
+- [Sort](/nodes/builtin/datatransformation/sort/)
+- [Node types overview](/nodes/builtin/node-types/)

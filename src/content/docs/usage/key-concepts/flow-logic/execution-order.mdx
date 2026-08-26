@@ -51,6 +51,16 @@ flowchart LR
 
 If the downstream step needs data from both branches, use [Merge](/nodes/builtin/flow/merge/) explicitly. If the downstream step only needs one branch, keep the connections separate to avoid accidental cross-input behavior.
 
+## Reading a run variable before it is set
+
+A [Set Variable](/nodes/builtin/flow/setvariable/) node stores a value that later nodes read as `{{ $run.name }}` (see [run variables](/usage/key-concepts/data/data-mapping/data-mapping-expressions/#run-variables--run)). Because the value only exists once the writer has run, a node that reads it must be **guaranteed to run after** the writer. The editor checks this at design time and warns you when it isn't sure:
+
+- **Error** — no Set Variable node for that name can reach the reader at all. The variable would never be set when the read happens, so the run would fail.
+- **Warning** — a writer _can_ reach the reader, but isn't guaranteed to have run first. This happens when the paths rejoin through a **Funnel**, which fires as soon as the first branch arrives — so the branch carrying the write may not have run yet.
+- **No warning** — a writer is guaranteed to have run. An **AND-join** waits for every predecessor before firing, so a write on any incoming branch has definitely happened by the time the reader runs.
+
+Plain **If** branches need no special handling: whichever branch is taken runs to completion before the nodes after it, so a variable set on the taken branch is available downstream.
+
 ## Browser actions are stateful
 
 In-page actions do not just pass data. They can change the active page.
