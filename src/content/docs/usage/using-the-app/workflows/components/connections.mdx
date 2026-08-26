@@ -29,6 +29,17 @@ Hover over a connection arrow until controls appear, then click **Delete** to re
 
 ---
 
+## Named outputs on branching nodes
+
+Branching nodes — [If](/nodes/builtin/flow/if/) and [Switch](/nodes/builtin/flow/switch/) — expose more than one output port, and each port has a **name** (the branch or rule it routes to). When you connect a branch, the edge attaches to that specific named port.
+
+Because an edge binds to the port **name** rather than its position:
+
+- **Reordering** branches or rules keeps every edge pointing where it was. Moving a rule up or down does not rewire anything.
+- **Renaming** an output disconnects the edge that left it. The canvas removes the now-dangling edge and tells you it did so, rather than silently leaving it pointing at a branch that no longer exists.
+
+---
+
 ## Best practices and tips
 
 - Keep the flow easy to read (left to right works well).

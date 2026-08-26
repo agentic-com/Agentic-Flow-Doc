@@ -1,0 +1,67 @@
+---
+title: "Aggregate"
+description: "Fold many items into a single item"
+sidebar:
+  label: "Aggregate"
+---
+
+# Aggregate
+
+Fold many items into a single item.
+
+## What it does
+
+Takes the whole collection of incoming items and combines it into **one** item. It is the exact inverse of [Split Out](/nodes/builtin/datatransformation/splitout/): splitting a field out and aggregating it back returns the original array.
+
+There are two modes:
+
+- **Individual fields** collects one or more chosen fields, across every item, into arrays. Items `[{ price: 3 }, { price: 5 }]` aggregated on `price` produce the single item `{ price: [3, 5] }`.
+- **All item data** wraps every incoming item, whole, under a single named field.
+
+## When to use it
+
+Use this node to act once on a whole list rather than once per row: to send one summary message about a scraped list instead of one per row, to hand a full result set to a model in a single prompt, or to turn "many rows with one value" back into "one row with many values".
+
+To join two separate branches together on matching keys, use Merge instead — that combines different data about the same things across **two** inputs, whereas Aggregate folds one input down.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Mode | `Individual fields` collects chosen fields into arrays, `All item data` wraps every item into one field. Defaults to `Individual fields`. |
+| Fields To Aggregate | (Individual fields mode) The list of fields to collect. Each entry has a **Field** (dot path, e.g. `user.profile.name`) and an optional **Output field name** for the resulting array — this defaults to the last segment of the path, mirroring how Split Out names the field it emits. Empty by default. |
+| Put Output In Field | (All item data mode) The name of the field that holds every input item. Defaults to `data`. |
+| Keep Missing Values | Off by default. **Off**: items that lack the collected field are skipped, so the array is shorter. **On**: they contribute `null`, so positions stay aligned across several aggregated fields. |
+
+### What counts as missing
+
+Only an **absent key** — a field path that cannot be reached — is treated as missing. A field that is present but `null` is collected as a real value. This deliberately differs from [Sort](/nodes/builtin/datatransformation/sort/), where `null` and empty strings carry no ordering and sort last.
+
+## Outputs
+
+Returns a single item.
+
+- In **Individual fields** mode, one field per collected entry, each holding an array of the gathered values.
+- In **All item data** mode, one field (named by **Put Output In Field**) holding the array of every input item.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+A node returns a list of scraped listings. Connect it into Aggregate in **Individual fields** mode, add a field `title` (output name `titles`) and a field `url` (output name `urls`), and the node emits a single item `{ titles: [...], urls: [...] }` that you can drop into one notification message. To round-trip, a [Split Out](/nodes/builtin/datatransformation/splitout/) on `titles` would fan it back into individual items.
+
+## Troubleshooting
+
+- Aggregate operates on the whole collection at once. If it seems to have no effect, make sure the upstream node emits multiple items rather than a single object.
+- In **Individual fields** mode the node reports an error if no field is set — add at least one field, or switch to **All item data**.
+- If an aggregated array is shorter than you expect, some items are missing that field. Turn on **Keep Missing Values** to contribute `null` and keep the arrays aligned.
+- Remember that `null` is collected as a real value; only a genuinely absent key is skipped.
+
+## Related nodes
+
+- [Split Out](/nodes/builtin/datatransformation/splitout/)
+- [Sort](/nodes/builtin/datatransformation/sort/)
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/)
+- [Node types overview](/nodes/builtin/node-types/)

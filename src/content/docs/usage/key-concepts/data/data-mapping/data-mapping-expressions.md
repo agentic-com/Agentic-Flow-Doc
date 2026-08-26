@@ -44,6 +44,19 @@ Pricing page
 
 You don't have to type `$input` by hand: open the input panel next to a field and pick a value from the **Input** section — the editor inserts the matching `{{ $input... }}` expression for you.
 
+## Run variables — `$run`
+
+Use `$run` to read a value that an earlier [Set Variable](/nodes/builtin/flow/setvariable/) node stored during **this run**.
+
+- `{{ $run.cursor }}` — a variable named `cursor`.
+- `{{ $run.page.next }}` — a field nested inside a stored object (dot path).
+
+No edge or connection is needed between the Set Variable node and the field that reads it. As long as the writer runs before the reader, the value is available anywhere `{{ ... }}` expressions work. (To pull a stored value out as the item itself, use the [Get Variable](/nodes/builtin/flow/getvariable/) node instead.)
+
+Unlike `$input`, reading a variable that was never set does **not** quietly become an empty string — it **fails the expression loudly**, and the error names the variable and lists what has been set so far. This is deliberate: a silent empty value is exactly how an ordering mistake would slip through unnoticed. Only the variable itself must exist; a deeper path _inside_ an existing variable that isn't present still resolves to empty.
+
+Ordering matters. A variable is only reliably readable by nodes that are **guaranteed to run after** the Set Variable node — that is, nodes downstream of it. Reading it from a parallel branch may work today and break when the graph changes. When a read might happen before the write, the canvas surfaces a design-time warning; see [reading a variable before it is set](/usage/key-concepts/flow-logic/execution-order/#reading-a-run-variable-before-it-is-set).
+
 ## Previous node values — `$('Node name')`
 
 Use a previous-node reference when the value should come from a specific earlier step, identified by its node name.

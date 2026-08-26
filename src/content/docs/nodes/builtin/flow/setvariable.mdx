@@ -1,0 +1,63 @@
+---
+title: "Set Variable"
+description: "Remember a named value for the rest of the current run"
+sidebar:
+  label: "Set Variable"
+---
+
+# Set Variable
+
+Remember a value for the rest of this run.
+
+## What it does
+
+Stores a named value that any later node can read as `{{ $run.name }}` — no edge or connection required. It is how you carry a value to a node several steps away without dragging it through every node in between, and how you accumulate a running total or a list across the iterations of a [Loop](/nodes/builtin/flow/loop/).
+
+Variables live for **one execution** and are gone when the run ends. If you need to remember something between runs, that is the Data Store, not this node — the lifetime is why the expression token says `$run`.
+
+## When to use it
+
+- To hand a value to a node far away on the canvas without running an edge across the whole graph.
+- To build up a total or a list over a Loop, which is otherwise hard without reaching for persistent storage.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | What to do to the variable: `Set`, `Add to number` (increment), `Append to list`, or `Delete`. Defaults to `Set`. |
+| Name | The name to store the value under, read later as `{{ $run.name }}`. Letters, digits, underscore and `$`, not starting with a digit — the same shape the expression token accepts. |
+| Value | The value to store, for example `{{ $json.nextPage }}`. Resolves from an upstream connection, or is taken as text when typed in. |
+| Pass The Item Through | On by default: the incoming item continues unchanged, so the node can sit inline. Off: the item is replaced by a summary of what was stored. |
+
+## Outputs
+
+By default the incoming item passes through unchanged, so Set Variable can sit inline without disturbing the stream. With pass-through off, it emits a summary of the write (`name`, `value`, `operation`) instead.
+
+## Reading a variable later
+
+Any downstream node reads the value inline with `{{ $run.name }}` in any input field — no connection to this node is needed.
+
+A variable is only reliably readable by nodes **guaranteed to run after** the one that sets it — that is, nodes downstream of this one. A node runs once every node feeding into it has run, but between two branches that do not feed into each other there is no ordering at all. Reading a variable from a parallel branch may work today and break when someone inserts a node elsewhere. Reading a variable that was never set **fails loudly, naming the variable**, rather than resolving to an empty string, so that mistake cannot pass unnoticed. The canvas shows a design-time warning when a read may happen before the write.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+- Variables exist only while a workflow is running. Running this node on its own, outside an execution, has nothing to store into and reports so.
+
+## Example workflow
+
+Early in a run, use Set Variable with **Operation** `Set`, **Name** `cursor`, and **Value** `{{ $json.nextPage }}`. Later, a Loop increments a `count` variable each pass with **Operation** `Add to number`. A final node reads `{{ $run.cursor }}` and `{{ $run.count }}` directly, with no edge back to either Set Variable node.
+
+## Troubleshooting
+
+- "Variables only exist while a workflow is running." Run the whole workflow rather than this node on its own.
+- "A variable name is required" / the name is rejected: use letters, digits, underscore or `$`, not starting with a digit, so `{{ $run.name }}` can address it.
+- "Cannot append … not a list": **Append to list** needs the variable to hold a list. Set it to a list first, or start fresh.
+- A downstream read fails naming the variable: the reading node is not guaranteed to run after this one. Move it downstream, or heed the canvas warning about a read before the write.
+
+## Related nodes
+
+- [Get Variable](/nodes/builtin/flow/getvariable/)
+- [Loop](/nodes/builtin/flow/loop/)
+- [$run expressions](/usage/key-concepts/data/data-mapping/data-mapping-expressions/)
+- [Node types overview](/nodes/builtin/node-types/)

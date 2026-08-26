@@ -1,0 +1,67 @@
+---
+title: "Math"
+description: "Calculate with numbers and format them for people"
+sidebar:
+  label: "Math"
+---
+
+# Math
+
+Calculate with numbers and format them for people.
+
+## What it does
+
+Performs one calculation on the numbers you point it at and places the answer on the outgoing item. The available operations cover arithmetic (Add, Subtract, Multiply, Divide, Remainder, Power), four kinds of rounding, list reductions (Minimum, Maximum, Sum, Average), percentages, a random number, and locale-aware formatting.
+
+Input is read strictly. Unlike JavaScript's `Number()`, this node refuses anything that is not clearly a number rather than turning it into `0`: an empty or whitespace-only string, `null`, a list, or a boolean fails with a message that names the field. Numeric strings such as `'42'` are still accepted, because a scraped page has no other way of expressing a number. This keeps a missing field from silently becoming a zero and corrupting a total.
+
+## When to use it
+
+Use this node to turn a scraped price string into a real number and round it sensibly, to total or average a column pulled off a page, or to present a figure the way a person expects to read it (with thousands separators, a currency symbol, or a percent sign).
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | The calculation to perform. One of: `Add`, `Subtract`, `Multiply`, `Divide`, `Remainder`, `Power`, `Round`, `Round down`, `Round up`, `Drop decimals`, `Absolute value`, `Negate`, `Square root`, `Minimum`, `Maximum`, `Sum`, `Average`, `Percentage of`, `Percentage change`, `Random number`, `Format`. Defaults to `Add`. |
+| Value | The number to work on. Accepts an expression such as `{{ $json.price }}`. When left empty, the value is read from the incoming item (the item itself if it is a number, otherwise its `value` field). |
+| Second Value | The second number, used by Add, Subtract, Multiply, Divide, Remainder, Power, Percentage of and Percentage change. |
+| Values | The list of numbers for Minimum, Maximum, Sum and Average. Point it at an array such as `{{ $json.prices }}`. If left empty, the numbers are taken from the Value field of every incoming item instead. |
+| Decimal Places | How many decimal places `Round` keeps. Integer, defaults to `0`. |
+| Format As | How `Format` presents the number: `Plain number`, `Currency` or `Percentage`. Defaults to `Plain number`. |
+| Locale | Language tag deciding separators, such as `en-US` or `fr-FR`. Leave empty to follow the browser. An unusable tag falls back to the default rather than failing the run. |
+| Currency | Three-letter currency code used when Format As is `Currency`. Defaults to `USD`. |
+| Minimum Decimals | Fewest decimal places `Format` shows. Defaults to `0`. |
+| Maximum Decimals | Most decimal places `Format` shows. Defaults to `2`. |
+| Whole Number | Whether `Random number` returns a whole number. Defaults to `on`. |
+| Put Result In Field | Name of the field holding the answer. Defaults to `result`. |
+| Include Input Fields | On: the answer is added to the incoming item. Off: the item is replaced by the answer alone. Defaults to `on`. |
+
+## Outputs
+
+Per-item operations answer once per incoming item, placing the result in **Put Result In Field**. List operations (Minimum, Maximum, Sum, Average) fold the whole collection into a single answer. `Random number` needs no input and can run without a connected item, taking its range from **Value** (low, default `0`) and **Second Value** (high, default `1`).
+
+Formatting uses `Intl` under the hood, so separators, currency and percent follow the chosen locale.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Connect a node that emits product prices, set **Operation** to `Sum` and leave **Values** empty so it totals the `value` of every incoming item. Or, on a single scraped price, set **Operation** to `Round` and **Decimal Places** to `2`, then a second Math node with **Operation** `Format`, **Format As** `Currency` and **Currency** `EUR` to present it.
+
+## Troubleshooting
+
+- Non-numeric input fails with a message that names the field rather than becoming `0`. Empty and whitespace strings, `null`, lists and booleans are all rejected; numeric strings like `'42'` are accepted.
+- Dividing by zero fails rather than returning `Infinity`. Taking a remainder of zero, a percentage of zero, and a percentage change from zero fail for the same reason: a value that travels downstream looking like a result is worse than a stopped run.
+- `Square root` of a negative number, and an overflow such as `10` to the power of `1000`, both fail rather than returning `NaN` or `Infinity`.
+- Rounding keeps the digits you typed: `Round` of `1.005` to `2` decimal places gives `1.01`, avoiding the usual floating-point trap. Half-values round toward positive infinity, matching JavaScript, so `Round` of `-2.5` gives `-2`.
+- `Drop decimals` and `Round down` differ on negatives: `Drop decimals` of `-2.5` is `-2`, while `Round down` is `-3`.
+
+## Related nodes
+
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
+- [Code](/nodes/builtin/core/code/)
+- [Node types overview](/nodes/builtin/node-types/)

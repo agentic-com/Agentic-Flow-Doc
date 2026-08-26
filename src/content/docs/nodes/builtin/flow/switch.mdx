@@ -1,0 +1,72 @@
+---
+title: "Switch"
+description: "Route items to any number of named branches, with a fallback for the rest"
+sidebar:
+  label: "Switch"
+---
+
+# Switch
+
+Route items to any number of named branches.
+
+## What it does
+
+Sends each incoming item to one of several **named** output branches, with an optional fallback output for anything that matches nothing. Where [IF](/nodes/builtin/flow/if/) gives you two branches, Switch gives you as many as you name — the tool for any three-way-or-more decision, and for splitting a feed by category, status, or priority in one place.
+
+There are two ways to decide the branch:
+
+- **Rules** — each branch has a set of conditions, written with the same condition editor as IF and [Filter](/nodes/builtin/flow/filter/). Several conditions on one branch combine with **AND** unless a condition is set to OR.
+- **Expression** — one resolved value is matched against the branch names. The comparison is done as text, so a numeric `200` arriving from a field matches a branch you named `200`.
+
+## When to use it
+
+- Any decision with three or more outcomes, which would otherwise mean nesting IF nodes until the canvas is unreadable.
+- Splitting a feed by a field whose values are themselves the branch names — a status, a category, a country code.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Mode | How the branch is decided: `Rules` (conditions per branch) or `Expression` (match a value to a branch name). Defaults to `Rules`. |
+| Rules | One rule per branch, tried top to bottom. Each rule has an **Output Name** (the branch it routes to) and, in Rules mode, a set of **Conditions**. |
+| Value To Match | Used in Expression mode only. The value compared, as text, against each output name — for example `{{ $json.status }}`. |
+| On Multiple Matches | `First match only` (default) or `Every match`. First-match makes rule order your way of expressing precedence; every-match fans one item out to every branch it fits. |
+| Add A Fallback Branch | On by default. Sends items matching no rule to an output of their own. Off: an item matching nothing is dropped and goes no further. |
+| Fallback Name | Name of the fallback branch. Defaults to `Anything else`. |
+
+## Outputs
+
+The node draws one output handle per rule, plus the fallback handle when it is enabled. Items are binned by the branch they took.
+
+Two behaviours worth knowing:
+
+- **A rule with no conditions matches nothing**, not everything. This is deliberate: an empty rule that matched everything would turn the first half-written rule into a silent catch-all above every rule below it. When you want a catch-all, use the fallback output.
+- **First match wins by default.** Put the narrow rule above the broad one. Turn on **Every match** only when an item genuinely belongs in more than one branch.
+
+## Outputs are addressed by name
+
+Each edge is stored against its output's **name**, not its position. So **reordering rules rewires nothing** — every edge keeps pointing at the branch it left. The trade-off is that **renaming an output disconnects the edge** that left it: the canvas removes that edge and tells you, rather than leaving one pointing at a branch that no longer exists.
+
+If two outputs are given the same name, the later duplicate is suffixed (for example `Urgent (2)`) so it stays visible and nothing is silently swallowed.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Feed a list of support tickets into Switch in Rules mode. Add a rule named `Urgent` (priority is high), a rule named `Billing` (category is billing), and leave the fallback on as `Anything else`. Each ticket flows out of the branch whose rule it first matches; anything fitting neither rule leaves through the fallback.
+
+## Troubleshooting
+
+- "Switch needs at least one rule." Add a rule and name the branch it routes to before running.
+- "No source node is connected." Switch needs an input connection to route.
+- Everything is landing in the fallback: a rule with no conditions matches nothing. Add the conditions, or route the catch-all through the fallback on purpose.
+- An edge disappeared after you edited a rule: renaming an output disconnects its edge by design. Reconnect it to the renamed branch.
+
+## Related nodes
+
+- [IF](/nodes/builtin/flow/if/)
+- [Filter](/nodes/builtin/flow/filter/)
+- [Merge](/nodes/builtin/flow/merge/)
+- [Node types overview](/nodes/builtin/node-types/) — see named multi-output ports.
