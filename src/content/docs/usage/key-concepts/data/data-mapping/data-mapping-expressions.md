@@ -3,7 +3,7 @@ title: Mapping with expressions
 description: "Use expressions when drag-and-drop mapping is not enough."
 ---
 
-Expressions let you reference values from the current item, previous nodes, or linked items. Use them when a field needs dynamic text, a fallback, or a value nested inside an object.
+Expressions let you reference values from the current node's input, previous nodes, or linked items. Use them when a field needs dynamic text, a fallback, or a value nested inside an object.
 
 For most workflows, start with the visual mapping UI. Use expressions when you need more control.
 
@@ -16,17 +16,18 @@ flowchart LR
   Expr --> Field["Configured field value"]
 ```
 
-An expression is evaluated while the node runs. If the node runs for ten items, the expression is evaluated ten times, once for each current item.
+An expression is written inside double curly braces (`{{ ... }}`) and is evaluated while the node runs. If the node runs for ten items, the expression is evaluated ten times, once for each current item.
 
-## Current item values
+## Current input values — `$input`
 
-Use the current input item when the value should come from the item being processed now.
+Use `$input` when the value should come from the data flowing **into** the current node.
 
-```js
-{{$input.item.json.title}}
-```
+- `{{ $input }}` — the whole incoming input.
+- `{{ $input.title }}` — a top-level field.
+- `{{ $input.metadata.description }}` — a nested field (dot path).
+- `{{ $input.0.name }}` — an item by index when the input is a list.
 
-If the current item is:
+If the incoming input is:
 
 ```json
 {
@@ -35,18 +36,20 @@ If the current item is:
 }
 ```
 
-the expression resolves to:
+then `{{ $input.title }}` resolves to:
 
 ```txt
 Pricing page
 ```
 
-## Previous node values
+You don't have to type `$input` by hand: open the input panel next to a field and pick a value from the **Input** section — the editor inserts the matching `{{ $input... }}` expression for you.
 
-Use a previous node reference when the value should come from a specific earlier step.
+## Previous node values — `$('Node name')`
+
+Use a previous-node reference when the value should come from a specific earlier step, identified by its node name.
 
 ```js
-{{$("Get Page Metadata").item.json.title}}
+{{ $('Get Page Metadata').title }}
 ```
 
 This follows item linking where possible, so the workflow uses the previous item related to the current item.
@@ -56,8 +59,8 @@ This follows item linking where possible, so the workflow uses the previous item
 Expressions are useful for prompts, messages, filenames, and API payloads.
 
 ```txt
-Summarize the page at {{$input.item.json.url}}.
-Title: {{$input.item.json.title}}
+Summarize the page at {{ $input.url }}.
+Title: {{ $input.title }}
 ```
 
 ## Fallback values
@@ -65,7 +68,7 @@ Title: {{$input.item.json.title}}
 When page data may be missing, include a fallback before passing values to an AI or integration node.
 
 ```js
-{{$input.item.json.title || "Untitled page"}}
+{{ $input.title || "Untitled page" }}
 ```
 
 ## Nested values
@@ -73,7 +76,7 @@ When page data may be missing, include a fallback before passing values to an AI
 If a node returns nested output, reference the full path.
 
 ```js
-{{$input.item.json.metadata.description}}
+{{ $input.metadata.description }}
 ```
 
 If the shape is uncertain, inspect the previous node output before writing the expression.

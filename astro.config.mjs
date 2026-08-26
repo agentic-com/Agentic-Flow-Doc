@@ -148,6 +148,10 @@ export default defineConfig({
                     collapsed: true,
                   },
                 },
+                {
+                  label: "Assistant Notch",
+                  link: "usage/using-the-app/assistant-notch",
+                },
               ],
             },
             {
