@@ -1,0 +1,49 @@
+---
+title: "Split Out"
+description: "Turn one item with an array field into many items"
+sidebar:
+  label: "Split Out"
+---
+
+# Split Out
+
+Turn one item with an array field into many items.
+
+## What it does
+
+Takes a field on the input item whose value is a list, and emits one output item for each element of that list. Optionally carries the item's other fields onto each output.
+
+## When to use it
+
+Use this node when an upstream step returns a list packed inside a single item (e.g. a `tags` array, a list of results, or rows nested under a key) and you want the rest of the workflow to process each element separately.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Field to split out | Dot-notation path to the array field on the input item (e.g. `tags` or `data.items`). |
+| Output field name | Name each element is stored under on the output items. Defaults to the last segment of the path. |
+| Include other fields | When on, the item's remaining top-level fields are copied onto every output item. Defaults to off. |
+
+## Outputs
+
+Emits one item per array element: `{ [outputFieldName]: element }`, plus the carried-over fields when **Include other fields** is enabled. An empty array produces no items; a value that is not an array passes through as a single item.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+An HTTP request returns `{ results: [ {...}, {...}, {...} ] }`. Point Split Out at `results`, and each result becomes its own item so the next node runs once per result.
+
+## Troubleshooting
+
+- If nothing splits, confirm **Field to split out** points at an actual array. A non-array value is passed through unchanged as a single item.
+- Referencing a field that does not exist on the input throws an error — check the path and the upstream data shape.
+
+## Related nodes
+
+- [Limit](/nodes/builtin/datatransformation/limit/)
+- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
