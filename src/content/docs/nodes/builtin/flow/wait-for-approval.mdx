@@ -1,0 +1,43 @@
+---
+title: "Wait For Approval"
+description: "Pause a run until a person approves or rejects it"
+sidebar:
+  label: "Wait For Approval"
+---
+
+# Wait For Approval
+
+Pause a run and wait for a human decision before continuing.
+
+## What it does
+
+Pauses the run until a person approves or rejects it. The node produces no output on its own — the run parks and waits for a decision. When a decision arrives, the items that were waiting flow out of the port the decision chose: **Approved** or **Rejected**. Use this as a checkpoint before any consequential action that warrants a human sign-off.
+
+## When to use it
+
+- Any human-in-the-loop checkpoint before a consequential step: sending an email, making a purchase, publishing content, or triggering an external action.
+- The work after **Approved** runs only on approval; **Rejected** is an ordinary branch for handling a no or fallback behavior.
+- When waiting indefinitely is acceptable — the run survives browser restarts and remains in the Executions pane until approved, rejected, or manually cancelled.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Prompt | The question or text shown to the person making the decision. Appears on the paused run in the Executions pane. |
+
+## Outputs
+
+The node draws two output handles:
+
+- **Approved** — Items flow here when the person approves the run.
+- **Rejected** — Items flow here when the person rejects the run.
+
+## Paused run visibility and control
+
+A paused run appears in the **Executions** pane, where a person with access can approve, reject, or cancel it. The run waits indefinitely — it does not time out or resume on its own — and persists even if the browser restarts or the window closes. Cancelling a paused run stops it without flowing items to either output.
+
+## Related nodes
+
+- [IF](/nodes/builtin/flow/if/)
+- [Switch](/nodes/builtin/flow/switch/)
+- [Merge](/nodes/builtin/flow/merge/)
