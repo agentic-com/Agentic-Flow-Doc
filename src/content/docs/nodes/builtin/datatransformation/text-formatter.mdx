@@ -1,0 +1,67 @@
+---
+title: "Text / Formatter"
+description: "Transform text: case, trim, pad, replace, split, slugify, extract and count"
+sidebar:
+  label: "Text / Formatter"
+---
+
+# Text / Formatter
+
+Transform text: case, trim, pad, replace, split, slugify, extract and count.
+
+## What it does
+
+One node with an operation selector, rather than a dozen tiny nodes. It converts case (`Uppercase`, `Lowercase`, `Title Case`, `camelCase`, `snake_case`, `kebab-case`), trims, pads, replaces (plain or regex), splits and joins, slugifies, truncates with an ellipsis, and substitutes a default value when the text is empty. It also extracts every email, URL, number or phone number found in the text, and counts words or characters. The selector both drives the transformation and decides which extra settings the UI shows.
+
+A single transformed value comes back in `result`. The extract operations return `matches`, always an array, so an empty result is still iterable. The count operations return `count`. Character counting is by code point, so an accented letter or emoji counts once rather than by its UTF-16 units.
+
+## When to use it
+
+Use this node to tidy scraped or user-supplied text before it travels downstream: turning a heading into a slug, pulling every email address out of a page, or normalizing a key into snake_case — without dropping to a Code node.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | What to do with the text. One of `Uppercase`, `Lowercase`, `Title Case`, `camelCase`, `snake_case`, `kebab-case`, `Trim`, `Pad`, `Replace`, `Split`, `Join`, `Slugify`, `Truncate`, `Default if empty`, `Extract emails`, `Extract URLs`, `Extract numbers`, `Extract phone numbers`, `Word count` or `Character count`. Defaults to `Uppercase`. |
+| Text | The text to transform. Bind an upstream value with `{{ }}`, for example `{{ $json.description }}`. |
+| Target Length | For `Pad`: pad until the text reaches this many characters. Defaults to `0`. |
+| Pad With | For `Pad`: the characters repeated to fill the space. Defaults to a single space. |
+| Pad Side | For `Pad`: which end to pad, `Start` or `End`. Defaults to `Start`. |
+| Find | For `Replace`: the text or pattern to look for. |
+| Replace With | For `Replace`: the text put in place of each match. |
+| Treat Find As Regex | For `Replace`: read the Find field as a regular expression. Defaults to `off`. |
+| Regex Flags | For `Replace`: flags for the pattern, such as `gi`. Defaults to `g`. |
+| Separator | For `Split` and `Join`: the string to split on, or the string placed between joined items. Defaults to `,`. Splitting on an empty separator splits into individual characters. |
+| Maximum Length | For `Truncate`: keep at most this many characters. Defaults to `20`. |
+| Ellipsis | For `Truncate`: appended when the text is shortened. Defaults to `…`. |
+| Default Value | For `Default if empty`: returned when the text is empty or only whitespace. |
+
+## Outputs
+
+- Case conversions, `Trim`, `Pad`, `Replace`, `Split`, `Join`, `Slugify`, `Truncate` and `Default if empty` return the transformed value in `result`. `Split` returns an array; `Join` expects an array as input text and returns a joined string.
+- `Extract emails`, `Extract URLs`, `Extract numbers` and `Extract phone numbers` return every match found in `matches`, an array that is empty rather than absent when nothing matches.
+- `Word count` and `Character count` return the count in `count`. Character counting is by Unicode code point.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Place Text / Formatter after a node that scrapes a page, set **Operation** to `Extract emails`, and point **Text** at `{{ $json.html }}`. Every email address on the page comes back in `matches`. Chain a second Text / Formatter node with **Operation** set to `Slugify` on a page title to produce a URL-safe filename before saving.
+
+## Troubleshooting
+
+- `Replace` with **Treat Find As Regex** on fails if **Find** is not a valid regular expression — check the pattern and **Regex Flags**.
+- `Split` with an empty **Separator** splits the text into individual characters rather than failing.
+- `Join` expects an array; if the incoming text is not an array, it is treated as a single-item list.
+- Extract operations never fail on no matches — they return an empty `matches` array instead.
+
+## Related nodes
+
+- [Regex](/nodes/builtin/datatransformation/regex/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [JSON](/nodes/builtin/datatransformation/json/)
+- [Code](/nodes/builtin/core/code/)
+- [Node types overview](/nodes/builtin/node-types/)
