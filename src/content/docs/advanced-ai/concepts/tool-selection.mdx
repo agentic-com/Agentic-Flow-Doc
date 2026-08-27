@@ -211,6 +211,10 @@ Watch how agents use tools and refine the selection:
   Agents perform better with a focused set of relevant tools rather than access to every possible tool. Start small and add tools as needed.
 </Aside>
 
+<Aside type="caution" title="Tools that act require approval">
+  Some tools don't just read or compute — they take real actions ([Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/), [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/), [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)). Because agents read untrusted page content, every action these tools take is gated: you approve or reject the concrete action before it runs. See [Action Approval](/advanced-ai/concepts/action-approval/).
+</Aside>
+
 ## Common orchestration challenges
 
 ### Tool conflicts

@@ -36,6 +36,10 @@ The node draws two output handles:
 
 A paused run appears in the **Executions** pane, where a person with access can approve, reject, or cancel it. The run waits indefinitely — it does not time out or resume on its own — and persists even if the browser restarts or the window closes. Cancelling a paused run stops it without flowing items to either output.
 
+## Wait For Approval vs. action approval
+
+This node is a **durable checkpoint you design into a flow**: it pauses a whole step, waits indefinitely, and survives browser restarts. It is different from the **live action approval** that gates the model-driven action tools ([Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/), [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/), [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)) — that gate is automatic, fires on each action the model decides to take, and auto-rejects after a timeout. Use this node for deliberate human sign-off on a step; the action gate is always-on and requires no node. See [Action Approval](/advanced-ai/concepts/action-approval/).
+
 ## Related nodes
 
 - [IF](/nodes/builtin/flow/if/)

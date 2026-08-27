@@ -17,6 +17,16 @@ Creates an AI agent that can use external tools to complete complex tasks by pla
 
 Use this agent when you need an LLM to interact with external APIs, databases, or services to accomplish multi-step tasks.
 
+## Tools that take actions
+
+Connect tool dependency nodes into this agent's tools input to give it capabilities. Some tools only read or compute; others take real actions on your behalf. The action tools are **gated** — the model can call them, but each call pauses for your approval before it runs:
+
+- [Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/) — click, fill, type, select, submit, or navigate the active page.
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/) — send HTTP requests to APIs.
+- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/) — call the tools of a remote MCP server.
+
+You approve or reject each action in the **Executions** pane. This is automatic and cannot be turned off — see [Action Approval](/advanced-ai/concepts/action-approval/) for why.
+
 ## Inputs and settings
 
 | Setting | Notes |
@@ -45,6 +55,8 @@ Connect Tools Agent to an AI agent or dependency input that accepts this depende
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/)
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/)
+- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)
 - [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
 - [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
