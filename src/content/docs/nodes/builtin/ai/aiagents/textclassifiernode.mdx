@@ -1,0 +1,52 @@
+---
+title: "Text Classifier"
+description: "Classify text into one of a set of given categories using a LLM"
+sidebar:
+  label: "Text Classifier"
+---
+
+# Text Classifier
+
+Classify text into one of a set of given categories using a LLM
+
+## What it does
+
+Sends the input text to a language model along with a list of categories you define, and asks it to classify the text into exactly one of them. If none of the categories fit, the model is instructed to respond with `"unknown"`.
+
+## When to use it
+
+Use this node to route or tag text by topic or intent — for example, sorting incoming support requests into categories like "billing", "technical", "sales", or triaging content for downstream branching logic.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Text | The text to classify. Rendered as a text area. |
+| Categories | Comma-separated category names to classify the text into. Rendered as a text area. |
+| Options → System message | Optional additional system message appended to the classification instructions. Rendered as a text area. |
+
+## Outputs
+
+Returns `{ category }`, a string with the trimmed category name returned by the model — one of the categories you supplied, or `"unknown"` if none fit.
+
+## Dependencies and credentials
+
+- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). Used to classify the text.
+
+## Example workflow
+
+Connect a Chat OpenAI node to the Model dependency, feed text from an upstream node into Text, list your categories (e.g. "billing, technical, sales"), then branch downstream logic on the `category` output using a router or condition node.
+
+## Troubleshooting
+
+- If the model frequently returns "unknown", check that your Categories cover the expected range of input text, or make category names less ambiguous.
+- Verify the Model dependency is connected — the node throws if no model is found.
+- Keep category names distinct and non-overlapping to reduce misclassification.
+
+## Related nodes
+
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
+- [AI Agents](/advanced-ai/concepts/ai-agents/)

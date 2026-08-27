@@ -1,0 +1,56 @@
+---
+title: "Chat Azure OpenAI"
+description: "Use OpenAI models hosted on Azure OpenAI Service."
+sidebar:
+  label: "Chat Azure OpenAI"
+---
+
+# Chat Azure OpenAI
+
+Use OpenAI models hosted on Azure OpenAI Service.
+
+## What it does
+
+Provides access to OpenAI models deployed on your own Azure OpenAI resource for AI agent nodes.
+
+## When to use it
+
+Connect this to AI agents when your organization runs OpenAI models through an Azure OpenAI Service resource instead of the public OpenAI API, for example to meet data residency or enterprise compliance requirements.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | The Azure OpenAI model name, e.g. `gpt-4o`. Placeholder: `gpt-4o`. |
+| Resource Name | Your Azure OpenAI resource (instance) name. Placeholder: `my-azure-openai`. |
+| Deployment Name | The deployment name configured in your Azure OpenAI resource. Placeholder: `gpt-4o`. |
+| API Version | The Azure OpenAI API version. Defaults to `2024-10-21`. Placeholder: `2024-10-21`. |
+| Authentication | Credential used to authenticate: "Use your Azure OpenAI API key." |
+| Options → Temperature | The temperature to use for the model. |
+| Options → Max Retries | The maximum number of retries to use for the model. Defaults to `2`. |
+
+## Outputs
+
+Returns a chat model dependency that can be connected to AI agent nodes.
+
+## Dependencies and credentials
+
+- Requires an Authentication credential holding your Azure OpenAI API key.
+- Also requires the Resource Name and Deployment Name of your Azure OpenAI resource; the node throws an error if Model, Resource Name, or Deployment Name are empty.
+
+## Example workflow
+
+Connect Chat Azure OpenAI to an AI agent or dependency input that accepts this dependency type, set the Model, Resource Name, and Deployment Name to match your Azure OpenAI resource, attach your API key credential, then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Ensure Model, Resource Name, and Deployment Name are all filled in — the node rejects empty values for these fields.
+- Verify the API Version is supported by your Azure OpenAI resource if requests fail.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Model Dependencies](/advanced-ai/concepts/model-dependencies/)

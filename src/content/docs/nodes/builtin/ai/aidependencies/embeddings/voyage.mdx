@@ -1,0 +1,50 @@
+---
+title: "Voyage Embeddings"
+description: "Leverage Voyage AI to create embeddings."
+sidebar:
+  label: "Voyage Embeddings"
+---
+
+# Voyage Embeddings
+
+Leverage Voyage AI to create embeddings.
+
+## What it does
+
+Converts text into vector embeddings using a Voyage AI embeddings model.
+
+## When to use it
+
+Connect this to indexer or RAG nodes when you need to create embeddings for semantic search and retrieval using Voyage AI.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | The embeddings model to use. Placeholder: `voyage-large-2`. |
+| Authentication | Credential field. Use your Voyage API key. |
+
+## Outputs
+
+Returns an embeddings dependency for vector stores and retrieval workflows.
+
+## Dependencies and credentials
+
+- Requires an Authentication credential (Voyage API key).
+
+## Example workflow
+
+Connect Voyage Embeddings to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Check that the Model field is set — the node throws an error if it is empty.
+- Verify the Voyage API key credential is valid.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Embeddings & Vectors](/advanced-ai/concepts/embeddings-vectors/)

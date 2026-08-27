@@ -1,0 +1,52 @@
+---
+title: "Sentiment Analysis"
+description: "Analyze the sentiment of a text using a LLM"
+sidebar:
+  label: "Sentiment Analysis"
+---
+
+# Sentiment Analysis
+
+Analyze the sentiment of a text using a LLM
+
+## What it does
+
+Sends the input text to a language model and asks it to classify the sentiment as one of `positive`, `negative`, or `neutral` by default, or into a custom set of categories you define. The model is instructed to respond with only the category name, with no explanation.
+
+## When to use it
+
+Use this node to classify the tone of customer feedback, reviews, support tickets, or social media text — for example, routing negative feedback to a different workflow branch than positive feedback.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Text | The text to analyze the sentiment of. Rendered as a text area. |
+| Options → Custom categories | Comma-separated list of custom sentiment categories to use instead of the default positive/negative/neutral. Rendered as a text area. |
+| Options → System message | Optional additional system message appended to the analysis instructions. Rendered as a text area. |
+
+## Outputs
+
+Returns `{ sentiment }`, a string with the trimmed category name returned by the model (one of the default three categories, or one of your custom categories).
+
+## Dependencies and credentials
+
+- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). Used to classify the sentiment.
+
+## Example workflow
+
+Connect a Chat OpenAI node to the Model dependency, feed text from an upstream node into Text, optionally set Custom categories (e.g. "angry, satisfied, confused"), then branch downstream logic on the `sentiment` output using a router or condition node.
+
+## Troubleshooting
+
+- If the output includes extra words instead of just the category, add a stronger instruction via the System message option, or verify the connected model follows instructions well.
+- Verify the Model dependency is connected — the node throws if no model is found.
+- Keep Custom categories short and mutually exclusive so the model can reliably pick one.
+
+## Related nodes
+
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
+- [AI Agents](/advanced-ai/concepts/ai-agents/)

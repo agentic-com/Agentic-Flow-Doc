@@ -1,0 +1,52 @@
+---
+title: "Chat Groq"
+description: "Run open models on Groq for fast, low-latency inference."
+sidebar:
+  label: "Chat Groq"
+---
+
+# Chat Groq
+
+Run open models on Groq for fast, low-latency inference.
+
+## What it does
+
+Provides access to open-weight models served on Groq's low-latency inference infrastructure for AI agent nodes. Groq exposes an OpenAI-compatible API, so this node runs the OpenAI client against Groq's base URL.
+
+## When to use it
+
+Connect this to AI agents when you want fast, low-latency inference on open models such as `llama-3.3-70b-versatile`.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | The Groq model to use, e.g. `llama-3.3-70b-versatile`. Placeholder: `llama-3.3-70b-versatile`. |
+| Authentication | Credential used to authenticate: "Use your Groq API key as a Bearer token." |
+| Options → Temperature | The temperature to use for the model. |
+| Options → Max Retries | The maximum number of retries to use for the model. Defaults to `2`. |
+
+## Outputs
+
+Returns a chat model dependency that can be connected to AI agent nodes.
+
+## Dependencies and credentials
+
+- Requires an Authentication credential holding your Groq API key, sent as a Bearer token.
+- The node throws an error if Model is empty.
+
+## Example workflow
+
+Connect Chat Groq to an AI agent or dependency input that accepts this dependency type, set the Model to a Groq-hosted model such as `llama-3.3-70b-versatile`, attach your Groq API key credential, then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Ensure Model is filled in — the node rejects an empty value.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Model Dependencies](/advanced-ai/concepts/model-dependencies/)

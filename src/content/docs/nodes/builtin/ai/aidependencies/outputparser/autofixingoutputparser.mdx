@@ -1,0 +1,53 @@
+---
+title: "Auto-fixing Output Parser"
+description: "Wraps another output parser and retries with a model when the output fails to parse"
+sidebar:
+  label: "Auto-fixing Output Parser"
+---
+
+# Auto-fixing Output Parser
+
+Wraps another output parser and retries with a model when the output fails to parse
+
+## What it does
+
+Wraps a base output parser (for example Structured Output Parser or Item List Output Parser) and, when the model's raw output fails to parse against it, sends the malformed output back to a model with instructions to fix it, then retries parsing.
+
+## When to use it
+
+Connect this in place of a base output parser when the model's responses are prone to malformed output (e.g. slightly invalid JSON) and you want automatic self-correction instead of the agent failing outright.
+
+## Inputs and settings
+
+This node has no editable settings of its own. It requires two connected dependencies:
+
+| Dependency | Notes |
+| --- | --- |
+| Model | Required. The model used to attempt fixing output that fails to parse. |
+| Base Parser | Required. The output parser to wrap; only one connection is accepted. |
+
+## Outputs
+
+Returns an output parser dependency that first tries the base parser, and on failure asks the connected model to fix the output before retrying.
+
+## Dependencies and credentials
+
+- Requires a connected Model dependency and a connected Base Parser (output parser) dependency; both are required for this node to function.
+- No explicit credential is declared in the node description beyond what the connected model itself requires.
+
+## Example workflow
+
+Connect a model (e.g. Chat OpenAI) and a base output parser (e.g. Structured Output Parser) into Auto-fixing Output Parser, then connect Auto-fixing Output Parser to an AI agent's output parser input. If the agent's raw output fails to parse against the base parser, it is automatically sent back to the connected model for correction before parsing is retried.
+
+## Troubleshooting
+
+- Check that both the Model and Base Parser dependencies are connected before running the node — both are required.
+- If parsing still fails after fixing, verify the base parser's expected format matches what you're asking the model to produce.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/)
+- [Prompting and Outputs](/advanced-ai/concepts/prompting-and-outputs/)
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)

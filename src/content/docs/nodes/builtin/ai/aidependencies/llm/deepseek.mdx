@@ -1,0 +1,52 @@
+---
+title: "Chat DeepSeek"
+description: "Use DeepSeek chat and reasoning models."
+sidebar:
+  label: "Chat DeepSeek"
+---
+
+# Chat DeepSeek
+
+Use DeepSeek chat and reasoning models.
+
+## What it does
+
+Provides access to DeepSeek's chat and reasoning models for AI agent nodes. DeepSeek exposes an OpenAI-compatible API, so this node runs the OpenAI client against DeepSeek's base URL.
+
+## When to use it
+
+Connect this to AI agents when you want to use DeepSeek models, such as `deepseek-chat` or `deepseek-reasoner`, for text generation or reasoning tasks.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | The DeepSeek model to use, e.g. `deepseek-chat` or `deepseek-reasoner`. Placeholder: `deepseek-chat`. |
+| Authentication | Credential used to authenticate: "Use your DeepSeek API key as a Bearer token." |
+| Options → Temperature | The temperature to use for the model. |
+| Options → Max Retries | The maximum number of retries to use for the model. Defaults to `2`. |
+
+## Outputs
+
+Returns a chat model dependency that can be connected to AI agent nodes.
+
+## Dependencies and credentials
+
+- Requires an Authentication credential holding your DeepSeek API key, sent as a Bearer token.
+- The node throws an error if Model is empty.
+
+## Example workflow
+
+Connect Chat DeepSeek to an AI agent or dependency input that accepts this dependency type, set the Model to a DeepSeek model such as `deepseek-chat`, attach your DeepSeek API key credential, then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Ensure Model is filled in — the node rejects an empty value.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Model Dependencies](/advanced-ai/concepts/model-dependencies/)
