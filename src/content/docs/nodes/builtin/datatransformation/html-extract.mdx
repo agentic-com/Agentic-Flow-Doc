@@ -1,0 +1,57 @@
+---
+title: "HTML Extract"
+description: "Pull values out of HTML with CSS selectors"
+sidebar:
+  label: "HTML Extract"
+---
+
+# HTML Extract
+
+Pull values out of HTML with CSS selectors.
+
+## What it does
+
+Parses HTML and reads values out of it with CSS selectors. Two modes cover the common jobs: **Single value** reads one element, returning its text, its inner HTML, or one of its attributes. **Repeating list** matches a set of containers and, for each one, reads a set of mapped fields from its children — turning a results page into rows.
+
+## When to use it
+
+Use this node to pull a title, price or link off scraped HTML, or to turn a listing page — search results, a table, a feed — into one item per row so downstream nodes can work with structured fields instead of markup.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| HTML | The HTML to extract from, usually bound from a previous node. Accepts an expression such as `{{ $json.body }}`. |
+| Mode | Read one value, or one item per matched container: `Single value` or `Repeating list`. Defaults to `Single value`. |
+| Selector | CSS selector for the element to read (single value mode), for example `h1.title`. |
+| Return | What the single-value selector returns: `Text`, `HTML`, or `Attribute`. Defaults to `Text`. |
+| Attribute | Attribute to read when Return is set to Attribute, for example `href`. |
+| Container Selector | CSS selector matching each repeating container (list mode), for example `ul.results > li`. |
+| Fields | One mapping per column, used in list mode: a field name, a selector read relative to the container, and what to return (`Text`, `HTML`, or `Attribute`, with an attribute name when needed). |
+
+## Outputs
+
+- **Single value** returns one item: `{ value }`, where `value` is the text, sanitized HTML, or attribute read from the matched element, or `undefined` if nothing matched.
+- **Repeating list** returns one item per matched container, each an object keyed by the field names in **Fields**.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Feed the body of an HTTP Request response into **HTML**, set **Mode** to `Repeating list`, point **Container Selector** at each result row (for example `ul.results > li`), and add fields such as `title` (`a.title`, Text) and `link` (`a.title`, Attribute, `href`). Each matched row becomes one output item with those two fields.
+
+## Troubleshooting
+
+- An empty **Selector** or **Container Selector** fails with a clear message naming the field to fill in.
+- An invalid CSS selector fails with `Invalid CSS selector: "..."` rather than silently matching nothing.
+- Return set to `Attribute` with no attribute name fails with a clear error; a missing attribute on the matched element (rather than a missing name) simply returns `undefined`.
+- This node parses untrusted HTML and is bounded: input far beyond a reasonable size fails the node with a clear error instead of freezing the tab, and any HTML the node returns is sanitized before it is handed back.
+
+## Related nodes
+
+- [Markdown](/nodes/builtin/datatransformation/markdown/)
+- [Regex](/nodes/builtin/datatransformation/regex/)
+- [JSON](/nodes/builtin/datatransformation/json/)
+- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/)

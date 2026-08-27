@@ -1,0 +1,55 @@
+---
+title: "Crypto"
+description: "Hash, HMAC and generate random values with WebCrypto"
+sidebar:
+  label: "Crypto"
+---
+
+# Crypto
+
+Hash, HMAC and generate random values with WebCrypto.
+
+## What it does
+
+Hashes text with SHA-1, SHA-256, SHA-512 or MD5, HMACs text with a secret key held in the credential store, generates cryptographically random bytes, or mints a random UUID (v4). The result is presented as hex or base64 text. Everything runs through `crypto.subtle` and `crypto.getRandomValues`, so the node needs no external dependency — except MD5, which `crypto.subtle.digest` does not implement (it was never part of the WebCrypto spec), so it is computed with a small self-contained implementation instead. MD5 is offered for Hash only; WebCrypto's HMAC accepts SHA-1/256/512, and choosing MD5 for HMAC fails with a clear error rather than pretending to support it.
+
+## When to use it
+
+Use this node to checksum scraped content or compare it against a known digest, to sign a webhook payload with HMAC before sending it onward, or to mint an idempotency key or random identifier for an outgoing item.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | What to do: `Hash`, `HMAC`, `Random bytes` or `UUID v4`. Defaults to `Hash`. |
+| Algorithm | The digest algorithm, for Hash and HMAC: `SHA-1`, `SHA-256`, `SHA-512` or `MD5`. Defaults to `SHA-256`. MD5 is available for Hash only; WebCrypto does not support it for HMAC. |
+| HMAC Key | Credential holding the secret key, for HMAC. Resolved from the credential store at run time and never travels with the workflow. |
+| Text | The text to hash or HMAC. Accepts an expression such as `{{ $json.payload }}`. |
+| Source Field | Field holding the text, when the field above is left empty. |
+| Byte Length | How many random bytes to generate. Defaults to `32`, capped at 1024 bytes. |
+| Encoding | How the result bytes are presented as text: `Hex` or `Base64`. Defaults to `Hex`. |
+| Include Input Fields | Keep the incoming item's fields alongside the result. Defaults to `on`. |
+| Put Result In Field | Field holding the hash, HMAC, random bytes or UUID. Defaults to `result`. |
+
+## Dependencies and credentials
+
+- **HMAC** requires a credential holding the secret key, selected in **HMAC Key**. The key is never typed into a plain parameter — that would travel with a shared workflow export or marketplace publish — it is resolved from the credential store at run time and used only in memory. `Hash`, `Random bytes` and `UUID v4` need no credential.
+- No node dependency is required. The node runs entirely in the browser via WebCrypto.
+
+## Example workflow
+
+Place Crypto after a node producing a webhook payload, set **Operation** to `HMAC`, choose an `SHA-256` **Algorithm**, and select a credential holding the shared secret in **HMAC Key**. Point **Text** at `{{ $json.body }}` and set **Encoding** to `Hex`. The signature lands in `result`, ready to attach as a header before the request goes out.
+
+## Troubleshooting
+
+- `HMAC` fails without a credential in **HMAC Key** — select one, since the key can never be typed inline.
+- Choosing `MD5` with `Operation` set to `HMAC` fails immediately: MD5 is not a valid HMAC algorithm. Choose SHA-1, SHA-256, or SHA-512 instead.
+- `Random bytes` silently caps **Byte Length** at 1024, so a typo cannot allocate gigabytes.
+- If there is no text to hash, fill in **Text** or name the field holding it in **Source Field**.
+
+## Related nodes
+
+- [JSON](/nodes/builtin/datatransformation/json/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Code](/nodes/builtin/core/code/)
+- [Node types overview](/nodes/builtin/node-types/)
