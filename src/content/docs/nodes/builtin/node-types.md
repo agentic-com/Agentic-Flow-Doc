@@ -16,5 +16,6 @@ description: Quick map of common workflow goals to the current source-aligned no
 | Call an API | [Http Request](/nodes/builtin/core/http-request/) |
 | Transform data | [Edit Fields](/nodes/builtin/datatransformation/editfields/) or [Pick Field](/nodes/builtin/datatransformation/pickfield/) |
 | Branch, filter, merge, loop, or wait | [IF](/nodes/builtin/flow/if/), [Filter](/nodes/builtin/flow/filter/), [Merge](/nodes/builtin/flow/merge/), [Loop](/nodes/builtin/flow/loop/), [Wait](/nodes/builtin/flow/wait/) |
+| Pause for human approval / sign-off | [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) |
 | Build AI workflows | [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) with [Chat LLM](/nodes/builtin/ai/aidependencies/llm/openai/) dependencies |
 | Use external apps | [Integrations](/nodes/builtin/integration/google-sheets/) |

@@ -15,6 +15,10 @@ For example: wait for a page to finish loading, wait 10 minutes, or wait for an 
 
 The **Wait** node lets you do that.
 
+:::note[Delaying vs. waiting for a person]
+The **Wait** node only *delays* — time, a specific date, or a webhook call. If you need the run to pause until a person actually approves or rejects it, use [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) instead: it suspends the run for a human decision, exposes **Approved** / **Rejected** output ports, and can be approved, rejected, or cancelled from the Executions pane — even after a browser restart.
+:::
+
 ---
 
 ## Why use waiting
@@ -22,7 +26,7 @@ The **Wait** node lets you do that.
 Using the Wait node enables patterns like:
 
 - Rate-limiting API requests (e.g., wait 30 minutes before next run).
-- Waiting for a human approval or external webhook event before continuing.
+- Waiting on an external webhook event before continuing. For a *human* approval or rejection, use [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) instead.
 - Scheduling actions at a future date/time rather than immediately.  
   This lets your workflow pause and resume with the same data in context.
 
@@ -57,7 +61,7 @@ Here are the main ways you can configure waiting:
 - Ensure critical data from upstream nodes is available before the Wait node — the workflow retains its state until it resumes.
 - If using “On Webhook Call”, test that the URL reaches the node correctly and the external system triggers it.
 - Beware of many concurrent waiting workflows – they hold state and may impact performance.
-- Use meaningful naming (e.g., “Wait for Approval”, “Wait 10 Minutes”) and documentation via sticky notes. See [Sticky Notes](/usage/using-the-app/workflows/components/sticky-notes/) for annotations.
+- Use meaningful naming (e.g., “Wait 10 Minutes”, “Wait for Webhook”) and documentation via sticky notes. See [Sticky Notes](/usage/using-the-app/workflows/components/sticky-notes/) for annotations. For a human sign-off gate, use the dedicated [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) node instead of naming a Wait node after approval.
 - After a wait, always test the downstream branch or logic – sometimes unexpected states after long waits can cause issues.
 
 If you want the full node reference, see [Wait node](/nodes/builtin/flow/wait/).
