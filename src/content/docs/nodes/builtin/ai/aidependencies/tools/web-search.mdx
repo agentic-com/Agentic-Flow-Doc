@@ -1,0 +1,52 @@
+---
+title: "Web Search"
+description: "Search the web and return results."
+sidebar:
+  label: "Web Search"
+---
+
+# Web Search
+
+Search the web and return results.
+
+## What it does
+
+Exposes the same web search the "Web Search" in-page action node performs as a tool the Tools Agent can call. It sends a `webSearch` message to the browser extension, which opens the chosen search engine in a background tab, scrapes the first page of results, and returns them to the agent as JSON. This only works inside the awflow browser extension; outside it, the call fails.
+
+## When to use it
+
+Connect this to Tools Agent nodes to give them the ability to search the web for up-to-date information the model doesn't already know.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Engine | Which search engine to query. One of `duckduckgo`, `bing`, or `brave`. Defaults to `duckduckgo`. |
+| Max Results | Maximum number of results to return. Leave empty or 0 to return all first-page results. |
+
+## Outputs
+
+Returns a tool dependency named `web_search` that agent nodes can call with a `query` string. It returns the scraped search results as a JSON string.
+
+## Dependencies and credentials
+
+- Requires the awflow browser extension — the tool sends a runtime message to the extension to perform the search, and the call rejects outside the extension.
+- No explicit credential is declared in the node description.
+
+## Example workflow
+
+Connect Web Search to a Tools Agent's tools input, then ask the agent a question that requires current information. The agent can call the `web_search` tool with a query, and the extension scrapes results from the configured engine for the agent to use.
+
+## Troubleshooting
+
+- Check that required settings are present before running the node.
+- If the node uses browser page data, run it on the target tab after the page has loaded.
+- This tool only works inside the awflow browser extension; running it outside the extension causes the runtime message call to reject.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [Wikipedia Query](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/)
+- [Tool Selection](/advanced-ai/concepts/tool-selection/)

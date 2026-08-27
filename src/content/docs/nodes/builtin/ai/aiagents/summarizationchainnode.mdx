@@ -1,0 +1,53 @@
+---
+title: "Summarization"
+description: "Summarize a text using a LLM"
+sidebar:
+  label: "Summarization"
+---
+
+# Summarization
+
+Summarize a text using a LLM
+
+## What it does
+
+Sends the input text to a language model with instructions to summarize it concisely while preserving the key points. You can optionally cap the approximate length and set a style (e.g. "bullet points", "one paragraph", "formal").
+
+## When to use it
+
+Use this node to condense long text — articles, transcripts, documents, chat threads — into a shorter summary for display, storage, or as compact context for a downstream agent.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Text | The text to summarize. Rendered as a text area. |
+| Options → Max words | The approximate maximum number of words the summary should contain. |
+| Options → Style | The style of the summary, e.g. "bullet points", "one paragraph", "formal". |
+| Options → System message | Optional additional system message appended to the summarization instructions. Rendered as a text area. |
+
+## Outputs
+
+Returns `{ summary }`, the model's generated summary of the input text.
+
+## Dependencies and credentials
+
+- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). Used to generate the summary.
+
+## Example workflow
+
+Connect a Chat OpenAI node to the Model dependency, feed long text from an upstream node (e.g. a scraped page or transcript) into Text, optionally set Max words and Style, then pass the `summary` output to a display node or as context for another agent.
+
+## Troubleshooting
+
+- If summaries run longer than expected, set Max words explicitly — it is an approximate instruction to the model, not a hard truncation.
+- Verify the Model dependency is connected — the node throws if no model is found.
+- For very long input text, check the connected model's context window; excessively long text may need to be chunked upstream.
+
+## Related nodes
+
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
+- [AI Agents](/advanced-ai/concepts/ai-agents/)

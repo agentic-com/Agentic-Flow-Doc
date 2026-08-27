@@ -1,0 +1,56 @@
+---
+title: "Guardrails"
+description: "Validate text against policies using a model, and route to pass or fail"
+sidebar:
+  label: "Guardrails"
+---
+
+# Guardrails
+
+Validate text against policies using a model, and route to pass or fail
+
+## What it does
+
+Sends the input text to a language model along with a policy description you define (e.g. no PII, no profanity, must stay on-topic). The model returns a strict JSON verdict, and the node routes the data down one of two output ports depending on whether the text complies. If the model's response cannot be parsed as valid JSON with a boolean `passed` field, the node fails closed — it treats the text as non-compliant rather than silently letting it through.
+
+## When to use it
+
+Use this node to enforce content policies on model output or user input before it reaches the next step in a workflow — for example, blocking disallowed topics, filtering PII, or catching off-policy responses from an upstream AI agent.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Text | The text to check. Supports binding upstream data with `{{ }}`. Rendered as a text area. |
+| Policy | Describes what is allowed / disallowed (e.g. no PII, no profanity, must be on-topic about X). Rendered as a text area. |
+
+## Outputs
+
+Two output ports:
+
+- **Pass** — the item is routed here when the model's verdict says the text complies with the policy.
+- **Fail** — the item is routed here when the model's verdict says the text does not comply, or when the model's response could not be parsed as a valid verdict (fail-closed behavior).
+
+If no implicit input is provided, the routed item is `{ text, passed, reason }`; otherwise the original implicit input item(s) are passed through to the matching port.
+
+## Dependencies and credentials
+
+- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). The node uses it to evaluate the text against the policy and produce the JSON verdict.
+
+## Example workflow
+
+Connect a Chat OpenAI (or other model) node into the Guardrails node's Model dependency input, wire upstream text into the Text field, describe your policy, then branch the Pass and Fail output ports to different downstream paths (e.g. continue the workflow on Pass, alert or stop on Fail).
+
+## Troubleshooting
+
+- If everything routes to Fail unexpectedly, check that the connected model reliably returns strict JSON — some models may add extra commentary that breaks parsing, which this node treats as a fail-closed non-compliant result.
+- Make the Policy field specific and unambiguous; vague policies produce inconsistent verdicts.
+- Verify the Model dependency is connected — the node throws if no model is found.
+
+## Related nodes
+
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
+- [AI Agents](/advanced-ai/concepts/ai-agents/)

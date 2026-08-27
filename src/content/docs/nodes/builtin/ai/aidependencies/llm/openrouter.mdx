@@ -1,0 +1,53 @@
+---
+title: "Chat OpenRouter"
+description: "Route to hundreds of models across providers through OpenRouter."
+sidebar:
+  label: "Chat OpenRouter"
+---
+
+# Chat OpenRouter
+
+Route to hundreds of models across providers through OpenRouter.
+
+## What it does
+
+Provides access to hundreds of models across many providers through OpenRouter's unified, OpenAI-compatible API. This node runs the OpenAI client against OpenRouter's base URL.
+
+## When to use it
+
+Connect this to AI agents when you want to pick from a wide range of provider models (for example `anthropic/claude-3.5-sonnet`) through a single OpenRouter account, without configuring each provider individually.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | The OpenRouter model slug, e.g. `anthropic/claude-3.5-sonnet`. Placeholder: `anthropic/claude-3.5-sonnet`. |
+| Authentication | Credential used to authenticate: "Use your OpenRouter API key as a Bearer token." |
+| Options → Temperature | The temperature to use for the model. |
+| Options → Max Retries | The maximum number of retries to use for the model. Defaults to `2`. |
+
+## Outputs
+
+Returns a chat model dependency that can be connected to AI agent nodes.
+
+## Dependencies and credentials
+
+- Requires an Authentication credential holding your OpenRouter API key, sent as a Bearer token.
+- The node throws an error if Model is empty.
+
+## Example workflow
+
+Connect Chat OpenRouter to an AI agent or dependency input that accepts this dependency type, set the Model to an OpenRouter model slug such as `anthropic/claude-3.5-sonnet`, attach your OpenRouter API key credential, then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Ensure Model is filled in — the node rejects an empty value.
+- Double-check the model slug format (`provider/model-name`) if requests fail.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/)
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
