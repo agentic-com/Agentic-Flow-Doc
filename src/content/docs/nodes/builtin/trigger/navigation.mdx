@@ -1,0 +1,54 @@
+---
+title: "Navigation"
+description: "Run the flow when a tab is created, navigated to a matching URL, or closed."
+sidebar:
+  label: "Navigation"
+---
+
+# Navigation
+
+Start a workflow on browser navigation — when a tab is created, its URL changes to match a pattern, or it is closed.
+
+## What it does
+
+[Page Load](/nodes/builtin/trigger/pageload/) only covers one case: a full page finishing loading. Navigation broadens that to tab **lifecycle** events (created, updated, removed) and to **URL-pattern** matching, so a workflow can react to a user moving around the browser, not just to a single load.
+
+## When to use it
+
+- Run automation whenever the user lands on any URL under a pattern such as `https://github.com/*/pull/*`.
+- React when a tab is opened or closed, independent of what page it shows.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| URL Patterns | One or more match patterns (glob-style, e.g. `https://*.example.com/*`, or `<all_urls>`). Applied to the tab's URL for **created** and **updated** events. |
+| Events | Which tab events fire the trigger: **Created**, **Navigated** (URL changed), and/or **Closed**. |
+
+## Outputs
+
+Starts the workflow and passes trigger context to downstream nodes:
+
+- `triggerType` — `"navigation"`.
+- `event` — `"created"`, `"updated"`, or `"removed"`.
+- `url`, `title`, `tabId`, `windowId` — details of the tab (a closed tab reports only its id).
+
+## Dependencies and credentials
+
+- No credential is required.
+- Uses the already-held `tabs` permission — no extra permission is needed.
+
+## Example workflow
+
+Create a workflow with Navigation as the first node (Events: **Navigated**, URL Patterns: `https://mail.google.com/*`), then connect the actions that should run each time the user opens a mail URL.
+
+## Troubleshooting
+
+- A **Closed** event has no reliable URL, so it matches on the event alone rather than on a URL pattern.
+- Single-page apps that change the URL with the History API (`pushState`) without a full navigation are **not** yet detected — that needs the `webNavigation` permission and is a planned follow-up. Navigation fires on the URL changes the browser reports as tab updates.
+
+## Related nodes
+
+- [Page Load](/nodes/builtin/trigger/pageload/)
+- [Element Change](/nodes/builtin/trigger/elementchange/)
+- [Tab Control](/nodes/extension/tabcontrol/)
