@@ -1,0 +1,54 @@
+---
+title: "Local File Read"
+description: "Pick a local file through the browser's file picker and read it into the workflow."
+sidebar:
+  label: "Local File Read"
+---
+
+# Local File Read
+
+Read a local file the user picks through the browser's file picker.
+
+## What it does
+
+Opens the operating system file picker at runtime and reads the chosen file into the workflow — as text, a data URL, or base64. It is the input counterpart to [Download as file](/nodes/builtin/datatransformation/downloadasfile/): the browser-legal answer to "read a file from disk".
+
+**Safe by construction:** the File System Access API requires a user gesture and a picker, so *the user chooses the file — the workflow can never name one*. That is exactly what makes this node safe without any special permission.
+
+## When to use it
+
+- Feed a local CSV, JSON, text, or image file into a workflow.
+- Let the user hand a file to an automation without uploading it anywhere first.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Read as | **Text**, **Data URL**, or **Base64** — how to read the file's content. |
+| Allow multiple files | Let the picker select more than one file. |
+| Accepted file types | Optional. Comma-separated extensions or MIME types to filter the picker, e.g. `.csv,.txt`. |
+
+## Outputs
+
+- For a single file: `{ name, size, type, content }`, where `content` is the file read in the chosen format.
+- For multiple files: an array of those objects.
+
+## Dependencies and credentials
+
+- No credential is required.
+- No permission is needed — the picker is user-gesture gated by design.
+
+## Example workflow
+
+Local File Read (**Read as** Text, **Accepted file types** `.csv`) → [Edit Fields](/nodes/builtin/datatransformation/editfields/) or an AI node to process the contents.
+
+## Troubleshooting
+
+- This node needs an **interactive run**: the file picker requires a user gesture, so run the workflow yourself rather than from a background trigger.
+- The File System Access API is available in Chromium-based browsers; on other browsers the node reports that it cannot open a picker.
+- If the picker is dismissed without choosing a file, the node reports that the selection was cancelled.
+
+## Related nodes
+
+- [Download as file](/nodes/builtin/datatransformation/downloadasfile/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)

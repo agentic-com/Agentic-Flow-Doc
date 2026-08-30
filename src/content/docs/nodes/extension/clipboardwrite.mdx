@@ -1,0 +1,49 @@
+---
+title: "Clipboard Write"
+description: "Write text to the system clipboard from a workflow."
+sidebar:
+  label: "Clipboard Write"
+---
+
+# Clipboard Write
+
+Write text to the system clipboard so it is ready to paste elsewhere.
+
+## What it does
+
+Copies a piece of text — a workflow result, a formatted value, an extracted snippet — onto the system clipboard. This node only ever **writes**; it never reads the clipboard. (Reading the clipboard exposes whatever the user last copied, which can include a password or a one-time code, so clipboard reading is a separate, permission-gated node.)
+
+## When to use it
+
+- Put a generated value (a summary, a link, a token you just minted) on the clipboard so the user can paste it straight away.
+- Hand a result off to another application by way of the clipboard.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Text | The text to place on the clipboard. |
+
+## Outputs
+
+- `written` — `true` once the text has been written.
+
+## Dependencies and credentials
+
+- No credential is required.
+- Writing to the clipboard needs no special permission.
+
+## Example workflow
+
+Extract a value from the page with [Get All Text](/nodes/extension/getalltext/) or shape one with [Edit Fields](/nodes/builtin/datatransformation/editfields/), then pass it to Clipboard Write so it is ready to paste.
+
+## Troubleshooting
+
+- Clipboard writes happen on the **active tab**. If the tab is not focused, the browser may block the write and the node reports a clear error — bring the tab into focus and rerun.
+- This node writes text only. Writing images is a planned follow-up.
+
+## Related nodes
+
+- [Get All Text](/nodes/extension/getalltext/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Tab Control](/nodes/extension/tabcontrol/)

@@ -1,0 +1,59 @@
+---
+title: "Element Change"
+description: "Watch a CSS selector on the page and fire when it changes, appears, disappears, or matches text."
+sidebar:
+  label: "Element Change"
+---
+
+# Element Change
+
+Watch an element on the live page and start a workflow when it changes.
+
+## What it does
+
+Places a `MutationObserver` on a CSS selector in the active page and fires the workflow when the element's content changes, appears, disappears, or comes to match a piece of text. This is a trigger no server-side tool can offer, because it needs to be **inside the page**: a price drop, a ticket becoming available, a build status flipping, or a new row landing in a dashboard is a live observation here rather than "poll this URL and diff the HTML".
+
+## When to use it
+
+- Notify the user the moment a watched value on a page changes.
+- Kick off a workflow when an element appears (a result loads) or disappears (a spinner clears).
+- React when an element's text starts matching a target string (a status turns to "Ready").
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| CSS Selector | The element to watch, e.g. `.price` or `#build-status`. |
+| Fire when | **Content changes**, **Element appears**, **Element disappears**, or **Text matches**. |
+| Match text | Used with **Text matches** — the substring the element's text must contain to fire. |
+| Debounce (ms) | Coalesces bursts of mutations into a single fire. SPAs mutate the DOM constantly; the default (500 ms) keeps a busy page from firing hundreds of times a second. |
+| URL Patterns | Which pages to watch (glob-style, or `<all_urls>`). |
+
+## Outputs
+
+Starts the workflow and passes trigger context to downstream nodes:
+
+- `triggerType` — `"elementChange"`.
+- `selector`, `condition` — what was watched and why it fired.
+- `url`, `tabId`, `matchedText` — the page and the element text at the moment of the change.
+
+## Dependencies and credentials
+
+- No credential is required.
+- Runs entirely in a content script — no extra permission is needed.
+
+## Example workflow
+
+Element Change (Selector `.availability`, **Text matches** "In stock", on a product URL) → an AI node or [Edit Fields](/nodes/builtin/datatransformation/editfields/) to compose a message → [Browser Notification](/nodes/extension/browsernotification/).
+
+## Troubleshooting
+
+- Keep the **Debounce** high enough on busy pages; a value that is too low can fire repeatedly during a single visual update.
+- The observer is injected fresh on each matching page load and is torn down when the tab navigates away — it does not persist across navigations.
+- **Text matches** fires on the transition into a match, not on every mutation while the text keeps matching.
+
+## Related nodes
+
+- [Page Load](/nodes/builtin/trigger/pageload/)
+- [Navigation](/nodes/builtin/trigger/navigation/)
+- [Browser Notification](/nodes/extension/browsernotification/)
