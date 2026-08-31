@@ -1,11 +1,11 @@
 ---
 title: Assistant Notch
-description: "A floating in-page button that gives quick access to your workflows and extension actions on any web page."
+description: "A draggable, dockable floating button that gives quick access to your workflows and extension actions on any web page."
 sidebar:
   order: 6
 ---
 
-The **Assistant Notch** is an optional floating button that the awflow browser extension can show on the web pages you visit. Clicking it opens a small panel with quick actions — the same actions available from the extension's right-click menu, plus a shortcut to run a matching workflow on the current page.
+The **Assistant Notch** is an optional floating control that the awflow browser extension can show on the web pages you visit. It docks to the edge of the screen, expands into a small panel of blocks — workflows, pinned items, quick actions — and can be dragged, restyled, and customized to fit how you work.
 
 It is off by default, and only appears once you enable it.
 
@@ -18,17 +18,86 @@ When enabled, the notch appears on each new web page you open. When disabled, it
 
 The notch is injected by the browser extension, so it only shows on standard `http(s)` web pages — not on browser system pages (like `chrome://`), the extension gallery, or local file/PDF viewers.
 
+## Dragging and docking
+
+Drag the notch by its orb to move it. Release it anywhere near the left or right edge of the screen and it snaps to dock at the **nearest edge** — you don't need to line it up precisely.
+
+When you click the docked notch to open it, the expanded panel opens **inward**, toward the center of the screen, so it never runs off-screen.
+
+Its position is remembered **per device**, so moving it on one computer doesn't affect where it sits on another.
+
+You can always snap it back to its default spot:
+
+- **Settings → Preferences** has a **Reset position** control.
+- The in-notch **Customize** menu also has a **Reset position** option.
+
+## Resting forms
+
+When collapsed (not expanded), the notch can take one of four shapes. Switch between them in **Settings → Preferences**:
+
+- **Orb** (default) — a small circular button.
+- **Pill** — a rounded, slightly wider shape.
+- **Edge tab** — a thin tab that sits flush against the screen edge.
+- **Orb + badge** — the orb with a small badge, useful as an at-a-glance indicator.
+
 ## What's in the panel
 
-Clicking the notch opens a panel with:
+Opening the notch expands it into a panel made up of **blocks**. The available blocks are:
 
-- **Run a workflow here** — any of your workflows that have a context-menu trigger applicable to the current page. Selecting one runs it against the current tab.
-- **Get / Refresh Workflows** — refreshes the list of workflows the extension knows about.
-- **Open in Side Panel** — opens awflow in the browser side panel.
-- **Open in Full Tab** — opens awflow in a full browser tab.
-- **Open chat** — opens the chat assistant for the current page.
+- **On this page** — workflows that have a trigger matching the current page's URL.
+- **Pinned workflows** — workflows you've pinned for quick access, regardless of the current page.
+- **Quick actions** — shortcuts for:
+  - Open in Side Panel
+  - Open in Full Tab
+  - Open chat
+  - Refresh workflows
 
-These are the same actions you get from the extension's right-click (context) menu — the notch just puts them one click away without opening the menu.
+The following blocks are visible in the panel but **not yet functional** — they're labeled **"Coming soon"** and are disabled:
+
+- **Page tools**
+- **Recent**
+- **Assistant**
+
+These are reserved for future releases; don't rely on them yet.
+
+:::note[Reserved for a future AI assistant]
+The **Assistant** slot in the notch is reserved for a future in-context AI assistant. It is not yet functional in this release.
+:::
+
+## Customizing the notch
+
+There are two places to customize the notch, with different depth:
+
+### Full editor — Settings → Preferences
+
+The Settings page has the complete editor, where you can:
+
+- Choose the **resting form** (Orb, Pill, Edge tab, Orb + badge).
+- Choose an **accent color**.
+- Choose a **size**.
+- Show or hide individual **blocks**, and **reorder** them.
+- Set the **site scope** (see below).
+
+### Quick editor — in-notch Customize menu
+
+Opening the notch and choosing **Customize** gives you a lighter popover for on-the-fly changes:
+
+- Reorder blocks.
+- Show or hide blocks.
+- Pin or unpin workflows.
+- Reset the notch's position.
+- A shortcut to open the full Settings editor.
+
+## Site scope
+
+The notch has a **site scope** setting that controls where it appears:
+
+- **All sites** (default) — the notch shows on every standard web page.
+- **Allowlist only** — intended to restrict the notch to a chosen set of sites.
+
+:::caution[Allowlist has no pattern editor yet]
+**Allowlist only** is present as an option, but this release doesn't yet include a way to add or edit the site patterns it uses. Until that editor ships, we recommend leaving the site scope set to **All sites**.
+:::
 
 ## Notes
 
