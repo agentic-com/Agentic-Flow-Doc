@@ -1,0 +1,71 @@
+---
+title: "Supabase"
+description: "Read and write rows in your Supabase project via PostgREST — select, insert, update, upsert, delete, and RPC — using the anon key with RLS."
+sidebar:
+  label: "Supabase"
+---
+
+# Supabase
+
+Persist workflow data to a real database. Where the **Data Store** node covers browser-local state, this covers state you want to keep, query, and share outside the browser — a scrape that accumulates into a table you can actually use.
+
+## What it does
+
+Full row access to your Supabase project through PostgREST: **select** (with filters), **insert**, **update**, **upsert**, **delete**, and **RPC** function calls.
+
+## Operations
+
+| Operation | Notes |
+| --- | --- |
+| Select rows | Columns, PostgREST filters, and a limit. |
+| Insert row | Column → value pairs. |
+| Update rows | Fields to change + filters (**a filter is required**). |
+| Upsert row | Insert or merge on a conflict column. |
+| Delete rows | Filters (**a filter is required**). |
+| Call function (RPC) | A Postgres function with named arguments. |
+
+### Filters
+
+Filters are **column → `operator.value`** pairs, matching PostgREST syntax:
+
+| Filter | Meaning |
+| --- | --- |
+| `id` → `eq.42` | `id = 42` |
+| `age` → `gt.18` | `age > 18` |
+| `name` → `like.*acme*` | `name` matches `*acme*` |
+| `status` → `in.(new,open)` | `status` in a set |
+
+**Update and Delete require at least one filter** — without one they would affect *every* row, so the node refuses to run.
+
+## ⚠️ Use the anon key — never service_role
+
+Supabase gives you two keys, and only one is safe to use here:
+
+| Key | Use it? | Why |
+| --- | --- | --- |
+| **anon** (public) | ✅ Yes | Designed to be public and shipped in browser clients. **Row Level Security (RLS)** enforces what it can actually read and write. |
+| **service_role** | ❌ Never | **Bypasses RLS entirely** — full read/write to every table — and would be recoverable from extension storage. |
+
+The two keys sit next to each other in the dashboard, and `service_role` "just works" when RLS blocks you — which is exactly the trap. **This node reads the key's JWT role and rejects a `service_role` key outright**, before making any request. Use the **anon** key and control access with RLS policies.
+
+## Dependencies and credentials
+
+- **Credential:** your project's **anon (public) key** (Project Settings → API), stored as a **Bearer Token** credential. Sent as both the `apikey` header and `Authorization: Bearer`.
+- **Project URL:** set per operation (Project Settings → API), e.g. `https://abcd.supabase.co`.
+- The key is stored in your credential vault and never passes through awflow's backend.
+
+## Web and extension builds
+
+This node is **extension-only**.
+
+## Troubleshooting
+
+- **"service_role key … rejected"** — you pasted the wrong key. Use the **anon** key.
+- **Blocked with an RLS message** — the anon key is working, but a Row Level Security policy denies the operation. Add or adjust a policy on the table for select/insert/update/delete as needed.
+- **Nothing selected / everything returned** — check your **filters** use the `operator.value` form (e.g. `eq.42`, not just `42`).
+
+## Related nodes
+
+- [Data Store](/nodes/builtin/core/datastore/)
+- [Baserow / NocoDB](/nodes/builtin/integration/baserow-nocodb/)
+- [Custom API](/nodes/builtin/integration/custom-api/)
