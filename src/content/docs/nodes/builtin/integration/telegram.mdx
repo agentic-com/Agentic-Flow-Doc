@@ -1,0 +1,60 @@
+---
+title: "Telegram"
+description: "Send messages, photos and documents to a Telegram chat via the Bot API."
+sidebar:
+  label: "Telegram"
+---
+
+# Telegram
+
+Send messages, photos and documents to a Telegram chat via the Bot API — the best "notify me on my phone" sink without building push infrastructure.
+
+## What it does
+
+Posts to a Telegram chat: a text message, a photo (with caption), or a document (with caption). Formatting can be plain, Markdown, MarkdownV2, or HTML. Every scheduled watcher can suddenly reach you wherever you are — pairs directly with **Element Change Trigger** and **Digest**, and sending a photo makes **Screenshot Page** genuinely useful ("this page changed, here's what it looks like now").
+
+> This node is **send-only**. Receiving updates (`getUpdates` polling) needs a long-running process and is out of scope.
+
+## Resource and operations
+
+| Resource | Operations |
+| --- | --- |
+| Message | Send message, Send photo, Send document |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | The Telegram bot token (see below). |
+| Operation | Send message, photo, or document. |
+| Chat ID | The target chat: a numeric chat ID, or a channel username like `@mychannel`. |
+| Text | The message text (Send message). |
+| Photo / Document | An HTTP URL, a Telegram `file_id`, or a base64 `data:` URL (e.g. from Screenshot Page — it is uploaded to Telegram as a file). |
+| Caption | Optional caption under a photo/document. |
+| Formatting | None, Markdown, MarkdownV2, or HTML — applied to the text/caption. |
+
+## Getting a bot token
+
+1. In Telegram, open a chat with **@BotFather** and send `/newbot`.
+2. Follow the prompts; BotFather gives you a token like `123456:ABC-DEF...`.
+3. Start a chat with your new bot (or add it to a group/channel) so it can message you, and note the chat ID.
+
+## Dependencies and credentials
+
+- **Auth type:** Bearer Token — store the **bot token**.
+- The bot token **is the whole credential and grants full control of the bot** — treat it like a password. It is stored in your credential vault and resolved at run time (never read from a node parameter); the node places it in the request path (`/bot<token>/sendMessage`), not a header.
+
+## Web and extension builds
+
+The Telegram Bot API sends CORS headers, so this node works in **both** the web app and the browser extension.
+
+## Troubleshooting
+
+- **`Unauthorized`** — the bot token is wrong or revoked; recreate it with @BotFather.
+- **`chat not found`** — the Chat ID is wrong, or the bot has never been started/added to that chat. Message the bot first (or add it to the group/channel).
+- **`Bad Request: can't parse entities`** — the text doesn't match the selected Formatting; switch Formatting to None or fix the markup.
+
+## Related nodes
+
+- [Screenshot Page](/nodes/extension/screenshotpage/)
+- [Slack](/nodes/builtin/integration/slack/)
