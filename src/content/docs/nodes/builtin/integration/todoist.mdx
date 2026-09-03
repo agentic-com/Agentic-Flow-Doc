@@ -1,0 +1,60 @@
+---
+title: "Todoist"
+description: "Create and manage Todoist tasks from the current page, with natural-language due dates."
+sidebar:
+  label: "Todoist"
+---
+
+# Todoist
+
+Create and manage Todoist tasks from the current page — "task from this page", the canonical browser-extension action.
+
+## What it does
+
+Creates, updates, closes and lists Todoist tasks, and lists projects and labels. Task creation can attach the current page's URL, and due dates accept natural language like `tomorrow 9am`. Paired with the **Hotkey Trigger** it becomes a one-keystroke capture.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Task | Create, Update, Close, List |
+| Project | List |
+| Label | List |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | Your Todoist personal API token (see below). |
+| Resource / Operation | What to act on and how. |
+| Content | The task text (supports Markdown, e.g. a `[link](url)`). |
+| Description | A longer description (Markdown). |
+| Source URL | The page URL to attach — appended to the description when present. |
+| Project ID | The project a new task belongs to, or a filter for **Task → List** (use **Project → List** to find IDs). |
+| Due (natural language) | A human due date like `tomorrow 9am` or `every Friday`. |
+| Priority | Priority 1 (urgent) → Priority 4 (normal). |
+| Labels | Label names to attach. |
+| Task ID | The task to update or close. |
+
+**Page-anchored tasks:** put the page title in **Content** and the page URL in **Source URL** (e.g. from Get Page Metadata) — the URL is appended to the task description as a `Source: <url>` line.
+
+## Dependencies and credentials
+
+- **Auth type:** Bearer Token — store a Todoist **personal API token** (Settings → Integrations → Developer). It grants full access to your account; keep it secret.
+- The token is stored in your credential vault and resolved at run time (never from a node parameter), and sent as `Authorization: Bearer <token>`.
+- Todoist also supports OAuth with PKCE (a public client). This node is structured so an OAuth token can be used through the same credential later, with no changes to the node.
+
+## Web and extension builds
+
+This node is **extension-only**. Todoist's REST API is not confirmed to send permissive CORS headers, so the calls are made from the awflow browser extension.
+
+## Troubleshooting
+
+- **`403 Forbidden` / `401 Unauthorized`** — the API token is missing, invalid, or expired; recreate it in Todoist's Developer settings.
+- **Task not created in the expected project** — pass a valid **Project ID** (run **Project → List** to get IDs); without one the task lands in the Inbox.
+- **A due date didn't parse** — Todoist interprets `Due (natural language)` in your account language; use a clearer phrase like `tomorrow 9am`.
+
+## Related nodes
+
+- [Get Page Metadata](/nodes/extension/getpagemetadata/)
+- [Linear](/nodes/builtin/integration/linear/)
