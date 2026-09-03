@@ -1,0 +1,65 @@
+---
+title: "Linear"
+description: "Create and update Linear issues, add comments, and list teams and projects — with the current page as context."
+sidebar:
+  label: "Linear"
+---
+
+# Linear
+
+Create and update Linear issues, add comments, and list teams and projects — anchored to the page you're on.
+
+## What it does
+
+Files and updates Linear issues from the page you're reading: the current URL and any selected text can be attached to the issue automatically. Comment on an issue, and list teams and projects to find the IDs you need.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Issue | Create, Update, Get, List |
+| Comment | Create |
+| Team | List |
+| Project | List |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | Your Linear personal API key (see below). |
+| Resource / Operation | What to act on and how. |
+| Team ID | The team the new issue belongs to (use **Team → List** to find it). |
+| Title / Description | The issue title and Markdown body. |
+| Source URL | The page URL to attach — appended to the description when present. |
+| Selection | Selected text to quote — appended to the description when present. |
+| Priority | None, Urgent, High, Medium, or Low. |
+| Issue ID | The issue to act on (its UUID or identifier like `ENG-123`). |
+| State ID | The workflow state to move an issue to (Issue → Update). |
+| Comment | The comment body (Comment → Create). |
+| Limit | Number of results to return for list operations (1–100). |
+
+**Page-anchored issues:** wire the current page URL into **Source URL** and selected text into **Selection** (e.g. from Get Page Metadata / Get Selected Text). When present, they're appended to the issue description — a quoted selection and a `Source: <url>` line.
+
+## Dependencies and credentials
+
+- **Auth type:** Bearer Token — store a Linear **personal API key** (Settings → Security & access → Personal API keys).
+- The key is **scoped to your whole workspace**, so pick the workspace deliberately. It's stored in your credential vault and resolved at run time (never from a node parameter); the node sends it directly in the `Authorization` header.
+
+## Web and extension builds
+
+This node is **extension-only**. Linear's GraphQL API does not send permissive CORS headers, so the calls can only be made from the awflow browser extension.
+
+## Notes
+
+- Linear is **GraphQL-only**: every operation is a single `POST` with `{ query, variables }`. Errors are returned with **HTTP 200** and an `errors` array — the node surfaces the first error message.
+
+## Troubleshooting
+
+- **`Authentication required`** — the API key is missing or invalid; recreate it in Linear's settings.
+- **`Entity not found: Team`** — the Team ID is wrong; run **Team → List** to get valid IDs.
+- **Issue not found on Update/Get** — use the issue's identifier (e.g. `ENG-123`) or its UUID.
+
+## Related nodes
+
+- [Get Selected Text](/nodes/extension/getselectedtext/)
+- [GitHub](/nodes/builtin/integration/github/)
