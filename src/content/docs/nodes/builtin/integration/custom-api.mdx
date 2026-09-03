@@ -1,0 +1,70 @@
+---
+title: "Custom API"
+description: "Call any REST API from its OpenAPI (Swagger) spec — pick an operation and its fields are generated for you."
+sidebar:
+  label: "Custom API"
+---
+
+# Custom API
+
+One node for any REST API that publishes an OpenAPI (Swagger) description. Point it at the spec URL, pick an operation, and the node builds the request fields for you — no per-service node required.
+
+## What it does
+
+Fetches a public OpenAPI 3 document, lists its operations, and generates a form for whichever one you select: path, query, header, and JSON body fields all come straight from the spec. At run time the node assembles the HTTP request, applies the operation's security scheme from a stored credential, and returns the parsed response.
+
+## How it works
+
+1. **Spec URL** — paste the URL of a public OpenAPI **JSON** document and grant access to its host (see below). The node fetches and parses it.
+2. **Operation** — choose from the operations found in the spec (shown as `METHOD /path — summary`).
+3. **Parameters** — the fields for that operation appear automatically. Required fields are marked; a JSON request body is edited as a single `body` field.
+4. **Credential** *(optional)* — attach a credential matching the API's security scheme.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| OpenAPI spec URL | URL of a public OpenAPI (Swagger) **JSON** document. Requires a host access grant. |
+| Operation | The operation to call, loaded from the spec. |
+| Parameters | Generated from the selected operation — path, query, header, and JSON body fields. |
+| Credential | Optional. Matches the API's security scheme (see below). |
+
+## Authentication
+
+The node reads the operation's `securitySchemes` from the spec and applies your credential accordingly. Secrets always come from the credential vault, never from node fields.
+
+| Spec security scheme | Credential to use | How it is sent |
+| --- | --- | --- |
+| `apiKey` (in header) | Bearer Token | The token as the named header (e.g. `X-API-Key: <token>`). |
+| `apiKey` (in query) | Bearer Token | The token as the named query parameter (e.g. `?api_key=<token>`). |
+| `http` / `bearer` | Bearer Token | `Authorization: Bearer <token>`. |
+| `http` / `basic` | Basic Auth | `Authorization: Basic <base64>`. |
+
+If the operation (or the spec's global default) declares no security, the credential is optional and can be left empty.
+
+## Host access
+
+The spec URL is a permissioned field: use **Grant access** next to it to allow requests to that host. The grant covers both fetching the spec and calling the API on the same host, and you can review or revoke it under **Settings → Site access**. See [Permissions &amp; Security](/usage/troubleshooting/permissions-security/) for how host access and Safe mode work.
+
+## Web and extension builds
+
+This node is **extension-only**. Arbitrary API hosts aren't assumed to send CORS headers, so run it in the awflow browser extension.
+
+## Limitations
+
+- **JSON specs only** for now — YAML specs are reported with a clear message rather than mis-parsed.
+- **JSON request bodies** — non-JSON request bodies (form-encoded, multipart) aren't generated yet.
+- **API-key, Basic, and Bearer** security schemes are supported; per-operation **OAuth2** flows are not (use a dedicated integration node, or a Bearer token, instead).
+- Local `$ref`s inside the same document are resolved; remote `$ref`s and `allOf`/`oneOf` composition are not.
+
+## Troubleshooting
+
+- **"could not be read as JSON"** — the spec is likely YAML. Use a JSON spec URL (many services publish both).
+- **No operations listed** — confirm the URL returns the OpenAPI document itself (not the Swagger UI page) and that access to the host is granted.
+- **`401` / `403`** — check the credential type matches the spec's security scheme (Bearer Token for api-key/bearer schemes, Basic Auth for basic).
+- **Request blocked at run time** — grant access to the host on the spec URL field, or check **Settings → Site access**.
+
+## Related nodes
+
+- [HTTP Request](/nodes/builtin/core/http-request/)
+- [Slack](/nodes/builtin/integration/slack/)
