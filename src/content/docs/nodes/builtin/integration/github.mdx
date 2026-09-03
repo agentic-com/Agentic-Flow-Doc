@@ -1,0 +1,72 @@
+---
+title: "GitHub"
+description: "Integrate with GitHub to work with issues, pull requests, repositories, and releases."
+sidebar:
+  label: "GitHub"
+---
+
+# GitHub
+
+Integrate with GitHub to work with issues, pull requests, repositories, and releases — anchored to the page you are looking at.
+
+## What it does
+
+Calls the GitHub REST API directly to create and manage issues, comment on and review pull requests, read repositories, and fetch releases. Because the request is made from the browser, it can act on the exact repository, issue, or PR you are currently viewing.
+
+## When to use it
+
+Use this node to open an issue from a page you are reading, comment on the PR you are reviewing, file a bug from a stack trace you just selected, or pull the latest release of a project into a workflow.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Issue | Create, Get, Update, Comment, List, Close |
+| Pull request | Get, List, Comment, Review, List files |
+| Repository | Get, List, Search |
+| Release | Get latest, List |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | The GitHub credential to authenticate with (see below). |
+| Resource | Which GitHub resource to act on. |
+| Operation | The operation to perform on the selected resource. |
+| Owner | The account owner of the repository (user or organization), e.g. `octocat`. |
+| Repository | The repository name without the owner, e.g. `hello-world`. |
+| Issue Number / Pull Request Number | The number identifying the issue or pull request. |
+| Title / Body | Title and Markdown body for creating or updating an issue. |
+| Labels / Assignees | Labels and GitHub logins to attach to an issue. |
+| Comment | The comment text for an issue or pull request. |
+| State | Open/Closed (updates) or Open/Closed/All (list filters). |
+| Review Event / Review Body | Approve, Request changes, or Comment — with optional review text. |
+| Search Query | The repository search query, e.g. `language:typescript stars:>100`. |
+| Limit | Number of results to return (1–100). |
+
+## Outputs
+
+Returns the GitHub API response for the selected operation — for example the created issue, the pull request, a list of files, or the latest release.
+
+## Dependencies and credentials
+
+- **Auth type:** Bearer Token. Paste a **fine-grained personal access token (PAT)**.
+- Prefer a fine-grained PAT scoped to a **single repository** with only the permissions you need (e.g. Issues: Read and write). Its leak radius is that one repository — not your whole account.
+- Create one under GitHub → Settings → Developer settings → Fine-grained tokens. Classic PATs also work but are broader; prefer fine-grained.
+- The credential is stored in your credential vault and resolved at run time — it is never read from a node parameter.
+
+## Web and extension builds
+
+GitHub's REST API sends permissive CORS headers, so this node works in **both** the browser extension and the web app — unlike integrations that require the extension to bypass CORS.
+
+## Troubleshooting
+
+- **`Bad credentials`** — the token is missing, mistyped, or expired. Recreate the fine-grained PAT.
+- **`rate limit exceeded`** — you have hit GitHub's rate limit; wait for it to reset or reduce request frequency.
+- **404 on a private repository** — the token's repository scope does not include that repo, or the fine-grained PAT lacks the needed permission.
+- Owner and Repository must be provided separately (owner `octocat`, repository `hello-world`), not as `octocat/hello-world`.
+
+## Related nodes
+
+- [Http Request](/nodes/builtin/core/http-request/)
+- [Slack](/nodes/builtin/integration/slack/)
