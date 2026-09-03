@@ -1,0 +1,61 @@
+---
+title: "Raindrop"
+description: "Save the current page to a Raindrop.io collection with title, excerpt, tags and cover — with duplicate-skip."
+sidebar:
+  label: "Raindrop"
+---
+
+# Raindrop
+
+Save the page you're on to [Raindrop.io](https://raindrop.io) — with its title, excerpt, tags, and cover. Bookmarking with page metadata is what a browser extension is for; this is the sink for the page-metadata nodes.
+
+## What it does
+
+Creates, updates, and searches bookmarks, and lists collections and tags. Where it becomes more than a bookmark button: pair it with **Get Page Metadata** / **Get Page Assets** on the input side, auto-tag with the **Text Classifier**, or summarise the page into the excerpt with an **LLM node** before saving — a workflow Raindrop's own extension can't do.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Bookmark | Create, Update, Search |
+| Collection | List |
+| Tag | List |
+
+### Duplicate handling
+
+Saving the same URL twice is the common accident. On **Bookmark → Create**, enable **Skip if already saved** and the node checks whether the URL is already bookmarked (via Raindrop's `url/exists`) before saving. If it exists, the create is skipped and the result reports `created: false`, `duplicate: true`, and the existing bookmark IDs — so your workflow can branch instead of saving a duplicate.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | A Raindrop test token or OAuth token (see below). |
+| Resource / Operation | What to act on and how. |
+| Link | The page URL to save (Bookmark → Create). |
+| Title / Excerpt / Cover image URL | Metadata — leave **Title** and **Cover** empty to let Raindrop parse them from the page. |
+| Tags | Tags to attach (pairs with the Text Classifier). |
+| Collection ID | The collection to save into (use Collection → List to find it). |
+| Skip if already saved | Skip creating a duplicate of a URL you've already bookmarked. |
+| Bookmark ID | The bookmark to update (Bookmark → Update). |
+| Query / Collection ID / Limit | Search text, scope (0 = all), and result count (max 50). |
+
+## Dependencies and credentials
+
+- **Auth:** a Raindrop **test token** (Settings → Integrations → create an app → **Test token**) or an OAuth token, sent as `Authorization: Bearer <token>`. The test token ships immediately and is the quickest way to start.
+- The token grants access to your Raindrop account. It's stored in your credential vault and never passes through awflow's backend.
+
+## Web and extension builds
+
+This node is **extension-only**. The Raindrop API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+
+## Troubleshooting
+
+- **A duplicate was still created** — enable **Skip if already saved**; without it, every Create saves a new bookmark even for a URL you already have.
+- **Title/cover are empty** — leave those fields blank so Raindrop parses them from the page, or set them explicitly (e.g. from Get Page Metadata).
+- **`401 Unauthorized`** — the token is missing or wrong; regenerate the test token in your Raindrop app settings.
+
+## Related nodes
+
+- [Get Page Metadata](/nodes/extension/getpagemetadata/)
+- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/)
+- [Custom API](/nodes/builtin/integration/custom-api/)
