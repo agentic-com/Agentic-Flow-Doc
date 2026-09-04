@@ -110,6 +110,10 @@ export default defineConfig({
                       link: "usage/using-the-app/workflows/create",
                     },
                     {
+                      label: "Notes & story",
+                      link: "usage/using-the-app/workflows/narration",
+                    },
+                    {
                       label: "Export/Import",
                       link: "usage/using-the-app/workflows/export-import",
                     },
