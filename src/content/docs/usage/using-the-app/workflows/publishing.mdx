@@ -78,3 +78,21 @@ When you import a published workflow from the Marketplace:
 
 - Go to the Marketplace listing and click **Use**.  
 - After import, review it: set your own credentials, check browser node selectors, and test it manually.
+
+## Admin: maintaining templates in the canvas
+
+Workspace admins curate the built-in Marketplace template library from **`#/admin/templates`**.
+
+The templates list shows each template's title, category, price, and an **Editing** column that indicates when another admin currently has it open — hover it to see who and since when.
+
+- **New template** opens a dialog to set a title, slug, summary, icon, category, price, sort order, and tags, then creates a draft and opens it directly in the canvas.
+- Clicking a template opens it for editing on the same visual canvas used for regular workflows, plus a metadata panel for the fields above.
+- Test-running a template while editing doesn't create an execution history entry — it's a scratch run, not a real automation execution.
+
+### Edit locking
+
+Only one admin can edit a given template at a time. When you open a template for editing, you acquire a lock that's automatically renewed while you stay on the page and released when you leave or save.
+
+- If someone else is already editing, you'll see a **read-only** banner naming them and how long they've held the lock.
+- **Force unlock** takes over the lock immediately — use it only when you're sure the other admin's session is stale, since it interrupts them and any of their unsaved changes are lost.
+- If your own lock is taken over while you're mid-edit, a banner warns you that your changes since the last save weren't submitted, with a way to reacquire the lock or go back to the list.
