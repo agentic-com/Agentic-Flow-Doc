@@ -164,6 +164,10 @@ export default defineConfig({
                   label: "Data store",
                   link: "usage/using-the-app/data-store",
                 },
+                {
+                  label: "Newsletter",
+                  link: "usage/using-the-app/newsletter",
+                },
               ],
             },
             {
