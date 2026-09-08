@@ -1,0 +1,67 @@
+---
+title: "Google Calendar"
+description: "Integrate with Google Calendar to create, list and update events."
+sidebar:
+  label: "Google Calendar"
+---
+
+# Google Calendar
+
+Create, list and update Google Calendar events — with the current page as context.
+
+## What it does
+
+Manages calendar events (create, update, delete, get, list), lists your calendars, and runs a free/busy query. "Event from this page" is the point: a booking confirmation, a webinar signup, or a job posting with a deadline carries the date and the link, so you shouldn't retype either — events created from a page carry the page URL in their description.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Event | Create, Update, Delete, Get, List |
+| Calendar | List |
+| Free/busy | Query |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | Sign in with Google (see below). |
+| Resource / Operation | What to act on and how. |
+| Calendar ID | The calendar to use — `primary` (default) or an ID from **Calendar → List**. |
+| Event ID | The event to get, update, or delete. |
+| Title / Description / Location | The event summary, body, and place. |
+| Source URL | The page URL to attach — appended to the event description when present. |
+| Start / End (date-time) | Timed events, as RFC3339 date-times (e.g. `2026-09-10T09:00:00`). |
+| Start / End (all-day date) | All-day events, as `YYYY-MM-DD` (use instead of the date-time fields). |
+| Time Zone | IANA time zone for timed events, e.g. `America/New_York`. |
+| Attendees | Email addresses to invite. |
+| Recurrence | RRULE strings, e.g. `RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8`. |
+| Time min / Time max | Bounds for **Event → List** and **Free/busy → Query**. |
+| Max results | Maximum events to return when listing. |
+| Calendar IDs | Calendars to check for **Free/busy** (defaults to `primary`). |
+
+### Dates, time zones, and recurrence
+
+- Use **either** the date-time fields (timed event) **or** the all-day date fields — not both. All-day events must not carry a time zone.
+- For timed events, set **Time Zone** so the start/end are unambiguous.
+- Make an event recurring by adding one or more **Recurrence** RRULEs.
+
+## Dependencies and credentials
+
+- **Auth:** OAuth2 — sign in with Google. The node runs entirely client-side on the PKCE flow with a refreshing token; no calendar data passes through awflow's backend.
+- **Scopes:** managing events needs write access, so the node requests `calendar.events` (read/write events) plus `calendar.readonly` (read calendars and free/busy). This is broader than read-only, so the Google consent screen will ask for it.
+
+## Web and extension builds
+
+Works in **both** the web app and the browser extension — the Google Calendar API sends CORS headers.
+
+## Troubleshooting
+
+- **Consent screen asks for more than before** — expected: creating events needs the `calendar.events` scope, wider than read-only.
+- **Event created at the wrong time** — set **Time Zone**; without it, a bare date-time is interpreted in the calendar's default zone.
+- **`Not Found` on Update/Get/Delete** — check the **Event ID** and that it belongs to the given **Calendar ID**.
+
+## Related nodes
+
+- [Screenshot Page](/nodes/extension/screenshotpage/)
+- [Google Sheets](/nodes/builtin/integration/google-sheets/)

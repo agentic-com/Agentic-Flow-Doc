@@ -64,6 +64,8 @@ The output of one node becomes the input contract for the next node. This is whe
 
 A workflow completes when there are no more reachable nodes. It stops early when a node fails or when [Stop and Error](/nodes/builtin/flow/stopanderror/) is used intentionally.
 
+A run can also **pause indefinitely awaiting a human decision** via [Wait For Approval](/nodes/builtin/flow/wait-for-approval/), rather than completing or stopping outright. The run parks in the Executions pane until it is approved or rejected — resuming from where it paused — or is cancelled there.
+
 ## Debugging by lifecycle stage
 
 | Symptom | Stage to inspect | Likely fix |
@@ -73,6 +75,7 @@ A workflow completes when there are no more reachable nodes. It stops early when
 | Browser action happens too early | Browser state | Add wait or wait for element |
 | AI answer lacks context | Data contract | Pass the extracted text or retrieval result explicitly |
 | Integration writes wrong rows | Item linking | Add stable IDs and merge intentionally |
+| Run seems stuck, never finishes | Completion or stop | Check the Executions pane for a run paused on [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) awaiting approve/reject |
 
 ## Related topics
 

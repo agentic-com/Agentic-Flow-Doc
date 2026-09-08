@@ -1,0 +1,37 @@
+---
+title: Data store management
+description: "Review, and clear the values your workflows remember between runs, from Settings → Preferences."
+sidebar:
+  order: 7
+---
+
+The [Data Store](/nodes/builtin/core/datastore/) node lets a workflow remember values between runs — a last-seen timestamp, a page cursor, a call count. Those values are kept in this browser profile. **Settings → Preferences** has a **Data store** section that shows everything currently stored, so you can inspect it and clear what you no longer need.
+
+This page covers the management surface. For writing and reading values inside a workflow, see the [Data Store node](/nodes/builtin/core/datastore/).
+
+## Where it is
+
+1. Open **Settings → Preferences**.
+2. Scroll to the **Data store** section.
+
+At the top you'll see a summary — how many values are stored, across how many scopes, and the total size — followed by the storage limits (each scope holds at most a fixed number of keys and total size).
+
+## Values grouped by scope
+
+Stored values are grouped by **scope**:
+
+- **Shared with all workflows** — the shared keyspace any of your workflows can read and overwrite. It is listed first.
+- **This workflow** — one group per workflow that has written values, named after the workflow.
+
+Each group shows its key count and size. Inside a group, every key is listed with a short preview of its value and that value's size.
+
+### Values from deleted workflows
+
+A workflow can be deleted while values it wrote are still stored. Rather than hiding that data, the list keeps it visible under the label **`Deleted workflow (<id>)`**, so orphaned values stay findable and clearable instead of silently taking up space.
+
+## Deleting values
+
+- **Delete one value** — use the delete (trash) control on that key's row.
+- **Clear a scope** — use **Clear all** on a group's header to remove every value in that scope at once.
+
+Deletions take effect immediately and cannot be undone. Because this data lives only in the current browser profile, clearing it here — or clearing the extension's data — removes it for good; the same workflow on another device keeps its own separate store.

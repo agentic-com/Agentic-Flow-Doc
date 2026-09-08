@@ -1,28 +1,29 @@
 ---
 title: Workflow tags
-description: "Learn how to use <Agentic WorkFlow> browser extension for workflow tags with intelligent workflow creation."
+description: "Label your workflows with tags and filter the workflow list by tag."
 sidebar:
     order: 4
 ---
 
-Workflow tags allow you to label your workflows. You can then filter workflows by tag.
+Workflow tags let you label your workflows so you can organise and find them quickly. Tags are **per workflow** — each workflow keeps its own list of tag labels; there is no shared, instance-wide tag registry.
 
-Tags are global. This means when you create a tag, it's available to all users on your `Agentic WorkFlow` instance.
+## Add or edit tags on a workflow
 
-## Add a tag to a workflow
+You can manage a workflow's tags at any time from the workflow list:
 
-To add a tag to your workflow:
+1. On the **Workflows** page, open the **⋯** (actions) menu on the workflow's row.
+2. Select **Manage tags**.
+3. In the dialog, add tags (type a name and confirm) or remove existing ones.
+4. Select **Save**. The updated tags appear in the workflow's **Tags** column.
 
-1. In your workflow, select **+ Add tag**.
-2. Select an existing tag, or enter a new tag name.
-3. Once you select a tag and click away `Agentic WorkFlow`m the tag modal, `Agentic WorkFlow` displays the tag next to the workflow name.
+You can add more than one tag to a workflow.
 
-You can add more than one tag.
+> **Note:** Tags are also editable when you publish a workflow to the marketplace, from the publish form.
 
-## Filter by tag
+## Filter the list by tag
 
-When browsing the workflows on your instance, you can filter by tag.
+When browsing your workflows, you can narrow the list to workflows that carry specific tags:
 
-1. On the **Workflows** page, select **Filters**.
-2. Select **Tags**.
-3. Select the tag or tags you`Agentic WorkFlow`nt to filter by. `Agentic WorkFlow` lists the workflows with that tag.
+1. On the **Workflows** page, open the **Tags** filter above the table.
+2. Select one or more tags. The list shows only workflows that have at least one of the selected tags.
+3. Use **Clear filters** to reset.

@@ -1,0 +1,68 @@
+---
+title: "JSON"
+description: "Parse, build, pick from and repair JSON"
+sidebar:
+  label: "JSON"
+---
+
+# JSON
+
+Parse, build, pick from and repair JSON.
+
+## What it does
+
+Reads, writes and rescues JSON. It offers five operations: parse a string into real data, stringify data back into a string, pick a value out by dot path, deep-merge two objects, and repair malformed JSON while reporting what it had to fix.
+
+## When to use it
+
+Use this node to turn JSON-LD scraped off a page into fields the next node can address, to rescue model output that is nearly valid without wrapping a Code node in a try/catch, or to hand a clean object to a downstream parser.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | What to do with the JSON: `Parse`, `Stringify`, `Pick by path`, `Merge` or `Repair`. Defaults to `Parse`. |
+| JSON | The JSON text or data to work on. Accepts an expression such as `{{ $json.raw }}`. |
+| Source Field | Field on the incoming item to read when the JSON field above is left empty, for example `body`. |
+| Path | Dot path read by `Pick by path`, for example `product.offers.price`. |
+| Merge With | The object `Merge` folds into the JSON. Its values win on conflict. |
+| Repair If Needed | For `Parse`: try to fix nearly-valid JSON before parsing it. Fixes code fences, surrounding prose, comments, single quotes, unquoted keys, trailing commas and cut-off tails. Valid JSON is never touched. Defaults to `on`. |
+| Pretty Print | For `Stringify`: indent the output. Defaults to `off`. |
+| Put Result In Field | Name of the field holding the answer. Defaults to `data`. For Parse and Merge, leaving the default lets the parsed object become the item itself when it is an object. |
+
+## Outputs
+
+- **Parse** turns text into data. A parsed object becomes the outgoing item itself, so its fields are addressable downstream without a wrapper; an array becomes one item per entry; anything else is placed in **Put Result In Field**. When repair was needed, the steps applied are attached as a `_repaired` field.
+- **Stringify** returns the JSON text in **Put Result In Field**, indented when Pretty Print is on.
+- **Pick by path** returns the value at **Path**, or fails if the path does not exist.
+- **Merge** deep-merges **Merge With** into the source (plain objects merge key by key; arrays and non-objects replace wholesale).
+- **Repair** returns the repaired `text`, a `repaired` flag, the list of `steps` applied, and a `valid` flag saying whether the result now parses.
+
+## How repair works
+
+Repair applies up to seven passes in order — strip a markdown code fence, trim surrounding prose, remove `//` and `/* */` comments, convert single quotes to double, quote unquoted keys, drop trailing commas, and close a truncated tail. It short-circuits the moment the text parses: valid JSON is returned byte-identical with no passes applied, and each pass is kept only if the text still has a chance of parsing.
+
+Repair never guesses values. A truncated payload is *closed* — open brackets are shut and a half-written string is ended — but a key whose value never arrived is dropped, not filled with `null`, because downstream could not tell an invented `null` from a real one. Non-JSON prose with no bracketed payload stays unparseable rather than being coerced. Strings are respected throughout: a brace, comma or comment marker inside a quoted string is treated as data, not syntax.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Place JSON after a node that returns model output, set **Operation** to `Parse` and leave **Repair If Needed** on. A response wrapped in a ```json code fence with a trailing comma parses cleanly, and a `_repaired` field records which fixes were needed. Follow with `Pick by path` set to `product.offers.price` to read a single value out.
+
+## Troubleshooting
+
+- With **Repair If Needed** off, invalid JSON fails and the message suggests turning repair on.
+- If Parse still fails after repair, the input is not nearly-valid JSON — repair only undoes the small, fixed set of malformations above and refuses to invent data.
+- `Pick by path` fails when the path does not exist. Check the dot path against the actual structure.
+- `Merge` fails if **Merge With** is empty. `Stringify` fails on a circular reference or a value with no JSON form.
+- `Repair` reports rather than throws: check the `valid` flag to tell rescued JSON from JSON that is still broken.
+
+## Related nodes
+
+- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Code](/nodes/builtin/core/code/)
+- [Node types overview](/nodes/builtin/node-types/)

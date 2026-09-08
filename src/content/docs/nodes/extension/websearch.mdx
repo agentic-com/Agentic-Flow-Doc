@@ -1,0 +1,56 @@
+---
+title: "Web Search"
+description: "Run a web search and return the results as structured data"
+sidebar:
+  label: "Web Search"
+---
+
+# Web Search
+
+Run a web search and return the results as structured data.
+
+## What it does
+
+Searches the web on a chosen engine and returns the results as a list of `{ title, url, snippet }` objects. It works entirely in your browser through the extension: it opens the engine's results page in a background tab, reads the results from the page, and closes the tab again.
+
+## When to use it
+
+Use this node to feed live web results into a workflow — for example to gather sources for an AI agent, monitor mentions, or collect links for further processing.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Query | The search query. |
+| Engine | Which search engine to use: `DuckDuckGo` (default, most reliable), `Bing`, or `Brave`. |
+| Max results | Optional cap on how many results to return. Leave empty (or `0`) to return all results found on the first page. |
+
+## Outputs
+
+Returns an array of result objects, each shaped like:
+
+```json
+[
+  { "title": "Example result", "url": "https://example.com", "snippet": "A short description of the result." }
+]
+```
+
+## Dependencies and credentials
+
+- No credential is required.
+- Requires the awflow **browser extension** to be installed — the search runs inside the browser.
+
+## Example workflow
+
+Add Web Search with **Engine** = `DuckDuckGo` and a query, then pass its output into an AI Agent or an Edit Fields node to summarise or filter the results.
+
+## Troubleshooting
+
+- This node runs in the extension. If it returns nothing, confirm the extension is installed and active.
+- Search engines change their page markup over time, which can affect scraping. If one engine returns no results, try another — **DuckDuckGo** is the most stable, while **Brave** is the most likely to need updates.
+- Google is intentionally not offered, because it blocks automated searches.
+
+## Related nodes
+
+- [Get Structured Data](/nodes/extension/getstructureddata/)
+- [Get All Links](/nodes/extension/getalllinks/)

@@ -1,0 +1,60 @@
+---
+title: "Get Variable"
+description: "Emit a previously-set run variable as the item itself"
+sidebar:
+  label: "Get Variable"
+---
+
+# Get Variable
+
+Emit a stored value as the item.
+
+## What it does
+
+Reads a variable set earlier in the run (with [Set Variable](/nodes/builtin/flow/setvariable/)) and emits it as **the item itself**. Most of the time you do not need this node: `{{ $run.name }}` works in any input field, which is fewer nodes and fewer edges than fetching a value into one. Reach for Get Variable when a value has to become the item — because the node you are feeding reads its incoming items rather than a configured field. Handing a collected list to Split Out, or a stored object to an integration that maps over its input, both need a node rather than an expression.
+
+## When to use it
+
+- When a stored value must be the item stream itself, not a value read inside a field.
+- When feeding a collected list into a node that iterates over its input.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Name | Name of the variable to read. |
+| Path | Optional dot path inside the value, for example `page.next`. Leave blank to emit the whole value. |
+| Use A Fallback | Off by default: an unset variable fails the node, so an ordering mistake cannot pass unnoticed. On: the fallback below is emitted instead. |
+| Fallback | The value emitted when the variable is not set and **Use A Fallback** is on. |
+| Put Value In Field | Field the value is placed in when the value is not itself an object. Defaults to `value`. |
+
+## Outputs
+
+- A list becomes a collection, so downstream nodes iterate it the way they iterate any other input.
+- An object becomes the item directly.
+- Anything else is wrapped in the field named by **Put Value In Field** (default `value`), so it is still addressable.
+
+## Reading a variable that was never set
+
+Fails, naming the variable, rather than emitting an empty value — unless **Use A Fallback** is on, which makes the intent explicit. Ordering between parallel branches is decided by how the graph is walked and is not visible on the canvas, so a quietly-empty read is exactly how that mistake would go unnoticed until something downstream produced nonsense. See the ordering note on [Set Variable](/nodes/builtin/flow/setvariable/).
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+- Variables exist only while a workflow is running. Running this node on its own, outside an execution, has nothing to read and reports so.
+
+## Example workflow
+
+A Set Variable node earlier in the run appends each result to a list variable named `results`. Downstream, Get Variable with **Name** `results` emits that list as a collection, which a Split Out node then iterates one item at a time.
+
+## Troubleshooting
+
+- "Variable … has not been set at this point in the run." The Set Variable node is not guaranteed to run before this one — often because it sits on a branch of its own. Move it upstream, or turn on **Use A Fallback**.
+- "Path … does not exist inside variable …": the dot path does not match the stored value's shape. Check the path, or clear it to emit the whole value.
+- "Variables only exist while a workflow is running." Run the whole workflow rather than this node on its own.
+
+## Related nodes
+
+- [Set Variable](/nodes/builtin/flow/setvariable/)
+- [$run expressions](/usage/key-concepts/data/data-mapping/data-mapping-expressions/)
+- [Node types overview](/nodes/builtin/node-types/)

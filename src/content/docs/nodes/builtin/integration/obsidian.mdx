@@ -1,0 +1,60 @@
+---
+title: "Obsidian"
+description: "Append the current page, a selection, or workflow output to a note in a local Obsidian vault — nothing leaves your machine."
+sidebar:
+  label: "Obsidian"
+---
+
+# Obsidian
+
+Clip the page you're on straight into your **local** Obsidian vault, through the [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) community plugin. This is the strongest local-first path there is: page → local vault, with **no cloud service anywhere in the middle**. Nothing leaves your machine.
+
+## What it does
+
+Appends to a note, creates a note, reads a note, and searches the vault. Append and Create can attach the page URL as a Markdown source link — pair it with page-extraction nodes to clip web content into your notes.
+
+## Operations
+
+| Operation | Notes |
+| --- | --- |
+| Append to note | Add content to the end of a note (creates it if missing). |
+| Create note | Create or replace a note at a path. |
+| Get note | Read a note's Markdown. |
+| Search vault | Full-text search across the vault. |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | The plugin's API key (see below). |
+| Operation | What to do in the vault. |
+| Server URL | Defaults to `http://127.0.0.1:27123`. **Prefer the HTTP port** — see the note below. |
+| Note path | Path within the vault, including `.md` (e.g. `Clippings/Web.md`). |
+| Content | Markdown to write (the page text, a selection, or workflow output). |
+| Source URL | Attached as a `[Source](…)` link when present (Append / Create). |
+| Query | Text to search for (Search). |
+
+## Setup
+
+1. In Obsidian, install and enable the **Local REST API** community plugin.
+2. Copy the **API key** from the plugin's settings and save it as a **Bearer Token** credential here.
+3. Leave the **Server URL** at `http://127.0.0.1:27123` unless you changed the port.
+
+### Use the HTTP port, not HTTPS
+
+The plugin exposes an HTTPS port (`27124`) with a **self-signed certificate** and an HTTP port (`27123`). A self-signed cert makes `fetch` fail without manual browser intervention, so this node defaults to and recommends the **HTTP port** — safe here because the connection never leaves `127.0.0.1`.
+
+## Web and extension builds
+
+This node is **extension-only**. It talks to software running on your own machine (`http://127.0.0.1`), which is already covered by the extension's host permissions — no new permission and no cloud round-trip.
+
+## Troubleshooting
+
+- **"Could not reach the Obsidian Local REST API…"** — Obsidian isn't running, the Local REST API plugin is disabled, or the port doesn't match. Open Obsidian, enable the plugin, and confirm the **Server URL** matches the plugin's HTTP port.
+- **`401`** — the API key is wrong. Recopy it from the plugin settings into the credential.
+- **`404` on Get/Append** — check the **Note path** (including the `.md` extension and any folders).
+
+## Related nodes
+
+- [Get Page Metadata](/nodes/extension/getpagemetadata/)
+- [Custom API](/nodes/builtin/integration/custom-api/)

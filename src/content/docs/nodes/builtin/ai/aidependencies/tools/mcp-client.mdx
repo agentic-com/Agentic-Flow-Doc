@@ -1,0 +1,63 @@
+---
+title: "MCP Client Tool"
+description: "Connect an agent to a remote MCP server and let it call the server's tools — with an approval gate on every call."
+sidebar:
+  label: "MCP Client Tool"
+---
+
+# MCP Client Tool
+
+Connects to a remote [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server and exposes the server's tools to an AI agent. **Each remote tool the model calls is gated — you approve or reject it before it runs.**
+
+## What it does
+
+Given a remote MCP server URL, the node connects, discovers the tools the server offers, and turns each one into a tool the agent can call. When the model invokes one, the tool describes it to you (*"call MCP tool `search` on mcp.example.com"*) and runs it only after you approve. One MCP Client node can expose many remote tools at once — one approval-gated tool per remote tool.
+
+Only **remote HTTP/SSE** MCP servers are supported. The extension cannot launch local (stdio) MCP servers.
+
+## When to use it
+
+- You already run an MCP server (or use a hosted one) and want an agent in Agentic WorkFlow to use its tools.
+- You want to reuse existing MCP tooling instead of rebuilding it as native nodes.
+- You want a human approving each remote call, because MCP tools can have real side effects.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Server URL | The remote MCP server endpoint (HTTP/SSE), e.g. `https://mcp.example.com`. |
+| Authentication | Optional credential sent as the `Authorization` header on every request. Resolved from the credential store; never logged or shown in the approval prompt. |
+| Allowed Tools | Optional comma-separated allow-list of remote tool names (e.g. `search, write`). When set, only those tools are exposed to the agent; leave empty to expose all of the server's tools. |
+
+## Outputs
+
+Returns one or more tool dependencies (one per exposed remote tool) for agent nodes such as [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). No output port — connect it into an agent's tools input.
+
+## Approval and safety
+
+- **Every remote call is gated.** A tool runs only after you approve; the gate can't be disabled.
+- **The prompt names the tool and server, never the arguments.** You see the remote tool name and host — never the call arguments or the auth credential.
+- **Fails safe on a bad server.** If the server is unreachable, the credential is invalid, or the tool list can't be fetched, this node contributes **no tools** rather than breaking the agent's other tools. Check the run logs for the connection error.
+- **Unattended runs auto-reject.** Calls are rejected after the approval timeout when no one is present.
+
+## Dependencies and credentials
+
+- A reachable remote HTTP/SSE MCP server.
+- Optional **Authentication** credential for servers that require an `Authorization` header.
+
+## Example workflow
+
+Add **MCP Client Tool**, set **Server URL** to your MCP endpoint, optionally set an **Allowed Tools** list, and connect it into a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). Give the agent a goal that maps to one of the server's tools. When it calls a remote tool, an approval row appears in the **Executions** pane naming the tool and server; approve to let the call run.
+
+## Troubleshooting
+
+- **No tools appear / the agent has fewer tools than expected:** the server was unreachable, the credential was rejected, or the tool list failed — check the run logs. The node fails open to keep the rest of the agent working.
+- **Everything is rejected:** a decision timed out, or you rejected the calls.
+- **Only some tools show:** an **Allowed Tools** list is filtering them.
+- Remember only remote HTTP/SSE servers work; local stdio servers are not supported in the extension.
+
+## Related nodes
+
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/)
+- [Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/)

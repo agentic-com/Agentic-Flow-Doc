@@ -1,0 +1,65 @@
+---
+title: "Push Notification"
+description: "Send a push notification to your phone via ntfy or Pushover, with priority and a click-through URL."
+sidebar:
+  label: "Push Notification"
+---
+
+# Push Notification
+
+Deliver a notification to your phone — with the browser closed and no tab focused. This is the sink that completes the watcher story: an **Element Change Trigger** detects a change, **Digest** batches it, and this delivers it to a device.
+
+## What it does
+
+Sends a push notification via **ntfy** or **Pushover**, with a title, priority, and a click-through URL so the notification can open the page it's about. Pick the provider and its fields appear.
+
+## Providers
+
+| Provider | Why | Auth |
+| --- | --- | --- |
+| **ntfy** | Open source, self-hostable, works with **no account** — just publish to a topic. The lowest-friction path. | None for public topics; a Bearer token for a protected server. |
+| **Pushover** | A polished app with a one-off purchase, for reliability over self-hosting. | An application token + your user key. |
+
+## Inputs and settings
+
+### ntfy
+
+| Setting | Notes |
+| --- | --- |
+| Topic | The topic to publish to. **Anyone who knows it can read it** — pick something unguessable. |
+| Message / Title | The notification body and title. |
+| Priority | Min, Low, Default, High, or Max. |
+| Tags | Emoji shortcodes (e.g. `warning`, `tada`) render as icons. |
+| Click URL | Open this URL when the notification is tapped. |
+| Server | Defaults to `https://ntfy.sh`; set your self-hosted URL for a private instance. |
+
+### Pushover
+
+| Setting | Notes |
+| --- | --- |
+| Message / Title | The notification body and title. |
+| Priority | Lowest, Low, Normal, or High. |
+| Click URL / Click URL title | A URL to include, and its label. |
+
+## Dependencies and credentials
+
+- **ntfy (public topic):** no credential needed — leave it empty. For an access-controlled server, use a **Bearer Token** credential.
+- **Pushover:** create an application at [pushover.net](https://pushover.net) for the **application token**, and copy your **user key** from your dashboard. Store both as a **Basic Auth** credential:
+  - **Username** → the Pushover **application token**
+  - **Password** → your Pushover **user key**
+- Tokens are stored in your credential vault and never pass through awflow's backend.
+
+## Web and extension builds
+
+This node is **extension-only**. Self-hosted ntfy servers are often on `localhost` or a LAN address — reachable through the extension's host permissions, but not from the web build.
+
+## Troubleshooting
+
+- **ntfy notification never arrives** — subscribe to the exact same **topic** in the ntfy app, and confirm the **Server** matches (default `https://ntfy.sh`).
+- **Pushover `user key is invalid`** — check the credential: **Username** must be the *application token*, **Password** your *user key* (a common mix-up).
+- **Click URL doesn't open** — provide an absolute `https://` URL.
+
+## Related nodes
+
+- [Schedule Trigger](/nodes/builtin/trigger/schedule/)
+- [Custom API](/nodes/builtin/integration/custom-api/)

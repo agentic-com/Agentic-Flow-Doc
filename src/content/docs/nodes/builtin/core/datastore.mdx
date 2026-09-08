@@ -1,0 +1,63 @@
+---
+title: "Data Store"
+description: "Remember values between workflow runs"
+sidebar:
+  label: "Data Store"
+---
+
+# Data Store
+
+Remember values between workflow runs.
+
+## What it does
+
+Gives a workflow a small memory that persists across runs. Every other node starts each run knowing nothing; this one keeps what it wrote, so "only tell me what changed", "carry on from the page I stopped at" and "stop once I have made N calls" become expressible. It offers six operations over a set of named keys.
+
+## When to use it
+
+Use this node to hold a last-seen timestamp or ID between runs, a page cursor for a paginated source, or a call counter that survives across runs. Anything a run needs to know about a *previous* run belongs here.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | What to do to the store: `Get`, `Set`, `Delete`, `Increment`, `List keys`, or `Clear all`. Defaults to `Get`. |
+| Scope | Which keys this node can see: `This workflow only` (the default — private to this workflow) or `Shared with all workflows` (every workflow you own can read and overwrite these keys). |
+| Key | Name of the value to read or store. Required by every operation except `List keys` and `Clear all`. |
+| Value | Used by **Set**: the value to store. Accepts any resolved type — an object or number arriving from an upstream connection is stored as-is. |
+| Value Format | Used by **Set**: how to read text *typed directly* into Value — `Text`, `Number`, `True / false`, or `JSON`. It applies only to typed text; a value resolved from an upstream connection is already a real value and is stored untouched. |
+| Increment By | Used by **Increment**: how much to add. Use a negative number to count down. Defaults to `1`. |
+
+## Outputs
+
+Depends on the operation:
+
+- **Get** — `{ key, found, value }`. `found` is reported separately from `value` because a stored `null` and an absent key are different answers; check `found`, not `value`, to tell them apart.
+- **Set** — `{ key, value }` with the stored value.
+- **Delete** — `{ key, deleted }`, where `deleted` says whether there was a value to remove.
+- **Increment** — `{ key, value }` with the new total. An unset key starts at `0`, so a counter needs no initialization step.
+- **List keys** — one item per entry in the current scope, each `{ key, value, lastModified }`.
+- **Clear all** — `{ cleared }`, the number of entries removed from the current scope.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser, and works without an account.
+- Stored values live in this browser profile. Nothing is sent anywhere, the same workflow on another device keeps its own separate store, and clearing the extension's data clears these entries too.
+- You can view and clear stored values at any time from **Settings → Preferences → Data store**.
+
+## Example workflow
+
+To fetch only new items each run: at the start, use `Get` with key `last-seen-id` to read where you stopped, filter the incoming items down to those newer than it, and at the end use `Set` on the same key with the newest ID from this run. The next run resumes exactly where this one left off.
+
+## Troubleshooting
+
+- **A stored `null` is not the same as a missing key.** For `Get`, branch on the `found` field rather than on `value`.
+- **Scope is per workflow by default.** A workflow that switches to `Shared with all workflows` is the only way to read keys another workflow wrote. An imported workflow gets a fresh, local ID, so it cannot read keys it did not write itself.
+- **Value Format only affects typed text.** If you wire a value in from another node, the format selector is ignored and the value is stored as it already is.
+- Nothing is ever evicted to make room. If a scope's limits are reached, the node fails with a message rather than silently dropping a value.
+
+## Related nodes
+
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/) — uses the Data Store for cross-run deduplication
+- [Code](/nodes/builtin/core/code/)
+- [Node types overview](/nodes/builtin/node-types/)

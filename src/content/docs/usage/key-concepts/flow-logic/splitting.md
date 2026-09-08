@@ -46,4 +46,6 @@ flowchart LR
 
 This is the basic idea: one input → different actions depending on what you find.
 
-See the node reference: [If](/nodes/builtin/flow/if/).
+For a decision with three or more outcomes, the [Switch](/nodes/builtin/flow/switch/) node gives you one named output per branch instead of nesting **If** nodes. Both nodes expose named output ports, and edges attach to a port by name — so reordering branches keeps every connection intact. See [named outputs on branching nodes](/usage/using-the-app/workflows/components/connections/#named-outputs-on-branching-nodes).
+
+See the node reference: [If](/nodes/builtin/flow/if/) and [Switch](/nodes/builtin/flow/switch/).

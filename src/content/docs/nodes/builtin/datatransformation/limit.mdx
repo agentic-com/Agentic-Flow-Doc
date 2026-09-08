@@ -1,0 +1,47 @@
+---
+title: "Limit"
+description: "Cap the number of items that flow through the workflow"
+sidebar:
+  label: "Limit"
+---
+
+# Limit
+
+Cap the number of items that flow through the workflow.
+
+## What it does
+
+Reduces the incoming collection of items to at most a fixed number, keeping either the first or the last items. Everything beyond the limit is dropped.
+
+## When to use it
+
+Use this node to process only a sample of a large dataset, to keep the most recent (or earliest) records, or to protect downstream nodes and external services from running on too many items at once.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Max items | Maximum number of items to keep. Integer, minimum `1`, defaults to `10`. |
+| Keep | Which end of the collection to keep: `first` (from the start) or `last` (from the end). Defaults to `first`. |
+
+## Outputs
+
+Returns at most **Max items** items. If the collection already has fewer items than the limit, it passes through unchanged.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Connect a node that produces many items (for example, an HTTP request returning a list, or a "Get All Links" node) into Limit, set **Max items** to `5` and **Keep** to `first`, and only the first five items continue to the next step.
+
+## Troubleshooting
+
+- Limit operates on the whole collection at once. If it seems to have no effect, make sure the upstream node is actually emitting multiple items rather than a single object.
+- `Max items` must be at least `1`.
+
+## Related nodes
+
+- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
+- [Node types overview](/nodes/builtin/node-types/)

@@ -1,0 +1,57 @@
+---
+title: "Baserow / NocoDB"
+description: "Create, read, update, and delete rows in a Baserow or NocoDB table — hosted or self-hosted, including localhost."
+sidebar:
+  label: "Baserow / NocoDB"
+---
+
+# Baserow / NocoDB
+
+Read and write rows in [Baserow](https://baserow.io) or [NocoDB](https://nocodb.com) — open-source, self-hostable Airtable alternatives. Because both can run on your own machine, this keeps your workflow data entirely local if you want — the same local-first story as Local Knowledge, Ollama, and WebLLM.
+
+## What it does
+
+Full row CRUD against a table you point it at: create, get, update, list, and delete rows. Pick the provider, give your instance URL, the table ID, and (for writes) a set of field-name → value pairs.
+
+## Resources and operations
+
+| Provider | Operations |
+| --- | --- |
+| Baserow / NocoDB | Create row, Get row, Update row, List rows, Delete row |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | A Baserow database token or a NocoDB API token (see below). |
+| Provider | Baserow or NocoDB. |
+| Base URL | Your instance — `https://api.baserow.io`, `https://app.nocodb.com`, or a self-hosted address like `http://localhost:8080`. **Plain HTTP on localhost is fine.** |
+| Table ID | The table to work with (Baserow's numeric ID, or NocoDB's table ID). |
+| Fields | Field name → value pairs for Create / Update (use your table's column names). |
+| Row ID | The row/record to get, update, or delete. |
+| Limit | Maximum rows to return (List). |
+
+Field names are used directly — Baserow requests use `user_field_names`, and NocoDB uses column names natively — so you never deal with internal field IDs.
+
+## Dependencies and credentials
+
+- **Baserow:** create a **database token** (Settings → Database tokens), stored as a **Bearer Token** credential. Sent as `Authorization: Token <token>`.
+- **NocoDB:** create an **API token** (Account → Tokens), stored as a **Bearer Token** credential. Sent as the `xc-token` header.
+- Tokens are stored in your credential vault and never pass through awflow's backend.
+
+## Web and extension builds
+
+This node is **extension-only**. Self-hosted instances are usually on `localhost` or a LAN address — reachable through the extension's host permissions, but not from the web build.
+
+## Troubleshooting
+
+- **`401` / `403`** — the token is wrong, or lacks access to the table/database. Regenerate it and confirm it covers the table.
+- **`404` on a self-hosted instance** — check the **Base URL** (no trailing path, correct port) and the **Table ID**.
+- **Update/delete does nothing (NocoDB)** — NocoDB identifies the record by `Id` in the request body; make sure **Row ID** is the record's `Id`.
+- **Wrong field written** — use the exact **column name** as it appears in your table.
+
+## Related nodes
+
+- [Airtable](/nodes/builtin/integration/airtable/)
+- [Get Page Metadata](/nodes/extension/getpagemetadata/)
+- [Custom API](/nodes/builtin/integration/custom-api/)

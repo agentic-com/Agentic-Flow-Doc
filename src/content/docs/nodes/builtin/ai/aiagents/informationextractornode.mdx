@@ -1,0 +1,53 @@
+---
+title: "Information Extractor"
+description: "Extract structured information from a text using a LLM"
+sidebar:
+  label: "Information Extractor"
+---
+
+# Information Extractor
+
+Extract structured information from a text using a LLM
+
+## What it does
+
+Sends the input text to a language model with instructions describing which fields to pull out, and returns the extracted information. The fields to extract can be described in plain language, or shaped by an optional connected Output Parser dependency for structured output.
+
+## When to use it
+
+Use this node when you need to turn unstructured text (emails, documents, form responses, transcripts) into structured data — for example, pulling a name, date, and amount out of an invoice, or extracting entities from a support ticket for downstream processing.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Text | The text to extract information from. Rendered as a text area. |
+| What to extract | Describes the fields to extract, or connect an Output Parser. Rendered as a text area. |
+| Options → System message | Optional additional system message appended to the extraction instructions. Rendered as a text area. |
+
+## Outputs
+
+Returns `{ extracted }`, containing the model's structured extraction result (shaped by the connected Output Parser when one is provided).
+
+## Dependencies and credentials
+
+- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). Used to perform the extraction.
+- **Output Parser** (optional) — connect an Output Parser dependency to constrain the response to a specific structured shape (e.g. JSON schema) instead of relying solely on the "What to extract" description.
+
+## Example workflow
+
+Connect a Chat OpenAI node to the Model dependency, feed text from an upstream node (e.g. an HTTP Request or file read) into Text, describe the fields you want in "What to extract" (or connect an Output Parser for a strict schema), and consume `extracted` in the next node.
+
+## Troubleshooting
+
+- If extracted fields are inconsistent, tighten the "What to extract" description or connect an Output Parser to enforce a schema.
+- Verify the Model dependency is connected — the node throws if no model is found.
+- Use the optional System message to add extraction constraints (e.g. output language, date formats) without changing the field description.
+
+## Related nodes
+
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
+- [AI Agents](/advanced-ai/concepts/ai-agents/)

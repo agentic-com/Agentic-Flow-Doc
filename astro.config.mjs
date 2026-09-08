@@ -110,6 +110,14 @@ export default defineConfig({
                       link: "usage/using-the-app/workflows/create",
                     },
                     {
+                      label: "Notes & story",
+                      link: "usage/using-the-app/workflows/narration",
+                    },
+                    {
+                      label: "Narration style guide",
+                      link: "usage/using-the-app/workflows/narration-style",
+                    },
+                    {
                       label: "Export/Import",
                       link: "usage/using-the-app/workflows/export-import",
                     },
@@ -147,6 +155,18 @@ export default defineConfig({
                     directory: "usage/using-the-app/credentials",
                     collapsed: true,
                   },
+                },
+                {
+                  label: "Assistant Notch",
+                  link: "usage/using-the-app/assistant-notch",
+                },
+                {
+                  label: "Data store",
+                  link: "usage/using-the-app/data-store",
+                },
+                {
+                  label: "Newsletter",
+                  link: "usage/using-the-app/newsletter",
                 },
               ],
             },

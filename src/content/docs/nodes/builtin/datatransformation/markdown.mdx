@@ -1,0 +1,56 @@
+---
+title: "Markdown"
+description: "Convert HTML to Markdown, or Markdown to HTML"
+sidebar:
+  label: "Markdown"
+---
+
+# Markdown
+
+Convert HTML to Markdown, or Markdown to HTML.
+
+## What it does
+
+Converts between HTML and Markdown in either direction. **HTML to Markdown** walks the document and emits Markdown for the structures that matter — headings, bold/italic, inline and block code, links, images, lists, blockquotes and tables. **Markdown to HTML** renders GitHub-flavoured Markdown to HTML.
+
+## When to use it
+
+Use **HTML to Markdown** before an AI node: feeding raw scraped HTML into a model wastes tokens on markup the model doesn't need, and converting to Markdown first strips the tag soup while keeping the structure a model actually reads. Use **Markdown to HTML** to turn Markdown (model output, a saved note) into HTML for display.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | Which way to convert: `HTML to Markdown` or `Markdown to HTML`. Defaults to `HTML to Markdown`. |
+| Content | The HTML or Markdown to convert. Accepts an expression such as `{{ $json.html }}`. |
+| Source Field | Field holding the content, used when the Content field above is left empty, for example `html`. |
+| Keep Links | Keep links as `[text](url)`; when off, only the link text is kept. Applies to HTML to Markdown. Defaults to `on`. |
+| Keep Images | Keep images as `![alt](src)`; when off, images are dropped. Applies to HTML to Markdown. Defaults to `on`. |
+| Keep Tables | Render tables as Markdown tables; when off, cells become plain lines. Applies to HTML to Markdown. Defaults to `on`. |
+| Include Input Fields | Keep the incoming item's fields alongside the result. Defaults to `on`. |
+| Put Result In Field | Field the converted text is written to. Defaults to `result`. |
+
+## Outputs
+
+Returns each incoming item with the converted text written to **Put Result In Field**. When **Include Input Fields** is on, the item's original fields travel alongside the result; when off, only the result field is returned. A single incoming item produces a single output item; multiple items produce one output item each.
+
+## Dependencies and credentials
+
+- No credential is required. HTML to Markdown parses the document in the browser; Markdown to HTML renders with `marked`, time-bounded in a worker, and the resulting HTML is sanitized with DOMPurify before it is returned. No node dependency is required.
+
+## Example workflow
+
+Place Markdown after an HTTP Request or HTML Extract node returning scraped markup, set **Operation** to `HTML to Markdown`, and feed the result into an AI Agent node — the model reads clean structure instead of raw tags, at a fraction of the token cost. For the reverse, set **Operation** to `Markdown to HTML` to turn model output or a stored note into HTML ready for display.
+
+## Troubleshooting
+
+- If neither **Content** nor **Source Field** resolves to a value, the node fails with a message asking you to fill in one of them.
+- **Source Field** failing means the named field does not exist on the incoming item — check the field name against the actual data.
+- This node parses untrusted Markdown and HTML and is bounded: very large input, or content that would take pathologically long to render, fails the node with a clear error instead of freezing the tab, and rendered HTML is sanitized before it is returned.
+
+## Related nodes
+
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/)
+- [Regex](/nodes/builtin/datatransformation/regex/)
+- [JSON](/nodes/builtin/datatransformation/json/)
+- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/)

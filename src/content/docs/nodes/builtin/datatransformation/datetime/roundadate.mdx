@@ -1,0 +1,51 @@
+---
+title: "Round a Date"
+description: "Round a date up or down to a chosen unit of time"
+sidebar:
+  label: "Round a Date"
+---
+
+# Round a Date
+
+Round a date up or down to a chosen unit of time.
+
+## What it does
+
+Takes a date and snaps it to the boundary of a time unit — for example the start of the day, the end of the month, or the start of the hour. Rounding **down** returns the start of the unit; rounding **up** returns the end of the unit.
+
+## When to use it
+
+Use this node to normalise timestamps (e.g. bucket events by day or month), to compute the start or end of a billing/reporting period, or to align dates before grouping or comparison.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Date to round | The date to round. Accepts the same date input as the other Date & Time nodes. |
+| Unit | The unit to round to: `year`, `month`, `week`, `day`, `hour`, or `minute`. |
+| Direction | `down` for the start of the unit (floor), `up` for the end of the unit (ceil). |
+| Output field name | Name of the field the rounded date is written to. |
+| Include input fields | Optionally keep the incoming fields alongside the result. |
+
+## Outputs
+
+Returns the rounded value as a date in the field named by **Output field name**. When **Include input fields** is enabled, the incoming fields are spread in alongside it.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Feed a timestamp into Round a Date, set **Unit** to `day` and **Direction** to `down`, and the output is midnight at the start of that day — handy for grouping records by date.
+
+## Troubleshooting
+
+- `week` uses the default locale, where the week starts on Sunday.
+- Make sure the input value is a valid date; an unparseable value will fail the node.
+
+## Related nodes
+
+- [Add to a Date](/nodes/builtin/datatransformation/datetime/addtoadate/)
+- [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/)
+- [Extract Part of a Date](/nodes/builtin/datatransformation/datetime/extractpartofadate/)

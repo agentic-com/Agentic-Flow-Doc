@@ -1,0 +1,62 @@
+---
+title: "HTTP Request Tool"
+description: "Let an agent send HTTP requests — with a user approval gate on every call."
+sidebar:
+  label: "HTTP Request Tool"
+---
+
+# HTTP Request Tool
+
+Gives an AI agent the ability to send HTTP requests. **Every call the model makes is gated: you see the exact request and approve or reject it before it is sent.**
+
+## What it does
+
+Exposes an HTTP client as a tool the model can call. The model decides the method, URL, headers, and body; the tool describes that request to you as a plain sentence (for example, *"send a POST request to api.example.com"*), and the request is only sent after you approve it. Rejected calls are never sent — the model is told you declined and continues without that action.
+
+This tool exists so an agent can call APIs *safely*. Because page content an agent reads is untrusted input, a model that can both read a page and make network calls is a potential action primitive for a hostile page. The approval gate is what makes that safe. See [Action Approval](/advanced-ai/concepts/action-approval/) for the reasoning.
+
+## When to use it
+
+- You want an agent to call an external API as part of its reasoning — fetch a record, post an update, trigger a webhook.
+- You want a human in the loop on every outbound request the model decides to make.
+- Prefer this over hand-wiring a fixed [HTTP Request](/nodes/builtin/core/http-request/) action node when the *model* should choose whether and how to call the API.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Authentication | Optional credential applied to the requests this tool makes. Resolved from the credential store at call time; the secret never travels in the workflow or the approval prompt. |
+
+The model supplies the rest of each request at call time: **method** (GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD), **URL**, optional **headers**, and an optional **body**.
+
+## Outputs
+
+Returns a tool dependency that agent nodes (such as [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)) can call. It has no output port of its own — connect it into an agent's tools input.
+
+## Approval and safety
+
+- **Every call is gated.** The request is sent only after you approve it; there is no setting to turn the gate off.
+- **The prompt names the action, not the payload.** You see the method and host — never headers, bodies, or credential values.
+- **Blocked and unsafe URLs are refused.** The tool validates the URL before prompting or sending, and rejects internal/loopback and cloud-metadata addresses (the same SSRF protection as the built-in HTTP Request node), on the initial URL and on every redirect.
+- **Unattended runs auto-reject.** If no one responds within the approval timeout, the call is rejected so a background run can't act without a human.
+
+## Dependencies and credentials
+
+- Optional **Authentication** credential (Basic Auth, Bearer token, etc.). Reuses the same credential types as the built-in HTTP Request node.
+
+## Example workflow
+
+Connect **HTTP Request Tool** into the tools input of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). Give the agent a goal that needs an API call ("look up the order status for #1234"). When the agent decides to make the request, the run surfaces an approval row in the **Executions** pane naming the method and host; approve it to let the call proceed.
+
+## Troubleshooting
+
+- If a call never fires, check the **Executions** pane — it may be waiting on your approval, or it may have auto-rejected after the timeout.
+- If the model reports the action was denied, either you (or the timeout) rejected it, or the URL was blocked by the SSRF guard.
+- Verify the optional Authentication credential is set if the target API requires it.
+
+## Related nodes
+
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/)
+- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)
+- [HTTP Request (action node)](/nodes/builtin/core/http-request/)

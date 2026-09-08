@@ -1,0 +1,70 @@
+---
+title: "HubSpot"
+description: "Log the contact or company you're viewing to HubSpot CRM — create or update records, attach the page as a note, and list deals."
+sidebar:
+  label: "HubSpot"
+---
+
+# HubSpot
+
+Turn the page you're on into a CRM record. Read a profile, extract the details, and create or update a contact or company in HubSpot — then attach the page itself as a note.
+
+## What it does
+
+Creates or updates **contacts** and **companies** (deduplicated by email / domain), logs **notes** from the current page against a record, and lists **deals**. This is the classic sales-extension pattern — "log the profile I'm viewing" — as a composable workflow: read the page, extract with the Information Extractor, upsert the contact, attach the URL.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Contact | Create or update (dedup by email), Update, Search |
+| Company | Create or update (dedup by domain), Search |
+| Note | Create (attach the current page to a record) |
+| Deal | List |
+
+### Create or update (deduplication)
+
+"Create or update" searches for an existing record by its unique property first — **email** for contacts, **domain** for companies. If a match is found the record is **updated**; otherwise a new one is **created**. The result includes `created: true | false` so the rest of your workflow knows which happened.
+
+> **Note:** HubSpot search is *eventually consistent* — a record created moments earlier may not be searchable yet, so two upserts fired back-to-back for the same email can create a duplicate.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | A HubSpot Private App token (see below). |
+| Resource / Operation | What to act on and how. |
+| Email | Contact unique key (Contact → Create or update). |
+| Domain | Company unique key (Company → Create or update). |
+| First name / Last name / Phone / Company / Job title / Website | Contact properties. |
+| Name / City / Country / Website / Phone | Company properties. |
+| Contact ID | The contact to update (Contact → Update). |
+| Query | Full-text search term (Search). |
+| Note / Source URL / Selection | The note text, the page URL, and any quoted selection (Note → Create). |
+| Associate with / Associated record ID | Attach the note to a contact, company, or deal. |
+| Limit | Number of results for list/search. |
+
+## Dependencies and credentials
+
+- **Auth:** a HubSpot **Private App token**, sent as `Authorization: Bearer <token>`. Create one under **Settings → Integrations → Private Apps** in HubSpot.
+- **⚠️ Scope guidance:** a private app token is **account-wide** — it is scope-limited but not scoped per-record. Grant only the scopes you need:
+  - `crm.objects.contacts.read`, `crm.objects.contacts.write`
+  - `crm.objects.companies.read`, `crm.objects.companies.write`
+  - `crm.objects.deals.read`
+- The token is stored in your credential vault and never passes through awflow's backend. Treat it like a password — a leak exposes your CRM to the extent of those scopes.
+
+## Web and extension builds
+
+This node is **extension-only**. The HubSpot API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+
+## Troubleshooting
+
+- **`403` / missing scope** — the private app is missing a scope the operation needs. Add it in HubSpot (Settings → Integrations → Private Apps) and retry. The node calls this out in the error.
+- **A duplicate was created** — two "create or update" calls for the same email/domain ran before HubSpot's search index caught up. Space them out, or search first.
+- **Note isn't attached** — set both **Associate with** and **Associated record ID**; a note with neither is created standalone.
+
+## Related nodes
+
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/)
+- [Screenshot Page](/nodes/extension/screenshotpage/)
+- [Custom API](/nodes/builtin/integration/custom-api/)

@@ -1,0 +1,50 @@
+---
+title: "Hugging Face Embeddings"
+description: "Leverage Hugging Face Inference to create embeddings."
+sidebar:
+  label: "Hugging Face Embeddings"
+---
+
+# Hugging Face Embeddings
+
+Leverage Hugging Face Inference to create embeddings.
+
+## What it does
+
+Converts text into vector embeddings using a Hugging Face Inference embeddings model.
+
+## When to use it
+
+Connect this to indexer or RAG nodes when you need to create embeddings for semantic search and retrieval using a Hugging Face-hosted model.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | The embeddings model to use. Placeholder: `sentence-transformers/all-MiniLM-L6-v2`. |
+| Authentication | Credential field. Use your Hugging Face API key. |
+
+## Outputs
+
+Returns an embeddings dependency for vector stores and retrieval workflows.
+
+## Dependencies and credentials
+
+- Requires an Authentication credential (Hugging Face API key).
+
+## Example workflow
+
+Connect Hugging Face Embeddings to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Check that the Model field is set — the node throws an error if it is empty.
+- Verify the Hugging Face API key credential is valid and has access to the selected model.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Embeddings & Vectors](/advanced-ai/concepts/embeddings-vectors/)

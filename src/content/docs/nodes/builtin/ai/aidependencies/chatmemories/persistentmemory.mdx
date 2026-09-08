@@ -1,0 +1,48 @@
+---
+title: "Persistent Chat Memory"
+description: "Chat memory persisted across runs and workflows under a named conversation key"
+sidebar:
+  label: "Persistent Chat Memory"
+---
+
+# Persistent Chat Memory
+
+Chat memory persisted across runs and workflows under a named conversation key
+
+## What it does
+
+Maintains conversation history that persists across separate workflow runs, keyed off a conversation key you choose. Any two executions — in this workflow or another — that use the same key share the same persisted memory.
+
+## When to use it
+
+Connect this to AI agents that need to remember context across multiple, separate executions of a workflow (not just within a single run), such as a long-running support bot thread. Unlike Local Memory, the conversation key is meant to be set explicitly rather than wired dynamically.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Conversation Key | A stable, user-chosen identifier used to persist this memory across runs. Placeholder: `e.g. support-bot-main-thread`. Required — the node throws an error if left empty. |
+
+## Outputs
+
+Returns a memory dependency for conversational AI workflows.
+
+## Dependencies and credentials
+
+- No explicit credential dependency is declared in the node description.
+
+## Example workflow
+
+Connect Persistent Chat Memory to an AI agent or dependency input that accepts this dependency type, set a stable Conversation Key, then run the agent with data from previous nodes. Reuse the same key in a later run to continue the same conversation.
+
+## Troubleshooting
+
+- Check that Conversation Key is set — the node throws an error if it is empty.
+- Using a different Conversation Key starts a fresh, unrelated memory; reuse the exact same key to continue a prior conversation.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/)
+- [Memory & Context](/advanced-ai/concepts/memory-context/)
+- [Q&A](/nodes/builtin/ai/aiagents/qanode/)

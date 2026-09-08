@@ -1,0 +1,65 @@
+---
+title: "Regex"
+description: "Match, extract and replace text with a regular expression"
+sidebar:
+  label: "Regex"
+---
+
+# Regex
+
+Match, extract and replace text with a regular expression.
+
+## What it does
+
+Runs a regular expression against a piece of text and does one of four things with it: takes the first match, takes every match, replaces the matches, or simply tests whether the text matches at all. Named capture groups are the reason this is usually a one-node job: a group like `(?<amount>[\d.,]+)` becomes a field called `amount` on the outgoing item, so you rarely need to drop to a Code node to reshape the result.
+
+## When to use it
+
+Use this node to pull a price, an ID, a date or any other fragment out of text — most often text you have just scraped from a page. Reach for it when you want to reshape a string, split one field into several, or branch a workflow on whether some text contains a pattern.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | What to do with the pattern: `Match` (first match), `Match all` (every match), `Replace`, or `Test`. Defaults to `Match`. |
+| Pattern | The regular expression, without surrounding slashes. Named groups such as `(?<price>[\d.]+)` become fields on the outgoing item. |
+| Flags | How the pattern matches: `Ignore case (i)`, `All matches (g)`, `Multiline anchors (m)`, `Dot matches newlines (s)`, `Unicode (u)`. Choose any combination. |
+| Text | The text to match against. Accepts an expression such as `{{ $json.description }}`. |
+| Source Field | Name of the field holding the text, used only when **Text** is left empty (for example `description`). |
+| Replacement | Used by **Replace**: the text put in place of each match. Use `$1` or `$<name>` to reference groups. |
+| Maximum Matches | Used by **Match all**: the most matches to collect before stopping. Defaults to `1000` and is capped internally; the output reports whether it stopped early. |
+| Include Input Fields | Keep the incoming item's fields alongside the result. On by default. |
+| Put Result In Field | Field that holds the match, the replaced text, or the test result. Defaults to `match`. Named capture groups are always added as fields of their own, regardless of this. |
+
+## Outputs
+
+The shape depends on the operation:
+
+- **Test** — the item with your result field set to `true` or `false`.
+- **Replace** — the item with your result field set to the replaced text.
+- **Match** — the item with the result field set to the first match (or `null`), plus `matched`, a `groups` array of positional groups, and one field per named group. For example, `(?<currency>[£$€])(?<amount>[\d.,]+)` run against `"Now $19.99"` produces `{ currency: "$", amount: "19.99", match: "$19.99", matched: true }`.
+- **Match all** — one item per match, each carrying `match`, `matched`, `index`, the `groups` array and the same named-group fields. If nothing matched, a single item comes through with the result field `null` and `matched: false`.
+
+When **Include Input Fields** is on, the incoming item's fields ride along with each result.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Scrape a product page, then connect it into Regex. Set **Operation** to `Match`, **Source Field** to `description`, and **Pattern** to `(?<currency>[£$€])(?<amount>[\d.,]+)`. Each item now carries `currency` and `amount` fields you can feed straight into Edit Fields or a downstream request — no array indexing, no Code node.
+
+## Troubleshooting
+
+- **A malformed pattern** fails immediately with a clear message. Fix the pattern rather than the input.
+- **Nothing matched** is not an error. In `Match` the result field is `null` and `matched` is `false`; in `Match all` a single `matched: false` item comes through. Check your flags — case sensitivity and the `g` flag are the usual culprits.
+- **Patterns are safe to run on large pages.** Matching happens inside a worker that is terminated when a deadline passes, so a catastrophically backtracking pattern like `(a+)+$` reports a timeout instead of freezing the tab. Caps on input length (~2M characters), pattern length (~2k characters) and match count (~10k) sit on top of that. If you hit a timeout, simplify the pattern rather than the text.
+- To reference a named group in a replacement, write `$<name>`; for a positional group, write `$1`.
+
+## Related nodes
+
+- [Rename Keys](/nodes/builtin/datatransformation/renamekeys/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Code](/nodes/builtin/core/code/)
+- [Node types overview](/nodes/builtin/node-types/)

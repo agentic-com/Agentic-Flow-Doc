@@ -73,9 +73,11 @@ If you don’t want parts of the workflow to run while testing, temporarily disa
 - **Production execution** runs automatically in response to a trigger (schedule, event, etc.).  
   - For this, workflows must include a non-manual trigger node and be activated.
   - Production runs do *not* respect pinned data — they always execute everything fully.
+  - A run that reaches a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) node pauses and waits for a human decision — it can be approved, rejected, or cancelled from the Executions pane rather than finishing immediately.
 
 ## Related Concepts
 
 - [Workflow lifecycle](/usage/key-concepts/flow-logic/workflow-lifecycle/)
 - [Execution order](/usage/key-concepts/flow-logic/execution-order/)
 - [Workflow connections](/usage/troubleshooting/workflow-connections/)
+- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/)

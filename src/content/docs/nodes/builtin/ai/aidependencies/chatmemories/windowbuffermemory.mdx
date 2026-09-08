@@ -1,0 +1,48 @@
+---
+title: "Window Buffer Memory"
+description: "Keeps only the last N messages in memory"
+sidebar:
+  label: "Window Buffer Memory"
+---
+
+# Window Buffer Memory
+
+Keeps only the last N messages in memory
+
+## What it does
+
+Maintains conversation history for the duration of the current execution, keeping only the last k human/AI message exchanges. Older messages are dropped from context. Unlike Local Memory or Persistent Chat Memory, this memory is not persisted across runs.
+
+## When to use it
+
+Connect this to AI agents that need short-term conversational context within a single run, while bounding how much history is kept in the prompt.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Window Size (k) | Only the last k message exchanges are kept in memory. Number of most recent human/AI message pairs to keep; older messages are dropped from context. Default: `5`. |
+
+## Outputs
+
+Returns a memory dependency for conversational AI workflows.
+
+## Dependencies and credentials
+
+- No explicit credential dependency is declared in the node description.
+
+## Example workflow
+
+Connect Window Buffer Memory to an AI agent or dependency input that accepts this dependency type, set the Window Size (k), then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Check that Window Size (k) reflects how much recent context you want retained — a small k can drop information the agent still needs.
+- Remember this memory does not persist across separate workflow runs; use Persistent Chat Memory if you need that.
+- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+
+## Related nodes
+
+- [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/)
+- [Memory & Context](/advanced-ai/concepts/memory-context/)
+- [Q&A](/nodes/builtin/ai/aiagents/qanode/)

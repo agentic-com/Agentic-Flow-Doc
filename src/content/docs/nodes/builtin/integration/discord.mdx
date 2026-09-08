@@ -1,0 +1,63 @@
+---
+title: "Discord"
+description: "Integrate with Discord: post messages and rich embeds via a webhook, or read channels and messages with a bot token."
+sidebar:
+  label: "Discord"
+---
+
+# Discord
+
+Post messages and rich embeds to a Discord channel via a webhook, or read channels and messages with a bot token.
+
+## What it does
+
+Gives every scheduled watcher and page monitor somewhere to report to. In **Webhook** mode it POSTs a message — optionally a rich embed (title, URL, description, thumbnail) — to a single channel. In **Bot** mode it reads channels and messages and adds reactions.
+
+## When to use it
+
+Send a "page changed" notification with the page title and a screenshot thumbnail (pairs well with **Screenshot Page** and **Edit Image**), mirror alerts into a team channel, or read recent messages from a channel to drive a workflow.
+
+## Resources and operations
+
+| Resource | Operations | Auth |
+| --- | --- | --- |
+| Webhook | Send (message + optional rich embed) | Webhook URL |
+| Channel | Get, List (server channels), Get messages | Bot token |
+| Message | Get, React | Bot token |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | The Discord credential (see below). |
+| Resource / Operation | What to act on and how. |
+| Message | The message text (Webhook Send) — optional if an embed is provided. |
+| Username | Override the webhook display name for this message. |
+| Embed Title / URL / Description / Thumbnail URL | Fields of the rich embed. Any subset may be set; leave all empty to send a plain message. |
+| Server (Guild) ID | The Discord server ID (Channel → List). |
+| Channel ID / Message ID | Identify the channel or message (Bot operations). |
+| Emoji | Unicode emoji (e.g. 👍) or a custom emoji as `name:id` (Message → React). |
+| Limit | Number of messages to return (Channel → Get messages, 1–100). |
+
+## Dependencies and credentials
+
+- **Auth type:** Bearer Token. The stored value depends on the mode:
+  - **Webhook** operations: store the **webhook URL**. A webhook URL **is a secret** — anyone holding it can post to that channel, so treat it like a password.
+  - **Channel / Message** operations: store a **bot token**. The node sends it as `Authorization: Bot <token>`.
+- Create one credential per secret (a webhook URL, or a bot token) and select it on the node. The secret is stored in your credential vault and resolved at run time — it is never read from a node parameter.
+
+## Web and extension builds
+
+This node is **extension-only**. Discord's API does not send permissive CORS headers, so the calls can only be made from the awflow browser extension, not the web app.
+
+## Troubleshooting
+
+- **`Unknown Webhook` / 404 on Webhook Send** — the webhook URL is wrong or the webhook was deleted; recreate it in the channel's Integrations settings.
+- **`rate limited`** — Discord returned 429; reduce how often the node runs.
+- **401 on Bot operations** — the bot token is missing or invalid, or the bot isn't in the server / lacks access to the channel.
+- Discord IDs are numeric snowflakes — enable Developer Mode in Discord to copy channel, message, and server IDs.
+
+## Related nodes
+
+- [Screenshot Page](/nodes/extension/screenshotpage/)
+- [Slack](/nodes/builtin/integration/slack/)

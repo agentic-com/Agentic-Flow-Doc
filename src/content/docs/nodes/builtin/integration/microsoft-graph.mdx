@@ -1,0 +1,60 @@
+---
+title: "Microsoft 365"
+description: "Integrate with Microsoft 365 via Graph: send and read Outlook mail, manage OneDrive files, create calendar events and To Do tasks."
+sidebar:
+  label: "Microsoft 365"
+---
+
+# Microsoft 365
+
+One node covering Microsoft 365 via the Graph API — Outlook mail, OneDrive files, calendar, and To Do — with the current page as context.
+
+## What it does
+
+Sends and reads Outlook mail, uploads and shares OneDrive files, creates calendar events, and creates and lists To Do tasks. Mail, events, and tasks created "from this page" can carry the page URL, so a signup, confirmation, or deadline captures its own link.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Mail | Send, List, Get, Draft |
+| File (OneDrive) | Upload, List, Get link |
+| Calendar | Create event, List |
+| To Do | Create task, List |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | Sign in with Microsoft (see below). |
+| Resource / Operation | What to act on and how. |
+| Subject / Body / To | Compose an email (Mail → Send/Draft). |
+| Body type | Text or HTML (mail). |
+| Source URL | The page URL to attach — appended to the mail body / event description / task note when present. |
+| Message ID | The message to fetch (Mail → Get). |
+| File path / File content / Content type | Upload text content to a OneDrive path (File → Upload). |
+| Item ID / Link type / Link scope | Create a sharing link for a OneDrive item (File → Get link). |
+| Subject / Location / Start / End / Time Zone / Attendees | Create a calendar event (Time Zone defaults to UTC). |
+| Title / Note / List ID | Create a task; List ID defaults to your default To Do list. |
+| Limit | Number of results for list operations. |
+
+## Dependencies and credentials
+
+- **Auth:** OAuth2 (auth-code + PKCE) against the Microsoft `common` tenant. Register a **public client** (no secret) with delegated permissions and the extension redirect; the credential only needs the **Application (client) ID**.
+- **Delegated least-privilege scopes** (requested together in one consent): `offline_access` (refresh), `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite`, `Tasks.ReadWrite`.
+- The token is stored in your credential vault, refreshes transparently, and never passes through awflow's backend.
+
+## Web and extension builds
+
+This node is **extension-only**. The public-client token exchange isn't guaranteed to be CORS-enabled from the web build, so run it in the awflow browser extension.
+
+## Troubleshooting
+
+- **`access denied` / consent blocked** — your organization's admin may have blocked the app, or a scope needs admin consent. Ask an admin to grant consent, or use an account/tenant that allows it. The node reports this instead of a raw 403.
+- **Sign-in loops or "need admin approval"** — the app registration must be a **public client** with the delegated scopes above and the extension redirect URI.
+- **Event created at the wrong time** — set **Time Zone**; it defaults to UTC.
+
+## Related nodes
+
+- [Screenshot Page](/nodes/extension/screenshotpage/)
+- [Google Calendar](/nodes/builtin/integration/google-calendar/)

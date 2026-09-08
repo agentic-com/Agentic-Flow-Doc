@@ -1,0 +1,51 @@
+---
+title: "No Operation"
+description: "Forward input unchanged, to end a branch explicitly or park a sub-graph"
+sidebar:
+  label: "No Operation"
+---
+
+# No Operation
+
+Forward input unchanged.
+
+## What it does
+
+Hands its incoming data straight on, without changing it. Doing nothing is the point: the node exists to make a workflow readable and editable, not to transform data. Use it to give a branch somewhere to end, so a path that should not act yet is explicit on the canvas instead of a dangling, unconnected port. Or use it to park a sub-graph while you rework it, without deleting the wiring.
+
+## When to use it
+
+- To end an IF (or Switch) branch explicitly, so the canvas shows that the path was considered rather than left half-wired.
+- To hold a section of a workflow in place while you rework it, keeping the edges intact instead of deleting and rebuilding them later.
+
+This is not a convergence node. It takes a **single input** connection and passes it on. To bring several branches together, reach for [Funnel](/nodes/builtin/flow/merge/) or [Merge](/nodes/builtin/flow/merge/) instead, which are built for that.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| _(none)_ | The node has no configuration of its own. Every node already carries a built-in **Notes** field for annotating the canvas, so No Operation adds nothing further. |
+
+## Outputs
+
+Returns the upstream data untouched, so the node can be inserted anywhere without changing the shape of what flows through it. When there is no upstream data to forward, it emits a `{ passed: true }` marker so the engine still sees a non-empty result and continues the run.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+An IF node sends unwanted items down its "false" branch. Connect that branch into No Operation to state, on the canvas, that those items are intentionally dropped here rather than forgotten. Nothing acts on them, but the branch reads as finished.
+
+## Troubleshooting
+
+- No Operation takes a single input. If you are trying to combine several branches into one, use Funnel or Merge; wiring several nodes into No Operation will not join their data.
+- The node never changes your data. If a value looks wrong downstream, the cause is upstream of No Operation.
+
+## Related nodes
+
+- [Merge](/nodes/builtin/flow/merge/)
+- [IF](/nodes/builtin/flow/if/)
+- [Switch](/nodes/builtin/flow/switch/)
+- [Node types overview](/nodes/builtin/node-types/)

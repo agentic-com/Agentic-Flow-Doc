@@ -1,0 +1,61 @@
+---
+title: "Trello"
+description: "Create, update, and move Trello cards from the current page, and attach the page URL."
+sidebar:
+  label: "Trello"
+---
+
+# Trello
+
+Turn the page you're on into a Trello card. The same capture-from-page pattern as Linear and Todoist, aimed at a non-developer audience — pick a board and list, and the page URL is attached to the card.
+
+## What it does
+
+Creates, updates, and moves cards, lists your boards and their lists, and attaches URLs. On **Card → Create**, the page URL is added both to the description and as a real card attachment — the one call that makes a captured card actually useful.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Card | Create, Update, Move, Attach URL |
+| Board | List |
+| List | List |
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | A Trello API key + token (see below). |
+| Resource / Operation | What to act on and how. |
+| Card title / Description | The card (Card → Create/Update). |
+| List ID | The list (column) to add the card to — use **List → List** to find it. |
+| Source URL | The page URL — attached to the card and appended to the description. |
+| Position | Place the new card at the top or bottom of the list. |
+| Card ID | The card to update/move/attach to. |
+| Target list ID | The list to move the card to (Card → Move). |
+| URL / Attachment name | Attach a URL to an existing card (Card → Attach URL). |
+| Board ID | The board whose lists to fetch (List → List). |
+
+## Dependencies and credentials
+
+- **Auth:** Trello's own **API key + user token** — *not* the Atlassian OAuth (3LO) platform, so it ships immediately with no OAuth dance.
+- Store both as a **Basic Auth** credential:
+  - **Username** → your Trello **API key**
+  - **Password** → your Trello **token**
+- Get both from [trello.com/app-key](https://trello.com/app-key) (generate the token from that page). They're sent in Trello's `Authorization: OAuth …` header — never in the URL — and stored in your credential vault, never through awflow's backend.
+
+## Web and extension builds
+
+This node is **extension-only**. The Trello API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+
+## Troubleshooting
+
+- **`401` invalid token** — the key or token is wrong or expired. Regenerate the token at [trello.com/app-key](https://trello.com/app-key) and update the credential (key in Username, token in Password).
+- **Card created in the wrong place** — **List ID** is a *list* (column) ID, not a board ID. Use **List → List** with your **Board ID** to find the right list.
+- **Can't find IDs** — run **Board → List** for board IDs, then **List → List** for the lists on a board.
+
+## Related nodes
+
+- [Get Page Metadata](/nodes/extension/getpagemetadata/)
+- [Todoist](/nodes/builtin/integration/todoist/)
+- [Linear](/nodes/builtin/integration/linear/)

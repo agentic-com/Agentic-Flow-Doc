@@ -1,0 +1,78 @@
+---
+title: "Remove Duplicates"
+description: "Drop repeated items from a collection, optionally across runs"
+sidebar:
+  label: "Remove Duplicates"
+---
+
+# Remove Duplicates
+
+Drop repeated items from a collection.
+
+## What it does
+
+Looks at the whole collection of incoming items and keeps only the **first** occurrence of each distinct value, dropping later ones. Because the first occurrence wins, the surviving items stay in their original order — which composes predictably with [Sort](/nodes/builtin/datatransformation/sort/): sort first, and Remove Duplicates keeps the winner of each group.
+
+Two items count as the same regardless of the order their object keys were built in, at every depth: `{ a: 1, b: 2 }` and `{ b: 2, a: 1 }` are duplicates.
+
+You choose which part of each item decides sameness, and, separately, whether to remember items across runs.
+
+## When to use it
+
+Use this node to clean a scraped list that repeats the same row in several places, to ignore a volatile field such as a timestamp when deciding what counts as the same record, or — with cross-run comparison on — to build a "notify me only about new listings" workflow that never re-emits a row it has already handled.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Compare | Which part of each item decides sameness: `All fields`, `Selected fields`, or `All fields except`. Defaults to `All fields`. |
+| Fields | The field names used by `Selected fields` (compare only these) and `All fields except` (ignore these). Dots address nested fields. Ignored by `All fields`. Empty by default. |
+| Also Compare Against Previous Runs | Off by default. **Off**: only items repeated inside this run are dropped. **On**: the node remembers what it has emitted and never emits the same item twice, across runs. |
+| Remember | (When cross-run is on) How far back the history reaches: `Last N items` or `Time window`. Defaults to `Last N items`. |
+| History Size | (When cross-run is on) How many items to remember, or how many days to look back. Defaults to `1000` items. |
+
+### Compare modes
+
+- **All fields** compares the entire item.
+- **Selected fields** compares only the named fields (dot paths allowed).
+- **All fields except** compares everything but the named **top-level** keys. Only top-level keys can be excluded, since a nested path does not identify a whole key to drop.
+
+The field-based modes need at least one field — they will not silently fall back to comparing everything.
+
+### Cross-run history
+
+The "Also compare against previous runs" switch is independent of the compare mode: *what makes two items the same* and *how far back to look* are separate questions. History is stored through the [Data Store](/nodes/builtin/core/datastore/) and is scoped to this node, so two Remove Duplicates nodes in one workflow keep separate histories. It is listed under **Settings → Preferences**, where you can view and clear it.
+
+The history is bounded, and oversized settings are **clamped, not refused**, so the node keeps running with a shorter horizon:
+
+- By **count**: default `1000` items, capped at `2000`.
+- By **age**: default `30` days, capped at `365`.
+
+## Outputs
+
+Returns the collection with later duplicates removed, survivors in input order.
+
+## Dependencies and credentials
+
+- No credential is required. The node runs in the browser.
+- Cross-run comparison uses the [Data Store](/nodes/builtin/core/datastore/) to remember history between runs, and needs the node to run as part of a saved workflow (it needs a stable node id to write against).
+
+## Example workflow
+
+A scheduled workflow re-scrapes a listings page each hour. Connect it into Remove Duplicates, set **Compare** to `Selected fields` with **Fields** `url`, turn on **Also Compare Against Previous Runs**, and leave **Remember** on `Last N items`. Each run only passes on URLs the node has not seen before, which you can send straight to a notification.
+
+## Troubleshooting
+
+- The node operates on the whole collection at once. If it seems to have no effect, make sure the upstream node emits multiple items.
+- `Selected fields` and `All fields except` report an error if no field is set — add a field, or switch to `All fields`.
+- Comparison fails with a clear error if an item contains a circular reference or a value that cannot be serialized. Switch to `Selected fields` to compare on simple fields instead.
+- If cross-run history is not being remembered, confirm the workflow is saved: the node needs a stable id to write history against.
+- Setting a very large **History Size** is safe — it is reduced to the cap rather than rejected.
+
+## Related nodes
+
+- [Sort](/nodes/builtin/datatransformation/sort/)
+- [Data Store](/nodes/builtin/core/datastore/)
+- [Aggregate](/nodes/builtin/datatransformation/aggregate/)
+- [Limit](/nodes/builtin/datatransformation/limit/)
+- [Node types overview](/nodes/builtin/node-types/)

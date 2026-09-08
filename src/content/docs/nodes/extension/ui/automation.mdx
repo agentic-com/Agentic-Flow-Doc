@@ -21,12 +21,62 @@ Use this node to automate complex browser interactions, testing, or repetitive t
 
 | Setting | Notes |
 | --- | --- |
-| Actions | Source-backed field from the node schema. |
-| Target Element | Source-backed field from the node schema. |
-| Action | Source-backed field from the node schema. |
-| Wait timeout | Source-backed field from the node schema. |
-| Value | Source-backed field from the node schema. |
-| Event Name | Source-backed field from the node schema. |
+| Actions | Source-backed field from the node schema. The ordered list of interactions the node performs. Can be built by hand or captured with the [action recorder](#recording-actions). |
+| Target Element | Source-backed field from the node schema. Selector for the element the action applies to. Not used by Wait Delay. |
+| Action | Source-backed field from the node schema. Which interaction to perform — see the table below. |
+| Wait timeout | Source-backed field from the node schema. Maximum time to wait for the target element to be ready. |
+| Value | Source-backed field from the node schema. Text, option, or other value used by value-setting actions. |
+| Event Name | Source-backed field from the node schema. Custom DOM event to dispatch, when applicable. |
+
+### Available actions
+
+| Action | Description | Key fields |
+| --- | --- | --- |
+| Click | Clicks the target element. | Target Element |
+| Type | Types a value into the target element. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element, Value |
+| Clear | Clears the target element's value. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element |
+| Check | Checks a checkbox/radio element. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element |
+| Uncheck | Unchecks a checkbox element. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element |
+| Select | Selects an option in a `<select>` element. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element, Value |
+| Scroll | Scrolls the target element into view. | Target Element |
+| **Hover** *(new)* | Hovers the pointer over the target element, firing `pointerover`/`mouseover`. | Target Element |
+| **Focus** *(new)* | Focuses the target element. | Target Element |
+| **Blur** *(new)* | Removes focus from the target element. | Target Element |
+| **Key Press** *(new)* | Presses a key or keyboard shortcut on the target element. | Key (e.g. `Enter`, `Escape`, `Tab`, `a`), Ctrl/Shift/Alt/Meta modifiers |
+| **Wait For Element** *(new)* | Waits for the target element to reach a given state before continuing. | State (`visible` \| `attached` \| `detached`), Wait timeout |
+| **Wait Delay** *(new)* | Pauses execution for a fixed amount of time. No target element is used. | Delay (ms) |
+| **Assert Exists** *(new)* | Asserts that the target element exists. | On failure (`stop` \| `continue`) |
+| **Assert Text** *(new)* | Asserts that the target element's text matches an expected value. | Expected text, Match (`contains` \| `equals`), On failure (`stop` \| `continue`) |
+| **Drag & Drop** *(new)* | Drags a source element and drops it onto a target element. | Source element, Target element |
+| **Press & Hold** *(new)* | Presses and holds the pointer on the target element for a set duration. | Hold (ms) |
+
+## Recording actions
+
+Instead of building the Actions list by hand, you can record it directly from the page:
+
+1. Open the UI Automation node's settings and press **Record actions**.
+2. Interact with the page as you normally would — click, type, scroll, press keys, drag elements.
+3. Press **Stop recording** when you're done.
+
+While recording is active, each interaction is appended to the Actions list automatically, using robust selectors so the recorded steps keep working across similar runs. Recording also follows you across page navigations, so a single recording session can capture a multi-page flow end to end — you don't need to stop and restart the recorder after a link click or form submit changes the page.
+
+### Worked example: a blog flow
+
+A recording session that reads a blog post and likes it might capture the following, in order:
+
+1. **Click** the Blog nav link (this navigates to the blog listing page).
+2. **Click** the first post (this navigates to the post page).
+3. **Scroll** the Like button into view.
+4. **Click** the Like button (this opens a confirmation modal).
+5. **Click** Validate inside the modal.
+
+The recorder produces this as five actions — click, click, scroll into view, click, click — even though two of the clicks trigger full page navigations in between.
+
+### Known limitations
+
+- **File upload is not supported.** Browser security prevents scripts from setting a file input's `files` property, so file-picker interactions cannot be recorded or replayed.
+- **Cross-origin iframes are not recorded.** Interactions inside an iframe from a different origin are invisible to the recorder.
+- **Drag-and-drop replay is best-effort.** Recorded Drag & Drop actions replay using synthetic events, which not all pages interpret the same way as a real user drag.
 
 ## Outputs
 
