@@ -1,0 +1,79 @@
+---
+title: Version 0.6.0
+description: Release notes for Agentic WorkFlow v0.6.0.
+sidebar:
+  order: 1
+---
+
+Published: **September 8, 2026**
+
+## Highlights
+
+Version 0.6.0 is the largest release so far. It introduces an AI assistant that drafts workflows for you, a community marketplace with templates and safe sharing, a big expansion of app integrations built on modern OAuth, a browser-native node set that runs without extra permissions, and a trust layer that shows what a workflow touches and asks for consent before it runs. Under the hood, the cloud data layer moved to a new backend.
+
+## AI Workflow Assistant
+
+Describe the outcome you want and let the assistant draft a workflow on the canvas, then refine it by hand. It previews the result before you keep it, and runs on free in-browser models or a provider you connect.
+
+Relevant docs:
+
+- [Advanced AI overview](/advanced-ai/)
+- [Workflow intelligence](/advanced-ai/concepts/workflow-intelligence/)
+- [Chrome AI (free, in-browser)](/nodes/builtin/ai/aidependencies/llm/chrome-ai/)
+
+## Workflow Marketplace & Templates
+
+Start from a goal with the template gallery, or browse, install, and run workflows published by the community. Publish and share your own, with author attribution and safety signals on every listing.
+
+Relevant docs:
+
+- [Creating a workflow](/usage/using-the-app/workflows/create/)
+- [Publishing a workflow](/usage/using-the-app/workflows/publishing/)
+
+## App Integrations
+
+This release greatly expands the integration set: GitHub, Discord, Telegram, Linear, Todoist, Google Calendar, Microsoft 365 (Graph), HubSpot, Raindrop, Trello, Push Notifications (ntfy / Pushover), Baserow / NocoDB, Supabase, and Obsidian. A Custom API node connects to any service from its OpenAPI definition. Sign-in uses an auth-code + PKCE OAuth flow.
+
+Relevant docs:
+
+- [GitHub node](/nodes/builtin/integration/github/)
+- [Custom API node](/nodes/builtin/integration/custom-api/)
+- [Creating credentials](/usage/using-the-app/credentials/create/)
+
+## Browser-Native Nodes
+
+A set of nodes and triggers that run directly in the browser without requesting extra host permissions, so common automations work with a smaller footprint.
+
+Relevant docs:
+
+- [Node reference](/nodes/)
+- [In Page Action nodes](/nodes/extension/)
+- [Trigger nodes](/nodes/builtin/trigger/whenstarted/)
+
+## Trust & Transparency
+
+Every workflow now shows what it touches before it runs. Grant page and integration access per site, approve sensitive actions with per-run consent, and rely on a Safe / Trusted mode to control where automations can act. Shared workflows never carry secrets.
+
+Relevant docs:
+
+- [Permissions and security](/usage/troubleshooting/permissions-security/)
+- [Action approval](/advanced-ai/concepts/action-approval/)
+- [Browser tool access](/nodes/builtin/ai/aidependencies/tools/browser/)
+
+## Self-Explaining Workflows
+
+Published workflows can carry narration — per-node notes, callouts, and a story panel that explains each step on open. The assistant can draft narration in a plain-outcome voice, and a Narrated badge marks flows that include it.
+
+Relevant docs:
+
+- [Narrated workflows](/usage/using-the-app/workflows/narration/)
+- [Narration style guide](/usage/using-the-app/workflows/narration-style/)
+
+## Cloud Data Layer Migration
+
+The cloud data layer moved from SurrealDB to a new backend API. This is an internal change with no action required, but it underpins the marketplace, sharing, and account features in this release.
+
+Relevant docs:
+
+- [Quick intro (local and cloud mode)](/usage/getting-started/quick-intro/)
+- [Data Store](/usage/using-the-app/data-store/)
