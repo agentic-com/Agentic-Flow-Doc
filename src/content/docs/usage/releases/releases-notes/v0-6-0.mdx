@@ -9,40 +9,61 @@ Published: **September 8, 2026**
 
 ## Highlights
 
-Version 0.6.0 is the largest release so far. It introduces an AI assistant that drafts workflows for you, a community marketplace with templates and safe sharing, a big expansion of app integrations built on modern OAuth, a browser-native node set that runs without extra permissions, and a trust layer that shows what a workflow touches and asks for consent before it runs. Under the hood, the cloud data layer moved to a new backend.
+Version 0.6.0 is the largest release so far. It turns Agentic WorkFlow from a
+workflow builder into a full automation platform: an AI assistant that drafts
+workflows for you, a community marketplace with templates and safe sharing, a
+large expansion of app integrations built on modern OAuth, browser-native nodes
+that run without extra permissions, and a trust layer that shows what a workflow
+touches and asks for consent before it runs. Alongside these, a redesigned
+first-run experience helps new users reach a real result faster, workflows can
+now explain themselves step by step, and the cloud data layer moved to a new
+backend.
+
+The sections below group the change by theme. Most features are self-service and
+need no configuration; where a feature affects how you build or run workflows,
+the relevant docs are linked.
 
 ## AI Workflow Assistant
 
-Describe the outcome you want and let the assistant draft a workflow on the canvas, then refine it by hand. It previews the result before you keep it, and runs on free in-browser models or a provider you connect.
+The AI assistant is the headline feature of this release. Describe the outcome
+you want in plain language and the assistant drafts a workflow on the canvas —
+choosing triggers, nodes, and wiring — which you can then review and refine by
+hand. A live preview shows the draft against the real canvas before you keep it,
+and an in-feed artifact card summarizes what was built.
+
+The assistant runs on free in-browser models with a guided first-run setup, or
+on any provider you connect. A collapsible history keeps past drafts within
+reach, and a dedicated home landing makes the assistant easy to return to. This
+is a beta surface and is signposted as such in the product.
 
 Relevant docs:
 
 - [Advanced AI overview](/advanced-ai/)
 - [Workflow intelligence](/advanced-ai/concepts/workflow-intelligence/)
 - [Chrome AI (free, in-browser)](/nodes/builtin/ai/aidependencies/llm/chrome-ai/)
+- [WebLLM (free, in-browser)](/nodes/builtin/ai/aidependencies/llm/wbellm/)
+- [AI agents](/advanced-ai/concepts/ai-agents/)
 
-## Workflow Marketplace & Templates
+## UI Automation & Action Recorder
 
-Start from a goal with the template gallery, or browse, install, and run workflows published by the community. Publish and share your own, with author attribution and safety signals on every listing.
-
-Relevant docs:
-
-- [Creating a workflow](/usage/using-the-app/workflows/create/)
-- [Publishing a workflow](/usage/using-the-app/workflows/publishing/)
-
-## App Integrations
-
-This release greatly expands the integration set: GitHub, Discord, Telegram, Linear, Todoist, Google Calendar, Microsoft 365 (Graph), HubSpot, Raindrop, Trello, Push Notifications (ntfy / Pushover), Baserow / NocoDB, Supabase, and Obsidian. A Custom API node connects to any service from its OpenAPI definition. Sign-in uses an auth-code + PKCE OAuth flow.
+UI Automation gained a recorder: perform a sequence of clicks, inputs, and
+submissions on a page and turn it into a reusable automation instead of wiring
+each step by hand. This is the fastest way to capture a repetitive on-page
+routine and replay it inside a workflow.
 
 Relevant docs:
 
-- [GitHub node](/nodes/builtin/integration/github/)
-- [Custom API node](/nodes/builtin/integration/custom-api/)
-- [Creating credentials](/usage/using-the-app/credentials/create/)
+- [UI Automation](/nodes/extension/ui/automation/)
+- [Form Fill](/nodes/extension/ui/form-fill/)
+- [Submit Form](/nodes/extension/ui/submit-form/)
+- [Browser context](/usage/key-concepts/flow-logic/browser-context/)
 
 ## Browser-Native Nodes
 
-A set of nodes and triggers that run directly in the browser without requesting extra host permissions, so common automations work with a smaller footprint.
+A set of nodes and triggers now runs directly in the browser without requesting
+extra host permissions, so common automations work with a smaller footprint and
+fewer prompts. Nodes indicate where they run — in the browser, in the extension,
+or against an external service — so you can tell at a glance what a step needs.
 
 Relevant docs:
 
@@ -50,9 +71,44 @@ Relevant docs:
 - [In Page Action nodes](/nodes/extension/)
 - [Trigger nodes](/nodes/builtin/trigger/whenstarted/)
 
-## Trust & Transparency
+## Workflow Marketplace
 
-Every workflow now shows what it touches before it runs. Grant page and integration access per site, approve sensitive actions with per-run consent, and rely on a Safe / Trusted mode to control where automations can act. Shared workflows never carry secrets.
+Workflows are no longer private-only. This release ships a full publishing and
+sharing experience:
+
+- A guided **publish wizard** with saved drafts, so a listing can be prepared
+  over more than one sitting.
+- **Owner capabilities** and **author recognition**, so the person who built a
+  workflow is credited on every listing.
+- A **template gallery** to start from a goal rather than a blank canvas, with
+  honest badges that describe what each starter actually does.
+- **Install and run** workflows published by the community, then adapt them to
+  your own needs.
+
+Published workflows carry no secrets, and each listing shows an at-a-glance
+safety signal (see Trust, Consent & Safety below).
+
+Relevant docs:
+
+- [Publishing a workflow](/usage/using-the-app/workflows/publishing/)
+- [Creating a workflow](/usage/using-the-app/workflows/create/)
+- [Import and export](/usage/using-the-app/workflows/export-import/)
+- [Tags](/usage/using-the-app/workflows/tags/)
+
+## Trust, Consent & Safety
+
+A new trust layer makes it clear what a workflow can do before it does it:
+
+- A **"what this flow touches"** panel lists the pages, providers, and
+  integrations a workflow will use, shown before a run and on shared listings.
+- **Per-run consent** asks for approval when an installed workflow is about to
+  act, across every surface it can run from.
+- **Scoped credential consent** grants an app's access per flow, so a shared or
+  imported workflow can't silently reuse your connections.
+- A **runtime permission manifest** is enforced on both the canvas and the
+  download paths, so a workflow can only do what its manifest declares.
+- **Site access management** with a Safe / Trusted mode keeps you in control of
+  where automations are allowed to act.
 
 Relevant docs:
 
@@ -62,18 +118,146 @@ Relevant docs:
 
 ## Self-Explaining Workflows
 
-Published workflows can carry narration — per-node notes, callouts, and a story panel that explains each step on open. The assistant can draft narration in a plain-outcome voice, and a Narrated badge marks flows that include it.
+Published workflows can now explain themselves. Narration adds per-node notes,
+callouts, and a story panel that walks through each step when a workflow is
+opened — so someone installing a flow understands what it does and why. The AI
+assistant can draft narration in a plain, outcome-focused voice for you to
+review, a soft publish gate encourages adding it, and a **Narrated** badge marks
+listings that include it. A house-style guide keeps narration consistent across
+first-party flows.
 
 Relevant docs:
 
 - [Narrated workflows](/usage/using-the-app/workflows/narration/)
 - [Narration style guide](/usage/using-the-app/workflows/narration-style/)
 
+## Guided First Success
+
+The first-run experience was redesigned so a new user reaches a real result
+quickly:
+
+- **Start from a goal** in the template gallery instead of a blank canvas.
+- A **configure-to-run checklist** shows exactly what a workflow still needs
+  before it can run.
+- A visible **run-outcome panel** reports what happened, and failures are
+  survivable rather than dead ends.
+- Time-to-first-real-success is now instrumented, so the onboarding path can
+  keep improving.
+
+Relevant docs:
+
+- [Quick intro](/usage/getting-started/quick-intro/)
+- [Learning path](/usage/getting-started/learning-path/)
+- [Creating a workflow](/usage/using-the-app/workflows/create/)
+
+## Better Node Discovery & Wiring
+
+Finding and connecting nodes is easier:
+
+- **Discovery by outcome** — search nodes by what you want to achieve, with
+  results grouped by operation rather than by internal name.
+- **Data-shape visibility on wiring** — friendly field names and sample values
+  appear as you connect nodes, with the raw path available on hover.
+- **Next-step suggestions** in the node picker propose what commonly comes next.
+- An inline **"ask about this"** explainer gives an on-the-spot description of a
+  node or field.
+
+Relevant docs:
+
+- [Node reference](/nodes/)
+- [Connections](/usage/using-the-app/workflows/components/connections/)
+- [Data structure](/usage/key-concepts/data/data-structure/)
+- [Data mapping expressions](/usage/key-concepts/data/data-mapping/data-mapping-expressions/)
+
+## Community Requests
+
+A requests board lets people ask for the workflows they want and see what others
+are asking for. Requests can be submitted from several entry points, similar
+requests are de-duplicated and merged with an "N others want this" signal, a
+public board shows a visible heartbeat of activity, and everyone who asked is
+notified when a request is fulfilled.
+
+Relevant docs:
+
+- [Help and support](/usage/help-and-community/help/)
+- [Contributing](/usage/help-and-community/contributing/)
+
+## App Integrations
+
+This release greatly expands the set of services a workflow can connect to.
+New integration nodes:
+
+- [GitHub](/nodes/builtin/integration/github/)
+- [Discord](/nodes/builtin/integration/discord/)
+- [Telegram](/nodes/builtin/integration/telegram/)
+- [Linear](/nodes/builtin/integration/linear/)
+- [Todoist](/nodes/builtin/integration/todoist/)
+- [Google Calendar](/nodes/builtin/integration/google-calendar/)
+- [Microsoft 365 (Graph)](/nodes/builtin/integration/microsoft-graph/)
+- [HubSpot](/nodes/builtin/integration/hubspot/)
+- [Trello](/nodes/builtin/integration/trello/)
+- [Raindrop](/nodes/builtin/integration/raindrop/)
+- [Push Notification (ntfy / Pushover)](/nodes/builtin/integration/push-notification/)
+- [Baserow / NocoDB](/nodes/builtin/integration/baserow-nocodb/)
+- [Supabase](/nodes/builtin/integration/supabase/)
+- [Obsidian](/nodes/builtin/integration/obsidian/)
+
+For any service that isn't a first-party node, the **Custom API** node connects
+using an OpenAPI definition, generating its fields dynamically from the spec.
+
+Relevant docs:
+
+- [Custom API node](/nodes/builtin/integration/custom-api/)
+- [HTTP Request](/nodes/builtin/core/http-request/)
+
+## OAuth & Credentials
+
+Account connections moved to a provider-agnostic auth-code flow with PKCE, and
+the unused client-secret requirement was dropped. The same flow powers both
+confidential and public-client providers, including Google (external) and
+Microsoft 365. Extension-only nodes are marked as such and fail gracefully when
+a workflow runs in web mode.
+
+Relevant docs:
+
+- [Creating credentials](/usage/using-the-app/credentials/create/)
+- [Editing credentials](/usage/using-the-app/credentials/edit/)
+
 ## Cloud Data Layer Migration
 
-The cloud data layer moved from SurrealDB to a new backend API. This is an internal change with no action required, but it underpins the marketplace, sharing, and account features in this release.
+The cloud data layer moved from SurrealDB to a new backend API (project phases
+P4–P6). This is an internal change with no action required, but it underpins the
+marketplace, sharing, requests board, and account features in this release.
+Local and anonymous mode continue to work without an account.
 
 Relevant docs:
 
 - [Quick intro (local and cloud mode)](/usage/getting-started/quick-intro/)
 - [Data Store](/usage/using-the-app/data-store/)
+
+## Admin & Operations
+
+Several changes support the people who run the platform:
+
+- Admins can maintain first-party **templates directly in the canvas**, with a
+  shared edit-lock so two admins don't collide.
+- A **moderation review** page reviews author-uploaded listing content, with a
+  runnable sandbox clone to try a submission before approving it.
+- **User management** was rebuilt: a user detail page with sensitive actions, a
+  searchable and filterable users list, and bulk actions.
+- All admin tables now share a consistent data-table component.
+- An opt-in **newsletter** adds a subscribe card, a settings toggle, and an
+  admin compose-and-send flow.
+
+## Fixes, Quality & Localization
+
+- A pre-release audit remediated 21 findings across extension subsystems.
+- Publishing is more robust: aborted-publish drafts no longer show as
+  "Published", and author config is stripped on share and required on fork.
+- Google external nodes report the correct runtime after the OAuth changes.
+- Untranslated strings were translated across French, German, and Chinese.
+
+Relevant docs:
+
+- [Troubleshooting](/usage/troubleshooting/)
+- [Performance optimization](/usage/troubleshooting/performance-optimization/)
