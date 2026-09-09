@@ -59,6 +59,16 @@ Learn more about nodes in [Nodes](/usage/using-the-app/workflows/components/node
 
 ---
 
+## Per-node error settings
+
+Beyond an error path, each node has settings that control what happens when it fails:
+
+- **Retry** — automatically re-run the node if it errors. Set how many times (**Max tries**) and how long to wait between attempts (**Wait between tries**). Good for flaky network calls; add a delay for rate-limited services.
+- **Continue On Fail** — if the node still errors after any retries, log it and output a single empty item instead of stopping the workflow. Downstream nodes keep running. Use it for a step whose failure shouldn't sink the whole run.
+- **Always Output Data** — emit an empty item when the output would otherwise be empty, so the workflow doesn't finish on this node just because it produced nothing.
+
+Retry runs first; if it's exhausted, Continue On Fail decides whether the run stops or carries on.
+
 ## Best Practices for Error Handling
 
 - **Use retries wisely**: Add delay or exponential backoff when retrying failed requests.
