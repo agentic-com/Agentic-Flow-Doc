@@ -37,7 +37,7 @@ Here are some common error types you may encounter in browser automation or API 
 
 ## Handle failures with Try / Catch
 
-An individual node does not have its own separate "error" output. To run steps when something goes wrong, wrap the risky work in a **Try / Catch** node.
+An individual node does not have its own separate "error" output. To run steps when something goes wrong, wrap the risky work in a [**Try / Catch**](/nodes/builtin/flow/try/) node.
 
 The **Try** branch runs the guarded steps. If any of them fails, the rest of that branch is abandoned and control jumps to the **Catch** branch — which receives the failing node's name, its error message, and its input, so it can notify, log, or recover.
 
@@ -50,7 +50,7 @@ flowchart LR
 
 In this example, if “Fetch Data” fails, the guarded branch stops and the **Catch** branch runs “Send Alert Email”. Where the two branches join back together marks the end of the guarded region. A failure inside the Catch branch is not caught by the same Try — it propagates to an outer Try, or ends the run.
 
-To react when an **entire workflow** fails (rather than a single step inside it), use an **Error Trigger** — a workflow that runs whenever a chosen workflow errors.
+To react when an **entire workflow** fails (rather than a single step inside it), use an [**Error Trigger**](/nodes/builtin/trigger/errortrigger/) — a workflow that runs whenever a chosen workflow errors.
 
 Learn more about nodes in [Nodes](/usage/using-the-app/workflows/components/nodes/).
 

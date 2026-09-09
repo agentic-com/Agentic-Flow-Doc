@@ -1,0 +1,49 @@
+---
+title: "Error Trigger"
+description: "Run the flow when a workflow fails."
+sidebar:
+  label: "Error Trigger"
+---
+
+# Error Trigger
+
+Start this workflow whenever a watched workflow fails, and hand it the details of what went wrong.
+
+## What it does
+
+When a watched workflow errors, this trigger starts its own workflow and passes along the failure — the workflow and node that failed, the error message, and the input that node received — so downstream steps can alert, log, or clean up.
+
+Where a [Try / Catch](/nodes/builtin/flow/try/) node handles a failure *inside* one workflow, the Error Trigger reacts to an *entire workflow* failing.
+
+## When to use it
+
+- One alerting workflow that watches everything and sends a notification (or writes to a sheet/issue tracker) whenever any workflow fails.
+- A per-workflow cleanup or fallback that should run only when that workflow errors.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Watch | Which workflows to listen to: **This workflow**, **Selected workflows**, or **All workflows**. Defaults to This workflow. |
+| Workflows to watch | The specific workflows to watch, when **Selected workflows** is chosen. |
+
+## Outputs
+
+The trigger outputs the failure details for downstream nodes:
+
+| Field | Meaning |
+| --- | --- |
+| `workflowId`, `workflowName` | The workflow that failed. |
+| `nodeId`, `nodeLabel` | The node that failed. |
+| `message` | The error message. |
+| `input` | The input that node received (when available). |
+| `failedAt` | When it failed. |
+
+## Important: only unattended runs report failures
+
+Only **unattended** runs report their failures to an Error Trigger — schedule, page load, navigation, context menu, and browser startup. A run you start yourself from the canvas surfaces its error to you directly and does **not** fire an Error Trigger.
+
+## Related nodes
+
+- [Try / Catch](/nodes/builtin/flow/try/)
+- [Error handling](/usage/key-concepts/flow-logic/error-handling/)

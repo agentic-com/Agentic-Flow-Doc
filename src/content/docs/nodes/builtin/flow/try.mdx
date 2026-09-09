@@ -1,0 +1,46 @@
+---
+title: "Try / Catch"
+description: "Guard the work after it, and route a failure instead of ending the run"
+sidebar:
+  label: "Try / Catch"
+---
+
+# Try / Catch
+
+Guard the steps after it, and send a failure down a separate branch instead of stopping the whole run.
+
+## What it does
+
+The node draws two output handles, **Try** and **Catch**.
+
+- The **Try** branch runs the guarded steps as normal.
+- If any node in the Try branch fails, the rest of that branch is abandoned and control jumps to the **Catch** branch — which receives the node that failed, its error message, and the input it was given, so it can react.
+
+Everything the Try branch reaches, up to the point where the Try and Catch branches join back together, is "inside" the guard. Where they rejoin marks the end of the guarded region.
+
+## When to use it
+
+- Wrap a step that can fail (a network call, an integration, parsing untrusted data) so a failure becomes a handled branch instead of ending the run.
+- Notify, log, or fall back on failure — the Catch branch is an ordinary branch, so it can send a message, write a record, or try an alternative path.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Note | Optional. A display-only label describing what this Try guards. |
+
+## Outputs
+
+- **Try** — the guarded steps; runs first.
+- **Catch** — runs only if a guarded step fails. It receives the failing node's name, its message, and its input.
+
+## Good to know
+
+- **Retries run first.** A node set to [retry](/usage/key-concepts/flow-logic/error-handling/) exhausts its attempts before anything is reported as a failure, so the boundary catches only what retrying could not fix.
+- **A failure in the Catch branch is not caught by its own Try.** It propagates to an outer Try, or ends the run — the way a catch block behaves everywhere else.
+- To react when an *entire workflow* fails (not just a step), use the [Error Trigger](/nodes/builtin/trigger/errortrigger/) instead.
+
+## Related nodes
+
+- [Stop and Error](/nodes/builtin/flow/stopanderror/)
+- [Error handling](/usage/key-concepts/flow-logic/error-handling/)
