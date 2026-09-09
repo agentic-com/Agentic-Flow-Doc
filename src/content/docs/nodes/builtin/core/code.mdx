@@ -23,9 +23,26 @@ Use this node for custom data transformations, calculations, or logic that isn't
 | --- | --- |
 | Code to Execute | Source-backed field from the node schema. |
 
+## Reading input and returning output
+
+The data flowing into the node is available to your code as a variable named **`input`** — a normal Python value (dict, list, or scalar), mirroring what `{{ $input }}` holds elsewhere.
+
+Set a variable named **`result`** to whatever the node should output.
+
+```python
+# input = {"tags": ["news", "ai"], "title": "Hello"}
+result = {
+    "title": input["title"].upper(),
+    "tag_count": len(input["tags"]),
+    "joined": ", ".join(input["tags"]),
+}
+```
+
+If nothing is connected into the node, `input` is not defined — guard with `globals().get("input")` if your code can run either way.
+
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+Returns the `result` variable, visible in the workflow execution data and passed to the next node.
 
 ## Dependencies and credentials
 
