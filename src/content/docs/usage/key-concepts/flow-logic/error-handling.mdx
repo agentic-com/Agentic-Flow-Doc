@@ -35,25 +35,22 @@ Here are some common error types you may encounter in browser automation or API 
 
 ---
 
-## Create an Error Path
+## Handle failures with Try / Catch
 
-Each node can have an **error path** — a dedicated branch that runs when that node fails.  
-This allows your workflow to handle issues intelligently, such as retrying, sending a notification, or logging the error.
+An individual node does not have its own separate "error" output. To run steps when something goes wrong, wrap the risky work in a **Try / Catch** node.
 
-For example:
+The **Try** branch runs the guarded steps. If any of them fails, the rest of that branch is abandoned and control jumps to the **Catch** branch — which receives the failing node's name, its error message, and its input, so it can notify, log, or recover.
 
 ```mermaid
 flowchart LR
-    A["Fetch Data"] L_A_B_0@-- Success --> B["Process Data"]
-    A L_A_C_0@-- Error --> C["Send Alert Email"]
-    n1[" "] L_n1_A_0@--> A
-    n1@{ icon: "fa:circle-play", pos: "b"}
-    L_A_B_0@{ animation: slow } 
-    L_A_C_0@{ animation: slow } 
-    L_n1_A_0@{ animation: slow }
+    Start(["Start"]) --> T["Try / Catch"]
+    T -- Try --> F["Fetch Data"] --> P["Process Data"]
+    T -- Catch --> A["Send Alert Email"]
 ```
 
-In this example, if “Fetch Data” fails, the workflow continues through the error path to “Send Alert Email”.
+In this example, if “Fetch Data” fails, the guarded branch stops and the **Catch** branch runs “Send Alert Email”. Where the two branches join back together marks the end of the guarded region. A failure inside the Catch branch is not caught by the same Try — it propagates to an outer Try, or ends the run.
+
+To react when an **entire workflow** fails (rather than a single step inside it), use an **Error Trigger** — a workflow that runs whenever a chosen workflow errors.
 
 Learn more about nodes in [Nodes](/usage/using-the-app/workflows/components/nodes/).
 
@@ -61,7 +58,7 @@ Learn more about nodes in [Nodes](/usage/using-the-app/workflows/components/node
 
 ## Per-node error settings
 
-Beyond an error path, each node has settings that control what happens when it fails:
+Beyond Try / Catch, each node has settings that control what happens when it fails:
 
 - **Retry** — automatically re-run the node if it errors. Set how many times (**Max tries**) and how long to wait between attempts (**Wait between tries**). Good for flaky network calls; add a delay for rate-limited services.
 - **Continue On Fail** — if the node still errors after any retries, log it and output a single empty item instead of stopping the workflow. Downstream nodes keep running. Use it for a step whose failure shouldn't sink the whole run.
