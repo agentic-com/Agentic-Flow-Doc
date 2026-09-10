@@ -32,6 +32,10 @@ The node draws two output handles:
 - **Approved** — Items flow here when the person approves the run.
 - **Rejected** — Items flow here when the person rejects the run.
 
+## One approval for a batch
+
+Fed a list of items, this node pauses **once** for the whole batch — a single decision that then routes all the items to **Approved** or **Rejected** together. If you need a separate decision **per item**, put the node inside a [Loop](/nodes/builtin/flow/loop/) or [Split in Batches](/nodes/builtin/flow/splitinbatches/) body, which runs it once per item (and stays durable across restarts).
+
 ## Paused run visibility and control
 
 A paused run appears in the **Executions** pane, where a person with access can approve, reject, or cancel it. The run waits indefinitely — it does not time out or resume on its own — and persists even if the browser restarts or the window closes. Cancelling a paused run stops it without flowing items to either output.
