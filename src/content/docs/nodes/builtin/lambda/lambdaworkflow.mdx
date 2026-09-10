@@ -27,6 +27,10 @@ Use this node to call modular sub-workflows, enabling workflow composition and r
 
 Passes data into or out of a lambda workflow, or exposes a lambda workflow as a reusable node.
 
+## Pausing inside a sub-workflow
+
+A lambda workflow can contain a step that pauses — a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/), an [In-Page Form](/nodes/builtin/flow/), a durable [Wait](/nodes/builtin/flow/wait/), or a [Poll Until](/nodes/builtin/flow/polluntil/). When it does, the whole run pauses: the sub-workflow waits (you'll see it in the Executions pane), and the outer workflow waits at this node. When the sub-workflow finishes, its output flows into this node and the outer workflow continues — so a reusable "get an approval" or "wait for the job" sub-workflow works exactly like a single pausing step, at any nesting depth.
+
 ## Dependencies and credentials
 
 - No explicit credential or node dependency is declared in the node description.
