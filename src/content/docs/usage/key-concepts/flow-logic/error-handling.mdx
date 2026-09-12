@@ -60,7 +60,9 @@ Learn more about nodes in [Nodes](/usage/using-the-app/workflows/components/node
 
 Beyond Try / Catch, each node has settings that control what happens when it fails:
 
-- **Retry** — automatically re-run the node if it errors. Set how many times (**Max tries**) and how long to wait between attempts (**Wait between tries**). Good for flaky network calls; add a delay for rate-limited services.
+- **Retry** — automatically re-run the node if it errors. Set how many times (**Max tries**, up to 10) and how long to wait between attempts (**Wait between tries**). Good for flaky network calls; add a delay for rate-limited services.
+  - **Backoff** — choose how the wait changes between attempts. _Fixed_ waits the same amount every time. _Exponential (with jitter)_ grows the wait after each attempt and adds a little randomness, which is kinder to rate-limited APIs.
+  - **Retry condition** — choose which errors trigger a retry. _Any error_ retries on anything (the default). _Transient errors only_ retries just on likely-temporary failures (429, 5xx, network, timeout) and fails fast on client errors like 401/404 or validation errors. _When message matches_ retries only when the error text matches the pattern you supply in **Retry if message matches** (a substring, or a `/regex/`).
 - **Continue On Fail** — if the node still errors after any retries, log it and output a single empty item instead of stopping the workflow. Downstream nodes keep running. Use it for a step whose failure shouldn't sink the whole run.
 - **Always Output Data** — emit an empty item when the output would otherwise be empty, so the workflow doesn't finish on this node just because it produced nothing.
 
