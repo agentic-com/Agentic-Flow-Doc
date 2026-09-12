@@ -23,6 +23,11 @@ Use this trigger to run workflows automatically at regular intervals or specific
 | --- | --- |
 | rules | Source-backed field from the node schema. |
 
+## Timing and reliability
+
+- **Daylight saving time:** Daily, weekly and monthly schedules (and hourly schedules pinned to a specific minute) re-arm after each run, recomputing the next occurrence from the calendar. This keeps them on the correct **local** wall-clock time across daylight-saving transitions instead of drifting by an hour.
+- **Second-level schedules are best-effort:** browser alarms are floored at about one minute, so second intervals have a minimum of 10 seconds and are effectively rounded up to roughly a minute. Use them for approximate polling, not precise sub-minute timing.
+
 ## Outputs
 
 Starts the workflow and passes trigger context to downstream nodes when context is available.
