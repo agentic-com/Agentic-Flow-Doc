@@ -1,0 +1,51 @@
+---
+title: "Cohere Embeddings"
+description: "Leverage Cohere to create embeddings."
+sidebar:
+  label: "Cohere Embeddings"
+---
+
+# Cohere Embeddings
+
+Leverage Cohere to create embeddings.
+
+## What it does
+
+Converts text into vector embeddings using a Cohere embeddings model. Cohere exposes an OpenAI-compatible API, so this node runs the OpenAI embeddings client against Cohere's base URL.
+
+## When to use it
+
+Connect this to indexer or RAG nodes when you need to create embeddings for semantic search and retrieval using Cohere.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | The Cohere embeddings model to use, e.g. `embed-english-v3.0`. Placeholder: `embed-english-v3.0`. |
+| Authentication | Credential field. Use your Cohere API key as a Bearer token. |
+
+## Outputs
+
+Returns an embeddings dependency for vector stores and retrieval workflows.
+
+## Dependencies and credentials
+
+- Requires an Authentication credential (Cohere API key), sent as a Bearer token.
+- The node throws an error if Model is empty.
+
+## Example workflow
+
+Connect Cohere Embeddings to an AI agent or dependency input that accepts this dependency type, set the Model to a Cohere embeddings model such as `embed-english-v3.0`, attach your Cohere API key credential, then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Check that the Model field is set — the node throws an error if it is empty.
+- Verify the Cohere API key credential is valid.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+
+## Related nodes
+
+- [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/)
+- [Google Embeddings](/nodes/builtin/ai/aidependencies/embeddings/google/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Embeddings & Vectors](/advanced-ai/concepts/embeddings-vectors/)
