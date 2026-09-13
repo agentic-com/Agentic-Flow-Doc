@@ -1,0 +1,79 @@
+---
+title: "Edit Image"
+description: "Resize, crop, rotate, convert, compress or annotate an image in the browser"
+sidebar:
+  label: "Edit Image"
+---
+
+# Edit Image
+
+Resize, crop, rotate, convert the format, compress, or annotate an image — entirely in the browser.
+
+## What it does
+
+Edit Image edits the picture carried on an item's `$binary` attachment using the browser's native `OffscreenCanvas`, so it needs no external dependency and no credential. One operation runs per node:
+
+- **Resize** — scale to a target width and/or height. With **Keep aspect ratio** on (the default), giving only one dimension derives the other, and giving both fits the image inside that box without distortion; turn it off to stretch to exactly both dimensions.
+- **Crop** — cut out a rectangle at `x, y` of size `w x h`. The rectangle must lie fully inside the image; an out-of-bounds rectangle is rejected with a clear message.
+- **Rotate** — turn the image clockwise by a number of **degrees**. Right-angle turns (90 / 180 / 270) swap or keep the canvas dimensions exactly; any other angle gets a bounding box large enough to hold the rotated image.
+- **Convert format / compress** — re-encode as **PNG**, **JPEG** or **WebP**. **Quality** (0–1) applies to the lossy formats (JPEG and WebP) only and controls the compression trade-off — lower quality, smaller file. PNG ignores quality.
+- **Annotate** — draw over the image. A **text** annotation writes a string at `x, y` in the chosen **color** and **font**; a **box** annotation strokes a rectangle at `x, y` of size `w x h` in the chosen **color** and **line width**.
+
+## $binary in, $binary out
+
+The source bytes are read from the item's `$binary` slot (**Binary Field**, default `data`) and the edited image is written back to the same slot with an updated MIME type and file name. Because input and output are always `$binary`, the result flows straight into any node that accepts a binary source — [Download as File](/nodes/builtin/datatransformation/downloadasfile/), [Save as File](/nodes/builtin/datatransformation/saveasfile/), an HTTP request body, Google Drive, or a Slack / email attachment — and comes out of any node that produces one.
+
+When converting the format, the output file name keeps its base name but its extension is aligned to the new format (for example `shot.png` becomes `shot.jpg`). For every other operation the source's format and file name are preserved.
+
+## Pair with Screenshot
+
+Edit Image pairs naturally with the [Screenshot Page](/nodes/extension/screenshotpage/) node, which captures the page (or a selected element) as a PNG on `$binary.data`. Put Edit Image straight after it to crop the capture to a region, resize it for a thumbnail, compress it to JPEG before uploading, or annotate it with a label or a highlight box — then send the result on to a download, an upload, or a message attachment.
+
+## Cross-origin taint limitation
+
+Reading pixels back out of a canvas is blocked by the browser when the canvas has been **tainted** by cross-origin image data — a security rule that stops one site from silently reading another site's images. A tainted canvas cannot be exported: `convertToBlob` fails with an opaque `SecurityError`.
+
+Edit Image works on **your own bytes** — a screenshot, an extension-fetched image, or an HTTP `$binary` payload — which it decodes with `createImageBitmap(new Blob(bytes))`. Decoding from bytes you control normally avoids the taint entirely. Should a taint still occur, the node **detects it and fails with a clear message** rather than surfacing the raw `SecurityError`:
+
+> This image cannot be edited because it is cross-origin and taints the canvas, so the browser will not let its pixels be read back. Fetch the image through an HTTP Request node (which brings the bytes into `$binary`) and edit that instead.
+
+The fix is to bring the image into `$binary` first: fetch it with an [HTTP Request](/nodes/builtin/core/http-request/) node (or capture it with Screenshot Page), then edit that binary payload.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | The single edit to apply: Resize, Crop, Rotate, Convert format / compress, or Annotate. |
+| Binary Field | The `$binary` slot the input image is read from and the result is written to. Defaults to `data`. |
+| Width / Height | Resize: target dimensions in px. Leave one empty to derive it from the other. |
+| Keep aspect ratio | Resize: fit inside the given box without distorting the image. Defaults to on. |
+| X / Y | Crop / Annotate: the left and top offset in px. |
+| Width / Height (w / h) | Crop: the size of the cropped rectangle. Annotate (box): the size of the box. |
+| Degrees | Rotate: clockwise angle. Use 90 / 180 / 270 for right-angle turns. |
+| Format | Convert: output format — PNG, JPEG or WebP. |
+| Quality (0–1) | Convert / compress: applies to JPEG and WebP only. Lower means a smaller file. |
+| Annotation | Annotate: draw Text or a Box. |
+| Text | Annotate (text): the string to draw. |
+| Color | Annotate: the CSS color of the text fill or box stroke. |
+| Font | Annotate (text): a CSS font shorthand, e.g. `16px sans-serif`. |
+| Line width | Annotate (box): the stroke width in px. |
+
+## Dependencies and credentials
+
+- No credential is required.
+- No node dependency is required. The node runs entirely in the browser via `OffscreenCanvas`.
+
+## Troubleshooting
+
+- **Cross-origin / tainted-canvas error** — the source image could not be read back off the canvas. Fetch it into `$binary` first with an HTTP Request node (or Screenshot Page) and edit that, as described above.
+- **No image found on `$binary`** — connect a node that produces an image on the chosen binary field (Screenshot Page, an HTTP Request returning image bytes, or Convert to File).
+- **Crop rectangle is out of bounds** — the `x, y, w, h` rectangle runs past the edge of the image; reduce the size or the offset so it fits inside the source dimensions.
+- **Quality seems ignored** — quality only affects JPEG and WebP. PNG is lossless and ignores it.
+
+## Related nodes
+
+- [Screenshot Page](/nodes/extension/screenshotpage/)
+- [Convert to File](/nodes/builtin/datatransformation/converttofile/)
+- [Download as File](/nodes/builtin/datatransformation/downloadasfile/)
+- [Compression](/nodes/builtin/datatransformation/compression/)
+- [Node types overview](/nodes/builtin/node-types/)
