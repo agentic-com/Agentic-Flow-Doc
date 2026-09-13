@@ -1,0 +1,47 @@
+---
+title: "Document Loaders"
+description: "Load a URL, file, or the current page as text to feed into the Indexer"
+sidebar:
+  label: "Overview"
+  order: 0
+---
+
+# Document Loaders
+
+Document Loaders turn a **source** — a web page, a file, or the currently-open browser tab —
+into a plain **text string**. That text is meant to be wired into the [Indexer](/nodes/builtin/ai/aiagents/indexernode/) node's `Input` port.
+
+## How they fit together
+
+The Indexer takes a plain string on its `Input` port and, using its text-splitter dependency,
+turns that string into Documents internally before embedding them into a vector store. The
+loaders never touch the Indexer or its dependencies — each one simply **outputs text** under a
+configurable field (default `text`), which you connect to the Indexer's `Input`.
+
+```
+[ Document Loader ] --text--> [ Indexer ] --> vector store
+```
+
+Because a loader's output is ordinary text, you can also route it through any other node that
+consumes text (an AI Agent, a summarizer, a data transform) — the Indexer is just the most
+common destination.
+
+## The three loaders
+
+| Loader | Source | Runs where |
+| --- | --- | --- |
+| [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/) | A web page fetched over HTTP | Web app or extension |
+| [File Document Loader](/nodes/builtin/ai/loaders/filedocumentloader/) | A file/binary payload on the input item (PDF, HTML, text) | Web app or extension |
+| [Current Page Document Loader](/nodes/builtin/ai/loaders/currentpagedocumentloader/) | The text of the currently-open tab | **Browser extension only** |
+
+## Composing with existing parse nodes
+
+The loaders reuse the same building blocks as the standalone parse/scrape nodes, so you can mix
+and match:
+
+- The URL loader uses the same fetch + HTML-to-text conversion as [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/).
+- The File loader uses the same PDF extraction as the [PDF Parser](/nodes/builtin/datatransformation/pdfparser/); for a PDF already on an item you can use either node.
+- The Current Page loader uses the same page-text extraction as [Get All Text](/nodes/extension/getalltext/).
+
+Use a dedicated parse node when you only need the parsed text; use a Document Loader when the
+goal is to feed the Indexer.
