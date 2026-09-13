@@ -55,6 +55,14 @@ Connect prepared data into Notion, select the credential, choose the operation, 
 - If it calls an external service, verify credentials, permissions, and rate limits.
 - This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
+## Running in the web app
+
+Notion's API cannot be called directly from a normal web page, so this node is
+**extension-only** by default. If you use the **web app** but also have the awflow
+**browser extension installed**, the web app can still run Notion by delegating its
+calls to the extension — provided Notion's host is consented for the workflow. See
+[Running Extension-Only Integrations in the Web App](/usage/troubleshooting/extension-only-integrations-in-the-web-app/).
+
 ## Related nodes
 
 - [Http Request](/nodes/builtin/core/http-request/)
