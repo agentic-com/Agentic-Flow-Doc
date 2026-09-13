@@ -1,0 +1,70 @@
+---
+title: "XML"
+description: "Convert between XML and JSON"
+sidebar:
+  label: "XML"
+---
+
+# XML
+
+Convert between XML and JSON.
+
+## What it does
+
+Converts in both directions: **XML to JSON** turns an XML document into a JSON object whose elements and attributes become fields the next node can address, and **JSON to XML** turns a JSON object back into an XML string. It uses the browser's own XML parser and serializer, so no extra dependency is pulled in.
+
+## When to use it
+
+Use this node to read an XML feed, API response or config file into fields the rest of a workflow can work with, or to build an XML payload from data a previous node produced.
+
+## The `@`-attribute convention
+
+Attributes are prefixed with `@`. So `<a href="x"/>` becomes `{ "a": { "@href": "x" } }`, and the same object turns back into `<a href="x"/>`. The rest of the mapping follows from that:
+
+- **Attributes** become `@name` keys — `<a href="x"/>` → `{ "a": { "@href": "x" } }`.
+- **A leaf element with no attributes** is its own text value — `<a>hello</a>` → `{ "a": "hello" }`.
+- **Text beside attributes or child elements** is kept under a `#text` key — `<a href="x">hi</a>` → `{ "a": { "@href": "x", "#text": "hi" } }`.
+- **Repeated sibling elements** of the same name become an array — `<root><item>1</item><item>2</item></root>` → `{ "root": { "item": ["1", "2"] } }`.
+- **An empty element** is the empty string — `<a/>` → `{ "a": "" }`.
+
+The JSON object must have exactly one root element key, mirroring how an XML document has exactly one root element.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Direction | Which way to convert: `XML to JSON` or `JSON to XML`. Defaults to `XML to JSON`. |
+| Input | The XML text (for XML to JSON) or JSON data (for JSON to XML) to convert. Accepts an expression such as `{{ $json.raw }}`. |
+| Source Field | Field on the incoming item to read when the Input field above is left empty, for example `body`. |
+| Put Result In Field | Name of the field holding the answer. Defaults to `data`. For XML to JSON, leaving the default lets the parsed object become the item itself. |
+
+## Outputs
+
+- **XML to JSON** returns the parsed object keyed by the root element name, so its fields are addressable downstream.
+- **JSON to XML** returns the built XML string in **Put Result In Field**.
+
+## Safety: entity expansion is capped
+
+Malicious XML can declare internal entities that expand exponentially — the "billion-laughs" attack — or reference an external DTD to make the parser fetch a remote resource (XXE). The XML-to-JSON direction parses through a shared bounded parser that **rejects any DTD with internal entities (`<!ENTITY …>`) or an external subset (`<!DOCTYPE … SYSTEM/PUBLIC …>`)** before any expansion can run, and caps the input size. Such a document fails fast with a clear error rather than being expanded.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser using its native `DOMParser` and `XMLSerializer`.
+
+## Example workflow
+
+Place XML after a node that fetches an XML feed, set **Direction** to `XML to JSON`, and the elements become fields the next node can read. To go the other way, set **Direction** to `JSON to XML` and feed it an object with a single root key, using `@` for attributes and `#text` for element text.
+
+## Troubleshooting
+
+- Invalid XML fails with a "not valid XML" message — check the document is well-formed.
+- XML that declares a DTD with internal entities or an external subset is rejected on purpose; strip the `<!DOCTYPE …>` declaration.
+- JSON to XML needs an object with exactly one root element key. An object with several top-level keys, or an array at the top, fails.
+- An array cannot be an element value on its own; nest it under a key so it expands into repeated sibling elements.
+
+## Related nodes
+
+- [JSON](/nodes/builtin/datatransformation/json/)
+- [CSV](/nodes/builtin/datatransformation/csv/)
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/)
+- [Node types overview](/nodes/builtin/node-types/)
