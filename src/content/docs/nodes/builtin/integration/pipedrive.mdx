@@ -1,0 +1,65 @@
+---
+title: "Pipedrive"
+description: "Log the person or organization you're viewing to Pipedrive CRM — create or update records and attach the page as a note."
+sidebar:
+  label: "Pipedrive"
+---
+
+# Pipedrive
+
+Turn the page you're on into a CRM record. Read a profile, extract the details, and create or update a person or organization in Pipedrive — then attach the page itself as a note.
+
+## What it does
+
+Creates or updates **persons** and **organizations** (deduplicated by email / name) and logs **notes** from the current page against a record. This is the classic sales-extension pattern — "log the profile I'm viewing" — as a composable workflow: read the page, extract with the Information Extractor, upsert the person, attach the URL.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Person | Create or update (dedup by email), Search |
+| Organization | Create or update (dedup by name), Search |
+| Note | Create (attach the current page to a person or organization) |
+
+### Create or update (deduplication)
+
+"Create or update" searches for an existing record by its unique field first — **email** for persons, **name** for organizations. If an exact match is found the record is **updated** (`PUT`); otherwise a new one is **created** (`POST`). The result includes `created: true | false` so the rest of your workflow knows which happened.
+
+> **Note:** search indexing can lag record creation slightly, so two upserts fired back-to-back for the same email/name can create a duplicate. Space them out if you fan out in parallel.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | A Pipedrive API token (see below). |
+| Resource / Operation | What to act on and how. |
+| Email | Person unique key (Person → Create or update). |
+| Name | Person name, and the Organization unique key. |
+| Phone | Person field. |
+| Address | Organization field. |
+| Query | Search term matched across the record's fields (Search). |
+| Note / Source URL / Selection | The note text, the page URL, and any quoted selection (Note → Create). |
+| Person ID / Organization ID | Attach the note to a person and/or organization (Note → Create). |
+| Limit | Number of results for search. |
+
+## Dependencies and credentials
+
+- **Auth:** a Pipedrive **API token**, sent as the `api_token` query parameter. Copy it from **Settings → Personal preferences → API** in Pipedrive.
+- **⚠️ Scope guidance:** a Pipedrive API token is **account-wide** — it acts with your full user access across the company account. There is no per-record scoping. Treat it like a password — a leak exposes your CRM.
+- The token is stored in your credential vault and never passes through awflow's backend.
+
+## Web and extension builds
+
+This node is **extension-only**. The Pipedrive API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+
+## Troubleshooting
+
+- **`401` / unauthorized** — the API token is missing or wrong. Copy it again from Pipedrive (Settings → Personal preferences → API) and update the credential. The node calls this out in the error.
+- **A duplicate was created** — two "create or update" calls for the same email/name ran before Pipedrive's search index caught up. Space them out, or search first.
+- **Note isn't attached** — set **Person ID** and/or **Organization ID**; a note with neither is created standalone.
+
+## Related nodes
+
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/)
+- [Screenshot Page](/nodes/extension/screenshotpage/)
+- [Custom API](/nodes/builtin/integration/custom-api/)
