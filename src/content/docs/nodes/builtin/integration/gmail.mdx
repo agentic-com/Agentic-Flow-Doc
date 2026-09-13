@@ -31,8 +31,18 @@ Use this node to automate email workflows, send notifications, or process incomi
 | HTML Body | Source-backed field from the node schema. |
 | CC | Source-backed field from the node schema. |
 | BCC | Source-backed field from the node schema. |
+| Attachments | (Message → Send) The `$binary` keys on the incoming item to attach to the email. Each selected key is read from the item and added as a file; leave empty to send with no attachments. |
 | Search Query | Source-backed field from the node schema. |
 | Page Size | Source-backed field from the node schema. |
+
+## Attachments
+
+The **Send** message operation can attach files carried by the incoming item's `$binary`
+data (for example a file produced by a Google Drive, HTTP Request, or file-download node).
+List the logical `$binary` keys to attach in the **Attachments** field — commonly `data`.
+Each selected key is read from the item, and the email is built as a `multipart/mixed`
+message with your body followed by one part per attachment. If a selected key has no
+binary on the incoming item, the node fails with a clear error.
 
 ## Outputs
 
