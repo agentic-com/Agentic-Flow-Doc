@@ -29,12 +29,33 @@ Use this node to automate documentation, sync data to Notion, or build workflows
 | Block | Source-backed field from the node schema. |
 | Title | Source-backed field from the node schema. |
 | Content | Source-backed field from the node schema. |
-| Block Type | Source-backed field from the node schema. |
+| Block Type | For **Block → Create**: `Paragraph`, headings, list items, to-do, plus `File (from binary)` and `Image (from binary)`. |
+| Binary Field | For File / Image block types: which `$binary` key on the incoming item holds the file (defaults to `data`). |
+| Caption | Optional caption shown under a File / Image block. |
 | Properties | Source-backed field from the node schema. |
 | Filter | Source-backed field from the node schema. |
 | Sort | Source-backed field from the node schema. |
 | Page Size | Source-backed field from the node schema. |
 | Search Query | Source-backed field from the node schema. |
+
+## Attaching files and images to a page
+
+**Block → Create** can append a **File** or **Image** block whose content comes
+from a file attached to the incoming item (its `$binary` payload — as produced by
+**HTTP Request**, **Local File Read**, **Convert to File**, and similar nodes).
+
+1. Set **Block** to the ID of the page (or block) to append to.
+2. Set **Block Type** to `File (from binary)` or `Image (from binary)`.
+3. Set **Binary Field** to the `$binary` key holding the file (defaults to `data`).
+4. Optionally set a **Caption**.
+
+Under the hood the node uses Notion's file-upload API: it creates a file upload,
+sends the file's bytes, then appends a block that references the completed upload.
+The file's name and MIME type are taken from the binary attachment. If the incoming
+item has no file under the chosen Binary Field, the node fails with a clear error so
+you can fix the upstream step. These uploads run through the same delegated-fetch
+path as the rest of the node, so File / Image blocks work both in the extension and
+in the web app (with the extension installed and Notion's host consented).
 
 ## Outputs
 
