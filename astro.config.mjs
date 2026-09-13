@@ -168,6 +168,10 @@ export default defineConfig({
                   label: "Newsletter",
                   link: "usage/using-the-app/newsletter",
                 },
+                {
+                  label: "Request board",
+                  link: "usage/using-the-app/request-board",
+                },
               ],
             },
             {
