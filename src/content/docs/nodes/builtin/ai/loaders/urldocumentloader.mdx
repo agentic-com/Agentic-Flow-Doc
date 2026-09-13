@@ -1,0 +1,57 @@
+---
+title: "URL Document Loader"
+description: "Load a web page as text to feed into the Indexer"
+sidebar:
+  label: "URL Document Loader"
+  order: 1
+---
+
+# URL Document Loader
+
+Load a web page as text to feed into the Indexer.
+
+## What it does
+
+Fetches the given URL and converts its HTML response into clean plain text, then outputs that
+text under a configurable field (default `text`). Connect that output to the
+[Indexer](/nodes/builtin/ai/aiagents/indexernode/) node's `Input` port to index a web page.
+
+## When to use it
+
+Use it to index the content of a public web page into a knowledge base for RAG or Q&A, without
+manually copying the page text.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| URL | The page to fetch, e.g. `https://example.com`. |
+| Output field name | Field that holds the extracted text. Defaults to `text`. |
+| Timeout | Optional request timeout in milliseconds. |
+| Headers | Optional request headers (toggle **Send Headers**). |
+| Include input fields | When enabled, the incoming item's fields are merged into the output. |
+
+## Outputs
+
+An item with the extracted page text under the chosen output field (default `text`).
+
+## Notes
+
+- Runs in the web app or the extension. Pages that block cross-origin requests may not be
+  reachable from the web app — in that case use the
+  [Current Page Document Loader](/nodes/builtin/ai/loaders/currentpagedocumentloader/) inside
+  the extension instead.
+- Uses the same fetch + HTML-to-text conversion as
+  [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/).
+
+## Troubleshooting
+
+- A `HTTP error! status: …` means the server returned a non-2xx response.
+- An `Invalid URL` error means the URL is malformed.
+- A `Request timeout` means the page took longer than the configured timeout.
+
+## Related nodes
+
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/)
+- [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/)
+- [File Document Loader](/nodes/builtin/ai/loaders/filedocumentloader/)
