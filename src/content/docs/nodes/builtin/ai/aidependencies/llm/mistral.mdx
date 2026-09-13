@@ -1,0 +1,52 @@
+---
+title: "Chat Mistral"
+description: "Run Mistral open and frontier models for text generation."
+sidebar:
+  label: "Chat Mistral"
+---
+
+# Chat Mistral
+
+Run Mistral open and frontier models for text generation.
+
+## What it does
+
+Provides access to Mistral's open and frontier models for AI agent nodes. Mistral exposes an OpenAI-compatible API, so this node runs the OpenAI client against Mistral's base URL.
+
+## When to use it
+
+Connect this to AI agents when you want to generate or reason over text with Mistral models such as `mistral-large-latest`.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | The Mistral model to use, e.g. `mistral-large-latest`. Placeholder: `mistral-large-latest`. |
+| Authentication | Credential used to authenticate: "Use your Mistral API key as a Bearer token." |
+| Options → Temperature | The temperature to use for the model. |
+| Options → Max Retries | The maximum number of retries to use for the model. Defaults to `2`. |
+
+## Outputs
+
+Returns a chat model dependency that can be connected to AI agent nodes.
+
+## Dependencies and credentials
+
+- Requires an Authentication credential holding your Mistral API key, sent as a Bearer token.
+- The node throws an error if Model is empty.
+
+## Example workflow
+
+Connect Chat Mistral to an AI agent or dependency input that accepts this dependency type, set the Model to a Mistral model such as `mistral-large-latest`, attach your Mistral API key credential, then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Ensure Model is filled in — the node rejects an empty value.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+
+## Related nodes
+
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [Chat Groq](/nodes/builtin/ai/aidependencies/llm/groq/)
+- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Model Dependencies](/advanced-ai/concepts/model-dependencies/)
