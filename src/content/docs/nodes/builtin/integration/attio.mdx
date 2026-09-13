@@ -1,0 +1,65 @@
+---
+title: "Attio"
+description: "Log the person or company you're viewing to Attio CRM — create or update records and attach the page as a note."
+sidebar:
+  label: "Attio"
+---
+
+# Attio
+
+Turn the page you're on into a CRM record. Read a profile, extract the details, and create or update a person or company in Attio — then attach the page itself as a note.
+
+## What it does
+
+Creates or updates **people** and **companies** (deduplicated by email / domain) and logs **notes** from the current page against a record. This is the classic sales-extension pattern — "log the profile I'm viewing" — as a composable workflow: read the page, extract with the Information Extractor, upsert the person, attach the URL.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Person | Create or update (dedup by email), Search |
+| Company | Create or update (dedup by domain), Search |
+| Note | Create (attach the current page to a record) |
+
+### Create or update (deduplication)
+
+"Create or update" searches for an existing record by its unique attribute first — **email** for people (`email_addresses`), **domain** for companies (`domains`). If a match is found the record is **updated**; otherwise a new one is **created**. The result includes `created: true | false` so the rest of your workflow knows which happened.
+
+> **Note:** search indexing can lag record creation slightly, so two upserts fired back-to-back for the same email/domain can create a duplicate. Space them out if you fan out in parallel.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | An Attio API key (see below). |
+| Resource / Operation | What to act on and how. |
+| Email | Person unique key (Person → Create or update). |
+| Domain | Company unique key (Company → Create or update). |
+| First name / Last name / Phone / Job title | Person attributes. |
+| Name / Description | Company attributes. |
+| Query | Text matched against the record's name (Search). |
+| Attach to / Record ID | The parent object (person/company) and record the note is attached to (Note → Create). |
+| Title / Note / Source URL / Selection | The note title, text, the page URL, and any quoted selection (Note → Create). |
+| Limit | Number of results for search. |
+
+## Dependencies and credentials
+
+- **Auth:** an Attio **API key**, sent as `Authorization: Bearer <api-key>`. Create one under **Workspace settings → Developers → Access tokens** in Attio.
+- **⚠️ Scope guidance:** an Attio API key is **account-wide** — it can read and write everything your workspace permits. There is no per-record scoping. Treat it like a password — a leak exposes your CRM.
+- The token is stored in your credential vault and never passes through awflow's backend.
+
+## Web and extension builds
+
+This node is **extension-only**. The Attio API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+
+## Troubleshooting
+
+- **`401` / unauthorized** — the API key is missing, revoked, or wrong. Create a new one in Attio (Workspace settings → Developers → Access tokens) and update the credential. The node calls this out in the error.
+- **A duplicate was created** — two "create or update" calls for the same email/domain ran before Attio's search index caught up. Space them out, or search first.
+- **Note isn't attached** — set both **Attach to** and **Record ID**; the note must reference a parent record.
+
+## Related nodes
+
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/)
+- [Screenshot Page](/nodes/extension/screenshotpage/)
+- [Custom API](/nodes/builtin/integration/custom-api/)
