@@ -72,6 +72,21 @@ easier for others to learn.
 A flow where **every step has a note** earns a **✨ Narrated** badge on its
 Marketplace card and listing — a signal that it teaches on open, not just runs.
 
+## How listings get discovered
+
+Once approved, your listing can surface in a few places on the Marketplace:
+
+- **Featured** — a hand-picked selection the awflow team highlights in the hero
+  banner at the top of the Marketplace. Featuring is editorial: it isn't earned
+  automatically, and there's nothing to opt into. Well-documented, reliable,
+  clearly-scoped flows are the best candidates.
+- **Trending now** — a rail showing flows that are **gaining installs this week**.
+  This is computed automatically from recent install activity over a rolling
+  window, so a burst of interest can put your flow here without any curation.
+- **Top / search** — everywhere else, ordering blends rating, install count, and
+  recency (with a **Trending** sort option on the search page if you want to see
+  the same recent-activity view).
+
 ## Using shared workflows  
 
 When you import a published workflow from the Marketplace:
@@ -96,3 +111,20 @@ Only one admin can edit a given template at a time. When you open a template for
 - If someone else is already editing, you'll see a **read-only** banner naming them and how long they've held the lock.
 - **Force unlock** takes over the lock immediately — use it only when you're sure the other admin's session is stale, since it interrupts them and any of their unsaved changes are lost.
 - If your own lock is taken over while you're mid-edit, a banner warns you that your changes since the last save weren't submitted, with a way to reacquire the lock or go back to the list.
+
+## Admin: featuring a listing
+
+Moderators can feature an **approved** listing from its review screen in the
+moderation queue (**`#/admin/marketplace/moderation`**). Featuring is the
+editorial lever behind the Marketplace **Featured** banner:
+
+- **Feature / Unfeature** promotes or removes the listing from the Featured
+  banner. Featured listings sort ahead of the normal ranking everywhere they
+  appear.
+- An optional **rank** orders featured listings relative to each other (lower
+  numbers first); leave it blank to let them fall back to the normal score.
+- Every feature/unfeature is written to the moderation **audit log** alongside
+  approvals and rejections, so curation stays accountable.
+
+**Trending** is not a moderator action — it's computed from recent installs and
+needs no curation.
