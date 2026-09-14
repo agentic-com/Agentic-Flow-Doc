@@ -1,0 +1,63 @@
+---
+title: "Element Change"
+description: "Run the flow when any of one or more CSS selectors on a matching page changes."
+sidebar:
+  label: "Element Change"
+---
+
+# Element Change
+
+Run the flow when any of one or more CSS selectors on a matching page changes.
+
+## What it does
+
+Watches one or more elements on any open tab whose URL matches the configured patterns. The extension injects a `MutationObserver` for each selector while the page is open, and fires the workflow when any watched element meets the chosen condition. The trigger only runs inside the awflow browser extension — never in the web app.
+
+## When to use it
+
+Use this trigger to react to live changes on a page without polling: a price updating, a "Back in stock" badge appearing, a status line changing, or a headline matching a keyword. Add several selectors to one node when the same reaction should fire for any of a set of elements.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| CSS Selectors | A list of elements to watch. Each row is a DOM picker — type a selector, or use the crosshair to pick an element directly on the page. The flow fires when **any** selector meets the condition. At least one selector is required. |
+| Fire when | The condition each selector is tested against: **Content changes**, **Element appears**, **Element disappears**, or **Text matches**. |
+| Match text | The text to look for when *Fire when* is **Text matches**. |
+| Debounce (ms) | Single-page apps mutate constantly; the debounce coalesces bursts of mutations into one fire. Defaults to 500 ms. |
+| URL Patterns | The pages the observers are injected into. Defaults to `<all_urls>`. |
+
+The condition, match text, debounce, and URL patterns are shared by every selector in the list.
+
+## Outputs
+
+When a watched selector fires, the workflow starts with this trigger context:
+
+| Field | Notes |
+| --- | --- |
+| `triggerType` | Always `elementChange`. |
+| `selector` | The single selector that fired (not the whole list). |
+| `condition` | The condition that was met. |
+| `url` | The page URL where the change happened. |
+| `matchedText` | The element's text at the moment it fired. |
+| `tabId` | The tab the change happened in. |
+
+## Dependencies and credentials
+
+- No explicit credential or node dependency is declared in the node description.
+- Runs inside the awflow browser extension only.
+
+## Example workflow
+
+Add an Element Change trigger, add a row for each element you want to watch (for example `.price` and `.availability`), set *Fire when* to **Content changes**, and restrict *URL Patterns* to the product page. Connect it to a notification node so you are alerted whenever either element changes.
+
+## Troubleshooting
+
+- If nothing fires, confirm the tab's URL matches one of the *URL Patterns* and that each selector actually matches an element on the page — use the crosshair to pick it, or the ping button to highlight the current selector.
+- On single-page apps, raise the debounce if the flow fires more often than expected.
+- Blank selector rows are ignored; at least one non-empty selector must remain.
+- Workflows saved before the selector list existed keep working: their single selector is honoured as a one-item list.
+
+## Related nodes
+
+- [Node types overview](/nodes/builtin/node-types/)
