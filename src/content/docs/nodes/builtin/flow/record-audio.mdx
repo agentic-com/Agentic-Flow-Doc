@@ -1,0 +1,40 @@
+---
+title: "Record Audio"
+description: "Pause the run and record audio from the microphone, then continue"
+sidebar:
+  label: "Record Audio"
+---
+
+# Record Audio
+
+Pause the workflow, record audio from the microphone, and continue with the recording as a `$binary` value. Audio is captured **locally** and never leaves your device — pair it with [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) for a fully on-device voice-to-text step.
+
+## What it does
+
+When the run reaches this node it **suspends** and shows a recording popup. You record, then stop — and the captured audio flows out of the node as `$binary`. Like other interactive pauses (approvals, in-page forms), the run signals that it is waiting for you.
+
+## When to use it
+
+Capture a voice note, a spoken command, or dictation as part of a workflow — then transcribe, summarize, or store it. Because it's a durable suspend, it fits anywhere you'd pause for human input.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Prompt | The message shown in the recording popup (default *Record audio*). |
+| Max length (seconds) | Caps the recording length (default `60`). |
+
+## Outputs
+
+Resumes with the recording as a **`$binary`** value (an audio blob, e.g. `audio/webm`) plus a `recordedAt` timestamp. Feed the `$binary` straight into [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) or any node that accepts binary media.
+
+## Notes
+
+- The microphone is accessed via `getUserMedia`; the browser asks for permission the first time.
+- Audio is captured client-side and **never uploaded** by this node.
+- If no audio is captured (the popup is dismissed), the node continues with an empty output.
+
+## Related nodes
+
+- [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/)
+- [In-Page Form](/nodes/builtin/flow/) — the other interactive pause pattern.

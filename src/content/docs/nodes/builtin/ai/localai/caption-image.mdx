@@ -1,0 +1,39 @@
+---
+title: "Caption Image"
+description: "Describe an image in words, on-device"
+sidebar:
+  label: "Caption Image"
+---
+
+# Caption Image
+
+Describe an image in a short sentence, running locally in your browser (ViT-GPT2 on transformers.js). Private, offline, no cost.
+
+## What it does
+
+Runs the image through an on-device image-to-text model and returns a natural-language caption.
+
+## When to use it
+
+Generate alt text, summarize an image for a downstream text step, or make a searchable description of visual content — without a vision API.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | Any **installed** image-captioning (image-to-text) model. |
+| Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
+
+## Outputs
+
+Returns `{ text }` — the generated caption string.
+
+## Troubleshooting
+
+- **Empty or generic caption** — captioning models are small; keep expectations modest, or feed a clearer image.
+- **Empty picker** — install an image-to-text model first.
+
+## Related nodes
+
+- [Classify Image](/nodes/builtin/ai/localai/classify-image/)
+- [Generate Text](/nodes/builtin/ai/localai/generate-text/)

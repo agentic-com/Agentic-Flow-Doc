@@ -1,0 +1,48 @@
+---
+title: "Run Local Model"
+description: "Run any installed on-device model for a chosen task"
+sidebar:
+  label: "Run Local Model"
+---
+
+# Run Local Model
+
+The **generic** Local AI node: pick a task, pick any installed model, feed it an input. Use it for tasks the dedicated nodes don't cover, for custom-imported models, or when you want one node that adapts. Runs locally in your browser — private, offline, no cost.
+
+## What it does
+
+Runs the selected on-device model for the task you choose and returns the normalized output for that task (the same shapes the dedicated nodes return).
+
+## When to use it
+
+- You imported a **custom model** and want to run it.
+- You want **embeddings** from a node, not a dependency.
+- You'd rather configure one flexible node than reach for the specific one.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Task | One of: Image classification, Object detection, Image captioning, Text moderation, Text generation, Speech-to-text, Embeddings. |
+| Model | Any **installed** model, across engines. |
+| Input | Text, or an image/audio **URL / data URL / `$binary`**, depending on the task. |
+
+## Outputs
+
+The output shape matches the chosen task:
+
+- **Image classification / Text moderation** → `{ predictions, top, score }`
+- **Object detection** → `{ objects, count, top }`
+- **Image captioning / Text generation** → `{ text }`
+- **Speech-to-text** → `{ transcript, chunks? }`
+- **Embeddings** → `{ embedding }` (a numeric vector)
+
+## Troubleshooting
+
+- **Task/model mismatch** — pick a model trained for the selected task; the picker lists models by their declared task.
+- **Empty picker** — install a model for that task first, from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
+
+## Related nodes
+
+- [Classify Image](/nodes/builtin/ai/localai/classify-image/), [Detect Objects](/nodes/builtin/ai/localai/detect-objects/), [Caption Image](/nodes/builtin/ai/localai/caption-image/)
+- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/), [Generate Text](/nodes/builtin/ai/localai/generate-text/), [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/)

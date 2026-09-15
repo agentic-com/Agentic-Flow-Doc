@@ -1,0 +1,41 @@
+---
+title: "Analyze Text"
+description: "On-device sentiment, toxicity and moderation of text"
+sidebar:
+  label: "Analyze Text"
+---
+
+# Analyze Text
+
+Classify text — **sentiment, toxicity, or moderation** — locally in your browser (DistilBERT-SST2, toxic-bert on transformers.js). Private, offline, no cost.
+
+## What it does
+
+Runs the text through the selected on-device classifier and returns the matching labels with confidence scores, filtered by a threshold and capped to the top results.
+
+## When to use it
+
+Moderate user-generated content, gauge feedback tone, or gate a workflow branch on toxicity — without sending the text to a third-party API.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | Any **installed** text-moderation model, across engines. |
+| Text | The text to analyze. |
+| Confidence threshold | Drop labels below this score (default `0`). |
+| Top-K labels | Keep at most this many labels (default `5`). |
+
+## Outputs
+
+Returns `{ predictions, top, score }`:
+
+- `predictions` — array of `{ label, score }`, highest first.
+- `top` — the highest-scoring label (or `null`).
+- `score` — that label's score.
+
+## Related nodes
+
+- [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) — LLM or on-device engine toggle.
+- [Answer Question](/nodes/builtin/ai/localai/answer-question/)
+- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/)

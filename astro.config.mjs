@@ -165,7 +165,7 @@ export default defineConfig({
                   link: "usage/using-the-app/data-store",
                 },
                 {
-                  label: "Local Models",
+                  label: "Local AI",
                   link: "usage/using-the-app/local-models",
                 },
                 {
