@@ -165,6 +165,10 @@ export default defineConfig({
                   link: "usage/using-the-app/data-store",
                 },
                 {
+                  label: "Local Models",
+                  link: "usage/using-the-app/local-models",
+                },
+                {
                   label: "Newsletter",
                   link: "usage/using-the-app/newsletter",
                 },

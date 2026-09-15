@@ -17,13 +17,15 @@ Runs language models locally in the browser using WebGPU for hardware accelerati
 
 Connect this to AI agents for privacy-focused, offline AI that runs entirely in the browser without external dependencies.
 
+Manage which models are installed, pre-download them, and free up space on the [Local Models](/usage/using-the-app/local-models/) page.
+
 ## Inputs and settings
 
 | Setting | Notes |
 | --- | --- |
-| Model | Source-backed field from the node schema. |
-| Temperature | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+| Model | The in-browser model to run. The picker marks **installed** models and shows them first; others show an estimated size and can be **downloaded right from the dropdown** (with progress). Use **Manage models** to open [Local Models](/usage/using-the-app/local-models/). Defaults to your chosen default local model. |
+| Temperature | Sampling temperature for the model (higher = more varied output). |
+| Options | Additional model options. |
 
 ## Outputs
 
@@ -44,8 +46,9 @@ Connect Web LLM to an AI agent or dependency input that accepts this dependency 
 - If it calls an external service, verify credentials, permissions, and rate limits.
 - No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
-## Related nodes
+## Related pages
 
+- [Local Models](/usage/using-the-app/local-models/) — see, install, and remove in-browser models
 - [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
 - [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
 - [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
