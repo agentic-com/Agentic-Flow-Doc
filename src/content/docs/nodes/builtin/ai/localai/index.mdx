@@ -41,7 +41,14 @@ The first run of a model **loads it into memory** (and downloads it if it wasn't
 
 ## Image and audio inputs
 
-Vision and audio nodes accept the media as a **URL**, a **data URL**, or a **`$binary`** value piped from an earlier node — for example [Record Audio](/nodes/builtin/flow/record-audio/) → Transcribe Audio, or an HTTP download → Classify Image.
+Vision and audio nodes give you four ways to provide the media:
+
+- **From input** — an expression such as `{{ $binary }}` piped from an earlier node (e.g. [Record Audio](/nodes/builtin/flow/record-audio/) → Transcribe Audio, or an HTTP download → Classify Image).
+- **URL** — a link to the image or audio.
+- **Upload** — pick a file; it's stored inline with the node and stays on your device.
+- **Base64** — paste a data URL or raw base64.
+
+Each of these nodes also has a **Run preview** button: it runs the task on-device against the current media and selected model and shows the result right in the settings — top labels and scores as bars, or the generated text / transcript — so you can check a model before wiring it up.
 
 ## Privacy and cost
 
