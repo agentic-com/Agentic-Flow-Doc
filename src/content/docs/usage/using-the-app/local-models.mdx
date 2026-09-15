@@ -1,0 +1,60 @@
+---
+title: "Local Models"
+description: "See and manage the AI models installed in your browser"
+sidebar:
+  label: "Local Models"
+---
+
+# Local Models
+
+**Local Models** is where you see and manage the AI models that run **entirely in your browser** — nothing leaves your device. Open it from the workspace sidebar (**Local Models**) or from **Settings › Local models**.
+
+Models come in two runtimes:
+
+- **WebLLM** — chat models (Llama, Qwen, Phi, and more) that run on WebGPU.
+- **TensorFlow.js** — the Universal Sentence Encoder embedding model that powers Local Knowledge search.
+
+Both store their weights in this browser's storage, so a model you install here is available to workflows (the [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) node) and to the assistant, with no re-download.
+
+## Models and variants
+
+The page lists **models** the way you think of them — for example *Llama 3.2 3B Instruct*. Open a model to see its **variants**: the same model at different numeric precisions (quantizations). A smaller variant trades a little quality for less memory and a faster load. Install the variant that fits your device from the model's detail view.
+
+Each variant shows:
+
+- an **≈ estimated size** (see [Storage and sizes](#storage-and-sizes)),
+- a **device fit** — *Fits comfortably*, *Tight fit*, or *Exceeds memory* — based on your device's estimated memory and WebGPU support,
+- whether it is **installed**.
+
+## Installing, testing and removing
+
+- **Install** a variant to download it ahead of time. Downloads run **in the background, one at a time** — you can keep working, and cancel from the download panel in the corner. A queued download starts when the current one finishes.
+- **Test** a model to load it and run a quick check, confirming it actually works on your device (WebGPU support varies between machines).
+- **Remove** a variant to delete its weights and free space. Any workflow or the assistant set to that model will re-download it the next time it runs.
+- **Set default** marks a variant as your default in-browser model. The assistant prefers it, and it pre-fills the model field when you add a new Web LLM node.
+
+Models that **exceed your device's estimated memory** are still shown and installable, with a warning — they may run slowly, fail to load, or be intended for another machine.
+
+## Storage and sizes
+
+The header shows **exactly how much browser storage your models use**, out of what's available, split by runtime. This total is measured by your browser.
+
+Per-model sizes are **estimates** (marked with `≈`): the browser doesn't expose the exact size of an individual model, so the figure is derived from the model's memory requirement.
+
+### Keep models installed
+
+Browsers can automatically delete stored data — including multi-gigabyte models — when space runs low. Use **Keep models installed** to ask the browser to treat your models as persistent storage. When granted, the header shows **Protected**.
+
+## Add a custom model
+
+You can add a model beyond the built-in list with **Add custom model**. This takes an **MLC-compiled** model — its **weights URL** and its compiled **model library (`.wasm`)**.
+
+WebLLM cannot load a raw `.gguf` file directly; it needs the MLC build (a compiled model library per architecture). Once added, a custom model behaves like any built-in one — install, test, use it in a workflow, and remove it (which deletes both its weights and the entry).
+
+## In the Web LLM node
+
+When you pick a model in the [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) node, installed models are marked and shown first, and you can **download a model right from the dropdown** (with progress) or jump to this page with **Manage models**.
+
+## Privacy and scope
+
+Everything here runs and stays on your device. Models are stored per browser profile, and installing or removing one only affects this browser.
