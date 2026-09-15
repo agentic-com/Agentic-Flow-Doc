@@ -1,0 +1,43 @@
+---
+title: "Answer Question"
+description: "Extract an answer from a passage, on-device"
+sidebar:
+  label: "Answer Question"
+---
+
+# Answer Question
+
+Extractive question answering that runs locally in your browser (DistilBERT-SQuAD on transformers.js). Given a question and a passage, it returns the span of the passage that answers it. Private, offline, no cost.
+
+## What it does
+
+Runs an on-device extractive-QA model over the **context** passage to find the substring that best answers the **question**, with a confidence score.
+
+## When to use it
+
+Pull a specific fact out of a document, email, or scraped page — the answer comes verbatim from your text, so there's no hallucination and nothing is sent to a server.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | Any **installed** question-answering model. |
+| Question | The question to answer. |
+| Context | The passage to find the answer in. |
+
+## Outputs
+
+Returns `{ answer, score }`:
+
+- `answer` — the extracted answer string (empty if none found).
+- `score` — the model's confidence.
+
+## Troubleshooting
+
+- **Empty or wrong answer** — make sure the answer actually appears in the context; extractive QA can only return spans that are present.
+- **Empty picker** — install a question-answering model first.
+
+## Related nodes
+
+- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/)
+- [Generate Text](/nodes/builtin/ai/localai/generate-text/)

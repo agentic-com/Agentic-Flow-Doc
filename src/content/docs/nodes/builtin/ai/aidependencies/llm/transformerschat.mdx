@@ -1,0 +1,46 @@
+---
+title: "Transformers Chat"
+description: "Run a small chat model on-device with transformers.js"
+sidebar:
+  label: "Transformers Chat"
+---
+
+# Transformers Chat
+
+Run a small instruct/chat model **entirely in your browser** with transformers.js (ONNX/WASM, WebGPU where available). The runtime-agnostic sibling of [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/): the same chat-model dependency, a different on-device engine — a good fit for tiny, **CPU-friendly** chat that runs without WebGPU or an API key.
+
+## What it does
+
+Exposes an installed transformers.js chat model (e.g. *SmolLM2 360M Instruct*) as a chat-model dependency. Connect it to an AI agent node and it answers on-device — messages in, text out — with no cloud call.
+
+## When to use it
+
+- You want local chat but the device has **no WebGPU** (Web LLM needs it; transformers.js falls back to WASM).
+- You want the **smallest possible** local chat model for quick, low-stakes replies.
+- You're already using transformers.js models for vision/text tasks and want one engine.
+
+For larger, higher-quality local chat with WebGPU, prefer [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/).
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | An **installed** transformers.js chat model. The picker marks installed models and can download others; **Manage models** opens [Local AI](/usage/using-the-app/local-models/). |
+| Temperature | Sampling temperature (higher = more varied; `0` = deterministic). |
+| Max new tokens | Caps the reply length (default `256`). |
+
+## Outputs
+
+Returns a chat-model dependency you connect to AI agent nodes.
+
+## Troubleshooting
+
+- **"isn't a transformers.js chat model"** — the picker only lists chat models; if you selected one from another engine, use [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) instead.
+- **Slow or short replies** — these models are tiny; lower expectations, or raise Max new tokens for longer output.
+- **First run is slow** — the model loads (and downloads if needed) on first use, then stays warm for the session.
+
+## Related pages
+
+- [Local AI](/usage/using-the-app/local-models/) — install and manage on-device models.
+- [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) — WebGPU-based local chat.
+- [Local AI nodes](/nodes/builtin/ai/localai/) — on-device vision/text/audio tasks.

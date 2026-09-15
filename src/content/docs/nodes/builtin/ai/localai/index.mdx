@@ -1,0 +1,61 @@
+---
+title: "Local AI"
+description: "On-device AI nodes — vision, text and audio that run privately in your browser"
+sidebar:
+  label: "Overview"
+  order: 0
+---
+
+# Local AI
+
+**Local AI** nodes run AI models **entirely in your browser** — no API key, no cloud call, no per-token cost, and your data never leaves the device. They are the workflow counterpart of the [Local AI](/usage/using-the-app/local-models/) management page, where you install and manage the models these nodes use.
+
+## The runtimes
+
+Every Local AI node is **runtime-agnostic**: you pick a *model*, and the model decides which on-device engine runs it. Three engines are supported, chosen automatically per model:
+
+- **WebLLM** — chat / text-generation models on WebGPU (Llama, Qwen, Phi…).
+- **TensorFlow.js** — vision and embedding models (MobileNet, COCO-SSD, Universal Sentence Encoder), WebGPU with a WebGL/WASM fallback.
+- **transformers.js** — the widest task zoo (classification, detection, captioning, Q&A, summarization, translation, Whisper speech-to-text) via ONNX, WebGPU with a WASM fallback.
+
+You never choose the engine directly — the model picker lists **installed** models across all three, and the node resolves the right runtime for whichever you select.
+
+## The nodes
+
+| Node | Task | Typical model |
+| --- | --- | --- |
+| [Classify Image](/nodes/builtin/ai/localai/classify-image/) | Label an image | MobileNet, ViT |
+| [Detect Objects](/nodes/builtin/ai/localai/detect-objects/) | Objects + bounding boxes | COCO-SSD, DETR |
+| [Caption Image](/nodes/builtin/ai/localai/caption-image/) | Describe an image in words | ViT-GPT2 |
+| [Analyze Text](/nodes/builtin/ai/localai/analyze-text/) | Sentiment / toxicity / moderation | DistilBERT-SST2, toxic-bert |
+| [Answer Question](/nodes/builtin/ai/localai/answer-question/) | Extract an answer from a passage | DistilBERT-SQuAD |
+| [Generate Text](/nodes/builtin/ai/localai/generate-text/) | Summarize, translate, transform | DistilBART, NLLB, T5 |
+| [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) | Speech-to-text | Whisper tiny/base |
+| [Run Local Model](/nodes/builtin/ai/localai/run-local-model/) | Any task, any installed model | — |
+
+## Before you run
+
+Each node needs a **model installed for its task**. Open the model picker in the node and download one right there, or install ahead of time from the [Local AI](/usage/using-the-app/local-models/) page. If nothing is installed for the task, the picker is empty and the node explains which kind of model to add.
+
+The first run of a model **loads it into memory** (and downloads it if it wasn't installed), which can take a few seconds; subsequent runs in the same session are fast. All inference runs **off the main thread** in a Web Worker, so the editor stays responsive.
+
+## Image and audio inputs
+
+Vision and audio nodes give you four ways to provide the media:
+
+- **From input** — an expression such as `{{ $binary }}` piped from an earlier node (e.g. [Record Audio](/nodes/builtin/flow/record-audio/) → Transcribe Audio, or an HTTP download → Classify Image).
+- **URL** — a link to the image or audio.
+- **Upload** — pick a file; it's stored inline with the node and stays on your device.
+- **Base64** — paste a data URL or raw base64.
+
+Each of these nodes also has a **Run preview** button: it runs the task on-device against the current media and selected model and shows the result right in the settings — top labels and scores as bars, or the generated text / transcript — so you can check a model before wiring it up.
+
+## Privacy and cost
+
+Because everything runs locally: there is **no usage cost**, the workflow works **offline** once models are installed, and **no image, text, or audio is ever sent to a server**. This makes Local AI a good fit for private documents, personal media, and moderation you don't want to route through a third party.
+
+## Related
+
+- [Local AI page](/usage/using-the-app/local-models/) — install and manage the models.
+- [Record Audio](/nodes/builtin/flow/record-audio/) — capture microphone audio to feed Transcribe Audio.
+- [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) — supports an on-device engine toggle.

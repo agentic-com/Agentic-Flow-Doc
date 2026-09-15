@@ -1,0 +1,42 @@
+---
+title: "Transcribe Audio"
+description: "Speech-to-text on-device with Whisper"
+sidebar:
+  label: "Transcribe Audio"
+---
+
+# Transcribe Audio
+
+Turn speech into text **entirely in your browser** with Whisper (tiny/base, on transformers.js). Private, offline, no cost — audio never leaves the device.
+
+## What it does
+
+Runs the audio through an on-device speech-to-text model and returns the transcript (and, when the model provides them, timed chunks).
+
+## When to use it
+
+Transcribe a voice note, a recorded call, or microphone input captured by [Record Audio](/nodes/builtin/flow/record-audio/) — then summarize, search, or route the text downstream.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | Any **installed** speech-to-text model (e.g. Whisper tiny/base). |
+| Audio | Audio **URL**, **data URL**, or **`$binary`** — pair with [Record Audio](/nodes/builtin/flow/record-audio/) or a file node. |
+
+## Outputs
+
+Returns `{ transcript, chunks? }`:
+
+- `transcript` — the full text.
+- `chunks` — optional timed segments, when the model returns them.
+
+## Troubleshooting
+
+- **Empty transcript** — check the audio actually contains speech and is a format the browser can decode (e.g. `webm`, `wav`, `mp3`).
+- **Slow first run** — Whisper loads on first use, then stays warm for the session. Prefer `tiny` on low-memory devices.
+
+## Related nodes
+
+- [Record Audio](/nodes/builtin/flow/record-audio/)
+- [Generate Text](/nodes/builtin/ai/localai/generate-text/)

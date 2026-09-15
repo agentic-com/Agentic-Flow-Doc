@@ -1,0 +1,51 @@
+---
+title: "Classify Image"
+description: "Label an image on-device with any installed image-classification model"
+sidebar:
+  label: "Classify Image"
+---
+
+# Classify Image
+
+Label an image **entirely in your browser** with an installed image-classification model (MobileNet on TensorFlow.js, ViT on transformers.js). No cloud call, no cost, no data leaving the device.
+
+## What it does
+
+Loads the image you provide, runs it through the selected on-device classifier, and returns the predicted labels with confidence scores — filtered by a threshold and capped to the top results.
+
+## When to use it
+
+Tag or route images by content: sort uploads, flag categories, or branch a workflow on what an image contains — all offline and private.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | Any **installed** image-classification model, across engines. Download one from the picker if the list is empty. |
+| Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
+| Confidence threshold | Drop predictions scoring below this value (default `0.1`). |
+| Top-K results | Keep at most this many labels (default `5`). |
+
+## Outputs
+
+Returns `{ predictions, top, score }`:
+
+- `predictions` — array of `{ label, score }`, highest first, after threshold and top-K.
+- `top` — the highest-scoring label (or `null` if none pass the threshold).
+- `score` — that label's score.
+
+## Before you run
+
+Install an image-classification model from the picker or the [Local AI](/usage/using-the-app/local-models/) page. The first run loads the model into memory; later runs are fast.
+
+## Troubleshooting
+
+- **Empty picker** — no image-classification model is installed; add one first.
+- **No predictions** — lower the confidence threshold, or try a stronger model (ViT over MobileNet).
+- **Slow first run** — the model is loading/downloading; it stays warm for the session.
+
+## Related nodes
+
+- [Detect Objects](/nodes/builtin/ai/localai/detect-objects/)
+- [Caption Image](/nodes/builtin/ai/localai/caption-image/)
+- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/)
