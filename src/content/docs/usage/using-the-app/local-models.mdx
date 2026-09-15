@@ -65,7 +65,8 @@ Once added, a custom model behaves like any built-in one — install, test, use 
 ## Using models in workflows
 
 - **[Local AI nodes](/nodes/builtin/ai/localai/)** — classify or caption images, detect objects, moderate or transform text, answer questions, and transcribe audio, all on-device.
-- **[Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/)** — an in-browser chat model dependency. Installed models are marked and shown first, and you can **download a model right from the dropdown** or jump to this page with **Manage models**.
+- **[Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/)** — an in-browser chat model dependency (WebGPU). Installed models are marked and shown first, and you can **download a model right from the dropdown** or jump to this page with **Manage models**.
+- **[Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/)** — a chat model dependency backed by transformers.js (ONNX/WASM), for tiny CPU-friendly chat when WebGPU isn't available.
 - **[Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/)** — an **Engine** toggle switches it between a connected LLM and a local classifier.
 - **[Record Audio](/nodes/builtin/flow/record-audio/) → [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/)** — capture the mic and transcribe it, end to end on-device.
 - **Local Knowledge / embeddings** — vector search embeds with an on-device model; each store records the embedding model it was built with, so results stay consistent.
