@@ -1,0 +1,44 @@
+---
+title: "Generate Text"
+description: "Summarize, translate or transform text on-device"
+sidebar:
+  label: "Generate Text"
+---
+
+# Generate Text
+
+Summarize, translate, or transform text locally in your browser with a sequence-to-sequence model (DistilBART for summarization, NLLB for translation, T5 for general transforms, on transformers.js). Private, offline, no cost.
+
+## What it does
+
+Runs the input text through the selected on-device text-generation model. What it *does* depends on the model you pick — a summarizer condenses, a translation model translates, a T5 model follows a task prefix.
+
+## When to use it
+
+Add offline summarization or translation to a workflow, or run a small text transform without an LLM API key or per-token cost.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | Any **installed** text-generation model, across engines. |
+| Text | The input text. |
+| Source language | *(translation models only)* e.g. `eng_Latn`. |
+| Target language | *(translation models only)* e.g. `fra_Latn`. |
+
+Source/target language are passed through to translation models (such as NLLB); other models ignore them.
+
+## Outputs
+
+Returns `{ text }` — the generated / summarized / translated text.
+
+## Troubleshooting
+
+- **Translation ignored** — set both Source and Target language in the codes the model expects (e.g. NLLB's `xxx_Yyyy` form).
+- **Truncated output** — small on-device models have short context/output limits; split long inputs upstream.
+
+## Related nodes
+
+- [Answer Question](/nodes/builtin/ai/localai/answer-question/)
+- [Caption Image](/nodes/builtin/ai/localai/caption-image/)
+- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/)

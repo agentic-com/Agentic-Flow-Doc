@@ -13,6 +13,8 @@ Analyze the sentiment of a text using a LLM
 
 Sends the input text to a language model and asks it to classify the sentiment as one of `positive`, `negative`, or `neutral` by default, or into a custom set of categories you define. The model is instructed to respond with only the category name, with no explanation.
 
+It can also run **on-device**: switch **Engine** to *On-device* to classify with a local moderation model that runs entirely in your browser — free, private, and offline, with no LLM connection required. See [Local AI](/usage/using-the-app/local-models/).
+
 ## When to use it
 
 Use this node to classify the tone of customer feedback, reviews, support tickets, or social media text — for example, routing negative feedback to a different workflow branch than positive feedback.
@@ -22,16 +24,19 @@ Use this node to classify the tone of customer feedback, reviews, support ticket
 | Setting | Notes |
 | --- | --- |
 | Text | The text to analyze the sentiment of. Rendered as a text area. |
+| Engine | **LLM** (a connected chat model) or **On-device** (a local classifier — free, offline). |
+| On-device model | *(Engine = On-device)* Any installed text-moderation model, across engines. |
 | Options → Custom categories | Comma-separated list of custom sentiment categories to use instead of the default positive/negative/neutral. Rendered as a text area. |
 | Options → System message | Optional additional system message appended to the analysis instructions. Rendered as a text area. |
 
 ## Outputs
 
-Returns `{ sentiment }`, a string with the trimmed category name returned by the model (one of the default three categories, or one of your custom categories).
+- **LLM engine** — returns `{ sentiment }`, the trimmed category name returned by the model (one of the default three categories, or one of your custom categories).
+- **On-device engine** — returns `{ sentiment, score, predictions }`: the top label, its confidence, and the full list of `{ label, score }` predictions. (Custom categories and System message don't apply here — the local model's own labels are used.)
 
 ## Dependencies and credentials
 
-- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). Used to classify the sentiment.
+- **Model** (required for the LLM engine) — connect a language model dependency (e.g. Chat OpenAI). Not needed for the on-device engine.
 
 ## Example workflow
 
@@ -40,7 +45,8 @@ Connect a Chat OpenAI node to the Model dependency, feed text from an upstream n
 ## Troubleshooting
 
 - If the output includes extra words instead of just the category, add a stronger instruction via the System message option, or verify the connected model follows instructions well.
-- Verify the Model dependency is connected — the node throws if no model is found.
+- **LLM engine** — verify the Model dependency is connected; the node throws if no model is found (or switch Engine to On-device).
+- **On-device engine** — choose an on-device model; the node throws if the field is empty or the model isn't installed. Install one from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
 - Keep Custom categories short and mutually exclusive so the model can reliably pick one.
 
 ## Related nodes
@@ -49,4 +55,5 @@ Connect a Chat OpenAI node to the Model dependency, feed text from an upstream n
 - [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
 - [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
 - [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
+- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/) — the dedicated on-device classifier.
 - [AI Agents](/advanced-ai/concepts/ai-agents/)

@@ -1,0 +1,48 @@
+---
+title: "Save as file"
+description: "Save text content as a downloadable file"
+sidebar:
+  label: "Save as file"
+---
+
+# Save as file
+
+Save generated text — CSV, Markdown, JSON, or plain text — as a downloadable file.
+
+## What it does
+
+Takes text content produced earlier in the workflow and downloads it as a file. Unlike [Download as file](/nodes/builtin/datatransformation/downloadasfile/), which downloads an existing URL, this node writes content you generated (for example the output of [CSV](/nodes/builtin/datatransformation/csv/), [JSON](/nodes/builtin/datatransformation/json/), or [Code](/nodes/builtin/core/code/)).
+
+## When to use it
+
+Use it as the final step when you want the workflow's result saved to a file rather than sent to a service or shown on the page.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Content | The text to save. Usually an expression such as `{{ $input.csv }}`. |
+| File name | Optional. Without the extension (added from File type). Defaults to `file`. |
+| File type | `txt`, `csv`, `json`, `md`, `html`, or `xml`. Sets the extension and content type. Defaults to `txt`. |
+
+## Outputs
+
+Triggers the download as a side effect and passes control to the next node.
+
+## Dependencies and credentials
+
+- No credentials. Runs in the browser (it needs a page/window to trigger the download).
+
+## Example workflow
+
+Build a report → **CSV** (build) → **Save as file** (Content: `{{ $input.csv }}`, File type: `csv`, File name: `report`).
+
+## Requirements
+
+Available from extension **v0.7.0**. Workflows that use it won't install on older extensions.
+
+## Related nodes
+
+- [Download as file](/nodes/builtin/datatransformation/downloadasfile/)
+- [CSV](/nodes/builtin/datatransformation/csv/)
+- [Code](/nodes/builtin/core/code/)

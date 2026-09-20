@@ -1,0 +1,75 @@
+---
+title: "Extract From File"
+description: "Turn a file into items, with the format auto-detected"
+sidebar:
+  label: "Extract From File"
+---
+
+# Extract From File
+
+Turn a file into workflow items, whatever its format.
+
+## What it does
+
+Reads a file and returns its contents as items. It generalises the PDF Parser: instead of one format it decodes several, detecting which one to use automatically. It runs entirely in the browser.
+
+The first-wave formats are:
+
+- **CSV** — one item per row, keyed by the header row.
+- **JSON** — an array becomes one item per element; a single object becomes one item.
+- **XML** — the document is turned into a JSON object (attributes are read with an `@` prefix, repeated elements become arrays), returned as one item.
+- **Text** — one item per line, each as `{ text: "…" }`.
+- **PDF** — the extracted text, returned as one item `{ text, pageCount }`.
+
+> XLSX (Excel) is **not yet supported**.
+
+## Where the file comes from
+
+The node accepts a file from either source:
+
+- **HTTP Request** — a downloaded file arrives as a binary attached to the item under `$binary` (by default the `data` slot). Point the node at it with the **Binary Field** setting.
+- **Local File Read** — the picked file arrives as `{ name, type, content }`; the node reads its `content` and uses the file name and type for detection.
+
+Any plain text/string field is also accepted for the text formats when no binary is present.
+
+## Format auto-detection
+
+With **Format** left on **Auto-detect**, the format is worked out in this order:
+
+1. the binary's MIME type (for example `text/csv`, `application/json`, `application/pdf`),
+2. the file-name extension (`.csv`, `.json`, `.xml`, `.pdf`, `.txt`),
+3. a light content sniff (a `%PDF` header, or leading `{` / `[` / `<`).
+
+If none of these decides, the node throws a clear error asking you to pick the format yourself. You can always **override** the detection by choosing a specific format.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Format | The decoder to use, or `Auto-detect` (default). Choose CSV, JSON, XML, Text or PDF to override detection. |
+| Binary Field | Which `$binary` key on the incoming item holds the file. Defaults to `data` (where HTTP Request stores a downloaded file). Ignored when the item carries plain text content. |
+
+## Outputs
+
+An array of items whose shape depends on the format (see above). CSV and JSON arrays can produce many items; XML, PDF and single-object JSON produce one.
+
+## Dependencies and credentials
+
+- No credential is required. Decoding runs in the browser.
+
+## Example workflow
+
+Add an **HTTP Request** that downloads a CSV, connect it into **Extract From File** (leave Format on Auto-detect), then feed the resulting rows to **Edit Fields** or an **AI Agent**. Or start from **Local File Read** to let the user pick a file at runtime.
+
+## Troubleshooting
+
+- If auto-detect fails, set the **Format** field manually.
+- Malformed content for the chosen (or detected) format — invalid JSON or XML, for example — throws a clear error.
+- Excel `.xlsx` files are not yet supported; export to CSV first.
+
+## Related nodes
+
+- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/)
+- [CSV](/nodes/builtin/datatransformation/csv/)
+- [XML](/nodes/builtin/datatransformation/xml/)
+- [Local File Read](/nodes/builtin/datatransformation/localfileread/)

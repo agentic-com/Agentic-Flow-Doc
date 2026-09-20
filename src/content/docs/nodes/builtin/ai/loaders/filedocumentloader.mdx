@@ -1,0 +1,65 @@
+---
+title: "File Document Loader"
+description: "Load a file (PDF, HTML, text) as text to feed into the Indexer"
+sidebar:
+  label: "File Document Loader"
+  order: 2
+---
+
+# File Document Loader
+
+Load a file (PDF, HTML, text) as text to feed into the Indexer.
+
+## What it does
+
+Takes a file/binary payload attached to the incoming item, decodes it to plain text based on its
+type, and outputs that text under a configurable field (default `text`). Connect that output to
+the [Indexer](/nodes/builtin/ai/aiagents/indexernode/) node's `Input` port to index a file.
+
+Supported formats:
+
+- **PDF** — text is extracted with the same engine as the [PDF Parser](/nodes/builtin/datatransformation/pdfparser/).
+- **HTML** — converted to clean plain text.
+- **Text formats** — `csv`, `json`, `xml`, `markdown`, `txt` (and any `text/*`) are decoded as text.
+
+## When to use it
+
+Use it to index the contents of an uploaded or fetched file — a PDF report, an exported CSV, a
+Markdown doc — into a knowledge base.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Binary key / field | The binary attachment key on the input item (its `$binary` map), or a field holding a base64 / data-URL string. Defaults to `data`. |
+| Output field name | Field that holds the extracted text. Defaults to `text`. |
+| MIME type | Optional hint used to pick the decoder. Required for a raw base64 string with no data-URL prefix. |
+| File name | Optional hint — its extension is used to pick the decoder when no MIME type is known. |
+| Include input fields | When enabled, the incoming item's fields are merged into the output. |
+
+## Outputs
+
+An item with the extracted text under the chosen output field (default `text`).
+
+## Notes
+
+- The loader first looks for a real binary attachment on the item's `$binary` map under the
+  configured key; if none is found it falls back to a plain field of the same name holding a
+  base64 string or a `data:` URL.
+- For a PDF you already have on an item you can use either this loader or the
+  [PDF Parser](/nodes/builtin/datatransformation/pdfparser/) — this loader is the choice when
+  the goal is to feed the Indexer and you may be handling PDF, HTML, or text interchangeably.
+
+## Troubleshooting
+
+- `No source node is connected to this node.` — connect a node that provides the file.
+- `No binary attachment or field "…" found` — check the Binary key matches the attachment or
+  field carrying the payload.
+- `Unsupported document type …` — set a MIME type or file name so the loader can pick a decoder,
+  or convert the file to a supported format first.
+
+## Related nodes
+
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/)
+- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/)
+- [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/)

@@ -134,6 +134,10 @@ export default defineConfig({
                       link: "usage/using-the-app/workflows/tags",
                     },
                     {
+                      label: "Filter the list",
+                      link: "usage/using-the-app/workflows/filters",
+                    },
+                    {
                       label: "Components",
                       autogenerate: {
                         directory: "usage/using-the-app/workflows/components",
@@ -165,8 +169,16 @@ export default defineConfig({
                   link: "usage/using-the-app/data-store",
                 },
                 {
+                  label: "Local AI",
+                  link: "usage/using-the-app/local-models",
+                },
+                {
                   label: "Newsletter",
                   link: "usage/using-the-app/newsletter",
+                },
+                {
+                  label: "Request board",
+                  link: "usage/using-the-app/request-board",
                 },
               ],
             },

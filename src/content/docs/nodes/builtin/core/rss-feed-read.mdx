@@ -11,7 +11,16 @@ Reads an RSS feed from a URL and returns the parsed data
 
 ## What it does
 
-Fetches and parses RSS/Atom feeds from a URL, returning structured feed data.
+Fetches and parses RSS/Atom feeds from a URL, returning structured feed data
+(feed metadata plus an `items` array). The feed body is retrieved with the
+browser `fetch` API and then parsed, so it runs client-side.
+
+:::note
+Reading arbitrary feeds from other domains needs the **extension build**, whose
+host permissions allow cross-origin requests. The plain web build is subject to
+the browser's CORS policy, so it can only read feeds served with permissive CORS
+headers.
+:::
 
 ## When to use it
 
@@ -45,7 +54,8 @@ Connect data into RSS Feed Read, configure the settings above, and use the outpu
 ## Troubleshooting
 
 - Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
+- If the feed fails to load with a CORS or network error on the web build, run the workflow from the extension build instead — arbitrary cross-origin feeds require the extension's host permissions.
+- A non-OK HTTP response or an empty body raises a clear error; verify the URL returns a valid feed.
 - If it calls an external service, verify credentials, permissions, and rate limits.
 - This node has source tests; use them as the reference for edge-case behavior during maintenance.
 

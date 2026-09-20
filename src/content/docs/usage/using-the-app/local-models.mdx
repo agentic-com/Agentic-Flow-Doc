@@ -1,0 +1,94 @@
+---
+title: "Local AI"
+description: "See and manage the on-device AI models installed in your browser"
+sidebar:
+  label: "Local AI"
+---
+
+# Local AI
+
+**Local AI** is where you see and manage the AI models that run **entirely in your browser** — nothing leaves your device. Open it from the workspace sidebar (**Local AI**) or from **Settings › Local AI**.
+
+Models cover chat, vision, text and audio, and run on one of three on-device runtimes — chosen automatically per model, so you pick a *model* and never worry about the engine:
+
+- **WebLLM** — chat / text-generation models (Llama, Qwen, Phi, and more) on WebGPU.
+- **TensorFlow.js** — vision and embedding models (MobileNet, COCO-SSD, the Universal Sentence Encoder that powers Local Knowledge search), WebGPU with a WebGL/WASM fallback.
+- **transformers.js** — the widest range of tasks (image classification, object detection, captioning, sentiment/toxicity, question answering, summarization, translation, and Whisper speech-to-text) via ONNX, WebGPU with a WASM fallback.
+
+All three store their weights in this browser's storage, so a model you install here is available to workflows (the [Local AI nodes](/nodes/builtin/ai/localai/) and the [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) node) and to the assistant, with no re-download.
+
+## Browsing by task
+
+The page groups models by **task** — Chat, Image classification, Object detection, Captioning, Moderation, Question answering, Text generation, Speech-to-text, Embeddings — each with its own section. Because a task can have many models, each section shows a preview and a **Show all** control to expand it, so a long list of chat models never buries the other categories.
+
+Use the **search** box to filter by name, and the **engine filter** to narrow to WebLLM, TensorFlow.js, or transformers.js.
+
+## Models and variants
+
+The page lists **models** the way you think of them — for example *Llama 3.2 3B Instruct* or *ViT base*. Open a model to see its **variants**: the same model at different numeric precisions (quantizations). A smaller variant trades a little quality for less memory and a faster load.
+
+Each variant shows:
+
+- an **≈ estimated size** (see [Storage and sizes](#storage-and-sizes)),
+- a **device fit** — *Fits comfortably*, *Tight fit*, or *Exceeds memory* — based on your device's estimated memory and hardware support,
+- whether it is **installed**.
+
+## Comparing models
+
+Tick the **compare** checkbox on two or three models to line them up side by side, then click **Compare (N)** in the bar that appears. The comparison opens on its own page (with a shareable link) and shows each model in its own column, grouped into **Overview**, **Storage & device fit**, **Performance**, and **Actions**, with a plain-language summary at the end. Turn on **Highlight best** to mark the winning value in each row (largest context, smallest size, best device fit, fastest to load).
+
+Only models of the **same task** can be compared together — the checkbox disables for mismatched models, and you can compare up to three at once. **Add model** adds another same-task model to the comparison.
+
+### Measure on this device
+
+Because these models run locally, the comparison can measure **real performance on your device** rather than quote numbers from elsewhere. Press **Measure on this device** (per model, or **Measure all**) and it loads and runs the model to report how long it takes to be **ready** and, where the engine supports it, its **speed** in tokens/second. Results are kept for the session, and the same measurement appears in the model's detail view.
+
+## The model detail view
+
+Open any model to see the full picture: its task, engine and backend, context window, parameters, quantizations and install footprint, a link to the model's source, and a plain "good for…" summary. The **Performance on this device** card runs the same on-device measurement, and **Use it in** links straight to the workflow nodes (and the assistant) that accept the model. **Also for this task** lists related models you can open or add to a comparison.
+
+## Installing, testing and removing
+
+- **Install** a variant to download it ahead of time. Downloads run **in the background, one at a time** — you can keep working, and cancel from the download panel in the corner. A queued download starts when the current one finishes.
+- **Test** a model to load it and run a quick check, confirming it actually works on your device (hardware support varies between machines).
+- **Remove** a variant to delete its weights and free space. Any workflow or the assistant set to that model will re-download it the next time it runs.
+- **Set default** marks a chat variant as your default in-browser model. The assistant prefers it, and it pre-fills the model field when you add a new Web LLM node.
+
+Models that **exceed your device's estimated memory** are still shown and installable, with a warning — they may run slowly, fail to load, or be intended for another machine.
+
+## Storage and sizes
+
+The header shows **exactly how much browser storage your models use**, out of what's available, split across the three runtimes. This total is measured by your browser.
+
+Per-model sizes are shown as measured where the runtime exposes real bytes (transformers.js and TensorFlow.js graph models), and as an **estimate** (marked with `≈`) where the browser doesn't expose an exact per-model figure.
+
+### Keep models installed
+
+Browsers can automatically delete stored data — including multi-gigabyte models — when space runs low. Use **Keep models installed** to ask the browser to treat your models as persistent storage. When granted, the header shows **Protected**.
+
+## Add a custom model
+
+You can add a model beyond the built-in list with **Add custom model**. The importer is **engine-aware** — pick the runtime, and it asks for exactly what that engine needs:
+
+- **WebLLM** — an **MLC-compiled** model: its **weights URL** and its compiled **model library (`.wasm`)**. WebLLM cannot load a raw `.gguf` directly; it needs the MLC build.
+- **TensorFlow.js** — the **model URL** of a graph/layers model (e.g. a `model.json`).
+- **transformers.js** — the **Hugging Face model id** (e.g. `Xenova/vit-base-patch16-224`) and its task.
+
+Once added, a custom model behaves like any built-in one — install, test, use it in a workflow (including the [Run Local Model](/nodes/builtin/ai/localai/run-local-model/) node), and remove it (which deletes both its weights and the entry).
+
+## Using models in workflows
+
+- **[Local AI nodes](/nodes/builtin/ai/localai/)** — classify or caption images, detect objects, moderate or transform text, answer questions, and transcribe audio, all on-device.
+- **[Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/)** — an in-browser chat model dependency (WebGPU). Installed models are marked and shown first, and you can **download a model right from the dropdown** or jump to this page with **Manage models**.
+- **[Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/)** — a chat model dependency backed by transformers.js (ONNX/WASM), for tiny CPU-friendly chat when WebGPU isn't available.
+- **[Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/)** — an **Engine** toggle switches it between a connected LLM and a local classifier.
+- **[Record Audio](/nodes/builtin/flow/record-audio/) → [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/)** — capture the mic and transcribe it, end to end on-device.
+- **Local Knowledge / embeddings** — vector search embeds with an on-device model; each store records the embedding model it was built with, so results stay consistent.
+
+## In the assistant
+
+When you chat with the assistant in **Ask** mode, it can use on-device tools — classify an image, moderate some text, or transcribe audio — by running a local model for you and answering from the result. If no suitable model is installed, it tells you which kind to add.
+
+## Privacy and scope
+
+Everything here runs and stays on your device. There is **no usage cost**, it works **offline** once models are installed, and no image, text, or audio is ever sent to a server. Models are stored per browser profile, and installing or removing one only affects this browser.

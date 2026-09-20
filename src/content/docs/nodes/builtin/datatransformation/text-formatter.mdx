@@ -1,19 +1,31 @@
 ---
 title: "Text / Formatter"
-description: "Transform text: case, trim, pad, replace, split, slugify, extract and count"
+description: "Transform text: case, trim, pad, replace, split, slugify, extract, count, encode and decode"
 sidebar:
   label: "Text / Formatter"
 ---
 
 # Text / Formatter
 
-Transform text: case, trim, pad, replace, split, slugify, extract and count.
+Transform text: case, trim, pad, replace, split, slugify, extract, count, encode and decode.
 
 ## What it does
 
-One node with an operation selector, rather than a dozen tiny nodes. It converts case (`Uppercase`, `Lowercase`, `Title Case`, `camelCase`, `snake_case`, `kebab-case`), trims, pads, replaces (plain or regex), splits and joins, slugifies, truncates with an ellipsis, and substitutes a default value when the text is empty. It also extracts every email, URL, number or phone number found in the text, and counts words or characters. The selector both drives the transformation and decides which extra settings the UI shows.
+One node with an operation selector, rather than a dozen tiny nodes. It converts case (`Uppercase`, `Lowercase`, `Title Case`, `camelCase`, `snake_case`, `kebab-case`), trims, pads, replaces (plain or regex), splits and joins, slugifies, truncates with an ellipsis, and substitutes a default value when the text is empty. It also extracts every email, URL, number or phone number found in the text, counts words or characters, and encodes or decodes text with a chosen scheme (Base64, URL, URI component, HTML entities or hex). The selector both drives the transformation and decides which extra settings the UI shows.
 
 A single transformed value comes back in `result`. The extract operations return `matches`, always an array, so an empty result is still iterable. The count operations return `count`. Character counting is by code point, so an accented letter or emoji counts once rather than by its UTF-16 units.
+
+### Encode and decode
+
+`Encode` and `Decode` convert text to or from a chosen **Scheme**, in both directions, returning the converted value in `result`:
+
+- **Base64** — standard Base64. Unicode-safe: the text is converted to its UTF-8 bytes before encoding and read back as UTF-8 on decode, so emoji and accented characters survive a round trip (plain `btoa`/`atob` cannot do this).
+- **URL (whole URL)** — `encodeURI`/`decodeURI`. Escapes spaces and unsafe characters but leaves reserved URL characters such as `:/?#&=` intact, so it is safe to run on a whole URL.
+- **URI component** — `encodeURIComponent`/`decodeURIComponent`. Escapes reserved characters too, for a single query-string value or path segment.
+- **HTML entities** — escapes `& < > " '` to entities on encode, and decodes named (`&amp;`), decimal (`&#72;`) and hexadecimal (`&#x1F30D;`) entities back to characters on decode.
+- **Hex** — the UTF-8 bytes of the text as lowercase hexadecimal, and back.
+
+Decoding malformed input throws a clear error (for example, non-hex characters, an odd-length hex string, invalid Base64, or a broken percent-escape).
 
 ## When to use it
 
@@ -23,7 +35,7 @@ Use this node to tidy scraped or user-supplied text before it travels downstream
 
 | Setting | Notes |
 | --- | --- |
-| Operation | What to do with the text. One of `Uppercase`, `Lowercase`, `Title Case`, `camelCase`, `snake_case`, `kebab-case`, `Trim`, `Pad`, `Replace`, `Split`, `Join`, `Slugify`, `Truncate`, `Default if empty`, `Extract emails`, `Extract URLs`, `Extract numbers`, `Extract phone numbers`, `Word count` or `Character count`. Defaults to `Uppercase`. |
+| Operation | What to do with the text. One of `Uppercase`, `Lowercase`, `Title Case`, `camelCase`, `snake_case`, `kebab-case`, `Trim`, `Pad`, `Replace`, `Split`, `Join`, `Slugify`, `Truncate`, `Default if empty`, `Extract emails`, `Extract URLs`, `Extract numbers`, `Extract phone numbers`, `Word count`, `Character count`, `Encode` or `Decode`. Defaults to `Uppercase`. |
 | Text | The text to transform. Bind an upstream value with `{{ }}`, for example `{{ $json.description }}`. |
 | Target Length | For `Pad`: pad until the text reaches this many characters. Defaults to `0`. |
 | Pad With | For `Pad`: the characters repeated to fill the space. Defaults to a single space. |
@@ -36,12 +48,14 @@ Use this node to tidy scraped or user-supplied text before it travels downstream
 | Maximum Length | For `Truncate`: keep at most this many characters. Defaults to `20`. |
 | Ellipsis | For `Truncate`: appended when the text is shortened. Defaults to `…`. |
 | Default Value | For `Default if empty`: returned when the text is empty or only whitespace. |
+| Scheme | For `Encode` and `Decode`: which encoding to convert to or from. One of `Base64`, `URL (whole URL)`, `URI component`, `HTML entities` or `Hex`. Defaults to `Base64`. |
 
 ## Outputs
 
 - Case conversions, `Trim`, `Pad`, `Replace`, `Split`, `Join`, `Slugify`, `Truncate` and `Default if empty` return the transformed value in `result`. `Split` returns an array; `Join` expects an array as input text and returns a joined string.
 - `Extract emails`, `Extract URLs`, `Extract numbers` and `Extract phone numbers` return every match found in `matches`, an array that is empty rather than absent when nothing matches.
 - `Word count` and `Character count` return the count in `count`. Character counting is by Unicode code point.
+- `Encode` and `Decode` return the converted value in `result`. Base64, hex and URI-component conversions are UTF-8 safe, so unicode text round-trips.
 
 ## Dependencies and credentials
 
@@ -57,6 +71,7 @@ Place Text / Formatter after a node that scrapes a page, set **Operation** to `E
 - `Split` with an empty **Separator** splits the text into individual characters rather than failing.
 - `Join` expects an array; if the incoming text is not an array, it is treated as a single-item list.
 - Extract operations never fail on no matches — they return an empty `matches` array instead.
+- `Decode` throws on malformed input: invalid Base64, a non-hex or odd-length hex string, or a broken percent-escape for URL/URI-component. Check the input matches the selected **Scheme**.
 
 ## Related nodes
 

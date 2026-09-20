@@ -1,0 +1,71 @@
+---
+title: "Readwise / Reader"
+description: "Save highlights to Readwise (batch) and full articles to Reader, carrying source URL, title and author."
+sidebar:
+  label: "Readwise / Reader"
+---
+
+# Readwise / Reader
+
+Save what you highlight to [Readwise](https://readwise.io) and full articles to [Reader](https://readwise.io/read). Two Readwise APIs behind one node, modeled as **resources** — one account-wide token unlocks both.
+
+## What it does
+
+- **Readwise (highlights)** — save one or many highlights in a single run. This is a **batch** save: every item that arrives on the node's input becomes one highlight and they all go up in one request, each carrying its source URL, title, and author when available. Pair it with the page-metadata / selection nodes upstream, or fan a list of quotes into it.
+- **Reader (articles)** — save a full page/article to your Reader library, optionally with the exact HTML you captured.
+
+## Resources and operations
+
+| Resource | Operations |
+| --- | --- |
+| Readwise (Highlights) | Save highlights |
+| Reader (Articles) | Save document |
+
+### Batch highlight save
+
+On **Readwise → Save highlights**, the node maps **every incoming item** to a highlight and sends them all in **one** `POST /v2/highlights/` request. For each item it fills:
+
+| Field | Source |
+| --- | --- |
+| `text` (required) | The **Highlight text** field, else the item's `text` / `highlight` / `content` / `selection` |
+| `title` | The **Title** field, else the item's `title` |
+| `author` | The **Author** field, else the item's `author` / `byline` |
+| `source_url` | The **Source URL** field, else the item's `source_url` / `url` / `link` |
+| `note`, `location`, `highlighted_at` | The matching fields, else the item's values |
+
+Leave a field blank to read it per-item from the incoming data; set a field to apply that value to **every** highlight in the run. Items with no highlight text are skipped.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Credential | A Readwise **access token** (see below). |
+| Resource / Operation | Readwise (highlights) or Reader (articles), and what to do. |
+| Highlight text | The highlight (Readwise). Leave blank to read it from each incoming item. |
+| Title / Author / Source URL | Provenance carried onto each highlight — blank reads from the item. |
+| Note / Location / Highlighted at | Optional per-highlight metadata. |
+| URL | The article/page URL to save (Reader → Save document). |
+| HTML | Optional full-page HTML to store the exact content you captured (Reader). |
+| Summary / Tags | Optional metadata for the saved document (Reader). |
+
+## Dependencies and credentials
+
+- **Auth (Class A):** a single **account-wide access token** from [readwise.io/access_token](https://readwise.io/access_token). The **same** token works for both Readwise and Reader. Because it is account-wide it grants full access to your Readwise account — keep it secret.
+- It is sent as `Authorization: Token <token>` (Readwise's scheme — not `Bearer`). It's stored in your credential vault and never passes through awflow's backend.
+
+## Web and extension builds
+
+This node is **extension-only**. The Readwise API isn't confirmed to send browser-CORS headers for token-authenticated requests, so run it in the awflow browser extension. In the web build the node shows the "needs the extension" block instead of running.
+
+## Troubleshooting
+
+- **`401 Unauthorized` / "access token was rejected"** — the token is missing or wrong; copy a fresh one from [readwise.io/access_token](https://readwise.io/access_token).
+- **Nothing saved / "No highlight text to save"** — either set the **Highlight text** field, or connect items that carry a `text` (or `highlight` / `content` / `selection`) field.
+- **Highlights missing their source** — set **Source URL** / **Title** / **Author**, or make sure the incoming items carry `source_url` (or `url` / `link`), `title`, and `author`.
+- **`429 Too Many Requests`** — Readwise throttles bursts; enable retry on the node or wait before retrying.
+
+## Related nodes
+
+- [Get Page Metadata](/nodes/extension/getpagemetadata/)
+- [Raindrop](/nodes/builtin/integration/raindrop/)
+- [Custom API](/nodes/builtin/integration/custom-api/)

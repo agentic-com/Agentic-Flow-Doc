@@ -1,0 +1,51 @@
+---
+title: "Google Embeddings"
+description: "Leverage Google (Gemini) to create embeddings."
+sidebar:
+  label: "Google Embeddings"
+---
+
+# Google Embeddings
+
+Leverage Google (Gemini) to create embeddings.
+
+## What it does
+
+Converts text into vector embeddings using a Google (Gemini) embeddings model. Google exposes an OpenAI-compatible Gemini API, so this node runs the OpenAI embeddings client against Google's base URL.
+
+## When to use it
+
+Connect this to indexer or RAG nodes when you need to create embeddings for semantic search and retrieval using Google (Gemini).
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | The Google embeddings model to use, e.g. `text-embedding-004`. Placeholder: `text-embedding-004`. |
+| Authentication | Credential field. Use your Google AI (Gemini) API key as a Bearer token. |
+
+## Outputs
+
+Returns an embeddings dependency for vector stores and retrieval workflows.
+
+## Dependencies and credentials
+
+- Requires an Authentication credential (Google AI / Gemini API key), sent as a Bearer token.
+- The node throws an error if Model is empty.
+
+## Example workflow
+
+Connect Google Embeddings to an AI agent or dependency input that accepts this dependency type, set the Model to a Google embeddings model such as `text-embedding-004`, attach your Google AI (Gemini) API key credential, then run the agent with data from previous nodes.
+
+## Troubleshooting
+
+- Check that the Model field is set — the node throws an error if it is empty.
+- Verify the Google AI (Gemini) API key credential is valid.
+- If it calls an external service, verify credentials, permissions, and rate limits.
+
+## Related nodes
+
+- [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/)
+- [Cohere Embeddings](/nodes/builtin/ai/aidependencies/embeddings/cohere/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Embeddings & Vectors](/advanced-ai/concepts/embeddings-vectors/)

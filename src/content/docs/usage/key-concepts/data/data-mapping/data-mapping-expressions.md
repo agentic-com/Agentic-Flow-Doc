@@ -94,6 +94,55 @@ If a node returns nested output, reference the full path.
 
 If the shape is uncertain, inspect the previous node output before writing the expression.
 
+## Operators and functions
+
+Expressions can do more than reference a value — you can compare, combine, and transform inside the braces.
+
+**Math** — `+ - * / %`, with normal precedence and parentheses:
+
+```txt
+{{ 5 + 3 * 2 }}        → 11
+{{ (5 + 3) * 2 }}      → 16
+{{ $input.price * 1.2 }}
+```
+
+**Text** — `+` joins text (any side that's text makes it a join):
+
+```txt
+{{ $input.first + " " + $input.last }}
+```
+
+**Compare and choose** — comparisons (`== != < <= > >=`), logic (`&& || !`), and a ternary (`condition ? ifYes : ifNo`):
+
+```txt
+{{ $input.total > 100 ? "big order" : "small order" }}
+{{ $input.status == "open" && $input.priority == "high" }}
+```
+
+**Fallbacks** — `||` returns the first value that isn't empty:
+
+```txt
+{{ $input.title || "Untitled page" }}
+```
+
+**Helper functions** — a fixed set of safe helpers:
+
+| Text | Numbers | Lists / general |
+|---|---|---|
+| `upper(s)` `lower(s)` `trim(s)` | `round(n)` `floor(n)` `ceil(n)` `abs(n)` | `length(x)` |
+| `replace(s, find, with)` | `min(a, b, …)` `max(a, b, …)` | `includes(list, value)` |
+| `split(s, sep)` `slice(s, start, end)` | `number(x)` | `join(list, sep)` `slice(list, start, end)` |
+| `str(x)` | | `default(value, fallback)` |
+
+```txt
+{{ upper(trim($input.name)) }}
+{{ join($input.tags, ", ") }}
+{{ default($input.title, "Untitled") }}
+{{ length($input.items) > 0 ? "has items" : "empty" }}
+```
+
+Expressions are **sandboxed**: only these functions are available — there are no variables, method calls, or access to anything outside the values you reference. For anything more complex, use the [Code](/nodes/builtin/core/code/) node.
+
 ## Good expression habits
 
 - Prefer clear field names from [Edit Fields](/nodes/builtin/datatransformation/editfields/) over long nested expressions.

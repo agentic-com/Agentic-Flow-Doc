@@ -49,6 +49,16 @@ When sharing workflow JSON files, be cautious:
 - Sensitive information (like tokens) may require cleaning before sharing.  
 </Aside>
 
+<Aside type="note" title="Imported workflows are treated as untrusted">
+A workflow you import from a file or URL didn't come from you, so it's treated as
+**untrusted code** — exactly like a workflow installed from the marketplace. Before
+its steps run, they're **run-gated** against the permissions the workflow actually
+needs, and steps that do something sensitive (run code, change the current page,
+read or write local files, use a connected app, or reach a new site) ask for your
+**consent** the first time. Review and approve those prompts — or choose "Always
+allow for this flow" — when you're happy with what the workflow does.
+</Aside>
+
 ---
 
 ## Why this matters

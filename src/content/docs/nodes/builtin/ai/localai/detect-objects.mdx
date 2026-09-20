@@ -1,0 +1,44 @@
+---
+title: "Detect Objects"
+description: "Find objects and bounding boxes in an image, on-device"
+sidebar:
+  label: "Detect Objects"
+---
+
+# Detect Objects
+
+Find objects **and their bounding boxes** in an image, running locally in your browser (COCO-SSD on TensorFlow.js, DETR on transformers.js). Private, offline, no cost.
+
+## What it does
+
+Runs the image through the selected on-device detector and returns every object found — its label, confidence, and box — sorted by confidence and filtered by a threshold.
+
+## When to use it
+
+Count or locate things in an image: how many people are in a photo, where a product sits, whether a frame contains a given object — then branch or annotate downstream.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | Any **installed** object-detection model, across engines. |
+| Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
+| Confidence threshold | Drop detections below this score (default `0.5`). |
+
+## Outputs
+
+Returns `{ objects, count, top }`:
+
+- `objects` — array of `{ label, score, box }`, highest confidence first. `box` holds the bounding-box coordinates.
+- `count` — number of objects that passed the threshold.
+- `top` — label of the most confident detection (or `null`).
+
+## Troubleshooting
+
+- **Nothing detected** — lower the threshold, or use a model trained on the objects you expect.
+- **Empty picker** — install an object-detection model first.
+
+## Related nodes
+
+- [Classify Image](/nodes/builtin/ai/localai/classify-image/)
+- [Caption Image](/nodes/builtin/ai/localai/caption-image/)

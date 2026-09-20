@@ -1,0 +1,69 @@
+---
+title: "Digest"
+description: "Accumulate items across runs and release them together"
+sidebar:
+  label: "Digest"
+---
+
+# Digest
+
+Accumulate items across runs and release them together.
+
+## What it does
+
+A Data Store remembers *values*; a Digest remembers a growing *list* and hands the whole thing over when asked. Each run can add to a bucket, and a later moment releases everything that gathered. That is what "collect everything that happened today and send one summary at 6pm", "batch these up and act once I have twenty" and "hold these until I say go" all have in common.
+
+The node has three modes over named **buckets**, so several independent digests can live in one workflow.
+
+## When to use it
+
+Use this node to batch work that should be acted on together rather than one item at a time: a daily or hourly digest email, a nightly export, or an "act once N have piled up" batcher. Add items as they arrive on each run, and release them on a schedule, on demand, or automatically once a count is reached.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Mode | What to do with the digest: `Add to digest` (append the incoming item(s) and wait), `Peek` (read everything without clearing), or `Release` (read everything and clear the bucket). Defaults to `Add to digest`. |
+| Bucket | Name of the digest to add to, peek at, or release. Defaults to `default`. Use different names to keep several digests apart in the same workflow. |
+| Release at (count) | Used by **Add**: release automatically once the bucket reaches this many items. `0` (the default) means an add never releases on its own — the bucket is emptied by a **Release** (manual or scheduled) or a Peek-then-act. |
+
+The item(s) to accumulate come from the node's incoming connection, the same way any other node reads its input. An **Add** appends whatever flows in; a single item is added as one, and a list is added as many.
+
+## Outputs
+
+The node has a single output, **Released**, and puts items on it *only* when it releases:
+
+- **Add to digest** — routes **nothing** while it is still accumulating, so the branch past it does not run. If a threshold is set and this add brings the bucket to it, the add releases instead: every accumulated item flows out of **Released** and the bucket is cleared.
+- **Peek** — everything currently in the bucket flows out of **Released**, and the bucket is left as it was.
+- **Release** — everything in the bucket flows out of **Released**, and the bucket is cleared.
+
+Because the engine follows an edge only from an output that received items, an add that is still gathering simply ends its branch — nothing downstream runs until a release happens.
+
+## The scheduled-digest pattern
+
+To release on a schedule — say a summary at 6pm every day — **do not** try to make one node schedule itself. Instead use two branches over the *same bucket*:
+
+1. Throughout the day, whatever produces items ends in a **Digest** node in **Add to digest** mode (bucket `daily`). Each run appends and the branch ends there.
+2. Separately, a **Schedule Trigger** set to 6pm leads to a **Digest** node in **Release** mode on the same bucket (`daily`). When it fires, it emits everything gathered since the last release and empties the bucket for the next day.
+
+The same shape works for a manual trigger (a "send it now" button branch) or an "act once I have N" batcher (a single Add node with **Release at (count)** set).
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser, and works without an account.
+- A digest lives in this workflow's Data Store, in this browser profile — same guarantees and limits as the [Data Store](/nodes/builtin/core/datastore/) node. Buckets are private to this workflow: an imported workflow gets a fresh, local ID and cannot read another workflow's digests.
+- Limits are the Data Store's: at most 500 keys and 5 MB per scope, with any single stored value capped at 128 KB. A digest that grows past a limit fails the node with a message rather than silently dropping items.
+- **Deleting the workflow clears its digests with it.** Editing the workflow keeps them — the accumulator survives ordinary edits.
+
+## Troubleshooting
+
+- **An add that "does nothing" is working as intended.** With no threshold, Add accumulates and ends the branch on purpose; wire the downstream steps to a **Release** (or **Peek**) instead.
+- **Give each digest its own bucket.** Two digests that share a bucket name accumulate into the same list. The bucket is stored under a `digest:<bucket>` key, so it will not collide with a plain Data Store key of the same name.
+- **Peek does not clear.** Use it when a run needs to look at the pending items but leave them pending; use **Release** when it should take them and empty the bucket.
+- **A release when the bucket is empty emits an empty list rather than failing.**
+
+## Related nodes
+
+- [Data Store](/nodes/builtin/core/datastore/) — remembers individual values between runs; a Digest builds on the same storage
+- [Schedule Trigger](/nodes/builtin/trigger/schedule/) — pair with a Release-mode Digest for a scheduled digest
+- [Node types overview](/nodes/builtin/node-types/)

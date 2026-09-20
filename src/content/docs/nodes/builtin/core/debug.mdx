@@ -1,0 +1,68 @@
+---
+title: "Debug"
+description: "Generate sample data, delay, or throw on demand"
+sidebar:
+  label: "Debug"
+---
+
+# Debug
+
+Generate sample data, delay, or throw on demand.
+
+## What it does
+
+A helper for building and troubleshooting workflows. It does one of three things, chosen by its **Mode** setting: emits predictable sample data, waits for a short moment, or forces an error. It never touches the network, credentials, or storage — it is purely a way to exercise the rest of a flow.
+
+## When to use it
+
+Use this node while you are building or debugging a workflow:
+
+- Feed a downstream step **sample data** so you can test it without wiring up a real source.
+- Add a short **delay** to slow a step down and watch it run.
+- **Throw** an error on purpose to see how Continue On Fail, retries, and downstream error handling behave.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Mode | What the node does: `Generate` (the default), `Delay`, or `Throw`. |
+| Shape | Used by **Generate**: which sample data shape to emit — `Indexed items` (the default), `Long string`, `Nested object`, or `Random JSON`. |
+| Count | Used by **Generate → Indexed items**: how many items to emit. Defaults to `5`. |
+| Length | Used by **Generate → Long string**: the exact length, in characters, of the generated string. Defaults to `1000`. |
+| Depth | Used by **Generate → Nested object**: how many levels deep to nest. Defaults to `3`. |
+| Delay (ms) | Used by **Delay**: how long to wait, in milliseconds. Defaults to `1000`. |
+| Error message | Used by **Throw**: the error message to raise. Defaults to `Debug node threw on demand`. |
+
+## Outputs
+
+Depends on the mode:
+
+- **Generate** — depends on the chosen shape:
+  - *Indexed items* — an array of `Count` items, each `{ index, id }` where `index` runs from `0` and `id` is `item-<index>`.
+  - *Long string* — one item `{ value }` whose string is exactly `Length` characters, built deterministically.
+  - *Nested object* — one item nested `Depth` levels deep, `{ level: 1, child: { level: 2, child: { … } } }`, where the leaf's `level` equals `Depth`.
+  - *Random JSON* — one item with randomized primitive fields: `{ id, name, active, score, tags }` (a number, a string, a boolean, a number, and an array of strings).
+- **Delay** — passes the upstream input straight through after waiting, or an empty item when there is no upstream input.
+- **Throw** — produces no output; it raises the configured error.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser and works without an account. Nothing is sent anywhere.
+
+## Example workflow
+
+To exercise a step that iterates: put a Debug node in **Generate** mode with the **Indexed items** shape and a `Count` of, say, `10`, then wire it into the node you want to test. It emits ten predictable items so you can confirm the downstream node handles a list before you connect a real source.
+
+To test error handling: put a Debug node in **Throw** mode, enable **Continue On Fail** on it, and confirm the run carries on past it — the node logs the error and outputs a single empty item instead of stopping the workflow.
+
+## Troubleshooting
+
+- **Delay is not durable.** The delay uses a plain in-run timer and does not survive a closed tab. For waits that must survive a closed tab or run for minutes or more, use the [Wait](/nodes/builtin/flow/wait/) node instead.
+- **Generate settings are per shape.** `Count`, `Length`, and `Depth` each apply only to their matching shape; the others are ignored.
+- **Throw always fails the node.** Unless **Continue On Fail** is enabled (or retries are configured), a Debug node in Throw mode stops the run — that is what it is for.
+
+## Related nodes
+
+- [Wait](/nodes/builtin/flow/wait/) — pause the workflow durably, surviving a closed tab
+- [Code](/nodes/builtin/core/code/)
+- [Node types overview](/nodes/builtin/node-types/)

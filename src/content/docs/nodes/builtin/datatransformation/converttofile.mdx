@@ -1,0 +1,62 @@
+---
+title: "Convert to File"
+description: "Turn items into a file (CSV, JSON, text, base64 or binary)"
+sidebar:
+  label: "Convert to File"
+---
+
+# Convert to File
+
+Turn items into a file (CSV, JSON, text, base64 or binary).
+
+## What it does
+
+Produces a file from the incoming items **without saving it**. It generalises [Download as File](/nodes/builtin/datatransformation/downloadasfile/) by separating *producing* a file from *saving* it: the produced bytes are attached to the output item as a binary payload (`$binary.data`), so the same result can flow onward to Download as File, Google Drive, an HTTP request body, or a Slack / email attachment — anywhere a **Binary source** is accepted — without re-encoding.
+
+## When to use it
+
+Use this node when a later step needs a real file rather than text on a field: uploading generated data to Google Drive, sending it as an attachment, or posting it as an HTTP body. Pick the format, and the node hands the next node a ready-to-use binary attachment.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Format | The kind of file to produce: `CSV`, `JSON`, `Text`, `Base64` or `Binary`. Defaults to `CSV`. |
+| File name | Name recorded on the produced file. Left empty, a sensible default per format is used (`data.csv`, `data.json`, `data.txt`, `data.bin`). |
+| MIME type | Content type recorded on the file. Left empty, a sensible default per format is used (see below). Set it explicitly for `Base64`, where it cannot be inferred. |
+| Source Field | Field to read from the item. For `Text`: the text to write per item. For `Base64`: the field holding the base64 string. For `Binary`: the binary slot (defaults to `data`) or a field holding the bytes. |
+
+## Formats
+
+- **CSV** — the incoming items are serialized with the shared CSV writer (the same one behind the [CSV](/nodes/builtin/datatransformation/csv/) node), so quoting, column union and line endings match everywhere. Default MIME `text/csv`.
+- **JSON** — the incoming items are stringified as a pretty-printed JSON array (two-space indent). Default MIME `application/json`.
+- **Text** — items are joined line by line. A **Source Field** picks the text off each item; otherwise a plain-string item is used as-is and anything else is JSON-encoded. Default MIME `text/plain`.
+- **Base64** — a base64 string read off the item (via **Source Field**, or the item's `data` field) is decoded into the file bytes. Because base64 carries no content type, set the **MIME type** yourself; it defaults to `application/octet-stream`.
+- **Binary** — an existing `$binary` attachment (or a blob / base64 field named in **Source Field**) is wrapped and re-labelled with the configured name / MIME when given, otherwise the source's own name and type are kept. Default MIME `application/octet-stream`.
+
+## Outputs
+
+A single item carrying the produced file on `$binary.data`, plus `fileName`, `mimeType`, `format` and `size` on its JSON for reference. Downstream nodes that accept a **Binary source** (Download as File, Google Drive, Slack, HTTP Request) read the file straight off `$binary.data`.
+
+## Dependencies and credentials
+
+- No credential or node dependency is required. The node runs entirely in the browser.
+
+## Example workflow
+
+Point a node that produces items into Convert to File, set **Format** to `CSV` and leave the rest at their defaults, then connect the result into Google Drive (choose the binary as the upload source) — the spreadsheet lands in Drive without a separate download step. To attach generated JSON to a Slack message, set **Format** to `JSON` and pick this node's binary as the attachment source.
+
+## Troubleshooting
+
+- **"No items to convert"** — connect a node that produces items upstream.
+- **Base64 "needs a base64 string"** — name the field holding the base64 in **Source Field**, or place it on the item's `data` field, and make sure the value is a string.
+- **Binary "No binary to wrap"** — the incoming item has no `$binary` attachment; connect a node that produces one, or name a field holding a blob or base64 string.
+- Base64 files open with the wrong type — set the **MIME type** explicitly; it cannot be inferred from base64 alone.
+
+## Related nodes
+
+- [Download as File](/nodes/builtin/datatransformation/downloadasfile/)
+- [Save as File](/nodes/builtin/datatransformation/saveasfile/)
+- [CSV](/nodes/builtin/datatransformation/csv/)
+- [JSON](/nodes/builtin/datatransformation/json/)
+- [Node types overview](/nodes/builtin/node-types/)
