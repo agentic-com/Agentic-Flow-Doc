@@ -1,0 +1,60 @@
+---
+title: "In-Page Form"
+description: "Pause the run and ask the user to fill a form; continue with the values they enter."
+sidebar:
+  label: "In-Page Form"
+---
+
+# In-Page Form
+
+Pause a run to ask the user for input, then continue with whatever they enter.
+
+## What it does
+
+Workflows otherwise run start to finish with no way to ask a question. In-Page Form pauses the run, presents a form you define, and resumes once the user submits it — passing the entered values on to the next node. Anything that needs a choice mid-run (which of these results, what subject line, confirm these details) becomes possible.
+
+The paused run waits in the **Executions** pane, where the form is shown; it survives browser restarts, like the **Wait For Approval** node.
+
+## When to use it
+
+- Collect a value mid-run that only a person can supply.
+- Let the user pick from choices, toggle an option, or confirm details before a consequential step.
+- Gather structured input (name, date, selection) to feed downstream nodes.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Form title | The heading shown above the form on the paused run. |
+| Fields | The fields to render. Each field has a **name** (the output key), an optional **label**, a **type**, optional **options**, and a **required** flag. |
+
+Supported field types: **text**, **textarea**, **number**, **checkbox**, **select** (comma-separated options), and **date**.
+
+## Outputs
+
+When the user submits, the entered values flow out as the node's output, keyed by each field's **name**. Downstream nodes reference them by that name — e.g. a field named `email` becomes available as `email`.
+
+## Paused run visibility and control
+
+A paused run appears in the **Executions** pane with the form rendered inline. It waits indefinitely — it does not time out on its own — and persists across browser restarts. Cancelling the paused run stops it without producing output.
+
+## Dependencies and credentials
+
+- No credential is required.
+- No extra permission is needed.
+
+## Example workflow
+
+An automation gathers candidate subject lines with an AI node → In-Page Form (a **select** field over the candidates) → an email integration sends the chosen one.
+
+## Troubleshooting
+
+- Required fields must be filled before the form can be submitted.
+- Give each field a distinct **name** — that name is the key downstream nodes use to read its value.
+- For a simple yes/no gate rather than a form, use the **Wait For Approval** node.
+
+## Related nodes
+
+- [IF](/nodes/builtin/flow/if/)
+- [Merge](/nodes/builtin/flow/merge/)
+- [Filter](/nodes/builtin/flow/filter/)

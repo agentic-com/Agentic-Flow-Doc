@@ -1,0 +1,60 @@
+---
+title: "Tab Control"
+description: "Open, close, focus, reload, navigate, and group browser tabs — and wait for a tab to finish loading."
+sidebar:
+  label: "Tab Control"
+---
+
+# Tab Control
+
+Drive browser tabs from a workflow: open, close, focus, reload, navigate, and group them — with an optional wait for the page to finish loading.
+
+## What it does
+
+Every In Page Action node operates on a tab that already exists and is already the right one. Tab Control is how a workflow *gets* to a page: "open this URL, wait for it to load, then scrape it" becomes expressible. It returns a reference to the tab it acted on, and it focuses newly opened tabs so the In Page Action nodes that follow act on the right page.
+
+## When to use it
+
+- Open a URL and wait for it to load before scraping or interacting with it.
+- Navigate an existing tab somewhere new, reload it, or bring it to the front.
+- Close a tab when you are done with it, or group a set of tabs together.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Operation | `Open`, `Close`, `Focus`, `Reload`, `Navigate`, or `Group`. |
+| URL | The address to open or navigate to (used by **Open** and **Navigate**). Validated before use. |
+| Tab ID | The tab to act on (used by **Close**, **Focus**, **Reload**, **Navigate**). Defaults to the active tab when left blank. |
+| Wait for load | For **Open**, **Navigate**, and **Reload** — wait until the tab reports it has finished loading before continuing. |
+| Active | For **Open** — open the tab focused (default) or in the background. |
+| Tab IDs | For **Group** — the tabs to place into one group. |
+
+## Outputs
+
+- For **Open**, **Navigate**, **Reload**, **Focus**: a tab reference — `{ tabId, url, title, windowId, status }`.
+- For **Close**: `{ closed: true, tabId }`.
+- For **Group**: `{ groupId, tabIds }`.
+
+Feed the `tabId` from a reference into subsequent In Page Action nodes so the whole group composes.
+
+## Dependencies and credentials
+
+- No credential is required.
+- Uses the already-held `tabs` permission — no extra permission is needed.
+
+## Example workflow
+
+Tab Control (**Open** `https://example.com`, **Wait for load** on) → [Get All Text](/nodes/extension/getalltext/) → an AI node to summarise → [Browser Notification](/nodes/extension/browsernotification/).
+
+## Troubleshooting
+
+- **Wait for load** resolves as soon as the tab reports completion, and always resolves after a safety timeout — so a stalled page can never hang the run indefinitely.
+- If **Navigate**/**Close**/**Reload** targets a specific **Tab ID**, make sure that tab still exists; otherwise leave Tab ID blank to act on the active tab.
+- Setting a tab group's title or colour needs a separate permission and is a planned follow-up; **Group** currently just places tabs into one group.
+
+## Related nodes
+
+- [Navigation Trigger](/nodes/builtin/trigger/navigation/)
+- [Page Load](/nodes/builtin/trigger/pageload/)
+- [Get All Text](/nodes/extension/getalltext/)

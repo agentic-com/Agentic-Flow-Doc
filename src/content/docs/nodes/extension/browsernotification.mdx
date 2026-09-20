@@ -1,0 +1,58 @@
+---
+title: "Browser Notification"
+description: "Show a system notification through the OS notification center, visible even when no tab is focused."
+sidebar:
+  label: "Browser Notification"
+---
+
+# Browser Notification
+
+Show a system-level notification through the operating system's notification center — visible even when no browser tab is focused.
+
+## What it does
+
+Creates a native OS notification with a title, message, icon, priority, and up to two action buttons. Unlike [Show Notification](/nodes/extension/shownotification/), which renders **inside the current page** and therefore only works while a tab is open and in view, this node reaches the user through the system notification center regardless of what they are looking at.
+
+## When to use it
+
+- A scheduled or background workflow finishes while the user is in another app and needs to be told.
+- You want the alert to persist in the OS notification center rather than disappear with the tab.
+- You need an alert that does not depend on a page being open.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Title | The notification's bold heading. |
+| Message | The notification body text. |
+| Icon URL | Optional. A packaged extension asset path (e.g. `icons/icon128.png`) or an accessible image URL. Falls back to the extension icon. |
+| Priority | `Low`, `Normal`, or `High` — controls how prominently the OS surfaces the notification. |
+| Buttons | Optional. Up to two action buttons (Chrome's limit), each with a title. |
+
+## Outputs
+
+Returns a small confirmation object:
+
+- `notificationId` — the id of the created notification.
+- `shown` — `true` once the notification has been created.
+
+## Dependencies and credentials
+
+- No credential is required.
+- Uses the extension's already-held `notifications` permission — no extra permission is needed.
+
+## Example workflow
+
+Run a scheduled workflow that gathers a daily summary, then end with Browser Notification to alert the user that the digest is ready — even if the browser is in the background.
+
+## Troubleshooting
+
+- If nothing appears, check that notifications are enabled for your browser in the operating system's settings.
+- A custom **Icon URL** must resolve to a reachable image; when in doubt, leave it blank to use the default extension icon.
+- Button clicks are not yet routed back into the workflow — buttons are display-only for now. For a gate that resumes a run based on the user's response, use [In-Page Form](/nodes/builtin/flow/in-page-form/).
+
+## Related nodes
+
+- [Show Notification](/nodes/extension/shownotification/)
+- [In-Page Form](/nodes/builtin/flow/in-page-form/)
+- [Tab Control](/nodes/extension/tabcontrol/)
