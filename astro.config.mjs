@@ -134,6 +134,10 @@ export default defineConfig({
                       link: "usage/using-the-app/workflows/tags",
                     },
                     {
+                      label: "Filter the list",
+                      link: "usage/using-the-app/workflows/filters",
+                    },
+                    {
                       label: "Components",
                       autogenerate: {
                         directory: "usage/using-the-app/workflows/components",
