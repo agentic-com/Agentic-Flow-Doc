@@ -49,11 +49,7 @@ The data flowing into the node is available to your code as a variable named **`
   - A node with a **blank label** is keyed by its node id instead, so a key is never empty.
   - If **two nodes share a label**, both keys get an id suffix — `"HTTP Request [a1b2]"` — so they stay unique. A label used only once keeps its plain name.
 
-- **Nothing connected** — `input` is *not* your data; it is Python's built-in `input` function. Reading it (for example `str(input)`) yields `"<built-in function input>"`. If your code can run with nothing wired in, guard for it:
-
-  ```python
-  data = input if isinstance(input, dict) else {}
-  ```
+- **Nothing connected** — `input` is an empty dict, `{}`. It is always defined, so you can safely read it (e.g. `input.get("selection", "")`) even when no node feeds the Code node.
 
 In expressions elsewhere on the canvas, the same data is reachable as `{{ $input }}`: `{{ $input.selection }}` for a single connection, or `{{ $input["Get Selected Text"].selection }}` for fan-in.
 
