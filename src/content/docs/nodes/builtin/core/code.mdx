@@ -23,26 +23,53 @@ Use this node for custom data transformations, calculations, or logic that isn't
 | --- | --- |
 | Code to Execute | Source-backed field from the node schema. |
 
-## Reading input and returning output
+## Reading input
 
-The data flowing into the node is available to your code as a variable named **`input`** — a normal Python value (dict, list, or scalar), mirroring what `{{ $input }}` holds elsewhere.
+The data flowing into the node is available to your code as a variable named **`input`** — a normal Python value (dict, list, or scalar), mirroring what `{{ $input }}` holds elsewhere. Its shape depends on how many nodes are wired into the Code node:
 
-Set a variable named **`result`** to whatever the node should output.
+- **One node connected** — `input` is that node's output, exactly as it produced it:
+
+  ```python
+  # from a single upstream node
+  # input == {"selection": "Hello", "triggerType": "contextMenu"}
+  input["selection"]  # -> "Hello"
+  ```
+
+- **Several nodes connected (fan-in)** — `input` is a dict **keyed by each source node's label**, so you can tell the branches apart:
+
+  ```python
+  # input == {
+  #   "Get Selected Text": {"selection": "Hello"},
+  #   "HTTP Request": {"status": 200, "body": {...}},
+  # }
+  input["Get Selected Text"]["selection"]  # -> "Hello"
+  ```
+
+  Two rules keep those keys usable:
+  - A node with a **blank label** is keyed by its node id instead, so a key is never empty.
+  - If **two nodes share a label**, both keys get an id suffix — `"HTTP Request [a1b2]"` — so they stay unique. A label used only once keeps its plain name.
+
+- **Nothing connected** — `input` is an empty dict, `{}`. It is always defined, so you can safely read it (e.g. `input.get("selection", "")`) even when no node feeds the Code node.
+
+In expressions elsewhere on the canvas, the same data is reachable as `{{ $input }}`: `{{ $input.selection }}` for a single connection, or `{{ $input["Get Selected Text"].selection }}` for fan-in.
+
+## Returning output
+
+The node outputs the value of the **last expression** in your code — like a notebook cell. Put the value you want to emit on its own final line. (Assigning to a variable is *not* enough; an assignment is a statement, not an expression, so it emits nothing.)
 
 ```python
 # input = {"tags": ["news", "ai"], "title": "Hello"}
-result = {
+out = {
     "title": input["title"].upper(),
     "tag_count": len(input["tags"]),
     "joined": ", ".join(input["tags"]),
 }
+out  # <- last expression: this is what the node returns
 ```
-
-If nothing is connected into the node, `input` is not defined — guard with `globals().get("input")` if your code can run either way.
 
 ## Outputs
 
-Returns the `result` variable, visible in the workflow execution data and passed to the next node.
+The value of the last expression, visible in the workflow execution data and passed to the next node.
 
 ## Dependencies and credentials
 
