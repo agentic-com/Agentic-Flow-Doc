@@ -60,7 +60,7 @@ Connect Tools Agent to an AI agent or dependency input that accepts this depende
 
 ## Troubleshooting
 
-- **"This agent requires that the bind_tools() method be implemented on the input model"** — the connected chat model can't call tools. Cloud models and [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/) (prompt-based tool calling) support it; [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) doesn't yet.
+- **"This agent requires that the bind_tools() method be implemented on the input model"** — the connected chat model can't call tools. Cloud models support it, and so do the on-device [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/) and [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) models (prompt-based tool calling). Check that the model node is up to date and connected to the agent's **Model** input.
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
