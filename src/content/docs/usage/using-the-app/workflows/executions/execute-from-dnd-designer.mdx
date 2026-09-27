@@ -30,9 +30,30 @@ flowchart LR
 Use this when you want to see the complete result from start to finish.
 
 1. Open the page you want the workflow to work on.
-2. In the designer, click **Execute Workflow**.
-3. The workflow runs node by node.
-4. Click a node to see its output.
+2. In the designer, click **Test Workflow**.
+3. The workflow runs node by node. The button turns into **Running… 2 of 4 | Stop** so you can see how far it got.
+4. When it finishes, the **Last run** tab of the panel on the right says what happened. Click a node to see its output.
+
+### One run at a time
+
+While a run is in progress, every other way to start one — **Test Workflow**, a node's play button, **Test step**, **Run again**, **Run once to test** — is disabled, with a tooltip saying why. Two runs at once would mix their outputs and logs.
+
+You can keep editing during a run. Your changes don't affect the run in progress, and they stay marked as unsaved until you save.
+
+### Stop a run
+
+Click **Stop** on the running button. The step that is already running finishes; nothing after it starts. The run is recorded as canceled, and the **Last run** tab shows how many steps ran before it stopped.
+
+### When a run fails
+
+The **Last run** tab explains the failure in plain words instead of showing the raw error:
+
+- **What happened**, e.g. *"Get weather couldn't reach the service."*
+- **Why it probably happened** — a network or CORS block, a refused key (401 / 403), a rate limit (429, with a countdown when the service says how long to wait), a used-up quota, a missing connection or a field that needs attention.
+- **Try this** — a few concrete things to do, and a button to open the step's settings, reconnect it or run again.
+- **Show technical details** — the step, time, run id, the error the step reported and its input, with **Copy details** for a bug report.
+
+You get a single notification for a failed run, and only when the panel isn't on screen (for example when the run was started from the workflow list or the tab was in the background). Testing a single step still shows a short notification when it fails.
 
 ---
 
@@ -44,7 +65,7 @@ When you run a step, Agentic WorkFlow will also run any steps *before it* that a
 
 1. Click the node you want to test.
 2. Open its configuration panel.
-3. Click **Execute Step**.
+3. Click **Test step**.
 
 If you don’t want parts of the workflow to run while testing, temporarily disable those nodes.
 
