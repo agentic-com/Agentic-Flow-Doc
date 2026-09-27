@@ -12,14 +12,14 @@ sidebar:
 Models cover chat, vision, text and audio, and run on one of three on-device runtimes — chosen automatically per model, so you pick a *model* and never worry about the engine:
 
 - **WebLLM** — chat / text-generation models (Llama, Qwen, Phi, and more) on WebGPU.
-- **TensorFlow.js** — vision and embedding models (MobileNet, COCO-SSD, the Universal Sentence Encoder that powers Local Knowledge search), WebGPU with a WebGL/WASM fallback.
-- **transformers.js** — the widest range of tasks (image classification, object detection, captioning, sentiment/toxicity, question answering, summarization, translation, and Whisper speech-to-text) via ONNX, WebGPU with a WASM fallback.
+- **TensorFlow.js** — vision, text and embedding models (MobileNet, COCO-SSD, toxicity, the Universal Sentence Encoder used by older Local Knowledge stores), WebGPU with a WebGL/WASM fallback.
+- **transformers.js** — the widest range of tasks (image classification, object detection, image segmentation, depth estimation, captioning, sentiment/toxicity and zero-shot classification, question answering, summarization, translation, embeddings, and Whisper speech-to-text) via ONNX. Encoder-style tasks use WebGPU automatically when available, with a WASM fallback.
 
 All three store their weights in this browser's storage, so a model you install here is available to workflows (the [Local AI nodes](/nodes/builtin/ai/localai/) and the [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) node) and to the assistant, with no re-download.
 
 ## Browsing by task
 
-The page groups models by **task** — Chat, Image classification, Object detection, Captioning, Moderation, Question answering, Text generation, Speech-to-text, Embeddings — each with its own section. Because a task can have many models, each section shows a preview and a **Show all** control to expand it, so a long list of chat models never buries the other categories.
+The page groups models by **task** — Chat, Image classification, Object detection, Image segmentation, Depth estimation, Captioning, Moderation, Question answering, Text generation, Speech-to-text, Embeddings — each with its own section. **Image segmentation** splits an image into labelled regions (e.g. SegFormer); **Depth estimation** estimates how far each pixel is (e.g. Depth Anything) — both run through the [Run Local Model](/nodes/builtin/ai/localai/run-local-model/) node. Because a task can have many models, each section shows a preview and a **Show all** control to expand it, so a long list of chat models never buries the other categories.
 
 Use the **search** box to filter by name, and the **engine filter** to narrow to WebLLM, TensorFlow.js, or transformers.js.
 
@@ -68,22 +68,28 @@ Browsers can automatically delete stored data — including multi-gigabyte model
 
 ## Add a custom model
 
-You can add a model beyond the built-in list with **Add custom model**. The importer is **engine-aware** — pick the runtime, and it asks for exactly what that engine needs:
+You can add a model beyond the built-in list with **Add custom model**. It takes two steps.
 
-- **WebLLM** — an **MLC-compiled** model: its **weights URL** and its compiled **model library (`.wasm`)**. WebLLM cannot load a raw `.gguf` directly; it needs the MLC build.
-- **TensorFlow.js** — the **model URL** of a graph/layers model (e.g. a `model.json`).
-- **transformers.js** — the **Hugging Face model id** (e.g. `Xenova/vit-base-patch16-224`) and its task.
+**Step 1 — the model.** Pick the engine, and the dialog asks for exactly what that engine needs:
 
-Once added, a custom model behaves like any built-in one — install, test, use it in a workflow (including the [Run Local Model](/nodes/builtin/ai/localai/run-local-model/) node), and remove it (which deletes both its weights and the entry).
+- **WebLLM** — an **MLC-compiled** model: its **weights URL** and its compiled **model library (`.wasm`)**. WebLLM models are always **chat** models, and WebLLM cannot load a raw `.gguf` directly; it needs the MLC build.
+- **TensorFlow.js** — the **model URL** of a graph/layers model (a `model.json`).
+- **transformers.js** — the **Hugging Face model id** (e.g. `Xenova/vit-base-patch16-224`). It needs an ONNX build (an `onnx/` folder); repos with only GPTQ, GGUF or safetensors weights won't run in the browser.
+
+As you type, the dialog **detects the model's task** and shows what it found — task, expected input and output, file size where known, and where the guess came from. For a transformers.js model it reads the model's hub metadata; for a TensorFlow.js `model.json` it reads the input/output signature (e.g. `[1,224,224,3] → [1,1001]` means image classification). If the guess is wrong, or nothing could be detected (for example while offline), choose the task yourself under **Use it as**. The task decides which nodes can pick the model.
+
+**Step 2 — confirm you trust the source.** Custom models aren't reviewed. Their files are downloaded from the source you gave and run inside your browser, and a bad model can give wrong or misleading results (WebLLM models also run a compiled `.wasm` library). Tick **I trust this source and want to add the model** to add it and start the download.
+
+Once added, a custom model gets a **Custom** badge and behaves like any built-in one — install, test, use it in a workflow (including the [Run Local Model](/nodes/builtin/ai/localai/run-local-model/) node, whose *Custom model (raw output)* task runs a model of any other kind), and remove it (which deletes both its weights and the entry).
 
 ## Using models in workflows
 
 - **[Local AI nodes](/nodes/builtin/ai/localai/)** — classify or caption images, detect objects, moderate or transform text, answer questions, and transcribe audio, all on-device.
 - **[Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/)** — an in-browser chat model dependency (WebGPU). Installed models are marked and shown first, and you can **download a model right from the dropdown** or jump to this page with **Manage models**.
 - **[Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/)** — a chat model dependency backed by transformers.js (ONNX/WASM), for tiny CPU-friendly chat when WebGPU isn't available.
-- **[Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/)** — an **Engine** toggle switches it between a connected LLM and a local classifier.
+- **[Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) and [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/)** — connect them to the Model port of Text Classifier, Sentiment Analysis, or the Q&A Agent to run those agents on-device.
 - **[Record Audio](/nodes/builtin/flow/record-audio/) → [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/)** — capture the mic and transcribe it, end to end on-device.
-- **Local Knowledge / embeddings** — vector search embeds with an on-device model; each store records the embedding model it was built with, so results stay consistent.
+- **[Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/) → [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)** — vector search embeds with an on-device model; each store records the embedding model it was built with, so results stay consistent.
 
 ## In the assistant
 

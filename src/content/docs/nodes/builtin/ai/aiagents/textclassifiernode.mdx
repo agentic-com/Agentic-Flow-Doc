@@ -1,17 +1,26 @@
 ---
 title: "Text Classifier"
-description: "Classify text into one of a set of given categories using a LLM"
+description: "Classify text into one of a set of given categories using a LLM, or on-device with a Local Classifier"
 sidebar:
   label: "Text Classifier"
 ---
 
 # Text Classifier
 
-Classify text into one of a set of given categories using a LLM
+Classify text into one of a set of given categories using a LLM, or on-device with a Local Classifier
 
 ## What it does
 
 Sends the input text to a language model along with a list of categories you define, and asks it to classify the text into exactly one of them. If none of the categories fit, the model is instructed to respond with `"unknown"`.
+
+## Run on-device
+
+What you connect to the **Model** port decides the engine — there is no setting to switch:
+
+- **A chat model** (e.g. Chat OpenAI, Web LLM) — the LLM path described above.
+- **A [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/)** — classifies in your browser: free, private, offline. With a **zero-shot** model, your **Categories** become the candidate labels and the best-scoring one wins. With a fixed-label model (sentiment, toxicity), the model's own labels are used and Categories are ignored. System message doesn't apply.
+
+For standalone zero-shot classification without an agent, see [Classify Text](/nodes/builtin/ai/localai/classify-text/).
 
 ## When to use it
 
@@ -27,11 +36,12 @@ Use this node to route or tag text by topic or intent — for example, sorting i
 
 ## Outputs
 
-Returns `{ category }`, a string with the trimmed category name returned by the model — one of the categories you supplied, or `"unknown"` if none fit.
+- **Chat model** — returns `{ category }`, a string with the trimmed category name returned by the model — one of the categories you supplied, or `"unknown"` if none fit.
+- **Local Classifier** — returns `{ category, scores }`: the top label (or `"unknown"` if the model returned none) and a `{ label: score }` map of every label's score.
 
 ## Dependencies and credentials
 
-- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). Used to classify the text.
+- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI), or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to classify on-device.
 
 ## Example workflow
 
@@ -41,6 +51,7 @@ Connect a Chat OpenAI node to the Model dependency, feed text from an upstream n
 
 - If the model frequently returns "unknown", check that your Categories cover the expected range of input text, or make category names less ambiguous.
 - Verify the Model dependency is connected — the node throws if no model is found.
+- **"Add at least one category"** — a zero-shot Local Classifier needs at least one category to score against.
 - Keep category names distinct and non-overlapping to reduce misclassification.
 
 ## Related nodes
