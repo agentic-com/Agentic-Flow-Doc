@@ -1,0 +1,55 @@
+---
+title: "Classify Text"
+description: "Sort text into your own labels on-device — no training needed"
+sidebar:
+  label: "Classify Text"
+---
+
+# Classify Text
+
+Sort text into **your own labels** — any words you like, no training — running locally in your browser with a zero-shot model (e.g. *DeBERTa zero-shot* on transformers.js). Private, offline, no cost.
+
+## What it does
+
+Scores the text against every label you list using a zero-shot (NLI) model, then returns the best label and a score for each one. If even the best label scores below the **Confidence threshold**, `label` is `null`, so you can route "none of the above" separately.
+
+## When to use it
+
+- Route incoming messages, tickets, or emails by topic or intent (`billing, bug report, feature request, other`).
+- Tag scraped content or notes with categories you invent on the spot.
+- Anywhere you'd use the [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/) agent but want it free, private, and offline without wiring a model dependency.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Text | The text to classify. |
+| Labels | Comma-separated list of labels, e.g. `billing, bug report, other`. An expression may return a list or a comma/newline-separated string (e.g. `{{ $json.labels }}`). Duplicates are ignored (case-insensitive). |
+| Model | An **installed** zero-shot (NLI) model. Only zero-shot models are listed here. |
+| Allow several labels | Off by default: labels compete for one answer (scores sum to 1). On: each label is scored independently, so several can be high at once. |
+| Confidence threshold | Below this score the top `label` is `null` (default `0.3`). |
+
+## Outputs
+
+Returns `{ label, score, labels }`:
+
+- `label` — the best label, or `null` when its score is below the threshold.
+- `score` — the top label's score (reported even when `label` is `null`).
+- `labels` — every label as `{ label, score }`, highest first.
+
+## Example workflow
+
+Feed an email body into **Text**, set **Labels** to `invoice, meeting request, newsletter, other`, then branch on `{{ $json.label }}` with a Switch node — and send `null` results to a manual-review branch.
+
+## Troubleshooting
+
+- **"Choose a zero-shot model to classify with."** — pick a model; install one from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
+- **"Add at least one label (comma-separated)."** — the Labels field is empty after parsing.
+- **`label` is often `null`** — lower the threshold, or make labels more distinct and descriptive (`refund request` rather than `money`).
+- **Several labels look right** — turn on **Allow several labels** and read the `labels` scores.
+
+## Related nodes
+
+- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/) — the agent version; connect a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to run it on-device.
+- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/) — fixed-label sentiment / toxicity.
+- [Summarize](/nodes/builtin/ai/localai/summarize/), [Translate](/nodes/builtin/ai/localai/translate/)

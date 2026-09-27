@@ -17,29 +17,41 @@ Runs the selected on-device model for the task you choose and returns the normal
 
 - You imported a **custom model** and want to run it.
 - You want **embeddings** from a node, not a dependency.
+- You need **image segmentation**, a **depth map**, or extractive Q&A with the question and passage in one input.
 - You'd rather configure one flexible node than reach for the specific one.
 
 ## Inputs and settings
 
 | Setting | Notes |
 | --- | --- |
-| Task | One of: Image classification, Object detection, Image captioning, Text moderation, Text generation, Speech-to-text, Embeddings. |
-| Model | Any **installed** model, across engines. |
-| Input | Text, or an image/audio **URL / data URL / `$binary`**, depending on the task. |
+| Task | One of: Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio, Moderate text, Answer question, Generate text, Embeddings, Custom model (raw output). |
+| Model | Any **installed** model for the chosen task, across engines. The picker is filtered to the selected Task. |
+| Input | Depends on the task — see below. |
+
+### Input by task
+
+- **Image and audio tasks** (Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio) — an image/audio **URL**, **data URL**, raw base64, or **`$binary`** from a previous node.
+- **Answer question** — JSON with both fields: `{ "question": "…", "context": "…" }`. The answer is quoted from `context`.
+- **Text tasks** (Moderate text, Generate text, Embeddings) and **Custom model** — text. A non-text value from an expression is passed as JSON.
 
 ## Outputs
 
 The output shape matches the chosen task:
 
-- **Image classification / Text moderation** → `{ predictions, top, score }`
-- **Object detection** → `{ objects, count, top }`
-- **Image captioning / Text generation** → `{ text }`
-- **Speech-to-text** → `{ transcript, chunks? }`
+- **Classify image / Moderate text** → `{ predictions, top, score }`
+- **Detect objects** → `{ objects, count, top }`
+- **Caption image / Generate text** → `{ text }`
+- **Segment image** → `{ segments, labels, top }` — `segments` is `[{ label, score, coverage, mask }]`, largest region first; each `mask` is a black-and-white **PNG** binary (`image/png`) of that region, usable anywhere a `$binary` image is accepted.
+- **Depth map** → `{ depth, width, height, $binary }` — `depth` is a grayscale **PNG** depth map (with Depth Anything, brighter usually means closer), also exposed as `$binary` so the next node's media input picks it up via *From input*.
+- **Transcribe audio** → `{ transcript, segments, chunks }`
+- **Answer question** → `{ answer, score }`
 - **Embeddings** → `{ embedding }` (a numeric vector)
+- **Custom model (raw output)** → `{ result }` — whatever the model returned, unchanged. Use it for a custom-imported model whose task isn't one of the above.
 
 ## Troubleshooting
 
-- **Task/model mismatch** — pick a model trained for the selected task; the picker lists models by their declared task.
+- **Task/model mismatch** — pick a model trained for the selected task; the picker only lists models for the chosen task. Change the task first, then the model.
+- **"Answer question needs JSON input …"** — the Input must be valid JSON with non-empty `question` and `context` strings.
 - **Empty picker** — install a model for that task first, from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
 
 ## Related nodes

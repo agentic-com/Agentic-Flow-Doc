@@ -1,0 +1,50 @@
+---
+title: "Local Q&A Model"
+description: "Answer questions on-device by quoting your Knowledge"
+sidebar:
+  label: "Local Q&A Model"
+---
+
+# Local Q&A Model
+
+An **on-device extractive question-answering model** you plug into the **Model** port of the [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/). With it connected, the agent answers locally in your browser by **quoting** the most relevant passage from its connected Knowledge — free, private, offline, and without made-up answers.
+
+## What it does
+
+Exposes an installed extractive Q&A model (e.g. *DistilBERT SQuAD*) as a dependency. When the Q&A Agent runs with it, the agent:
+
+1. Retrieves the top passages from its connected [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) (the agent's **Knowledge documents (k)** option, default `4`).
+2. Runs the model over each passage (each capped to **Max knowledge context length**, default `4000` characters).
+3. Keeps the highest-scoring answer and tells you which document it came from.
+
+Extractive models can only return text that is present in a passage, so the Q&A Agent **must have a Knowledge connected** in this mode.
+
+## When to use it
+
+- Look up facts in your own documents without sending them or the question to a server.
+- You want answers that are verbatim quotes you can trust, not generated text.
+
+For open-ended, synthesized answers, connect a chat model instead.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | An installed extractive Q&A model. Pick one, or download it from the picker. Cleared when a workflow is published, so each user picks their own. |
+
+## Outputs
+
+Returns a Q&A model dependency for the Q&A Agent's Model port. See the [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) for the output shape (`response`, `answer`, `score`, `source`).
+
+## Troubleshooting
+
+- **"… it needs a context: connect a Knowledge to the Q&A Agent."** — connect a Local Knowledge to the agent.
+- **"Choose an on-device Q&A model in the Local Q&A Model node."** — the Model field is empty.
+- **Empty answer** — none of the retrieved passages contained an answer (a warning is logged). Raise **Knowledge documents (k)**, rephrase the question, or check the knowledge store actually holds the information.
+
+## Related pages
+
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) — the agent that accepts it.
+- [Answer Question](/nodes/builtin/ai/localai/answer-question/) — standalone extractive Q&A over a passage you provide.
+- [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/)
+- [Local AI](/usage/using-the-app/local-models/) — install and manage on-device models.

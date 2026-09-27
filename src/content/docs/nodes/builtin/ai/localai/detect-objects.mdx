@@ -24,18 +24,20 @@ Count or locate things in an image: how many people are in a photo, where a prod
 | Model | Any **installed** object-detection model, across engines. |
 | Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
 | Confidence threshold | Drop detections below this score (default `0.5`). |
+| Max objects | Keep at most this many objects, highest score first (default `20`). |
 
 ## Outputs
 
 Returns `{ objects, count, top }`:
 
 - `objects` — array of `{ label, score, box }`, highest confidence first. `box` holds the bounding-box coordinates.
-- `count` — number of objects that passed the threshold.
+- `count` — number of objects returned (after the threshold and Max objects).
 - `top` — label of the most confident detection (or `null`).
 
 ## Troubleshooting
 
 - **Nothing detected** — lower the threshold, or use a model trained on the objects you expect.
+- **Fewer objects than expected in a busy image** — raise **Max objects**.
 - **Empty picker** — install an object-detection model first.
 
 ## Related nodes
