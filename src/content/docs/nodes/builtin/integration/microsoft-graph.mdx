@@ -40,7 +40,7 @@ Sends and reads Outlook mail, uploads and shares OneDrive files, creates calenda
 
 ## Dependencies and credentials
 
-- **Auth:** OAuth2 (auth-code + PKCE) against the Microsoft `common` tenant. Register a **public client** (no secret) with delegated permissions and the extension redirect; the credential only needs the **Application (client) ID**.
+- **Auth:** OAuth2 (auth-code + PKCE) against the Microsoft `common` tenant. Register a **public client** (no secret) with delegated permissions and the extension redirect ([step-by-step](/usage/using-the-app/credentials/oauth-client/#microsoft-365)); the credential only needs the **Application (client) ID**.
 - **Delegated least-privilege scopes** (requested together in one consent): `offline_access` (refresh), `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite`, `Tasks.ReadWrite`.
 - The token is stored in your credential vault, refreshes transparently, and never passes through awflow's backend.
 
