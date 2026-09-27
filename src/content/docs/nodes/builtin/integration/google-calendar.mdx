@@ -48,7 +48,7 @@ Manages calendar events (create, update, delete, get, list), lists your calendar
 
 ## Dependencies and credentials
 
-- **Auth:** OAuth2 — sign in with Google. The node runs entirely client-side on the PKCE flow with a refreshing token; no calendar data passes through awflow's backend.
+- **Auth:** OAuth2 — sign in with Google, using your own Google OAuth client ([create it](/usage/using-the-app/credentials/oauth-client/#google)). The node runs entirely client-side on the PKCE flow with a refreshing token; no calendar data passes through awflow's backend.
 - **Scopes:** managing events needs write access, so the node requests `calendar.events` (read/write events) plus `calendar.readonly` (read calendars and free/busy). This is broader than read-only, so the Google consent screen will ask for it.
 
 ## Web and extension builds
