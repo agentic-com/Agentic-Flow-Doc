@@ -20,9 +20,9 @@ Every Local AI node is **runtime-agnostic**: you pick a *model*, and the model d
 
 You never choose the engine directly — the model picker lists **installed** models across all three, and the node resolves the right runtime for whichever you select. Each picker only lists models that can do the node's task.
 
-### WebGPU, automatically
+### Where transformers.js runs
 
-transformers.js models for encoder-style tasks — classification, zero-shot, detection, segmentation, depth, Q&A, embeddings — run on **WebGPU automatically** when your device supports it, using the same downloaded files (no second download). If WebGPU isn't available, or fails while loading or running a model, the model falls back to **WASM** (CPU) and stays there for the rest of the session. Generative tasks (speech-to-text, captioning, summarization, translation) stay on WASM, where they run reliably.
+transformers.js models run on **WASM** (your CPU) using compact quantized files. This is deliberate: those files give wrong results on WebGPU in current browsers, and a quietly wrong answer is worse than a slower one. WebLLM chat models and TensorFlow.js models still use your GPU when available.
 
 ## The nodes
 
