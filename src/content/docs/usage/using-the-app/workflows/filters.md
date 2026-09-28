@@ -1,6 +1,6 @@
 ---
 title: Filter the workflow list
-description: "Narrow the Workflows list by status, storage and published state — your filters and view are remembered on reload."
+description: "Narrow the Workflows list by status, storage, published state and setup — your filters and view are remembered on reload."
 sidebar:
     order: 5
 ---
@@ -14,6 +14,7 @@ Each filter is a multi-select: pick one or more values, and the list shows workf
 - **Status** — **Active** or **Inactive**.
 - **Storage** — where the workflow is saved: **Cloud** (your account) or **Local** (this device only).
 - **Published** — whether the workflow is published to the marketplace: **Published** or **Not published**.
+- **Needs setup** — **Needs setup** or **Ready to run**. A workflow needs setup when a step still has to be connected to an account or has a required field left empty. Those rows also carry an amber **Needs setup** badge next to their name; hover it to see what's missing. The check is the one the canvas's **Ready to run** panel makes, so it is up to date as of the last time the workflow was opened.
 - **Tags** — narrow by tag. See [Workflow tags](/usage/using-the-app/workflows/tags/). The Tags filter only appears once at least one workflow carries a tag.
 
 You can combine filters (for example, **Active** + **Local**) to narrow further, and use the search box on top for free-text matching.
