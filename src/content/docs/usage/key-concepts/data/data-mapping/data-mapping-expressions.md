@@ -65,6 +65,8 @@ Use a previous-node reference when the value should come from a specific earlier
 {{ $('Get Page Metadata').title }}
 ```
 
+The name must match the node's label exactly, including spaces and capitalization — a name with spaces like `$('Get Page Metadata')` works as written.
+
 This follows item linking where possible, so the workflow uses the previous item related to the current item.
 
 ## Combine static text and dynamic values

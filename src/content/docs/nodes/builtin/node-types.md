@@ -10,6 +10,7 @@ description: Quick map of common workflow goals to the current source-aligned no
 | Start manually | [When Started](/nodes/builtin/trigger/whenstarted/) |
 | Start on a schedule | [Schedule](/nodes/builtin/trigger/schedule/) |
 | Start from browser events | [Context Menu](/nodes/builtin/trigger/contextmenu/) or [Page Load](/nodes/builtin/trigger/pageload/) |
+| Start on each chat message | [Chat Trigger](/nodes/builtin/trigger/chat/) |
 | Extract selected page text | [Get Selected Text](/nodes/extension/getselectedtext/) |
 | Extract all page text or HTML | [Get All Text](/nodes/extension/getalltext/) or [Get All HTML](/nodes/extension/getallhtml/) |
 | Read a URL | [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/) or [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) |

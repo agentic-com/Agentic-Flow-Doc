@@ -23,26 +23,64 @@ Use this node for custom data transformations, calculations, or logic that isn't
 | --- | --- |
 | Code to Execute | Source-backed field from the node schema. |
 
-## Reading input and returning output
+## Reading input
 
-The data flowing into the node is available to your code as a variable named **`input`** — a normal Python value (dict, list, or scalar), mirroring what `{{ $input }}` holds elsewhere.
+The data flowing into the node is available to your code as a variable named **`input`** — a normal Python value (dict, list, or scalar), mirroring what `{{ $input }}` holds elsewhere. Its shape depends on how many nodes are wired into the Code node:
 
-Set a variable named **`result`** to whatever the node should output.
+- **One node connected** — `input` is that node's output, exactly as it produced it:
+
+  ```python
+  # from a single upstream node
+  # input == {"selection": "Hello", "triggerType": "contextMenu"}
+  input["selection"]  # -> "Hello"
+  ```
+
+- **Several nodes connected (fan-in)** — `input` is a dict **keyed by each source node's label**, so you can tell the branches apart:
+
+  ```python
+  # input == {
+  #   "Get Selected Text": {"selection": "Hello"},
+  #   "HTTP Request": {"status": 200, "body": {...}},
+  # }
+  input["Get Selected Text"]["selection"]  # -> "Hello"
+  ```
+
+  Two rules keep those keys usable:
+  - A node with a **blank label** is keyed by its node id instead, so a key is never empty.
+  - If **two nodes share a label**, both keys get an id suffix — `"HTTP Request [a1b2]"` — so they stay unique. A label used only once keeps its plain name.
+
+- **Nothing connected** — `input` is an empty dict, `{}`. It is always defined, so you can safely read it (e.g. `input.get("selection", "")`) even when no node feeds the Code node.
+
+In expressions elsewhere on the canvas, the same data is reachable as `{{ $input }}`: `{{ $input.selection }}` for a single connection, or `{{ $input["Get Selected Text"].selection }}` for fan-in.
+
+## Returning output
+
+The node outputs the value of the **last expression** in your code — like a notebook cell. Put the value you want to emit on its own final line. (Assigning to a variable is *not* enough; an assignment is a statement, not an expression, so it emits nothing.)
 
 ```python
 # input = {"tags": ["news", "ai"], "title": "Hello"}
-result = {
+out = {
     "title": input["title"].upper(),
     "tag_count": len(input["tags"]),
     "joined": ", ".join(input["tags"]),
 }
+out  # <- last expression: this is what the node returns
 ```
 
-If nothing is connected into the node, `input` is not defined — guard with `globals().get("input")` if your code can run either way.
+## Sandbox and limits
+
+Each run of the Code node gets a **fresh Python interpreter in its own isolated background worker**, separate from the app page:
+
+- **No network access.** `pyodide.http` (`pyfetch`, `open_url`) and browser networking are disabled — calling them raises `PermissionError`. To call an API, use an [Http Request](/nodes/builtin/core/http-request/) node before or after the Code node and pass the data through `input` / the output.
+- **No access to the browser or extension.** The `js` module only exposes basic helpers (`Math`, `JSON`, `Date`, timers, `console`); it cannot reach the page, your stored credentials, browser storage, or extension APIs.
+- **Nothing is kept between runs.** Variables, imports and files from a previous run are gone; everything your code needs must come from `input`.
+- **Data in and out is JSON.** `input` is decoded from JSON and the output value is converted to JSON: dicts become objects, sets become lists, very large integers become strings, and values with no JSON form (e.g. class instances) are returned as their `str()`.
+- **Timeout.** A run is stopped after 30 seconds (including interpreter start-up); the worker is terminated, so infinite loops really stop.
+- **Standard library only.** Extra packages (e.g. `numpy`) cannot be installed.
 
 ## Outputs
 
-Returns the `result` variable, visible in the workflow execution data and passed to the next node.
+The value of the last expression, visible in the workflow execution data and passed to the next node.
 
 ## Dependencies and credentials
 
@@ -56,7 +94,8 @@ Connect data into Code, configure the settings above, and use the output in the 
 
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- `PermissionError: Network access is disabled…` — the Code node cannot make HTTP calls; use an Http Request node instead.
+- `Code execution timed out after 30000ms` — the code (or the interpreter start-up on a slow machine) took longer than 30 seconds.
 - No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
 ## Related nodes

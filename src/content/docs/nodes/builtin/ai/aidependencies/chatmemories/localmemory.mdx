@@ -13,15 +13,27 @@ Local memory
 
 Maintains conversation history locally for AI agents to reference previous messages.
 
+The history is stored in your browser (IndexedDB), under the conversation you pick. It survives across runs and browser restarts.
+
+### How messages are read and saved
+
+Local Memory doesn't save anything by itself — the agent it's connected to does:
+
+1. Before calling the model, the agent loads the conversation's earlier messages from the memory and adds them to the prompt as chat history.
+2. It saves the incoming message as a `user` message.
+3. After the model (and any tools) answer, it saves the reply as an `assistant` message. A structured reply from an output parser is saved as JSON text.
+
+Each save notifies any open view of that conversation (the chat memories page, a [Chat Trigger](/nodes/builtin/trigger/chat/) window), so they update right away.
+
 ## When to use it
 
-Connect this to AI agents that need to remember context across multiple interactions in a conversation.
+Connect this to AI agents that need to remember context across multiple interactions in a conversation. It's also the usual memory for a [Chat Trigger](/nodes/builtin/trigger/chat/): connect the same Local Memory to the trigger and to the agent, and the chat window shows this conversation.
 
 ## Inputs and settings
 
 | Setting | Notes |
 | --- | --- |
-| Memory | Source-backed field from the node schema. |
+| Memory | The conversation to read from and save to. Pick an existing conversation or create one. Required — the agent fails with "Conversation ID is required" if it's empty. |
 
 ## Outputs
 
@@ -37,13 +49,17 @@ Connect Local Memory to an AI agent or dependency input that accepts this depend
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
+- Check that a conversation is selected in **Memory**.
+- If several agents use the same Local Memory, each one saves its own user message and reply to the same conversation.
+- Local Memory vs [Persistent Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/persistentmemory/): both store history the same way. Local Memory points to a conversation you pick; Persistent Chat Memory uses a text key you type, which is easier to reuse across workflows.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
 - This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 
+- [Chat Trigger](/nodes/builtin/trigger/chat/)
+- [Persistent Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/persistentmemory/)
 - [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
 - [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
 - [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)

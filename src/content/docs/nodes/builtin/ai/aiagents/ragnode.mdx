@@ -32,6 +32,18 @@ Returns node-specific output described by the implementation and visible in work
 
 - No explicit credential or node dependency is declared in the node description.
 
+## Memory
+
+Connect a chat memory to the agent's memory input to give it a conversation:
+
+1. Before calling the model, the agent loads the conversation's earlier messages and adds them to the prompt as chat history.
+2. It saves the incoming prompt as a `user` message.
+3. After the model answers, it saves the reply as an `assistant` message (structured replies from an output parser are saved as JSON text).
+
+With [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/) or [Persistent Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/persistentmemory/) the conversation is kept across runs; [Window Buffer Memory](/nodes/builtin/ai/aidependencies/chatmemories/windowbuffermemory/) only lasts for one run.
+
+This is also how a [Chat Trigger](/nodes/builtin/trigger/chat/) gets its replies: connect the **same** memory to the trigger and to this agent, and set the prompt to `{{ $json.chatInput }}`. The chat window shows the messages this agent saves.
+
 ## Example workflow
 
 Connect RAG Agent to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
@@ -45,6 +57,7 @@ Connect RAG Agent to an AI agent or dependency input that accepts this dependenc
 
 ## Related nodes
 
+- [Chat Trigger](/nodes/builtin/trigger/chat/)
 - [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
 - [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
 - [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)

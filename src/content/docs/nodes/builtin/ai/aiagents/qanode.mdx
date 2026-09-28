@@ -17,34 +17,50 @@ Answers questions using a knowledge base by retrieving relevant context and gene
 
 Use this agent to build question-answering systems that reference specific documents or knowledge bases.
 
+## Run on-device
+
+What you connect to the **Model** port decides the engine — there is no setting to switch:
+
+- **A chat model** (e.g. Chat OpenAI, Web LLM) — retrieves passages from the connected Knowledge and writes an answer from them.
+- **A [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/)** — answers in your browser: free, private, offline. It retrieves the top passages from the connected Knowledge and **quotes** the best-scoring answer span, so the answer always comes verbatim from your documents. System message and Output Parser don't apply.
+
+The on-device path **needs a Knowledge**: an extractive model can only quote from a passage, so connect a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) (pair it with [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/) to keep everything on-device).
+
 ## Inputs and settings
 
 | Setting | Notes |
 | --- | --- |
-| System message | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+| Options → System message | Extra instructions appended to the Q&A prompt (chat model only). |
+| Options → Knowledge documents (k) | How many passages to retrieve from the Knowledge (default `4`). |
+| Options → Max knowledge context length | Maximum characters of retrieved knowledge to use (default `4000`). On-device, each passage is capped to this length. |
+| Options → Fail on knowledge error | Chat model only: fail when retrieval errors instead of answering without context (default off). |
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+- **Chat model** — returns `{ response }`, the generated answer.
+- **Local Q&A Model** — returns `{ response, answer, score, source }`: `response` and `answer` are the quoted answer (empty if none was found), `score` is the model's confidence, and `source` names the document it came from (when its metadata has a source, file name, title, or URL).
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+- **Model** (required) — a chat model, or a [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/) to answer on-device.
+- **Knowledge** — optional with a chat model, **required** with a Local Q&A Model.
+- **Output Parser** (optional) — chat model only.
 
 ## Example workflow
 
-Connect Q&A Agent to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+Connect Local Embeddings → Local Knowledge → the Q&A Agent's Knowledge port, and a Local Q&A Model to its Model port. Index your documents into the knowledge store, then send questions to the agent — the answer and its source document come back without anything leaving the browser.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
+- **"… it needs a context: connect a Knowledge to the Q&A Agent."** — the Local Q&A Model is connected but no Knowledge is.
+- **Empty `answer` on-device** — no retrieved passage contained an answer (a warning is logged). Raise Knowledge documents (k) or rephrase the question.
+- **"Knowledge retrieval failed: …"** — the knowledge store couldn't be searched; check the Local Knowledge node and its embeddings.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/)
 - [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
+- [Answer Question](/nodes/builtin/ai/localai/answer-question/) — on-device Q&A over a passage you provide.
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)

@@ -19,6 +19,16 @@ Connect this to AI agents for privacy-focused, offline AI that runs entirely in 
 
 Manage which models are installed, pre-download them, and free up space on the [Local Models](/usage/using-the-app/local-models/) page.
 
+## Using it with tools
+
+Web LLM works with the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). WebLLM models have no built-in tool API, so tool calling goes through the prompt, the same way as for [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/#using-it-with-tools):
+
+1. The connected tools are described in the system prompt.
+2. The model calls a tool by writing the call in its reply; the common formats models use are all understood (`<tool_call>{…}</tool_call>`, `[TOOL_CALLS] […]`, `<function=name>{…}</function>`, fenced JSON, or a reply that is only the JSON call).
+3. The agent runs the tool and sends the result back as a `<tool_response>` message; the model then answers or calls another tool.
+
+How reliably a model calls tools depends on the model: instruct models trained for tool use do much better than very small ones. A call to a tool that isn't connected, or with invalid JSON, is kept as plain text instead of being run.
+
 ## Inputs and settings
 
 | Setting | Notes |

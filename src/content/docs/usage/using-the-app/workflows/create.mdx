@@ -53,10 +53,24 @@ Best for testing, or when you want to decide exactly when to run:
 
 1. Open the page you want to automate.
 2. Open the extension and choose your workflow.
-3. Click **Execute Workflow**.
+3. Click **Test Workflow**.
 4. Nodes will run in order using the current page state.
 
-> After a run finishes, the canvas shows what actually happened in plain words — not raw logs. On success, you get the real-world effect of the run (for example, "Sent to #general") plus a link to verify it yourself. On failure, you get the plain-language cause and one concrete next action to try, with the option to show technical details if you need them.
+> After a run finishes, the **Last run** tab of the panel on the right shows what actually happened in plain words — not raw logs. On success, you get the real-world effect of the run (for example, "Sent to #general") plus a link to verify it yourself. On failure, you get the plain-language cause, a few things to try, and the option to show technical details if you need them. See [Full and Partial Executions Inside the Designer](/usage/using-the-app/workflows/executions/execute-from-dnd-designer/).
+
+### The panel on the right
+
+One floating panel below the run buttons holds three tabs, and opens the one that matters most on its own:
+
+- **Story** — [How this flow works](/usage/using-the-app/workflows/narration/), step by step.
+- **Ready to run** — what is still missing (a connection, a required field) with a button to fix each one. **Ready to run?** in the toolbar opens this tab; its count is the number of things left. Steps that still need setup also carry an amber dot on the canvas — hover it to see what's missing.
+- **Last run** — the outcome of the last test run.
+
+Close it with the collapse button; it shrinks to a small pill under the run buttons.
+
+### Field checks and previews
+
+In a step's settings, a field is checked against what the step expects as soon as you leave it — a required field left empty or a value in the wrong format shows a short message under the field. Fields that map data from earlier steps with `{{ }}` show **Preview from last run**: the value they resolved to in the last test run (run the workflow once to see it).
 
 ### Automatic execution (future feature)
 
@@ -80,6 +94,20 @@ Even when you use triggers, manual runs are still useful for testing.
 - Because they run inside the browser, workflows are subject to **browser security rules** (e.g. cross-origin constraints).
 - Very large workflows or heavy processing may hit browser performance limits (memory, CPU).
 - Workflows are saved locally in your extension — they persist across browser sessions. You can export/import workflows to share or back them up.
+
+## Saving and shortcuts
+
+The status next to **Save** tells you where you stand: **Saved**, **Unsaved changes**, **Saving…**, or **Couldn't save · Retry**. Changes you make while a run is in progress stay unsaved until you save.
+
+If you try to leave the canvas with unsaved changes, you're asked whether to **Save & leave**, **Leave without saving** or **Stay**. Closing or reloading the tab shows the browser's own warning.
+
+| Shortcut | Action |
+| --- | --- |
+| <kbd>⌘</kbd> <kbd>S</kbd> / <kbd>Ctrl</kbd> <kbd>S</kbd> | Save |
+| <kbd>⌘</kbd> <kbd>Z</kbd> / <kbd>Ctrl</kbd> <kbd>Z</kbd> | Undo |
+| <kbd>⇧</kbd> <kbd>⌘</kbd> <kbd>Z</kbd> / <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>Z</kbd> or <kbd>Ctrl</kbd> <kbd>Y</kbd> | Redo |
+
+Undo and redo don't fire while you're typing in a field, so they don't fight the field's own undo.
 
 ---
 

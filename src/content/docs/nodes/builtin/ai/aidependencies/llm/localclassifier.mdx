@@ -1,0 +1,49 @@
+---
+title: "Local Classifier"
+description: "Classify text on-device: zero-shot, sentiment or toxicity"
+sidebar:
+  label: "Local Classifier"
+---
+
+# Local Classifier
+
+An **on-device text classifier** you plug into the **Model** port of the [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/) or [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) agent. With it connected, the agent classifies locally in your browser instead of prompting a chat model — free, private, and offline.
+
+## What it does
+
+Exposes an installed classification model as a dependency. The agent it's connected to decides how to use it:
+
+- **Zero-shot models** (e.g. *DeBERTa zero-shot*) score the text against the agent's own labels — Text Classifier's **Categories**, or Sentiment Analysis's **Custom categories** (else `positive, negative, neutral`).
+- **Fixed-label models** (e.g. a sentiment or toxicity classifier) use their own labels. For Sentiment Analysis, common sentiment labels (`POSITIVE`/`NEGATIVE`, `LABEL_0..2`, `1 star`–`5 stars`) are mapped onto `positive` / `negative` / `neutral`.
+
+What you connect decides the engine — there is no toggle: a chat model runs the LLM path, a Local Classifier runs on-device.
+
+## When to use it
+
+- Route or tag text in a workflow that must stay private or run offline.
+- Classify high volumes of text without paying per token.
+- You don't need an explanation — just a label and scores.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | An on-device text classifier: zero-shot (uses your labels), sentiment, or toxicity. Pick an installed one, or download it from the picker. Cleared when a workflow is published, so each user picks their own. |
+
+## Outputs
+
+Returns a classifier dependency for the agent's Model port. The agent's output gains a `scores` map (`{ label: score }`) alongside its usual result — see the agent pages.
+
+## Troubleshooting
+
+- **"Choose an on-device classifier in the Local Classifier node."** — the Model field is empty.
+- **"Model … isn't available. Install it from Local AI."** — install the model from the [Local AI](/usage/using-the-app/local-models/) page, or download it from the picker.
+- **The agent ignores my categories** — the model is a fixed-label classifier. Use a zero-shot model to classify into your own labels.
+- **"Add at least one category"** — Text Classifier with a zero-shot model needs at least one category.
+
+## Related pages
+
+- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) — agents that accept it.
+- [Classify Text](/nodes/builtin/ai/localai/classify-text/) — standalone zero-shot classification node.
+- [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/) — the on-device model for the Q&A Agent.
+- [Local AI](/usage/using-the-app/local-models/) — install and manage on-device models.

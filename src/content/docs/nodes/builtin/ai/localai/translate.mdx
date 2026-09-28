@@ -1,0 +1,50 @@
+---
+title: "Translate"
+description: "Translate text between languages on-device"
+sidebar:
+  label: "Translate"
+---
+
+# Translate
+
+Translate text between languages, running locally in your browser. With a multilingual model (*NLLB-200*) you pick the source and target languages; a fixed-pair model (`opus-mt-xx-yy`) always translates its own pair. Private, offline, no cost.
+
+## What it does
+
+Splits the text into sentence-aligned chunks (about 1,000 characters each, to stay inside the model's input limit), translates each chunk on-device, and joins the results.
+
+## When to use it
+
+Translate incoming messages, product descriptions, or scraped pages before processing them, or localize a reply before sending it — without sending the text to a translation service.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Text | The text to translate. |
+| From | Source language (default **English**). Ignored by fixed-pair `opus-mt` models. |
+| To | Target language (default **French**). Ignored by fixed-pair `opus-mt` models. |
+| Model | An **installed** translation model. Only translation models are listed here. |
+
+The From / To lists offer 59 common languages by name. Through an expression you can also pass an English language name (`Spanish`), a two-letter code (`es`), or any NLLB-200 code (`spa_Latn`) — so the full 200-language NLLB set stays reachable.
+
+## Outputs
+
+Returns `{ text, from, to }`:
+
+- `text` — the translation.
+- `from`, `to` — the language codes actually used: NLLB codes (e.g. `eng_Latn`, `fra_Latn`) for NLLB, or the model's own pair (e.g. `en`, `de`) for an `opus-mt` model.
+
+If From and To are the same (with NLLB), the text is returned unchanged without running the model.
+
+## Troubleshooting
+
+- **"Choose a translation model."** — install one from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
+- **"Unknown source/target language …"** — the expression returned something that isn't a listed name, a two-letter code, or an NLLB code.
+- **Output is in the wrong language** — you're using an `opus-mt` model: it ignores From / To and always translates its fixed pair. Use NLLB-200 for other pairs.
+- **Slow first run** — NLLB-200 is a large model; it loads on first use, then stays warm for the session.
+
+## Related nodes
+
+- [Summarize](/nodes/builtin/ai/localai/summarize/), [Classify Text](/nodes/builtin/ai/localai/classify-text/)
+- [Generate Text](/nodes/builtin/ai/localai/generate-text/)

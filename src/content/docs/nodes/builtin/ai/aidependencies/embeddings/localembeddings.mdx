@@ -1,0 +1,52 @@
+---
+title: "Local Embeddings"
+description: "Turn text into vectors on this device — free and private"
+sidebar:
+  label: "Local Embeddings"
+---
+
+# Local Embeddings
+
+Turn text into vectors **on this device** with an in-browser embeddings model. Connect it to [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to index and search documents without an API key or any data leaving your browser.
+
+## What it does
+
+Exposes an on-device embeddings model as an Embeddings dependency. Inference runs in the shared background worker, so the editor stays responsive. The default is **all-MiniLM-L6-v2**; you can also pick the legacy **Universal Sentence Encoder** or any installed embeddings model.
+
+The embeddings carry their model's identity, so a knowledge store knows which model it was built with and never mixes vectors from different models.
+
+## When to use it
+
+- Build a private, offline knowledge base for the [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/).
+- Avoid per-token embedding costs when indexing many documents.
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| Model | An on-device embeddings model (default **all-MiniLM-L6-v2**, recommended). **Universal Sentence Encoder** keeps older knowledge stores readable. |
+
+## Outputs
+
+Returns an embeddings dependency for Local Knowledge and other nodes that accept embeddings.
+
+## Choosing a model for a knowledge store
+
+A knowledge store is built with **one** embeddings model and remembers it. Pick the model **before** you first fill a new store:
+
+- A new store uses whatever embeddings are connected the first time it runs (or all-MiniLM-L6-v2 if none).
+- Connecting a different model to an existing store later doesn't re-embed it — the store keeps using its own model, with a warning in the run log.
+
+See [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/#embedding-models) for details.
+
+## Troubleshooting
+
+- **"Embeddings model … isn't available. Install it from Local AI."** — install it from the [Local AI](/usage/using-the-app/local-models/) page, or download it from the picker.
+- **"Model mismatch" warning** — the store was built with a different model; its own model was used. To switch models, create a new store.
+- **First run is slow** — the model loads (and downloads if needed) on first use, then stays warm for the session.
+
+## Related nodes
+
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
+- [Local AI](/usage/using-the-app/local-models/) — install and manage on-device models.

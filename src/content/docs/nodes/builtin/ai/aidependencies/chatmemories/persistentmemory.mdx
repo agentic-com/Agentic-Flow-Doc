@@ -13,6 +13,8 @@ Chat memory persisted across runs and workflows under a named conversation key
 
 Maintains conversation history that persists across separate workflow runs, keyed off a conversation key you choose. Any two executions — in this workflow or another — that use the same key share the same persisted memory.
 
+It stores messages exactly like [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/) — in your browser (IndexedDB), read and saved by the connected agent (see [How messages are read and saved](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/#how-messages-are-read-and-saved)). The only difference is how the conversation is chosen: instead of picking one, you type a key, which always maps to the same conversation.
+
 ## When to use it
 
 Connect this to AI agents that need to remember context across multiple, separate executions of a workflow (not just within a single run), such as a long-running support bot thread. Unlike Local Memory, the conversation key is meant to be set explicitly rather than wired dynamically.
@@ -35,6 +37,8 @@ Returns a memory dependency for conversational AI workflows.
 
 Connect Persistent Chat Memory to an AI agent or dependency input that accepts this dependency type, set a stable Conversation Key, then run the agent with data from previous nodes. Reuse the same key in a later run to continue the same conversation.
 
+It can also back a [Chat Trigger](/nodes/builtin/trigger/chat/): connect it as the trigger's Chat Memory and give the downstream Agent the same Persistent Chat Memory (same key). The chat window then shows the conversation stored under that key, so any other workflow using the key sees the same thread.
+
 ## Troubleshooting
 
 - Check that Conversation Key is set — the node throws an error if it is empty.
@@ -44,5 +48,6 @@ Connect Persistent Chat Memory to an AI agent or dependency input that accepts t
 ## Related nodes
 
 - [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/)
+- [Chat Trigger](/nodes/builtin/trigger/chat/)
 - [Memory & Context](/advanced-ai/concepts/memory-context/)
 - [Q&A](/nodes/builtin/ai/aiagents/qanode/)
