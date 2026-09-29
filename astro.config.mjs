@@ -103,6 +103,10 @@ export default defineConfig({
               label: "Using the app",
               items: [
                 {
+                  label: "Side panel",
+                  link: "usage/using-the-app/side-panel",
+                },
+                {
                   label: "Workflows",
                   items: [
                     {
