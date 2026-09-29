@@ -29,7 +29,13 @@ Passes data into or out of a lambda workflow, or exposes a lambda workflow as a 
 
 ## Pausing inside a sub-workflow
 
-A lambda workflow can contain a step that pauses — a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/), an [In-Page Form](/nodes/builtin/flow/), a durable [Wait](/nodes/builtin/flow/wait/), or a [Poll Until](/nodes/builtin/flow/polluntil/). When it does, the whole run pauses: the sub-workflow waits (you'll see it in the Executions pane), and the outer workflow waits at this node. When the sub-workflow finishes, its output flows into this node and the outer workflow continues — so a reusable "get an approval" or "wait for the job" sub-workflow works exactly like a single pausing step, at any nesting depth.
+A lambda workflow can contain a step that pauses — a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/), an [In-Page Form](/nodes/builtin/flow/), a durable [Wait](/nodes/builtin/flow/wait/), or a [Poll Until](/nodes/builtin/flow/polluntil/). When it does, the whole run pauses: the sub-workflow waits (you'll see it in the Executions pane), and the outer workflow waits at this node. When the sub-workflow finishes, its output flows into this node and the outer workflow continues — so a reusable "get an approval" or "wait for the job" sub-workflow works exactly like a single pausing step, nested up to 10 sub-workflows deep.
+
+This applies to the Lambda Workflow node only. A lambda workflow used as an agent's Workflow tool or started from the workflow list can't pause mid-run: the run fails instead, and nothing is left waiting in the Executions pane.
+
+## Sub-workflows that call themselves
+
+A workflow can't call itself through sub-workflows, directly or through a chain (A calls B, B calls A). Such a run stops at the call that would loop, with an error naming the workflow, instead of repeating without end. Sub-workflows also can't nest more than 10 deep.
 
 ## Dependencies and credentials
 
