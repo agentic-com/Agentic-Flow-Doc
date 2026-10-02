@@ -11,7 +11,9 @@ Capture a screenshot of the opened page or selected element
 
 ## What it does
 
-Captures a screenshot of the entire page or a specific element on the active browser tab.
+Captures a PNG screenshot of the visible viewport, the entire page, or a specific element on the active browser tab.
+
+Screenshots are taken from the pixels Chrome actually renders, so images, web fonts, canvases, video frames, and cross-origin assets appear exactly as they do on screen. For `Full Page` and `Element` modes, the node scrolls the page, captures it in viewport-sized tiles, and stitches them into one image. Afterward, it restores your original scroll position, even if the capture fails.
 
 ## When to use it
 
@@ -26,11 +28,17 @@ Use this node to document page states, create visual records, or capture content
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+| Field | Notes |
+| --- | --- |
+| `dataUrl` | The screenshot as a `data:image/png;base64,…` URL. It is also attached as `$binary.data` for nodes that accept files. |
+| `found` | `false` in `Element` mode when the selector matches nothing. In that case, `dataUrl` is empty. |
+| `boundingBox` | `{ top, left, width, height }` of the captured area, in CSS pixels. For `Element` mode, it is the element's position relative to the viewport before the capture. |
+| `mode` / `selector` | The mode used and, for `Element` mode, the selector. |
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+- No credentials are needed.
+- **One-time browser permission:** the first time a screenshot runs, AWFlow asks you to allow it to capture web pages. Chrome usually grants this without a second prompt, because it is covered by the site access you accepted when you installed the extension. After you allow it, screenshots work in every workflow, including triggered and scheduled runs.
 
 ## Example workflow
 
@@ -38,6 +46,10 @@ Run Screenshot Page after opening the target page, then pass its output to Edit 
 
 ## Troubleshooting
 
+- **"Screenshot Page needs permission to capture web pages"**: the one-time permission hasn't been granted yet. It can only be granted while the AWFlow app is open, so run the workflow once from the side panel or app tab and choose **Allow**. A workflow started by a trigger while the app is closed fails with this error until you do.
+- **"Screenshot … is too large … Use Element mode"**: a capture is limited to 64 viewport tiles and 100 million pixels. For very long pages, capture a specific element instead.
+- **A sticky or fixed header appears more than once in a Full Page capture**: each tile records what is on screen while that part is scrolled into view, so fixed elements appear in every tile. Capture a specific element to avoid this.
+- **Animated or lazy-loaded content looks different between sections**: Full Page and Element captures take several frames over a short time. Let the page finish loading and scroll it once before running the node.
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
