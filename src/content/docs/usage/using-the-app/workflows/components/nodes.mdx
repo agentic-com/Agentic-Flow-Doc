@@ -132,6 +132,17 @@ Most of the time, the data is shown as JSON in the output panel.
 
 If you want more insight into how data moves between nodes, see [Data Structure](/usage/key-concepts/data/data-structure/) and [Item Linking](/usage/key-concepts/data/item-linking/).
 
+### When a step fails
+
+A step that fails, with no **Try** guarding it, stops **its own branch**: the steps after it don't run.
+Branches that don't depend on it keep running, so a node wired in parallel next to a failing step
+(for example a **Display Markdown** next to a **Copy to clipboard**) still runs.
+
+- A step that joins several branches needs all of them, so it doesn't run if one of them failed. A
+  **Funnel** still runs as soon as any branch that didn't fail reaches it.
+- The run is still reported as **failed**, with the first step that failed as its cause, and any
+  error workflow runs once.
+
 ---
 
 ## What’s next?
