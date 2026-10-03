@@ -7,7 +7,7 @@ sidebar:
 
 # Try / Catch
 
-Guard the steps after it, and send a failure down a separate branch instead of stopping the whole run.
+Guard the steps after it, and send a failure down a separate branch instead of failing the run.
 
 ## What it does
 
@@ -37,7 +37,7 @@ Everything the Try branch reaches, up to the point where the Try and Catch branc
 ## Good to know
 
 - **Retries run first.** A node set to [retry](/usage/key-concepts/flow-logic/error-handling/) exhausts its attempts before anything is reported as a failure, so the boundary catches only what retrying could not fix.
-- **A failure in the Catch branch is not caught by its own Try.** It propagates to an outer Try, or ends the run — the way a catch block behaves everywhere else.
+- **A failure in the Catch branch is not caught by its own Try.** It propagates to an outer Try, or fails the run — the way a catch block behaves everywhere else.
 - To react when an *entire workflow* fails (not just a step), use the [Error Trigger](/nodes/builtin/trigger/errortrigger/) instead.
 
 ## Related nodes
