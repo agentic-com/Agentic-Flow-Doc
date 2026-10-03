@@ -45,6 +45,17 @@ Depends on the operation:
 - Stored values live in this browser profile. Nothing is sent anywhere, the same workflow on another device keeps its own separate store, and clearing the extension's data clears these entries too.
 - You can view and clear stored values at any time from **Settings → Preferences → Data store**.
 
+## See stored values from the canvas
+
+With the workflow open, you don't need to leave the canvas to check what it remembered:
+
+- Open the **Stored data** tab in the canvas's side panel, with the database button in the canvas controls or **View stored values** in a Data Store node's settings.
+- Every key this workflow stored is listed with its value, its type and when it last changed. Click a key to see the full value; lists and objects are pretty-printed.
+- The tab re-reads the store after each run, and has a refresh button for runs that happen in the background (for example a scheduled run).
+- **Delete** removes one key. **Clear all** removes every key this workflow stored, so the next run behaves like its first run, which is useful to reset a watcher that should alert again.
+- The tab only lists keys private to this workflow. Keys **Shared with all workflows** are managed in **Settings → Preferences → Data store**.
+- The tab appears once the workflow is saved and has a Data Store node, or still has stored keys after the node was removed.
+
 ## Example workflow
 
 To fetch only new items each run: at the start, use `Get` with key `last-seen-id` to read where you stopped, filter the incoming items down to those newer than it, and at the end use `Set` on the same key with the newest ID from this run. The next run resumes exactly where this one left off.
