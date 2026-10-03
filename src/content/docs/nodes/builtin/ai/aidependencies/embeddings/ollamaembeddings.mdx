@@ -37,6 +37,9 @@ Connect Ollama Embeddings to an AI agent or dependency input that accepts this d
 
 ## Troubleshooting
 
+- **Ollama refuses the request (403 / CORS error):** Ollama only answers browser origins it allows. Start it with the extension's origin allowed:
+  - **Chrome:** `OLLAMA_ORIGINS=chrome-extension://linlkeaipfpnhddjkpcbmldionajfifa ollama serve`
+  - **Firefox:** `OLLAMA_ORIGINS=moz-extension://* ollama serve` (a Firefox add-on's origin is different on every install)
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.

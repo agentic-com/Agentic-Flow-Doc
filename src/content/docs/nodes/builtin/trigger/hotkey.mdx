@@ -25,19 +25,18 @@ Use this trigger for workflows you run often and want instant, keyboard-driven a
 
 ## Choosing a slot and assigning the key
 
-Chrome only lets an extension declare a **fixed set** of keyboard commands in its manifest — you cannot register an arbitrary shortcut per workflow at runtime. The extension therefore ships four generic slots (Hotkey slot 1–4). In the node, pick which slot should fire this workflow.
+Browsers only let an extension declare a **fixed set** of keyboard commands in its manifest — you cannot register an arbitrary shortcut per workflow at runtime. The extension therefore ships four generic slots (Hotkey slot 1–4). In the node, pick which slot should fire this workflow.
 
-Then assign the actual key combination at:
+Then assign the actual key combination:
 
-```
-chrome://extensions/shortcuts
-```
+- **Chrome:** open `chrome://extensions/shortcuts`.
+- **Firefox:** open `about:addons`, click the gear menu, then **Manage Extension Shortcuts**.
 
 Find "Agentic Workflow", locate the slot you chose (for example "Run workflow bound to Hotkey slot 2"), and set your key combo there.
 
 ### The Chrome shortcut cap
 
-Chrome limits how many shortcuts an extension may **suggest** by default (currently four, of which we suggest a default for slot 1 only — `Ctrl+Shift+1` / `Command+Shift+1`). The remaining slots start unbound: they will not fire until you assign a key combination to them at `chrome://extensions/shortcuts`. If a hotkey does nothing, this is almost always the reason.
+Chrome limits how many shortcuts an extension may **suggest** by default (currently four, of which we suggest a default for slot 1 only — `Ctrl+Shift+1` / `Command+Shift+1`). The remaining slots start unbound: they will not fire until you assign a key combination to them at `chrome://extensions/shortcuts` (Firefox: **Manage Extension Shortcuts**). If a hotkey does nothing, this is almost always the reason.
 
 ## Outputs
 
@@ -50,11 +49,11 @@ Starts the workflow and passes the fired command name (`triggerType: "hotkey"`, 
 
 ## Example workflow
 
-Create a workflow with Hotkey as the first node, choose a slot, assign its key combo at `chrome://extensions/shortcuts`, then connect it to the action nodes that should run after the shortcut fires.
+Create a workflow with Hotkey as the first node, choose a slot, assign its key combo (see above for Chrome and Firefox), then connect it to the action nodes that should run after the shortcut fires.
 
 ## Troubleshooting
 
-- If nothing happens, confirm the slot you selected in the node has a key combo assigned at `chrome://extensions/shortcuts`.
+- If nothing happens, confirm the slot you selected in the node has a key combo assigned (`chrome://extensions/shortcuts`, or in Firefox **about:addons → gear menu → Manage Extension Shortcuts**).
 - Make sure no other extension or the browser itself already claims the same key combination.
 - Two workflows may listen on the same slot; both will run when that slot's shortcut fires.
 - This node has source tests; use them as the reference for edge-case behavior during maintenance.
