@@ -160,6 +160,17 @@ value that was received; **Compare with expected structure** opens the Expected 
 failure behaves like any other step error: **Retry**, **Continue on fail** and **Try / Catch** all
 apply.
 
+### When a step fails
+
+A step that fails, with no **Try** guarding it, stops **its own branch**: the steps after it don't run.
+Branches that don't depend on it keep running, so a node wired in parallel next to a failing step
+(for example a **Display Markdown** next to a **Copy to clipboard**) still runs.
+
+- A step that joins several branches needs all of them, so it doesn't run if one of them failed. A
+  **Funnel** still runs as soon as any branch that didn't fail reaches it.
+- The run is still reported as **failed**, with the first step that failed as its cause, and any
+  error workflow runs once.
+
 ---
 
 ## What’s next?
