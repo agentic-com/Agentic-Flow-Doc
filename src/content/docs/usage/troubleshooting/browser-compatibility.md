@@ -21,11 +21,11 @@ Agentic WorkFlow Studio relies on modern browser APIs for automation, DOM access
 |-------|---------------|------|
 | **Google Chrome** | Fully supported | Recommended |
 | **Microsoft Edge** | Fully supported | Chromium-based |
-| **Firefox** | Partial support | Some automation nodes may not work |
+| **Firefox** | Supported (version 140 or later) | A few differences, listed below |
 | **Safari** | Not supported | Technical limitations |
 
 <aside>
-Chrome or Edge is strongly recommended for the best experience.
+Chrome and Edge get every feature. Firefox runs the same workflows, with the few differences listed in the Firefox section below.
 </aside>
 
 ---
@@ -57,7 +57,7 @@ These browsers provide full support for:
 If you do not see Agentic WorkFlow Studio in your toolbar or right-click menu:
 
 1. Open the extension manager  
-   `chrome://extensions/` or `edge://extensions/`
+   `chrome://extensions/`, `edge://extensions/`, or `about:addons` in Firefox
 2. Make sure **Agentic WorkFlow Studio** is enabled
 3. Refresh the webpage you are working on
 
@@ -67,25 +67,30 @@ If the issue persists:
 
 ---
 
-## Firefox (Limited Support)
+## Firefox
 
-Firefox uses stricter security rules that limit what extensions can do on webpages.
+Agentic WorkFlow runs in **Firefox 140 or later** (desktop). Workflows, triggers, page steps, integrations and the web app work as in Chrome. The differences are below.
 
-### What May Not Work Properly
+### First run
 
-Some workflows may:
-- Fail to click elements
-- Stop when extracting page content
-- Not detect dynamic elements
-- Be blocked on certain websites
+- **Website access.** Page steps (reading pages, clicking, filling forms) need access to the websites you visit. Firefox lets you turn this off at any time: keep **Access your data for all websites** on in `about:addons` → Agentic WorkFlow → **Permissions**. If it's off, the app shows an **Allow access** card, and a page step that fails explains how to turn it back on.
+- **Usage statistics.** Firefox's install prompt has an optional **technical and interaction data** setting. Anonymous usage statistics and error reports are only sent when it's on, *and* when they're on in **Settings → Privacy**. Settings → Privacy shows Firefox's setting and has an **Allow in Firefox** button.
+- **Signing in.** When you sign in to an awflow account, Firefox asks your permission to share account data (your email and sign-in details, and the workflows and logs you sync). If you decline, you can keep using the app in local mode, without an account.
 
-These are browser limitations, not workflow errors.
+### Differences from Chrome
 
-### Recommendation
+| Area | In Firefox |
+|------|------------|
+| Where the app opens | In Firefox's **sidebar** instead of Chrome's side panel: click the toolbar icon to show or hide it. The context menu says **Open in Sidebar**. |
+| Keyboard shortcuts | Assign [Hotkey](/nodes/builtin/trigger/hotkey/) key combos in `about:addons` → gear menu → **Manage Extension Shortcuts**. |
+| Notifications | No action buttons, and notifications close on their own. **Require Interaction** and **Silent** in [Show Notification](/nodes/extension/shownotification/) only apply in Chrome. |
+| Local AI | **WebLLM** models need graphics (WebGPU) features that some Firefox and GPU combinations don't offer. They then show **Not supported here** and can't be installed. Use a **Transformers.js** model instead, which runs everywhere. |
+| Ollama | Start Ollama with `OLLAMA_ORIGINS=moz-extension://*` (see [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/)). |
+| OAuth credentials | Firefox uses its own redirect URI (`…extensions.allizom.org/oauth2`). Add it to your OAuth client next to Chrome's: see [Create your OAuth client](/usage/using-the-app/credentials/oauth-client/). |
+| Restricted pages | Firefox doesn't let extensions run on its own pages (addons.mozilla.org, support.mozilla.org, Firefox accounts…), like Chrome's Web Store. |
+| Chrome AI | The **Chrome AI** node uses Chrome's built-in AI and only works in Chrome. |
 
-If a workflow does not behave as expected in Firefox:
-- Try the same workflow in **Chrome or Edge**
-- Use Firefox only for simple workflows or testing
+If a workflow behaves differently in Firefox than in Chrome, please report it on the <a href="https://community.awflow.io" target="_blank">Community Forum</a> with the node and the page where it happens.
 
 ---
 
@@ -183,7 +188,7 @@ Useful links:
 ## Summary
 
 - Chrome and Edge offer full compatibility
-- Firefox works with limitations
+- Firefox (140+) is supported, with the differences listed above
 - Safari is not supported
 - Most issues are browser-related, not workflow-related
 
