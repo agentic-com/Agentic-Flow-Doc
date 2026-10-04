@@ -1,0 +1,73 @@
+---
+title: "Chat with Aria"
+description: "Chat privately with Aria, your in-browser assistant — on-device or cloud models, page context, files, dictation, knowledge and memory"
+sidebar:
+  label: "Chat with Aria"
+---
+
+# Chat with Aria
+
+**Aria** is the assistant built into AWFlow. Open **Assistant** in the sidebar: the home screen is a chat. Ask anything — explain, write, summarise, translate, reason — and Aria answers as it types (streaming), even on small on-device models.
+
+When you want something done again and again, say so ("every Monday…", "when this page changes…") or click **Build this as a workflow** under a reply. Aria then builds a workflow you can open in the canvas.
+
+## Models and privacy
+
+The chat runs on the model you pick in the composer:
+
+- **On-device models** (WebLLM, transformers.js, Chrome's built-in Gemini Nano) run entirely in your browser. Nothing you type leaves your device. Install them from [Local AI](/usage/using-the-app/local-models/).
+- **Cloud providers** (OpenAI, Anthropic, Gemini, OpenRouter…) use your own API key from **Settings › Providers**.
+- **Auto** uses your cloud providers first and falls back to an on-device model.
+
+Each reply shows which model answered, whether it ran **on-device** or in the cloud, and its speed.
+
+The first time you open Aria without a model, a short setup offers a recommended on-device model for your computer — or Chrome's Gemini Nano when it is available — and your cloud providers.
+
+:::note
+On-device answers are generated in a background page, so a chat keeps going while you switch tabs. Small models are fast and private but can make mistakes; double-check important answers.
+:::
+
+## Working with replies
+
+Under each reply:
+
+- **Copy** the answer.
+- **Regenerate** for another answer; use **‹ ›** to switch between answers.
+- **Branch** into a new chat from that point.
+- Edit one of your messages and send it again — everything after it is answered again.
+- **Stop** a reply while it is being written; what was written so far stays.
+
+## Chat settings
+
+The settings button in the chat header opens **Chat settings** for the current chat:
+
+- **Model** for this chat.
+- **Instructions for this chat** — extra guidance only this chat follows.
+- **Creativity** — from *Precise* to *Creative*.
+- **Use Aria's memory** — turn memory off for one chat.
+- **Knowledge** — pin **Knowledge Base** collections (sidebar › Knowledge Base) the chat can draw on, and choose when to use them (always, when relevant, or only when you ask). A lock on a collection means it is **never sent to cloud models**.
+
+A **context meter** shows how much of the model's context window the conversation uses; older messages are trimmed automatically when it is full.
+
+## Page context, files and dictation
+
+Use **+** in the composer to give Aria more to work with:
+
+- **This tab** or **other open tabs** — Aria reads the page text.
+- **Selection** — the text you selected on the page.
+- **Files** — PDFs, text files and images. Long files are condensed **on-device** to fit the model, and the steps are shown under the reply ("Read report.pdf · condensed on-device").
+- **Screenshot** of the current tab.
+
+Click the **microphone** to dictate. Speech is transcribed by an on-device Whisper model; your voice never leaves the browser.
+
+When Aria answers from your Knowledge Base, the sources appear as numbered chips under the reply.
+
+## Memory
+
+Aria remembers lasting preferences you share ("I prefer guesthouses over chain hotels") and your explicit requests ("remember that my budget is €600"). When it learns something, a small **Updated memory** notice appears with **Undo**.
+
+Memories are stored **only on this device**. See and edit them per agent in the agent's **Memory** tab, or remove everything in **Settings › Privacy › Agent memory**.
+
+## Talk to other agents
+
+Type **@** to bring one of your [agents](/usage/using-the-app/chat-and-agents/agents/) into the chat for one answer ("@writer turn this into an email"), or a [team](/usage/using-the-app/chat-and-agents/teams/) to start a team thread ("@trip-crew 3 days in Rome"). Use the agent switcher in the chat header to chat with another agent.
