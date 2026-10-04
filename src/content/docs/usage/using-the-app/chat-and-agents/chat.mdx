@@ -29,12 +29,17 @@ Use a chat's **⋯** menu to rename, pin, move it to a project or delete it — 
 The chat runs on the model you pick in the composer:
 
 - **On-device models** (WebLLM, transformers.js, Chrome's built-in Gemini Nano) run entirely in your browser. Nothing you type leaves your device. Install them from [Local AI](/usage/using-the-app/local-models/).
+- **Ollama models** on your computer appear automatically under **Ollama · this computer** when [Ollama](https://ollama.com) is running — every model you have pulled, no setup needed. They run on your machine, so nothing leaves it. Models without tool support are marked *Chat only*. To use an Ollama server on another address, add it once in **Settings › Providers** (kind *Ollama*, with its base URL): its models are then listed too.
 - **Cloud providers** (OpenAI, Anthropic, Gemini, OpenRouter…) use your own API key from **Settings › Providers**.
 - **Auto** uses your cloud providers first and falls back to an on-device model.
 
 Each reply shows which model answered, whether it ran **on-device** or in the cloud, and its speed.
 
-The first time you open Aria without a model, a short setup offers a recommended on-device model for your computer — or Chrome's Gemini Nano when it is available — and your cloud providers.
+The first time you open Aria without a model — and no running Ollama, a short setup offers a recommended on-device model for your computer — or Chrome's Gemini Nano when it is available — and your cloud providers.
+
+:::tip[Ollama not listed?]
+Make sure Ollama is running (`ollama serve`, or the Ollama app) and has at least one chat model (`ollama pull llama3.1`). If you changed `OLLAMA_ORIGINS`, keep the browser extension allowed (`chrome-extension://*`). The list refreshes when you open a new chat.
+:::
 
 :::note
 On-device answers are generated in a background page, so a chat keeps going while you switch tabs. Small models are fast and private but can make mistakes; double-check important answers.
