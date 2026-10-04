@@ -112,6 +112,7 @@ export default defineConfig({
                     { label: "Chat with Aria", link: "usage/using-the-app/chat-and-agents/chat" },
                     { label: "Ways to open Aria", link: "usage/using-the-app/chat-and-agents/entry-points" },
                     { label: "Agents", link: "usage/using-the-app/chat-and-agents/agents" },
+                    { label: "Projects", link: "usage/using-the-app/chat-and-agents/projects" },
                     { label: "Teams", link: "usage/using-the-app/chat-and-agents/teams" },
                     { label: "Browser control & safety", link: "usage/using-the-app/chat-and-agents/browser-control" },
                     { label: "Agent & team templates", link: "usage/using-the-app/chat-and-agents/templates" },
