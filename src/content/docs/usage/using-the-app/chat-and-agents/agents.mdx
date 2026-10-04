@@ -48,7 +48,7 @@ The right panel lets you **Try it** — chat with the agent as you edit — and,
 | **Workflows** | Each chosen workflow becomes a tool. The agent can pass it some text; it gets back what the workflow produced (the output of its last steps). A workflow that pauses for an approval or a wait can't finish inside the call, so the agent is told it failed. |
 | **On-device AI** | Image, text and audio models that run on your device. |
 | **Teammates** | Can ask the teammates you pick to do part of the work. Each teammate works on its own model, skills and rules and sends back its answer. Teammates don't see the chat, so the agent gives them a complete task. In a team thread, the team's own handoff map is used instead. |
-| **MCP** | The tools of each MCP server you add. Each call counts as a *submit* action, so with the **Balanced** rules the agent asks you first. |
+| **MCP** | The tools of each MCP server you add. For a server that needs a login, pick a saved credential (a Bearer token or API key from **Credentials**) next to it; only a reference to the credential is stored on the agent. Each call follows the **MCP** rule, with a row per server on the Rules tab: **Cautious** and **Balanced** ask you first, **Autonomous** lets it act. *Always allow* applies to that server only. |
 
 Skills need a model that can call tools. With a chat-only model, such as Chrome's built-in AI, the agent's skills are off. When a skill can't be used (no extension, a workflow was deleted, an MCP server doesn't answer), you see a notice and the agent says so instead of pretending.
 
