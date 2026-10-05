@@ -111,6 +111,7 @@ export default defineConfig({
                   items: [
                     { label: "Chat with Aria", link: "usage/using-the-app/chat-and-agents/chat" },
                     { label: "Ways to open Aria", link: "usage/using-the-app/chat-and-agents/entry-points" },
+                    { label: "Building workflows in chat", link: "usage/using-the-app/chat-and-agents/building-workflows-in-chat" },
                     { label: "Agents", link: "usage/using-the-app/chat-and-agents/agents" },
                     { label: "Projects", link: "usage/using-the-app/chat-and-agents/projects" },
                     { label: "Teams", link: "usage/using-the-app/chat-and-agents/teams" },

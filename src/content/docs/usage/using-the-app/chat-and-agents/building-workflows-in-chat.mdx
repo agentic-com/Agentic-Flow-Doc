@@ -1,0 +1,92 @@
+---
+title: "Building workflows in chat"
+description: "Turn on Build in a chat to create a workflow, keep improving it message by message, improve a saved workflow, and mention other workflows with @"
+sidebar:
+  label: "Building workflows in chat"
+---
+
+# Building workflows in chat
+
+Aria can build a workflow for you and keep refining it for the whole conversation. Switch the chat to **Build**, say what to automate, then keep asking for changes ("also post it to Slack"). Every change is shown in the chat and can be undone.
+
+## Chat or Build
+
+The composer has a **Chat | Build** switch. It is per conversation and stays where you leave it.
+
+| Mode | What your messages do |
+| --- | --- |
+| **Chat** | Aria answers. Nothing is built. |
+| **Build** | Every message changes the workflow this chat is about. |
+
+Press **⌥↵** (Alt+Enter) instead of Enter to send one message the other way: **just ask** in Build, **build this once** in Chat. The mode doesn't change. The composer shows the hint under the box, and in Build it gets an orange ring.
+
+You can also type **/build** at the start of a message to build once while in Chat.
+
+In Build, obvious questions ("Why did you add a filter?") are answered without touching the workflow. The reply says **Looked like a question · no changes**, with **Apply as a change** if you did mean it as an edit. Messages that start like an edit ("Also add a delay") are built.
+
+## Which workflow a chat builds
+
+In Build, the chat is **bound to one workflow**. The first time you turn Build on:
+
+- With nothing in the chat yet, Aria builds a **new workflow** when you send your first message.
+- Otherwise, **Build which workflow?** opens:
+
+| Choice | What it does |
+| --- | --- |
+| **In this chat** | Continue a workflow already in this conversation. |
+| **New workflow** | Start a fresh one. |
+| **Your workflows** | Search your saved workflows (Active or Inactive) and improve one. |
+
+The header shows the workflow's name as a pill. Click it and choose **Change workflow** to switch; your other drafts in the chat are kept. Choose **Stop building** to turn Build off.
+
+The home cards help you start: **Automate something** turns on Build for this chat, and **Improve one of my workflows** opens the picker on *Your workflows*.
+
+## Changes, undo and versions
+
+Each build reply ends with a change chip, such as **Invoice saver · v3 · +1 step**. It counts steps added, changed and removed since the previous version.
+
+- **View changes** opens the preview with the differences highlighted.
+- **Undo** reverts the **latest** change only, and goes back one version. Older changes can't be undone from the chip.
+- **Keep building &lt;name&gt;** appears after a one-off build made in Chat: it turns Build on for that workflow.
+- **Review & save** appears when the workflow can be saved (see below).
+
+If a message produces nothing usable, no version is added.
+
+## Improving an existing workflow
+
+Pick a saved workflow in the picker, or choose **Improve with Aria** in a workflow's row menu in the Workflows list. Aria opens the most recent chat about that workflow, or starts a new one with Build on.
+
+Changes to a saved workflow are **staged in the chat**; the workflow itself is untouched. A banner reminds you: **N unsaved changes — &lt;name&gt; still runs the saved version.** with **Discard** and **Review & save**.
+
+**Review & save** lists what changed and asks **Save changes to &lt;name&gt;?**:
+
+- **Save into &lt;name&gt;** updates the saved workflow.
+- **Save as a new workflow** keeps the original as it is and saves the result as a copy; the chat then builds the copy.
+
+**Discard** throws away the staged changes and goes back to the saved version.
+
+A workflow built from scratch is saved with the usual save dialog. After that, the chat remembers it, so saving again updates it instead of creating another one.
+
+## Mentioning another workflow
+
+Type **@** and pick a workflow to bring it into one message. A chip appears above the box, **&lt;name&gt; · reference**, where you choose its role:
+
+| Role | What Aria does | Example |
+| --- | --- | --- |
+| **Use as reference** | Reads it and borrows from it. It isn't changed. | "Build a weekly report like @invoice-saver" |
+| **Change it** | Applies one change to that workflow, staged as above. Your current workflow stays the target. | "@invoice-saver also save a copy to Drive" |
+| **New workflow from it** | Copies it into a new workflow (named "&lt;name&gt; (copy)"), turns Build on for it and applies the rest of your message. | "Make a version of @invoice-saver for receipts" |
+| **Ask about it** | Answers questions about it. No changes. | "What does @invoice-saver do with failed rows?" |
+
+Aria picks a role from your wording and the mode, and a hint under the box says what will happen. Your choice in the chip always wins. Use one workflow mention per message; extra ones are read as references.
+
+You can still @-mention [agents and teams](/usage/using-the-app/chat-and-agents/agents/) in Chat as before.
+
+## Where it works
+
+- **Aria page** and the **[side panel](/usage/using-the-app/side-panel/)** — full support, including the workflow pill, banner and Review & save.
+- **Canvas dock** and the **[notch](/usage/using-the-app/assistant-notch/)** — the same **Chat | Build** switch and **⌥↵**. Canvas dock chats are not shared with the Aria page yet.
+
+:::note
+Aria builds with whichever [model you picked](/usage/using-the-app/chat-and-agents/chat/). Small on-device models can miss details, so check **View changes** before you save.
+:::
