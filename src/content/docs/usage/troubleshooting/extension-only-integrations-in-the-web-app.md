@@ -50,7 +50,9 @@ request; only the integration's own credential (its `Authorization` header) is s
 ## If a delegated integration does not run
 
 1. Confirm the **extension is installed and enabled** (`chrome://extensions/` or
-   `edge://extensions/`), then reload the web app tab.
+   `edge://extensions/`; in Firefox, `about:addons`), then reload the web app tab.
+   Firefox works the same way as Chrome here: the add-on connects to the web app
+   automatically.
 2. Confirm the workflow has **access to the integration's host** (Settings →
    Site access), or re-approve the workflow's permissions.
 3. If it still does not run, use the integration **inside the extension**, which

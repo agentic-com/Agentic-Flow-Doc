@@ -132,6 +132,45 @@ Most of the time, the data is shown as JSON in the output panel.
 
 If you want more insight into how data moves between nodes, see [Data Structure](/usage/key-concepts/data/data-structure/) and [Item Linking](/usage/key-concepts/data/item-linking/).
 
+### Actual and expected output
+
+Every node declares the shape of the data it outputs. The **Output** tab of a node's settings shows
+two views:
+
+- **Expected** — what this node will output with its current configuration, before you run it. Use
+  it to write expressions for the next node without a test run.
+  - **Example** shows sample JSON with placeholder values (not real data).
+  - **Structure** lists every field with its type, and marks it as required or optional. Expand objects
+    and lists to see what they contain. "Additional fields" means the node may output more fields than
+    those listed; a note tells you when the node also passes on the fields of the item it received.
+- **Actual** — the data the node really output in its last run. It opens automatically after a run.
+
+Some nodes cannot describe their output in advance:
+
+- **Finish configuring this node** — the output depends on a choice you haven't made yet, such as the
+  operation of an integration. Choose it in **Parameters** and the preview appears.
+- **No valid content** — the output is whatever an external service or your own code returns (for
+  example **Custom API** or **Code**), so there is nothing fixed to preview. Run the node to see it.
+- **This node does not emit workflow output** — the node gives a capability to another node (for
+  example a chat model connected to an agent) or always stops the run.
+
+When a node outputs data that doesn't match its declared shape, the step fails with **Output
+validation failed**. The Actual view lists the field at fault, the type that was expected and the
+value that was received; **Compare with expected structure** opens the Expected view next to it. The
+failure behaves like any other step error: **Retry**, **Continue on fail** and **Try / Catch** all
+apply.
+
+### When a step fails
+
+A step that fails, with no **Try** guarding it, stops **its own branch**: the steps after it don't run.
+Branches that don't depend on it keep running, so a node wired in parallel next to a failing step
+(for example a **Display Markdown** next to a **Copy to clipboard**) still runs.
+
+- A step that joins several branches needs all of them, so it doesn't run if one of them failed. A
+  **Funnel** still runs as soon as any branch that didn't fail reaches it.
+- The run is still reported as **failed**, with the first step that failed as its cause, and any
+  error workflow runs once.
+
 ---
 
 ## What’s next?
