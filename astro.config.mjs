@@ -185,7 +185,7 @@ export default defineConfig({
                   items: [
                     { label: "Overview", link: "usage/using-the-app/knowledge-bases/overview" },
                     { label: "Save from anywhere", link: "usage/using-the-app/knowledge-bases/save-from-anywhere" },
-                    { label: "Export, import & backup", link: "usage/using-the-app/knowledge-bases/export-import-backup" },
+                    { label: "Export & import", link: "usage/using-the-app/knowledge-bases/export-import-backup" },
                   ],
                 },
                 {
