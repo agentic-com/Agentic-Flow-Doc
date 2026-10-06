@@ -1,0 +1,102 @@
+---
+title: "Following Aria's work"
+description: "The live work timeline, the step limit, what Stop did, the reply receipt, fallback notices, error cards and the skill banner"
+sidebar:
+  label: "Following Aria's work"
+---
+
+# Following Aria's work
+
+When Aria or one of your [agents](/usage/using-the-app/chat-and-agents/agents/) uses tools — searching the web, reading a page, running a workflow, asking a teammate — you can see each step as it happens, what it cost, and what to do when something goes wrong. Everything on this page works the same in the Aria page, the side panel, the canvas dock, agent **Try it** and team threads.
+
+## The work timeline
+
+While a reply is being worked on, a **Working** bar sits above it:
+
+- **step 3 of 25** — the model's current step and the agent's step limit, with a small progress bar and the time elapsed.
+- **Stop** — ends the turn right away (see [Stopping a reply](#stopping-a-reply)).
+
+Each tool call appears **as soon as it starts**, with a spinner and *Started — waiting for it to finish*, and gets its duration when it ends. A finished step can show:
+
+| Label | Meaning |
+| --- | --- |
+| **Preview** | Open a short preview of what the tool returned. |
+| **Result trimmed · 41k → 8k tokens** | The result was too long, so only part of it was sent to the model. |
+| **Page text treated as data** | The result came from a web page, the web, an MCP server, a workflow or a teammate. It was given to the model as content to read, never as instructions. |
+| **Instructions in the page were ignored** | The page contained text trying to instruct the agent. It was treated as page content and ignored. |
+| **Timed out after 60s** | The tool didn't answer in time. |
+| **Failed · …** | The tool returned an error, with the reason. *The agent moved on without it* when it continued anyway. |
+| **Skipped · same call repeated** | The agent asked for exactly the same call again; the repeat wasn't run. |
+| **Cancelled** | The step was running when you pressed Stop. |
+
+When the reply is done, the timeline folds into one line — for example **Used 3 tools · 4 steps · 0:12 · 1 failed, recovered**. Click **Show steps** to open it again.
+
+## When the step limit is reached
+
+Each agent has a **max steps per answer** (Aria included — set it in the agent's **Model** tab). When a reply uses them all, Aria stops calling tools and writes the best answer it can with what it has. A **Not done yet** card appears under it, with what was done and what is left when the answer lists them:
+
+- **Continue · N more steps** — carry on where it left off, with another full set of steps.
+- **Finish with what you have** — answer now without using more tools.
+- **Change the limit** — opens the agent's Model tab.
+
+The folded timeline then reads **Used all 25 steps**. [Team threads](/usage/using-the-app/chat-and-agents/teams/) show the same card when the team's limit pauses a thread.
+
+## Stopping a reply
+
+**Stop** really stops: the running model call and tools are cancelled and nothing more is sent to the model. Text written so far stays.
+
+If the reply had used tools, a **stop receipt** tells you where things are:
+
+- **Already done — can't be undone here** — actions that had finished (a click, a sent message, a workflow run, an MCP call). Plain lookups aren't listed.
+- **Cancelled while running** — steps that were cut off, and after how long.
+- *Nothing was changed: only lookups had finished.* — when nothing needs checking.
+
+Then pick **Continue from here** or **Retry the whole request**. Stopping a workflow build leaves a similar receipt — see [Building workflows in chat](/usage/using-the-app/chat-and-agents/building-workflows-in-chat/#while-it-builds).
+
+## The reply receipt
+
+Under each reply, a quiet line tells you who answered and what it took:
+
+> Claude Sonnet · cloud · 2 model calls · 14.2k tokens · 9.8s
+
+- The **model** and where it ran: **on-device · free** (with a green dot) or **cloud**.
+- **Model calls** and **tokens**. A `~` means some counts are estimates because the provider didn't report them.
+- How long it took, and the speed (tokens per second) for on-device models.
+
+Click the usage to open a **per-call table** (*Call · In · Out · Time*), including calls that failed (for example *429, not billed*). It also shows how much of the input came **from cache (cheaper)**. For a full timeline of a reply, turn on [Developer mode](/usage/using-the-app/chat-and-agents/turn-traces/) and click **Trace**.
+
+:::note[Prompt caching]
+With Anthropic models, the parts of the prompt that repeat from one message to the next (instructions, tools, earlier messages) are cached by the provider, so long chats are cheaper and faster. The model picker marks these models with a **Cache** chip.
+:::
+
+## Auto fallback notices
+
+When the model is **Auto** and your first provider fails, the next one answers and a notice says so: **OpenAI is rate-limited, so Anthropic answered.** It also says when Auto will try the first provider again — after a short cool-down (*Auto will try OpenAI again in 0:42*), or on your next message. See [Models and privacy](/usage/using-the-app/chat-and-agents/chat/#models-and-privacy).
+
+If the model that answered **can't use tools** (for example a small on-device fallback), a second notice says **Answered by a fallback model that can't use tools. Anything that needed a tool wasn't done.**, with **Retry with &lt;provider&gt;** and **Pick a model with tools**.
+
+## When a reply fails
+
+A failed reply shows a card that names the problem and offers the fix that matches it. The provider's own message (with secrets removed) is folded under **Provider message**.
+
+| Card | What the actions do |
+| --- | --- |
+| **Out of credits** (quota) | **Add credits on &lt;provider&gt;** opens the provider's billing page. **Retry with &lt;model&gt;** answers this message with another model. |
+| **Rate-limiting requests** | Wait a moment and **Retry**, or answer with another model. |
+| **Rejected your API key** | **Update the key** opens **Settings › Providers**. Nothing was sent to the model. |
+| **Context too long** | **Summarise earlier messages and retry** condenses the start of the chat and sends again. **Switch to a bigger model** opens the model picker. |
+| **Network / timeout** | Network errors and timeouts are **retried automatically** (twice, after 2 and 6 seconds): the card shows *Retrying automatically in 0:04* with **Retry now** and **Cancel**. If it still fails: check your connection, then **Retry**. |
+| **A tool call went wrong** | The model asked for a tool in a way that couldn't be run. **Retry**, or try a stronger model. |
+| **No answer came back** | The model finished without writing anything. **Retry** usually helps. |
+
+Cloud requests time out after **60 seconds** without an answer.
+
+## When a skill is off
+
+If some of an agent's skills can't be used — the extension isn't installed, a workflow it runs was deleted, an MCP server doesn't answer, or the model can't use tools — a banner stays above the composer for as long as the problem lasts, for example **1 of Researcher’s skills is off. · Browser control needs the AWFlow extension.** It offers the matching fix:
+
+- **Switch to a model with tools**
+- **Reconnect &lt;server&gt;** for an MCP server
+- **Open skills** to change the agent's skills
+
+Close it with **×** to hide it for this chat.

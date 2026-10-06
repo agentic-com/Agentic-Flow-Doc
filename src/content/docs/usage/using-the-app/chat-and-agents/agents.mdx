@@ -39,6 +39,16 @@ Open an agent to edit it. Changes save automatically.
 
 The right panel lets you **Try it** — chat with the agent as you edit — and, on the Rules tab, **Test a rule** with a sentence like "click Reserve on booking.example".
 
+### Try it
+
+**Try it** runs the **real agent**: its model, skills, rules, approvals and max steps — exactly what a chat with it would use. A row of chips shows what is in effect (the model and where it runs, each skill — marked *off* when it can't be used — the rules preset and the step limit). Edits you make in the tabs apply on your next message.
+
+:::caution[Actions are real]
+Emails send and sheets change. Approvals appear in the panel, the same as in a chat.
+:::
+
+You see the same [work timeline, step limit card and approval receipts](/usage/using-the-app/chat-and-agents/seeing-the-work/) as in a chat, and a banner when a skill is off. **Reset** starts over with a fresh chat, tools and browser session.
+
 ### Looks and living eyes
 
 Every agent is a character. On the **Identity** tab, pick its **shape**, **color**, **texture**, **eyes** and an **accessory**, or press **Shuffle**. The preview shows it at every size, and its eyes follow your pointer. New agents get a look that suits their job; press **Try another look** before creating one.
@@ -68,7 +78,17 @@ Aria's look (orange, with sun rays) is fixed so you always recognize her. To cal
 | **Teammates** | Can ask the teammates you pick to do part of the work. Each teammate works on its own model, skills and rules and sends back its answer. Teammates don't see the chat, so the agent gives them a complete task. In a team thread, the team's own handoff map is used instead. |
 | **MCP** | The tools of each MCP server you add. For a server that needs a login, pick a saved credential (a Bearer token or API key from **Credentials**) next to it; only a reference to the credential is stored on the agent. Each call follows the **MCP** rule, with a row per server on the Rules tab: **Cautious** and **Balanced** ask you first, **Autonomous** lets it act. *Always allow* applies to that server only. |
 
-Skills need a model that can call tools. Chrome's built-in Gemini Nano handles a few simple skills (up to 8 tools at a time, no browser control); with a chat-only model, such as some Ollama models, the agent's skills are off. When a skill can't be used (no extension, a workflow was deleted, an MCP server doesn't answer), you see a notice and the agent says so instead of pretending.
+Skills need a model that can call tools. Chrome's built-in Gemini Nano handles a few simple skills (up to 8 tools at a time, no browser control); with a chat-only model, such as some Ollama models, the agent's skills are off. When a skill can't be used (no extension, a workflow was deleted, an MCP server doesn't answer), a banner above the composer says so, with a fix, and the agent says so instead of pretending — see [When a skill is off](/usage/using-the-app/chat-and-agents/seeing-the-work/#when-a-skill-is-off).
+
+### Tool results and timeouts
+
+- What a tool brings back from **outside** — web pages, web search, MCP servers, workflows and teammates — is given to the model as **data to read, never as instructions**. The step shows *Page text treated as data*, and a warning when the text tried to instruct the agent. See [Prompt injection](/usage/using-the-app/chat-and-agents/browser-control/#prompt-injection).
+- Each tool call has a **time limit**: 60 seconds, or 2 minutes for a workflow (a teammate has no limit). The clock pauses while the agent waits for your approval. A tool that runs out of time shows *Timed out* and the agent continues without it.
+- Very long results are **trimmed** before they reach the model (the step says *Result trimmed*), and the agent can't call exactly the same tool with the same input over and over: repeats are skipped.
+
+### Teammate results
+
+When an agent hands a task to a teammate, the teammate's answer comes back with a **status** — *done*, *partly done* (it ran out of steps or was stopped), *blocked* (an approval was declined or its model failed) or *needs you* (an approval wasn't answered) — so the agent knows whether to rely on it, retry or ask you. Ready-to-use pieces (a drafted email, a table, a list, links, code) come back as separate items the agent can use directly.
 
 ## Routines
 
