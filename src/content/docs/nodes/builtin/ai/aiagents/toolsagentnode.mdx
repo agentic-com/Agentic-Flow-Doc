@@ -33,10 +33,23 @@ You approve or reject each action in the **Executions** pane. This is automatic 
 | --- | --- |
 | System message | Source-backed field from the node schema. |
 | Options | Source-backed field from the node schema. |
+| Options → Max iterations | How many times the agent may call tools before it must answer with what it has. Defaults to `10`. |
+
+When the agent reaches **Max iterations**, it stops calling tools and is asked for a final answer with what it has; the run log says *Agent reached its max iterations and answered with what it had*.
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+| Field | Description |
+| --- | --- |
+| `response` | The agent's final answer. |
+| `steps` | The tool calls the agent made, in order: `name`, `args`, `status` (`ok`, `error`, `timeout`, `aborted` or `skipped`), `durationMs`, `result` (shortened) and `truncated`. Present when tools are connected. |
+| `usage` | Tokens used over every model call of the run: `inputTokens`, `outputTokens`, `cachedTokens` (served from the provider's prompt cache) and `totalTokens`. Present when the provider reports usage. |
+
+## How it runs
+
+- Each tool call appears in the run log as it happens (*Agent calls tool …*, then *Tool … finished in 840 ms*, or a warning when it failed or timed out).
+- **Stop** interrupts the agent mid-reply: the model call and any running tool are cancelled, and the log says *Agent stopped before it finished*.
+- When the model asks for a tool in a malformed way, the error is sent back to the model so it can correct the call, instead of failing the node.
 
 ## Dependencies and credentials
 
