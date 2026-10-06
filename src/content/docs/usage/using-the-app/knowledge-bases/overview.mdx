@@ -1,0 +1,184 @@
+---
+title: "Knowledge bases"
+description: "Create private, on-device knowledge bases from files, web pages, open tabs and pasted text, test what they return, and choose who may read them"
+sidebar:
+  label: "Overview"
+---
+
+import { Steps, Aside } from "@astrojs/starlight/components";
+
+# Knowledge bases
+
+A **knowledge base** is a set of documents your agents and workflows can search: product manuals, policies, notes, saved web pages. When Aria, an agent or a workflow needs to answer from your documents, it searches the knowledge base and gets back the most relevant **passages** (short pieces of text) to answer from.
+
+Knowledge bases live **on this device**, in your browser's storage. Text is extracted, split and turned into vectors (embedded) by a model that runs in your browser, so nothing is uploaded when you add a source. The extension and the web app each have their own knowledge bases; use [export or an encrypted backup](/usage/using-the-app/knowledge-bases/export-import-backup/) to move one between them or to another device.
+
+Words used on this page:
+
+- **Source** — something you added: a file, a web page, an open tab, pasted text, or text indexed by a workflow.
+- **Passage** — a piece of a source (a chunk) that is shown to a model or to you.
+
+Open **Knowledge bases** in the sidebar to see them all.
+
+## The knowledge bases page
+
+Each knowledge base is a card with:
+
+- its name and description;
+- **sources · chunks · size** on this device;
+- the **search engine** (embedding model) it was built with, for example *MiniLM · on-device*;
+- its **privacy** badge: **Cloud OK** or **Device only** (see [Privacy](#privacy-cloud-ok-or-device-only));
+- **Used by** — the agents, projects, teams, chats and workflows that use it;
+- when it was last updated.
+
+Cards that need attention stand out:
+
+- **Empty** — a dashed card with **Add sources**. An empty knowledge base returns nothing.
+- **Built with a cloud embedding model** — for example "Built with OpenAI embeddings. Needs your OpenAI key to search it." Searching it embeds your question with that provider.
+- **Indexing** — a progress bar ("Indexing 2 of 5 sources").
+
+The summary at the top shows how many knowledge bases you have, the total chunks and size on this device, and how many need attention. Search filters by name, description, tags and source names. Switch to the **table** view to sort by sources, chunks, size or date.
+
+There is **no limit** on the number of knowledge bases: they are stored on your device, not on our servers, so your plan does not count them. See [Plans](#plans).
+
+## Create a knowledge base
+
+<Steps>
+
+1. Click **New knowledge base**.
+2. Enter a **Name** and, optionally, **What's in it**. The description helps agents choose the right knowledge base.
+3. Add sources right away — drop files, or use **Web page**, **Open tabs** (extension) or **Paste text**. You can also add sources later.
+4. Choose **Who can read it**: any model (**Cloud OK**) or this device only (**Device only**).
+5. Optionally open the **Search engine** disclosure to see the model it will use (by default *all-MiniLM-L6-v2*, on this device).
+6. Click **Create and index**. The knowledge base opens and shows the indexing progress.
+
+</Steps>
+
+## Add sources
+
+Open a knowledge base and click **Add sources** (or use **Add sources** on its card). The dialog has four tabs:
+
+| Tab | What it adds |
+| --- | --- |
+| **Files** | Drop or browse for one or more files: PDF, TXT, Markdown, CSV, JSON and HTML. Text is extracted on this device. |
+| **Web pages** | One URL per line. A bare domain gets `https://`. Duplicates and invalid entries are reported. |
+| **Open tabs** | Extension only. Pick tabs, or **Select all** in a tab group. The text is read from the tab itself, so pages you are signed in to work too. |
+| **Paste text** | A title and the text. |
+
+The dialog header says which model indexes the sources, for example "Indexed on this device with MiniLM. Nothing is uploaded."
+
+Each source gets its own row with a live status:
+
+- *Reading* → *Embedding · 12 of 40 chunks* → **Added · 40 chunks**.
+- **Already in this knowledge base and unchanged · skipped** — with **Re-index anyway**.
+- An error in plain words, for example "No text found. It looks like a scanned image.", with **Try again**. A failed source never stops the others.
+
+Under **Chunking** you can choose how sources are split: **Automatic** (about 350 tokens per chunk), **Small** or **Large**, and whether to **Skip sources that haven't changed** (on by default).
+
+You can close the dialog: indexing keeps going in the background, and the card and the knowledge base page show the progress. Use **Stop** to cancel a job.
+
+Adding a source that is already there **updates it in place** instead of adding a copy. If the new version is shorter, its leftover old passages are removed.
+
+## The knowledge base page
+
+Click a card to open the knowledge base. The header shows sources, chunks, size, the model and the privacy badge, with **Test search**, **Add sources** and a menu (**Edit**, **Export**, **Back up to your account** when signed in, **Delete**). The page has four tabs.
+
+### Sources
+
+Every source with its type, title or link, number of chunks, when it was added, and its indexing status. Text indexed by a workflow shows as **From workflow …**. Content added before sources were tracked is grouped under **Older content**.
+
+Click a source to open it in a drawer: the list of its chunks with their number, page and size (the overlap with the previous chunk is greyed), **Find in this source**, and the actions **Re-index**, **Replace file…** and **Remove source**.
+
+In the side panel the page switches to a single column, with **Add this tab** (extension) and **More sources**.
+
+### Test search
+
+See exactly what an agent would get before you rely on it. Type a question and you get the ranked passages with:
+
+- a **score** and a meter (how similar the passage is to the question), and a badge when it also matched your keywords;
+- the source, chunk and page, with the matching words highlighted, and **Open source**;
+- a dashed **cut-off line at 0.35**: passages under it are dimmed, because *When relevant* skips them (see [When to look things up](/usage/using-the-app/chat-and-agents/knowledge/#when-to-look-things-up)).
+
+**Search as** lets you test it the way a given reader would:
+
+- **who is asking** — Aria, an agent that uses this knowledge base (with its model, on-device or cloud), or a workflow RAG node;
+- the **policy** (Always / When relevant / When asked) and how many passages to return;
+- **Search mode** — **Hybrid** (keywords and meaning) or **Vector** (meaning only);
+- **Prefer different sources (MMR)** — return passages that are relevant but differ from each other.
+
+A note explains the result for that reader, for example "This knowledge base is on this device only, so a cloud model skips it." Test search runs on this device and saves nothing.
+
+### Used by
+
+Every agent, project, team, chat and workflow that uses this knowledge base, with links.
+
+### Settings
+
+- **Privacy** — the **On this device only** switch.
+- **Search engine** — the embedding model and vector size, and **Re-embed with…** (see [Change the search engine](#change-the-search-engine-re-embed)).
+
+## Privacy: Cloud OK or Device only
+
+Every knowledge base has one privacy setting, shown with the same badge everywhere (the knowledge bases page, chat, the agent builder, projects and teams). Click the badge to change it.
+
+| Setting | What it means |
+| --- | --- |
+| **Cloud OK** | Passages may be sent to the cloud model that answers. |
+| **Device only** | Only on-device models see it. Cloud chats skip it and say so. |
+
+What happens with **Device only**:
+
+- **In a chat, agent, project or team** — when the answer comes from a cloud model, the knowledge base is skipped and the steps above the reply say *Skipped · on this device only*, with **Answer this one on-device** when an on-device model is ready.
+- **In a workflow** — the RAG, Q&A and Tools Agent nodes never send it to a cloud model. By default the node **stops with an error**; you can set it to **answer without it** and log a warning instead. See [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options).
+
+Indexing always happens on this device for knowledge bases built with an on-device model, whatever the privacy setting.
+
+## Search: keywords and meaning
+
+A search uses **hybrid search** by default: it combines a keyword search (good for exact names, codes and error messages) with a search by meaning (good for paraphrases), and merges the two rankings. A passage counts as relevant when it is similar enough to the question, or when it contains most of the words you searched for.
+
+You can switch to meaning only (**Vector**) in Test search and in the workflow nodes' **Match by** option.
+
+## Change the search engine (re-embed)
+
+A knowledge base always searches with the **embedding model it was built with**, because vectors from different models can't be compared. To move it to another model, for example from a cloud model to an on-device one:
+
+<Steps>
+
+1. Open the knowledge base and go to **Settings › Search engine**.
+2. Click **Re-embed with…** and pick a model. The list shows the on-device embedding models installed in [Local AI](/usage/using-the-app/local-models/) and the default model.
+3. Wait for the progress to finish. You can leave the page; the job continues.
+
+</Steps>
+
+While it runs, searches keep using the old model. The knowledge base switches only when every passage has been embedded again. If you stop it or it fails, the knowledge base stays on its old model and the partial copy is removed.
+
+## Delete a knowledge base
+
+Choose **Delete** in the knowledge base's menu. The dialog shows the impact before anything happens:
+
+- how many sources and chunks are removed, and how much space is freed on this device;
+- who stops finding its passages (Aria, agents, projects, teams, chats);
+- which **workflows will fail** until you pick another knowledge base in their Local Knowledge node.
+
+Type the name to confirm. Use **Export first** to download an `.awkb` copy before deleting. Deleting removes all its passages from this device and unpins it from every agent, project, team and chat.
+
+## Project files use the same engine
+
+Files you add to a [project](/usage/using-the-app/chat-and-agents/projects/) are indexed by the same engine, in a hidden knowledge base that belongs to the project. It does not appear on the knowledge bases page, and it is deleted with the project. Files indexed before this change are moved over automatically the first time you open the project.
+
+## Plans
+
+- **Knowledge bases are not limited** by your plan. Plans only limit things stored on our servers, and knowledge bases are stored on your device.
+- **Encrypted backups** are stored on your account, so the total size of your backups is a plan limit. See [Encrypted backups](/usage/using-the-app/knowledge-bases/export-import-backup/#encrypted-backups-on-your-account).
+
+<Aside>
+Clearing your browser's site data removes your knowledge bases. Export or back up the ones you want to keep.
+</Aside>
+
+## Related
+
+- [Using knowledge in chats and agents](/usage/using-the-app/chat-and-agents/knowledge/)
+- [Save to a knowledge base from anywhere](/usage/using-the-app/knowledge-bases/save-from-anywhere/)
+- [Export, import and backup](/usage/using-the-app/knowledge-bases/export-import-backup/)
+- Workflow nodes: [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)

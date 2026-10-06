@@ -34,8 +34,27 @@ You approve or reject each action in the **Executions** pane. This is automatic 
 | System message | Source-backed field from the node schema. |
 | Options | Source-backed field from the node schema. |
 | Options → Max iterations | How many times the agent may call tools before it must answer with what it has. Defaults to `10`. |
+| Options → Knowledge documents (k) | How many passages to retrieve from the connected knowledge base (default `4`). |
+| Options → Max knowledge context length | Maximum characters of retrieved passages added to the prompt (default `4000`). |
+| Options → Fail on knowledge error | Fail when the knowledge base can't be searched, instead of answering without it (default off). |
+| Options → Knowledge search | How the agent uses the connected knowledge base. See [Knowledge search](#knowledge-search). |
+| Options → Search type, Match by, Minimum relevance, Metadata filter, Device-only knowledge with a cloud model | Same as on the RAG Agent: see [Knowledge base options](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options). |
 
 When the agent reaches **Max iterations**, it stops calling tools and is asked for a final answer with what it has; the run log says *Agent reached its max iterations and answered with what it had*.
+
+## Knowledge search
+
+When a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) is connected to the Knowledge port, **Knowledge search** decides how the agent uses it:
+
+| Option | What happens |
+| --- | --- |
+| **Search before answering** (default) | The knowledge base is searched with the prompt and the passages are given to the agent up front. Best for small and on-device models. |
+| **Let the agent search the knowledge base on its own** | The agent gets a knowledge search tool and decides when and what to search, for example several searches with better questions. Best for capable models. |
+| **Both** | Passages up front, and the tool to search again. |
+
+The search tool returns passages numbered `[S1]`, `[S2]`… (the numbering continues across calls), fenced as reference data. It reads only; it doesn't need your approval. Its calls appear in `steps` like any other tool, and the sources it found are added to `sources`.
+
+Passages given up front are fenced as reference data too, and a **Device only** knowledge base is never sent to a cloud model (see [Device-only knowledge bases](/nodes/builtin/ai/aiagents/ragnode/#device-only-knowledge-bases)).
 
 ## Outputs
 
@@ -43,6 +62,7 @@ When the agent reaches **Max iterations**, it stops calling tools and is asked f
 | --- | --- |
 | `response` | The agent's final answer. |
 | `steps` | The tool calls the agent made, in order: `name`, `args`, `status` (`ok`, `error`, `timeout`, `aborted` or `skipped`), `durationMs`, `result` (shortened) and `truncated`. Present when tools are connected. |
+| `sources` | Present when a knowledge base is connected (may be empty): the sources of the passages used, each with `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`. |
 | `usage` | Tokens used over every model call of the run: `inputTokens`, `outputTokens`, `cachedTokens` (served from the provider's prompt cache) and `totalTokens`. Present when the provider reports usage. |
 
 ## How it runs
@@ -53,7 +73,8 @@ When the agent reaches **Max iterations**, it stops calling tools and is asked f
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+- **Model** (required) — a chat model that supports tool calling.
+- **Tools**, **Knowledge**, **Memory** and **Output Parser** (optional).
 
 ## Memory
 
