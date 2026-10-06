@@ -41,6 +41,20 @@ The header shows the workflow's name as a pill. Click it to open **Build which w
 
 The home cards help you start: **Automate something** turns on Build for this chat, and **Improve one of my workflows** opens the picker on *Your workflows*.
 
+## While it builds
+
+Aria builds with the **whole conversation so far**, so details you gave a few messages earlier ("only invoices over €500") are taken into account.
+
+A **Building your workflow** card shows each stage as it runs, with its time: *Understand your request*, *Look for similar workflows*, *Choose an approach*, *Write the workflow* and *Check it's valid* (plus *Fixing the problems* when the check finds something). When it is done, the card folds into a line such as **Built in 0:14 · 5 stages**; click it to see the stages again.
+
+The **preview draws the workflow as it is written**. Steps after an **IF** or **Switch** are laid out in side-by-side lanes, one per branch, in the order of the node's outputs, and each branch is wired to the right output.
+
+**Stop** on the card really stops the build: the model call in progress is cancelled and no more requests go to the model, so a stopped build costs nothing further. A **Build stopped** receipt stays in the chat with the stages that ran, *Nothing was changed*, **Build again** and **Edit request**.
+
+### Settings to check
+
+When the new workflow needs something from you before it can run — a credential, a sheet ID, a channel — a card lists **N settings to check before it runs**, one row per step. Click a row to open the preview on that step. The card also says when connections were **fixed automatically**.
+
 ## Changes, undo and versions
 
 Each build reply ends with a change chip, such as **Invoice saver · v3 · +1 step**. It counts steps added, changed and removed since the previous version.
