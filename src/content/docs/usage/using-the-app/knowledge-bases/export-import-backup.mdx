@@ -1,0 +1,85 @@
+---
+title: "Export, import and back up knowledge bases"
+description: "Move a knowledge base with an .awkb file, map knowledge bases when you import a workflow, and keep encrypted backups on your account"
+sidebar:
+  label: "Export, import & backup"
+---
+
+import { Steps, Aside } from "@astrojs/starlight/components";
+
+# Export, import and back up knowledge bases
+
+Knowledge bases are stored in this browser only. The extension and the web app have separate storage, and clearing site data removes them. To move a knowledge base, or keep a copy, export it to a file or back it up to your account.
+
+## Export to a file
+
+Open the knowledge base, open its menu and choose **Export**. You get an `.awkb` file that contains everything needed to search it somewhere else: its name, description and privacy setting, every passage with its source details, the vectors, and the embedding model it was built with.
+
+The delete dialog also offers **Export first**, so you can keep a copy before deleting.
+
+<Aside type="caution">
+An `.awkb` file is **not encrypted**. Anyone who has the file can read its passages. Store it like the documents it came from.
+</Aside>
+
+## Import a file
+
+<Steps>
+
+1. On the **Knowledge bases** page, click **Import** (or **Import a file** when you have none yet).
+2. Choose an `.awkb` file. A preview shows its embedding model, number of chunks and sources, file size and privacy.
+3. Change the **Name** if you want, then click **Import**.
+
+</Steps>
+
+The file is added as a **new** knowledge base; an existing one is never overwritten. If the name is already used, "(imported)" is added. Nothing is embedded again, so the import is quick and searches give the same results as on the original device.
+
+If the knowledge base was built with a cloud embedding model, that provider must be set up here too: your questions are embedded with it when you search.
+
+## Importing a workflow that uses knowledge bases
+
+A workflow refers to its knowledge bases by id. When you import a workflow whose [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) nodes use knowledge bases that aren't on this device, a dialog **Knowledge bases used by this workflow** lists each missing one and the nodes that use it. For each one you can:
+
+- pick one of **your knowledge bases** to use instead;
+- choose **Import a .awkb file…** to import the original and use it;
+- **Leave unset**.
+
+Click **Use these knowledge bases** to apply your choices, or **Import without them**. A node left unset stops with a clear message when the workflow runs ("Knowledge base … doesn't exist on this device…"); you can pick a knowledge base later in the node's settings.
+
+## Encrypted backups on your account
+
+When you are signed in, you can back up knowledge bases to your account and restore them on another device or browser.
+
+Backups are **encrypted on your device** with a backup passphrase before they are uploaded. The server only stores the encrypted file and the knowledge base's name; your passphrase and the key never leave the device, so nobody else, including us, can read a backup.
+
+### Back up a knowledge base
+
+1. Open the knowledge base, open its menu and choose **Back up to your account**.
+2. Enter a **Backup passphrase** of at least 8 characters. Tick **Remember for this session** to avoid typing it again until you close the browser.
+3. Click **Back up now**.
+
+The dialog shows when it was last backed up and its size. Backing up again **replaces** the previous backup of that knowledge base.
+
+<Aside type="caution">
+We can't recover a forgotten passphrase. A backup can only be restored with the passphrase it was made with.
+</Aside>
+
+### Restore a backup
+
+1. On the **Knowledge bases** page, click **Backups** (or **Restore a backup** when you have no knowledge bases yet).
+2. Enter the backup passphrase.
+3. Click **Restore** next to the backup.
+
+The backup is downloaded, decrypted on this device and imported as a **new** knowledge base, like an imported file. A wrong passphrase, or a backup that was changed, can't be decrypted and shows "This passphrase does not open the backup."
+
+The same list lets you **delete** backups you no longer need.
+
+### Backup storage and your plan
+
+Backups use storage on our servers, so the **total size of your backups is limited by your plan**. The dialog shows how much you use, for example "18 MB of 100 MB used". When it is full, delete an old backup or upgrade your plan (**See plans**). A single very large knowledge base may also be too big to back up; export it to a file instead.
+
+The number of knowledge bases on your device is never limited.
+
+## Related
+
+- [Knowledge bases](/usage/using-the-app/knowledge-bases/overview/)
+- [Export/Import workflows](/usage/using-the-app/workflows/export-import/)

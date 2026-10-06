@@ -116,6 +116,7 @@ export default defineConfig({
                     { label: "Agents", link: "usage/using-the-app/chat-and-agents/agents" },
                     { label: "Projects", link: "usage/using-the-app/chat-and-agents/projects" },
                     { label: "Teams", link: "usage/using-the-app/chat-and-agents/teams" },
+                    { label: "Knowledge in chats & agents", link: "usage/using-the-app/chat-and-agents/knowledge" },
                     { label: "Browser control & safety", link: "usage/using-the-app/chat-and-agents/browser-control" },
                     { label: "Agent & team templates", link: "usage/using-the-app/chat-and-agents/templates" },
                     { label: "Turn traces", link: "usage/using-the-app/chat-and-agents/turn-traces" },
@@ -178,6 +179,14 @@ export default defineConfig({
                     directory: "usage/using-the-app/credentials",
                     collapsed: true,
                   },
+                },
+                {
+                  label: "Knowledge bases",
+                  items: [
+                    { label: "Overview", link: "usage/using-the-app/knowledge-bases/overview" },
+                    { label: "Save from anywhere", link: "usage/using-the-app/knowledge-bases/save-from-anywhere" },
+                    { label: "Export, import & backup", link: "usage/using-the-app/knowledge-bases/export-import-backup" },
+                  ],
                 },
                 {
                   label: "Assistant Notch",

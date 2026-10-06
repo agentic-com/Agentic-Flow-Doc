@@ -11,39 +11,62 @@ Splitting text into chunks and embedding them into a vector store
 
 ## What it does
 
-Splits text into chunks and stores them as embeddings in a vector database for later retrieval.
+Splits text into chunks and saves them, with their embeddings, into the connected knowledge base so agents can search them later.
 
 ## When to use it
 
-Use this node to prepare documents for RAG or Q&A workflows by indexing content into a searchable knowledge base.
+Use it to fill a [knowledge base](/usage/using-the-app/knowledge-bases/overview/) from a workflow: pages you scrape, files you load, results of an API call. To add files, pages or text by hand, use **Add sources** on the knowledge bases page instead.
 
 ## Inputs and settings
 
 | Setting | Notes |
 | --- | --- |
-| Input | Source-backed field from the node schema. |
+| Input | The text to index. |
+| Source name | Optional. Shown in citations and in the knowledge base's source list. Supports expressions, for example `{{ $json.title }}`. |
+| Source link | Optional. Where the text comes from; citations link to it. |
+| Source ID | Optional. A stable id for this document, for example `invoices/2026-10`. Defaults to the source link, then the source name, then the text itself. |
+
+### Update in place
+
+Indexing again with the **same source** updates it instead of adding a copy. The source is identified by its Source ID, or else its Source link, or else its Source name. Its passages are overwritten in place, and if the new text is shorter, the old passages beyond it are removed.
+
+Give each document a Source name or Source link (or an ID) when a workflow re-indexes the same pages on a schedule; without one, a changed text counts as a new source.
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+| Field | Description |
+| --- | --- |
+| `success` | `false` when some chunks could not be saved (see `failed`). |
+| `chunks` | How many chunks the input was split into. |
+| `added` | New chunks written. |
+| `updated` | Chunks that replaced the same source's previous version. |
+| `failed` | Chunks that could not be saved. |
+| `removed` | Old chunks removed because the source got shorter. |
+| `sourceId` | The source the chunks are stored under. Index again with the same id to update it. |
+
+After a run, the node on the canvas shows a badge such as **24 added · 3 updated**, and the node settings show the last run's **Added / Updated / Failed** counts. When some chunks fail, the run log has a warning; when none can be saved, the node fails.
+
+With a vector store other than Local Knowledge, the chunks are simply added (`updated` is always 0).
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+- **Knowledge** (required) — a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node. The chunks are embedded with that knowledge base's own model.
+- **Text Splitter** (required) — how the text is split, for example [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/).
+- **Model** (optional) — not used for indexing. Existing workflows that have one connected keep working.
 
 ## Example workflow
 
-Connect Indexer to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+A Schedule Trigger → HTTP Request (or a page extraction node) → Indexer, with Local Knowledge and a text splitter connected to the Indexer. Set **Source link** to the page URL so each run updates the same source, and citations in chats link back to it.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"None of the N chunks could be saved to the knowledge base."** — nothing was written; check the knowledge base and its embedding model in [Local AI](/usage/using-the-app/local-models/).
+- **"N of M chunks could not be saved…"** (warning) — part of the text was saved; `success` is `false` and `failed` counts the rest.
+- **Duplicates after each run** — set a Source name, Source link or Source ID so the same document is updated in place.
+- **Citations read "Workflow input"** — set a Source name.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
 - [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
+- [File Document Loader](/nodes/builtin/ai/loaders/filedocumentloader/), [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/)

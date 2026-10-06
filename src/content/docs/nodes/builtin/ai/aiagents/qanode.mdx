@@ -34,11 +34,16 @@ The on-device path **needs a Knowledge**: an extractive model can only quote fro
 | Options → Knowledge documents (k) | How many passages to retrieve from the Knowledge (default `4`). |
 | Options → Max knowledge context length | Maximum characters of retrieved knowledge to use (default `4000`). On-device, each passage is capped to this length. |
 | Options → Fail on knowledge error | Chat model only: fail when retrieval errors instead of answering without context (default off). |
+| Options → Search type, Match by, Minimum relevance, Metadata filter, Device-only knowledge with a cloud model | How the knowledge base is searched, and what happens when a *Device only* knowledge base meets a cloud model. Same as on the RAG Agent: see [Knowledge base options](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options). |
+
+Retrieved passages are added to the prompt as fenced reference data, not instructions. A knowledge base marked **Device only** is never sent to a cloud model: by default the node stops with an error; set **Device-only knowledge with a cloud model** to *Answer without it* to run without it and log a warning. The Local Q&A Model runs on-device, so it can always use it.
 
 ## Outputs
 
-- **Chat model** — returns `{ response }`, the generated answer.
-- **Local Q&A Model** — returns `{ response, answer, score, source }`: `response` and `answer` are the quoted answer (empty if none was found), `score` is the model's confidence, and `source` names the document it came from (when its metadata has a source, file name, title, or URL).
+- **Chat model** — returns `{ response, sources }`: the generated answer and the sources of the passages used.
+- **Local Q&A Model** — returns `{ response, answer, score, source, sources }`: `response` and `answer` are the quoted answer (empty if none was found), `score` is the model's confidence, and `source` names the document it came from (when its metadata has a source, file name, title, or URL).
+
+`sources` is present when a knowledge base is connected (it may be empty). Each entry has `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`. After a run, the node shows a badge such as **3 sources cited**.
 
 ## Dependencies and credentials
 
@@ -48,13 +53,14 @@ The on-device path **needs a Knowledge**: an extractive model can only quote fro
 
 ## Example workflow
 
-Connect Local Embeddings → Local Knowledge → the Q&A Agent's Knowledge port, and a Local Q&A Model to its Model port. Index your documents into the knowledge store, then send questions to the agent — the answer and its source document come back without anything leaving the browser.
+Connect Local Embeddings → Local Knowledge → the Q&A Agent's Knowledge port, and a Local Q&A Model to its Model port. Add your documents to the knowledge base (on the [knowledge bases page](/usage/using-the-app/knowledge-bases/overview/) or with the [Indexer](/nodes/builtin/ai/aiagents/indexernode/)), then send questions to the agent — the answer and its source document come back without anything leaving the browser.
 
 ## Troubleshooting
 
 - **"… it needs a context: connect a Knowledge to the Q&A Agent."** — the Local Q&A Model is connected but no Knowledge is.
 - **Empty `answer` on-device** — no retrieved passage contained an answer (a warning is logged). Raise Knowledge documents (k) or rephrase the question.
 - **"Knowledge retrieval failed: …"** — the knowledge store couldn't be searched; check the Local Knowledge node and its embeddings.
+- **"… is on this device only, but … is a cloud model."** — the knowledge base is *Device only*. Use an on-device model (such as the Local Q&A Model), change the knowledge base's privacy, or set **Device-only knowledge with a cloud model** to *Answer without it*.
 - If it calls an external service, verify credentials, permissions, and rate limits.
 
 ## Related nodes
