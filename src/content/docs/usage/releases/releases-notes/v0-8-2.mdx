@@ -1,0 +1,133 @@
+---
+title: Version 0.8.2
+description: Release notes for Agentic WorkFlow v0.8.2.
+sidebar:
+  order: 1
+---
+
+{/* TODO: set the publish date when v0.8.2 ships. */}
+
+Published: **To be announced**
+
+## Highlights
+
+Version 0.8.2 is about **memory**: what AWFlow remembers, how it uses it, and
+how you see and manage it. Chats, workflow conversations and the facts your
+agents learn now live in one store on your device, with one **Memory** page to
+read, search, export and clean them up. Facts are suggested before they are
+saved and picked by relevance. Workflows get one **Chat Memory** node instead
+of three. A new **Settings › Storage** page shows everything AWFlow keeps in
+your browser.
+
+## The Memory page
+
+**Chat memories** becomes **Memory** (old links redirect), with three tabs:
+
+- **Conversations** — every chat, quick chat, team thread, workflow
+  conversation and canvas dock chat, with filters by kind, **search inside
+  messages** with snippets that open the conversation at the right message,
+  and size badges for anything over 1 MB.
+- A **transcript page** for each conversation: its summary, tool steps,
+  interrupted replies, which workflows use it, what takes its space, and
+  **Export**, **Slim**, **Clear messages** and **Delete**.
+- **Facts** — every fact by owner, a **Suggested** queue, and **No owner** for
+  facts kept after their agent or team was deleted.
+- **Storage** — what memory takes and what is easy to free: **slim**,
+  **archive** or **delete** conversations and **clear orphans**, always with
+  the space freed shown first.
+- **`.awmem` export and import**, with an optional passphrase. Import always
+  adds copies and never overwrites.
+- Workflow conversations written by the old Persistent Chat Memory node, which
+  were never visible before, now appear marked **Recovered**.
+
+Relevant docs:
+
+- [Memory](/usage/using-the-app/memory/overview/)
+
+## Storage
+
+- **Settings › Storage** shows everything AWFlow keeps in the browser — local
+  models, memory, knowledge bases, workflows and run history — against what the
+  browser allows.
+- **Keep my data** asks the browser not to delete AWFlow data when the disk is
+  low.
+- A one-time suggestion when memory passes **500 MB**, **1 GB**, or the browser
+  is **80% full**.
+- An opt-in **automatic clean-up** rule for conversations not opened for a
+  number of days (slim, archive or delete). It is off by default.
+
+Relevant docs:
+
+- [Storage & clean-up](/usage/using-the-app/memory/storage/)
+
+## Smarter facts
+
+- **Remember this?** — preferences the assistant notices are suggested, and
+  saved only when you confirm. "Remember that…" still saves at once, and
+  questions are never saved.
+- **Relevance recall** — each message uses the facts most relevant to it, found
+  by a small on-device model that downloads on first use. Until then, the
+  newest facts are used.
+- The context meter shows **how many facts** went in and whether memory search
+  is ready. Facts are sent as reference data, never as instructions, and no
+  longer push the conversation out of the context window.
+- Facts longer than 500 characters are refused with a clear hint instead of
+  being lost.
+- The agent that answered (or that you @mentioned) learns; an agent with
+  learning off never learns, even in a project.
+- Share a fact with **one specific team**. A team's memory tab lists what
+  members shared, with **Stop sharing**.
+- Deleting an agent or a team asks whether to delete its memories too.
+
+Relevant docs:
+
+- [Assistant memory](/usage/using-the-app/chat-and-agents/memory/)
+
+## Long chats
+
+- **View summary** opens the rolling summary to read and edit it, or turn it
+  into fact suggestions. **Compact now** summarises early on demand.
+- Context windows come from a list of known models; unknown models assume a
+  safe 8k and the meter marks it as estimated.
+- A reply cut off by closing the tab is kept as **interrupted**, with
+  **Retry**.
+- The notch quick chat now trims and summarises long chats, and uses and
+  suggests memories like the full chat.
+- **Canvas dock** chats are saved with their workflow and reopen next time,
+  with a **Saved chats** list.
+- Team members who are handed work see the thread's summary and last turns.
+
+Relevant docs:
+
+- [Chat with Aria](/usage/using-the-app/chat-and-agents/chat/#context-meter)
+- [Building workflows in chat](/usage/using-the-app/chat-and-agents/building-workflows-in-chat/#canvas-dock-chats)
+- [Teams](/usage/using-the-app/chat-and-agents/teams/)
+
+## Workflow memory
+
+- One **Chat Memory** node replaces Local Memory, Persistent Chat Memory and
+  Window Buffer Memory. Storage: a conversation, a key, or this run only. Keys
+  are scoped to the workflow by default, or shared. History fits the model's
+  window (or the last N messages), older messages can be summarised, and tool
+  results can be remembered.
+- Existing workflows keep working and are upgraded to Chat Memory when saved.
+- The picked conversation is cleared when a workflow is published or shared.
+- Deleting a workflow offers to delete its own conversations; shared keys are
+  kept.
+
+Relevant docs:
+
+- [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/)
+- [Chat Trigger](/nodes/builtin/trigger/chat/)
+
+## Plans
+
+Conversations are **no longer limited by plans**: they are stored on your
+device.
+
+{/* TODO(#1262) verify: keep this section only if vault encryption at rest ships in 0.8.2. */}
+
+## Encryption
+
+With **Local secret protection** on, conversation messages and facts are
+encrypted on this device. Titles and sizes stay visible; unlock to read.
