@@ -1,0 +1,41 @@
+---
+title: "Turn traces (developer mode)"
+description: "See where the time and tokens of each assistant reply went: Developer mode, the Trace drawer, Export JSON, and what is kept on your device"
+sidebar:
+  label: "Turn traces"
+---
+
+# Turn traces (developer mode)
+
+Every assistant reply leaves a **trace** on your device: the model calls and tools it used, how long each took and how many tokens it sent and received. Traces help you understand a slow or expensive reply, or share the details when you report a problem.
+
+## Settings
+
+Open **Settings › Privacy › Turn traces**:
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Developer mode** | Off | Shows a **Trace** button under replies. |
+| **Keep traces** | On | Keeps a trace for each reply — sizes and timings only. |
+| **Include prompt text** | Off | Also keeps what the last model call received and the reply, with secrets removed. |
+| **Clear traces** | — | Deletes every trace on this device (asks you to confirm). |
+
+Traces stay **on this device for 7 days** and are never uploaded.
+
+## The Trace drawer
+
+With Developer mode on, click **Trace** under a reply. The drawer shows:
+
+- **Turn stats** — total time, model calls, tool calls (and how many failed), tokens in / out and from cache, and the error if the turn failed (or *stopped* if you stopped it).
+- **Timeline** — every model call and tool call on a time line, with its duration.
+- **What the last model call received** — the prompt split into its sections (instructions, memory, tools, conversation, attachments…) with their token counts, and the model's context window.
+- **Prompt and reply text** — only when **Include prompt text** is on. You can turn it on from the drawer too.
+- **Export JSON** — downloads the trace, for a bug report.
+
+A trace older than 7 days is gone: the drawer says so.
+
+## Privacy
+
+- By default a trace holds **sizes and timings, not your text**.
+- Turning on **Include prompt text** keeps the text of the last model call on this device only; secrets are removed.
+- Anonymous assistant usage events (for example, a reply finished or failed, with counts and the error kind — never your text) are sent only while **Share anonymous usage statistics** is on, in the same **Settings › Privacy** page. Turn it off to stop them.

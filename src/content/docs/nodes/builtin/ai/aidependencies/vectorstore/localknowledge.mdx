@@ -1,59 +1,74 @@
 ---
 title: "Local Knowledge"
-description: "Local knowledge"
+description: "Connect one of your on-device knowledge bases to an AI agent or the Indexer"
 sidebar:
   label: "Local Knowledge"
 ---
 
 # Local Knowledge
 
-Local knowledge
+Connect one of your on-device knowledge bases to an AI agent or the Indexer.
 
 ## What it does
 
-Stores and retrieves document embeddings locally in the browser for semantic search.
+Gives the connected node access to one of your [knowledge bases](/usage/using-the-app/knowledge-bases/overview/). The agents search it for passages to answer from; the [Indexer](/nodes/builtin/ai/aiagents/indexernode/) writes new passages into it. Everything is stored and searched in your browser.
 
 ## When to use it
 
-Connect this to RAG or Q&A agents to provide a local knowledge base for question answering and information retrieval.
+Connect it to the Knowledge port of a [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) to answer from your documents, or to an [Indexer](/nodes/builtin/ai/aiagents/indexernode/) to fill a knowledge base from a workflow.
 
 ## Inputs and settings
 
 | Setting | Notes |
 | --- | --- |
-| Knowledge | The knowledge store to read from and write to. |
+| Knowledge | The knowledge base to use. Pick it from the list. |
+
+The picker shows, for each knowledge base:
+
+- its number of passages and the embedding model it was built with;
+- its privacy badge, **Cloud OK** or **Device only** (see [Privacy](/usage/using-the-app/knowledge-bases/overview/#privacy-cloud-ok-or-device-only));
+- whether it is **empty** or still **indexing** (with a percentage).
+
+Use **New knowledge base** to create one without leaving the canvas, and **Open selected** to open the chosen knowledge base's page.
+
+How the agent searches it (number of passages, similarity or MMR, keywords and meaning, minimum relevance, metadata filter, device-only behaviour) is set on the agent node. See [RAG Agent › Knowledge base options](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options).
 
 ## Outputs
 
-Returns a vector store dependency for retrieval and RAG workflows.
+Returns a vector store dependency for the connected agent or Indexer.
 
 ## Dependencies and credentials
 
-- **Embeddings** (optional) — the model used to turn text into vectors. Connect [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/) to stay fully on-device, or another embeddings node. See [Embedding models](#embedding-models) for how the choice is remembered.
+- **Embeddings** (optional) — not needed for a knowledge base that already has content: it is always searched with its own model. See [Embedding models](#embedding-models).
 
 ## Embedding models
 
-Each knowledge store **remembers the embedding model it was built with**, and is always searched and filled with that model. Vectors from different models live in different spaces and can't be compared, so they are never mixed.
+Each knowledge base **remembers the embedding model it was built with**, and is always searched and filled with that model. Vectors from different models can't be compared, so they are never mixed.
 
-- **New stores** use the embeddings connected on their first run — or, if none is connected, the on-device **all-MiniLM-L6-v2** model. That model is then recorded on the store.
-- **Older stores** (created before stores remembered their model) keep the **Universal Sentence Encoder** they were built with, so existing search results stay correct.
-- **Mismatched embeddings** — if you connect a different model than the one a store was built with, the store's **own model is used** for that run and a warning is written to the run log. To move to another model, create a new store and index your documents again.
+- **New knowledge bases** use the on-device **all-MiniLM-L6-v2** model, unless another embeddings node is connected on the first run. That model is then recorded on the knowledge base.
+- **Older knowledge bases** (created before they remembered their model) keep the **Universal Sentence Encoder** they were built with, so existing results stay correct.
+- **Mismatched embeddings** — when the connected Embeddings node is a different model than the knowledge base's, the node settings show a callout before you run: the connected embeddings won't be used. Choose:
+  - **Disconnect it** — removes the connection; the knowledge base keeps its own model.
+  - **Re-embed with …** — opens the knowledge base's settings to [move it to the connected model](/usage/using-the-app/knowledge-bases/overview/#change-the-search-engine-re-embed).
 
-If a store was built with a non-local embeddings node, connect that same node to use it; the store can't rebuild those vectors on its own.
+  If you run anyway, the knowledge base's own model is used and the run log has a warning.
+
+If a knowledge base was built with a cloud embeddings node (for example OpenAI), connect that same node, or re-embed it with an on-device model.
 
 ## Example workflow
 
-Connect Local Embeddings to Local Knowledge, and Local Knowledge to the Knowledge port of a [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/). Index documents with the [Indexer](/nodes/builtin/ai/aiagents/indexernode/), then ask questions.
+Connect Local Knowledge to the Knowledge port of a [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) and ask questions. Add content from the [knowledge bases page](/usage/using-the-app/knowledge-bases/overview/#add-sources), or from a workflow with the [Indexer](/nodes/builtin/ai/aiagents/indexernode/).
 
 ## Troubleshooting
 
-- **"Model mismatch" warning** — the connected embeddings differ from the store's model; the store's model was used. Disconnect or match the embeddings, or use a new store.
-- **"… was built with … embeddings. Connect that embeddings node to use it."** — the store uses a non-local embeddings model; connect it.
-- **Poor search results after changing embeddings** — changing the connected model doesn't re-embed an existing store. Create a new store for the new model.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
+- **"Knowledge base "…" doesn't exist on this device…"** — the knowledge base was deleted, or the workflow comes from another device or browser. Pick a knowledge base in this node, or [import the knowledge base file (.awkb)](/usage/using-the-app/knowledge-bases/export-import-backup/#import-a-file) first. When you import a workflow, AWFlow offers to [map its knowledge bases](/usage/using-the-app/knowledge-bases/export-import-backup/#importing-a-workflow-that-uses-knowledge-bases).
+- **"Model mismatch" warning in the run log** — the connected embeddings differ from the knowledge base's model; its own model was used. Disconnect the embeddings or re-embed the knowledge base.
+- **"… was built with … embeddings. Connect that embeddings node to use it."** — the knowledge base uses a cloud embeddings model; connect it, or re-embed on this device.
+- **"… is on this device only, but … is a cloud model."** — the knowledge base is *Device only* and the agent uses a cloud model. Use an on-device model, change the knowledge base's privacy, or set the agent's **Device-only knowledge with a cloud model** option to answer without it.
+- **No passages** — check the knowledge base isn't empty, and try the question in its **Test search** tab.
 
 ## Related nodes
 
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
 - [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/)
-- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)

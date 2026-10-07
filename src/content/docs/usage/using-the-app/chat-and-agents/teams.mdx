@@ -47,12 +47,12 @@ Thread options: show agent-to-agent messages, let agents work in parallel, @ment
 
 - Max steps for all agents together (default 60)
 - Max handoffs between agents (12)
-- Cloud tokens per thread (200k) — on-device agents never count
+- Cloud tokens per thread (200k) — every call to a cloud model counts, including the page text, search results and other tool results the agents send back to it; on-device agents never count. Input the provider serves from its prompt cache counts at a tenth of its size, since it is cheaper
 - Agents working at once (2)
 
-When a limit is reached, the thread **pauses and asks you** (click **Continue +30 steps**) or **stops**.
+When a limit is reached, the thread **pauses and asks you** or **stops**. A paused thread shows a **Not done yet** card with **Continue · 30 more steps** and **Change the limit**.
 
-**Shared by the team**: team memory (facts every member can read), team knowledge (Knowledge Base collections), and one browser tab group that members share.
+**Shared by the team**: team memory (facts every member can read, plus the memories each agent marked *Shared with team* in its Memory tab), team [knowledge bases](/usage/using-the-app/chat-and-agents/knowledge/#teams-and-projects) (each member also uses its own), and one browser tab group that members share.
 
 ## Team threads
 
@@ -63,7 +63,9 @@ Open a team to see its **Threads**. Type a new job to start one, or start a thre
 - Right-click a page: **Send to a team…**
 - From a team routine: each run is a new thread.
 
-In a thread you see which agent answered, the handoffs as pills (click one to read that member's result), approval cards, and a side panel with each member's status, the plan, the team rules and usage against the limits. Threads keep working when you switch to another page of the app while the browser is open.
+In a thread you see which agent answered, the handoffs as pills (click one to read that member's result), each member's tool steps as they happen, approval cards, and a side panel with each member's status, the plan, the team rules and usage against the limits. Under **Cloud tokens**, the panel lists each member's usage (tokens in, out and cached), most expensive first.
+
+A handoff pill reads **Failed** when the member hit an error (expand it to see why), and **Skipped** when it was stopped, ran into a limit, or an approval was declined or not answered. Members tell the lead whether they finished, only partly finished, were blocked or need you, so the lead can decide what to do next. Threads keep working when you switch to another page of the app while the browser is open. If you close the app before the team has finished, the thread shows **This request was interrupted** the next time you open it — click **Retry** to send the same request again.
 
 **Invite guest agent** adds an agent to this thread only — the team doesn't change.
 

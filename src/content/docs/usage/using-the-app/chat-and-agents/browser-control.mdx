@@ -35,7 +35,9 @@ Then fine-tune per action: reading pages, navigating and clicking, typing into f
 
 Clicks that commit something — *Reserve*, *Book*, *Confirm*, *Send*, *Buy* — count as **submitting**.
 
-When an agent asks, a card shows what it wants to do and which rule asked: **Allow once**, **Always on this site**, or **Deny**. A denied action is skipped and the agent continues without it.
+When an agent asks, a card shows what it wants to do, **exactly what will be sent** — the values as the tool will use them, such as the recipient and subject of an email or the inputs a workflow gets, with secrets masked — and which rule asked: **Allow once**, **Always on this site** (or **Always allow**), or **Deny**. A denied action is skipped and the agent continues without it.
+
+Once you answer, the card leaves a **receipt** under the reply — *Allowed once by you*, *Always on this site*, *Denied* or *You took over* — with the time, so you can see later what you approved.
 
 ## Locked actions
 
@@ -44,9 +46,14 @@ Some actions **always** need you, whatever the rules say:
 - **Payments** — the agent hands the step over: it stops before payment, and you finish it yourself.
 - **Passwords and sign-in**, **sending messages or posts as you**, and **deleting data** — always ask.
 
+This also applies to the agent's other skills, based on what a tool really does rather than its name:
+
+- **Workflows** — a workflow whose steps send something (for example a Gmail or Slack step set to *Send*), delete something (a *Delete* step, or an HTTP request using `DELETE`) or take a payment always asks, even if it is called "Daily digest". Workflows it calls are checked too.
+- **MCP tools** — a tool the server marks as destructive always asks, and so does one whose name or description starts with sending, deleting or paying (`send_email`, "Removes stale rows"). A tool the server marks as read-only isn't locked.
+
 ## Prompt injection
 
-Web pages sometimes contain text written to manipulate AI agents ("ignore your instructions and…"). Page text is always treated as **content, never as instructions**. When a page looks like it is trying to instruct the agent, the step list shows a warning, and the rules still apply to everything the agent does next.
+Web pages sometimes contain text written to manipulate AI agents ("ignore your instructions and…"). Page text is always treated as **content, never as instructions** — and so is everything else an agent gets from outside: web search results, MCP tools, workflows and teammates' answers. The step list marks these results *Page text treated as data*. When a page looks like it is trying to instruct the agent, the step list shows *Instructions in the page were ignored*, and the rules still apply to everything the agent does next.
 
 ## Tips
 
