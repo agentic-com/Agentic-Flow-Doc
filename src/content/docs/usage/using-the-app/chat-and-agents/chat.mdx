@@ -88,10 +88,31 @@ The settings button in the chat header opens **Chat settings** for the current c
 
 A **context meter** in the composer toolbar shows how much of the model's context window your next message will use — for example **18k / 128k**. It turns amber when the window is nearly full and red when it is over. Click it for the breakdown: instructions & persona, memory, tool definitions, the conversation, attachments, tool calls this turn, your message, and what is kept free for the reply.
 
-When a chat gets long, the **oldest messages are summarised** instead of being dropped. A marker in the chat shows **18 earlier messages summarised to fit · View summary**: the messages stay in the chat for you to scroll to, and the model gets the summary in their place. From the meter you can also:
+The **memory** row says how many of your facts went in — for example **8 of 212 facts**, the most relevant ones — and whether memory search is ready. See [Assistant memory](/usage/using-the-app/chat-and-agents/memory/#see-what-was-used).
 
+Each model's window comes from a built-in list of known models, and from the model itself for Ollama and on-device models. When a model's window is unknown, AWFlow assumes a safe **8k** and the meter marks it as **estimated** with a **~** (for example **3k / ~8k**).
+
+### Long chats and the summary
+
+When a chat gets long, the **oldest messages are summarised** instead of being dropped. A marker in the chat shows **18 earlier messages summarised to fit · View summary**: the messages stay in the chat for you to scroll to, and the model gets the summary in their place.
+
+**View summary** opens it in an editor:
+
+- It shows which messages it covers and when it was last updated.
+- **Edit** it and **Save** to correct or trim what the model remembers. Your edit is sent in place of the earlier messages **until one of them changes** (you edit or regenerate an earlier message); the summary is then made again.
+- **Suggest as facts** looks for lasting facts in the summary and adds them as **suggestions** for you to confirm — nothing is saved on its own.
+
+From the meter you can also:
+
+- **Compact now** — fold earlier messages into the summary right away, to free room before a long message.
 - **New chat with this summary** — start a fresh chat that begins with the summary.
 - **Use a model with a bigger window** — open the model picker.
+
+The quick chat in the notch, the right-click card and the palette trim and summarise long chats the same way.
+
+### Interrupted replies
+
+Your message is saved as soon as you send it, and the reply is saved while it is written. If the tab closes or the browser restarts in the middle, the partial reply is kept and marked **This reply was interrupted**. On the latest reply, click **Retry** to answer again.
 
 ## Page context, files and dictation
 
@@ -108,9 +129,9 @@ When Aria answers from a knowledge base, the passages are numbered in the reply 
 
 ## Memory
 
-Aria remembers lasting preferences you share ("I prefer guesthouses over chain hotels") and your explicit requests ("remember that my budget is €600"). When it learns something, a small **Updated memory** notice appears with **Undo**.
+Aria remembers what you ask it to ("remember that my budget is €600") — a line under the reply says **Saved to Aria's memory** with **Undo**. When you mention a lasting preference ("I prefer guesthouses over chain hotels"), it asks first with a **Remember this?** card. With each message, it uses the facts most relevant to what you asked.
 
-Memories are stored **only on this device**. See and edit them per agent in the agent's **Memory** tab, or remove everything in **Settings › Privacy › Agent memory**.
+Memories are stored **only on this device**. See [Assistant memory](/usage/using-the-app/chat-and-agents/memory/) for how facts are learned, used and shared, and the [Memory page](/usage/using-the-app/memory/overview/) for every chat and fact AWFlow keeps.
 
 ## Talk to other agents
 
