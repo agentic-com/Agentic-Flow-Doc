@@ -84,7 +84,7 @@ Connect a chat memory to the agent's memory input to give it a conversation:
 2. It saves the incoming prompt as a `user` message.
 3. After the model answers, it saves the reply as an `assistant` message (structured replies from an output parser are saved as JSON text).
 
-With [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/) or [Persistent Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/persistentmemory/) the conversation is kept across runs; [Window Buffer Memory](/nodes/builtin/ai/aidependencies/chatmemories/windowbuffermemory/) only lasts for one run.
+Use a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/): with **Conversation** or **Key** storage the conversation is kept across runs; with **This run only** it lasts for one run. It sends as much history as fits the connected model (or the last N messages), summarises what no longer fits, and can keep tool results so later turns can use them.
 
 This is also how a [Chat Trigger](/nodes/builtin/trigger/chat/) gets its replies: connect the **same** memory to the trigger and to this agent, and set the prompt to `{{ $json.chatInput }}`. The chat window shows the messages this agent saves.
 
