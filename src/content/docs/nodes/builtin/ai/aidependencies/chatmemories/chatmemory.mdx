@@ -1,0 +1,106 @@
+---
+title: "Chat Memory"
+description: "Lets an agent remember the conversation, across runs or within one run"
+sidebar:
+  label: "Chat Memory"
+  order: 0
+---
+
+# Chat Memory
+
+Lets an agent remember the conversation, across runs or within one run.
+
+## What it does
+
+Chat Memory gives an agent a conversation history. Connect it to an agent's memory input: before calling the model, the agent reads the earlier messages from the memory, and after answering it saves your message and its reply.
+
+It replaces three older nodes — Local Memory, Persistent Chat Memory and Window Buffer Memory — with one node and a few options. See [Replaced memory nodes](#replaced-memory-nodes).
+
+Conversations are stored **in your browser**, on this device. Every saved conversation is listed on the [Memory page](/usage/using-the-app/memory/overview/), where you can read, search, export or clear it.
+
+## When to use it
+
+- A chatbot built with a [Chat Trigger](/nodes/builtin/trigger/chat/): connect the **same** Chat Memory to the trigger and to its agent.
+- An agent that runs again and again (on a schedule, on page load) and should remember what happened in earlier runs.
+- One conversation **per user or per thread**, with a key such as `{{ $json.userId }}`.
+- An agent that calls several tools within one run and should remember the exchange only for that run.
+
+Works with the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) and the [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), and with the [Chat Trigger](/nodes/builtin/trigger/chat/).
+
+## Inputs and settings
+
+| Setting | Notes |
+| --- | --- |
+| **Storage** | Where the conversation is kept: **Conversation**, **Key** or **This run only** (see below). Default: **Conversation**. |
+| **Conversation** | *(Conversation storage)* The saved conversation to use. Leave it empty to give this node **its own conversation** in this workflow. |
+| **Key** | *(Key storage)* Runs with the same key share one conversation. Type a fixed key (`support-bot`) or an expression for one conversation per user or thread (`{{ $json.userId }}`). |
+| **Key scope** | *(Key storage)* **This workflow** (default): the same key in another workflow is a different conversation. **Shared**: every workflow using this key shares one conversation. |
+| **History sent to the model** | **As much as fits** (default): the newest messages that fit the model's context window. **Last N messages**: at most a fixed number. |
+| **Messages** | *(Last N messages)* How many of the newest messages to send. A question and its answer are two. Default: `20`. |
+| **Summarise older messages** | Messages that no longer fit are folded into a short summary the model still sees. Costs an extra model call now and then. Default: on. |
+| **Remember tool results** | Keep what the agent's tools returned with each reply, so later turns can use it without calling the tools again. Default: on. |
+
+### Storage
+
+| Storage | The conversation… | Good for |
+| --- | --- | --- |
+| **Conversation** | is one saved conversation: the one you pick, or this node's own when you pick none. | A single chatbot, a recurring agent. |
+| **Key** | is named by a key. Every run with the same key continues the same conversation. | One conversation per user, per ticket, per page. |
+| **This run only** | lives only while the workflow runs and is forgotten when it ends. Nothing is saved. | Multi-step reasoning inside one run. |
+
+### Key scope
+
+Keys are scoped to **this workflow** by default, so two workflows that both use the key `inbox` don't mix their conversations. Choose **Shared** when several workflows should continue the same conversation — for example a capture workflow and a reply workflow working on one thread.
+
+### Fitting the model
+
+With **As much as fits**, each turn sends the newest messages that fit the connected model's context window, keeping room for the reply. With **Summarise older messages** on, what no longer fits is summarised instead of dropped, the same way as in [Aria's long chats](/usage/using-the-app/chat-and-agents/chat/#long-chats-and-the-summary). The summary is kept with the conversation.
+
+With **Remember tool results** on, the agent's tool calls and their results are saved with its replies, so a later message can refer to them ("what was the price you found?") without running the tools again.
+
+## Outputs
+
+Chat Memory is a dependency: it doesn't run on its own and has no output. It hands its memory to the node it is connected to.
+
+## Sharing and publishing
+
+The picked **Conversation** only exists on your device, so it is **cleared when you publish or share** the workflow. Whoever installs it gets a fresh, empty conversation (this node's own) unless they pick one of theirs. Keys are kept as they are.
+
+## With a Chat Trigger
+
+Connect the same Chat Memory to the trigger's memory input and to the agent's. The chat window shows the conversation the memory points at:
+
+- **Conversation** and **Key** storage with a fixed key: the chat shows the history, and reopening it continues the conversation.
+- **This run only**, or a **key that is an expression**: the conversation isn't known before a run, so the chat window keeps no history — each message is answered on its own.
+
+## Deleting
+
+- Deleting a workflow offers to delete **its own** conversations (picked or own conversations and keys scoped to this workflow). **Shared** keys, and conversations another workflow uses, are kept.
+- Deleting a conversation on the Memory page warns you when a workflow uses it; that workflow then starts with an empty memory. **Clear messages** keeps the conversation and empties it instead.
+
+## Replaced memory nodes
+
+**Local Memory**, **Persistent Chat Memory** and **Window Buffer Memory** are no longer in the node palette. Workflows that use them **keep working**: they run through Chat Memory with matching settings. When you open such a workflow, the node shows that it was **upgraded from** the old node, and saving the workflow turns it into a Chat Memory node.
+
+| Old node | Becomes Chat Memory with |
+| --- | --- |
+| [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/) | **Conversation** storage, the same conversation. |
+| [Persistent Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/persistentmemory/) | **Key** storage, the same key, **Shared** scope (old keys were shared by every workflow). Its conversations — some of which were never visible before — now appear on the Memory page, marked **Recovered**. |
+| [Window Buffer Memory](/nodes/builtin/ai/aidependencies/chatmemories/windowbuffermemory/) | **This run only**, **Last N messages** with N = 2 × the old window size *k*. |
+
+Upgraded nodes keep **Summarise older messages** off, as before. Turn it on if you want it.
+
+## Troubleshooting
+
+- **The agent forgets between runs** — check **Storage**: *This run only* forgets everything when the run ends. Use *Conversation* or *Key*.
+- **Two workflows share a conversation unexpectedly** — they use the same key with **Shared** scope. Switch one to **This workflow**.
+- **The chat window stays empty** — the trigger and the agent must use the *same* Chat Memory node, and the storage must be a conversation or a fixed key.
+- **A conversation is getting large** — open it on the [Memory page](/usage/using-the-app/memory/overview/) to **Slim** it (tool results are the usual culprit), or turn **Remember tool results** off.
+
+## Related nodes
+
+- [Chat Trigger](/nodes/builtin/trigger/chat/)
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
+- [Memory page](/usage/using-the-app/memory/overview/)
+- [Memory & Context](/advanced-ai/concepts/memory-context/)

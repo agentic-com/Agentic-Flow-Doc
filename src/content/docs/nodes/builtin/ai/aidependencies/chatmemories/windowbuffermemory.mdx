@@ -1,49 +1,35 @@
 ---
-title: "Window Buffer Memory"
-description: "Keeps only the last N messages in memory"
+title: "Window Buffer Memory (replaced)"
+description: "Replaced by Chat Memory. Workflows that use Window Buffer Memory keep working and are upgraded on save."
 sidebar:
   label: "Window Buffer Memory"
+  order: 12
+  badge:
+    text: Replaced
+    variant: caution
 ---
 
-# Window Buffer Memory
+# Window Buffer Memory (replaced)
 
-Keeps only the last N messages in memory
+:::caution[Replaced by Chat Memory]
+Window Buffer Memory is no longer in the node palette. Use [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) with **Storage: This run only** instead.
+:::
 
-## What it does
+## What happens to existing workflows
 
-Maintains conversation history for the duration of the current execution, keeping only the last k human/AI message exchanges. Older messages are dropped from context. Unlike Local Memory or Persistent Chat Memory, this memory is not persisted across runs.
+Workflows that already use Window Buffer Memory **keep working**:
 
-## When to use it
+- The node runs through Chat Memory with **Storage: This run only** and **History sent to the model: Last N messages**, where N is twice the old window size *k* (a question and its answer are two messages). With the default *k* of 5, that is the last 10 messages.
+- The conversation is now really kept for the length of the run — the old node didn't remember anything. Nothing is saved after the run.
+- When you open the workflow, the node shows that it was **upgraded from Window Buffer Memory**. Saving the workflow turns it into a Chat Memory node.
 
-Connect this to AI agents that need short-term conversational context within a single run, while bounding how much history is kept in the prompt.
-
-## Inputs and settings
-
-| Setting | Notes |
+| Window Buffer Memory setting | Chat Memory setting |
 | --- | --- |
-| Window Size (k) | Only the last k message exchanges are kept in memory. Number of most recent human/AI message pairs to keep; older messages are dropped from context. Default: `5`. |
+| Window Size (k) | **Storage: This run only**, **Last N messages** with N = 2 × k |
 
-## Outputs
+Because nothing is saved, it still can't give a [Chat Trigger](/nodes/builtin/trigger/chat/) a chat history. Use **Conversation** or **Key** storage for that.
 
-Returns a memory dependency for conversational AI workflows.
+## Related
 
-## Dependencies and credentials
-
-- No explicit credential dependency is declared in the node description.
-
-## Example workflow
-
-Connect Window Buffer Memory to an AI agent or dependency input that accepts this dependency type, set the Window Size (k), then run the agent with data from previous nodes.
-
-## Troubleshooting
-
-- Check that Window Size (k) reflects how much recent context you want retained — a small k can drop information the agent still needs.
-- Remember this memory does not persist across separate workflow runs; use Persistent Chat Memory if you need that.
-- It can't be used as the memory of a [Chat Trigger](/nodes/builtin/trigger/chat/): nothing is saved, so the chat window has no conversation to show. Use Local Memory or Persistent Chat Memory instead.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
-
-## Related nodes
-
-- [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/)
+- [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/)
 - [Memory & Context](/advanced-ai/concepts/memory-context/)
-- [Q&A](/nodes/builtin/ai/aiagents/qanode/)

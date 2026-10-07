@@ -27,13 +27,15 @@ The trigger itself never writes a reply. The reply comes from a downstream agent
 
 A Chat Trigger needs three things wired together:
 
-1. **A Chat Memory connected to the trigger** — its memory input is required, and the run fails with a clear error if it's missing. Use [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/) (pick a conversation) or [Persistent Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/persistentmemory/) (set a conversation key).
+1. **A [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) connected to the trigger** — its memory input is required, and the run fails with a clear error if it's missing. Use **Conversation** storage (pick a conversation, or leave it empty for the node's own) or **Key** storage with a fixed key.
 2. **A downstream agent that uses the same memory node** — [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/). Connect the memory to the agent's memory input as well as to the trigger's.
 3. **The agent's prompt set to the chat message** — for example `{{ $json.chatInput }}`.
 
-<Aside type="caution" title="Window Buffer Memory doesn't work here">
-[Window Buffer Memory](/nodes/builtin/ai/aidependencies/chatmemories/windowbuffermemory/) only lives for the length of one run and isn't saved anywhere, so the chat window has nothing to display. The chat shows "no Chat Memory connected" in that case.
+<Aside type="caution" title="Which storage shows a history">
+The chat window shows the conversation the memory points at, so it needs to know it before a run. That works with **Conversation** storage and with a **fixed key**. With **This run only**, or a key that is an expression (`{{ $json.userId }}`), nothing is known ahead of the run: the chat keeps no history and each message is answered on its own.
 </Aside>
+
+Workflows built with the older Local Memory, Persistent Chat Memory or Window Buffer Memory keep working; those nodes are now [upgraded to Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/#replaced-memory-nodes).
 
 ## Inputs and settings
 
@@ -55,7 +57,7 @@ Each message produces one run whose trigger output is:
 | --- | --- |
 | `triggerType` | Always `chat`. |
 | `chatInput` | The message the user typed. |
-| `sessionId` | The conversation id of the connected Chat Memory, as a string. |
+| `sessionId` | The conversation id of the connected Chat Memory, as a string. Empty with **This run only** storage. |
 | `triggeredAt` | ISO timestamp of the message. |
 | `url`, `title`, `tabId` | The page the chat was opened on. Only set when chatting from a web page, not from the canvas. |
 
@@ -69,7 +71,7 @@ Each message produces one run whose trigger output is:
    - **On the canvas**, the window updates as soon as each message is saved, so your message appears first and the reply follows.
    - **On a web page**, the chat checks the conversation every 1.5 seconds, so messages can appear with a short delay. The "thinking" indicator stops when a new assistant message arrives.
 
-Because the conversation lives in the memory, it's also visible on the chat memories page, and any other workflow using the same memory sees the same messages.
+Because the conversation lives in the memory, it's also visible on the [Memory page](/usage/using-the-app/memory/overview/), and any other workflow using the same conversation (or the same **shared** key) sees the same messages.
 
 ## Where you can chat
 
@@ -90,14 +92,15 @@ The run still happens in the AWFlow app tab: the extension opens that tab if nee
 ## Example workflow
 
 1. Add a **Chat Trigger**.
-2. Add a **Local Memory**, pick (or create) a conversation, and connect it to the trigger's memory input.
-3. Add a **Tools Agent** after the trigger, connect a chat model, and connect the **same** Local Memory to its memory input.
+2. Add a **Chat Memory** (Storage: **Conversation**; leave the conversation empty to give it its own) and connect it to the trigger's memory input.
+3. Add a **Tools Agent** after the trigger, connect a chat model, and connect the **same** Chat Memory to its memory input.
 4. Set the agent's prompt to `{{ $json.chatInput }}`.
 5. Press **Run** and start chatting.
 
 ## Troubleshooting
 
-- **"No Chat Memory connected" / chat disabled** — connect a Local Memory with a conversation selected, or a Persistent Chat Memory with a conversation key, to the trigger's memory input.
+- **"No Chat Memory connected" / chat disabled** — connect a Chat Memory to the trigger's memory input.
+- **The chat forgets earlier messages** — the Chat Memory uses **This run only** or a key written as an expression. Use **Conversation** storage or a fixed key.
 - **Nothing appears, not even my own message** — the trigger doesn't save messages; the agent does. Check that an agent runs on every message and that it uses the same memory node as the trigger.
 - **The agent answers but the chat stays empty** — the agent is using a different memory (or a different conversation / key) than the trigger.
 - **The agent answers something unrelated** — its prompt isn't set to the chat message. Use `{{ $json.chatInput }}`.
@@ -108,8 +111,7 @@ The run still happens in the AWFlow app tab: the extension opens that tab if nee
 
 ## Related nodes
 
-- [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/)
-- [Persistent Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/persistentmemory/)
+- [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/)
 - [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
 - [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
 - [Memory & Context](/advanced-ai/concepts/memory-context/)

@@ -116,6 +116,7 @@ export default defineConfig({
                     { label: "Agents", link: "usage/using-the-app/chat-and-agents/agents" },
                     { label: "Projects", link: "usage/using-the-app/chat-and-agents/projects" },
                     { label: "Teams", link: "usage/using-the-app/chat-and-agents/teams" },
+                    { label: "Assistant memory", link: "usage/using-the-app/chat-and-agents/memory" },
                     { label: "Knowledge in chats & agents", link: "usage/using-the-app/chat-and-agents/knowledge" },
                     { label: "Browser control & safety", link: "usage/using-the-app/chat-and-agents/browser-control" },
                     { label: "Agent & team templates", link: "usage/using-the-app/chat-and-agents/templates" },
@@ -186,6 +187,13 @@ export default defineConfig({
                     { label: "Overview", link: "usage/using-the-app/knowledge-bases/overview" },
                     { label: "Save from anywhere", link: "usage/using-the-app/knowledge-bases/save-from-anywhere" },
                     { label: "Export & import", link: "usage/using-the-app/knowledge-bases/export-import-backup" },
+                  ],
+                },
+                {
+                  label: "Memory",
+                  items: [
+                    { label: "Memory page", link: "usage/using-the-app/memory/overview" },
+                    { label: "Storage & clean-up", link: "usage/using-the-app/memory/storage" },
                   ],
                 },
                 {
