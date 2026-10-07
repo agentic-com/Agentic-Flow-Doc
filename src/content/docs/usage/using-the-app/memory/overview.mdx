@@ -139,14 +139,16 @@ Use export and import to move your memory to another browser or device, or to ke
 
 ## Encryption on this device
 
-{/* TODO(#1262) verify: wording and behaviour once vault encryption at rest has shipped. */}
+When **Local secret protection** is on (**Settings › Preferences**, the same passphrase that protects your credentials), conversation messages, summaries and facts are also **encrypted on this device**. Turning it on encrypts what you already have in the background; the settings card shows the progress.
 
-When **Local secret protection** is on (**Settings › Preferences**, the same passphrase that protects your credentials), conversation messages and facts are **encrypted on this device** too.
-
-- Titles, sizes, dates and kinds stay readable, so the lists still work.
-- To read messages or facts, **unlock** with your passphrase. While locked, the page shows **Unlock to read memory**.
-- Searching inside messages, and picking the most relevant facts for a chat, work only while unlocked. While locked, chats fall back to your newest facts.
-- Turning protection off decrypts everything in place.
+- Titles, sizes, dates and kinds stay readable, so the lists still work. Message previews are hidden.
+- To read messages or facts, **unlock** with your passphrase. While locked, the Memory page, chats and the canvas dock show **Unlock to read memory**.
+- Unlocking in one AWFlow tab also unlocks memory for your other tabs and for the notch until you lock again or close the browser. Credentials still ask for the passphrase in each tab.
+- While protection is on, **search looks at titles only** (message text is not indexed), and chats use your **pinned and newest facts** instead of the most relevant ones. Nothing about your facts is stored in a readable form.
+- While locked, nothing new is saved in plain text: the notch asks you to unlock in the app, and a workflow whose Chat Memory needs encrypted memory stops with an "unlock" error.
+- **Export and archive** need memory to be unlocked.
+- If you forget the passphrase, encrypted memory **can't be recovered**.
+- Turning protection off decrypts everything in place and restores search.
 
 ## Plans
 
