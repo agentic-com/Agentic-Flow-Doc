@@ -165,6 +165,10 @@ flowchart TD
     B --> C[Scroll if Needed]
     C --> D[Extract Data]
     D --> E[Process or Use Data]
+    class A awf-trigger
+    class B,C awf-flow
+    class D awf-io
+    class E awf-ok
 ````
 
 Skipping the “wait” step is the most common mistake.

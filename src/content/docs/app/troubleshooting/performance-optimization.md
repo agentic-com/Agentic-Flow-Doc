@@ -109,6 +109,10 @@ flowchart TD
     A[Page Opens] --> B[Wait for Element]
     B --> C[Extract Data]
     C --> D[Process or Analyze]
+    class A awf-trigger
+    class B awf-flow
+    class C awf-io
+    class D awf-ai
 ```
 
 Waiting for the right element is faster than retrying failed steps.
@@ -189,6 +193,11 @@ flowchart TD
     B --> C[Extract Only Needed Data]
     C --> D[Optional AI or Processing]
     D --> E[Result or Action]
+    class A awf-trigger
+    class B awf-flow
+    class C awf-io
+    class D awf-ai
+    class E awf-ok
 ```
 
 If your workflow is much more complex, consider simplifying it.
