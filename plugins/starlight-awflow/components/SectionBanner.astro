@@ -1,0 +1,22 @@
+---
+/** Coloured section banner with a dashed "wireframe" decoration (Guide.dc.html). */
+/** Starlight's PAGE_TITLE_ID: the skip link and the TOC "Overview" entry point at it. */
+const PAGE_TITLE_ID = '_top';
+import { getAwflowRoute } from '../route-data';
+
+const { section, eyebrow } = getAwflowRoute(Astro.locals);
+const { title, description } = Astro.locals.starlightRoute.entry.data;
+---
+
+<section class="awf-banner awf-rise" style={`--awf-c: ${section?.color}; --awf-t: ${section?.tint}`}>
+	<div class="awf-banner__text">
+		{eyebrow && <p class="awf-eyebrow">{eyebrow}</p>}
+		<h1 id={PAGE_TITLE_ID}>{title}</h1>
+		{description && <p class="awf-banner__lede">{description}</p>}
+	</div>
+	<div class="awf-banner__wire" aria-hidden="true">
+		<span class="awf-banner__box awf-float"></span>
+		<span class="awf-banner__link"></span>
+		<span class="awf-banner__box awf-banner__box--solid awf-float awf-f2"></span>
+	</div>
+</section>

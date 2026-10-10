@@ -5,19 +5,59 @@ import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
-import starlightVideos from "starlight-videos";
+import starlightLinksValidator from "starlight-links-validator";
+import starlightLlmsTxt from "starlight-llms-txt";
+import starlightMdTxt from "starlight-md-txt";
+import starlightImageZoom from "starlight-image-zoom";
+import starlightKbd from "starlight-kbd";
+import starlightHeadingBadges from "starlight-heading-badges";
 import mermaid from "astro-mermaid";
+import starlightAwflow from "./plugins/starlight-awflow/index.ts";
 
 import svelte from "@astrojs/svelte";
 
-// Load environment variables from .env file
-//import "dotenv/config";
-//const { PUBLIC_SITE_URL } = import.meta.env;
 import { loadEnv } from "vite";
 import mdx from "@astrojs/mdx";
 import { satteri } from "@astrojs/markdown-satteri";
-const { DOCS_SITE_URL } = loadEnv(process.env.NODE_ENV, process.cwd(), "");
-//const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL;
+const { DOCS_SITE_URL, PUBLIC_CHROME_EXTENSION_URL } = loadEnv(
+  process.env.NODE_ENV ?? "production",
+  process.cwd(),
+  "",
+);
+
+/**
+ * Mermaid (awflow/Agentic-Flow#1316): Mermaid's `base` theme, with every colour pointing at CSS
+ * variables defined in plugins/starlight-awflow/styles/mermaid.css. The SVG is inlined in the page,
+ * so `var(--awf-mm-*)` follows the light/dark switch without re-rendering.
+ */
+const mermaidThemeCSS = `
+  .node rect, .node polygon, .node circle, .node ellipse, .node path, .node .label-container {
+    fill: var(--awf-mm-node); stroke: var(--awf-mm-border);
+  }
+  .nodeLabel, .nodeLabel p, .label, .label text, text.actor, .messageText, .loopText, .noteText, .labelText {
+    color: var(--awf-mm-text); fill: var(--awf-mm-text);
+  }
+  .edgePath .path, .flowchart-link, .messageLine0, .messageLine1, .relation, .transition {
+    stroke: var(--awf-mm-line);
+  }
+  .arrowheadPath, marker path, .arrowhead, #arrowhead path { fill: var(--awf-mm-line); stroke: var(--awf-mm-line); }
+  .edgeLabel, .edgeLabel p, .edgeLabel rect, .labelBkg {
+    background-color: var(--awf-mm-label-bg); fill: var(--awf-mm-label-bg); color: var(--awf-mm-text);
+  }
+  .cluster rect { fill: var(--awf-mm-cluster); stroke: var(--awf-mm-cluster-border); }
+  .cluster .nodeLabel, .cluster-label .nodeLabel, .cluster text { color: var(--awf-mm-text); fill: var(--awf-mm-text); }
+  .note, rect.note { fill: var(--awf-mm-note); stroke: var(--awf-mm-border); }
+  .actor { fill: var(--awf-mm-node); stroke: var(--awf-mm-border); }
+  .actor-line { stroke: var(--awf-mm-line); }
+  .node.awf-trigger > * { fill: var(--awf-mm-trigger); }
+  .node.awf-ai > * { fill: var(--awf-mm-ai); }
+  .node.awf-data > * { fill: var(--awf-mm-data); }
+  .node.awf-flow > * { fill: var(--awf-mm-flow); }
+  .node.awf-io > * { fill: var(--awf-mm-io); }
+  .node.awf-ok > * { fill: var(--awf-mm-ok); }
+  .node.awf-warn > * { fill: var(--awf-mm-warn); }
+  .node.awf-err > * { fill: var(--awf-mm-err); }
+`;
 
 // https://astro.build/config
 export default defineConfig({
@@ -42,12 +82,28 @@ export default defineConfig({
     processor: satteri({ features: { rawHtml: true } }),
   },
   integrations: [mermaid({
-    theme: "forest",
-    autoTheme: true,
+    theme: "base",
+    // Colours follow the page theme through CSS variables (see mermaidThemeCSS), so no re-render.
+    autoTheme: false,
     mermaidConfig: {
       startOnLoad: false,
       logLevel: "error",
       securityLevel: "strict",
+      fontFamily: "'Geist Variable', 'Geist', ui-sans-serif, system-ui, sans-serif",
+      // Fallback values for anything themeCSS doesn't reach (Mermaid needs concrete colours here).
+      themeVariables: {
+        fontFamily: "'Geist Variable', 'Geist', ui-sans-serif, system-ui, sans-serif",
+        primaryColor: "#FFF3E3",
+        primaryBorderColor: "#C9A27A",
+        primaryTextColor: "#1C1917",
+        secondaryColor: "#E0E7FF",
+        tertiaryColor: "#F5F0E8",
+        lineColor: "#78716C",
+        textColor: "#1C1917",
+        noteBkgColor: "#FEF3E2",
+        noteTextColor: "#1C1917",
+      },
+      themeCSS: mermaidThemeCSS,
     },
 
     iconPacks: [
@@ -57,13 +113,18 @@ export default defineConfig({
       },
     ],
   }), starlight({
-    title: "Agentic WorkFlow",
+    title: "AWFlow Docs",
     description:
-      "Agentic WorkFlow - Build AI-powered workflows directly in your browser with intelligent automation and web content manipulation capabilities.",
+      "AWFlow (Agentic Workflow) documentation — build AI-powered browser workflows: guides, recipes and a reference for every node.",
     logo: {
-      src: "./src/assets/logo.png",
+      src: "./src/assets/logo.svg",
+      alt: "Agentic Workflow",
     },
-    favicon: "./src/assets/logo.png",
+    // Must be a path under public/. The old "./src/assets/logo.png" value 404'd (awflow/Agentic-Flow#1330).
+    favicon: "/favicon.svg",
+    editLink: {
+      baseUrl: "https://github.com/agentic-com/Agentic-Flow-Doc/edit/Dev/",
+    },
     social: [
       {
         icon: "x.com",
@@ -93,14 +154,11 @@ export default defineConfig({
     ],
     defaultLocale: "root",
     locales: {
-      // English docs in `src/content/docs/en/`
+      // English only for now (decision in awflow/Agentic-Flow#1332, see CONTRIBUTING.md).
       root: {
         label: "English",
         lang: "en",
       },
-      /*fr: {
-        label: "Français",
-      },*/
     },
     plugins: [
       starlightSidebarTopics([
@@ -424,11 +482,54 @@ export default defineConfig({
           ],
         },
       ]),
-      starlightVideos(),
+      // starlight-videos is no longer registered: no page uses `video` frontmatter, and its PageTitle /
+      // MarkdownContent overrides blocked starlight-awflow and starlight-image-zoom. The package stays
+      // installed because src/content.config.ts still extends `videosSchema`.
+      // AWFlow chrome: section tabs, banners, node header, at-a-glance, Ask Aria pill, tokens.
+      starlightAwflow({
+        sections: [
+          // Today's three sidebar topics, labelled and coloured as their target tabs.
+          // awflow/Agentic-Flow#1334 grows this to six: get-started · app · recipes · nodes · concepts · releases.
+          { id: "app", label: "Use the app", link: "/usage/", topic: "/usage/" },
+          { id: "nodes", label: "Nodes", link: "/nodes/", topic: "/nodes/" },
+          { id: "concepts", label: "AI concepts", link: "/advanced-ai/", topic: "/advanced-ai/" },
+        ],
+        version: { label: "v0.8.2", href: "/usage/releases/" },
+        install: {
+          label: "Install free",
+          href: PUBLIC_CHROME_EXTENSION_URL || "https://awflow.io",
+        },
+        askAria: { href: "#ask-aria" },
+        // Node reference pages are listed A–Z, so prev/next there is noise (awflow/Agentic-Flow#1330).
+        noPagination: ["/nodes/builtin/", "/nodes/extension/"],
+      }),
+      starlightLinksValidator({
+        // Checks internal links and anchors (awflow/Agentic-Flow#1311). Warn-only until the content
+        // fixes land (4 broken links + 14 relative links today); then flip to `failOnError: true`.
+        failOnError: false,
+        exclude: ["/og/**", "#ask-aria"],
+      }),
+      starlightLlmsTxt({
+        // Raw MDX: the plugin cannot render Svelte components (SiteHero, src/components/awflow).
+        rawContent: true,
+        projectName: "Agentic Workflow",
+        description:
+          "Agentic Workflow (AWFlow) is a browser extension and web app for building AI-powered automations with visual nodes.",
+      }),
+      starlightMdTxt({ format: ".md" }),
+      starlightImageZoom(),
+      starlightKbd({
+        globalPicker: false,
+        types: [
+          { id: "mac", label: "macOS", detector: "apple", default: true },
+          { id: "windows", label: "Windows / Linux" },
+        ],
+      }),
+      starlightHeadingBadges(),
     ],
     components: {
-      // Override the default `Sidebar` component with a custom one.
-      //Sidebar: "./src/components/(override)/Sidebar.astro",
+      // Keeps the feedback widget above prev/next. Prev/next themselves are scoped to the
+      // current sidebar group by the starlight-awflow route middleware.
       Pagination: "./src/components/(override)/Pagination.astro",
     },
     customCss: [

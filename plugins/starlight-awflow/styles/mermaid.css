@@ -1,0 +1,77 @@
+/*
+ * Mermaid theming (awflow/Agentic-Flow#1316).
+ *
+ * astro-mermaid renders with Mermaid's `base` theme; the `themeCSS` in astro.config.mjs points
+ * every colour at the variables below, so diagrams follow the light/dark switch without a re-render.
+ *
+ * Theme-aware node classes for authors (no classDef needed, works in both themes):
+ *   class A awf-trigger   class B awf-ai   class C awf-data   class D awf-flow
+ *   class E awf-io        class F awf-ok   class G awf-warn   class H awf-err
+ */
+
+:root {
+	--awf-mm-bg: #171412;
+	--awf-mm-node: #292420;
+	--awf-mm-border: #78716c;
+	--awf-mm-text: #f5f5f4;
+	--awf-mm-line: #a8a29e;
+	--awf-mm-cluster: #1f1b18;
+	--awf-mm-cluster-border: #44403c;
+	--awf-mm-label-bg: #171412;
+	--awf-mm-note: #3a2a12;
+	--awf-mm-trigger: #4a2a09;
+	--awf-mm-ai: #2e2353;
+	--awf-mm-data: #0d3a3f;
+	--awf-mm-flow: #23265a;
+	--awf-mm-io: #3b2a20;
+	--awf-mm-ok: #12391f;
+	--awf-mm-warn: #47380b;
+	--awf-mm-err: #4a1616;
+}
+:root[data-theme='light'] {
+	--awf-mm-bg: #fffbf5;
+	--awf-mm-node: #ffffff;
+	--awf-mm-border: #c9a27a;
+	--awf-mm-text: #1c1917;
+	--awf-mm-line: #78716c;
+	--awf-mm-cluster: #faf6f0;
+	--awf-mm-cluster-border: #eadfcf;
+	--awf-mm-label-bg: #fffbf5;
+	--awf-mm-note: #fef3e2;
+	--awf-mm-trigger: #fef3e2;
+	--awf-mm-ai: #ede9fe;
+	--awf-mm-data: #cffafe;
+	--awf-mm-flow: #e0e7ff;
+	--awf-mm-io: #f5f0e8;
+	--awf-mm-ok: #dcfce7;
+	--awf-mm-warn: #fef9c3;
+	--awf-mm-err: #fee2e2;
+}
+
+pre.mermaid[data-processed] {
+	background: var(--awf-surface) !important;
+	border: 1px solid var(--awf-line);
+	border-radius: var(--awf-radius) !important;
+	padding: 1rem;
+}
+
+/*
+ * Diagrams that hard-code pastel fills (`style X fill:#e8f5e8`, or a classDef) were written for a
+ * light page. In dark mode, keep the author's fill but force dark text on those nodes so the label
+ * stays readable (AA). A classDef that sets its own `color:` still wins (it carries an id selector).
+ */
+:root:not([data-theme='light'])
+	pre.mermaid
+	:is(.node:not([class="node default"]), .node:has([style*='fill']))
+	:is(.nodeLabel, .nodeLabel *, .label text, text) {
+	color: #1c1917 !important;
+	fill: #1c1917 !important;
+}
+/* Our own theme-aware classes keep light text in dark mode. */
+:root:not([data-theme='light'])
+	pre.mermaid
+	.node:is(.awf-trigger, .awf-ai, .awf-data, .awf-flow, .awf-io, .awf-ok, .awf-warn, .awf-err)
+	:is(.nodeLabel, .nodeLabel *, .label text, text) {
+	color: var(--awf-mm-text) !important;
+	fill: var(--awf-mm-text) !important;
+}

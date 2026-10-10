@@ -1,0 +1,134 @@
+/*
+ * AWFlow brand tokens mapped onto Starlight's --sl-color-* variables (awflow/Agentic-Flow#1335).
+ *
+ * Unlayered on purpose: it wins over Starlight's `starlight.base` layer and over the
+ * starlight-tailwind compat mapping (in `utilities`), without !important.
+ *
+ * Starlight naming reminder: --sl-color-white is the STRONGEST text colour and
+ * --sl-color-black the page background, in both themes.
+ *
+ * Contrast (WCAG AA, checked against the page background):
+ *   light  text gray-2 #44403C on paper #FFFBF5 → 9.9:1 · muted gray-3 #57534E → 7.4:1
+ *          accent #B45309 on paper → 5.0:1 · white on #B45309 → 5.0:1
+ *   dark   text gray-2 #D6D3D1 on #171412 → 12.6:1 · muted gray-3 #A8A29E → 7.2:1
+ *          accent-high #FBBF24 on #171412 → 11:1
+ */
+
+:root {
+	/* Brand palette (theme-independent). */
+	--awf-paper: #fffbf5;
+	--awf-cream: #fff3e3;
+	--awf-ink: #1c1917;
+	--awf-amber: #b45309;
+	--awf-amber-dark: #92400e;
+	--awf-ember: #f59e0b;
+	--awf-gold: #fbbf24;
+
+	/* Section colours (Main.dc.html · 01). */
+	--awf-section-get-started: #b45309;
+	--awf-section-app: #be185d;
+	--awf-section-recipes: #15803d;
+	--awf-section-nodes: #4338ca;
+	--awf-section-concepts: #0f766e;
+	--awf-section-releases: #6d28d9;
+
+	/* Node family tints (one per palette group). */
+	--awf-family-trigger: #fef3e2;
+	--awf-family-lambda: #f5f5f4;
+	--awf-family-inpage: #ccfbf1;
+	--awf-family-flow: #e0e7ff;
+	--awf-family-data: #cffafe;
+	--awf-family-core: #f5f0e8;
+	--awf-family-ai: #ede9fe;
+	--awf-family-integration: #dbeafe;
+
+	/* Motion. */
+	--awf-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+	--awf-fast: 150ms;
+	--awf-base: 300ms;
+	--awf-enter: 800ms;
+
+	/* Radii. */
+	--awf-radius-sm: 8px;
+	--awf-radius: 14px;
+	--awf-radius-lg: 18px;
+	--awf-radius-xl: 22px;
+
+	/* Fonts (Geist via @fontsource-variable — no Google Fonts). */
+	--sl-font: 'Geist Variable', 'Geist', ui-sans-serif, system-ui, sans-serif;
+	--sl-font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+	--sl-line-height: 1.7;
+	--sl-text-h1: 2.5rem;
+	--sl-text-h2: 1.6rem;
+	--sl-text-h3: 1.3rem;
+
+	/* ---------- Dark theme (Starlight's default block) ---------- */
+	--sl-color-white: #fafaf9;
+	--sl-color-gray-1: #e7e5e4;
+	--sl-color-gray-2: #d6d3d1;
+	--sl-color-gray-3: #a8a29e;
+	--sl-color-gray-4: #78716c;
+	--sl-color-gray-5: #44403c;
+	--sl-color-gray-6: #292524;
+	--sl-color-gray-7: #1f1b18;
+	--sl-color-black: #171412;
+
+	--sl-color-accent-low: #451a03;
+	--sl-color-accent: #f59e0b;
+	--sl-color-accent-high: #fbbf24;
+	--sl-color-text-accent: #fbbf24;
+
+	--sl-color-bg-nav: rgba(23, 20, 18, 0.86);
+	--sl-color-bg-sidebar: #171412;
+	--sl-color-bg-inline-code: #292524;
+	--sl-color-hairline: #2f2a26;
+	--sl-color-hairline-light: #3a332e;
+	--sl-color-hairline-shade: #0e0c0b;
+
+	/* AWFlow semantic tokens (dark). */
+	--awf-surface: #1f1b18;
+	--awf-surface-2: #292420;
+	--awf-line: #3a332e;
+	--awf-line-soft: #2a2521;
+	--awf-grid: rgba(255, 243, 227, 0.035);
+	--awf-muted: #a8a29e;
+	--awf-code-bg: #1a1714;
+	--awf-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.8);
+}
+
+:root[data-theme='light'] {
+	--sl-color-white: #1c1917;
+	--sl-color-gray-1: #292524;
+	--sl-color-gray-2: #44403c;
+	--sl-color-gray-3: #57534e;
+	--sl-color-gray-4: #78716c;
+	--sl-color-gray-5: #d6cfc4;
+	--sl-color-gray-6: #eadfcf;
+	--sl-color-gray-7: #faf6f0;
+	--sl-color-black: #fffbf5;
+
+	--sl-color-accent-low: #fde7c7;
+	--sl-color-accent: #b45309;
+	--sl-color-accent-high: #78350f;
+	--sl-color-text-accent: #b45309;
+
+	--sl-color-bg-nav: rgba(255, 251, 245, 0.86);
+	--sl-color-bg-sidebar: #fffbf5;
+	--sl-color-bg-inline-code: #f5f0e8;
+	--sl-color-hairline: #efe4d4;
+	--sl-color-hairline-light: #eadfcf;
+	--sl-color-hairline-shade: #eadfcf;
+
+	--awf-surface: #ffffff;
+	--awf-surface-2: #faf6f0;
+	--awf-line: #eadfcf;
+	--awf-line-soft: #f0e9df;
+	--awf-grid: #f3eadd;
+	--awf-muted: #57534e;
+	--awf-code-bg: #1a1714;
+	--awf-shadow: 0 22px 44px -24px rgba(146, 64, 14, 0.45);
+}
+
+::selection {
+	background: color-mix(in srgb, var(--awf-ember) 35%, transparent);
+}
