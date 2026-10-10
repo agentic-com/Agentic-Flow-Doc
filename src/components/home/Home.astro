@@ -4,7 +4,7 @@
  * works-with marquee, help strip and the footer links from #1323 (FAQ, Privacy & data).
  * The header, section tabs, search dialog and Ask Aria pill come from plugins/starlight-awflow.
  */
-import { PUBLIC_CHROME_EXTENSION_URL, PUBLIC_FIREFOX_EXTENSION_URL } from 'astro:env/client';
+import { CHROME_WEB_STORE_URL, FIREFOX_ADDONS_URL } from '../../data/stores';
 import { SECTION_PALETTE } from '../../../plugins/starlight-awflow/palette';
 import { getHomeData } from './data';
 import HeroStage from './HeroStage.astro';
@@ -88,8 +88,8 @@ const explore = [
 			</p>
 			<SearchTyper />
 			<div class="awh-install awf-rise awf-d4">
-				<a class="awh-btn awf-press" href={PUBLIC_CHROME_EXTENSION_URL}>Add to Chrome</a>
-				<a class="awh-btn awf-press" href={PUBLIC_FIREFOX_EXTENSION_URL}>Add to Firefox</a>
+				<a class="awh-btn awf-press" href={CHROME_WEB_STORE_URL}>Add to Chrome</a>
+				{FIREFOX_ADDONS_URL && <a class="awh-btn awf-press" href={FIREFOX_ADDONS_URL}>Add to Firefox</a>}
 				<span class="awh-muted">Free · runs in your browser</span>
 			</div>
 		</div>

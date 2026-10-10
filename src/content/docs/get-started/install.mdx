@@ -13,7 +13,7 @@ sidebar:
 
 import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
 import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awflow";
-import { PUBLIC_CHROME_EXTENSION_URL, PUBLIC_FIREFOX_EXTENSION_URL } from "astro:env/client";
+import { CHROME_WEB_STORE_URL, FIREFOX_ADDONS_URL } from "../../../data/stores";
 
 <LessonProgress
   client:visible
@@ -38,7 +38,7 @@ AWFlow is a browser extension. It runs in your browser, next to the page you're 
 <TabItem label="Chrome, Edge, Brave">
 
 <StepCard n={1} title="Add the extension" check="an “Agentic Workflow” welcome tab opens.">
-  Open <a href={PUBLIC_CHROME_EXTENSION_URL} target="_blank" rel="noopener">AWFlow on the Chrome Web Store</a> and click **Add to Chrome**, then **Add extension**. Edge, Brave and other Chromium browsers install it from the same store.
+  Open <a href={CHROME_WEB_STORE_URL} target="_blank" rel="noopener">AWFlow on the Chrome Web Store</a> and click **Add to Chrome**, then **Add extension**. Edge, Brave and other Chromium browsers install it from the same store.
 </StepCard>
 
 <StepCard n={2} title="Pin it to the toolbar" check="the AWFlow icon stays visible next to the address bar.">
@@ -49,7 +49,11 @@ AWFlow is a browser extension. It runs in your browser, next to the page you're 
 <TabItem label="Firefox">
 
 <StepCard n={1} title="Add the extension" check="an “Agentic Workflow” welcome tab opens.">
-  Open <a href={PUBLIC_FIREFOX_EXTENSION_URL} target="_blank" rel="noopener">AWFlow on Firefox Add-ons</a> and click **Add to Firefox**, then **Add**. You need Firefox 140 or later, on a computer.
+  {FIREFOX_ADDONS_URL ? (
+    <>Open <a href={FIREFOX_ADDONS_URL} target="_blank" rel="noopener">AWFlow on Firefox Add-ons</a> and click <strong>Add to Firefox</strong>, then <strong>Add</strong>. You need Firefox 140 or later, on a computer.</>
+  ) : (
+    <>AWFlow isn't on Firefox Add-ons yet. The listing is coming; until then, install it in Chrome, Edge or Brave. Once it's live: open AWFlow on Firefox Add-ons and click <strong>Add to Firefox</strong>, then <strong>Add</strong>. You need Firefox 140 or later, on a computer.</>
+  )}
 </StepCard>
 
 <StepCard n={2} title="Pin it and allow website access" check="the AWFlow icon is in the toolbar, and the app doesn't show an Allow access card.">

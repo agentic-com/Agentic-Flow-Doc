@@ -20,7 +20,8 @@ import svelte from "@astrojs/svelte";
 import { loadEnv } from "vite";
 import mdx from "@astrojs/mdx";
 import { satteri } from "@astrojs/markdown-satteri";
-const { DOCS_SITE_URL, PUBLIC_CHROME_EXTENSION_URL } = loadEnv(
+import { CHROME_WEB_STORE_URL } from "./src/data/stores.ts";
+const { DOCS_SITE_URL } = loadEnv(
   process.env.NODE_ENV ?? "production",
   process.cwd(),
   "",
@@ -605,7 +606,7 @@ export default defineConfig({
         version: { label: "v0.8.2", href: "/releases/" },
         install: {
           label: "Install free",
-          href: PUBLIC_CHROME_EXTENSION_URL || "https://awflow.io",
+          href: CHROME_WEB_STORE_URL,
         },
         askAria: { href: "#ask-aria" },
         // Node reference pages are listed A–Z, so prev/next there is noise (awflow/Agentic-Flow#1330).
@@ -660,16 +661,6 @@ export default defineConfig({
         optional: false,
       }),
       PUBLIC_SITE_URL: envField.string({
-        context: "client",
-        access: "public",
-        optional: false,
-      }),
-      PUBLIC_CHROME_EXTENSION_URL: envField.string({
-        context: "client",
-        access: "public",
-        optional: false,
-      }),
-      PUBLIC_FIREFOX_EXTENSION_URL: envField.string({
         context: "client",
         access: "public",
         optional: false,
