@@ -17,7 +17,7 @@ recipe:
 
 import { Steps } from '@astrojs/starlight/components';
 import FlowPreview from '@components/awflow/FlowPreview.astro';
-import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+import { RecipeMeta, RecipeUse, RecipeSteps, StepShot } from '@components/awflow';
 
 <RecipeMeta slug="explain-like-im-five" />
 
@@ -56,14 +56,29 @@ import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
 			tweak: 'use [Browser Notification](/nodes/extension/browsernotification/) instead for a short answer.',
 		},
 	]}
-/>
+>
+	<StepShot slot="shot-1" shot="recipe-eli5-trigger-context-menu" spot="document-url-patterns" n={1} />
+	<StepShot slot="shot-2" shot="recipe-eli5-canvas" spot="get-selection" n={2} zoom={36} />
+	<StepShot slot="shot-3" shot="recipe-eli5-explain" spot="prompt" n={3} />
+	<StepShot slot="shot-4" shot="recipe-eli5-canvas" spot="show-explanation" n={4} zoom={36} />
+</RecipeSteps>
 
 ## Test it
 
 <Steps>
 
-1. Install the recipe and pick a model in **Local AI model** (it downloads once; see [Local models](/app/local-models/)).
+1. Install the recipe and pick a model in **Local AI model** (it downloads once; see [Local models](/app/local-models/)). To import the file yourself, use **Add Workflow** › **Import**, choose the `.awf` and click **Create & open**. Then click **Make it mine** at the bottom of the canvas, tick the box and confirm, so you can edit it.
+
+   <StepShot shot="recipe-eli5-import" spot="create-open" n={1} />
+
+   <StepShot shot="recipe-eli5-consent" spot="make-it-mine" n={1} />
+
+   <StepShot shot="recipe-eli5-local-model" spot="model" n={1} />
+
 2. Save and activate the workflow.
+
+   <StepShot shot="recipe-eli5-canvas" spot="active" n={2} />
+
 3. On any page, highlight a sentence, right-click it and choose **Agentic Workflow** › **Personal Workflows** › **Explain Like I'm 5**.
 4. An **Explanation** panel opens with a plain-words version.
 

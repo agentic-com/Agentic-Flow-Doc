@@ -17,7 +17,7 @@ recipe:
 
 import { Steps } from '@astrojs/starlight/components';
 import FlowPreview from '@components/awflow/FlowPreview.astro';
-import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+import { RecipeMeta, RecipeUse, RecipeSteps, StepShot } from '@components/awflow';
 
 <RecipeMeta slug="summarize-this-page" />
 
@@ -56,14 +56,29 @@ import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
 			tweak: 'rename the panel in **Title**, or send the summary somewhere instead (see the variations).',
 		},
 	]}
-/>
+>
+	<StepShot slot="shot-1" shot="recipe-summarize-canvas" spot="trigger-run" n={1} zoom={36} />
+	<StepShot slot="shot-2" shot="recipe-summarize-get-text" spot="dom-selector" n={2} />
+	<StepShot slot="shot-3" shot="recipe-summarize-summarize" spot="max-words" n={3} />
+	<StepShot slot="shot-4" shot="recipe-summarize-show-summary" spot="title" n={4} />
+</RecipeSteps>
 
 ## Test it
 
 <Steps>
 
-1. Install the recipe, open it on the canvas and pick a model in **Local AI model**. The first run downloads it once; installed models start right away. See [Local models](/app/local-models/).
+1. Install the recipe, open it on the canvas and pick a model in **Local AI model**. The first run downloads it once; installed models start right away. See [Local models](/app/local-models/). To import the file yourself, use **Add Workflow** › **Import**, choose the `.awf` and click **Create & open**. Then click **Make it mine** at the bottom of the canvas, tick the box and confirm, so you can edit it.
+
+   <StepShot shot="recipe-summarize-import" spot="create-open" n={1} />
+
+   <StepShot shot="recipe-summarize-consent" spot="make-it-mine" n={1} />
+
+   <StepShot shot="recipe-summarize-local-model" spot="model" n={1} />
+
 2. Save and activate the workflow, then open a long article.
+
+   <StepShot shot="recipe-summarize-canvas" spot="active" n={2} />
+
 3. Right-click the article and choose **Agentic Workflow** › **Personal Workflows** › **Summarize This Page**. If it's missing, choose **Get / Refresh Workflows** first.
 4. A **Page summary** panel opens in the corner of the article with a few bullet points.
 

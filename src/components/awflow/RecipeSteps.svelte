@@ -10,7 +10,12 @@
 	 * `node` is the step's id inside the .awf (`also` lists nodes plugged into it, such as the model).
 	 * `body` and `tweak` accept `code`, **bold** and [links](/path/).
 	 * The build fails when a step names a node the workflow doesn't have.
+ *
+ * A step can carry screenshots: pass Astro children with `slot="shot-<n>"` (n = step number), e.g.
+ *   <StepShot slot="shot-2" shot="recipe-summarize-get-text" spot="dom-selector" n={2} />
+ * Several shots for one step go in one wrapper: `<div slot="shot-2">…</div>`.
 	 */
+	import type { Snippet } from 'svelte';
 	import { getRecipe, type RecipeNode } from './recipes';
 
 	interface Step {
@@ -20,7 +25,7 @@
 		body: string;
 		tweak?: string;
 	}
-	let { slug, steps }: { slug: string; steps: Step[] } = $props();
+	let { slug, steps, ...slots }: { slug: string; steps: Step[]; [slot: `shot-${number}`]: Snippet | undefined } = $props();
 
 	// svelte-ignore state_referenced_locally
 	const recipe = getRecipe(slug);
@@ -59,6 +64,7 @@
 				</p>
 				<p class="awf-rsteps__text">{@html inline(s.body)}</p>
 				{#if s.tweak}<p class="awf-rsteps__tweak"><strong>Make it yours</strong> — {@html inline(s.tweak)}</p>{/if}
+				{#if slots[`shot-${i + 1}`]}<div class="awf-rsteps__shot">{@render slots[`shot-${i + 1}`]?.()}</div>{/if}
 			</div>
 		</li>
 	{/each}
@@ -145,6 +151,9 @@
 		border-radius: 10px;
 		background: color-mix(in srgb, var(--awf-section-recipes) 10%, var(--awf-surface));
 		color: var(--sl-color-white);
+	}
+	.awf-rsteps__shot :global(> *) {
+		margin-top: 0.25rem;
 	}
 	.awf-rsteps :global(code) {
 		font-size: 0.85em;

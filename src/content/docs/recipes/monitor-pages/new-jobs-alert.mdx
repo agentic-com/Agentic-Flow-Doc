@@ -17,7 +17,7 @@ recipe:
 
 import { Steps } from '@astrojs/starlight/components';
 import FlowPreview from '@components/awflow/FlowPreview.astro';
-import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+import { RecipeMeta, RecipeUse, RecipeSteps, StepShot } from '@components/awflow';
 
 <RecipeMeta slug="new-jobs-alert" />
 
@@ -43,15 +43,30 @@ import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
 			tweak: 'put the page in the message with `{{ $input.url }}`, or use **Fire when** **Text matches** with a keyword such as `Designer` to be told only about roles you want.',
 		},
 	]}
-/>
+>
+	<StepShot slot="shot-1" shot="recipe-jobs-trigger-element-change" spot="css-selectors" n={1} />
+	<StepShot slot="shot-2" shot="recipe-jobs-send-push" spot="topic" n={2} />
+</RecipeSteps>
 
 ## Test it
 
 <Steps>
 
-1. Install the recipe. In **Send a push notification**, pick a connection and set **Topic** to a hard-to-guess name such as `jobs-k7f3q`. See [Push Notification](/nodes/builtin/integration/push-notification/).
+1. Install the recipe. In **Send a push notification**, pick a connection and set **Topic** to a hard-to-guess name such as `jobs-k7f3q`. See [Push Notification](/nodes/builtin/integration/push-notification/). To import the file yourself, use **Add Workflow** › **Import**, choose the `.awf` and click **Create & open**. Then click **Make it mine** at the bottom of the canvas, tick the box and confirm, so you can edit it. To add the connection itself, see [Create a connection](/app/connections/create/).
+
+   <StepShot shot="recipe-jobs-import" spot="create-open" n={1} />
+
+   <StepShot shot="recipe-jobs-consent" spot="make-it-mine" n={1} />
+
+   <StepShot shot="recipe-jobs-send-push" spot="credential" n={1} />
+
 2. Subscribe to the same topic in the ntfy app on your phone.
 3. In **Watch the job list**, pick the job list on the careers page with the crosshair, then save and activate the workflow.
+
+   <StepShot shot="recipe-jobs-trigger-element-change" spot="url-patterns" n={3} />
+
+   <StepShot shot="recipe-jobs-canvas" spot="active" n={3} />
+
 4. Keep the page open. To test right away, edit the list's text in the browser's developer tools: your phone shows **New jobs**.
 
 </Steps>
