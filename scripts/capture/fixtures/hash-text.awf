@@ -1,0 +1,165 @@
+{
+  "name": "Hash Text",
+  "description": "Get the SHA-256 and SHA-512 hash of any text — locally, no upload, great for checksums.",
+  "tags": [
+    "crypto",
+    "hash"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "🔐 Hash any text.\n\nType your text into the box below and press Run. It computes SHA-256 and SHA-512 hashes with the Web Crypto API, entirely in your browser. Useful for checksums, cache keys, or verifying a value matches."
+      },
+      "width": 360,
+      "height": 190
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": {
+        "x": 120,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:whenStarted"
+        },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": {
+          "notes": "Starts the workflow when you press Run."
+        }
+      }
+    },
+    {
+      "id": "seed-text",
+      "type": "basic",
+      "position": {
+        "x": 440,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:editFields"
+        },
+        "label": "Your text",
+        "inputs": {
+          "fields": {
+            "text": {
+              "type": "string",
+              "value": "The quick brown fox jumps over the lazy dog"
+            }
+          }
+        },
+        "parameters": {
+          "notes": "Type the text you want to hash here."
+        }
+      }
+    },
+    {
+      "id": "sha256",
+      "type": "basic",
+      "position": {
+        "x": 760,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:crypto"
+        },
+        "label": "SHA-256",
+        "inputs": {
+          "operation": "hash",
+          "algorithm": "SHA-256",
+          "value": "{{ $input.text }}",
+          "encoding": "hex",
+          "outputFieldName": "sha256",
+          "includeInputFields": true
+        },
+        "parameters": {
+          "notes": "Computes the SHA-256 hash (hex) of your text and keeps the original."
+        }
+      }
+    },
+    {
+      "id": "sha512",
+      "type": "basic",
+      "position": {
+        "x": 1080,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:crypto"
+        },
+        "label": "SHA-512",
+        "inputs": {
+          "operation": "hash",
+          "algorithm": "SHA-512",
+          "value": "{{ $input.text }}",
+          "encoding": "hex",
+          "outputFieldName": "sha512",
+          "includeInputFields": true
+        },
+        "parameters": {
+          "notes": "Adds the SHA-512 hash (hex) alongside the SHA-256 one."
+        }
+      }
+    },
+    {
+      "id": "show",
+      "type": "basic",
+      "position": {
+        "x": 1400,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:displayObjectNode"
+        },
+        "label": "Show the hashes",
+        "inputs": {
+          "title": "Hashes"
+        },
+        "parameters": {
+          "notes": "Displays the text with both hashes."
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-run-seed",
+      "source": "trigger-run",
+      "target": "seed-text",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-seed-256",
+      "source": "seed-text",
+      "target": "sha256",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-256-512",
+      "source": "sha256",
+      "target": "sha512",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-512-show",
+      "source": "sha512",
+      "target": "show",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": []
+}
