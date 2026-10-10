@@ -1,0 +1,46 @@
+---
+title: "Privacy settings"
+description: "Turn anonymous usage statistics and error reports on or off, and clear agent memory and traces"
+kind: guide
+section: app
+sidebar:
+  label: "Privacy"
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+**Settings › Privacy** controls what this device shares with AWFlow. For the full picture, read [Privacy & data](/app/privacy-and-data/).
+
+## Usage statistics
+
+**Share anonymous usage statistics** sends counts such as "a workflow ran" so the team can see where people get stuck. It is on by default; switch it off at any time.
+
+- Each event is tied to a random install ID, never to you or your account.
+- Workflow names, steps and data, credentials, page URLs, and your email or name are never sent.
+- Open **What we collect** to see examples of events.
+- **Reset install ID** replaces the random ID with a new one.
+
+## Error reports
+
+**Send error reports** sends the error message and technical trace when the app itself crashes. Workflow data and inputs are removed first. It is on by default.
+
+At the bottom, a line sums up what this device shares, for example *Nothing is shared from this device.*
+
+<Aside>
+On Firefox, nothing is sent unless you also allow Firefox's "technical and interaction data" permission. The page shows its status and an **Allow in Firefox** button.
+</Aside>
+
+## Agent memory
+
+Aria and your agents remember lasting preferences you share with them. These memories are stored **only on this device**. **Forget everything** erases them for all agents after you confirm.
+
+## Turn traces
+
+Each assistant reply leaves a trace on this device: model calls, tools, timings and token counts. Traces are kept for 7 days and never uploaded.
+
+- **Developer mode** shows a **Trace** button under replies. Off by default.
+- **Keep traces** stores sizes and timings. On by default.
+- **Include prompt text** also keeps what the model received and replied, with secrets removed. Off by default.
+- **Clear traces** deletes every trace on this device.
+
+See [Turn traces](/app/chat-and-agents/turn-traces/).

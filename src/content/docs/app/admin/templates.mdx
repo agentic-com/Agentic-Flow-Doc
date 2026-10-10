@@ -1,0 +1,44 @@
+---
+title: "Templates"
+description: "Create and maintain the built-in workflow templates every user can start from"
+kind: guide
+section: app
+sidebar:
+  label: "Templates"
+---
+
+import { Badge, Steps } from '@astrojs/starlight/components';
+
+<Badge text="Admin" variant="caution" />
+
+**Templates** (Admin panel › **Templates**) holds the first-party workflow templates shared by all admins. Users see published templates when they create a new workflow.
+
+The list shows each template's **Title** and slug, **Category**, **Status** (*published* or *draft*), **Tags**, **Order**, and an **Editing** column that names whoever is editing it right now.
+
+## Create a template
+
+<Steps>
+
+1. Click **New template**.
+
+2. Optionally, under **Start from**, pick an existing template to copy its icon, summary, category and tags. The canvas is never copied.
+
+3. Fill in the **Icon**, **Title** and **Summary**. Open **Details** for the category, tags and sort order.
+
+4. Click **Create draft & open canvas**.
+
+</Steps>
+
+The template is created as a draft and opens on the canvas.
+
+## Edit, publish, delete
+
+From the **⋮** menu:
+
+- **Edit** opens the template on the canvas. It is disabled while another admin holds the edit lock.
+- **Publish** / **Unpublish** makes it visible to users or hides it. This applies straight away.
+- **Delete** removes the template straight away, without asking.
+
+On the canvas, **Template details** lets you change the title, slug, summary, icon, order, category, tags and publish status. These are saved with the graph when you click **Save**.
+
+Only one admin can edit a template at a time. Edit locking, **Force unlock** and running a template while editing are explained in [Publishing › Admin: maintaining templates in the canvas](/app/workflows/publishing/#admin-maintaining-templates-in-the-canvas).

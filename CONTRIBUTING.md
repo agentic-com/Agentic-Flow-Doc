@@ -117,7 +117,7 @@ Example:
 ```mdx
 import { Callout, StepCard } from '@components/awflow';
 
-<Callout type="credential" title="Needs a Slack connection" href="/usage/using-the-app/credentials/" linkLabel="Connect Slack">
+<Callout type="credential" title="Needs a Slack connection" href="/app/connections/create/" linkLabel="Connect Slack">
   A bot token from a small Slack app (about 3 minutes).
 </Callout>
 
@@ -129,6 +129,21 @@ import { Callout, StepCard } from '@components/awflow';
 ### The `starlight-awflow` plugin
 
 The site chrome (section tabs, banners, node headers, the "at a glance" card, the Ask Aria pill, brand tokens and motion) lives in the in-repo plugin `plugins/starlight-awflow/`. Its options are typed in `plugins/starlight-awflow/types.ts`; the header tabs come from its `sections` option in `astro.config.mjs`. Motion respects "reduce motion".
+
+### Where pages go
+
+Each header tab is a folder under `src/content/docs/` and a `starlight-sidebar-topics` topic in `astro.config.mjs`:
+
+| Tab | Folder | Holds |
+| --- | --- | --- |
+| Get started | `get-started/` | Tutorials for a first workflow |
+| Use the app | `app/` | Feature guides, settings, connections, account, troubleshooting, help, admin |
+| Recipes | `recipes/` | Complete workflows for one job |
+| Nodes | `nodes/` | The node reference |
+| Concepts | `concepts/` | `data/`, `flow/` and `ai/` hubs, plus the glossary |
+| Releases | `releases/` | One page per version (`v0-8-2.mdx`) |
+
+The sidebar is set in `astro.config.mjs`; `_meta.yml` files are not read, so don't add them. Keep sidebar groups at most 3 levels deep. When you move or rename a page, add its old URL to `redirects` in `astro.config.mjs`, pointing straight at the final URL (no redirect chains), and update links to it.
 
 ## 🌍 Languages
 

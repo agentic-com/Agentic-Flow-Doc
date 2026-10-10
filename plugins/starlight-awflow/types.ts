@@ -16,7 +16,7 @@ export interface AwflowSectionOption {
 	/** Where the tab links to (the section landing page). */
 	link: string;
 	/**
-	 * Link of the `starlight-sidebar-topics` topic this tab stands for (e.g. `/usage/`).
+	 * Link of the `starlight-sidebar-topics` topic this tab stands for (e.g. `/app/`).
 	 * When the current page belongs to that topic, this tab is the current one.
 	 */
 	topic?: string;

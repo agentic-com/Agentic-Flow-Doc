@@ -1,0 +1,93 @@
+---
+title: "Assistant memory"
+description: "How Aria, your agents and your teams remember facts about you: Remember this? suggestions, relevance recall, learning rules and team sharing"
+sidebar:
+  label: "Assistant memory"
+section: app
+---
+
+Aria and your agents remember **facts** about you — short, lasting things like "Prefers guesthouses over chain hotels" or "Budget is usually under €600". They use them in later chats so you don't have to repeat yourself.
+
+Facts are stored **only on this device**. See all of them on the [Memory page](/app/memory/overview/#facts-tab), or per agent in its **Memory** tab.
+
+## How facts are saved
+
+### Ask it to remember
+
+Say it plainly: *"Remember that my budget is €600."* The fact is saved **right away**, and a line under the reply says **Saved to Aria's memory: "Budget is €600"** with **View** and **Undo**. In a project chat it says *Saved to the project's memory*.
+
+Questions are never saved: "Do you remember my budget?" or "I don't remember the name" don't create a fact.
+
+### Remember this?
+
+When you mention a lasting preference without asking, the assistant only **suggests** it. A **Remember *…*?** card appears under the reply:
+
+- **Remember** saves it.
+- **Edit** lets you reword it first (up to 500 characters).
+- **No thanks** discards it.
+
+If you ignore it, the card fades after a few messages, and the suggestion waits in **Memory → Facts → Suggested** for **14 days**. A suggestion is never used in a chat until you confirm it.
+
+The suggestion is made on an on-device model when one is already loaded, otherwise on the chat's own model.
+
+## How facts are used
+
+### The most relevant facts
+
+You may have hundreds of facts; a chat doesn't need them all. With each message, the assistant picks the facts **most relevant to what you just asked**, and always includes **pinned** facts. The rest stay out of the way.
+
+To find relevant facts, AWFlow uses a small **memory search model** that runs on your device. It downloads quietly the first time it is needed. Until it is ready — or when it can't run — the assistant uses your **newest facts** instead, so memory is never silently empty.
+
+### See what was used
+
+The [context meter](/app/chat-and-agents/chat/#context-meter) shows a **Memory** row. When only some facts went in, it says so — for example **8 of 212 facts** — and while the search model isn't ready, it adds **newest facts — memory search is downloading** (or **is off**).
+
+In the quick chat (notch, right-click card, palette), **Used 3 memories** under a reply lists the facts that went in.
+
+### Reference, not instructions
+
+Facts are given to the model as **reference data about you**, clearly separated from its instructions. A fact that reads like a command ("ignore your rules…") is not obeyed.
+
+### Turn it off for one chat
+
+**Chat settings › Use Aria's memory** turns memory off for the current chat: no facts are used, and nothing is learned or suggested.
+
+## Who learns what
+
+- The agent that **answered** learns: the chat's agent, or the agent you **@mentioned** for that reply.
+- In a **project** chat, facts go to the **project memory** instead of the agent's (see [Projects](/app/chat-and-agents/projects/)).
+- An agent whose **Learn from chats and feedback** switch is **off** never learns or suggests anything — not in its own chats, not in projects, not in team threads.
+- In a **team thread**, each member follows its own *Learn* setting.
+
+Turn learning on or off in the agent's **Memory** tab. **Also read Aria's memory about you** lets an agent use what Aria knows (name, language, general preferences).
+
+## The agent's Memory tab
+
+Open an agent and go to **Memory** to see what it has learned. You can:
+
+- **Add something *agent* should know**, **edit** a fact or **forget** it;
+- review its **Suggested** facts;
+- **share** a fact with a team: when the agent belongs to one team, click **Only *agent*** to switch to **Shared with *team***; when it belongs to several, pick **one specific team** from the **Share** menu. Teammates only see memories shared with their team;
+- **Forget everything** (it asks first).
+
+## Team memory
+
+A team's **Shared memory** tab holds facts every member reads in that team's threads:
+
+- the team's own facts — learned in team threads ("remember …") or added here — which you can edit and forget;
+- **Shared by members** — facts an agent shared with this team, with who shared it. **Stop sharing** keeps the fact with that agent only;
+- **Forget everything** asks you to confirm before it removes the team's facts.
+
+## Deleting an agent or a team
+
+The delete dialog asks **Also delete its N memories** — on by default, with one of the facts as an example. Uncheck it to keep them: they move to **Memory → Facts → No owner**, where you can export or delete them later.
+
+## Remove memories
+
+- One fact: the agent's or team's Memory tab, or **Memory → Facts**.
+- Everything an agent remembers: **Forget everything** in its Memory tab.
+- Everything all agents remember: **Settings › Privacy › Agent memory**.
+
+## Encryption
+
+When **Local secret protection** is on, facts are encrypted on this device. Unlock with your passphrase to read them; unlocking in the app also unlocks the notch for this session. While protection is on, chats use your **pinned and newest** facts (relevance search needs readable facts), and while locked, facts aren't used at all. See [Encryption on this device](/app/memory/overview/#encryption-on-this-device).
