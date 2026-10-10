@@ -2,6 +2,8 @@
 title: Action Approval & Untrusted Content
 description: "Why model-driven actions cross a user approval gate, and how the gate keeps agents that read the live page safe."
 section: concepts
+sidebar:
+  order: 5
 ---
 
 import { Steps, Aside } from "@astrojs/starlight/components";
@@ -27,9 +29,9 @@ flowchart TB
   Gate -->|you approve| Act["Action runs<br/>(click / request / MCP call)"]
   Gate -->|you reject / timeout| Deny["Action denied<br/>model told, continues without it"]
 
-  style Gate fill:#fff3e0,stroke:#ef6c00
-  style Act fill:#e8f5e9,stroke:#2e7d32
-  style Deny fill:#fdecea,stroke:#c62828
+  class Gate awf-warn
+  class Act awf-ok
+  class Deny awf-err
 ```
 
 <Steps>

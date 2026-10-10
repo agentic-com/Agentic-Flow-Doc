@@ -1,69 +1,91 @@
 ---
-title: Merging Data Streams  
-description: "Learn how to merge multiple data streams or node outputs in AWFlow workflows."  
+title: Merging
+description: "Bring branches back together: join two lists with Merge, continue with whichever branch arrives with Funnel, or compare old and new with Compare Datasets."
+sidebar:
+  order: 4
 section: concepts
----
-import { Card, CardGrid } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
-
-Merging means “bring results back together”.
-
-You use merging when your workflow has multiple branches (or multiple sources) and you want one combined output at the end.
-
+kind: concept
 ---
 
-## When to merge  
-- After you’ve split workflow logic using an If Node or Switch Node and need to bring branches back together.  
-- When you have data from **multiple previous nodes** that you want to process or output as a single dataset.  
-- When you need to **compare** datasets and then combine results based on that comparison (for example, add new records, filter duplicates, or enrich data) using the Compare Datasets Node.
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards } from "@components/awflow";
 
+:::note[In 20 seconds]
+Most steps wait until every connected branch has finished. To **join two lists** item by item, use Merge with a match key. To **continue as soon as any branch arrives**, use Funnel. To find what's **new, gone or changed** between two lists, use Compare Datasets.
+:::
 
----
+## Pick the right node
 
-## Methods to merge data  
+<CompareCards
+  label="Ways to bring branches together"
+  cards={[
+    {
+      title: "Merge",
+      icon: "merge",
+      href: "/nodes/builtin/flow/merge/",
+      when: "Pair items from two lists that share a value.",
+      example: "Contacts from a sheet plus their orders, matched on email.",
+      meta: "Inner / Left / Right Join",
+    },
+    {
+      title: "Funnel",
+      icon: "filter",
+      href: "/nodes/builtin/flow/funnel/",
+      when: "Continue as soon as any one branch reaches it.",
+      example: "Three triggers sharing the same steps.",
+      meta: "passes the branch through",
+    },
+    {
+      title: "Compare Datasets",
+      icon: "switch",
+      href: "/nodes/builtin/flow/comparedatasets/",
+      when: "Sort two versions of a list into new, gone, same and changed.",
+      example: "Yesterday's prices against today's.",
+      meta: "In A only · Same · Different · In B only",
+    },
+  ]}
+/>
 
-### 1. Using the Merge node  
-The Merge node lets you combine two inputs in different ways. Common modes:
-- **Append**: Combine all items from each input one after another.  
-- **Combine By Matching Fields / Combine By Position**: Merge items based on matching field values or position index.  
-- **Choose Branch**: Output only one of the input streams, if that meets your workflow logic.
+## How Merge pairs items
 
-See the node reference: [Merge node](/nodes/builtin/flow/merge/).
+[Merge](/nodes/builtin/flow/merge/) has two inputs and waits for both. Each **Match Key** compares a field on the first input with a field on the second, for example `email` **Is Equal To** `email`. With no match keys, every item of the first input pairs with every item of the second.
 
-### 2. Using a Code or Function node  
-If you have complex logic or multiple executions of nodes (for example loops producing results over time) and you want full control over merging behavior, you can use a custom code node (or function) to collect, merge and output items manually.
+**Mode** decides what happens to items without a partner:
 
-### 3. Comparing datasets before merging  
-Use the Compare Datasets node when you’d like to **compare** two input streams (e.g., old vs new) and then merge based on “in A only”, “in B only”, “same”, or “different”. This lets you merge selectively and intelligently.
+| Mode | Output |
+| --- | --- |
+| **Inner Join** | Only the matched pairs |
+| **Left Join** | Every item of the first input, merged with its matches when it has any |
+| **Right Join** | Every item of the second input, merged with its matches when it has any |
 
----
+When both items have a field with the same name and different values, the result keeps both, renamed `left-<field>` and `right-<field>`.
 
-## How to use for split-then-merge workflows  
-1. Build two branches after a conditional logic filter (e.g., If or Switch).  
-2. Use a Merge node at the end to bring both branches back together.  
-3. Configure the mode (Append, Combine, etc.) depending on how you want items to join.  
-4. Test each branch separately using partial execution before full run.  
-5. Finally, run the full workflow to confirm output.
+## You'll notice this when…
 
+<details>
+<summary>Merge outputs nothing</summary>
 
----
+No pair matched (check that both fields hold the same text, without extra spaces or different capitals), or one branch didn't run. Try **Left Join** to see the first input's items even without matches.
 
-## Best practices  
-- Give descriptive names to your merge nodes (e.g., “Merge API & DB Results”, “Merge Long vs Short Branches”).  
-- Use Sticky Notes (see [Sticky Notes](/app/workflows/components/sticky-notes/)) to document the purpose of each merge.  
-- After merging, inspect the output of the merge node to ensure it contains the expected items — this helps avoid unexpected nulls or empty arrays.  
-- If one branch may output zero items, ensure your merge logic handles that — e.g., use “Keep Everything” mode or Add default items to branches.  
-- For workflows that run in loops or have many executions, consider grouping results and merging only after collection is complete.
+</details>
 
----
+<details>
+<summary>Merge outputs far more items than you sent in</summary>
 
-## Caveats and things to watch  
-- In workflows with multiple branches, a Merge node may wait until all connected inputs have reported results—this can mean delay or blocking unless set to “Always Output Data”.  
-- In older versions or legacy workflows, using Merge node with If nodes may cause unexpected behavior (both branches may execute). Confirm your version’s behavior. 
-- If you need to ensure order of items after merging (e.g., sorted by date), you may need to add a Code or Function node after merging to sort the array.
+There are no match keys, or the key isn't unique, so items pair with many partners. Add a match key on a field that identifies each record, such as `id` or `url`.
 
----
+</details>
 
-## Illustration  
-<Image src={Social} alt="Illustration of merging streams into one workflow" />
+<details>
+<summary>The step after several branches waits for all of them</summary>
+
+That's the default for any step. Use [Funnel](/nodes/builtin/flow/funnel/) when the first branch to arrive is enough.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Looping" description="Repeat steps with Loop, Split in Batches or Poll Until." href="/concepts/flow/looping/" />
+  <LinkCard title="Practise it" description="Recipes that combine data from two sources." href="/recipes/" />
+</CardGrid>

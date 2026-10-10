@@ -2,7 +2,7 @@
 title: Workflow lifecycle
 description: "Follow a workflow from trigger to final output, including data, browser state, errors, and cleanup."
 sidebar:
-  order: 0
+  order: 1
 section: concepts
 ---
 
@@ -27,9 +27,9 @@ flowchart TD
   Data --> Error["Error or explicit stop"]
   Error --> Stop["Execution stops with diagnostic output"]
 
-  style Trigger fill:#e8f5e9,stroke:#2e7d32
-  style Error fill:#ffebee,stroke:#c62828
-  style Complete fill:#e1f5fe,stroke:#0277bd
+  class Trigger awf-trigger
+  class Error awf-err
+  class Complete awf-ok
 ```
 
 ## 1. Trigger fires

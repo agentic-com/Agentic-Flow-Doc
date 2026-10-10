@@ -2,6 +2,8 @@
 title: Embeddings and vectors
 description: "How AWFlow knowledge bases find passages by meaning: embedding models, on-device or cloud, and what to watch for."
 section: concepts
+sidebar:
+  order: 7
 ---
 
 import { Aside } from "@astrojs/starlight/components";
@@ -21,7 +23,7 @@ flowchart LR
   KB --> Agent
   Agent --> Answer["Answer with sources"]
 
-  style KB fill:#e8f5e9,stroke:#2e7d32
+  class KB awf-data
 ```
 
 1. The [Indexer](/nodes/builtin/ai/aiagents/indexernode/) splits text into chunks (with a [text splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/)) and saves each chunk with its vector in a knowledge base.

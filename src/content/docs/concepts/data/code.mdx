@@ -1,101 +1,84 @@
 ---
 title: Processing data with code
-description: "Learn how to process and transform data using code inside AWFlow."
+description: "When a mapping isn't enough, reshape items with Python in the Code node."
 sidebar:
-  order: 2
+  order: 3
 section: concepts
+kind: concept
 ---
 
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
-<Image src={Social} alt="Code-based data processing illustration" />
+:::note[In 20 seconds]
+The [Code](/nodes/builtin/core/code/) node runs Python in your browser. The incoming data is in a variable called `input`, and the value of the **last line** becomes the output, under `result`. Like most nodes, it runs once per incoming item. Reach for it when the same change would take several nodes.
+:::
 
----
+## When code is the right tool
 
-## Why use code to process data
+Most changes need no code: drag a field, write an [expression](/concepts/data/data-mapping/data-mapping-expressions/), or use [Edit Fields](/nodes/builtin/datatransformation/editfields/). Use the Code node when you need to:
 
-Most workflows can be built visually using nodes.
+- regroup or count values, for example orders per customer;
+- parse an unusual format with Python's standard library (`re`, `json`, `csv`, `datetime`);
+- combine several fields with logic that doesn't fit in one expression.
 
-Sometimes, a small bit of code is the simplest way to do a custom transformation, for example:
+## Read the input, return a value
 
-- Calculating or transforming data dynamically  
-- Filtering or mapping items based on conditions  
-- Combining or formatting complex objects  
-
-In **AWFlow**, you can write small pieces of **Python** inside a workflow.
-
----
-
-## The Code node
-
-The [Code node](/nodes/builtin/core/code/) lets you write and run **Python** directly inside your workflow.
-It runs securely in the browser using **[Pyodide](https://pyodide.org/en/stable/index.html)** — a WebAssembly-based Python runtime.
-
-You can use this node to:
-- Create or modify fields in your data  
-- Validate or filter results before sending them to another node  
-- Perform calculations or aggregations  
-
----
-
-## Accessing workflow data
-
-The Code node receives the input data from the previous node(s).
-
-You can read it, modify it, and return the new result.
-
-### Example: Add a calculated field
-
-```python
-# Access the input data
-items = input_data
-
-# Add a new field to each item
-for item in items:
-    value = item.get("price", 0)
-    item["tax_included"] = value * 1.2  # Add 20% tax
-
-# Return the modified data
-return items
-````
-
-This example takes an array of objects with a `price` field and adds a new `tax_included` field to each one.
-
----
-
-## Using variables and references
-
-You can also reference values from other nodes using the standard templating syntax:
-
-```python
-# Example using a value from another node
-def compute_total():
-    base = {{ $('FetchPrices').item.price }}
-    return { "total": base * 1.2 }
-
-compute_total()
+```python title="Code to Execute"
+words = input.get("text", "").split()
+{
+    "words": len(words),
+    "longest": max(words, key=len) if words else "",
+}
 ```
 
-When executed, this code retrieves the value from the **FetchPrices** node and performs a simple computation.
+- `input` is a normal Python value: a dict, a list or a single value.
+- The last line, on its own, is what the node passes on. An assignment on the last line returns nothing.
+- The next step reads it as `{{ $input.result.words }}`.
+- `print()` writes to the run's activity log, which helps when you debug.
 
----
+With several steps connected to the Code node, `input` is a dict keyed by each step's label, such as `input["Get Selected Text"]["selection"]`.
 
-## Best practices
+## One item, or the whole list?
 
-When using the Code node:
+When the previous step outputs several items, the Code node runs **once per item** and `input` is one item. To work on the whole list at once (to total it or group it), put [Aggregate](/nodes/builtin/datatransformation/aggregate/) in front of the Code node. It then receives one item that holds the list.
 
-* Keep code small and focused on a single task
-* Always return data in the same structure as input (list of objects)
-* Use comments to explain complex logic
-* Test each change incrementally
+```python title="Code to Execute, after Aggregate (Put Output In Field: orders)"
+totals = {}
+for order in input["orders"]:
+    totals[order["customer"]] = totals.get(order["customer"], 0) + order["amount"]
+totals
+```
 
-If your logic becomes complex, consider breaking it into smaller workflows and use **[Lambda Workflows](/concepts/flow/lambdaworkflows/)**.
+## Limits
 
----
+Each run starts clean in an isolated sandbox: no network, no access to the page or your stored data, and a 30-second time limit. The first run after a pause takes a couple of seconds while Python starts. To call an API, use [Http Request](/nodes/builtin/core/http-request/) before or after the Code node.
 
-## Related topics
+## You'll notice this when…
 
-* [Data structure](/concepts/data/data-structure/)
-* [Merge data sources](/concepts/flow/merging/)
-* [Error handling](/concepts/flow/error-handling/)
+<details>
+<summary>The output is null</summary>
+
+The last line is an assignment (`total = 3`) or a statement, so nothing is returned. Put the value on its own as the last line (`total`).
+
+</details>
+
+<details>
+<summary>The Code node ran once per row but you wanted one total</summary>
+
+It received a list of items, so it ran for each one. Add [Aggregate](/nodes/builtin/datatransformation/aggregate/) before it.
+
+</details>
+
+<details>
+<summary>input["title"] raises a KeyError</summary>
+
+Several steps are connected, so `input` is keyed by step label, or the field is missing on this item. Use `input.get("title", "")`, and check the shape in the previous step's **Output** tab.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Back to the Data hub" description="Items, mapping, expressions and item linking." href="/concepts/data/" />
+  <LinkCard title="Code node reference" description="Every detail of input, output and limits." href="/nodes/builtin/core/code/" />
+</CardGrid>

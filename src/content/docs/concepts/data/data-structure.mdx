@@ -1,96 +1,167 @@
 ---
-title: Data structure
-description: "Understand items, fields, lists, and node outputs in AWFlow."
+title: "Items: how data moves"
+description: "Every step receives items and passes items on. Most steps run once per item, which is why you rarely need a loop."
 sidebar:
+  label: Items
   order: 1
 section: concepts
+kind: concept
 ---
 
-Most workflow problems are data-shape problems. A node may be working correctly, but the next node cannot use the result because the value is nested in a different field, because there are many items instead of one, or because two branches are combined differently than expected.
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards, ItemsPlayground } from "@components/awflow";
 
-This page explains the mental model to use before reaching for expressions or custom code.
+:::note[In 20 seconds]
+An **item** is one record with named fields, like a row in a table. A step receives a list of items and passes a list on. When a step receives several items, it usually **runs once for each one**. So three links in means three requests out, with no loop to build.
+:::
 
-## The basic unit: an item
+## See it happen
 
-AWFlow passes data as **items**. An item is one JSON-like object with named fields.
+Get All Link returns **one** item that holds a list of URLs. Split Out turns that list into **three** items, so Edit Fields runs three times. Click a step to see what it output.
 
-```json
+<ItemsPlayground
+  client:visible
+  steps={[
+    {
+      name: "Get All Link",
+      kind: "data",
+      note: "one item, a list inside",
+      items: { links: ["https://news.example/a/1", "https://news.example/a/2", "https://news.example/a/3"] },
+    },
+    {
+      name: "Split Out",
+      kind: "data",
+      note: "Field To Split Out: links",
+      items: [
+        { links: "https://news.example/a/1" },
+        { links: "https://news.example/a/2" },
+        { links: "https://news.example/a/3" },
+      ],
+    },
+    {
+      name: "Edit Fields",
+      kind: "data",
+      runs: 3,
+      note: "url = {{ $input.links }}",
+      items: [
+        { url: "https://news.example/a/1", source: "news" },
+        { url: "https://news.example/a/2", source: "news" },
+        { url: "https://news.example/a/3", source: "news" },
+      ],
+    },
+  ]}
+  caption="Illustration of a run. In the app, open a step after a run to see its output."
+/>
+
+## What an item looks like
+
+An item is a JSON object with named fields:
+
+```json title="One item"
 {
   "title": "Quarterly report",
-  "url": "https://example.com/report",
-  "summary": "Revenue increased across three regions."
+  "url": "https://example.com/report"
 }
 ```
 
-Most nodes receive a list of items and return a new list of items. A list can contain one item, many items, or no items.
+A step's output is either one item or a list of items. A list can hold one item, many items, or none.
 
-```json
+```json title="Two items"
 [
   { "title": "Page A", "url": "https://example.com/a" },
   { "title": "Page B", "url": "https://example.com/b" }
 ]
 ```
 
-When a downstream node receives two items, it usually runs once for each item. That is why a workflow that starts with ten links can produce ten HTTP requests, ten AI summaries, or ten rows in an integration.
+## A list of items is not a list inside an item
 
-## Fields are contracts
+This is the difference that trips people up most:
 
-Every node has a simple contract:
+- `[{ "url": "…/a" }, { "url": "…/b" }]` is **two items**. The next step runs twice.
+- `{ "links": ["…/a", "…/b"] }` is **one item** with a list in its `links` field. The next step runs once and sees the whole list.
 
-```mermaid
-flowchart LR
-  Input["Input items"] --> Node["Node settings + logic"]
-  Node --> Output["Output items"]
-  Output --> Next["Next node"]
+Many page nodes, like [Get All Link](/nodes/extension/getalllinks/), return the second shape. Use [Split Out](/nodes/builtin/datatransformation/splitout/) to turn it into one item per entry, and [Aggregate](/nodes/builtin/datatransformation/aggregate/) to go the other way.
 
-  style Node fill:#e8f5e9,stroke:#2e7d32
-```
+## How many times does a step run?
 
-The next node does not know what you meant. It only sees field names and values. If the previous node returns `pageText` but the next node expects `text`, you must map or rename the field.
+| The step receives… | It runs… |
+| --- | --- |
+| One item | Once |
+| A list of N items | N times, once per item. Each run sees one item as `$input`. |
+| Lists from two connected steps | Once for **every combination**: 2 items and 3 items give 6 runs. |
+| Nothing, because a branch wasn't taken | Not at all. Steps on the untaken port of an [IF](/nodes/builtin/flow/if/) or [Switch](/nodes/builtin/flow/switch/) are skipped. |
 
-Use [Edit Fields](/nodes/builtin/datatransformation/editfields/) when you need to create, rename, or reshape fields. Use [Pick Field](/nodes/builtin/datatransformation/pickfield/) when you want to pass only a smaller part of the item forward.
+Some nodes always work on the whole list at once and run a single time: [Aggregate](/nodes/builtin/datatransformation/aggregate/), [Limit](/nodes/builtin/datatransformation/limit/), [Merge](/nodes/builtin/flow/merge/), [Compare Datasets](/nodes/builtin/flow/comparedatasets/), [Wait](/nodes/builtin/flow/wait/), [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) and [Poll Until](/nodes/builtin/flow/polluntil/).
 
-## One item vs many items
+The run log shows the count too: **Running node Edit Fields (2/3)**.
 
-The most important question is: **how many items does this node output?**
+## When you do want to repeat work yourself
 
-| Output shape | What it means | Common example |
-| --- | --- | --- |
-| One item | The workflow has one record to continue with | A page screenshot result |
-| Many items | The next node repeats for each record | A list of links or images |
-| Empty list | Nothing continues on that branch | A filter removed every item |
-| Nested data | One item contains an array or object inside it | A response with `items: [...]` |
+Running once per item covers most jobs. Build a loop only when the repeat depends on a condition, a batch size or a deadline.
 
-Nested arrays are not the same thing as multiple workflow items. If a node returns `{ "links": [...] }`, the next node receives one item with a `links` field. If it returns `[{ "url": "..." }, { "url": "..." }]`, the next node receives two items.
+<CompareCards
+  label="Ways to repeat work"
+  cards={[
+    {
+      title: "Loop",
+      icon: "loop",
+      href: "/concepts/flow/looping/#repeat-while-a-condition-holds",
+      when: "Repeat steps while a condition holds.",
+      example: "Click Next until the last page.",
+      meta: "Loop · Done",
+    },
+    {
+      title: "Split in Batches",
+      icon: "batch",
+      href: "/concepts/flow/looping/#work-through-a-list-in-batches",
+      when: "Work through a long list a few items at a time.",
+      example: "500 rows, 20 at a time, to respect a rate limit.",
+      meta: "Loop · Done",
+    },
+    {
+      title: "Poll Until",
+      icon: "poll",
+      href: "/nodes/builtin/flow/polluntil/",
+      when: "Check a URL again and again until it's ready.",
+      example: "Every 5 minutes until an export finishes.",
+      meta: "Done · Timeout",
+    },
+  ]}
+/>
 
-## Branches and combined input
+## You'll notice this when…
 
-When a node has multiple incoming connections, AWFlow keeps the data from each parent separate so the downstream node can tell where each value came from.
+<details>
+<summary>A step sent 24 emails instead of 1</summary>
 
-```mermaid
-flowchart TB
-  A["Get All Links\n2 items"] --> C["Combine or use together"]
-  B["Get Page Metadata\n1 item"] --> C
-  C --> D["Next node receives linked data"]
+It received 24 items, so it ran 24 times. Put [Aggregate](/nodes/builtin/datatransformation/aggregate/) in front of it to combine the items into one, then build a single message from the combined list. [Limit](/nodes/builtin/datatransformation/limit/) set to 1 also works when you only need the first item.
 
-  style C fill:#e1f5fe,stroke:#0277bd
-```
+</details>
 
-If one branch produces two items and another produces one item, the downstream step may need to pair them, merge them, or choose one side as the source of truth. Use [Merge](/nodes/builtin/flow/merge/) when you want explicit control over how branches are combined.
+<details>
+<summary>A step ran once but you expected one run per link</summary>
 
-## Inspect before you map
+The previous step output one item with a list inside it, not a list of items. Add [Split Out](/nodes/builtin/datatransformation/splitout/) on that list field.
 
-Before writing an expression, inspect the previous node output and answer these questions:
+</details>
 
-1. Is the value on the current item or inside a nested object?
-2. Is there one item or many items?
-3. Does each item have the same fields?
-4. Did the data come from one parent node or multiple parent nodes?
-5. Should the next node repeat per item, or should the list be combined first?
+<details>
+<summary>A step ran 6 times with only 2 and 3 items coming in</summary>
 
-## Related topics
+It has two incoming connections that each carry a list, so it ran once for every combination. Join the two lists first with [Merge](/nodes/builtin/flow/merge/), or make one side a single item with [Aggregate](/nodes/builtin/datatransformation/aggregate/).
 
-- [Item linking and mapping](/concepts/data/item-linking/)
-- [Data mapping UI](/concepts/data/data-mapping/data-mapping-ui/)
-- [Expressions](/concepts/data/data-mapping/data-mapping-expressions/)
-- [Merge](/nodes/builtin/flow/merge/)
+</details>
+
+<details>
+<summary>The next step never ran</summary>
+
+Nothing reached it on that path: every item went down the other port of an [IF](/nodes/builtin/flow/if/) or [Switch](/nodes/builtin/flow/switch/), or a [Filter](/nodes/builtin/flow/filter/) kept nothing. Open the output of the step before it to see where the items went.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Mapping in the UI" description="Put a value from an earlier step into a setting." href="/concepts/data/data-mapping/data-mapping-ui/" />
+  <LinkCard title="Practise it" description="Pick a recipe that works through a list of links or rows." href="/recipes/" />
+</CardGrid>

@@ -563,12 +563,10 @@ export default defineConfig({
               label: "Data",
               items: [
                 { label: "Overview", link: "concepts/data" },
-                { label: "Data structure", link: "concepts/data/data-structure" },
+                { label: "Items", link: "concepts/data/data-structure" },
+                { label: "Mapping in the UI", link: "concepts/data/data-mapping/data-mapping-ui" },
+                { label: "Expressions", link: "concepts/data/data-mapping/data-mapping-expressions" },
                 { label: "Item linking", link: "concepts/data/item-linking" },
-                {
-                  label: "Data mapping",
-                  items: [{ autogenerate: { directory: "concepts/data/data-mapping" } }],
-                },
                 { label: "Code", link: "concepts/data/code" },
               ],
             },

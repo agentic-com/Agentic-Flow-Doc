@@ -28,3 +28,5 @@ export { default as RecipeGrid } from './RecipeGrid.svelte';
 export { default as RecipeMeta } from './RecipeMeta.svelte';
 export { default as RecipeUse } from './RecipeUse.svelte';
 export { default as RecipeSteps } from './RecipeSteps.svelte';
+export { default as ItemsPlayground } from './ItemsPlayground.svelte';
+export { default as CompareCards } from './CompareCards.svelte';

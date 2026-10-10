@@ -1,79 +1,145 @@
 ---
 title: Models and dependencies
-description: "Understand how AI dependency nodes connect models, memory, tools, parsers, embeddings, vector stores, and text splitters."
+description: "What you plug into an AI node (model, memory, tools, knowledge, output parser), and how to choose where the model runs."
 section: concepts
+kind: concept
+sidebar:
+  label: Models and where they run
+  order: 1
 ---
 
-AI workflows in AWFlow are built by connecting agent nodes to dependency nodes. Dependency nodes do not usually perform the final task alone. They provide capabilities that an agent or chain uses.
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards, ItemsPlayground } from "@components/awflow";
 
-## Dependency map
+:::note[In 20 seconds]
+An AI node does the task; the nodes you plug into its slots give it what it needs. Every AI node needs a **model**. Add **memory** to remember a conversation, **tools** to let an agent act, **knowledge** to answer from your documents, and an **output parser** to get fields instead of free text. The model can run in the cloud, on your computer, or in your browser.
+:::
 
-```mermaid
-flowchart TD
-  Agent["AI agent or chain"] --> LLM["Chat LLM"]
-  Agent --> Memory["Chat memory"]
-  Agent --> Tools["Tools"]
-  Agent --> Parser["Output parser"]
-  RAG["RAG / Indexer"] --> Splitter["Text splitter"]
-  RAG --> Embeddings["Embeddings"]
-  RAG --> Store["Vector store"]
-  Store --> Embeddings
+## See it happen
 
-  style Agent fill:#e1f5fe,stroke:#0277bd
-  style RAG fill:#fff3e0,stroke:#ef6c00
-```
+The same Basic LLM Chain reads a signature from a page. Without an output parser, `response` is text. With a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) plugged in, `response` holds fields the next step can read, such as `{{ $input.response.email }}`.
 
-## Dependency types
+<ItemsPlayground
+  client:visible
+  steps={[
+    {
+      name: "Get Selected Text",
+      kind: "data",
+      note: "Output field name: selection",
+      items: { selection: "Ada Lovelace, Analytical Engines, ada@example.com" },
+    },
+    {
+      name: "Basic LLM Chain",
+      kind: "ai",
+      note: "no output parser",
+      items: { response: "The name is Ada Lovelace, she works at Analytical Engines, and her email is ada@example.com." },
+    },
+    {
+      name: "Basic LLM Chain + parser",
+      kind: "ai",
+      note: "Structured Output Parser plugged in",
+      items: { response: { name: "Ada Lovelace", email: "ada@example.com", company: "Analytical Engines" } },
+    },
+  ]}
+  caption="Illustration of a run. Field names come from the parser's JSON Output Example."
+/>
 
-| Dependency | What it provides | Example nodes |
-| --- | --- | --- |
-| Chat model | Text reasoning and generation | Cloud: [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/), [Chat Google](/nodes/builtin/ai/aidependencies/llm/google/), [Chat Mistral](/nodes/builtin/ai/aidependencies/llm/mistral/), [Chat Groq](/nodes/builtin/ai/aidependencies/llm/groq/), [Chat DeepSeek](/nodes/builtin/ai/aidependencies/llm/deepseek/), [Chat xAI](/nodes/builtin/ai/aidependencies/llm/xai/), [Chat OpenRouter](/nodes/builtin/ai/aidependencies/llm/openrouter/), [Chat Azure OpenAI](/nodes/builtin/ai/aidependencies/llm/azure-openai/). On your computer: [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/). In your browser: [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/), [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/), [Chrome AI](/nodes/builtin/ai/aidependencies/llm/chrome-ai/) |
-| Embeddings | Converts text to vectors | [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/), [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/), [Ollama Embeddings](/nodes/builtin/ai/aidependencies/embeddings/ollamaembeddings/) and [others](/concepts/ai/embeddings-vectors/#embedding-models) |
-| Knowledge (vector store) | Stores and searches your documents | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
-| Text splitter | Breaks large text into chunks | [Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/charactertextsplitter/), [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) |
-| Memory | Keeps the conversation | [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) |
-| Output parser | Makes model output structured | [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/), [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
-| Tool | Gives an agent an action it can call | [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/), [Wikipedia](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/), [Browser](/nodes/builtin/ai/aidependencies/tools/browser/) and [others](/concepts/ai/tool-selection/#available-tools) |
-
-The on-device chat models run in your browser through [Local AI](/app/local-models/): free and private, but smaller and slower than cloud models. Cloud models use your own API key, added in **Settings › Providers**.
-
-## Choosing a model
-
-Choose the model based on the job, not only on raw capability.
-
-| Need | Prefer |
-| --- | --- |
-| Fast local experimentation | Web LLM, Chrome AI, Ollama |
-| Strong general reasoning and tool use | Chat OpenAI, Chat Anthropic, Chat Google |
-| Private workflows, nothing leaves your device | Ollama or the in-browser models |
-| Source-grounded search | Embeddings + vector store + RAG |
-| Reliable downstream automation | Chat model + structured output parser |
-
-## Connection design
-
-Keep dependencies close to the agent that uses them. A workflow is easier to debug when each AI step has an explicit model, explicit memory, explicit tools, and explicit parser.
+## What plugs into an AI node
 
 ```mermaid
 flowchart LR
-  Text["Extracted page text"] --> Chain["Basic LLM Chain"]
-  Model["Chat OpenAI"] --> Chain
-  Parser["Structured Output Parser"] --> Chain
-  Chain --> Rows["Clean JSON rows"]
+  Model[Model] --> Node[AI node]
+  Memory[Chat Memory] -.-> Node
+  Tools[Tools] -.-> Node
+  KB[Local Knowledge] -.-> Node
+  Parser[Output parser] -.-> Node
+  Input[Data from earlier steps] --> Node --> Next[Next step]
+  class Node awf-ai
+  class Model awf-ai
+  class KB,Memory awf-data
+  class Parser awf-data
+  class Tools awf-io
 ```
 
-## Practical rules
+Dotted lines are optional. Which slots a node has depends on the node: a chain has no tools slot, for example. See [AI agents](/concepts/ai/ai-agents/#what-you-can-connect).
 
-- Use one primary chat model per AI step unless you have a clear reason to compare models.
-- Add memory only when previous conversation turns should affect later answers.
-- Add tools only when the agent must choose actions.
-- Add a parser when another node will consume the model output.
-- Keep local/browser models for privacy-sensitive or offline-friendly workflows, but test quality on your actual tasks.
+| Dependency | What it provides | Example nodes |
+| --- | --- | --- |
+| Chat model | Reads and writes text | Cloud: [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/), [Chat Google](/nodes/builtin/ai/aidependencies/llm/google/), [Chat Mistral](/nodes/builtin/ai/aidependencies/llm/mistral/), [Chat Groq](/nodes/builtin/ai/aidependencies/llm/groq/), [Chat DeepSeek](/nodes/builtin/ai/aidependencies/llm/deepseek/), [Chat xAI](/nodes/builtin/ai/aidependencies/llm/xai/), [Chat OpenRouter](/nodes/builtin/ai/aidependencies/llm/openrouter/), [Chat Azure OpenAI](/nodes/builtin/ai/aidependencies/llm/azure-openai/). On your computer: [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/). In your browser: [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/), [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/), [Chrome AI](/nodes/builtin/ai/aidependencies/llm/chrome-ai/) |
+| Knowledge | Searches your documents | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
+| Memory | Keeps the conversation | [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) |
+| Output parser | Turns the reply into data | [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/), [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
+| Tool | An action an agent can choose | [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/), [Wikipedia](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/), [Browser](/nodes/builtin/ai/aidependencies/tools/browser/) and [others](/concepts/ai/tool-selection/#available-tools) |
+| Embeddings | Turns text into vectors | [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/), [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/), [Ollama Embeddings](/nodes/builtin/ai/aidependencies/embeddings/ollamaembeddings/) and [others](/concepts/ai/embeddings-vectors/#embedding-models) |
+| Text splitter | Cuts long text into chunks | [Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/charactertextsplitter/), [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) |
 
-## Related nodes
+## Where the model runs
 
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/)
-- [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/)
-- [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
-- [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/)
+<CompareCards
+  label="Where a model can run"
+  cards={[
+    {
+      title: "Cloud",
+      icon: "cloud",
+      href: "/nodes/builtin/ai/aidependencies/llm/openai/",
+      when: "You need the strongest reasoning and reliable tool use.",
+      example: "Chat OpenAI, Chat Anthropic, Chat Google with your own API key.",
+      meta: "key in Settings › Providers",
+    },
+    {
+      title: "Your computer",
+      icon: "device",
+      href: "/nodes/builtin/ai/aidependencies/llm/ollama/",
+      when: "Data must stay on your machine, and you can run a model server.",
+      example: "Ollama running on this computer.",
+      meta: "private, no per-call cost",
+    },
+    {
+      title: "In your browser",
+      icon: "device",
+      href: "/app/local-models/",
+      when: "Nothing to install, nothing leaves the browser.",
+      example: "Web LLM, Transformers Chat, Chrome AI.",
+      meta: "free, smaller, slower",
+    },
+  ]}
+/>
+
+Choose by the job, not by raw power. Try the smallest model that gets your real inputs right, and keep one model per AI step unless you're comparing them.
+
+## You'll notice this when…
+
+<details>
+<summary>The AI node fails with "Dependency … is required"</summary>
+
+A required slot is empty, usually the model. Connect a model node to the AI node's model slot.
+
+</details>
+
+<details>
+<summary>The next step can't read response.email</summary>
+
+Without an output parser, `response` is plain text. Plug a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) into the AI node and give it a JSON example with the fields you need.
+
+</details>
+
+<details>
+<summary>An in-browser model is slow or gives weak answers</summary>
+
+In-browser models are small and run on your device. Shorten the input, keep the task narrow, or switch that step to a cloud model. See [Local AI](/app/local-models/).
+
+</details>
+
+<details>
+<summary>The Tools Agent doesn't call any tool</summary>
+
+The Tools Agent needs a chat model that supports tool calling. Pick a model that does, and check the tools are connected to its tools slot.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Prompting and outputs" description="Instructions that work, and outputs later steps can use." href="/concepts/ai/prompting-and-outputs/" />
+  <LinkCard title="Practise it" description="Recipes with on-device and cloud AI steps." href="/recipes/" />
+</CardGrid>

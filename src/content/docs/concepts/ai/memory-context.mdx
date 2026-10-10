@@ -2,6 +2,8 @@
 title: Memory and context
 description: "Design AI workflows that remember: what the model sees on each run, how Chat Memory keeps a conversation, and when to use a knowledge base instead."
 section: concepts
+sidebar:
+  order: 8
 ---
 
 import { Aside } from "@astrojs/starlight/components";
@@ -47,7 +49,7 @@ flowchart LR
   Memory["Chat Memory"] --> Agent
   Memory --> Chat
 
-  style Memory fill:#e8f5e9,stroke:#2e7d32
+  class Memory awf-data
 ```
 
 Connect the **same** Chat Memory to the [Chat Trigger](/nodes/builtin/trigger/chat/) and to the agent, and set the agent's prompt to `{{ $json.chatInput }}`. The chat window then shows the conversation the agent saves.

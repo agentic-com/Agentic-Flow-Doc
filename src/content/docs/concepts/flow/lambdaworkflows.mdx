@@ -2,11 +2,10 @@
 title: Modular & Lambda Workflows
 description: "Learn how to build modular workflows by calling one workflow from another in AWFlow."
 section: concepts
+sidebar:
+  order: 8
 ---
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
 
 Sometimes you’ll want to reuse the same set of steps in multiple workflows.
 
@@ -32,16 +31,15 @@ This helps you:
 
 ### Step 1: Create the reusable workflow
 
-- Create a new workflow to act as a reusable piece.
-- Set it up to accept input from another workflow.
-- Build the internal logic, test and save the sub-workflow.
+- Create a new workflow as a **Lambda** workflow.
+- Start it with a [Lambda Input](/nodes/builtin/lambda/lambdainput/) node and declare the inputs it expects, with their defaults.
+- Build the steps, and end with a [Lambda Output](/nodes/builtin/lambda/lambdaoutput/) node that declares what it returns.
 
 ### Step 2: Call it from a parent workflow
 
-- In the parent workflow, add a node that calls the other workflow.
-- Choose which workflow to run.
-- Pass in the data you want the sub-workflow to process.
-- Use the output as the input for the next step.
+- In the parent workflow, open the node list, switch to the **Customs** tab and pick the workflow under **My Lambda Workflows**. It appears as a node named after the workflow.
+- Fill its fields (one per declared input) with fixed values or expressions such as `{{ $input.email }}`.
+- Read what it returned in the next step, for example `{{ $input.summary }}`.
 
 Node reference: [Lambda Workflow](/nodes/builtin/lambda/lambdaworkflow/).
 
@@ -49,28 +47,19 @@ Node reference: [Lambda Workflow](/nodes/builtin/lambda/lambdaworkflow/).
 
 ```mermaid
 sequenceDiagram
-  participant Parent as Parent Workflow
-  participant Execute as ExecuteWorkflow Node
-  participant SubTrigger as Sub-workflow Trigger
-  participant SubLogic as Sub-workflow Logic
-  participant ParentResume as Parent Workflow
+  participant Parent as Parent workflow
+  participant Node as Lambda Workflow node
+  participant In as Lambda Input
+  participant Out as Lambda Output
 
-  Parent->>Execute: Send input data
-  Execute->>SubTrigger: Trigger sub-workflow
-  SubTrigger->>SubLogic: Process data
-  SubLogic-->>SubTrigger: Return processed results
-  SubTrigger-->>Execute: Output back to parent
-  Execute-->>ParentResume: Parent continues with results
+  Parent->>Node: Item reaches the node
+  Node->>In: Starts the lambda workflow with the field values
+  In->>Out: The lambda's steps run
+  Out-->>Node: Returns the declared values
+  Node-->>Parent: Next step reads them as $input
 ```
 
-In this sequence:
-
-- The parent workflow sends data into the sub-workflow trigger.
-- The sub-workflow processes data and returns output.
-- The parent workflow resumes with the returned output.
-  To keep things predictable, decide what input fields the sub-workflow expects and what output it returns.
-
-<Image src={Social} alt="Illustration of parent-sub-workflow relationship" />
+Like most nodes, the Lambda Workflow node runs once per item it receives, so each run of the lambda workflow works on a single item. Decide what inputs the lambda expects and what it returns, and keep both small.
 
 ---
 

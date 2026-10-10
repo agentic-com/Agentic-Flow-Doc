@@ -1,68 +1,91 @@
 ---
 title: Waiting
-description: "Learn how to use the Wait node to pause and resume workflows in AWFlow."
+description: "Pause a run for a set time, until a person decides, or until another service is ready."
 sidebar:
-  order: 4
+  order: 6
 section: concepts
+kind: concept
 ---
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards } from "@components/awflow";
 
-Sometimes your workflow needs to **pause** and continue later.
-
-For example: wait for a page to finish loading, wait 10 minutes, or wait for an approval.
-
-The **Wait** node lets you do that.
-
-:::note[Delaying vs. waiting for a person]
-The **Wait** node only *delays* — time, a specific date, or a webhook call. If you need the run to pause until a person actually approves or rejects it, use [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) instead: it suspends the run for a human decision, exposes **Approved** / **Rejected** output ports, and can be approved, rejected, or cancelled from the Executions pane — even after a browser restart.
+:::note[In 20 seconds]
+**Wait** pauses for a set time and then carries on with the same data. **Wait For Approval** pauses until a person approves or rejects. **Poll Until** keeps checking a URL until it's ready. All three pause **once for everything they receive**, not once per item.
 :::
 
----
+## Pick the right way to pause
 
-## Why use waiting
+<CompareCards
+  label="Ways to pause a run"
+  cards={[
+    {
+      title: "Wait",
+      icon: "poll",
+      href: "/nodes/builtin/flow/wait/",
+      when: "Pause for a set time.",
+      example: "Wait 30 seconds between two requests to a busy service.",
+      meta: "Amount × Unit · up to 30 days",
+    },
+    {
+      title: "Wait For Approval",
+      icon: "shield",
+      href: "/nodes/builtin/flow/wait-for-approval/",
+      when: "Pause until a person approves or rejects.",
+      example: "Check a drafted reply before it's sent.",
+      meta: "Approved · Rejected",
+    },
+    {
+      title: "Poll Until",
+      icon: "batch",
+      href: "/nodes/builtin/flow/polluntil/",
+      when: "Pause until another service says the job is done.",
+      example: "Check an export every 5 minutes, give up after 1 hour.",
+      meta: "Done · Timeout",
+    },
+  ]}
+/>
 
-Using the Wait node enables patterns like:
+## How long waits survive
 
-- Rate-limiting API requests (e.g., wait 30 minutes before next run).
-- Waiting on an external webhook event before continuing. For a *human* approval or rejection, use [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) instead.
-- Scheduling actions at a future date/time rather than immediately.  
-  This lets your workflow pause and resume with the same data in context.
+Wait holds the run for **Amount** × **Unit** (seconds unless you change it):
 
----
+- **Under 1 minute:** a simple timer. Closing the tab cancels it.
+- **1 minute or more, in the browser extension:** the run is saved and resumes at the deadline, even after you close the tab or restart the browser. It shows as **waiting** in the Executions pane and can last up to **30 days**.
+- **In the web app:** every wait is a simple timer, so a long wait doesn't survive a closed tab.
 
-## Key modes of the Wait node
+Wait For Approval has no time limit. The question appears on the paused run in the **Executions** pane, and you're told a run is waiting by a count in the top bar, a sound and, in the extension, a desktop notification.
 
-Here are the main ways you can configure waiting:
+## Wait for a page, not a clock
 
-| Mode                    | Description                                                                                                               |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **After Time Interval** | Waits a specified amount of time (seconds, minutes, hours, days) before continuing. |
-| **At Specified Time**   | Waits until a specific date and time to resume. |
-| **On Webhook Call**     | Pauses until a unique resume-URL is called externally. |
+To wait until something appears on a web page, don't guess a delay. Use [Wait For Element](/nodes/extension/ui/wait-for-element/), so the run continues as soon as the page is ready. See [Browser context](/concepts/flow/browser-context/).
 
----
+## You'll notice this when…
 
-## How to set up a Wait node
+<details>
+<summary>Ten items left a Wait together instead of one by one</summary>
 
-1. Add the Wait node to your canvas after an action that produces data.
-2. Open the node’s settings and choose how you want the workflow to resume (Time interval, specified time, or webhook).
-3. For example, select “After Time Interval” and set “10 minutes”.
-4. If you choose "On Webhook Call", you’ll get a URL that you can send to an external system to resume the workflow.
-5. Save and test your workflow. It will pause at the Wait node and resume when the condition is met.
+Wait pauses once for everything it receives. To space items out, put Wait inside a [Loop](/nodes/builtin/flow/loop/) or after [Split in Batches](/nodes/builtin/flow/splitinbatches/).
 
-<Image src={Social} alt="Illustration of Wait node usage" />
+</details>
 
----
+<details>
+<summary>A long wait was lost when you closed the tab</summary>
 
-## Best practices & things to watch
+The run was in the web app, or the wait was shorter than a minute. Long waits survive a closed tab only in the browser extension.
 
-- Ensure critical data from upstream nodes is available before the Wait node — the workflow retains its state until it resumes.
-- If using “On Webhook Call”, test that the URL reaches the node correctly and the external system triggers it.
-- Beware of many concurrent waiting workflows – they hold state and may impact performance.
-- Use meaningful naming (e.g., “Wait 10 Minutes”, “Wait for Webhook”) and documentation via sticky notes. See [Sticky Notes](/app/workflows/components/sticky-notes/) for annotations. For a human sign-off gate, use the dedicated [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) node instead of naming a Wait node after approval.
-- After a wait, always test the downstream branch or logic – sometimes unexpected states after long waits can cause issues.
+</details>
 
-If you want the full node reference, see [Wait node](/nodes/builtin/flow/wait/).
+<details>
+<summary>One approval routed every item</summary>
+
+Wait For Approval pauses once and one answer routes all the items it received. For one decision per item, place it inside a Loop or after Split in Batches with a batch size of 1.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Error handling" description="Retry, carry on, or catch a failure." href="/concepts/flow/error-handling/" />
+  <LinkCard title="Practise it" description="Recipes with approvals and timed steps." href="/recipes/" />
+</CardGrid>
