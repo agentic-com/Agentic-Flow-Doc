@@ -105,8 +105,8 @@ A new trust layer makes it clear what a workflow can do before it does it:
   act, across every surface it can run from.
 - **Scoped credential consent** grants an app's access per flow, so a shared or
   imported workflow can't silently reuse your connections.
-- A **runtime permission manifest** is enforced on both the canvas and the
-  download paths, so a workflow can only do what its manifest declares.
+- A workflow can only do what it **declares up front**. This is checked when
+  you run it on the canvas and when you download it.
 - **Site access management** with a Safe / Trusted mode keeps you in control of
   where automations are allowed to act.
 
@@ -225,9 +225,9 @@ Relevant docs:
 
 ## Cloud Data Layer Migration
 
-The cloud data layer moved from SurrealDB to a new backend API (project phases
-P4–P6). This is an internal change with no action required, but it underpins the
-marketplace, sharing, requests board, and account features in this release.
+Account data in the cloud now goes through a new AWFlow cloud service. You don't
+need to do anything. This service powers the marketplace, sharing, the request
+board, and the account features in this release.
 Local and anonymous mode continue to work without an account.
 
 Relevant docs:
