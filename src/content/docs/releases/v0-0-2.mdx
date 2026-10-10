@@ -1,18 +1,23 @@
 ---
-title: Version 0.0.2
-description: Release notes for AWFlow v0.0.2.
+title: "First fixes and a new design system"
+description: "Early bug fixes and a move to the shadcn-svelte design system."
 sidebar:
+  label: v0.0.2
   order: 11
 section: releases
+kind: release
 ---
 
-Published: **April 4, 2026**
+import { ReleaseChanges } from '@components/awflow';
+import { getRelease } from '../../../data/releases';
 
-## Highlights
+## What changed
 
-Version 0.0.2 includes early bug corrections and a design update using the `shadcn-svelte` template system.
+<ReleaseChanges release={getRelease('0.0.2')} level={3} meta />
 
-## Bug Corrections
+## Notes
+
+### Bug Corrections
 
 This early release includes general bug corrections. If a workflow created on an earlier build behaves unexpectedly, test it step by step and inspect the output of each node.
 
@@ -22,7 +27,7 @@ Relevant docs:
 - [Workflow connections](/app/troubleshooting/workflow-connections/)
 - [Troubleshooting guide](/app/troubleshooting/)
 
-## Design System Update
+### Design System Update
 
 The app design moved toward the `shadcn-svelte` template system. This primarily affects the interface, not workflow logic, but it improves consistency across settings, panels, forms, and workflow controls.
 

@@ -1,0 +1,122 @@
+---
+title: Breaking changes & migration
+description: What changed in behaviour between AWFlow versions, and what to do about it. Releases with nothing to act on say so.
+sidebar:
+  label: Breaking changes
+  order: 0.5
+section: releases
+kind: guide
+---
+
+AWFlow updates itself, and existing workflows keep working through every
+release listed here: nothing was removed without an automatic upgrade. This page
+lists the changes in **behaviour** you may notice, and what to do about them.
+For everything else in a release, read its [release notes](/releases/).
+
+## v0.8.2
+
+[Release notes](/releases/v0-8-2/)
+
+- **Three memory nodes became one.** Local Memory, Persistent Chat Memory and
+  Window Buffer Memory are replaced by [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/).
+  Existing workflows keep running and are upgraded to Chat Memory the next time
+  you save them. Nothing to do; open and save a workflow if you want it on the
+  new node now.
+- **Chat memories is now Memory.** The page moved to [Memory](/app/memory/overview/);
+  old links redirect.
+- **Marketplace access is checked on your device.** An installed workflow that
+  needs access its author did not declare now asks for it at run time instead of
+  failing. Approve the prompt the first time you run it.
+- **Workflow conversation picks are cleared on share.** A conversation picked in
+  Chat Memory is cleared when a workflow is published or shared. Installers pick
+  their own.
+
+## v0.8.1
+
+[Release notes](/releases/v0-8-1/)
+
+- **Agent tools are locked by what they do.** Workflow and MCP tools are now
+  approved by their capability rather than their name, so an agent may ask you
+  again the first time it uses a tool. See [Action approval](/concepts/ai/action-approval/).
+- **Knowledge base account backups are off for now.** Use
+  [`.awkb` export](/app/knowledge-bases/export-import-backup/) to keep a copy.
+
+## v0.8.0
+
+[Release notes](/releases/v0-8-0/)
+
+- **A failed node stops only its own branch**, and a node with no output no
+  longer stops the run. If a workflow relied on a failure ending the whole run,
+  add a [Stop and Error](/nodes/builtin/flow/stopanderror/) node on that branch.
+  See [Error handling](/concepts/flow/error-handling/).
+- **The Code node reads upstream data as `input`**, including fan-in, and Python
+  runs in an isolated worker per run, so nothing carries over between runs. If
+  a Code node behaves differently after the update, read upstream data from
+  `input`. See [Code node](/nodes/builtin/core/code/).
+- **Only the last 100 executions per workflow are kept locally.** Older runs
+  are removed automatically.
+- **Imported workflows are untrusted until you review them.** See
+  [Import and export](/app/workflows/export-import/).
+- **Publishing needs narration.** The publish wizard requires the
+  [Explain the steps](/app/workflows/narration/) step.
+- **Minimum extension version.** Workflows can declare one, and installing is
+  blocked on older versions. Update the extension when asked.
+
+## v0.6.0
+
+[Release notes](/releases/v0-6-0/)
+
+- **Connections use OAuth with PKCE.** The client secret is no longer required.
+  If an existing connection stops working, reconnect it from
+  [Connections](/app/connections/edit/).
+- **Per-run consent.** An installed or shared workflow asks before it acts and
+  can only do what it declares up front. See
+  [Permissions and security](/app/troubleshooting/permissions-security/).
+- **New cloud service.** Account data moved to a new AWFlow cloud service. Nothing
+  to do; local mode is unchanged.
+
+## v0.4.0
+
+[Release notes](/releases/v0-4-0/)
+
+- **Plan limits.** Workflows have a node limit per plan, and uploaded text has a
+  size limit. Split large workflows if you hit one. See
+  [Rate limits](/nodes/builtin/rate-limits/).
+
+## v0.3.0
+
+[Release notes](/releases/v0-3-0/)
+
+None.
+
+## v0.2.4
+
+[Release notes](/releases/v0-2-4/)
+
+None.
+
+## v0.2.3
+
+[Release notes](/releases/v0-2-3/)
+
+None.
+
+## v0.2.2
+
+[Release notes](/releases/v0-2-2/)
+
+- **Remote assets use JWT-based authentication.** Check workflows that read
+  protected assets and reconnect their credentials if they fail. See
+  [Edit credentials](/app/connections/edit/).
+
+## v0.2.1
+
+[Release notes](/releases/v0-2-1/)
+
+None.
+
+## v0.0.2
+
+[Release notes](/releases/v0-0-2/)
+
+None.

@@ -1,29 +1,23 @@
 ---
-title: Version 0.8.2
-description: Release notes for AWFlow v0.8.2.
+title: "Memory you can see and manage — plus a safer Marketplace"
+description: "Chats, workflow conversations and learned facts now live in one store on your device, with a Memory page to search, export and clean them up. Marketplace installs update in one click and their access is checked on your device."
 sidebar:
+  label: v0.8.2
   order: 1
 section: releases
+kind: release
 ---
 
-Published: **October 10, 2026**
+import { ReleaseChanges } from '@components/awflow';
+import { getRelease } from '../../../data/releases';
 
-## Highlights
+## What changed
 
-Version 0.8.2 is about **memory**: what AWFlow remembers, how it uses it, and
-how you see and manage it. Chats, workflow conversations and the facts your
-agents learn now live in one store on your device, with one **Memory** page to
-read, search, export and clean them up. Facts are suggested before they are
-saved and picked by relevance. Workflows get one **Chat Memory** node instead
-of three. A new **Settings › Storage** page shows everything AWFlow keeps in
-your browser.
+<ReleaseChanges release={getRelease('0.8.2')} level={3} meta />
 
-The **Marketplace** also gets a large safety and quality pass: installs you can
-update in one click, listings you can stop sharing, a safety kill switch,
-access checked on your device, a stronger secret scan, and isolated moderation
-test runs. Agent and team templates get the same care.
+## In detail
 
-## The Memory page
+### The Memory page
 
 **Chat memories** becomes **Memory** (old links redirect), with three tabs:
 
@@ -48,7 +42,7 @@ Relevant docs:
 
 - [Memory](/app/memory/overview/)
 
-## Storage
+### Storage
 
 - **Settings › Storage** shows everything AWFlow keeps in the browser — local
   models, memory, knowledge bases, workflows and run history — against what the
@@ -64,7 +58,7 @@ Relevant docs:
 
 - [Storage & clean-up](/app/memory/storage/)
 
-## Smarter facts
+### Smarter facts
 
 - **Remember this?** — preferences the assistant notices are suggested, and
   saved only when you confirm. "Remember that…" still saves at once, and
@@ -87,7 +81,7 @@ Relevant docs:
 
 - [Assistant memory](/app/chat-and-agents/memory/)
 
-## Long chats
+### Long chats
 
 - **View summary** opens the rolling summary to read and edit it, or turn it
   into fact suggestions. **Compact now** summarises early on demand.
@@ -107,7 +101,7 @@ Relevant docs:
 - [Building workflows in chat](/app/chat-and-agents/building-workflows-in-chat/#canvas-dock-chats)
 - [Teams](/app/chat-and-agents/teams/)
 
-## Workflow memory
+### Workflow memory
 
 - One **Chat Memory** node replaces Local Memory, Persistent Chat Memory and
   Window Buffer Memory. Storage: a conversation, a key, or this run only. Keys
@@ -124,12 +118,12 @@ Relevant docs:
 - [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/)
 - [Chat Trigger](/nodes/builtin/trigger/chat/)
 
-## Plans
+### Plans
 
 Conversations are **no longer limited by plans**: they are stored on your
 device.
 
-## Encryption
+### Encryption
 
 With **Local secret protection** on, conversation messages, summaries and
 facts are encrypted on this device. Titles and sizes stay visible; unlock to
@@ -137,9 +131,9 @@ read. Unlocking in the app also unlocks the notch for the session. While
 protection is on, search covers titles only and chats use your pinned and
 newest facts.
 
-## Marketplace
+### Marketplace
 
-### Installing and updating
+#### Installing and updating
 
 - Listing buttons show where you stand: **Install**, **Installing…**,
   **Open** with the installed version, **Update to vN**, **Manage listing** for
@@ -168,7 +162,7 @@ newest facts.
   author and request board pages, and search that always shows the latest
   results.
 
-### Publishing and sharing
+#### Publishing and sharing
 
 - **Stop sharing** removes a listing from the Marketplace while people who
   installed it keep their copy. Use **Share again** to bring it back,
@@ -182,7 +176,7 @@ newest facts.
 - Marketplace notifications have their own icons and open the right place,
   for example the edit wizard when a listing needs changes.
 
-### Safety
+#### Safety
 
 - If AWFlow removes a listing for safety, installed copies **stop running**,
   their triggers are switched off, and you see a banner explaining why with
@@ -194,7 +188,7 @@ Relevant docs:
 - [Stop sharing a listing](/app/workflows/publishing/#stop-sharing-a-listing)
 - [Using shared workflows](/app/workflows/publishing/#using-shared-workflows)
 
-## Agent and team templates
+### Agent and team templates
 
 - Before installing, a **What it can do** panel lists the template's tools,
   workflows, hand-offs, knowledge search and routines, and asks you to confirm
@@ -208,7 +202,7 @@ Relevant docs:
 
 - [Agent & team templates](/app/chat-and-agents/templates/)
 
-## For moderators
+### For moderators
 
 - Moderation decisions are tied to the **exact version you reviewed**. If the
   author changes it meanwhile, your decision is not saved and you can load the
@@ -225,7 +219,7 @@ Relevant docs:
 - The audit log is paged and can be filtered by action, person, target and
   date.
 
-## Fixes and polish
+### Fixes and polish
 
 - **Faster sign-in**: AWFlow no longer requests an extra token at sign-in, and
   changing your password works on Firefox.
