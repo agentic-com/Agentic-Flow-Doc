@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -17,17 +18,18 @@ The list shows each category's icon, label and description, its **Slug**, the nu
 
 ## Create a category
 
-<Steps>
+Click **New category**, then fill in the dialog:
 
-1. Click **New category**.
-
-2. Pick an **Icon** (an emoji), type a **Label**, and optionally a **Description**, **Color**, **Sort order** and comma-separated **Tags**.
-
-3. The slug is filled in from the label. Click **Edit** next to it if you want a different one. You can't change it later.
-
-4. Click **Create category** (or press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>Enter</kbd>).
-
-</Steps>
+<GuidedShot
+  shot="admin-category-new"
+  steps={[
+    { spot: 'icon', title: 'Pick an icon', body: 'An emoji shown next to the category.' },
+    { spot: 'label', title: 'Type a label', body: 'The name people see, for example *Marketing*.' },
+    { spot: 'slug', title: 'Check the slug', body: 'It is filled in from the label. Click **Edit** for a different one. You can\'t change it later.' },
+    { spot: 'details', title: 'Add the details (optional)', body: '**Description**, **Color**, **Sort order** and comma-separated **Tags**.' },
+    { spot: 'create', title: 'Click Create category', body: 'Or press `⌘`/`Ctrl` + `Enter`.', check: "the category's page opens." },
+  ]}
+/>
 
 The new category's page opens. If the slug is already taken, you are told so.
 

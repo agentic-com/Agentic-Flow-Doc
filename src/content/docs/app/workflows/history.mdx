@@ -6,34 +6,37 @@ sidebar:
 section: app
 ---
 
-import { Steps } from "@astrojs/starlight/components";
-import { History } from "@lucide/astro";
+import { GuidedShot } from '@components/awflow';
 
 Workflow history helps you go back to an older version of a workflow.
 
 ## Understand workflow history
 
-AWFlow creates a new version when you:
-
-- Save your workflow.
-- Restore an old version. AWFlow saves the latest version before restoring.
+AWFlow keeps a new version of the workflow **each time you save it**. The first version is the one you created or imported.
 
 :::note[Workflow history and execution history]
 Don't confuse workflow history with execution history.
 
-Executions are workflow runs. With the executions list, you can see previous runs of the workflow.
+Executions are workflow runs. With the [executions list](/app/workflows/run-history/), you can see previous runs of the workflow.
 
 Workflow history is previous versions of the workflow: for example, a version with a different node, or different parameters set.
 :::
 
 A run paused by [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) appears in the executions list as a **waiting** run, and can be approved, rejected, or cancelled from there.
 
-## View workflow history & restore
+## View and restore a version
 
-To view a workflow's history:
+Open the workflow in the editor. Everything happens in the **Version history** popover at the top right:
 
-<Steps>
-1. Open the workflow.
-2. Select **Workflow history** <History class="inline-block m-0" />. AWFlow opens a menu showing the saved workflow versions, and a canvas with a preview of the selected version.
-3. Select the version you want to restore.
-</Steps>
+<GuidedShot
+  shot="version-history"
+  steps={[
+    { spot: 'version-history', title: 'Click Version history', body: 'The clock icon next to **Save**. It lists the saved versions, newest first, by the date and time they were saved.' },
+    { spot: 'date-range', title: 'Narrow the dates (optional)', body: 'Pick a start and end date to list only the versions saved in between.' },
+    { spot: 'version', title: 'Click a version', body: 'The canvas shows that version.', check: 'the steps and their settings are the ones of that version.' },
+  ]}
+/>
+
+To keep the version you picked, make it the current one: change something (move a step, for example), then click **Save**. Saving keeps a new version, so the newer ones stay in the list. To go back to the newest version instead, click the first version in the list, or reload the page.
+
+The list is read when the editor opens: reload the page to see a version you have just saved.

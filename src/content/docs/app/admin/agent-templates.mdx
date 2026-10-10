@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Badge } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -22,6 +23,17 @@ Each card shows the template's kind, members, name, author, how many agents it h
 Click **Preview** to read each agent's name, role and instructions before deciding.
 
 ## Decide
+
+<GuidedShot
+  shot="admin-agent-templates"
+  steps={[
+    { spot: 'queues', title: 'Pick a queue', body: '**Pending**, **Approved**, **Rejected**, **Suspended** or **Retired**.' },
+    { spot: 'preview', title: 'Click Preview', body: "Read each agent's name, role and instructions." },
+    { spot: 'note', title: 'Write a note to the author', body: 'Required to reject or suspend.' },
+    { spot: 'approve', title: 'Approve', body: 'Publishes it (or the update).' },
+    { spot: 'reject', title: 'Or Reject', body: 'Pending queue only. On the approved queue this is **Suspend**.' },
+  ]}
+/>
 
 Type a note in **Note to the author** when needed, then:
 

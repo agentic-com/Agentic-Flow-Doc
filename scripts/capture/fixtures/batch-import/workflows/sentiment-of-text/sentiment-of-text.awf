@@ -1,0 +1,101 @@
+{
+  "name": "Sentiment of Text",
+  "description": "Paste any text and see whether it reads positive, negative, or neutral — on your device, no account.",
+  "tags": ["ai", "tier-1", "on-device", "no-setup", "extension"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "😊 Check the sentiment of text.\n\nPress Run, paste some text, and the AI tells you whether it reads positive, negative, or neutral. It runs locally in your browser — nothing leaves your device. Pick a model the first time."
+      },
+      "width": 340,
+      "height": 190
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": { "x": 100, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": { "notes": "Starts the workflow when you press Run." }
+      }
+    },
+    {
+      "id": "ask-text",
+      "type": "inPageForm",
+      "position": { "x": 420, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:inPageForm:inPageForm" },
+        "label": "Paste text",
+        "inputs": {
+          "title": "Paste text",
+          "fields": [
+            { "name": "text", "label": "Text", "type": "textarea", "required": true }
+          ]
+        },
+        "parameters": { "notes": "Prompts you to paste the text you want analyzed." }
+      }
+    },
+    {
+      "id": "sentiment",
+      "type": "agent",
+      "position": { "x": 740, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:agent:sentiment-analysis" },
+        "label": "Analyze sentiment",
+        "inputs": {
+          "text": "{{ $input.text }}"
+        },
+        "parameters": { "notes": "Reads the text and returns its overall sentiment." }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": { "x": 740, "y": 500 },
+      "data": {
+        "instance": { "id": "af-base-node:dependency:webLLM" },
+        "label": "Local AI model",
+        "inputs": { "model": "", "options": { "temperature": 0.4 } },
+        "parameters": { "notes": "Runs the analysis locally in your browser. Pick a model the first time — it downloads once, then works offline." }
+      }
+    },
+    {
+      "id": "show-sentiment",
+      "type": "basic",
+      "position": { "x": 1060, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:displayObjectNode" },
+        "label": "Show the sentiment",
+        "inputs": { "title": "Sentiment" },
+        "parameters": { "notes": "Displays the detected sentiment." }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": { "x": 740, "y": 660 },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    { "id": "e-run-ask", "source": "trigger-run", "target": "ask-text", "type": "flowEdge" },
+    { "id": "e-ask-sentiment", "source": "ask-text", "target": "sentiment", "type": "flowEdge" },
+    { "id": "e-sentiment-model", "source": "sentiment", "target": "local-model", "type": "flowEdge", "sourceHandle": "dependency-0" },
+    { "id": "e-sentiment-show", "source": "sentiment", "target": "show-sentiment", "type": "flowEdge" }
+  ],
+  "requiredInputs": [
+    { "nodeId": "local-model", "field": "model" }
+  ]
+}

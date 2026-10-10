@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -20,25 +21,51 @@ import { Aside, Badge, Steps } from '@astrojs/starlight/components';
 
 Search by name, description, publisher or tags, and filter by **Tags**, **Publisher**, **Language**, **Featured**, and the **Submitted** and **Updated** dates.
 
+<GuidedShot
+  shot="admin-moderation"
+  steps={[
+    { spot: 'tabs', title: 'Pick a queue', body: '**Pending** shows what waits for a decision; **Approved** shows live listings.' },
+    { spot: 'search', title: 'Search and filter', body: 'Type in the search box, or use **Tags**, **Publisher**, **Language**, **Submitted** and **Updated**.' },
+    { spot: 'update-badge', title: 'Spot updates', body: 'An **Update** badge marks a new version of a live listing. The live version stays up until you decide.' },
+    { spot: 'review', title: 'Click Review', body: 'Opens the review page for that listing.' },
+  ]}
+/>
+
 ## Review a listing
 
-<Steps>
+<StepCard n={1} title="Click Review on a row">
+  In the **Pending** queue, click **Review** on the listing.
 
-1. Click **Review** on a row.
+  <StepShot shot="admin-moderation" spot="review" n={1} />
+</StepCard>
 
-2. Look at the read-only graph. It is the exact version people will install. For an update, switch between **Proposed** and **Live** to compare.
+<StepCard n={2} title="Look at the read-only graph">
+  It is the exact version people will install. For an update, switch between **Proposed** and **Live** to compare.
 
-3. Check the permissions panel. A red warning means the permissions the author declared don't match what the workflow really does.
+  <StepShot shot="admin-review" spot="graph" n={2} />
+</StepCard>
 
-4. Read the listing content: icon, screenshots, description, tags and categories.
+<StepCard n={3} title="Check the permissions and the listing">
+  Scroll to **Permissions & Safety**. A red warning means the permissions the author declared don't match what the workflow really does. Then read the listing content: icon, screenshots, description, tags and categories.
+</StepCard>
 
-5. Optionally click **Open sandbox to test** to run a throwaway copy safely. It uses no saved accounts, opens a fresh tab, asks before every site, and shows all network activity. Use test accounts, not real ones.
+<StepCard n={4} title="Optionally, test it in the sandbox">
+  **Open sandbox to test** runs a throwaway copy safely. It uses no saved accounts, opens a fresh tab, asks before every site, and shows all network activity. Use test accounts, not real ones.
 
-6. Tick the **Review checklist**. The first three checks are required before you can approve.
+  <StepShot shot="admin-review" spot="sandbox" n={4} />
+</StepCard>
 
-7. Click **Approve snapshot…** (or **Approve update**), **Reject…** or **Suspend…**. Rejecting and suspending need a note the author will see.
+<StepCard n={5} title="Tick the review checklist">
+  The first three checks are required before you can approve. The sandbox test is optional.
 
-</Steps>
+  <StepShot shot="admin-review" spot="checklist" n={5} />
+</StepCard>
+
+<StepCard n={6} title="Decide" check="the listing leaves the Pending queue and the decision is in the Audit log.">
+  Click **Approve snapshot** (or **Approve update**), **Reject…** or **Suspend…**. Rejecting and suspending need a note the author will see.
+
+  <StepShot shot="admin-review" spot="approve" n={6} />
+</StepCard>
 
 If the author changes the listing while you review it, your decision isn't saved and you are asked to load the new version.
 

@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
-import { Screenshot } from '@components/awflow';
+import { GuidedShot, Screenshot, StepCard, StepShot } from '@components/awflow';
 import runHistoryLight from '@assets/screenshots/run-history.light.webp';
 import runHistoryDark from '@assets/screenshots/run-history.dark.webp';
 
@@ -60,32 +60,47 @@ Failed and waiting runs have a coloured stripe on the left so they stand out.
 
 ## Find yesterday's failed run
 
-<Steps>
+<StepCard n={1} title="Click Filter">
+  In the **Executions** tab, click **Filter** above the list.
 
-1. In the **Executions** tab, click **Filter**.
+  <StepShot shot="run-history" spot="filter-runs" n={1} />
+</StepCard>
 
-2. Under **Status**, pick **error** (the filter lists the raw status names).
+<StepCard n={2} title="Pick the status">
+  Under **Status**, open the list and pick **Failed**.
 
-3. Under **Execution date range**, pick yesterday. The last day of the range is fully included.
+  <StepShot shot="run-filter" spot="status" n={2} zoom={44} />
+</StepCard>
 
-4. Click the run to open its details.
+<StepCard n={3} title="Pick the dates">
+  Under **Execution date range**, click **Pick a date** and pick yesterday. The last day of the range is fully included.
 
-</Steps>
+  <StepShot shot="run-filter" spot="date-range" n={3} zoom={44} />
+</StepCard>
 
-You can also type in the **Filter...** box. It matches the status name (for example *Failed*), the run id, and metadata such as `order:1234`. Click **Reset** in the filter panel to clear everything.
+<StepCard n={4} title="Open the run" check="its details open beside the list.">
+  Click the run in the list.
+
+  <StepShot shot="run-detail" spot="run-row" n={4} />
+</StepCard>
+
+You can also type in the **Filter...** box. It matches the status name (for example *Failed*), the run id, and metadata such as `order:1234`. Click **Reset** in the filter panel to clear the status and dates.
 
 On narrow screens, use the **All**, **Failed** and **Waiting** chips at the top instead.
 
 ## Read a run's details
 
-Click a row, or use **⋮ › Open detail**. A panel opens beside the list with:
+Click a row, or use **⋮ › Open detail**. A panel opens beside the list with the status, start time, duration, where it ran, its run id and its metadata. Drag the divider to make the panel wider.
 
-- the status, start time, duration, where it ran and its run id,
-- the run's metadata,
-- a **Graph** tab showing a read-only copy of the workflow **as it was when it ran**, even if you changed it since,
-- a **Logs** tab with every log line the run wrote, including the error message that made it fail.
-
-Drag the divider to make the panel wider. **Open in editor** takes you to the current version of the workflow so you can fix it.
+<GuidedShot
+  shot="run-detail"
+  steps={[
+    { spot: 'run-row', title: 'Pick the run', body: 'The panel shows the run you clicked.' },
+    { spot: 'graph-tab', title: 'Graph', body: 'A read-only copy of the workflow **as it was when it ran**, even if you changed it since.' },
+    { spot: 'logs-tab', title: 'Logs', body: 'Every log line the run wrote, including the error message that made it fail.' },
+    { spot: 'open-in-editor', title: 'Open in editor', body: 'Opens the current version of the workflow, so you can fix it.' },
+  ]}
+/>
 
 <Aside>
 The run record keeps the log, not each step's full input and output. To see the data flowing through each step, run the workflow again from the editor and inspect the steps there. Adding log messages or [Execution Data](/nodes/builtin/core/execution-data/) to important steps makes later runs easier to investigate.

@@ -4,7 +4,7 @@ description: "Use sticky notes to document and annotate your workflows in AWFlow
 section: app
 ---
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
+import { GuidedShot } from "@components/awflow";
 
 Sticky Notes are text blocks you can place on the canvas.
 
@@ -12,22 +12,22 @@ They help you (and other people) understand what your workflow does.
 
 ---
 
-## Adding a Sticky Note
+## Add, edit and arrange a note
 
-1. Open the node panel (the add-node menu).
-2. Search for **Sticky Note** or `note`.
-3. Click it to add a note to the canvas.
+Open the workflow in the editor. Everything happens on the canvas:
 
-You can place notes anywhere (even behind nodes) to label sections or add instructions.
+<GuidedShot
+  shot="canvas-sticky-note"
+  steps={[
+    { spot: 'add-sticky-note', title: 'Click Add sticky note', body: 'In the toolbar at the top left. A new note appears on the canvas.' },
+    { spot: 'note', title: 'Drag it into place', body: 'Click and drag the note anywhere, even behind steps to group them. Double-click it to edit its text.' },
+    { spot: 'resize', title: 'Resize it', body: 'Click the note, then drag one of its corners.' },
+    { spot: 'edit-sticky-note', title: 'Or right-click it › Edit Sticky Note', body: 'Opens the same editor as a double-click.' },
+    { spot: 'change-color', title: 'Change Color', body: 'Pick a colour to group notes visually. The palette icon on the note, when you hover it, does the same.' },
+  ]}
+/>
 
----
-
-## Editing a Sticky Note
-
-- Double-click the note to open it for editing.
-- You can use simple formatting (bold, headings, links, lists).
-- Press **Esc** or click outside to close and save.
-- You can change the note’s color from the options menu for visual grouping.
+In the editor, use simple formatting (bold, headings, links, lists). Close it to save the text.
 
 Sticky Notes support embedding YouTube videos with this syntax:
 
@@ -48,15 +48,6 @@ Images in notes can be displayed full width by appending `#full-width` after the
 ```markdown
 ![Alt text](https://example.com/image.png#full-width)
 ```
-
----
-
-## Moving & Resizing Notes
-
-- Click and drag to move a note anywhere on the canvas.
-- Drag edges to resize.
-- Move them behind nodes to visually group nodes.
-- Change the note’s color via **Options** in the header.
 
 ---
 

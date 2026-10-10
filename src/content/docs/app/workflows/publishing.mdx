@@ -6,13 +6,7 @@ sidebar:
 section: app
 ---
 
-import { Screenshot } from '@components/awflow';
-import publishBasicsLight from '@assets/screenshots/publish-basics.light.webp';
-import publishBasicsDark from '@assets/screenshots/publish-basics.dark.webp';
-import publishPreviewLight from '@assets/screenshots/publish-preview.light.webp';
-import publishPreviewDark from '@assets/screenshots/publish-preview.dark.webp';
-import publishReviewLight from '@assets/screenshots/publish-review.light.webp';
-import publishReviewDark from '@assets/screenshots/publish-review.dark.webp';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 Publishing lets you share your workflow in the Marketplace so other people can use it as a template.
 
@@ -44,25 +38,43 @@ Make sure your workflow meets these key conditions:
 
 ## How to publish
 
-1. Go to your **Workflows Library** in the extension.  
-2. Find the workflow you wish to publish.  
-3. Click **Publish** (or similar UI button).  
-4. Walk through the five wizard steps:
-   1. **Basics** — workflow name and description.
-   2. **Media** — icon and preview images.
-   3. **Details** — categories, tags and language.
-   4. **Explain the steps** — one plain-language note per step (see below).
-   5. **Review & publish** — secret scan, shared values and permissions, then **Publish**.
-5. Your listing goes to a quick review, then appears in the Marketplace for others to import.
+Only **cloud** workflows can be published, so you need to be signed in. Each **Next** saves the step to your draft, so you can close the wizard and pick up where you left off.
 
-The wizard opens on **Basics**, with the name and a starter description filled in from your workflow. Each **Next** saves the step to your draft, so you can close the wizard and pick up where you left off.
+<StepCard n={1} title="Open Publish on the workflow">
+  On the **Workflows** page, open the **⋮** menu at the start of the workflow's row and click **Publish**.
 
-<Screenshot
-  src={publishBasicsLight}
-  srcDark={publishBasicsDark}
-  alt="Step 1 of 5, Basics, of the Publish to the marketplace dialog for an example workflow: a five-step progress bar, the Name field filled with the workflow name (Summarise this page in 3 bullets), a Description editor with Write and Preview tabs and a formatting toolbar, prefilled with a starter description, the note Autofilled from your workflow, and Back and Next buttons."
-  hotspots={[{ x: 50, y: 33.5, label: "Five steps: Basics, Media, Details, Explain the steps, Review & publish" }, { x: 50, y: 39.5, label: "Listing name" }, { x: 50, y: 71.7, label: "Description, autofilled from your workflow" }, { x: 66.6, y: 77.1, label: "Next saves this step to your draft" }]}
-/>
+  <StepShot shot="publish-open" spot="publish" n={1} zoom={44} />
+</StepCard>
+
+<StepCard n={2} title="Basics: name and description">
+  The name and a starter description are filled in from your workflow. Edit them so a stranger understands what it does, then click **Next**.
+
+  <StepShot shot="publish-basics" spot="description" n={2} />
+</StepCard>
+
+<StepCard n={3} title="Media: icon and preview images">
+  Pick an icon (an emoji or an image), then upload screenshots or generate a preview image (see below). Click **Next**.
+
+  <StepShot shot="publish-preview" spot="generate-preview-image" n={3} />
+</StepCard>
+
+<StepCard n={4} title="Details: categories, tags and language">
+  Pick at least one category, add tags (press <kbd>Enter</kbd> after each) and check the language. Click **Next**.
+
+  <StepShot shot="publish-details" spot="tags" n={4} zoom={44} />
+</StepCard>
+
+<StepCard n={5} title="Explain the steps">
+  Write one plain sentence per step: what it does and why. Notes already on the canvas are filled in. **Next** stays disabled until every step has a note.
+
+  <StepShot shot="publish-explain" spot="progress" n={5} zoom={44} />
+</StepCard>
+
+<StepCard n={6} title="Review & publish" check="your listing shows In review in My published workflows.">
+  Check the secret scan, the values you share and **Permissions & Safety**, derived from the steps. Then click **Publish**. Your listing goes to a quick review, then appears in the Marketplace.
+
+  <StepShot shot="publish-review" spot="publish-sends-review" n={6} />
+</StepCard>
 
 ---
 
@@ -74,11 +86,14 @@ compose a shareable 16:9 image from your workflow — a snapshot of the flow plu
 the nodes it uses, its trigger, a few quick stats and an AWFlow mark, arranged
 in a bento layout.
 
-<Screenshot
-  src={publishPreviewLight}
-  srcDark={publishPreviewDark}
-  alt="Step 2 of 5, Media, of the Publish to the marketplace dialog for an example workflow, with Generate selected under Screenshots & video: a bento-style preview image of the workflow (its trigger, the Get All Text, Basic LLM Chain, Web LLM and Display Markdown nodes, the title, an AWFlow mark and a 5 nodes, Runs in your browser card), then the Layout choices (Spotlight Halo selected, Cinematic Split, Filmstrip, Mosaic), five Accent colours, Image theme Light or Dark, a Show title checkbox and the Generate preview button for a 1600×900 PNG."
-  hotspots={[{ x: 34.9, y: 26.9, label: "Generate a preview image, or Upload your own" }, { x: 35.9, y: 69.6, label: "Layout" }, { x: 47.7, y: 77.8, label: "Accent colour, image theme and title" }, { x: 36.1, y: 82.1, label: "Generate preview adds the image to your previews" }]}
+<GuidedShot
+  shot="publish-preview"
+  steps={[
+    { spot: 'generate-preview-image', title: 'Choose Generate', body: 'Under **Screenshots & video**. **Upload** takes your own images instead.' },
+    { spot: 'layout', title: 'Pick a layout', body: 'Spotlight Halo, Cinematic Split, Filmstrip or Mosaic.' },
+    { spot: 'accent-colour', title: 'Pick the accent, image theme and title', body: 'An accent colour, **Light** or **Dark**, and **Show title** on or off.' },
+    { spot: 'generate-preview-adds-image', title: 'Click Generate preview', check: 'the image is added to your previews.' },
+  ]}
 />
 
 It's one click, then a few optional tweaks:
@@ -183,14 +198,16 @@ The last step shows your listing as people will see it, then what gets checked b
 - **These values won't be shared.** Fields that are always left blank for installers, and other values you can choose to blank. Whoever installs the workflow fills them in.
 - **Permissions & Safety.** What the workflow can access (for example, reading the active tab) and where it connects, worked out from its steps. Installers see the same summary before they install.
 
-<Screenshot
-  src={publishReviewLight}
-  srcDark={publishReviewDark}
-  alt="Step 5 of 5, Review & publish, of the Publish to the marketplace dialog for an example workflow that summarises the page you're on, scrolled to Permissions & Safety: What it can access lists Reads the active tab (reads content, never writes), Where it connects says the workflow makes no network requests, How you're protected lists the runtime-enforced sandbox, capabilities disclosed up front and reviews from real installs only. Below, a Narrated badge (every step has a plain-language note), a What happens next note about the quick review, and the Publish button."
-  hotspots={[{ x: 38.5, y: 40.3, label: "What it can access, derived from the steps" }, { x: 51.2, y: 40.3, label: "Where it connects" }, { x: 41.9, y: 72.5, label: "Narrated: every step has a note" }, { x: 66.1, y: 88, label: "Publish sends it to review" }]}
+<GuidedShot
+  shot="publish-review"
+  steps={[
+    { spot: 'what-access', title: 'Check what it can access', body: 'Worked out from the steps, for example reading the active tab.' },
+    { spot: 'where-connects', title: 'Check where it connects', body: 'The sites and services it reaches, or none.' },
+    { spot: 'narrated', title: 'See the Narrated badge', body: 'Earned when every step has a note.' },
+    { spot: 'publish-sends-review', title: 'Click Publish', check: 'the listing goes to review.' },
+  ]}
 />
 
-Click **Publish** to send the listing to review.
 
 ## How listings get discovered
 

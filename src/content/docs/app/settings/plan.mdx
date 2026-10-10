@@ -8,12 +8,23 @@ sidebar:
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { GuidedShot } from '@components/awflow';
 
 **Settings › Plan** shows the plan you're on and compares all plans side by side.
 
 <Aside>
 Paid plans aren't on sale yet: their buttons read **Coming soon**. The Plan section is not listed in Settings for every account yet.
 </Aside>
+
+<GuidedShot
+  shot="settings-plan"
+  steps={[
+    { spot: 'active-plan', title: 'See your plan', body: '**Active plan** names the plan you are on.' },
+    { spot: 'current', title: 'Compare all plans', body: 'Your plan reads **Current plan**.' },
+    { spot: 'coming-soon', title: 'Paid plans', body: 'They read **Coming soon** for now.' },
+    { spot: 'comparison', title: 'Show detailed comparison', body: 'Lists every limit and feature side by side.' },
+  ]}
+/>
 
 ## What plans limit
 

@@ -1,0 +1,210 @@
+{
+  "name": "Flashcards from Text",
+  "description": "Highlight text, right-click, and get study flashcards as question/answer pairs — on your device.",
+  "tags": [
+    "ai",
+    "tier-1",
+    "on-device",
+    "no-setup",
+    "extension"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "🃏 Turn any selection into flashcards.\n\nHighlight some text on any page, right-click, and choose this workflow — it creates question/answer flashcards from your selection. The AI runs locally in your browser; nothing leaves your device. Pick a model the first time."
+      },
+      "width": 340,
+      "height": 200
+    },
+    {
+      "id": "trigger-context-menu",
+      "type": "trigger",
+      "position": {
+        "x": 100,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:contextMenu"
+        },
+        "label": "Right-click a selection",
+        "inputs": {
+          "contexts": [
+            "selection"
+          ]
+        },
+        "parameters": {
+          "notes": "Adds this workflow to the right-click menu whenever you have text selected."
+        }
+      }
+    },
+    {
+      "id": "get-selection",
+      "type": "basic",
+      "position": {
+        "x": 400,
+        "y": 450
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:getSelectedTextNode"
+        },
+        "label": "Get selected text",
+        "inputs": {
+          "outputFieldName": "selection",
+          "options": {
+            "includeInputFields": true
+          }
+        },
+        "parameters": {
+          "notes": "Reads the full text you highlighted on the page. The context-menu event only carries a short, truncated copy, so this node gets the complete selection reliably."
+        }
+      }
+    },
+    {
+      "id": "make-cards",
+      "type": "agent",
+      "position": {
+        "x": 420,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:agent:basicLLMChain"
+        },
+        "label": "Make flashcards",
+        "inputs": {
+          "prompt": "Create question/answer flashcards from this text:\n\n{{ $input.selection }}"
+        },
+        "parameters": {
+          "notes": "Turns your selected text into question/answer flashcards.\n\nUNVERIFIED: outputParser port index — the structured output parser is attached on dependency-1."
+        }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": {
+        "x": 420,
+        "y": 500
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:dependency:webLLM"
+        },
+        "label": "Local AI model",
+        "inputs": {
+          "model": "",
+          "options": {
+            "temperature": 0.4
+          }
+        },
+        "parameters": {
+          "notes": "Runs the model locally in your browser. Pick a model the first time — it downloads once, then works offline."
+        }
+      }
+    },
+    {
+      "id": "cards-parser",
+      "type": "dependency",
+      "position": {
+        "x": 640,
+        "y": 500
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:dependency:structuredOutputParser"
+        },
+        "label": "Structured output parser",
+        "inputs": {
+          "jsonOutputExample": "{\"cards\":[{\"q\":\"...\",\"a\":\"...\"}]}"
+        },
+        "parameters": {
+          "notes": "Shapes the output into a clean list of question/answer cards."
+        }
+      }
+    },
+    {
+      "id": "show-cards",
+      "type": "basic",
+      "position": {
+        "x": 740,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:displayObjectNode"
+        },
+        "label": "Show the flashcards",
+        "inputs": {
+          "title": "Flashcards"
+        },
+        "parameters": {
+          "notes": "Displays the generated flashcards."
+        }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": {
+        "x": 420,
+        "y": 660
+      },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-ctx-get-selection",
+      "source": "trigger-context-menu",
+      "target": "get-selection",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-trigger-cards",
+      "source": "get-selection",
+      "target": "make-cards",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-cards-model",
+      "source": "make-cards",
+      "target": "local-model",
+      "type": "flowEdge",
+      "sourceHandle": "dependency-0"
+    },
+    {
+      "id": "e-cards-parser",
+      "source": "make-cards",
+      "target": "cards-parser",
+      "type": "flowEdge",
+      "sourceHandle": "dependency-1"
+    },
+    {
+      "id": "e-cards-show",
+      "source": "make-cards",
+      "target": "show-cards",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": [
+    {
+      "nodeId": "local-model",
+      "field": "model"
+    }
+  ]
+}

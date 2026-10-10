@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Aside, Badge } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -32,6 +33,17 @@ Each row shows:
 - Click a name in the **About** or **By** column to show only entries for it. Remove that filter with the **X** on its chip.
 
 **Clear filters** resets everything. 50 entries show per page.
+
+<GuidedShot
+  shot="admin-audit"
+  steps={[
+    { spot: 'action', title: 'Pick an action group', body: 'For example *Approvals*, *Suspensions*, *Featuring* or *Imports*.' },
+    { spot: 'by', title: 'Pick who did it', body: 'One admin, or *Anyone*.' },
+    { spot: 'about', title: 'Pick what it is about', body: '*Listings*, *Categories*, *Templates*, *Agent templates*, *Requests* or *Imports*.' },
+    { spot: 'dates', title: 'Set From and To dates' },
+    { spot: 'details', title: 'Read the details', body: 'The note, the previous status, the version and the review checks that were ticked.' },
+  ]}
+/>
 
 <Aside>
 Actions on user accounts, such as bans and password resets, are not here. You find them on each user's **Admin history** tab. See [Users](/app/admin/users/).

@@ -4,9 +4,7 @@ description: Fix permission and security issues that prevent workflows from acce
 section: app
 ---
 
-import { Screenshot } from '@components/awflow';
-import settingsAccessLight from '@assets/screenshots/settings-access.light.webp';
-import settingsAccessDark from '@assets/screenshots/settings-access.dark.webp';
+import { GuidedShot } from '@components/awflow';
 
 
 Sometimes a workflow cannot run because the browser blocks access to a website or part of a page.  
@@ -240,14 +238,20 @@ it shows **Under review by AWFlow** and keeps running.
 
 ---
 
-## Visual Guide (Optional)
+## Check which sites a workflow may contact
 
-<Screenshot
-  src={settingsAccessLight}
-  srcDark={settingsAccessDark}
-  alt="Settings, Site access, in a new local workspace: the Site & app access page explains that access is granted when a workflow first needs a host or an app, notes that enforcement is off for your own workflows (Trusted mode) with a link to Security, and says no site or app access has been granted yet."
-  hotspots={[{ x: 68.1, y: 25.8, label: 'Enforcement for your own workflows: see Security' }, { x: 67.2, y: 39.1, label: 'Granted hosts and apps appear here' }]}
+If a step fails because it *needs permission*, or keeps asking, check the workflow's grants. Open **Settings › Site access**:
+
+<GuidedShot
+  shot="settings-access-granted"
+  steps={[
+    { spot: 'search', title: 'Find the workflow or the site', body: 'Type its name or the host in the search box.' },
+    { spot: 'host-switch', title: 'Switch the host back on', body: 'A host that is off makes the workflow ask again, or fail when nobody is there to answer.' },
+    { spot: 'remove-all', title: 'Start over', body: '**Remove all** clears the workflow’s permissions, so it asks again next time.' },
+  ]}
 />
+
+For your own workflows these grants only apply when [Safe mode](/app/settings/security/) is on. See [Site access](/app/settings/access/).
 
 ---
 

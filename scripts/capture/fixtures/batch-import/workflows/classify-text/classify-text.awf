@@ -1,0 +1,102 @@
+{
+  "name": "Classify Text",
+  "description": "Paste any text and sort it into a category — spam, important, promotional, or personal — on your device.",
+  "tags": ["ai", "tier-1", "on-device", "no-setup", "extension"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "🗂️ Classify a piece of text.\n\nPress Run, paste some text, and the AI sorts it into one of: spam, important, promotional, or personal. It runs locally in your browser — nothing leaves your device. Pick a model the first time."
+      },
+      "width": 340,
+      "height": 190
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": { "x": 100, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": { "notes": "Starts the workflow when you press Run." }
+      }
+    },
+    {
+      "id": "ask-text",
+      "type": "inPageForm",
+      "position": { "x": 420, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:inPageForm:inPageForm" },
+        "label": "Paste text",
+        "inputs": {
+          "title": "Paste text",
+          "fields": [
+            { "name": "text", "label": "Text", "type": "textarea", "required": true }
+          ]
+        },
+        "parameters": { "notes": "Prompts you to paste the text you want classified." }
+      }
+    },
+    {
+      "id": "classify",
+      "type": "agent",
+      "position": { "x": 740, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:agent:text-classifier" },
+        "label": "Classify it",
+        "inputs": {
+          "text": "{{ $input.text }}",
+          "categories": "spam, important, promotional, personal"
+        },
+        "parameters": { "notes": "Sorts the text into one of the four categories." }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": { "x": 740, "y": 500 },
+      "data": {
+        "instance": { "id": "af-base-node:dependency:webLLM" },
+        "label": "Local AI model",
+        "inputs": { "model": "", "options": { "temperature": 0.4 } },
+        "parameters": { "notes": "Runs the classifier locally in your browser. Pick a model the first time — it downloads once, then works offline." }
+      }
+    },
+    {
+      "id": "show-category",
+      "type": "basic",
+      "position": { "x": 1060, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:displayObjectNode" },
+        "label": "Show the category",
+        "inputs": { "title": "Category" },
+        "parameters": { "notes": "Displays the chosen category." }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": { "x": 740, "y": 660 },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    { "id": "e-run-ask", "source": "trigger-run", "target": "ask-text", "type": "flowEdge" },
+    { "id": "e-ask-classify", "source": "ask-text", "target": "classify", "type": "flowEdge" },
+    { "id": "e-classify-model", "source": "classify", "target": "local-model", "type": "flowEdge", "sourceHandle": "dependency-0" },
+    { "id": "e-classify-show", "source": "classify", "target": "show-category", "type": "flowEdge" }
+  ],
+  "requiredInputs": [
+    { "nodeId": "local-model", "field": "model" }
+  ]
+}

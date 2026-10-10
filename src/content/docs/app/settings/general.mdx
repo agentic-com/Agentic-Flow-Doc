@@ -7,7 +7,7 @@ sidebar:
   label: "General"
 ---
 
-import { Screenshot } from '@components/awflow';
+import { GuidedShot, Screenshot } from '@components/awflow';
 import settingsGeneralLight from '@assets/screenshots/settings-general.light.webp';
 import settingsGeneralDark from '@assets/screenshots/settings-general.dark.webp';
 
@@ -18,6 +18,31 @@ import settingsGeneralDark from '@assets/screenshots/settings-general.dark.webp'
   srcDark={settingsGeneralDark}
   alt="Settings, General section, in a local workspace: the settings menu (Preferences, Assistant Notch, Providers, Local models, Storage, Security, Privacy, Site access) and a card explaining that the workspace is saved on this device, with a Sign in button to create an account."
   hotspots={[{ x: 23.9, y: 20.9, label: 'Settings sections' }, { x: 40.2, y: 16, label: 'Sign in to manage your profile' }]}
+/>
+
+Signed in, the page looks like this:
+
+<GuidedShot
+  shot="settings-general-account"
+  steps={[
+    { spot: 'avatar', title: 'Change your avatar', body: 'Click it and pick **Upload a photo...**, then crop it.' },
+    { spot: 'username', title: 'Type a new Username' },
+    { spot: 'update-username', title: 'Click Update' },
+    { spot: 'tagline', title: 'Write a publisher tagline', body: 'Up to 160 characters, shown next to your name on the Marketplace.' },
+    { spot: 'save-tagline', title: 'Click Save' },
+  ]}
+/>
+
+Further down, the password and the newsletter:
+
+<GuidedShot
+  shot="settings-general-password"
+  steps={[
+    { spot: 'old-password', title: 'Enter your Old Password' },
+    { spot: 'new-password', title: 'Enter the New Password twice', body: '**New Password**, then **Confirm Password**. The eye shows what you typed.' },
+    { spot: 'update-password', title: 'Click Update' },
+    { spot: 'newsletter', title: 'Subscribe to the newsletter', body: 'Saves at once.' },
+  ]}
 />
 
 ## Avatar
