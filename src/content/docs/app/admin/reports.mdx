@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -17,15 +18,19 @@ Each row shows the **Listing**, how many **Reports** it has, and the **Reasons**
 
 ## Handle a report
 
-<Steps>
+<StepCard n={1} title="Open ⋮ › Moderate… on the listing's row">
+  Read the **Reasons** first; **view N reports** shows each report and who sent it.
 
-1. On the listing's row, open **⋮ › Moderate…**.
+  <StepShot shot="admin-reports" spot="moderate" n={1} />
+</StepCard>
 
-2. To keep the listing, click **Dismiss reports**. A note is optional.
+<StepCard n={2} title="Keep it: Dismiss reports">
+  In the **Moderate** dialog, click **Dismiss reports**. A note is optional.
+</StepCard>
 
-3. To take it down, pick a **Reason**, write a **Note**, and optionally a **Message to people who installed it**. Then click **Take down**.
-
-</Steps>
+<StepCard n={3} title="Or take it down">
+  Pick a **Reason**, write a **Note**, and optionally a **Message to people who installed it**. Then click **Take down**.
+</StepCard>
 
 The reason decides what happens to people who already installed the workflow:
 

@@ -9,6 +9,7 @@
  */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { createAdminFixtures } from './fakeAdmin.ts';
 
 /** The app's API and R2 public domain: production build, and non-production builds (BACKEND_URL / R2_PUBLIC_DOMAIN). */
 export const FAKE_API_ORIGINS = ['https://api.awflow.io', 'http://localhost:8787'];
@@ -50,19 +51,19 @@ const user = {
 };
 
 const CATEGORIES = [
-	['cat_productivity', 'Productivity', 'Save time on everyday tasks.', '#2563eb'],
-	['cat_developer', 'Developer tools', 'Encode, hash, format and debug data.', '#7c3aed'],
-	['cat_data', 'Data & files', 'Clean, convert and move data.', '#059669'],
-	['cat_research', 'Research', 'Collect and summarise information from the web.', '#d97706']
-].map(([id, label, description, color], i) => ({
+	['productivity', 'Productivity', 'Save time on everyday tasks.', '#2563eb', '⚡', 18, ['daily', 'email']],
+	['developer_tools', 'Developer tools', 'Encode, hash, format and debug data.', '#7c3aed', '🛠️', 24, ['json', 'encoding']],
+	['data_files', 'Data & files', 'Clean, convert and move data.', '#059669', '🗂️', 15, ['csv', 'sheets']],
+	['research', 'Research', 'Collect and summarise information from the web.', '#d97706', '🔎', 11, ['ai', 'reading']]
+].map(([id, label, description, color, picture, workflowCount, tags], i) => ({
 	id: `Workflow_Category:${id}`,
 	label,
 	description,
-	picture: null,
-	tags: [],
+	picture,
+	tags,
 	color,
 	sortOrder: i,
-	workflowCount: 0
+	workflowCount
 }));
 
 /** Per-browser-context state: what the wizard saved so far. */
@@ -92,6 +93,30 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 	};
 	let graph = { id: GRAPH_ID, workflowId: WF_ID, nodes: awf.nodes, edges: awf.edges, createdDate: T0 };
 	let listing: Json | null = null;
+	/**
+	 * Capture-only switches, set by a shot's prepare with `POST /__docs/state` (see shots/admin.ts):
+	 * `role` turns Alex Doe into an admin for the admin screens; `newsletterPrompt` lets the
+	 * "Stay in the loop" card show. Both are off by default so other shots stay unchanged.
+	 */
+	const state = { role: 'user', newsletterPrompt: false, newsletter: 'subscribed' as string };
+	const admin = createAdminFixtures(fixturesDir, user);
+	const NOW = Date.now();
+	const notifications = [
+		{ id: 'n_1', type: 'listing_approved', title: '“Summarise this page in 3 bullets” is live', body: 'It was approved and anyone can install it from the marketplace now.', linkUrl: null, refId: null, readAt: null, createdDate: NOW - 2 * 3_600_000 },
+		{ id: 'n_2', type: 'listing_review', title: 'New 5-star review on “Summarise this page in 3 bullets”', body: 'Exactly what I needed for long articles. The bullets are short and to the point.', linkUrl: null, refId: null, readAt: null, createdDate: NOW - 5 * 3_600_000 },
+		{ id: 'n_3', type: 'workflow_used', title: "Someone's using your workflow ✨", body: '“Summarise this page in 3 bullets” just got its first install — you built something people want.', linkUrl: null, refId: null, readAt: null, createdDate: NOW - 26 * 3_600_000 },
+		{ id: 'n_4', type: 'wanted_flow_fulfilled', title: 'Your requested workflow shipped', body: '"Price-drop alert for any product page" is ready to use.', linkUrl: null, refId: null, readAt: NOW - 50 * 3_600_000, createdDate: NOW - 3 * 86_400_000 },
+		{ id: 'n_5', type: 'report_resolved', title: 'Thanks — we acted on your report about “Free followers booster”', body: 'A moderator reviewed it and took action.', linkUrl: null, refId: null, readAt: NOW - 6 * 86_400_000, createdDate: NOW - 7 * 86_400_000 }
+	];
+	const PLANS = [
+		['free', 'Free', 'Get started at no cost.', 0, 0, false, [10, 5, 100, 20, 10]],
+		['basic', 'Basic', 'For growing automations.', 1.85, 19.98, false, [30, 10, 100, 40, 20]],
+		['premium', 'Premium', 'For power users.', 4.85, 52.38, true, [null, 20, null, 100, 50]],
+		['enterprise', 'Enterprise', 'Unlimited everything.', 19.85, 215.38, false, [null, null, null, null, null]]
+	].map(([id, name, description, priceMonthly, priceYearly, isPopular, l]) => {
+		const [max_workflows, max_workflow_versions, max_workflow_nodes, max_executions, max_credentials] = l as (number | null)[];
+		return { id, name, description, priceMonthly, priceYearly, isPopular, highlights: [], limits: { max_workflows, max_workflow_versions, max_workflow_nodes, max_executions, max_credentials } };
+	});
 	const assets = new Map<string, { type: string; data: Buffer }>();
 	const unknown = new Set<string>();
 
@@ -146,9 +171,19 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 
 	/** Answers one API call: [status, json body] or null when the endpoint isn't stubbed. */
 	function answer(method: string, path: string, body: Json, req: ReturnType<FakeRoute['request']>): [number, unknown] | null {
+		if (path === '/__docs/state' && method === 'POST') {
+			Object.assign(state, body);
+			return [200, state];
+		}
+		const me = { ...user, role: state.role };
+		const q = new URL(req.url()).searchParams;
+		if (state.role === 'admin') {
+			const a = admin.answer(method, path, q, body);
+			if (a) return a;
+		}
 		const session = { id: 'ses_docs', userId: USER_ID, token: FAKE_BEARER, expiresAt: new Date(T0 + 30 * 86_400_000).toISOString() };
-		if (path === '/auth/get-session') return [200, { session, user: { ...user, createdAt: new Date(T0).toISOString(), updatedAt: new Date(T0).toISOString() } }];
-		if (path === '/me' && method === 'GET') return [200, user];
+		if (path === '/auth/get-session') return [200, { session, user: { ...me, createdAt: new Date(T0).toISOString(), updatedAt: new Date(T0).toISOString() } }];
+		if (path === '/me' && method === 'GET') return [200, me];
 		if (path === '/me/settings')
 			return [200, { id: 'set_docs', userId: USER_ID, profilePicture: null, bio: 'Automates the boring bits of web work.', assistantNotchEnabled: null, assistantNotchConfig: null, createdDate: T0, lastModified: T0 }];
 		if (path === '/me/counts') return [200, { workflows: 1, credentials: 0 }];
@@ -156,8 +191,8 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 			return [200, { id: 'sub_docs', userId: USER_ID, planId: 'free', billingCycle: 'monthly', status: 'active', startDate: T0, endDate: null }];
 		if (path === '/published-workflows/downloads') return [200, []];
 		if (path === '/published-workflows/revocations') return [200, { revoked: [], updatedAt: T0 }];
-		if (path === '/me/plan' || path === '/plans/free')
-			return [200, { id: 'free', name: 'Free', description: 'For individuals.', priceMonthly: 0, priceYearly: 0, isPopular: false, highlights: [], limits: { max_workflows: null, max_workflow_versions: null, max_workflow_nodes: null, max_executions: null, max_credentials: null } }];
+		if (path === '/me/plan' || path === '/plans/free') return [200, PLANS[0]];
+		if (path === '/plans') return [200, PLANS];
 		if (path === '/workflows' && method === 'GET') return [200, [workflow]];
 		if (path === `/workflows/${WF_ID}` && method === 'GET') return [200, workflow];
 		if (path === `/workflows/${WF_ID}` && method === 'PUT') return [200, Object.assign(workflow, body, { lastModified: Date.now() })];
@@ -168,7 +203,8 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 			return [200, graph];
 		}
 		if (path.startsWith('/workflows/graphs/')) return [200, graph];
-		if (path === '/workflow-categories') return [200, CATEGORIES];
+		if (path === '/workflow-categories' && method === 'GET') return [200, CATEGORIES];
+		if (path.startsWith('/workflow-categories/') && method === 'GET') return [200, CATEGORIES.find((c) => path.endsWith(encodeURIComponent(c.id)) || path.endsWith(c.id)) ?? CATEGORIES[0]];
 		if (path === '/published-workflows/mine') return [200, listing ? [listing] : []];
 		if (path === '/published-workflows/draft' && method === 'POST') return [200, (listing ??= newListing())];
 		if (listing && path === `/published-workflows/draft/${listing.id}` && method === 'PUT') {
@@ -184,7 +220,25 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 			assets.set(key, part);
 			return [200, { uploaded: new Date().toISOString(), etag: `etag-${assets.size}`, size: part.data.length, key, url: `${FAKE_R2_ORIGINS[0]}/${key}` }];
 		}
-		if (path.startsWith('/notifications')) return [200, method === 'GET' ? [] : {}];
+		if (path === '/notifications' && method === 'GET') return [200, { items: notifications, unreadCount: notifications.filter((n) => n.readAt == null).length }];
+		if (path === '/notifications/read-all') {
+			for (const n of notifications) n.readAt ??= Date.now();
+			return [200, {}];
+		}
+		if (path.startsWith('/notifications/')) {
+			const n = notifications.find((x) => path === `/notifications/${x.id}/read`);
+			if (n) n.readAt ??= Date.now();
+			return [200, {}];
+		}
+		if (path === '/newsletter/prompt-status') return [200, { show: state.newsletterPrompt && state.newsletter === 'undecided' }];
+		if (path === '/newsletter/subscription') return [200, { status: state.newsletter }];
+		if (path === '/newsletter/subscribe') return [200, { status: (state.newsletter = 'subscribed') }];
+		if (path === '/newsletter/unsubscribe-self') return [200, { status: (state.newsletter = 'unsubscribed') }];
+		if (path === '/newsletter/dismiss') {
+			state.newsletterPrompt = false;
+			return [200, { ok: true }];
+		}
+		if (path === '/workflow-categories' && method === 'POST') return [200, { ...CATEGORIES[0], ...body, id: `Workflow_Category:${body.slug}`, workflowCount: 0 }];
 		return null;
 	}
 

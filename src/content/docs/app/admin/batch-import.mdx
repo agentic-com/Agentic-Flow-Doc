@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -17,17 +18,16 @@ The folder must contain one sub-folder per workflow. Each sub-folder holds the w
 
 ## Import
 
-<Steps>
-
-1. Click **Choose workflows folder** and pick the `workflows` folder.
-
-2. AWFlow compares each workflow with what is live and labels it (see the table below). Counts appear at the top.
-
-3. New and updated workflows are ticked for you. Untick any you want to leave out.
-
-4. Click **Import N to live** and confirm.
-
-</Steps>
+<GuidedShot
+  shot="admin-batch-import"
+  steps={[
+    { spot: 'choose-folder', title: 'Choose the workflows folder', body: 'AWFlow compares each workflow with what is live and labels it (see the table below). Counts appear at the top.' },
+    { spot: 'select', title: 'Check the ticks', body: 'New and updated workflows are ticked for you. Untick any you want to leave out.' },
+    { spot: 'export', title: 'Export live-diverged listings', body: 'Brings the live version back to the folder.' },
+    { spot: 'resolve', title: 'Resolve conflicts', body: 'See **Resolve a conflict** below.' },
+    { spot: 'import', title: 'Click Import N to live', body: 'Then confirm.' },
+  ]}
+/>
 
 AWFlow creates a preview image for each workflow, then imports them a few at a time under the official account. Rows that import successfully disappear from the table; failed rows stay so you can try again.
 

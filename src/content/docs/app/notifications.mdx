@@ -8,12 +8,23 @@ sidebar:
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { GuidedShot } from '@components/awflow';
 
 AWFlow tells you about things in two ways: the **bell** for account updates, and **waiting-run alerts** when a workflow needs your answer.
 
 ## The bell
 
-The bell sits at the top right of the app. A badge counts unread notifications. Click it to see the latest ones, **Mark all read**, or **See all** to open the Notifications page.
+The bell sits at the top right of the app. A badge counts unread notifications.
+
+<GuidedShot
+  shot="notifications"
+  steps={[
+    { spot: 'bell', title: 'Click the bell', body: 'The badge is the number of unread notifications.' },
+    { spot: 'mark-all-read', title: 'Mark all read', body: 'Clears the unread count.' },
+    { spot: 'see-all', title: 'See all', body: 'Opens the Notifications page.' },
+    { spot: 'unread', title: 'Click a notification', body: 'Marks it read and opens what it is about. Unread ones are highlighted.' },
+  ]}
+/>
 
 <Aside>
 Notifications need an account. In a local workspace the bell is hidden and the page asks you to sign in.

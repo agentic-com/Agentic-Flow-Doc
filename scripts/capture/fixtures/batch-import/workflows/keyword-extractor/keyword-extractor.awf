@@ -1,0 +1,97 @@
+{
+  "name": "Keyword & Tag Extractor",
+  "description": "Pull the most important keywords and tags out of any web page — on your device, no account.",
+  "tags": ["ai", "tier-1", "on-device", "no-setup", "extension"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "🏷️ Extract keywords from any page.\n\nPress Run to read the page at the URL below and pull out its most important keywords and tags. The AI runs locally in your browser — nothing leaves your device. Pick a model the first time."
+      },
+      "width": 340,
+      "height": 180
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": { "x": 100, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": { "notes": "Starts the workflow when you press Run." }
+      }
+    },
+    {
+      "id": "fetch-text",
+      "type": "basic",
+      "position": { "x": 420, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:getAllTextFromLinkNode" },
+        "label": "Get the page text",
+        "inputs": { "url": "https://example.com", "outputFieldName": "text" },
+        "parameters": { "notes": "Downloads the readable text from the page. Change the URL to any page you like." }
+      }
+    },
+    {
+      "id": "extract",
+      "type": "agent",
+      "position": { "x": 740, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:agent:information-extractor" },
+        "label": "Extract keywords",
+        "inputs": {
+          "text": "{{ $input.text }}",
+          "schemaDescription": "the 10 most important keywords/tags"
+        },
+        "parameters": { "notes": "Reads the text and returns the 10 most important keywords and tags." }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": { "x": 740, "y": 500 },
+      "data": {
+        "instance": { "id": "af-base-node:dependency:webLLM" },
+        "label": "Local AI model",
+        "inputs": { "model": "", "options": { "temperature": 0.4 } },
+        "parameters": { "notes": "Runs the extraction locally in your browser. Pick a model the first time — it downloads once, then works offline." }
+      }
+    },
+    {
+      "id": "show-keywords",
+      "type": "basic",
+      "position": { "x": 1060, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:displayObjectNode" },
+        "label": "Show the keywords",
+        "inputs": { "title": "Keywords" },
+        "parameters": { "notes": "Displays the extracted keywords and tags." }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": { "x": 740, "y": 660 },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    { "id": "e-run-fetch", "source": "trigger-run", "target": "fetch-text", "type": "flowEdge" },
+    { "id": "e-fetch-extract", "source": "fetch-text", "target": "extract", "type": "flowEdge" },
+    { "id": "e-extract-model", "source": "extract", "target": "local-model", "type": "flowEdge", "sourceHandle": "dependency-0" },
+    { "id": "e-extract-show", "source": "extract", "target": "show-keywords", "type": "flowEdge" }
+  ],
+  "requiredInputs": [
+    { "nodeId": "local-model", "field": "model" }
+  ]
+}
