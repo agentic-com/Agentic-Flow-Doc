@@ -335,14 +335,14 @@ export const shots: ShotDef[] = [
 		name: 'gs-activate',
 		page: 'get-started/first-automation',
 		route: '#/app/workflows/<id>',
-		alt: 'The Summarise this page in 3 bullets workflow after adding a Hotkey trigger (on the right, not linked yet). The header shows the Workflow active switch reading active, Unsaved changes and the Save button.',
+		alt: 'The Summarise this page in 3 bullets workflow with its Hotkey trigger added: Hotkey sits under When Started and both lines lead into Get All Text, then Basic LLM Chain (with Web LLM under it) and Display Markdown. The header shows the Workflow active switch reading active, Saved and the Save button.',
 		css: NO_MINIMAP,
 		spots: [
 			{ id: 'save', label: 'Save', locator: (p) => p.getByRole('banner').getByRole('button', { name: 'Save', exact: true }) },
 			{ id: 'active-switch', label: 'The active switch next to the workflow’s name', locator: (p) => p.getByRole('switch', { name: 'Workflow active' }) }
 		],
 		prepare: async (s) => {
-			await s.editor('summarize-page-llm-chain');
+			await s.editor('summarize-page-hotkey');
 			await closePanels(s.page);
 			await tidyCanvas(s.page);
 		}
