@@ -164,7 +164,7 @@ export const RELEASES: Release[] = [
 			{ kind: 'improved', area: 'Nodes', text: 'The Code node reads upstream data as input, and Python runs in an isolated worker.', link: '/nodes/builtin/core/code/', label: 'Code node' },
 			{ kind: 'improved', area: 'Workflows', text: 'A redesigned Executions view with an attention band and a docked detail panel.', link: '/app/workflows/executions/run-from-the-workflow-list/', label: 'Executions' },
 			{ kind: 'improved', area: 'App', text: 'Every screen works in the side panel at 320–450 px.', link: '/app/side-panel/', label: 'Side panel' },
-			{ kind: 'improved', area: 'App', text: 'An outcome-first first run with a welcome tab and a templates-first home.', link: '/get-started/quick-intro/', label: 'Quick intro' },
+			{ kind: 'improved', area: 'App', text: 'An outcome-first first run with a welcome tab and a templates-first home.', link: '/get-started/first-workflow/', label: 'Quick intro' },
 			{ kind: 'improved', area: 'Local AI', text: 'Ollama models are detected automatically and appear in the model picker.', link: '/nodes/builtin/ai/aidependencies/llm/ollama/', label: 'Ollama' },
 			{ kind: 'improved', area: 'Integrations', text: 'Google nodes use the right OAuth scopes and refresh tokens on their own; an inline guide creates your OAuth client.', link: '/app/connections/oauth-client/', label: 'Create your OAuth client' },
 			{ kind: 'improved', area: 'Integrations', text: 'Extension-only integrations work from the web app through a secure fetch bridge.', link: '/app/troubleshooting/extension-only-integrations-in-the-web-app/', label: 'Extension-only integrations' },
@@ -199,7 +199,7 @@ export const RELEASES: Release[] = [
 			{ kind: 'new', area: 'Integrations', text: 'Custom API connects any service from its OpenAPI definition.', link: '/nodes/builtin/integration/custom-api/', label: 'Custom API' },
 			{ kind: 'improved', area: 'Integrations', text: 'Connections use an auth-code flow with PKCE; the client secret is no longer required.', link: '/app/connections/create/', label: 'Creating credentials' },
 			{ kind: 'improved', area: 'Workflows', text: 'Find nodes by outcome, see data shapes while wiring, and get next-step suggestions.', link: '/app/workflows/components/connections/', label: 'Connections' },
-			{ kind: 'improved', area: 'App', text: 'Start from a goal, with a configure-to-run checklist and a run-outcome panel.', link: '/get-started/quick-intro/', label: 'Quick intro' },
+			{ kind: 'improved', area: 'App', text: 'Start from a goal, with a configure-to-run checklist and a run-outcome panel.', link: '/get-started/first-workflow/', label: 'Quick intro' },
 			{ kind: 'improved', area: 'Nodes', text: 'Browser-native nodes run without extra host permissions and show where they run.', link: '/nodes/', label: 'Node reference' },
 			{ kind: 'improved', area: 'App', text: 'Account data now goes through a new AWFlow cloud service; local mode is unchanged.' },
 			{ kind: 'fixed', area: 'Marketplace', text: 'Aborted-publish drafts no longer show as “Published”.' },
@@ -269,7 +269,7 @@ export const RELEASES: Release[] = [
 		summary: 'User images display reliably in settings, and early demos are more dependable.',
 		changes: [
 			{ kind: 'fixed', area: 'App', text: 'User images display reliably in settings.' },
-			{ kind: 'fixed', area: 'App', text: 'Demo workflows run more reliably.', link: '/get-started/quick-intro/', label: 'Quick intro' },
+			{ kind: 'fixed', area: 'App', text: 'Demo workflows run more reliably.', link: '/get-started/first-workflow/', label: 'Quick intro' },
 		],
 	},
 	{
