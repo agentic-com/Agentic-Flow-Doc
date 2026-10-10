@@ -145,6 +145,21 @@ Each header tab is a folder under `src/content/docs/` and a `starlight-sidebar-t
 
 The sidebar is set in `astro.config.mjs`; `_meta.yml` files are not read, so don't add them. Keep sidebar groups at most 3 levels deep. When you move or rename a page, add its old URL to `redirects` in `astro.config.mjs`, pointing straight at the final URL (no redirect chains), and update links to it.
 
+### Search & Ask Aria
+
+The plugin replaces Starlight's search box with its own dialog (awflow/Agentic-Flow#1340): `plugins/starlight-awflow/overrides/Search.astro` mounts `src/components/awflow/SearchDialog.svelte`, and the helpers live in `plugins/starlight-awflow/lib/search.ts`.
+
+- **Index:** still Pagefind, built by `astro build`. The dialog calls Pagefind's JS API (`/pagefind/pagefind.js`), so **search only works on a build**: test it with `bun run build` then `bun run preview`. In `astro dev` the dialog says the index is missing and offers Ask Aria.
+- **Opening it:** <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd> or <kbd>/</kbd> for Search, <kbd>⌘I</kbd> / <kbd>Ctrl+I</kbd> for Ask Aria. Any element with `data-awf-ask-aria` or a link to `#ask-aria` (the floating pill, `<PageActions>`) opens the Ask Aria tab; `data-awf-search-open` opens Search.
+- **Groups and filter chips** come from the URL prefix: `/get-started/` · `/recipes/` · `/nodes/` · `/app/` (shown as Guides) · `/concepts/` · `/releases/`, plus today's `/usage/` and `/advanced-ai/` paths. Any page under a `troubleshooting` folder is grouped as **Fix it**. Add new sections to `PREFIXES` in `lib/search.ts`.
+- **Keep chrome out of the index:** wrap UI that repeats on every page in `data-pagefind-ignore` (the pill and node-header actions already are), or it shows up in excerpts.
+- **Recent searches** are kept in the reader's browser (`localStorage`, best effort).
+- **Ask Aria doesn't answer on the docs site.** The docs are static, so the question is handed to the reader's own AWFlow, with the current page URL and the top 3 search results as context. The same top 3 results show in the dialog as sources straight away.
+  - If the AWFlow extension's docs hand-off is on the page (`<html data-awflow-docs-handoff="…">` or a `awflow:docs-handoff-ready` message), the dialog posts `{ type: 'awflow:docs-handoff', id, action: 'aria', prompt }` and waits about 1.5 s for `awflow:docs-handoff-result`.
+  - Otherwise, or if the extension says no, it opens the web app at `PUBLIC_APP_URL` (default `https://app.awflow.io`): `/#/app/assistant?mode=chat|build&source=docs&prompt=…`.
+  - **Build this with Aria** uses the same path, in Build mode.
+- **For AI tools:** every page has a Markdown twin at `<url>.md` (starlight-md-txt), and the whole site is listed in `/llms.txt` (starlight-llms-txt). The dialog footer links both.
+
 ## 🌍 Languages
 
 The docs are **English only** for now. This was decided in awflow/Agentic-Flow#1332, while the docs are being restructured (epic #1308): translating pages that are still moving and being rewritten would waste the effort and leave stale copies behind.

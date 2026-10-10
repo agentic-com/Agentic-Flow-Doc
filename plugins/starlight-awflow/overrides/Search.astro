@@ -1,0 +1,21 @@
+---
+/**
+ * Search override (awflow/Agentic-Flow#1340, Search.dc.html): keeps Pagefind's index but renders
+ * our own dialog (grouped results, section filters, keyboard navigation, recent searches) plus an
+ * Ask Aria tab that hands the question to the reader's own AWFlow (extension or web app).
+ *
+ * The header button and the dialog both live in the SearchDialog island.
+ */
+import SearchDialog from '../../../src/components/awflow/SearchDialog.svelte';
+
+const appUrl = import.meta.env.PUBLIC_APP_URL ?? 'https://app.awflow.io';
+---
+
+<div class:list={['awf-search-root', Astro.props.class]}>
+	<SearchDialog
+		client:load
+		appUrl={appUrl}
+		base={import.meta.env.BASE_URL}
+		placeholder={Astro.locals.t('search.label')}
+	/>
+</div>

@@ -38,7 +38,7 @@ export interface StarlightAwflowOptions {
 	version?: { label: string; href?: string };
 	/** Primary call to action in the header. Omit to hide it. */
 	install?: { label: string; href: string };
-	/** Target of the floating Ask Aria pill. Defaults to `#ask-aria` (wired in a later wave). */
+	/** Target of the floating Ask Aria pill. Defaults to `#ask-aria`, which opens the search dialog's Ask Aria tab. */
 	askAria?: { href?: string; label?: string; shortcut?: string } | false;
 	/**
 	 * Project-relative path to the generated node metadata (awflow/Agentic-Flow#1313).

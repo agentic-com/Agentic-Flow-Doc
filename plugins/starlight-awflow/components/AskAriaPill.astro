@@ -1,7 +1,7 @@
 ---
 /**
- * Floating "Ask Aria" pill (Main.dc.html · 04). Links to a placeholder target for now;
- * a later wave wires it to the assistant.
+ * Floating "Ask Aria" pill (Main.dc.html · 04). The Search override's dialog picks up clicks on
+ * `[data-awf-ask-aria]` and opens its Ask Aria tab (#1340); without JS the `#ask-aria` link is inert.
  */
 import config from 'virtual:starlight-awflow/config';
 import { getAwflowRoute } from '../route-data';
@@ -14,7 +14,7 @@ const label = aria ? (node ? `${aria.label} about ${title}` : aria.label) : '';
 
 {
 	aria && (
-		<a href={aria.href} class="awf-aria-pill awf-press print:hidden" data-awf-ask-aria>
+		<a href={aria.href} class="awf-aria-pill awf-press print:hidden" data-awf-ask-aria data-pagefind-ignore>
 			<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
 				stroke-linecap="round" aria-hidden="true" class="awf-aria-pill__spark">
 				<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z" />
