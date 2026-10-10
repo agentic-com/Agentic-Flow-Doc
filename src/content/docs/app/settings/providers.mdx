@@ -7,29 +7,47 @@ sidebar:
   label: "Providers"
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 **Settings › Providers** is where you connect cloud AI services for Aria and your agents. Without a provider, the assistant can still use [on-device models](/app/local-models/).
 
 ## Add a provider
 
-<Steps>
+Open **Settings** at the bottom of the sidebar and click **Providers**.
 
-1. Click **+ Add provider**.
+<StepCard n={1} title="Click Add provider" check="the Add provider dialog opens.">
+  At the top of the **Providers** card, click **Add provider**.
 
-2. Pick the **Provider**: Anthropic, OpenAI, Google, Groq, OpenRouter, DeepSeek, xAI, Azure OpenAI, Ollama (local) or OpenAI-compatible.
+  <StepShot shot="settings-providers" spot="add-provider" n={1} zoom={40} />
+</StepCard>
 
-3. Give it a **Label** you'll recognise, paste your **API key**, and type the **Model** name.
+<StepCard n={2} title="Fill in the provider">
+  Pick the **Provider**: Anthropic, OpenAI, Google, Groq, OpenRouter, DeepSeek, xAI, Azure OpenAI, Ollama (local) or OpenAI-compatible. Give it a **Label** you'll recognise, paste your **API key**, and type the **Model** name.
 
-4. For Ollama or an OpenAI-compatible service, fill in the **Base URL**. For Azure, fill in the instance and deployment names.
+  For Ollama or an OpenAI-compatible service, also fill in the **Base URL**. For Azure, fill in the instance and deployment names.
 
-5. Optionally set **Order** (lower numbers are tried first), **Set as default**, and a **Max output tokens** cap.
+  <StepShot shot="settings-providers-add" spot="api-key" n={2} zoom={40} />
+</StepCard>
 
-6. Click **Add**.
+<StepCard n={3} title="Set the options and click Add" check="the provider is listed with its type and model, switched on.">
+  Optionally set **Order** (lower numbers are tried first), **Set as default**, and a **Max output tokens** cap (4096 when left blank). Then click **Add**. Nothing is sent to the provider until the assistant uses it.
 
-</Steps>
+  <StepShot shot="settings-providers-add" spot="add" n={3} zoom={40} />
+</StepCard>
 
-Each provider has an on/off switch, **Edit** and **Delete**.
+## Manage a provider
+
+Each provider in the list has an on/off switch, **Edit** and **Delete**.
+
+<GuidedShot
+  shot="settings-providers"
+  steps={[
+    { spot: 'enable', title: 'Switch it on or off', body: 'A provider that is off is not used, but stays in the list.' },
+    { spot: 'edit', title: 'Edit it', body: 'Opens the same form, to change the key, the model or the order.' },
+    { spot: 'delete', title: 'Delete it', body: 'Asks you to confirm, then removes the provider and its key from this device.' },
+  ]}
+/>
 
 <Aside>
 Providers and their keys are stored **on this device only**, encrypted, and never synced to your account. The assistant calls the provider straight from your browser with your key. Add them again on each device you use.

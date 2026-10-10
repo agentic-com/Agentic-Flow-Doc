@@ -8,8 +8,23 @@ sidebar:
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { GuidedShot } from '@components/awflow';
 
-**Settings › Privacy** controls what this device shares with AWFlow. For the full picture, read [Privacy & data](/app/privacy-and-data/).
+**Settings › Privacy** controls what this device shares with AWFlow. For the full picture, read [Privacy & data](/app/privacy-and-data/). Open **Settings** at the bottom of the sidebar and click **Privacy**: every setting is on that one page.
+
+<GuidedShot
+  shot="settings-privacy"
+  steps={[
+    { spot: 'usage-stats', title: 'Share usage statistics, or not', body: '**Share anonymous usage statistics**: on by default, off in this picture.' },
+    { spot: 'what-we-collect', title: 'See what is collected', body: 'Click **What we collect** for examples of events.' },
+    { spot: 'reset-install-id', title: 'Reset the install ID', body: 'Replaces the random ID your statistics are tied to.' },
+    { spot: 'error-reports', title: 'Send error reports, or not', body: '**Send error reports**: on by default, off in this picture.' },
+    { spot: 'forget-everything', title: 'Erase agent memory', body: '**Forget everything** asks you to confirm. It is greyed out while there is nothing to forget.' },
+    { spot: 'developer-mode', title: 'Show traces under replies', body: '**Developer mode** adds a **Trace** button under assistant replies.' },
+    { spot: 'keep-traces', title: 'Choose what traces keep', body: '**Keep traces** (sizes and timings) and **Include prompt text**.' },
+    { spot: 'clear-traces', title: 'Clear traces', body: 'Click **Clear traces**, then **Delete traces** to confirm.', check: 'the line at the bottom sums up what this device shares, here *Nothing is shared from this device.*' },
+  ]}
+/>
 
 ## Usage statistics
 
@@ -32,7 +47,7 @@ On Firefox, nothing is sent unless you also allow Firefox's "technical and inter
 
 ## Agent memory
 
-Aria and your agents remember lasting preferences you share with them. These memories are stored **only on this device**. **Forget everything** erases them for all agents after you confirm.
+Aria and your agents remember lasting preferences you share with them. These memories are stored **only on this device**. **Forget everything** erases them for all agents after you confirm with **Yes, forget everything**.
 
 ## Turn traces
 
@@ -41,6 +56,6 @@ Each assistant reply leaves a trace on this device: model calls, tools, timings 
 - **Developer mode** shows a **Trace** button under replies. Off by default.
 - **Keep traces** stores sizes and timings. On by default.
 - **Include prompt text** also keeps what the model received and replied, with secrets removed. Off by default.
-- **Clear traces** deletes every trace on this device.
+- **Clear traces**, then **Delete traces**, deletes every trace on this device.
 
 See [Turn traces](/app/chat-and-agents/turn-traces/).

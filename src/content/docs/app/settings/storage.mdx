@@ -8,8 +8,20 @@ sidebar:
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { GuidedShot } from '@components/awflow';
 
-**Settings › Storage** shows what AWFlow keeps **in this browser**. Nothing on this page is uploaded.
+**Settings › Storage** shows what AWFlow keeps **in this browser**. Nothing on this page is uploaded. Open **Settings** at the bottom of the sidebar and click **Storage**; everything below happens on that one page.
+
+<GuidedShot
+  shot="settings-storage"
+  steps={[
+    { spot: 'manage', title: 'See what takes the space', body: 'Each category shows its size. Click **Manage** to open its page and delete what you no longer need.' },
+    { spot: 'keep-my-data', title: 'Click Keep my data', body: 'Asks the browser not to delete AWFlow data when the disk is low.', check: 'the card reads *Protected from automatic clean-up*, if the browser agrees.' },
+    { spot: 'export-memory', title: 'Export your memory', body: 'Opens **Memory**, where you can export your conversations and facts as a backup.' },
+    { spot: 'memory-large', title: 'Get warned when memory grows', body: '**Tell me when memory gets large** is on by default.' },
+    { spot: 'clean-up', title: 'Turn on automatic clean-up', body: '**Clean up old conversations** is off by default. When on, choose what it does: see **Clean-up** below.' },
+  ]}
+/>
 
 ## How much space is used
 
