@@ -1,0 +1,134 @@
+{
+  "name": "Price On Page Watch",
+  "description": "Watches a price element on any web page and notifies you the moment it drops below the last value it saw — fully integration-free.",
+  "tags": ["watch", "tier-1", "no-setup", "price", "monitor"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "🏷️ Catch price drops on any page.\n\nWhen the element matching \".price\" changes on a page you're viewing, this reads the new number, compares it to the last one it stored, and notifies you only when the price went down. It also remembers each new price, so you're always compared against the most recent low."
+      },
+      "width": 360,
+      "height": 200
+    },
+    {
+      "id": "sticky-setup",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 240 },
+      "data": {
+        "color": "#c9f0d1",
+        "content": "✏️ Point it at your product:\n\n• Selector: change \".price\" in 'When the price changes' to the CSS selector of the price on your page (use the element picker).\n• Page: narrow 'urlPatterns' from <all_urls> to the product URL so it only watches that page."
+      },
+      "width": 360,
+      "height": 170
+    },
+    {
+      "id": "trigger-change",
+      "type": "trigger",
+      "position": { "x": 440, "y": 320 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:elementChangeTrigger" },
+        "label": "When the price changes",
+        "inputs": {
+          "selector": ".price",
+          "condition": "changed",
+          "debounceMs": 500,
+          "urlPatterns": ["<all_urls>"]
+        },
+        "parameters": { "notes": "Fires when the element matching the selector changes on a matching page. Its output includes matchedText — the price text." }
+      }
+    },
+    {
+      "id": "extract-price",
+      "type": "basic",
+      "position": { "x": 760, "y": 320 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:regex" },
+        "label": "Read the price",
+        "inputs": {
+          "operation": "match",
+          "pattern": "[0-9]+([.][0-9]+)?",
+          "flags": [],
+          "sourceField": "matchedText",
+          "outputFieldName": "priceMatch"
+        },
+        "parameters": { "notes": "Pulls the first number out of the matched text (e.g. 19.99 from \"$19.99\"). Result is in the priceMatch field." }
+      }
+    },
+    {
+      "id": "get-last-price",
+      "type": "basic",
+      "position": { "x": 1080, "y": 320 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:dataStore" },
+        "label": "Read last price",
+        "inputs": { "operation": "get", "scope": "workflow", "key": "last-price" },
+        "parameters": { "notes": "Reads the price we stored last time. Returns { key, found, value }." }
+      }
+    },
+    {
+      "id": "is-drop",
+      "type": "if",
+      "position": { "x": 1400, "y": 320 },
+      "data": {
+        "instance": { "id": "af-base-node:if:if" },
+        "label": "Did the price drop?",
+        "inputs": {
+          "conditions": [
+            {
+              "leftSide": "{{ $('Read the price').priceMatch }}",
+              "rightSide": "{{ $input.value }}",
+              "operator": { "operationType": "number", "operatorValue": "lessThan" }
+            }
+          ]
+        },
+        "parameters": { "notes": "True (top port) fires when the new price is lower than the stored one. On the first run there's no stored price yet, so it just records a baseline." }
+      }
+    },
+    {
+      "id": "notify",
+      "type": "basic",
+      "position": { "x": 1720, "y": 220 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:showNotificationNode" },
+        "label": "Show the drop alert",
+        "inputs": {
+          "title": "Price dropped!",
+          "message": "The watched price is now {{ $('Read the price').priceMatch }} (was {{ $('Read last price').value }}).",
+          "options": { "priority": "high", "requireInteraction": true }
+        },
+        "parameters": { "notes": "Pops a high-priority notification showing the new and previous prices. Only runs when the price actually dropped." }
+      }
+    },
+    {
+      "id": "save-price",
+      "type": "basic",
+      "position": { "x": 2040, "y": 320 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:dataStore" },
+        "label": "Remember this price",
+        "inputs": {
+          "operation": "set",
+          "scope": "workflow",
+          "key": "last-price",
+          "value": "{{ $('Read the price').priceMatch }}",
+          "valueFormat": "number"
+        },
+        "parameters": { "notes": "Stores the current price (from either branch) so the next change is compared against the latest value." }
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e-trigger-extract", "source": "trigger-change", "target": "extract-price", "type": "flowEdge" },
+    { "id": "e-extract-last", "source": "extract-price", "target": "get-last-price", "type": "flowEdge" },
+    { "id": "e-last-if", "source": "get-last-price", "target": "is-drop", "type": "flowEdge" },
+    { "id": "e-if-notify", "source": "is-drop", "target": "notify", "type": "flowEdge", "sourceHandle": "output-0" },
+    { "id": "e-notify-save", "source": "notify", "target": "save-price", "type": "flowEdge" },
+    { "id": "e-if-save", "source": "is-drop", "target": "save-price", "type": "flowEdge", "sourceHandle": "output-1" }
+  ],
+  "requiredInputs": []
+}

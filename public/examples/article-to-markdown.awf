@@ -1,0 +1,74 @@
+{
+  "name": "Capture Article as Markdown",
+  "description": "Turns the current page into clean Markdown and copies it to your clipboard.",
+  "tags": ["capture", "tier-1", "extension", "markdown", "no-setup"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "📰 Capture an article as Markdown.\n\nPress Run on any page and this converts its content to clean Markdown, then copies it to your clipboard ready to paste — no account needed."
+      },
+      "width": 340,
+      "height": 170
+    },
+    {
+      "id": "trigger-when-started",
+      "type": "trigger",
+      "position": { "x": 100, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "When Started",
+        "inputs": {},
+        "parameters": { "notes": "Runs on the current page when you press Run." }
+      }
+    },
+    {
+      "id": "get-html",
+      "type": "basic",
+      "position": { "x": 420, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:getAllHTMLNode" },
+        "label": "Read the page HTML",
+        "inputs": { "outputFieldName": "html" },
+        "parameters": { "notes": "Grabs the page's HTML to convert." }
+      }
+    },
+    {
+      "id": "to-markdown",
+      "type": "basic",
+      "position": { "x": 740, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:markdown" },
+        "label": "Convert to Markdown",
+        "inputs": {
+          "operation": "htmlToMarkdown",
+          "sourceField": "html",
+          "keepLinks": true,
+          "outputFieldName": "markdown"
+        },
+        "parameters": { "notes": "Converts the page HTML into clean, readable Markdown." }
+      }
+    },
+    {
+      "id": "copy-clipboard",
+      "type": "basic",
+      "position": { "x": 1060, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:clipboardWriteNode" },
+        "label": "Copy to clipboard",
+        "inputs": { "text": "{{ $input.markdown }}" },
+        "parameters": { "notes": "Copies the Markdown to your clipboard, ready to paste anywhere." }
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e-trigger-html", "source": "trigger-when-started", "target": "get-html", "type": "flowEdge" },
+    { "id": "e-html-markdown", "source": "get-html", "target": "to-markdown", "type": "flowEdge" },
+    { "id": "e-markdown-clipboard", "source": "to-markdown", "target": "copy-clipboard", "type": "flowEdge" }
+  ],
+  "requiredInputs": []
+}

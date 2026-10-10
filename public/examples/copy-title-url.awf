@@ -1,0 +1,129 @@
+{
+  "name": "Copy Title and URL",
+  "description": "Copies the current page's title and link as one tidy line, ready to paste.",
+  "tags": [
+    "automation",
+    "tier-1",
+    "extension",
+    "clipboard"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "🔗 Grab the page title and link.\n\nPress Run and this copies the current page's title and URL as one line — 'Title — https://…' — straight to your clipboard, ready to paste into a message or doc."
+      },
+      "width": 360,
+      "height": 170
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": {
+        "x": 100,
+        "y": 260
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:whenStarted"
+        },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": {
+          "notes": "Starts the workflow when you press Run."
+        }
+      }
+    },
+    {
+      "id": "get-metadata",
+      "type": "basic",
+      "position": {
+        "x": 420,
+        "y": 260
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:getPageMetadataNode"
+        },
+        "label": "Read the page details",
+        "inputs": {},
+        "parameters": {
+          "notes": "Reads the current page's title and URL."
+        }
+      }
+    },
+    {
+      "id": "format-line",
+      "type": "basic",
+      "position": {
+        "x": 740,
+        "y": 260
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:editFields"
+        },
+        "label": "Build one tidy line",
+        "inputs": {
+          "fields": {
+            "formatted": {
+              "type": "string",
+              "value": "{{ $input.title }} — {{ $input.url }}"
+            }
+          }
+        },
+        "parameters": {
+          "notes": "Combines the title and URL into a single line."
+        }
+      }
+    },
+    {
+      "id": "copy-line",
+      "type": "basic",
+      "position": {
+        "x": 1060,
+        "y": 260
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:clipboardWriteNode"
+        },
+        "label": "Copy to clipboard",
+        "inputs": {
+          "text": "{{ $input.formatted }}"
+        },
+        "parameters": {
+          "notes": "Copies the finished line to your clipboard."
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-run-metadata",
+      "source": "trigger-run",
+      "target": "get-metadata",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-metadata-format",
+      "source": "get-metadata",
+      "target": "format-line",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-format-copy",
+      "source": "format-line",
+      "target": "copy-line",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": []
+}

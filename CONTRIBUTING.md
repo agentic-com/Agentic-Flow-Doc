@@ -126,6 +126,31 @@ import { Callout, StepCard } from '@components/awflow';
 </StepCard>
 ```
 
+### Workflow previews: `<FlowPreview>`
+
+`<FlowPreview>` shows a real AWFlow workflow (an exported `.awf` file) as a read-only graph. Steps run left to right, wrap on narrow pages and stack on phones. Each step links to its node page, and model, memory and tool attachments show as chips. The wire animation and the run-order glow stop when "reduce motion" is on. Under the graph, **Open in AWFlow** imports the workflow, and **Copy .awf** copies the file to the clipboard.
+
+```mdx
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+
+<FlowPreview src="/examples/summarize-this-page.awf" caption="Summarise the page you're on, on-device." />
+```
+
+| Prop | Meaning |
+| --- | --- |
+| `src` (required) | Site path of a file in `public/examples/`, e.g. `/examples/summarize-this-page.awf`. |
+| `caption` | Optional text under the preview. |
+
+- **Use the `.astro` wrapper.** It reads the file at build time, so the graph is part of the HTML and appears with no loading state. The Svelte island `@components/awflow/FlowPreview.svelte` also works on its own (`<FlowPreview src="…" client:visible />`). That version fetches the file in the browser, so use it only for files outside `public/`.
+- **Accessibility.** The graph is an ordered list of steps in run order, and a visually hidden sentence summarises it ("Summarize This Page: a workflow with 4 steps, starting with Run now and ending with Show the summary."). The step names are the link texts, so give every node a meaningful `label` in the app before you export.
+- **Open in AWFlow.** When the AWFlow extension is installed, it announces itself on the docs (`data-awflow-docs-handoff` on `<html>`, or an `awflow:docs-handoff-ready` message), and the button sends it the file with an `awflow:docs-handoff` message. If the extension isn't installed, refuses, or doesn't answer within 1.5 s, the button opens `${PUBLIC_APP_URL ?? 'https://app.awflow.io'}/#/app/import?src=<absolute .awf URL>`. The app accepts files only from `https://docs.awflow.io`, plus `localhost:4321` in its dev builds, so the button can't import from a Vercel preview URL.
+- **Adding an example.**
+  1. Build the workflow in AWFlow and export it as `.awf`. Exports already blank credentials and personal fields.
+  2. Save it as `public/examples/<slug>.awf`. Prefer an existing marketplace workflow (`awflow-marketplace-workflows`). Use no integrations, or a single common app. Don't use Knowledge Base nodes.
+  3. Run `bun scripts/examples/validate.ts`. It checks every example three ways: against the app's own import schema (`ExportedWorkflowSchema`, loaded from `../agentic-flow` when it's checked out, or a built-in copy otherwise), against the node registry (`scripts/examples/registry.json`) for ports, handles and blanked secrets, and against the docs node map. It exits non-zero on any error, so CI can run it.
+- **When the app adds or renames nodes**, regenerate the node map that labels and links each step: `AWFLOW_APP_DIR=../agentic-flow bun scripts/examples/build-node-map.ts`, which writes `src/data/flow-node-map.json`. Then refresh `scripts/examples/registry.json` from the app (`bun run registry:dump`, or copy the marketplace repo's `registry.json`).
+- **Hosting.** The docs are served by Vercel. `vercel.json` sends `/examples/*` with `Access-Control-Allow-Origin: *` and a JSON content type, so the web app can fetch the files cross-origin.
+
 ### The `starlight-awflow` plugin
 
 The site chrome (section tabs, banners, node headers, the "at a glance" card, the Ask Aria pill, brand tokens and motion) lives in the in-repo plugin `plugins/starlight-awflow/`. Its options are typed in `plugins/starlight-awflow/types.ts`; the header tabs come from its `sections` option in `astro.config.mjs`. Motion respects "reduce motion".

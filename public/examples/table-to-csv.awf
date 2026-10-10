@@ -1,0 +1,72 @@
+{
+  "name": "Page Table to CSV",
+  "description": "Reads a table on the current page and copies it to your clipboard as CSV.",
+  "tags": ["capture", "tier-1", "extension", "csv", "no-setup"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "📋 Grab a table as CSV.\n\nPress Run on a page with a table and this reads it, builds CSV, and copies it to your clipboard ready to paste into a spreadsheet — no account needed. Point the selector at the right table if the page has more than one."
+      },
+      "width": 340,
+      "height": 190
+    },
+    {
+      "id": "trigger-when-started",
+      "type": "trigger",
+      "position": { "x": 100, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "When Started",
+        "inputs": {},
+        "parameters": { "notes": "Runs on the current page when you press Run." }
+      }
+    },
+    {
+      "id": "read-table",
+      "type": "basic",
+      "position": { "x": 420, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:getStructuredDataNode" },
+        "label": "Read the table",
+        "inputs": {
+          "domSelector": "table",
+          "options": { "mode": "table", "tableUseFirstRowAsHeaders": true }
+        },
+        "parameters": { "notes": "Reads the table on the page, using its first row as column headers." }
+      }
+    },
+    {
+      "id": "build-csv",
+      "type": "basic",
+      "position": { "x": 740, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:csv" },
+        "label": "Build CSV",
+        "inputs": { "operation": "build", "outputFieldName": "csv" },
+        "parameters": { "notes": "Turns the table rows into CSV text." }
+      }
+    },
+    {
+      "id": "copy-clipboard",
+      "type": "basic",
+      "position": { "x": 1060, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:clipboardWriteNode" },
+        "label": "Copy to clipboard",
+        "inputs": { "text": "{{ $input.csv }}" },
+        "parameters": { "notes": "Copies the CSV to your clipboard, ready to paste into a spreadsheet." }
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e-trigger-table", "source": "trigger-when-started", "target": "read-table", "type": "flowEdge" },
+    { "id": "e-table-csv", "source": "read-table", "target": "build-csv", "type": "flowEdge" },
+    { "id": "e-csv-clipboard", "source": "build-csv", "target": "copy-clipboard", "type": "flowEdge" }
+  ],
+  "requiredInputs": []
+}
