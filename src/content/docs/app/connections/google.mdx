@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 6 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="OAuth2" />
 
@@ -39,11 +39,23 @@ This is the only method: Google signs you in and gives the token to your browser
 <Steps>
 
 1. **Create your OAuth client** in the Google Cloud Console: a project, the API you need enabled (Gmail API, Google Drive API, Google Calendar API, or **both** Google Sheets API and Google Drive API for Sheets), the consent screen with your account as a test user, and an OAuth client ID of type **Web application** with AWFlow's redirect URI. [Full steps with links](/app/connections/oauth-client/#google).
-2. **Start the credential.** In AWFlow, open **Credentials** and click **Add Credential**. Under **Integration App / Service** pick the app (**Gmail**, **Google Drive**, **Google Sheets** or **Google Calendar**) and click **Continue**. **Auth Type** is already set to **OAuth2**.
-3. **Copy the redirect URI.** The form shows **Create your Google OAuth client** with your install's redirect URI and a **Copy** button. Add it under **Authorized redirect URIs** in your OAuth client if you haven't yet.
-4. **Paste the client.** Fill **Client ID** and **Client Secret (optional)** (a **Web application** client needs the secret; a **Desktop app** client has none).
-5. **Click Check connection** and approve the Google window. Google may warn *Google hasn't verified this app* while your consent screen is in **Testing**: click **Continue**.
-6. Choose the **Storage location** and click **Create Credential**. Repeat from step 2 for each Google app you use, with the same Client ID and Secret.
+2. **Fill the credential in AWFlow.** Open **Credentials** and click **Add Credential**, then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap the Google app in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-google"
+     steps={[
+       { spot: 'app', title: 'Pick the Google app', body: 'Under **Integration App / Service**, pick **Gmail**, **Google Drive**, **Google Sheets** or **Google Calendar**. There is no **Auth Type** menu: Google uses **OAuth2**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Gmail – work*. A **Description** is optional.' },
+       { spot: 'oauth-guide', title: 'Copy the redirect URI', body: "Open **Create your Google OAuth client**: it shows your install's redirect URI with a **Copy** button. Add it under **Authorized redirect URIs** in your OAuth client if you haven't yet." },
+       { spot: 'client-id', title: 'Paste the Client ID', body: 'Copy it from your Google OAuth client.' },
+       { spot: 'client-secret', title: 'Paste the Client Secret', body: 'In **Client Secret (optional)**: a **Web application** client needs it; a **Desktop app** client has none.' },
+       { spot: 'check-connection', title: 'Click Check connection', body: "Approve the Google window. While your consent screen is in **Testing**, Google may warn *Google hasn't verified this app*: click **Continue** in that Google window." },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in Google nodes.' },
+     ]}
+   />
+
+3. **Repeat for each Google app** you use (Gmail, Drive, Sheets, Calendar), with the same Client ID and Secret.
 
 </Steps>
 

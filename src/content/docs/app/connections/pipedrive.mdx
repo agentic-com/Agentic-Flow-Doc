@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 1 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
 
@@ -28,7 +28,18 @@ This is the only method. The token can do anything your Pipedrive user can.
 <Steps>
 
 1. **Copy the token.** In Pipedrive, open **Settings › Personal preferences › API** and copy **Your personal API token**.
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Pipedrive** and click **Continue**. Name it, for example *Pipedrive – sales*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Pipedrive** in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-pipedrive"
+     steps={[
+       { spot: 'app', title: 'Pick Pipedrive', body: 'Under **Integration App / Service**, pick **Pipedrive**. There is no **Auth Type** menu: Pipedrive uses a **Bearer Token**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Pipedrive – sales*. A **Description** is optional.' },
+       { spot: 'token', title: 'Paste the token', body: 'Paste the token into **Bearer Token**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
 
 </Steps>
 

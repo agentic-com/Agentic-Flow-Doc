@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
 
@@ -28,7 +28,19 @@ This is the only method AWFlow accepts. The secret `service_role` key is refused
 <Steps>
 
 1. **Copy the key.** In Supabase, open **Project Settings › API** and copy the key labelled `anon` `public`. Also note the **Project URL** (`https://<project>.supabase.co`).
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Supabase** and click **Continue**. Name it, for example *Supabase – prices project*: **Auth Type** is already set to **Bearer Token**. Then paste the anon key into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Supabase** in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-supabase"
+     steps={[
+       { spot: 'app', title: 'Pick Supabase', body: 'Under **Integration App / Service**, pick **Supabase**. There is no **Auth Type** menu: Supabase uses a **Bearer Token**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Supabase – prices project*. A **Description** is optional.' },
+       { spot: 'token', title: 'Paste the anon key', body: 'Paste the anon key into **Bearer Token**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
+
 3. **Allow the access** with RLS policies on each table, for example a policy that lets the `anon` role `insert` into `prices`.
 4. **In the node**, pick the credential and paste the **Project URL**.
 

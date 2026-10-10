@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 2 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="Bearer Token" /> <Badge variant="neutral" text="Basic Auth" /> <Badge variant="neutral" text="JWT" />
 
@@ -50,7 +50,20 @@ These nodes take any credential. The **Auth Type** decides what AWFlow sends in 
 <Steps>
 
 1. **Create a key** in the service's developer settings.
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field). Pick **Simple Credential** and click **Continue**. Name it, for example *Acme API – read only*, set **Auth Type** to **Bearer Token** and paste the key into **Bearer Token**, without the word `Bearer`. Choose the **Storage location** and click **Create Credential**.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+
+   <GuidedShot
+     shot="credentials-simple-bearer"
+     steps={[
+       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Acme API – read only*. A **Description** is optional.' },
+       { spot: 'auth-type', title: 'Set Auth Type to Bearer Token', body: 'Open **Auth Type** and choose **Bearer Token**.' },
+       { spot: 'token', title: 'Paste the key', body: 'Paste the key into **Bearer Token**, without the word `Bearer`.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
+
 3. **Pick it in the node**: **Authentication** on Http Request, HTTP Request Tool and RSS Feed Read; **Credential** on Custom API; **Authentication** next to the server on MCP Client Tool.
 
 </Steps>
@@ -66,7 +79,21 @@ Click **Test step** on the node: the response comes back with status 200 instead
 
 <Steps>
 
-1. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field). Pick **Simple Credential** and click **Continue**. Name it, for example *Acme API – basic*, set **Auth Type** to **Basic Auth** and fill **Username** and **Password**. Choose the **Storage location** and click **Create Credential**.
+1. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+
+   <GuidedShot
+     shot="credentials-simple-basic"
+     steps={[
+       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Acme API – basic*. A **Description** is optional.' },
+       { spot: 'auth-type', title: 'Set Auth Type to Basic Auth', body: 'Open **Auth Type** and choose **Basic Auth**.' },
+       { spot: 'username', title: 'Fill Username', body: 'Type the **Username** the API gave you.' },
+       { spot: 'password', title: 'Fill Password', body: 'Type the matching **Password**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
+
 2. **Pick it in the node**, the same way as a bearer token.
 
 </Steps>
@@ -82,7 +109,20 @@ Click **Test step**: the response comes back without a 401.
 
 <Steps>
 
-1. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field). Pick **Simple Credential** and click **Continue**. Name it, for example *Acme API – token scheme*, set **Auth Type** to **JWT** and paste the full header value (for example `Token abc123`) into **JWT**, exactly as copied. Choose the **Storage location** and click **Create Credential**.
+1. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+
+   <GuidedShot
+     shot="credentials-simple-jwt"
+     steps={[
+       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Acme API – token scheme*. A **Description** is optional.' },
+       { spot: 'auth-type', title: 'Set Auth Type to JWT', body: 'Open **Auth Type** and choose **JWT**.' },
+       { spot: 'token', title: 'Paste the header value', body: 'Paste the full header value (for example `Token abc123`) into **JWT**, exactly as copied.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
+
 2. **Pick it in the node.** For a key in another header (`X-API-Key`) or in the query string, see the note below.
 
 </Steps>

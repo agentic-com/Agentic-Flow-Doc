@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="Bearer Token" />
 
@@ -26,7 +26,18 @@ import { Badge, Callout } from '@components/awflow';
 
 1. **Create the token.** On Airtable, open **Builder hub › Personal access tokens** ([airtable.com/create/tokens](https://airtable.com/create/tokens)) and click **Create token**.
 2. **Add scopes and bases.** Add the scopes `data.records:read`, `data.records:write` and `schema.bases:read`, then under **Access** add the bases (or the workspace) it may use. Click **Create token** and copy it.
-3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **AirTable** and click **Continue**. Name it, for example *Airtable – CRM base*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **AirTable** in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-airtable"
+     steps={[
+       { spot: 'app', title: 'Pick AirTable', body: 'Under **Integration App / Service**, pick **AirTable**. There is no **Auth Type** menu: AirTable uses a **Bearer Token**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Airtable – CRM base*. A **Description** is optional.' },
+       { spot: 'token', title: 'Paste the token', body: 'Paste the token into **Bearer Token**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
 
 </Steps>
 

@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
 
@@ -29,7 +29,18 @@ import { Badge, Callout } from '@components/awflow';
 1. **Install the plugin.** In Obsidian, open **Settings › Community plugins**, browse for **Local REST API**, install it and enable it.
 2. **Turn on the HTTP server.** In the plugin's settings, enable the non-encrypted (HTTP) server on port `27123`. The HTTPS port `27124` uses a self-signed certificate that the browser rejects.
 3. **Copy the API key** from the plugin's settings.
-4. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Obsidian** and click **Continue**. Name it, for example *Obsidian – vault*: **Auth Type** is already set to **Bearer Token**. Then paste the key into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+4. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Obsidian** in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-obsidian"
+     steps={[
+       { spot: 'app', title: 'Pick Obsidian', body: 'Under **Integration App / Service**, pick **Obsidian**. There is no **Auth Type** menu: Obsidian uses a **Bearer Token**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Obsidian – vault*. A **Description** is optional.' },
+       { spot: 'token', title: 'Paste the key', body: 'Paste the key into **Bearer Token**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
 
 </Steps>
 
