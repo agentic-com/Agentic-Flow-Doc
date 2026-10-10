@@ -92,7 +92,7 @@
 	];
 </script>
 
-<aside class="awf-ruse not-content" aria-labelledby="awf-ruse-title-{r.slug}">
+<aside class="awf-ruse not-content" aria-labelledby="awf-ruse-title-{r.slug}" data-pagefind-ignore>
 	<div class="awf-ruse__card">
 		<h2 class="awf-ruse__title" id="awf-ruse-title-{r.slug}">Use this recipe</h2>
 		<a class="awf-ruse__install" href={appHref} target="_blank" rel="noopener" onclick={install}>Install in AWFlow</a>
