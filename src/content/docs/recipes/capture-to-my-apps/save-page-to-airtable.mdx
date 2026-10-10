@@ -1,0 +1,79 @@
+---
+title: Save the page you're on to an Airtable reading list
+description: Right-click any page and its title and link land as a new row in your Airtable base. Build a reading list without copy-paste.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Save page to Airtable
+recipe:
+  goal: Capture to my apps
+  level: beginner
+  minutes: 5
+  setup: connection
+  apps: [Airtable]
+  awf: /examples/save-page-to-airtable.awf
+  marketplaceId: 5b5a9e16-9412-4762-b02e-0e0d47e405be
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="save-page-to-airtable" />
+
+<FlowPreview src="/examples/save-page-to-airtable.awf" caption="Right-click a page → read its title and link → add a row to Airtable." />
+
+<RecipeUse slug="save-page-to-airtable" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="save-page-to-airtable"
+	steps={[
+		{
+			node: 'trigger-context-menu',
+			title: 'Right-click the page',
+			body: 'With **Menu Contexts** set to **Page**, the workflow appears when you right-click anywhere on a page.',
+			tweak: 'add **Link** to **Menu Contexts** to save a link you right-click instead of the page (then map `linkUrl`).',
+		},
+		{
+			node: 'get-metadata',
+			title: 'Read the page details',
+			body: 'Get Page Metadata returns the page\'s `title`, `url`, description and other details, with no settings to fill in.',
+			tweak: 'map its `description` to a Notes column in the next step.',
+		},
+		{
+			node: 'save-airtable',
+			title: 'Add a row to Airtable',
+			body: 'Creates a record with **Name** = `{{ $input.title }}` and **URL** = `{{ $input.url }}` in the base and table you pick.',
+			tweak: 'pick your base and table, rename the field keys to match your column names, and add more, such as `Saved on`.',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe. Open **Add a record to Airtable**, choose or create an Airtable connection, then pick the **Base** and **Table**. See [AirTable](/nodes/builtin/integration/airtable/).
+2. Make sure the table has a **Name** and a **URL** column (or rename the keys in the node to your columns).
+3. Save and activate the workflow.
+4. Right-click any page and choose **Agentic Workflow** › **Personal Workflows** › **Save Page to Airtable Reading List**.
+5. Open the table in Airtable: a new row shows the page title and link.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Save to Notion instead | Replace the Airtable step with [Notion](/nodes/builtin/integration/notion/) and pick your database. | Beginner |
+| Save to Google Sheets | Replace it with [Google Sheets](/nodes/builtin/integration/google-sheets/) **Append** and map title and URL to columns. | Beginner |
+| Add an AI summary | Insert [Get All Text](/nodes/extension/getalltext/) and [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) before Airtable and map the summary to a column. | Intermediate |
+
+## Troubleshoot
+
+- **"Unknown field name".** A key in the record's fields doesn't match a column in your table. Column names are case-sensitive.
+- **The run fails on Airtable with an authorization error.** The connection's token can't reach this base. Give it access to the base in Airtable, then check the connection in AWFlow.
+- **The menu entry is missing.** Activate the workflow, then right-click and choose **Get / Refresh Workflows**.

@@ -17,3 +17,7 @@ export { default as RecipeCard } from './RecipeCard.svelte';
 export { default as Kbd } from './Kbd.svelte';
 export { default as FlowPreview } from './FlowPreview.svelte';
 export { default as SearchDialog } from './SearchDialog.svelte';
+export { default as RecipeGrid } from './RecipeGrid.svelte';
+export { default as RecipeMeta } from './RecipeMeta.svelte';
+export { default as RecipeUse } from './RecipeUse.svelte';
+export { default as RecipeSteps } from './RecipeSteps.svelte';

@@ -1,0 +1,83 @@
+---
+title: Rewrite rough text in a professional tone
+description: Highlight a quick draft, right-click, and paste back a clear, polite version. A model on your computer rewrites it, so your words stay private.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Rewrite professionally
+recipe:
+  goal: Write with AI
+  level: beginner
+  minutes: 4
+  setup: on-device
+  awf: /examples/rewrite-professional.awf
+  marketplaceId: 1bc4e7da-7f6a-4e89-849b-44502b9d79ef
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="rewrite-professionally" />
+
+<FlowPreview src="/examples/rewrite-professional.awf" caption="Right-click a selection → rewrite it with a local model → copy the result." />
+
+<RecipeUse slug="rewrite-professionally" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="rewrite-professionally"
+	steps={[
+		{
+			node: 'trigger-context-menu',
+			title: 'Right-click your draft',
+			body: 'With **Menu Contexts** set to **Selection**, the workflow appears when you right-click highlighted text, including in a text box.',
+			tweak: 'add **Editable Field** to **Menu Contexts** to offer it inside any text box.',
+		},
+		{
+			node: 'get-selection',
+			title: 'Read the draft',
+			body: 'Puts the highlighted text in the `selection` field.',
+		},
+		{
+			node: 'rewrite',
+			also: ['local-model'],
+			title: 'Rewrite it',
+			body: 'Basic LLM Chain asks the Web LLM model to `Rewrite this in a clear, professional tone. Return only the rewrite`.',
+			tweak: 'change the tone in **Prompt**: friendly, shorter, or in another language. Set a house style in **System message**.',
+		},
+		{
+			node: 'copy-result',
+			title: 'Copy the rewrite',
+			body: 'Clipboard Write copies the new text. Paste it over your draft.',
+			tweak: 'show it first with [Display Markdown](/nodes/extension/displaymarkdown/) if you want to compare before pasting.',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe and pick a model in **Local AI model** (it downloads once; see [Local models](/app/local-models/)).
+2. Save and activate the workflow.
+3. Type "hey can u send the report asap thx" in any text box, highlight it, right-click and choose **Agentic Workflow** › **Personal Workflows** › **Rewrite Professionally**.
+4. Paste: you get something like "Hello, could you please send the report as soon as possible? Thank you."
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Fix grammar only | Change **Prompt** to `Fix spelling and grammar. Keep my wording. Return only the text:`. | Beginner |
+| Draft a reply | Select a message and prompt `Write a short, polite reply to this:`. | Beginner |
+| Better writing, hosted model | Plug [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) into the **Model** slot. Your text then goes to that provider. | Beginner |
+
+## Troubleshoot
+
+- **The rewrite adds "Here is the rewrite:".** Small models chat. Add `Do not add any introduction.` to the prompt, or pick a larger model.
+- **Nothing to paste.** The model is still downloading on the first run. Wait for the run to finish (see the run log), then paste.
+- **The menu entry is missing.** Activate the workflow, then right-click and choose **Get / Refresh Workflows**.

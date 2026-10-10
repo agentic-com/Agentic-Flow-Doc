@@ -1,0 +1,92 @@
+---
+title: Get an alert when a price on a page drops
+description: Point it at the price on a product page. While the page is open, you get a notification the moment the price goes below the last one it saw.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Price drop alert
+recipe:
+  goal: Monitor pages
+  level: intermediate
+  minutes: 8
+  setup: none
+  awf: /examples/price-on-page-watch.awf
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="price-drop-alert" />
+
+<FlowPreview src="/examples/price-on-page-watch.awf" caption="The price changes → read the number → compare with the last one → notify if it dropped → remember it." />
+
+<RecipeUse slug="price-drop-alert" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="price-drop-alert"
+	steps={[
+		{
+			node: 'trigger-change',
+			title: 'Watch the price element',
+			body: 'Element Change watches the element matching `.price` on every page (**URL Patterns** `<all_urls>`) and fires when its text changes, after 500 ms of quiet.',
+			tweak: 'click the crosshair in **CSS Selectors** to pick the price on your product page, and set **URL Patterns** to that shop, for example `https://shop.example.com/product/*`.',
+		},
+		{
+			node: 'extract-price',
+			title: 'Read the number',
+			body: 'Regex **Match** finds the first number (such as `79.99`) in the changed text and puts it in `priceMatch`.',
+			tweak: 'for prices written `1.299,00`, change **Pattern** to match your format.',
+		},
+		{
+			node: 'get-last-price',
+			title: 'Look up the last price',
+			body: 'Data Store **Get** reads `last-price`, saved by earlier runs of this workflow.',
+		},
+		{
+			node: 'is-drop',
+			title: 'Did it drop?',
+			body: 'IF compares the new number with the stored one (**less than**). The true branch notifies, both branches go on to save it.',
+			tweak: 'compare with a fixed target instead, such as `50`, to be told only below your price.',
+		},
+		{
+			node: 'notify',
+			title: 'Show the alert',
+			body: 'Show Notification posts **Price dropped!** with the new and old price. **Require Interaction** keeps it on screen until you close it.',
+			tweak: 'send it to your phone with [Telegram](/nodes/builtin/integration/telegram/) or [Push Notification](/nodes/builtin/integration/push-notification/).',
+		},
+		{
+			node: 'save-price',
+			title: 'Remember this price',
+			body: 'Data Store **Set** saves the new number as `last-price` for the next change.',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe, open **When the price changes**, and pick the price element on your product page with the crosshair. Set **URL Patterns** to that site.
+2. Save and activate the workflow.
+3. Keep the product page open. Element Change only watches pages that are open in the browser.
+4. To try it without waiting for a sale, open the page's developer tools and edit the price text to a lower number. A **Price dropped!** notification appears.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Back in stock | Set **Fire when** to **Text matches** with **Match text** `In stock`, and drop the Regex, Data Store and IF steps. | Beginner |
+| Check pages that aren't open | Use a [Schedule](/nodes/builtin/trigger/schedule/) trigger with [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/) and [HTML Extract](/nodes/builtin/datatransformation/html-extract/) to read the price. | Advanced |
+| Log every price | Add [Google Sheets](/nodes/builtin/integration/google-sheets/) **Append** after Remember this price to chart the history. | Intermediate |
+
+## Troubleshoot
+
+- **It never fires.** The selector doesn't match the price, or the page isn't open. Re-pick the element with the crosshair and check **URL Patterns**.
+- **The first change never alerts.** There's no stored price yet, so the comparison fails once. The second change works.
+- **The number is wrong.** The element holds more than the price (such as "Was 99, now 79"). Pick a tighter element, or adjust the Regex **Pattern**.

@@ -1,0 +1,184 @@
+{
+  "name": "Rewrite Professionally",
+  "description": "Highlight rough text, right-click, and get a polished professional rewrite copied to your clipboard — generated on-device, no account.",
+  "tags": [
+    "rightclick",
+    "tier-1",
+    "ai",
+    "on-device",
+    "extension",
+    "no-setup"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "💼 Rewrite anything professionally.\n\nHighlight some text on any page, right-click, and choose this workflow — it rewrites your selection in a clear, professional tone and copies the result to your clipboard, ready to paste. The AI runs locally in your browser; nothing leaves your device. Pick a model the first time."
+      },
+      "width": 340,
+      "height": 210
+    },
+    {
+      "id": "trigger-context-menu",
+      "type": "trigger",
+      "position": {
+        "x": 100,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:contextMenu"
+        },
+        "label": "Right-click a selection",
+        "inputs": {
+          "contexts": [
+            "selection"
+          ]
+        },
+        "parameters": {
+          "notes": "Adds this workflow to the right-click menu whenever you have text selected."
+        }
+      }
+    },
+    {
+      "id": "get-selection",
+      "type": "basic",
+      "position": {
+        "x": 400,
+        "y": 450
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:getSelectedTextNode"
+        },
+        "label": "Get selected text",
+        "inputs": {
+          "outputFieldName": "selection",
+          "options": {
+            "includeInputFields": true
+          }
+        },
+        "parameters": {
+          "notes": "Reads the full text you highlighted on the page. The context-menu event only carries a short, truncated copy, so this node gets the complete selection reliably."
+        }
+      }
+    },
+    {
+      "id": "rewrite",
+      "type": "agent",
+      "position": {
+        "x": 440,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:agent:basicLLMChain"
+        },
+        "label": "Rewrite professionally",
+        "inputs": {
+          "prompt": "Rewrite this in a clear, professional tone. Return only the rewrite:\n\n{{ $input.selection }}"
+        },
+        "parameters": {
+          "notes": "Rewrites your selection in a clear, professional tone."
+        }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": {
+        "x": 440,
+        "y": 500
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:dependency:webLLM"
+        },
+        "label": "Local AI model",
+        "inputs": {
+          "model": "",
+          "options": {
+            "temperature": 0.5
+          }
+        },
+        "parameters": {
+          "notes": "Runs the AI model locally in your browser. Pick a model the first time — nothing is sent to a server."
+        }
+      }
+    },
+    {
+      "id": "copy-result",
+      "type": "basic",
+      "position": {
+        "x": 780,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:clipboardWriteNode"
+        },
+        "label": "Copy the rewrite",
+        "inputs": {
+          "text": "{{ $input.response }}"
+        },
+        "parameters": {
+          "notes": "Copies the professional rewrite to your clipboard, ready to paste."
+        }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": {
+        "x": 440,
+        "y": 660
+      },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-ctx-get-selection",
+      "source": "trigger-context-menu",
+      "target": "get-selection",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-trigger-rewrite",
+      "source": "get-selection",
+      "target": "rewrite",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-rewrite-model",
+      "source": "rewrite",
+      "target": "local-model",
+      "type": "flowEdge",
+      "sourceHandle": "dependency-0"
+    },
+    {
+      "id": "e-rewrite-copy",
+      "source": "rewrite",
+      "target": "copy-result",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": [
+    {
+      "nodeId": "local-model",
+      "field": "model"
+    }
+  ]
+}

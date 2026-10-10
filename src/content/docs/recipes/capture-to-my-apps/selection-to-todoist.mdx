@@ -1,0 +1,82 @@
+---
+title: Turn highlighted text into a Todoist task
+description: Highlight a sentence in an email or a doc, right-click, and a short task title lands in Todoist. A model on your computer drafts the title.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Selection to Todoist
+recipe:
+  goal: Capture to my apps
+  level: beginner
+  minutes: 6
+  setup: connection
+  awf: /examples/selection-to-todoist.awf
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="selection-to-todoist" />
+
+<FlowPreview src="/examples/selection-to-todoist.awf" caption="Right-click a selection → draft a task title with a local model → create the task in Todoist." />
+
+<RecipeUse slug="selection-to-todoist" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="selection-to-todoist"
+	steps={[
+		{
+			node: 'trigger-context-menu',
+			title: 'Right-click the selected text',
+			body: 'With **Menu Contexts** set to **Selection**, the workflow appears when you right-click highlighted text.',
+			tweak: 'add **Document URL Patterns** such as `https://mail.google.com/*` to offer it only in your mail.',
+		},
+		{
+			node: 'get-selection',
+			title: 'Read the selection',
+			body: 'Puts the highlighted text in the `selection` field.',
+		},
+		{
+			node: 'extract',
+			also: ['local-model'],
+			title: 'Draft a task title',
+			body: 'Information Extractor asks the Web LLM model for `a concise task title` from your selection, and returns it in `extracted`.',
+			tweak: 'change **What to extract**, for example `a task title that starts with a verb, under 8 words`.',
+		},
+		{
+			node: 'create-task',
+			title: 'Create the task in Todoist',
+			body: 'Todoist creates a task whose **Content** is the drafted title. With no project set, it lands in your Inbox.',
+			tweak: 'set a project, a label or a due string such as `tomorrow` in the Todoist step.',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe. Pick a model in **Local AI model** and choose or create a Todoist connection in **Create the Todoist task**. See [Todoist](/nodes/builtin/integration/todoist/).
+2. Save and activate the workflow.
+3. Highlight a sentence such as "Can you send me the signed contract by Friday?", right-click and choose **Agentic Workflow** › **Personal Workflows** › **Selection to Todoist Task**.
+4. A task like "Send the signed contract" appears in your Todoist Inbox.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Keep the exact text | Remove Information Extractor and map `selection` straight to the task content. No model needed. | Beginner |
+| Add the page link | Add [Get Page Metadata](/nodes/extension/getpagemetadata/) and put its `url` in the task description. | Intermediate |
+| Several tasks at once | Use an [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/) to split meeting notes into one task per action. | Advanced |
+
+## Troubleshoot
+
+- **The task title is empty.** The model returned nothing usable. Select a longer passage, or pick a larger model.
+- **Todoist says the request is unauthorized.** Reconnect Todoist in the node's connection picker.
+- **The menu entry is missing.** Activate the workflow, then right-click and choose **Get / Refresh Workflows**.

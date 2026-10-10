@@ -1,0 +1,77 @@
+{
+  "name": "Web Scrape to JSON",
+  "description": "Pulls a list of items off a web page into clean structured data you can reuse.",
+  "tags": ["data", "tier-1", "scraping", "no-setup"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "🕸️ Turn a web page into data.\n\nGive it a page URL and CSS selectors for the repeating item and the fields inside it. It fetches the page and returns one clean object per item — no account, runs anywhere. Edit the URL and selectors below to fit your target page."
+      },
+      "width": 360,
+      "height": 190
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": { "x": 120, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": { "notes": "Starts the workflow when you press Run." }
+      }
+    },
+    {
+      "id": "fetch-html",
+      "type": "basic",
+      "position": { "x": 440, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:getHTMLFromLinkNode" },
+        "label": "Fetch the page",
+        "inputs": { "url": "https://news.ycombinator.com", "outputFieldName": "html" },
+        "parameters": { "notes": "Downloads the raw HTML of the page you point it at." }
+      }
+    },
+    {
+      "id": "extract",
+      "type": "basic",
+      "position": { "x": 760, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:html-extract" },
+        "label": "Pull out the items",
+        "inputs": {
+          "html": "{{ $input.html }}",
+          "mode": "list",
+          "containerSelector": ".titleline",
+          "fields": [
+            { "name": "title", "selector": "a", "returnType": "text" },
+            { "name": "link", "selector": "a", "returnType": "attribute", "attribute": "href" }
+          ]
+        },
+        "parameters": { "notes": "Reads each repeating item and grabs the fields you asked for." }
+      }
+    },
+    {
+      "id": "show-result",
+      "type": "basic",
+      "position": { "x": 1080, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:displayObjectNode" },
+        "label": "Show the data",
+        "inputs": { "title": "Scraped items" },
+        "parameters": { "notes": "Displays the structured result so you can see what was extracted." }
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e-run-fetch", "source": "trigger-run", "target": "fetch-html", "type": "flowEdge" },
+    { "id": "e-fetch-extract", "source": "fetch-html", "target": "extract", "type": "flowEdge" },
+    { "id": "e-extract-show", "source": "extract", "target": "show-result", "type": "flowEdge" }
+  ],
+  "requiredInputs": []
+}

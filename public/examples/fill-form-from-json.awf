@@ -1,0 +1,100 @@
+{
+  "name": "Fill Form from JSON",
+  "description": "Keeps a set of form values as JSON, asks you to confirm, then fills the page's form and submits it.",
+  "tags": ["automation", "tier-1", "no-setup", "forms", "autofill"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "🧾 Fill a form from saved values.\n\nThis holds a set of field values as JSON. Press Run and it asks you to confirm before filling — then it types the values into the page's form and submits.\n\nEdit the values below, and match the form selector and field ids to your page."
+      },
+      "width": 360,
+      "height": 200
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": { "x": 120, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": { "notes": "Starts the workflow when you press Run." }
+      }
+    },
+    {
+      "id": "values",
+      "type": "basic",
+      "position": { "x": 440, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:editFields" },
+        "label": "Your form values",
+        "inputs": {
+          "fields": {
+            "formValues": {
+              "type": "object",
+              "value": {
+                "name": "Jane Doe",
+                "email": "jane@example.com",
+                "message": "Hello from awflow!"
+              }
+            }
+          }
+        },
+        "parameters": { "notes": "The example values to fill in. Edit these to your own details." }
+      }
+    },
+    {
+      "id": "approve",
+      "type": "waitForApproval",
+      "position": { "x": 760, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:waitForApproval:waitForApproval" },
+        "label": "Confirm before filling",
+        "inputs": { "prompt": "Fill and submit this form?" },
+        "parameters": { "notes": "Pauses and waits for you to approve before touching the page. Only the approved path continues." }
+      }
+    },
+    {
+      "id": "fill",
+      "type": "basic",
+      "position": { "x": 1080, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:formFillNode" },
+        "label": "Fill the form",
+        "inputs": {
+          "mode": "manual",
+          "formSelector": "form",
+          "values": [
+            { "id": "name", "value": "{{ $input.formValues.name }}" },
+            { "id": "email", "value": "{{ $input.formValues.email }}" },
+            { "id": "message", "value": "{{ $input.formValues.message }}" }
+          ]
+        },
+        "parameters": { "notes": "Types each value into the matching form field. Change 'form' and the field ids to match your page." }
+      }
+    },
+    {
+      "id": "submit",
+      "type": "basic",
+      "position": { "x": 1400, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:submitFormNode" },
+        "label": "Submit the form",
+        "inputs": { "domSelector": "form" },
+        "parameters": { "notes": "Submits the filled form." }
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e-run-values", "source": "trigger-run", "target": "values", "type": "flowEdge" },
+    { "id": "e-values-approve", "source": "values", "target": "approve", "type": "flowEdge" },
+    { "id": "e-approve-fill", "source": "approve", "target": "fill", "type": "flowEdge", "sourceHandle": "output-approved" },
+    { "id": "e-fill-submit", "source": "fill", "target": "submit", "type": "flowEdge" }
+  ],
+  "requiredInputs": []
+}

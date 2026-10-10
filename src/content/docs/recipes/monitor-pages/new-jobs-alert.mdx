@@ -1,0 +1,71 @@
+---
+title: Get a phone alert when a careers page lists new jobs
+description: Keep a careers page open and get a push notification on your phone as soon as its job list changes.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: New jobs alert
+recipe:
+  goal: Monitor pages
+  level: beginner
+  minutes: 6
+  setup: connection
+  awf: /examples/job-postings-watch.awf
+  marketplaceId: a5371ff0-92e8-4c59-840a-794a8aa8cf26
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="new-jobs-alert" />
+
+<FlowPreview src="/examples/job-postings-watch.awf" caption="The job list changes → send a push notification." />
+
+<RecipeUse slug="new-jobs-alert" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="new-jobs-alert"
+	steps={[
+		{
+			node: 'trigger-element-change',
+			title: 'Watch the job list',
+			body: 'Element Change watches the element matching `.jobs-list` and fires when its content changes, after 500 ms of quiet.',
+			tweak: 'pick the list on your careers page with the crosshair in **CSS Selectors**, and set **URL Patterns** to that page, for example `https://jobs.example.com/*`.',
+		},
+		{
+			node: 'send-push',
+			title: 'Send a push notification',
+			body: 'Push Notification sends **New jobs** with high priority through [ntfy](https://ntfy.sh) to the topic you choose. Install the ntfy app on your phone and subscribe to the same topic.',
+			tweak: 'put the page in the message with `{{ $input.url }}`, or use **Fire when** **Text matches** with a keyword such as `Designer` to be told only about roles you want.',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe. In **Send a push notification**, pick a connection and set **Topic** to a hard-to-guess name such as `jobs-k7f3q`. See [Push Notification](/nodes/builtin/integration/push-notification/).
+2. Subscribe to the same topic in the ntfy app on your phone.
+3. In **Watch the job list**, pick the job list on the careers page with the crosshair, then save and activate the workflow.
+4. Keep the page open. To test right away, edit the list's text in the browser's developer tools: your phone shows **New jobs**.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Alert in Slack or Discord | Replace Push Notification with [Slack](/nodes/builtin/integration/slack/) or [Discord](/nodes/builtin/integration/discord/). | Beginner |
+| Alert on the computer only | Replace it with [Browser Notification](/nodes/extension/browsernotification/); no connection needed. | Beginner |
+| Watch headlines or reviews | Point **CSS Selectors** at a news list or a reviews section instead. Several selectors can share one workflow. | Beginner |
+
+## Troubleshoot
+
+- **No alert.** Element Change only watches pages that are open. Keep the careers page in a tab, and check that the selector still matches after the site changes its layout.
+- **Too many alerts.** Some pages rewrite the list on every scroll. Raise **Debounce (ms)**, or watch a more specific element such as the job count.
+- **The phone gets nothing.** The topic on your phone differs from the one in the node; topics are case-sensitive.

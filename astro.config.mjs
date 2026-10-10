@@ -430,7 +430,16 @@ export default defineConfig({
           label: "Recipes",
           link: "/recipes/",
           icon: "document",
-          items: [{ label: "Overview", link: "recipes" }],
+          items: [
+            { label: "All recipes", link: "recipes" },
+            // One group per goal chip on /recipes/ (awflow/Agentic-Flow#1342).
+            { label: "Research & reading", items: [{ autogenerate: { directory: "recipes/research-and-reading" } }] },
+            { label: "Capture to my apps", items: [{ autogenerate: { directory: "recipes/capture-to-my-apps" } }] },
+            { label: "Monitor pages", items: [{ autogenerate: { directory: "recipes/monitor-pages" } }] },
+            { label: "Fill forms & click", items: [{ autogenerate: { directory: "recipes/fill-forms-and-click" } }] },
+            { label: "Extract data", items: [{ autogenerate: { directory: "recipes/extract-data" } }] },
+            { label: "Write with AI", items: [{ autogenerate: { directory: "recipes/write-with-ai" } }] },
+          ],
         },
         {
           label: {

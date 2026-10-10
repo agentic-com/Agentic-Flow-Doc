@@ -1,0 +1,82 @@
+---
+title: Turn a list on a web page into structured data
+description: Fetch a page by its address and pull each item's title and link into clean data you can reuse, without opening the page.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Scrape a list
+recipe:
+  goal: Extract data
+  level: intermediate
+  minutes: 7
+  setup: none
+  awf: /examples/web-scrape-to-json.awf
+  marketplaceId: e968c7c1-7e2f-4969-ac50-fea65dcc7988
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="scrape-a-list" />
+
+<FlowPreview src="/examples/web-scrape-to-json.awf" caption="Run it → fetch the page → pull out each item → show the data." />
+
+<RecipeUse slug="scrape-a-list" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="scrape-a-list"
+	steps={[
+		{
+			node: 'trigger-run',
+			title: 'Run it',
+			body: 'When Started has no settings. Click **Test Workflow** on the canvas.',
+			tweak: 'run it every morning with a [Schedule](/nodes/builtin/trigger/schedule/) trigger.',
+		},
+		{
+			node: 'fetch-html',
+			title: 'Fetch the page',
+			body: 'Get HTML from Link downloads `https://news.ycombinator.com` and puts its HTML in `html`. The page doesn\'t need to be open.',
+			tweak: 'change **URL** to the page you want. Pages that need you to be signed in may return a login page instead.',
+		},
+		{
+			node: 'extract',
+			title: 'Pull out the items',
+			body: 'HTML Extract in **list** mode finds every `.titleline` and, inside each, reads the link text as `title` and its `href` as `link`.',
+			tweak: 'set **Container Selector** to one repeated item on your page and add a field per value you want (price, date, author).',
+		},
+		{
+			node: 'show-result',
+			title: 'Show the data',
+			body: 'Display Object shows the items as a tree you can expand.',
+			tweak: 'save them with [Google Sheets](/nodes/builtin/integration/google-sheets/) or download them with [Save as File](/nodes/builtin/datatransformation/saveasfile/).',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe and open it on the canvas.
+2. Click **Test Workflow**.
+3. Open **Show the data** in the run results: you see about 30 items, each with a `title` and a `link` from the Hacker News front page.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Scrape the page you're on | Replace Get HTML from Link with [Get All HTML](/nodes/extension/getallhtml/), which also works on pages you're signed in to. | Beginner |
+| Keep only new items | Store the last titles with [Data Store](/nodes/builtin/core/datastore/) and use [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/). | Advanced |
+| Get a CSV | Add [CSV](/nodes/builtin/datatransformation/csv/) **Build** and [Clipboard Write](/nodes/extension/clipboardwrite/). | Beginner |
+
+## Troubleshoot
+
+- **The list is empty.** The site renders its list with JavaScript, so the fetched HTML has no items. Open the page and use [Get All HTML](/nodes/extension/getallhtml/) instead.
+- **Links are relative (`/item?id=…`).** The site writes them that way. Prefix them with the site address in an [Edit Fields](/nodes/builtin/datatransformation/editfields/) step.
+- **The fetch fails in the web app.** Some sites block requests from other origins; run it in the extension. See [browser compatibility](/app/troubleshooting/browser-compatibility/).

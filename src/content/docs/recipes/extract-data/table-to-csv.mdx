@@ -1,0 +1,81 @@
+---
+title: Copy any table on a page as CSV
+description: Run it on a page with a table and paste clean CSV into a spreadsheet. The first row becomes the header. No account, no AI.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Table to CSV
+recipe:
+  goal: Extract data
+  level: beginner
+  minutes: 3
+  setup: none
+  awf: /examples/table-to-csv.awf
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="table-to-csv" />
+
+<FlowPreview src="/examples/table-to-csv.awf" caption="Run it → read the table → build CSV → copy to the clipboard." />
+
+<RecipeUse slug="table-to-csv" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="table-to-csv"
+	steps={[
+		{
+			node: 'trigger-when-started',
+			title: 'Run it on the page',
+			body: 'When Started has no settings; run it from the right-click menu on the page with the table.',
+		},
+		{
+			node: 'read-table',
+			title: 'Read the table',
+			body: 'Get Structured Data in **table** mode reads the first `table` on the page, one item per row, using the first row as the column names.',
+			tweak: 'set **DOM Selector** to the table you want, such as `#results table`, when the page has several.',
+		},
+		{
+			node: 'build-csv',
+			title: 'Build the CSV',
+			body: 'CSV **Build** turns the rows into CSV text in the `csv` field, quoting values that need it.',
+			tweak: 'change **Delimiter** to `;` for spreadsheets set to a European locale.',
+		},
+		{
+			node: 'copy-clipboard',
+			title: 'Copy it',
+			body: 'Clipboard Write copies the CSV, ready to paste into Google Sheets, Excel or Numbers.',
+			tweak: 'download a `.csv` file with [Save as File](/nodes/builtin/datatransformation/saveasfile/) instead.',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe and save it. No setup is needed.
+2. Open a page with a table, such as a Wikipedia list.
+3. Right-click it and choose **Agentic Workflow** › **Personal Workflows** › **Page Table to CSV**.
+4. Paste into a new spreadsheet: each column lands in its own cell.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Send rows to a sheet | Replace CSV and Clipboard Write with [Google Sheets](/nodes/builtin/integration/google-sheets/) **Append**. | Intermediate |
+| Keep only some rows | Add [Filter](/nodes/builtin/flow/filter/) or [Sort](/nodes/builtin/datatransformation/sort/) between the table and the CSV. | Beginner |
+| Lists instead of tables | Set Get Structured Data **Mode** to **list** for `ul` or `ol` lists. | Beginner |
+
+## Troubleshoot
+
+- **The wrong table is copied.** The page has several tables. Set **DOM Selector** to the one you want; the [data extraction guide](/app/troubleshooting/data-extraction/) shows how to find a selector.
+- **Column names are the first data row.** The table has no header row. Turn off **Table first row is header**.
+- **Nothing is copied.** Run it from the right-click menu on the page itself, not from the canvas.
