@@ -108,6 +108,8 @@ Import from `@components/awflow`, e.g. `import { Callout, ParamTable } from '@co
 | `<OutputPorts>` | A node's output ports. | `ports`: `{ name, type?, description? }[]`; `label`. |
 | `<StepCard>` | A tutorial step with a verifiable result. Every step should say how the reader knows it worked. | `n`, `title`, `check` (renders "Check: …"), `level` (heading level, default 3). Body is the children. |
 | `<Screenshot>` | App captures, ideally a light and a dark pair, with numbered hotspots explained in a legend. | `src`, `srcDark`, `alt` (required), `caption`, `hotspots`: `{ x, y, label }[]` (x/y in %), `width`, `height`. |
+| `<GuidedShot>` | A task whose actions all happen on **one screen**: one screenshot with numbered markers, the numbered steps beside it. See [Guided screenshots](#guided-screenshots). | `shot`, `steps`: `{ spot, title, body?, check? }[]`, `caption`, `alt`. Astro component. |
+| `<StepShot>` | One step of a task that spans **several screens**: a zoomed crop around the control, ringed and numbered, with "Full screen". See [Guided screenshots](#guided-screenshots). | `shot`, `spot`, `n`, `height` (px, default 280), `zoom` (% of the image width, default 56), `alt`. Astro component. |
 | `<PageActions>` | Copy as Markdown / Ask Aria / Edit buttons. Node headers already include it. Interactive: add `client:visible`. | `markdownUrl` (defaults to the page's `.md` twin), `editUrl`, `askAriaHref`, `askAriaLabel`, `compact`. |
 | `<RecipeCard>` | Linking to a recipe from a node, concept or hub page. | `title`, `href`, `goal`, `level` (`beginner` · `intermediate` · `advanced`), `minutes`, `apps`, `setup` (`none` · `connection` · `on-device`). |
 | `<Kbd>` | A fixed key or combination. For shortcuts that differ per OS, use starlight-kbd's `<Kbd>` instead. | `keys`: `"Ctrl+Shift+K"` or `['⌘', 'K']`. |
@@ -220,7 +222,8 @@ An entry has `version`, `date` (ISO), `browsers`, `headline`, `summary`, an opti
 App screenshots are generated, never taken by hand, so they can be refreshed for each release. The pipeline lives in `scripts/capture/` and writes to `src/assets/screenshots/`:
 
 - `<shot>.light.webp` and `<shot>.dark.webp`: 1440×900 viewport at 2× scale, downscaled to 2000 px wide, WebP quality 85.
-- `manifest.json`: one entry per shot with `shot`, `route`, `page` (the docs page it is meant for), `alt` (true, descriptive alt text), `status` (`ok`, `skipped` or `failed`, with a `reason`), `files`, `hotspots`, `appCommit`, `appVersion` and `capturedAt`.
+- `<shot>.json`: one file per shot (no shared manifest, so parallel edits never conflict) with `shot`, `route`, `page` (the docs page it is meant for), `alt` (true, descriptive alt text), `status` (`ok`, `skipped` or `failed`, with a `reason`), `files`, `width`, `height`, `hotspots`, `appCommit`, `appVersion` and `capturedAt`.
+- Each entry of `hotspots` is `{ id, label, x, y, box: { x, y, w, h } }`: a stable kebab-case `id` (unique in the shot), the centre `x`/`y` and the element's bounding `box`, all in % of the image. Pages reference areas by `id`.
 
 ### Refresh the screenshots
 
@@ -228,7 +231,7 @@ You need the app repo checked out next to this one (`../agentic-flow`, or pass `
 
 ```bash
 bun run docs:capture --build                 # build the app (build:prod:web), then capture every shot in both themes
-bun run docs:capture --only canvas,memory    # some shots only (the manifest keeps the others)
+bun run docs:capture --only canvas,memory    # some shots only (the other <shot>.json files are untouched)
 bun run docs:capture --theme dark            # one theme only: light, dark or both (default)
 ```
 
@@ -237,16 +240,48 @@ bun run docs:capture --theme dark            # one theme only: light, dark or bo
 - Data is created through the app's own UI: example workflows from `scripts/capture/fixtures/*.awf` are imported with the Add Workflow wizard, runs are started from the workflow list, and the Memory and chat shots import a generated `.awmem` file (`scripts/capture/lib/awmem.ts`) with Memory › Import. No model runs during capture.
 - `local-models` and `marketplace-browse` need the network (Hugging Face list, `api.awflow.io`). The API does not allow a `127.0.0.1` origin, so the script adds CORS headers to those responses; the data is the live API's. Offline, these two are recorded as `skipped` and their old images are removed.
 - Shots with `signedIn: true` (the publish wizard) run in a separate browser context as a fictional signed-in user, Alex Doe. The UI is still the real app; only its backend is replaced by `scripts/capture/lib/fakeApi.ts`, which answers the account, workflow, marketplace-draft and upload calls with fixture data (one example cloud workflow from `fixtures/`) and never reaches the real API. Calls it doesn't answer get a 404 and are listed at the end of the run.
-- A shot that fails keeps its previous images and manifest entry, the run exits with code 1, and a screenshot plus an accessibility snapshot of the failing page are saved in your temp folder (`awflow-docs-capture-debug/`).
-- Afterwards, open the changed images and check there is no toast, dialog or half-loaded state, then commit the images and `manifest.json` together.
+- A shot that fails keeps its previous images and JSON, the run exits with code 1, and a screenshot plus an accessibility snapshot of the failing page are saved in your temp folder (`awflow-docs-capture-debug/`).
+- Afterwards, open the changed images and check there is no toast, dialog or half-loaded state, then commit the images and their `<shot>.json` together.
+
+### Where shots are defined
+
+Shots live in one file per docs area, so several people (or agents) can add shots at the same time without touching the same file:
+
+| File | Shots for |
+| --- | --- |
+| `scripts/capture/shots/get-started.ts` | Get started lessons |
+| `scripts/capture/shots/connections.ts` | Credentials and connection pages |
+| `scripts/capture/shots/workflows.ts` | Workflow list, canvas, node settings, run history |
+| `scripts/capture/shots/publishing.ts` | The publish wizard (signed-in) |
+| `scripts/capture/shots/ai.ts` | Assistant, agents, knowledge bases, local AI, memory |
+| `scripts/capture/shots/settings.ts` · `account.ts` · `app.ts` | Settings, account and the rest of the app |
+| `scripts/capture/shots/concepts.ts` · `recipes.ts` | Concept pages and recipes |
+
+`shots/index.ts` aggregates them (add a new area file there), `shots/define.ts` holds the `ShotDef` type and the locator helpers (`btn`, `link`, `text`, `inDialog`), and `lib/session.ts` the `Session` helpers. Shots of one theme run in one browser session, in the order of `index.ts` then of each file, and share its state (imported workflows, runs), so add a new shot **at the end of its area file**.
 
 ### Add a shot
 
-1. Add an entry to `SHOTS` in `scripts/capture/shots.ts` (the array order is the manifest order): `name`, `page`, `route`, `alt`, 2–4 `hotspots` and a `prepare(session)` that brings the app to the state to capture.
+1. Add an entry to the `shots` array of your area's file: `name` (kebab-case, unique), `page`, `route`, `alt`, `spots` (and/or legacy `hotspots`) and a `prepare(session)` that brings the app to the state to capture.
 2. Use visible roles and text for locators (`p.getByRole('button', { name: 'Add Workflow' })`) and wait for what you capture. Reuse the `Session` helpers (`workflow`, `editor`, `testRun`, `savedRuns`, `importMemory`, `knowledgeBase`, `assistant`) instead of seeding storage.
 3. Set `needsNetwork: true` only when the shot cannot work offline, and `viewport` for a non-desktop size (the `side-panel` shot uses 400×860).
 4. Write `alt` as what the image really shows. If a state can't be produced reliably (it needs a model, or an account feature the fake API doesn't answer yet), leave the shot out or let it be `skipped`; never fake it.
 5. Run `bun run docs:capture --only <name>`, open both images, then commit.
+
+### Add spots to a shot
+
+A **spot** is a named area of the screenshot that a page can point at. Declare it on the shot; the capture records its bounding box:
+
+```ts
+spots: [
+  { id: 'auth-type', label: 'Auth Type menu', locator: (p) => p.getByRole('dialog').getByRole('button', { name: 'Auth Type' }) },
+  { id: 'create', label: 'Create Credential', locator: btn('Create Credential') }
+]
+```
+
+- `id`: kebab-case, unique in the shot, never renamed once a page uses it (pages reference it). `label`: a few honest words; it is used in alt text and the screen-reader summary.
+- `locator`: a Playwright role, label or text locator, as in `prepare`. Outline the **control the reader acts on** (the field, the button), not its whole section. The first visible match is measured; a spot that isn't on screen fails the shot.
+- Older `hotspots: [{ id?, label, locate }]` still work and are recorded first (without an `id`, one is derived from the label). Spots are recorded after them, in the same `hotspots` list of the JSON.
+- Then re-capture: `bun run docs:capture --only <shot>` (add `--build` when the app's `build/` is not a fresh production web build, e.g. after the app was built as an extension). The capture launches Chromium, so run it outside any sandbox.
 
 ### Use a shot in a page
 
@@ -255,10 +290,44 @@ import { Screenshot } from '@components/awflow';
 import canvasLight from '@assets/screenshots/canvas.light.webp';
 import canvasDark from '@assets/screenshots/canvas.dark.webp';
 
-<Screenshot src={canvasLight} srcDark={canvasDark} alt="…alt from manifest.json…" hotspots={[{ x: 19.8, y: 9.6, label: 'Add a step (node)' }]} />
+<Screenshot src={canvasLight} srcDark={canvasDark} alt="…alt from canvas.json…" hotspots={[{ x: 19.8, y: 9.6, label: 'Add a step (node)' }]} />
 ```
 
-Take `alt` and the hotspots' `x`, `y` and `label` from the shot's `manifest.json` entry. Each hotspot also has a `box` (the element's bounds, in % of the image) if you need to place a marker elsewhere.
+Take `alt` and the hotspots' `x`, `y` and `label` from the shot's `<shot>.json`. Each hotspot also has a `box` (the element's bounds, in % of the image) if you need to place a marker elsewhere. For a task, prefer the guided components below: they read the JSON themselves.
+
+### Guided screenshots
+
+How-to steps show **where** to click with numbered screenshots. Pick the component by how many screens the task crosses:
+
+- **All the actions happen on one screen** (one dialog, one settings page) → **`<GuidedShot>`**: one screenshot, numbered markers on the controls, the numbered steps beside it (below it in a narrow column). Hovering, focusing or tapping a step highlights its marker; clicking a marker selects its step. Steps that happen *before* the screen (open a page, click a button) go in one sentence above it. Reference: `app/connections/create.mdx`.
+- **The actions span several screens** (dialog, then canvas, then a node panel) → one **`<StepShot>`** per step, inside its `<StepCard>`: a crop of that step's screen centred on the control, with a ring and the step number, and **Full screen** for the whole image. Reference: `get-started/summarize-with-ai.mdx`.
+
+Both are Astro components, so they work in MDX only (never inside a hydrated Svelte island). Import them from the library or directly:
+
+```mdx
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
+{/* or: import GuidedShot from '@components/awflow/GuidedShot.astro'; */}
+
+<GuidedShot
+  shot="credentials-new"
+  steps={[
+    { spot: 'app', title: 'Pick the app or service', body: 'Under **Integration App / Service**, pick **Slack**.' },
+    { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page.' },
+  ]}
+/>
+
+<StepCard n={2} title="Add a Basic LLM Chain" check="…">
+  Click the **+** on the right of **Get All Text** …
+
+  <StepShot shot="llm-chain" spot="basic-llm-chain" n={2} zoom={44} />
+</StepCard>
+```
+
+- `shot` is the file name in `src/assets/screenshots/` without `.json`; `spot` is an `id` from its `hotspots`. A missing shot, an uncaptured one or an unknown spot **fails the build** with the list of valid ids.
+- `<GuidedShot>` numbers markers in the order of `steps`, so marker *n* is always step *n*. `body` takes inline `**bold**`, `*italic*` and `` `code` `` (no links: put them in the text around the component). `check` renders "Check: …".
+- `<StepShot>`: `n` is the badge number (match the `StepCard`). `zoom` is the crop width in % of the image (default 56; smaller zooms in more, and it widens itself if the control would not fit); `height` is the crop height in px for a ~640 px column (default 280). On phones the crop gets tighter so the control stays readable.
+- Alt text comes from the shot's JSON: `<GuidedShot>` uses the shot's `alt` and adds a screen-reader list of the numbered areas; `<StepShot>` describes the close-up from the spot's `label` and the full-screen image uses the shot's `alt`. Pass `alt` to override when the page needs something more precise.
+- Both follow the site theme (light/dark captures), are keyboard accessible and stop their animations under reduced motion. If a spot is missing, add it to the shot (see [Add spots to a shot](#add-spots-to-a-shot)) and re-capture rather than positioning anything by hand.
 
 ## 🌍 Languages
 
