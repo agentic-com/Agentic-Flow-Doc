@@ -102,8 +102,11 @@ export default defineConfig({
     "/usage/faq/": "/app/faq/",
     "/usage/getting-started/": "/get-started/",
     "/usage/getting-started/learning-path/": "/get-started/learning-path/",
-    "/usage/getting-started/long-intro/": "/get-started/long-intro/",
-    "/usage/getting-started/quick-intro/": "/get-started/quick-intro/",
+    "/usage/getting-started/long-intro/": "/get-started/branch-on-page-content/",
+    "/usage/getting-started/quick-intro/": "/get-started/first-workflow/",
+    // Getting-started rework (awflow/Agentic-Flow#1318): the intros became lessons.
+    "/get-started/quick-intro/": "/get-started/first-workflow/",
+    "/get-started/long-intro/": "/get-started/branch-on-page-content/",
     "/usage/help-and-community/": "/app/help/help/",
     "/usage/help-and-community/contributing/": "/app/help/contributing/",
     "/usage/help-and-community/help/": "/app/help/help/",
@@ -312,8 +315,25 @@ export default defineConfig({
           items: [
             { label: "Overview", link: "get-started" },
             { label: "Learning path", link: "get-started/learning-path" },
-            { label: "Quick intro", link: "get-started/quick-intro" },
-            { label: "Long intro", link: "get-started/long-intro" },
+            {
+              // Lessons (kind: lesson) get the learning-path rail (awflow/Agentic-Flow#1341).
+              label: "Level 1 · Your first automations",
+              items: [
+                { label: "1 · Install AWFlow", link: "get-started/install" },
+                { label: "2 · Your first workflow", link: "get-started/first-workflow" },
+                { label: "3 · Summarise a page with AI", link: "get-started/summarize-with-ai" },
+                { label: "4 · Your first automation", link: "get-started/first-automation" },
+                { label: "5 · Ask Aria to build one", link: "get-started/build-with-aria" },
+              ],
+            },
+            {
+              label: "Level 2 · Working with data",
+              items: [
+                { label: "What's in level 2", link: "get-started/working-with-data" },
+                { label: "Walkthrough: branch on page content", link: "get-started/branch-on-page-content" },
+              ],
+            },
+            { label: "Level 3 · Agents & knowledge", link: "get-started/agents-and-knowledge" },
           ],
         },
         {

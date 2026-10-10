@@ -21,3 +21,6 @@ export { default as ReleaseTimeline } from './ReleaseTimeline.svelte';
 export { default as ReleaseChanges } from './ReleaseChanges.svelte';
 export { default as OperationTabs } from './OperationTabs.svelte';
 export { default as NodeCatalog } from './NodeCatalog.svelte';
+export { default as LessonProgress } from './LessonProgress.svelte';
+export { default as LessonDone } from './LessonDone.svelte';
+export { default as ModelTabs } from './ModelTabs.svelte';

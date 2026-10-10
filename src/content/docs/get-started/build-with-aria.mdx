@@ -1,0 +1,76 @@
+---
+title: Ask Aria to build one
+description: "Describe a workflow in plain words, let Aria build it, review the changes, and open it on the canvas."
+section: get-started
+kind: lesson
+lesson:
+  level: 1
+  order: 5
+  minutes: 5
+sidebar:
+  label: "5 · Ask Aria to build one"
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import { StepCard, LessonProgress, LessonDone } from "@components/awflow";
+
+<LessonProgress
+  client:visible
+  level={1}
+  order={5}
+  total={5}
+  minutes={5}
+  youWill={[
+    "Pick a model for Aria",
+    "Switch a chat to Build and describe a workflow",
+    "Review what Aria built and ask for a change",
+    "Save it and open it on the canvas",
+  ]}
+  before={["Lessons 2 to 4 done, so you can read what Aria builds", "An on-device model or an AI provider (you'll pick one in step 1)"]}
+/>
+
+**Aria** is AWFlow's assistant. In **Build** mode, every message you send changes a workflow: Aria picks the nodes, wires them, and fills in their settings. You've built three workflows by hand, so you can now check its work and fix what it misses.
+
+<StepCard n={1} title="Open Aria and pick a model" check="the chat composer is ready, with your model shown in its model picker.">
+  Click **Assistant** in the AWFlow sidebar. The first time, **Meet Aria, your private AI** asks which model to use:
+
+  - **Private, on this device** (*Recommended*): free, nothing leaves your device, downloads once in the background.
+  - **Connect a cloud provider**: **Add key** opens [AI providers](/app/settings/providers/). Larger cloud models build complex workflows more reliably.
+
+  Click **Start chatting**. You can switch models any time from the composer.
+</StepCard>
+
+<StepCard n={2} title="Switch to Build and describe the workflow" check="a Building your workflow card shows its stages, and the Workflow preview draws the nodes.">
+  Under the message box, switch **Chat | Build** to **Build**. Then describe what to automate, with the trigger, the steps and the result:
+
+  ```text title="Message"
+  When I press a keyboard shortcut, take the text I selected on the page,
+  translate it into French with an on-device model, and show the translation.
+  ```
+
+  Aria works through *Understand your request*, *Look for similar workflows*, *Choose an approach*, *Write the workflow* and *Check it's valid*.
+</StepCard>
+
+{/* SCREENSHOT: aria-build-preview — assistant in Build mode with the Building your workflow card and the Workflow preview */}
+
+<StepCard n={3} title="Review what it built" check="you can name each node in the preview and say what it does.">
+  Read the **Workflow preview** from left to right. You should recognise the pieces from earlier lessons: a **Hotkey** trigger, **Get Selected Text**, a chain with a model in its **Model** slot, and a display step. If a card says **settings to check before it runs**, click each row to see what Aria needs from you, such as a model to pick.
+</StepCard>
+
+<StepCard n={4} title="Ask for a change" check="the reply ends with a change chip such as “v2 · +1 step”.">
+  Keep chatting in Build: `Also copy the translation to the clipboard.` Each change adds a version. **View changes** highlights what moved, and **Undo** reverts the latest change.
+</StepCard>
+
+<StepCard n={5} title="Save it and open it on the canvas" check="the canvas opens with the same nodes as the preview.">
+  Click **Save workflow**, give it a name, keep **Local (this browser)**, and click **Create workflow**. Then click **Open in editor**. From here it's a normal workflow: test it with **Test Workflow**, then activate it as in [lesson 4](/get-started/first-automation/).
+</StepCard>
+
+<Aside type="tip" title="From these docs, straight to Aria">
+Press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>I</kbd> on any docs page (or click **Ask Aria**), type what you want, and choose **Build this with Aria**. The request opens in your AWFlow in Build mode, with the page you were reading as context.
+</Aside>
+
+Want to go further? [Building workflows in chat](/app/chat-and-agents/building-workflows-in-chat/) covers improving an existing workflow, mentioning other workflows, and the canvas dock.
+
+<LessonDone client:load title="Level 1 complete. You automate now." next={{ href: "/get-started/working-with-data/", label: "Level 2" }}>
+  You can build, run, automate and delegate a workflow. Level 2 is about the data that flows between steps.
+</LessonDone>

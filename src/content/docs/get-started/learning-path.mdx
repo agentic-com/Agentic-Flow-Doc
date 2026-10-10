@@ -1,132 +1,49 @@
 ---
-title: Learning Path
-description: "A guided path to help you learn AWFlow step by step — from your first workflow to advanced automations."
-sidebar:
-  order: 0
+title: Learning path
+description: "Three levels, inside the docs, no account: from installing AWFlow to agents that use your own knowledge."
 section: get-started
+kind: hub
+sidebar:
+  order: 1
 ---
 
-import { YouTube } from 'astro-embed';
+import { LinkCard, CardGrid, Aside } from "@astrojs/starlight/components";
+import { YouTube } from "astro-embed";
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
+The learning path takes you from installing AWFlow to building agents, one short lesson at a time. Every lesson ends with something that works, and tells you how to check it. Your progress is saved **in this browser**, with no account: open any lesson to see the progress ring in the left rail.
 
 <YouTube id="ogZ03_AC5o8" />
 
-## Why follow a learning path?
+## Level 1 · Your first automations
 
-Following this path helps you move from first steps to confident builder in a structured way.  
-You’ll understand key concepts, practice with real examples, and learn how to automate browser tasks — all without coding.
+**Available now.** About 30 minutes. You finish with an AI workflow that runs from a keyboard shortcut, and you know how to ask Aria for the next one.
 
-If you prefer a faster start, skip directly to the [Quick Intro](/get-started/quick-intro/) or open [Create a Workflow](/app/workflows/create/).
+<CardGrid>
+  <LinkCard title="1 · Install AWFlow" description="Store links, pinning, the side panel, local or cloud account, Firefox." href="/get-started/install/" />
+  <LinkCard title="2 · Your first workflow" description="Get Selected Text → Edit Fields, run it, read the output." href="/get-started/first-workflow/" />
+  <LinkCard title="3 · Summarise a page with AI" description="A Basic LLM Chain with an on-device, API key or Ollama model." href="/get-started/summarize-with-ai/" />
+  <LinkCard title="4 · Your first automation" description="A Hotkey or Schedule trigger, activate, check the Executions tab." href="/get-started/first-automation/" />
+  <LinkCard title="5 · Ask Aria to build one" description="Chat → Build, review what Aria made, open it on the canvas." href="/get-started/build-with-aria/" />
+</CardGrid>
 
----
+## Level 2 · Working with data
 
-## Step 1: Get familiar with the environment
+**Lessons coming next.** Expressions, lists of items, branching, loops and saving results. Until the lessons are written, the level page points you to the guides that already cover each topic.
 
-### What to do
+<LinkCard title="Level 2 · Working with data" description="What the level covers, and where to learn it today." href="/get-started/working-with-data/" />
 
-- [Install or activate the extension](/get-started/quick-intro/) in your browser.
-- Open the Workflow Builder and explore: canvas, nodes, and connections.
-- Run a small sample workflow to see how workflows behave.
-- Observe how triggers start workflows and how each node executes.
+## Level 3 · Agents & knowledge
 
-### Why this matters
+**Lessons coming next.** Agents that use tools, memory, and knowledge bases built from your own documents.
 
-This step introduces you to how AWFlow works inside your browser — no external servers, no setup complexity.  
-Once you know the interface, you’ll feel confident building any workflow.
+<LinkCard title="Level 3 · Agents & knowledge" description="What the level covers, and where to learn it today." href="/get-started/agents-and-knowledge/" />
 
-> Tip: Visit [Concepts](/concepts/) anytime for concise explanations of workflows, nodes, and triggers.
+<Aside type="tip" title="Stuck on a step?">
+Each step has a **Check** line that says what you should see. If you don't see it, open [Troubleshooting](/app/troubleshooting/), or press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>I</kbd> to ask Aria about the page you're on.
+</Aside>
 
----
+## About your progress
 
-## Step 2: Build your first workflow
-
-### What to do
-
-- Create a new workflow or import a workflow shared by another user.
-- Add a Trigger node (for example: “Page Loaded” or “Button Clicked”).
-- Add an action like Get Selected Text or Extract Links.
-- Run the workflow and inspect the data flow between nodes.
-- Modify parameters, rerun, and see how results change.
-
-### Why this matters
-
-This is your first hands-on experience. You’ll see how nodes pass data and how easy it is to create working automations.
-
-> Learn more in [Create a Workflow](/app/workflows/create/).
-
----
-
-## Step 3: Learn the core concepts
-
-### Topics to cover
-
-- What a node does and how it processes data
-- The difference between triggers and actions
-- How data flows between nodes (inputs and outputs)
-- Using the execution log to debug a run
-- Reusing workflows through export and import
-- Browser-specific automation with [Browser Nodes](/nodes/extension/)
-- Adding AI and reasoning with [AI concepts](/concepts/ai/)
-
-### Why this matters
-
-These are the building blocks of all workflows. Once you understand them, you can create flexible and reliable automations.
-
-> For definitions and examples, see [Concepts](/concepts/).
-
----
-
-## Step 4: Build intermediate workflows
-
-### What to try
-
-- Automate a small real-world task:
-  - Save highlighted text to a local file
-  - Extract all links and summarize them with an AI node
-  - Monitor a page for updates using “Wait for Element”
-- Combine browser actions:
-  - Scroll, extract, then fill a form automatically
-- Add conditional logic:
-  - “If page title contains X, then Y”
-- Export your workflow so you can reuse or share it.
-
-### Why this matters
-
-This step helps you transform simple ideas into practical automations — connecting data extraction, AI, and browser control together.
-
-> Explore browser-specific actions in [Browser Nodes](/nodes/extension/).
-
----
-
-## Step 5: Master and share
-
-### What to aim for
-
-- Publish or share workflows with clear notes and safe defaults
-- Build reusable templates or sub-workflows
-- Create advanced automations with [AI workflows](/concepts/ai/)
-- Learn to handle errors and timeouts for stability
-- Contribute to the community by sharing your best workflows
-
-### Why this matters
-
-You’re now designing intelligent, reliable workflows that others can reuse.  
-You’re part of the growing AWFlow ecosystem.
-
-> Visit [Troubleshooting & Best Practices](/app/troubleshooting/) to make your workflows more robust.
-
----
-
-## Tips for beginners
-
-- Start small — try extracting text or links first.
-- Use the [Node Reference](/nodes/) to explore available nodes.
-- Test step by step and inspect outputs.
-- Save your progress often — everything stays local and private.
-- Reuse exported workflows from the community to learn faster.
-
----
-
-With this path, you’ll move from basic understanding to creating intelligent browser automations.  
-Each workflow you build brings new insight — and new possibilities.
+- Progress is stored in your browser's local storage, on this device only. Nothing is sent anywhere.
+- In a private window, or if your browser blocks site storage, the lessons still work, but progress is forgotten when you leave the page.
+- To start over, clear this site's data in your browser settings.

@@ -1,14 +1,15 @@
 ---
-title: Long Intro
-description: "A more complete walkthrough: build a browser automation that extracts links, processes text, and branches logic."
-sidebar:
-  order: 2
+title: "Walkthrough: branch on page content"
+description: "A longer walkthrough for level 2: extract links and text, measure the page with expressions, and take a different path with an If node."
 section: get-started
+kind: guide
+sidebar:
+  label: "Walkthrough: branch on page content"
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-This tutorial builds on the Quick Intro and shows a slightly more “real” workflow.
+This walkthrough builds on [Your first workflow](/get-started/first-workflow/) and is part of [Level 2 · Working with data](/get-started/working-with-data/). It is a reference walkthrough, not yet a full lesson: it has no progress tracking or checks.
 
 You’ll create an automation that:
 
@@ -46,17 +47,17 @@ This shows the main idea behind workflows: they can react to what they find on t
 ## Step 1: Start a new workflow
 
 1. Click the AWFlow extension icon. The app opens in the [side panel](/app/side-panel/).
-2. Choose **Create New Workflow** or **Start from Blank**.
-3. You should now have an empty canvas ready to add nodes.
+2. Open **Workflows**, click **Add Workflow**, choose **Blank canvas** then **Triggered**, name it and click **Create & open**.
+3. You should now have an empty canvas with an **Add Trigger** button.
 
 ---
 
 ## Step 2: Add a link extraction node
 
-1. Click **Add first step**.
+1. Click **Add Trigger** and pick **When Started**, then click the **+** on its right edge.
 2. Search for **Get All Links** and insert it.
 3. By default, it extracts all `<a>` link URLs and labels from the current page.
-4. Click **Execute Step** to test it.
+4. Click **Test step** to test it.
 
 You’ll see the list of links in the node output.
 
@@ -66,17 +67,17 @@ This shows how to gather all hyperlinks on the page.
 
 ## Step 3: Add text extraction and processing
 
-1. From **Get All Links**, click **Add node**.
+1. From **Get All Links**, click the **+** on its right edge.
 2. Search for **Get All Text** and add it.
-3. Run **Execute Step** to fetch the full page text.
-4. From **Get All Text**, click **Add node** again.
+3. Click **Test step** to fetch the full page text.
+4. From **Get All Text**, click the **+** on its right edge again.
 5. Insert **Edit Fields** to analyze the text.
 7. Configure these fields by copying the values below:
    - **word_count**: `{{ $json.text.split(' ').length }}`
    - **character_count**: `{{ $json.text.length }}`
    - **summary**: `{{ $json.text.substring(0, 200) }}...`
 
-8. Execute to see analysis results.
+8. Click **Test step** to see the analysis results.
 
 This gives you a quick “profile” of the page: how long it is, plus a short preview.
 
@@ -91,14 +92,14 @@ graph TB
   Branch -->|otherwise| Short[Summary Branch]
 ```
 
-1. From the Edit Fields node, click **Add node**.
+1. From the Edit Fields node, click the **+** on its right edge.
 2. Search and insert **If**.
 3. Configure it:
    - **Input**: `word_count` (select this from the previous node's output)
    - **Operator**: "Number > Larger"
    - **Value**: `500`
 
-4. Execute the If node. You’ll see two potential paths: "true" (longer than 500 words) and "false" (shorter).
+4. Test the If node. You’ll see two potential paths: "true" (longer than 500 words) and "false" (shorter).
 
 Now your workflow can take different paths based on content length.
 
@@ -139,7 +140,7 @@ Then execute the full workflow. The final output will differ based on whether th
 ## Step 6: Run and review full workflow
 
 1. Navigate to a web page with substantial text (e.g. a news article).
-2. In the builder, click **Execute Workflow** (runs from first node onward).
+2. In the builder, click **Test Workflow** (runs from the trigger onward).
 3. Watch as the workflow runs step-by-step:
    - Links are extracted
    - Full text is fetched
