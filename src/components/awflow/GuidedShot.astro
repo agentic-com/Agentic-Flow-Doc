@@ -36,15 +36,20 @@ interface Props {
 	 * dialog isn't lost in a full app window. `full` shows the whole screenshot.
 	 */
 	focus?: 'auto' | 'full';
+	/**
+	 * Number of the first step (default 1). Split a crowded screen into two GuidedShots of the same
+	 * shot, the second with `start` after the first, so each zooms tighter and numbering continues.
+	 */
+	start?: number;
 }
 
-const { shot, steps, caption, alt, focus = 'auto' } = Astro.props;
+const { shot, steps, caption, alt, focus = 'auto', start = 1 } = Astro.props;
 if (!Array.isArray(steps) || steps.length === 0) throw new Error(`<GuidedShot shot="${shot}">: give at least one step.`);
 const r = await resolveShot(shot, 'GuidedShot');
 const items = steps.map((s, i) => {
 	if (!s.title) throw new Error(`<GuidedShot shot="${shot}">: step ${i + 1} has no title.`);
 	const spot = getSpot(r.entry, s.spot, 'GuidedShot');
-	return { n: i + 1, title: s.title, bodyHtml: s.body ? inlineMarkdown(s.body) : undefined, check: s.check, label: spot.label, box: spot.box };
+	return { n: start + i, title: s.title, bodyHtml: s.body ? inlineMarkdown(s.body) : undefined, check: s.check, label: spot.label, box: spot.box };
 });
 // Focus window: the union of the spots' boxes plus a margin, at least 45% of the image wide, kept
 // at the image's own proportions or wider, and clamped inside the image. Boxes become relative to it.
@@ -81,12 +86,17 @@ const markers = items.map((it) => {
 		{ px: it.box.x + it.box.w / 2, py: it.box.y, dx: 0, dy: -GAP, cx: b.x + b.w / 2, cy: b.y - GAP },
 		{ px: it.box.x + it.box.w / 2, py: it.box.y + it.box.h, dx: 0, dy: GAP, cx: b.x + b.w / 2, cy: b.y + b.h + GAP },
 	];
-	const free = (o: (typeof options)[number]) =>
-		o.cx >= 15 && o.cx <= FW - 15 && o.cy >= 15 && o.cy <= FH - 15 && placed.every((p) => Math.hypot(p.x - o.cx, p.y - o.cy) >= MIN);
-	const pick = options.find(free) ?? options[0];
+	// The CSS keeps markers inside the frame, so test the clamped position.
+	for (const o of options) { o.cx = Math.min(Math.max(17, o.cx), FW - 17); o.cy = Math.min(Math.max(17, o.cy), FH - 17); }
+	const free = (o: (typeof options)[number]) => placed.every((p) => Math.hypot(p.x - o.cx, p.y - o.cy) >= MIN);
+	const pick = options.find(free);
+	if (!pick) console.warn(`[GuidedShot] ${Astro.url.pathname} shot="${shot}": marker ${it.n} overlaps another; split the steps (see start).`);
+	return keep(pick ?? options[0]);
+});
+function keep(pick: { px: number; py: number; dx: number; dy: number; cx: number; cy: number }) {
 	placed.push({ x: pick.cx, y: pick.cy });
 	return { x: pick.px, y: pick.py, dx: pick.dx, dy: pick.dy };
-});
+}
 const placedItems = items.map((it, i) => ({ ...it, marker: markers[i] }));
 // Stable per page: shot name + position among this page's GuidedShots.
 const counter = ((Astro.locals as { __awfGuided?: number }).__awfGuided ?? 0) + 1;
