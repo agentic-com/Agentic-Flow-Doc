@@ -258,6 +258,10 @@ export default defineConfig({
     },
     // Must be a path under public/. The old "./src/assets/logo.png" value 404'd (awflow/Agentic-Flow#1330).
     favicon: "/favicon.svg",
+    head: [
+      // Release notes feed (awflow/Agentic-Flow#1345).
+      { tag: "link", attrs: { rel: "alternate", type: "application/rss+xml", title: "AWFlow release notes", href: "/releases/rss.xml" } },
+    ],
     editLink: {
       baseUrl: "https://github.com/agentic-com/Agentic-Flow-Doc/edit/Dev/",
     },
