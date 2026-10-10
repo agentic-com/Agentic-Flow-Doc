@@ -24,3 +24,7 @@ export { default as NodeCatalog } from './NodeCatalog.svelte';
 export { default as LessonProgress } from './LessonProgress.svelte';
 export { default as LessonDone } from './LessonDone.svelte';
 export { default as ModelTabs } from './ModelTabs.svelte';
+export { default as RecipeGrid } from './RecipeGrid.svelte';
+export { default as RecipeMeta } from './RecipeMeta.svelte';
+export { default as RecipeUse } from './RecipeUse.svelte';
+export { default as RecipeSteps } from './RecipeSteps.svelte';

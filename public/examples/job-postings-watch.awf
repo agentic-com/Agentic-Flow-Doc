@@ -1,0 +1,73 @@
+{
+  "name": "New Job Postings Watch",
+  "description": "Watches a careers page and sends a push notification when new job postings appear.",
+  "tags": ["watch", "tier-2", "push", "extension", "monitor"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "💼 First to know about new roles.\n\nPoint this at the job list on a careers page (set the CSS selector and page URL below). When the list changes, you get a push notification on your phone via ntfy. Pick a private ntfy topic the first time."
+      },
+      "width": 340,
+      "height": 180
+    },
+    {
+      "id": "trigger-element-change",
+      "type": "trigger",
+      "position": { "x": 100, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:elementChangeTrigger" },
+        "label": "Watch the job list",
+        "inputs": {
+          "selector": ".jobs-list",
+          "condition": "changed",
+          "debounceMs": 500,
+          "urlPatterns": ["<all_urls>"]
+        },
+        "parameters": { "notes": "Fires when the job list changes on the page you're watching. Swap in the real job-list selector and set the page URL." }
+      }
+    },
+    {
+      "id": "send-push",
+      "type": "basic",
+      "position": { "x": 420, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:pushNotification" },
+        "label": "Send a push notification",
+        "inputs": {
+          "credential": "",
+          "parameters": {
+            "provider": "ntfy",
+            "topic": "",
+            "message": "New job postings on the page you're watching",
+            "title": "New jobs",
+            "priority": "high"
+          }
+        },
+        "parameters": { "notes": "Sends a push alert via ntfy. The credential is optional for ntfy (only needed for protected topics); the topic is required." }
+      }
+    },
+    {
+      "id": "sticky-push",
+      "type": "stickyNote",
+      "position": { "x": 420, "y": 460 },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: pick a private ntfy topic to receive alerts (and connect a credential only if your topic is protected)."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    { "id": "e-trigger-push", "source": "trigger-element-change", "target": "send-push", "type": "flowEdge" }
+  ],
+  "requiredInputs": [
+    { "nodeId": "send-push", "field": "credential" },
+    { "nodeId": "send-push", "field": "topic" }
+  ]
+}

@@ -1,27 +1,25 @@
 ---
 title: Recipes
-description: Ready-made AWFlow workflows for common jobs, and where to find more.
+description: Pick an outcome, install it, make it yours. Each recipe is a ready-made workflow that shows how it works, what it touches and what to change.
+kind: hub
 section: recipes
+tableOfContents: false
 sidebar:
-  label: Overview
+  label: All recipes
   order: 0
 ---
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
+import { RecipeGrid } from '@components/awflow';
 
-A recipe is a complete workflow for one job, such as summarizing a page or saving data to a sheet, with the steps explained so you can adapt it.
+<RecipeGrid client:load />
 
-Until step-by-step recipes are written up here, the quickest way to start from a working workflow is the Marketplace: install one, open it on the canvas, and change it to fit.
+## How recipes work
 
-<CardGrid>
-  <Card title="Browse the Marketplace" icon="external">
-    Workflows shared by the AWFlow team and the community. Install one, then open it on the canvas.
+Each recipe is a real workflow from the AWFlow marketplace, drawn step by step:
 
-    [Open the Marketplace](https://app.awflow.io/#/app/marketplace)
-  </Card>
-  <Card title="Build your own" icon="rocket">
-    New to AWFlow? Build a first workflow from scratch in a few minutes.
+- **Install in AWFlow** sends the workflow to the extension, or opens the web app's import page. You review it before anything is saved.
+- **You'll need** lists what the import leaves blank for you to fill in: a connection, or a model to download once.
+- **It touches** lists the pages, sites, apps and models the workflow uses, worked out from its steps the same way as the permission list the marketplace shows before you install.
+- **Make it yours** under each step names the setting to change, and **Variations** suggests bigger changes.
 
-    [Start the quick intro](/get-started/first-workflow/)
-  </Card>
-</CardGrid>
+Recipes that need a [knowledge base](/app/knowledge-bases/overview/) of your own, such as chatting with your notes, are on the [Marketplace](https://app.awflow.io/#/app/marketplace) for now: a knowledge base can't travel inside a file. New to AWFlow? Start with the [quick intro](/get-started/quick-intro/).

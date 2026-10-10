@@ -1,0 +1,82 @@
+---
+title: Copy any article as clean Markdown
+description: One run turns the page you're reading into Markdown with its links, ready to paste into Obsidian, Notion or a note. No account, no AI.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Article to Markdown
+recipe:
+  goal: Capture to my apps
+  level: beginner
+  minutes: 3
+  setup: none
+  awf: /examples/article-to-markdown.awf
+  marketplaceId: 85d02ab9-cac8-4780-ab93-b7636ab28205
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="article-to-markdown" />
+
+<FlowPreview src="/examples/article-to-markdown.awf" caption="Run it → read the page's HTML → convert to Markdown → copy to the clipboard." />
+
+<RecipeUse slug="article-to-markdown" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="article-to-markdown"
+	steps={[
+		{
+			node: 'trigger-when-started',
+			title: 'Run it on the page',
+			body: 'When Started has no settings. A workflow whose only trigger is When Started is also listed in the right-click menu.',
+			tweak: 'add a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger to copy with a shortcut.',
+		},
+		{
+			node: 'get-html',
+			title: 'Read the page HTML',
+			body: 'Get All HTML puts the page\'s HTML in the `html` field.',
+			tweak: 'set **DOM Selector** to `article` or `main` so menus and footers stay out.',
+		},
+		{
+			node: 'to-markdown',
+			title: 'Convert it to Markdown',
+			body: 'Markdown with **Operation** **HTML to Markdown** reads `html`, keeps links (**Keep Links** on) and writes `markdown`.',
+			tweak: 'turn on **Keep Images** or **Keep Tables** when you want them too.',
+		},
+		{
+			node: 'copy-clipboard',
+			title: 'Copy it to the clipboard',
+			body: 'Clipboard Write copies the Markdown, ready to paste.',
+			tweak: 'save a file instead with [Save as File](/nodes/builtin/datatransformation/saveasfile/).',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe and save it. No setup is needed.
+2. Open an article, right-click it and choose **Agentic Workflow** › **Personal Workflows** › **Capture Article as Markdown**.
+3. Paste into a note: you get headings, paragraphs and links as Markdown.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Straight into Obsidian | Replace Clipboard Write with [Obsidian](/nodes/builtin/integration/obsidian/) to create a note. | Intermediate |
+| Only the selection | Replace Get All HTML with [Get Selected Text](/nodes/extension/getselectedtext/) and skip the conversion. | Beginner |
+| Add a title line | Add [Get Page Metadata](/nodes/extension/getpagemetadata/) and put `# title` and the URL above the Markdown in Clipboard Write's **Text**. | Intermediate |
+
+## Troubleshoot
+
+- **The Markdown is full of menus and ads.** Set **DOM Selector** on Get All HTML to the article container.
+- **Nothing is pasted.** Clipboard Write writes on the page you ran it on. Run it from the right-click menu on the article rather than from the canvas.
+- **Images are missing.** **Keep Images** is off by default in this recipe; turn it on in the Markdown step.

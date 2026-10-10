@@ -1,0 +1,84 @@
+---
+title: Summarize the page you're reading, on your device
+description: Run it on any article and get a few bullet points in a panel next to the page. A model on your computer writes them, so nothing leaves the browser.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Summarize this page
+recipe:
+  goal: Research & reading
+  level: beginner
+  minutes: 5
+  setup: on-device
+  awf: /examples/summarize-this-page.awf
+  marketplaceId: 7819bf04-cf92-4c5c-90a3-3a39cb4fbc53
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="summarize-this-page" />
+
+<FlowPreview src="/examples/summarize-this-page.awf" caption="Run it → read the page → summarize with a local model → show the bullets on the page." />
+
+<RecipeUse slug="summarize-this-page" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="summarize-this-page"
+	steps={[
+		{
+			node: 'trigger-run',
+			title: 'Start it when you want',
+			body: 'The workflow runs when you click **Test Workflow**, run it from the workflow list, or pick it in the right-click menu under **Agentic Workflow**.',
+			tweak: 'swap it for a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger to summarize with a keyboard shortcut.',
+		},
+		{
+			node: 'get-text',
+			title: 'Read the current page',
+			body: 'Takes the text you can see on the active tab (**Visible text only** is on), and puts it in the `text` field.',
+			tweak: 'set **DOM Selector** to `article` or `main` to skip menus, comments and footers.',
+		},
+		{
+			node: 'summarize',
+			also: ['local-model'],
+			title: 'Summarize it on your device',
+			body: 'The Summarization node asks the Web LLM model for at most 120 words as a few bullet points. The model runs in your browser through WebGPU.',
+			tweak: 'change **Max words** and **Style** (for example `one short paragraph`), or pick a bigger model in **Model**.',
+		},
+		{
+			node: 'show-summary',
+			title: 'Show the summary on the page',
+			body: 'Display Markdown opens a panel in the bottom-right corner of the tab, titled **Page summary**, with a copy button.',
+			tweak: 'rename the panel in **Title**, or send the summary somewhere instead (see the variations).',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe, open it on the canvas and pick a model in **Local AI model**. The first run downloads it once; installed models start right away. See [Local models](/app/local-models/).
+2. Save and activate the workflow, then open a long article.
+3. Right-click the article and choose **Agentic Workflow** › **Personal Workflows** › **Summarize This Page**. If it's missing, choose **Get / Refresh Workflows** first.
+4. A **Page summary** panel opens in the corner of the article with a few bullet points.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Summarize only what you select | Replace **Get All Text** with [Get Selected Text](/nodes/extension/getselectedtext/) and a [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger set to **Selection**. | Beginner |
+| Use a hosted model for long pages | Plug [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/) into the **Model** slot instead of Web LLM. | Beginner |
+| Keep a reading log | Connect [Notion](/nodes/builtin/integration/notion/) or [Google Sheets](/nodes/builtin/integration/google-sheets/) to the Summarize step's output as a second branch, to save each summary with the page's title and link. | Intermediate |
+
+## Troubleshoot
+
+- **The panel never appears.** Display Markdown shows on the active tab. Run it from the right-click menu on the article itself, so the article is the active tab.
+- **The model doesn't load.** Web LLM needs WebGPU, which some browsers and graphics cards lack. Use [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/) as the model instead.
+- **The summary covers the menu and the cookie banner.** Set **DOM Selector** on Get All Text to the article's container.
