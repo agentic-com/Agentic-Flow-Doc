@@ -33,7 +33,7 @@ export const shots: ShotDef[] = [
 			{ id: 'search', label: 'Search name or email', locator: (p) => main(p).getByPlaceholder(/Search name or email/) },
 			{ id: 'filters', label: 'Role, Status, Plan, Email verified and Joined filters', locator: (p) => main(p).getByText('Any role', { exact: true }).first() },
 			{ id: 'select', label: 'Tick users', locator: (p) => main(p).getByRole('checkbox', { name: 'Select user' }).nth(1) },
-			{ id: 'bulk', label: 'Bulk actions', locator: (p) => main(p).getByRole('button', { name: /^Ban/ }).first() },
+			{ id: 'bulk', label: 'Bulk actions', locator: (p) => main(p).getByRole('button', { name: /^Ban(…|\.\.\.)$/ }).first() },
 			{ id: 'open-user', label: 'Open a user', locator: (p) => main(p).getByText('Mei Lin', { exact: true }).first() }
 		],
 		prepare: async (s) => {

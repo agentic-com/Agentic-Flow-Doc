@@ -14,6 +14,8 @@
 		check?: string;
 		label: string;
 		box: Box;
+		/** Marker centre: a point on the box edge (%) plus an offset in px (GuidedShot.astro). */
+		marker: { x: number; y: number; dx: number; dy: number };
 	}
 	interface Props {
 		uid: string;
@@ -103,7 +105,7 @@
 					class="awf-guided__marker"
 					class:is-active={active === i}
 					class:awf-ping={active === i}
-					style="--x: calc({pct(it.box.x)} - 12px); --y: {pct(it.box.y + it.box.h / 2)}"
+					style="--x: calc({pct(it.marker.x)} + {it.marker.dx}px); --y: calc({pct(it.marker.y)} + {it.marker.dy}px)"
 					aria-label="Step {it.n}: {it.title}"
 					aria-controls="{uid}-step-{it.n}"
 					onclick={() => fromMarker(i)}>{it.n}</button
