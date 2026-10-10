@@ -3,6 +3,12 @@ title: "Set Variable"
 description: "Remember a named value for the rest of the current run"
 sidebar:
   label: "Set Variable"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/setvariable
+  family: flow
 ---
 
 Remember a value for the rest of this run.
@@ -20,14 +26,20 @@ Variables live for **one execution** and are gone when the run ends. If you need
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | What to do to the variable: `Set`, `Add to number` (increment), `Append to list`, or `Delete`. Defaults to `Set`. |
-| Name | The name to store the value under, read later as `{{ $run.name }}`. Letters, digits, underscore and `$`, not starting with a digit — the same shape the expression token accepts. |
-| Value | The value to store, for example `{{ $json.nextPage }}`. Resolves from an upstream connection, or is taken as text when typed in. |
-| Pass The Item Through | On by default: the incoming item continues unchanged, so the node can sit inline. Off: the item is replaced by a summary of what was stored. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Set | No | What to do to the variable. Options: Set, Add to number, Append to list, Delete. |
+| **Name** | Text |  | No | Name to store the value under. Read it later as \{\{ $run.name \}\}. |
+| **Value** | Value |  | No | The value to store. |
+| **Pass The Item Through** | Toggle | On | No | Emit the incoming item unchanged, so this node can sit inline. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 By default the incoming item passes through unchanged, so Set Variable can sit inline without disturbing the stream. With pass-through off, it emits a summary of the write (`name`, `value`, `operation`) instead.
 
@@ -38,6 +50,10 @@ Any downstream node reads the value inline with `{{ $run.name }}` in any input f
 A variable is only reliably readable by nodes **guaranteed to run after** the one that sets it — that is, nodes downstream of this one. A node runs once every node feeding into it has run, but between two branches that do not feed into each other there is no ordering at all. Reading a variable from a parallel branch may work today and break when someone inserts a node elsewhere. Reading a variable that was never set **fails loudly, naming the variable**, rather than resolving to an empty string, so that mistake cannot pass unnoticed. The canvas shows a design-time warning when a read may happen before the write.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 - Variables exist only while a workflow is running. Running this node on its own, outside an execution, has nothing to store into and reports so.

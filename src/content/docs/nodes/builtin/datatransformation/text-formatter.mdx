@@ -3,6 +3,12 @@ title: "Text / Formatter"
 description: "Transform text: case, trim, pad, replace, split, slugify, extract, count, encode and decode"
 sidebar:
   label: "Text / Formatter"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/text-formatter
+  family: data
 ---
 
 Transform text: case, trim, pad, replace, split, slugify, extract, count, encode and decode.
@@ -31,24 +37,15 @@ Use this node to tidy scraped or user-supplied text before it travels downstream
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | What to do with the text. One of `Uppercase`, `Lowercase`, `Title Case`, `camelCase`, `snake_case`, `kebab-case`, `Trim`, `Pad`, `Replace`, `Split`, `Join`, `Slugify`, `Truncate`, `Default if empty`, `Extract emails`, `Extract URLs`, `Extract numbers`, `Extract phone numbers`, `Word count`, `Character count`, `Encode` or `Decode`. Defaults to `Uppercase`. |
-| Text | The text to transform. Bind an upstream value with `{{ }}`, for example `{{ $json.description }}`. |
-| Target Length | For `Pad`: pad until the text reaches this many characters. Defaults to `0`. |
-| Pad With | For `Pad`: the characters repeated to fill the space. Defaults to a single space. |
-| Pad Side | For `Pad`: which end to pad, `Start` or `End`. Defaults to `Start`. |
-| Find | For `Replace`: the text or pattern to look for. |
-| Replace With | For `Replace`: the text put in place of each match. |
-| Treat Find As Regex | For `Replace`: read the Find field as a regular expression. Defaults to `off`. |
-| Regex Flags | For `Replace`: flags for the pattern, such as `gi`. Defaults to `g`. |
-| Separator | For `Split` and `Join`: the string to split on, or the string placed between joined items. Defaults to `,`. Splitting on an empty separator splits into individual characters. |
-| Maximum Length | For `Truncate`: keep at most this many characters. Defaults to `20`. |
-| Ellipsis | For `Truncate`: appended when the text is shortened. Defaults to `…`. |
-| Default Value | For `Default if empty`: returned when the text is empty or only whitespace. |
-| Scheme | For `Encode` and `Decode`: which encoding to convert to or from. One of `Base64`, `URL (whole URL)`, `URI component`, `HTML entities` or `Hex`. Defaults to `Base64`. |
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 - Case conversions, `Trim`, `Pad`, `Replace`, `Split`, `Join`, `Slugify`, `Truncate` and `Default if empty` return the transformed value in `result`. `Split` returns an array; `Join` expects an array as input text and returns a joined string.
 - `Extract emails`, `Extract URLs`, `Extract numbers` and `Extract phone numbers` return every match found in `matches`, an array that is empty rather than absent when nothing matches.
@@ -56,6 +53,10 @@ Use this node to tidy scraped or user-supplied text before it travels downstream
 - `Encode` and `Decode` return the converted value in `result`. Base64, hex and URI-component conversions are UTF-8 safe, so unicode text round-trips.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

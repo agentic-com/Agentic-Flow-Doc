@@ -3,6 +3,12 @@ title: "Guardrails"
 description: "Validate text against policies using a model, and route to pass or fail"
 sidebar:
   label: "Guardrails"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/guardrails
+  family: ai
 ---
 
 Validate text against policies using a model, and route to pass or fail
@@ -17,12 +23,24 @@ Use this node to enforce content policies on model output or user input before i
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to check. Supports binding upstream data with `{{ }}`. Rendered as a text area. |
-| Policy | Describes what is allowed / disallowed (e.g. no PII, no profanity, must be on-topic about X). Rendered as a text area. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | Yes | The text to check (bind upstream data with \{\{ \}\}). |
+| **Policy** | Long text |  | Yes | Describe what is allowed / disallowed (e.g. no PII, no profanity, must be on-topic about X). |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+2 output ports: **Pass**, **Fail**.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `routed` | Object |  |
+{/* AUTO:outputs:end */}
 
 Two output ports:
 
@@ -32,6 +50,12 @@ Two output ports:
 If no implicit input is provided, the routed item is `{ text, passed, reason }`; otherwise the original implicit input item(s) are passed through to the matching port.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model | Yes | One |
+{/* AUTO:deps:end */}
 
 - **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). The node uses it to evaluate the text against the policy and produce the JSON verdict.
 

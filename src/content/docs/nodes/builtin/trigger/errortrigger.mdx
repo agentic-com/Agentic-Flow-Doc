@@ -3,6 +3,12 @@ title: "Error Trigger"
 description: "Run the flow when a workflow fails."
 sidebar:
   label: "Error Trigger"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/errortrigger
+  family: trigger
 ---
 
 Start this workflow whenever a watched workflow fails, and hand it the details of what went wrong.
@@ -20,12 +26,32 @@ Where a [Try / Catch](/nodes/builtin/flow/try/) node handles a failure *inside* 
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Watch | Which workflows to listen to: **This workflow**, **Selected workflows**, or **All workflows**. Defaults to This workflow. |
-| Workflows to watch | The specific workflows to watch, when **Selected workflows** is chosen. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Watch** | Choice | This workflow | No | Which workflows this trigger listens to. Options: This workflow, Selected workflows, All workflows. |
+| **Workflows** | Workflow picker |  | No | The workflows to watch. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `workflowId` | Text |  |
+| `workflowName` | Text |  |
+| `nodeId` | Text |  |
+| `nodeLabel` | Text |  |
+| `message` | Text | What the failing node said |
+| `input` | Any | The input the failing node was given |
+| `failedAt` | Text |  |
+| `triggerType` | Choice |  |
+| `triggeredAt` | Text |  |
+{/* AUTO:outputs:end */}
 
 The trigger outputs the failure details for downstream nodes:
 
@@ -40,6 +66,12 @@ The trigger outputs the failure details for downstream nodes:
 ## Important: only unattended runs report failures
 
 Only **unattended** runs report their failures to an Error Trigger — schedule, page load, navigation, context menu, and browser startup. A run you start yourself from the canvas surfaces its error to you directly and does **not** fire an Error Trigger.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Related nodes
 

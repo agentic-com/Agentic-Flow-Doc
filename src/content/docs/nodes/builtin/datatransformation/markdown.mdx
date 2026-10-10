@@ -3,6 +3,12 @@ title: "Markdown"
 description: "Convert HTML to Markdown, or Markdown to HTML"
 sidebar:
   label: "Markdown"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/markdown
+  family: data
 ---
 
 Convert HTML to Markdown, or Markdown to HTML.
@@ -17,22 +23,32 @@ Use **HTML to Markdown** before an AI node: feeding raw scraped HTML into a mode
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | Which way to convert: `HTML to Markdown` or `Markdown to HTML`. Defaults to `HTML to Markdown`. |
-| Content | The HTML or Markdown to convert. Accepts an expression such as `{{ $json.html }}`. |
-| Source Field | Field holding the content, used when the Content field above is left empty, for example `html`. |
-| Keep Links | Keep links as `[text](url)`; when off, only the link text is kept. Applies to HTML to Markdown. Defaults to `on`. |
-| Keep Images | Keep images as `![alt](src)`; when off, images are dropped. Applies to HTML to Markdown. Defaults to `on`. |
-| Keep Tables | Render tables as Markdown tables; when off, cells become plain lines. Applies to HTML to Markdown. Defaults to `on`. |
-| Include Input Fields | Keep the incoming item's fields alongside the result. Defaults to `on`. |
-| Put Result In Field | Field the converted text is written to. Defaults to `result`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | HTML to Markdown | No | Which way to convert. Options: HTML to Markdown, Markdown to HTML. |
+| **Content** | Value |  | No | The HTML or Markdown to convert. |
+| **Source Field** | Text |  | No | Field holding the content, when the field above is left empty. |
+| **Keep Links** | Toggle | On | No | Keep links as \[text\](url); when off, only the link text is kept. |
+| **Keep Images** | Toggle | On | No | Keep images as !\[alt\](src); when off, images are dropped. |
+| **Keep Tables** | Toggle | On | No | Render tables as Markdown tables; when off, cells become plain lines. |
+| **Include Input Fields** | Toggle | On | No | Keep the incoming item’s fields alongside the result. |
+| **Put Result In Field** | Text | `result` | No | Field holding the converted text. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Returns each incoming item with the converted text written to **Put Result In Field**. When **Include Input Fields** is on, the item's original fields travel alongside the result; when off, only the result field is returned. A single incoming item produces a single output item; multiple items produce one output item each.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required. HTML to Markdown parses the document in the browser; Markdown to HTML renders with `marked`, time-bounded in a worker, and the resulting HTML is sanitized with DOMPurify before it is returned. No node dependency is required.
 

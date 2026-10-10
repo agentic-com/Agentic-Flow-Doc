@@ -3,6 +3,12 @@ title: "Readwise / Reader"
 description: "Save highlights to Readwise (batch) and full articles to Reader, carrying source URL, title and author."
 sidebar:
   label: "Readwise / Reader"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/readwise
+  family: integration
 ---
 
 Save what you highlight to [Readwise](https://readwise.io) and full articles to [Reader](https://readwise.io/read). Two Readwise APIs behind one node, modeled as **resources** — one account-wide token unlocks both.
@@ -35,18 +41,53 @@ Leave a field blank to read it per-item from the incoming data; set a field to a
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | A Readwise **access token** (see below). |
-| Resource / Operation | Readwise (highlights) or Reader (articles), and what to do. |
-| Highlight text | The highlight (Readwise). Leave blank to read it from each incoming item. |
-| Title / Author / Source URL | Provenance carried onto each highlight — blank reads from the item. |
-| Note / Location / Highlighted at | Optional per-highlight metadata. |
-| URL | The article/page URL to save (Reader → Save document). |
-| HTML | Optional full-page HTML to store the exact content you captured (Reader). |
-| Summary / Tags | Optional metadata for the saved document (Reader). |
+| Readwise (Highlights) | Save highlights |
+| Reader (Articles) | Save document |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | A Readwise access token (readwise.io/access\_token). One account-wide token works for both Readwise (highlights) and Reader (articles) — keep it secret. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Readwise (Highlights) → Save highlights**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Highlight text** | Text |  | No | The highlight text. Leave blank to read `text` (or `highlight`/`content`/`selection`) from each incoming item. |
+| **Title** | Text |  | No | Source title. Leave blank to read `title` from each incoming item. |
+| **Author** | Text |  | No | Source author. Leave blank to read `author` from each incoming item. |
+| **Source URL** | Text |  | No | The page the highlight came from. Leave blank to read `source_url`/`url`/`link` from each incoming item. |
+| **Note** | Text |  | No | An optional note attached to the highlight. |
+| **Location** | Text |  | No | An optional location/position reference (e.g. a page number or offset). |
+| **Highlighted at** | Text |  | No | An optional ISO 8601 timestamp for when the highlight was made. |
+
+**Reader (Articles) → Save document**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL** | Text |  | Yes | The URL of the article/page to save to Reader. |
+| **HTML** | Text |  | No | Optional full-page HTML. Provide it to save the exact content you captured. |
+| **Title** | Text |  | No | Source title. Leave blank to read `title` from each incoming item. |
+| **Author** | Text |  | No | Source author. Leave blank to read `author` from each incoming item. |
+| **Summary** | Text |  | No | An optional summary stored with the document. |
+| **Tags** | Text |  | No | Optional comma-separated tags. |
+{/* AUTO:settings:end */}
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth (Class A):** a single **account-wide access token** from [readwise.io/access_token](https://readwise.io/access_token). The **same** token works for both Readwise and Reader. Because it is account-wide it grants full access to your Readwise account — keep it secret.
 - It is sent as `Authorization: Token <token>` (Readwise's scheme — not `Bearer`). It's stored in your credential vault and never passes through awflow's backend.

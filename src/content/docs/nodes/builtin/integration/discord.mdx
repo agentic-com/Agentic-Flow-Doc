@@ -3,6 +3,12 @@ title: "Discord"
 description: "Integrate with Discord: post messages and rich embeds via a webhook, or read channels and messages with a bot token."
 sidebar:
   label: "Discord"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/discord
+  family: integration
 ---
 
 Post messages and rich embeds to a Discord channel via a webhook, or read channels and messages with a bot token.
@@ -25,19 +31,76 @@ Send a "page changed" notification with the page title and a screenshot thumbnai
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | The Discord credential (see below). |
-| Resource / Operation | What to act on and how. |
-| Message | The message text (Webhook Send) — optional if an embed is provided. |
-| Username | Override the webhook display name for this message. |
-| Embed Title / URL / Description / Thumbnail URL | Fields of the rich embed. Any subset may be set; leave all empty to send a plain message. |
-| Server (Guild) ID | The Discord server ID (Channel → List). |
-| Channel ID / Message ID | Identify the channel or message (Bot operations). |
-| Emoji | Unicode emoji (e.g. 👍) or a custom emoji as `name:id` (Message → React). |
-| Limit | Number of messages to return (Channel → Get messages, 1–100). |
+| Webhook | Send |
+| Channel | Get, List, Get messages |
+| Message | Get, React |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The Discord credential. For Webhook operations store the webhook URL (it is a secret — anyone with it can post to that channel); for Channel/Message operations store a bot token. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Webhook → Send**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Message** | Text |  | No | The message text to post (optional if an embed is provided). |
+| **Username** | Text |  | No | Override the webhook display name for this message. |
+| **Embed Title** | Text |  | No | Title of the rich embed. |
+| **Embed URL** | Text |  | No | URL the embed title links to. |
+| **Embed Description** | Text |  | No | Body text of the rich embed (Markdown supported). |
+| **Embed Thumbnail URL** | Text |  | No | Image URL shown as the embed thumbnail (e.g. a screenshot). |
+
+**Channel → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Channel ID** | Text |  | Yes | The Discord channel ID. |
+
+**Channel → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Server (Guild) ID** | Text |  | Yes | The Discord server (guild) ID. |
+
+**Channel → Get messages**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Channel ID** | Text |  | Yes | The Discord channel ID. |
+| **Limit** | Number | 50 | No | Number of messages to return (1-100). |
+
+**Message → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Channel ID** | Text |  | Yes | The Discord channel ID. |
+| **Message ID** | Text |  | Yes | The Discord message ID. |
+
+**Message → React**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Channel ID** | Text |  | Yes | The Discord channel ID. |
+| **Message ID** | Text |  | Yes | The Discord message ID. |
+| **Emoji** | Text |  | Yes | Unicode emoji (e.g. 👍) or a custom emoji as name:id. |
+{/* AUTO:settings:end */}
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth type:** Bearer Token. The stored value depends on the mode:
   - **Webhook** operations: store the **webhook URL**. A webhook URL **is a secret** — anyone holding it can post to that channel, so treat it like a password.

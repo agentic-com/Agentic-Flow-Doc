@@ -3,6 +3,12 @@ title: "PDF Parser"
 description: "Extract text from a PDF"
 sidebar:
   label: "PDF Parser"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/pdfparser
+  family: data
 ---
 
 Extract text from a PDF.
@@ -17,17 +23,29 @@ Use this node to turn an uploaded or fetched PDF into text you can search, summa
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Input field | The field holding the PDF data. Accepts base64, a `data:` URL, an ArrayBuffer/typed array, or a byte array. Defaults to `data`. |
-| Output field name | The field the extracted text is written to. Defaults to `text`. |
-| Merge pages | When on (default), all pages are joined into one text string. When off, the output is an array with one string per page. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Input field** | Text | `data` | No | The path to the field holding the PDF data (base64 string, data URL, ArrayBuffer/Uint8Array, or array of bytes). |
+| **Output field name** | Text | `text` | No | The name of the output field that will hold the extracted text. |
+| **Merge pages** | Toggle | On | No | When enabled, output one merged string for the whole document. When disabled, output an array with one string per page. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the original input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Returns `{ [outputFieldName]: text, pageCount }`, where `text` is a single string (merge pages on) or an array of per-page strings (merge pages off), and `pageCount` is the number of pages.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required. Parsing runs in the browser.
 

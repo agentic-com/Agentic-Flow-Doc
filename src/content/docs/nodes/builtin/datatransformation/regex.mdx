@@ -3,6 +3,12 @@ title: "Regex"
 description: "Match, extract and replace text with a regular expression"
 sidebar:
   label: "Regex"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/regex
+  family: data
 ---
 
 Match, extract and replace text with a regular expression.
@@ -17,19 +23,25 @@ Use this node to pull a price, an ID, a date or any other fragment out of text â
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | What to do with the pattern: `Match` (first match), `Match all` (every match), `Replace`, or `Test`. Defaults to `Match`. |
-| Pattern | The regular expression, without surrounding slashes. Named groups such as `(?<price>[\d.]+)` become fields on the outgoing item. |
-| Flags | How the pattern matches: `Ignore case (i)`, `All matches (g)`, `Multiline anchors (m)`, `Dot matches newlines (s)`, `Unicode (u)`. Choose any combination. |
-| Text | The text to match against. Accepts an expression such as `{{ $json.description }}`. |
-| Source Field | Name of the field holding the text, used only when **Text** is left empty (for example `description`). |
-| Replacement | Used by **Replace**: the text put in place of each match. Use `$1` or `$<name>` to reference groups. |
-| Maximum Matches | Used by **Match all**: the most matches to collect before stopping. Defaults to `1000` and is capped internally; the output reports whether it stopped early. |
-| Include Input Fields | Keep the incoming item's fields alongside the result. On by default. |
-| Put Result In Field | Field that holds the match, the replaced text, or the test result. Defaults to `match`. Named capture groups are always added as fields of their own, regardless of this. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Match | No | What to do with the pattern. Options: Match, Match all, Replace, Test. |
+| **Pattern** | Text |  | No | The regular expression, without surrounding slashes. |
+| **Flags** | Multiple choice |  | No | How the pattern matches. Options: Ignore case (i), All matches (g), Multiline anchors (m), Dot matches newlines (s), Unicode (u). |
+| **Text** | Value |  | No | The text to match against. |
+| **Source Field** | Text |  | No | Field holding the text, when the field above is left empty. |
+| **Replacement** | Text |  | No | Text put in place of each match. Use $1 or $ for groups. |
+| **Maximum Matches** | Number | 1000 | No | Most matches collected before stopping. |
+| **Include Input Fields** | Toggle | On | No | Keep the incoming itemâ€™s fields alongside the result. |
+| **Put Result In Field** | Text | `match` | No | Field holding the match, the replaced text, or the test result. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 The shape depends on the operation:
 
@@ -41,6 +53,10 @@ The shape depends on the operation:
 When **Include Input Fields** is on, the incoming item's fields ride along with each result.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

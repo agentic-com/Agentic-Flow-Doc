@@ -3,6 +3,12 @@ title: "Raindrop"
 description: "Save the current page to a Raindrop.io collection with title, excerpt, tags and cover — with duplicate-skip."
 sidebar:
   label: "Raindrop"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/raindrop
+  family: integration
 ---
 
 Save the page you're on to [Raindrop.io](https://raindrop.io) — with its title, excerpt, tags, and cover. Bookmarking with page metadata is what a browser extension is for; this is the sink for the page-metadata nodes.
@@ -25,19 +31,71 @@ Saving the same URL twice is the common accident. On **Bookmark → Create**, en
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | A Raindrop test token or OAuth token (see below). |
-| Resource / Operation | What to act on and how. |
-| Link | The page URL to save (Bookmark → Create). |
-| Title / Excerpt / Cover image URL | Metadata — leave **Title** and **Cover** empty to let Raindrop parse them from the page. |
-| Tags | Tags to attach (pairs with the Text Classifier). |
-| Collection ID | The collection to save into (use Collection → List to find it). |
-| Skip if already saved | Skip creating a duplicate of a URL you've already bookmarked. |
-| Bookmark ID | The bookmark to update (Bookmark → Update). |
-| Query / Collection ID / Limit | Search text, scope (0 = all), and result count (max 50). |
+| Bookmark | Create, Update, Search |
+| Collection | List |
+| Tag | List |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | A Raindrop test token (App settings → your app → Test token) or an OAuth token. It grants access to your Raindrop account — keep it secret. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Bookmark → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Link** | Text |  | Yes | The page URL to save. |
+| **Title** | Text |  | No | Leave empty to let Raindrop parse it from the page. |
+| **Excerpt** | Text |  | No | A short description — pair with an LLM node to summarise the page. |
+| **Tags** | List |  | No | Tags to attach — pair with the Text Classifier to auto-tag. |
+| **Cover image URL** | Text |  | No | Leave empty to let Raindrop parse it from the page. |
+| **Collection ID** | Number |  | No | The collection to save into (use Collection → List to find its ID). |
+| **Skip if already saved** | Toggle |  | No | Check whether this URL is already bookmarked and skip creating a duplicate. |
+
+**Bookmark → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Bookmark ID** | Number |  | Yes | The Raindrop bookmark ID to update. |
+| **Title** | Text |  | No | Leave empty to let Raindrop parse it from the page. |
+| **Excerpt** | Text |  | No | A short description — pair with an LLM node to summarise the page. |
+| **Tags** | List |  | No | Tags to attach — pair with the Text Classifier to auto-tag. |
+| **Collection ID** | Number |  | No | The collection to save into (use Collection → List to find its ID). |
+
+**Bookmark → Search**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Query** | Text |  | Yes | Search text (supports Raindrop search operators). |
+| **Collection ID** | Number |  | No | Search within this collection — 0 (default) searches all. |
+| **Limit** | Number |  | No | Maximum results per page (max 50). |
+
+**Collection → List**
+
+No further settings.
+
+**Tag → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Collection ID** | Number |  | No | List tags in this collection only (optional). |
+{/* AUTO:settings:end */}
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth:** a Raindrop **test token** (Settings → Integrations → create an app → **Test token**) or an OAuth token, sent as `Authorization: Bearer <token>`. The test token ships immediately and is the quickest way to start.
 - The token grants access to your Raindrop account. It's stored in your credential vault and never passes through awflow's backend.

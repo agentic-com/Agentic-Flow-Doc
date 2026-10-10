@@ -3,6 +3,12 @@ title: "Browser Notification"
 description: "Show a system notification through the OS notification center, visible even when no tab is focused."
 sidebar:
   label: "Browser Notification"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/browsernotification
+  family: inpage
 ---
 
 Show a system-level notification through the operating system's notification center — visible even when no browser tab is focused.
@@ -19,15 +25,29 @@ Creates a native OS notification with a title, message, icon, priority, and up t
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Title | The notification's bold heading. |
-| Message | The notification body text. |
-| Icon URL | Optional. A packaged extension asset path (e.g. `icons/icon128.png`) or an accessible image URL. Falls back to the extension icon. |
-| Priority | `Low`, `Normal`, or `High` — controls how prominently the OS surfaces the notification. |
-| Buttons | Optional. Up to two action buttons (Chrome's limit), each with a title. **Chrome only**: Firefox shows the notification without buttons. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Title** | Text |  | Yes |  |
+| **Message** | Long text |  | Yes |  |
+| **Icon URL** | Text |  | No |  |
+| **Priority** | Choice | Normal | No | Options: Low, Normal, High. |
+| **Buttons** | List of entries |  | No | Up to two action buttons, per the Chrome notifications API limit. Chrome only: Firefox shows the notification without buttons. |
+| Buttons (each entry) › **Button Title** | Text |  | Yes |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `notificationId` | Text |  |
+| `shown` | Choice |  |
+{/* AUTO:outputs:end */}
 
 Returns a small confirmation object:
 
@@ -35,6 +55,10 @@ Returns a small confirmation object:
 - `shown` — `true` once the notification has been created.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required.
 - Uses the extension's already-held `notifications` permission — no extra permission is needed.

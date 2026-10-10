@@ -3,6 +3,12 @@ title: "Digest"
 description: "Accumulate items across runs and release them together"
 sidebar:
   label: "Digest"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/digest
+  family: core
 ---
 
 Accumulate items across runs and release them together.
@@ -19,15 +25,27 @@ Use this node to batch work that should be acted on together rather than one ite
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | What to do with the digest: `Add to digest` (append the incoming item(s) and wait), `Peek` (read everything without clearing), or `Release` (read everything and clear the bucket). Defaults to `Add to digest`. |
-| Bucket | Name of the digest to add to, peek at, or release. Defaults to `default`. Use different names to keep several digests apart in the same workflow. |
-| Release at (count) | Used by **Add**: release automatically once the bucket reaches this many items. `0` (the default) means an add never releases on its own — the bucket is emptied by a **Release** (manual or scheduled) or a Peek-then-act. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | Add to digest | No | What to do with the digest. Options: Add to digest, Peek, Release. |
+| **Bucket** | Text | `default` | No | Name of the digest to add to, peek at, or release. |
+| **Release at (count)** | Number | 0 | No | Used by Add: release automatically once the bucket reaches this many items. 0 means only a Release (or manual/scheduled) empties it. |
+{/* AUTO:settings:end */}
 
 The item(s) to accumulate come from the node's incoming connection, the same way any other node reads its input. An **Add** appends whatever flows in; a single item is added as one, and a list is added as many.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port: **Released**.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `routed` | Object |  |
+{/* AUTO:outputs:end */}
 
 The node has a single output, **Released**, and puts items on it *only* when it releases:
 
@@ -47,6 +65,10 @@ To release on a schedule — say a summary at 6pm every day — **do not** try t
 The same shape works for a manual trigger (a "send it now" button branch) or an "act once I have N" batcher (a single Add node with **Release at (count)** set).
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser, and works without an account.
 - A digest lives in this workflow's Data Store, in this browser profile — same guarantees and limits as the [Data Store](/nodes/builtin/core/datastore/) node. Buckets are private to this workflow: an imported workflow gets a fresh, local ID and cannot read another workflow's digests.

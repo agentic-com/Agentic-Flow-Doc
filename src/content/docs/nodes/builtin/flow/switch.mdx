@@ -3,6 +3,12 @@ title: "Switch"
 description: "Route items to any number of named branches, with a fallback for the rest"
 sidebar:
   label: "Switch"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/switch
+  family: flow
 ---
 
 Route items to any number of named branches.
@@ -23,16 +29,26 @@ There are two ways to decide the branch:
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | How the branch is decided: `Rules` (conditions per branch) or `Expression` (match a value to a branch name). Defaults to `Rules`. |
-| Rules | One rule per branch, tried top to bottom. Each rule has an **Output Name** (the branch it routes to) and, in Rules mode, a set of **Conditions**. |
-| Value To Match | Used in Expression mode only. The value compared, as text, against each output name — for example `{{ $json.status }}`. |
-| On Multiple Matches | `First match only` (default) or `Every match`. First-match makes rule order your way of expressing precedence; every-match fans one item out to every branch it fits. |
-| Add A Fallback Branch | On by default. Sends items matching no rule to an output of their own. Off: an item matching nothing is dropped and goes no further. |
-| Fallback Name | Name of the fallback branch. Defaults to `Anything else`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | Rules | No | Decide the branch by conditions, or by matching a value to a name. Options: Rules, Expression. |
+| **Rules** | List of entries |  | No | One per branch, tried from top to bottom. |
+| Rules (each entry) › **Output Name** | Text |  | Yes | Name of the branch items matching this rule are sent to. |
+| Rules (each entry) › **Conditions** | Conditions |  | No | When these hold, the item takes this branch. |
+| **Value To Match** | Value |  | No | Compared against each output name, in Expression mode. |
+| **On Multiple Matches** | Choice | First match only | No | Whether an item takes only the first matching branch, or every one. Options: First match only, Every match. |
+| **Add A Fallback Branch** | Toggle | On | No | Send items matching no rule to an output of their own. |
+| **Fallback Name** | Text | `Anything else` | No | Name of the branch for items matching no rule. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port: **Anything else**.
+
+More ports appear as you add them in the settings (one per rule).
+{/* AUTO:outputs:end */}
 
 The node draws one output handle per rule, plus the fallback handle when it is enabled. Items are binned by the branch they took.
 
@@ -48,6 +64,10 @@ Each edge is stored against its output's **name**, not its position. So **reorde
 If two outputs are given the same name, the later duplicate is suffixed (for example `Urgent (2)`) so it stays visible and nothing is silently swallowed.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

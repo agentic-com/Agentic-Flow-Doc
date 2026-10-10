@@ -3,6 +3,12 @@ title: "Basic LLM Chain"
 description: "A simple chain to prompt a LLM and return the response"
 sidebar:
   label: "Basic LLM Chain"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/basicllmchainnode
+  family: ai
 ---
 
 A simple chain to prompt a LLM and return the response
@@ -17,18 +23,34 @@ Use this agent for straightforward LLM interactions without tools or knowledge r
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| System message | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Prompt** | Text |  | Yes |  |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **System message** | Long text |  | No | The system message to use. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `response` | Any | The model reply; the parsed result when an output parser is connected |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model | Yes | One |
+| **Output Parser** | output parser | No | One |
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -39,7 +61,6 @@ Connect Basic LLM Chain to an AI agent or dependency input that accepts this dep
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

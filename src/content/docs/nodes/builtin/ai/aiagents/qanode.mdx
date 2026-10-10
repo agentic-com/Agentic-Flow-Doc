@@ -3,6 +3,12 @@ title: "Q&A Agent"
 description: "Generate an action plan and execute it. Can use external tools."
 sidebar:
   label: "Q&A Agent"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/qanode
+  family: ai
 ---
 
 Generate an action plan and execute it. Can use external tools.
@@ -26,17 +32,39 @@ The on-device path **needs a Knowledge**: an extractive model can only quote fro
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Options → System message | Extra instructions appended to the Q&A prompt (chat model only). |
-| Options → Knowledge documents (k) | How many passages to retrieve from the Knowledge (default `4`). |
-| Options → Max knowledge context length | Maximum characters of retrieved knowledge to use (default `4000`). On-device, each passage is capped to this length. |
-| Options → Fail on knowledge error | Chat model only: fail when retrieval errors instead of answering without context (default off). |
-| Options → Search type, Match by, Minimum relevance, Metadata filter, Device-only knowledge with a cloud model | How the knowledge base is searched, and what happens when a *Device only* knowledge base meets a cloud model. Same as on the RAG Agent: see [Knowledge base options](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Prompt** | Text |  | Yes |  |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **System message** | Long text |  | No | The system message to use. |
+| Options › **Knowledge documents (k)** | Number | 4 | No | How many documents to retrieve from the connected knowledge base. |
+| Options › **Max knowledge context length** | Number | 4000 | No | Maximum characters of retrieved knowledge to inject into the prompt. |
+| Options › **Fail on knowledge error** | Toggle | Off | No | If enabled, the node fails when knowledge retrieval errors instead of answering without context. |
+| Options › **Search type** | Choice | Most similar | No | How passages are picked from the connected knowledge base. Options: Most similar, Diverse (MMR). |
+| Options › **Match by** | Choice | Keywords and meaning | No | How a knowledge base is searched with "Most similar". Diverse (MMR) and other vector stores always match by meaning. Options: Keywords and meaning, Meaning only. |
+| Options › **Minimum relevance** | Number | 0 | No | Drop passages less similar to the question than this (0 to 1). 0 keeps every passage. |
+| Options › **Metadata filter** | Key-value pairs |  | No | Only search passages whose metadata matches every key = value (e.g. sourceType = web). Keys use letters, numbers and \_; numbers and true/false are matched as such. |
+| Options › **Device-only knowledge with a cloud model** | Choice | Stop with an error | No | A knowledge base marked "Device only" is never sent to a cloud model. Choose what the node does when its model is a cloud model. Options: Stop with an error, Answer without it. |
+{/* AUTO:settings:end */}
 
 Retrieved passages are added to the prompt as fenced reference data, not instructions. A knowledge base marked **Device only** is never sent to a cloud model: by default the node stops with an error; set **Device-only knowledge with a cloud model** to *Answer without it* to run without it and log a warning. The Local Q&A Model runs on-device, so it can always use it.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `response` | Any | The model reply; the parsed result when an output parser is connected |
+| `answer` | Text |  |
+| `score` | Number |  |
+| `source` | Text |  |
+| `sources` | List of entries | The knowledge base sources used for the answer |
+{/* AUTO:outputs:end */}
 
 - **Chat model** — returns `{ response, sources }`: the generated answer and the sources of the passages used.
 - **Local Q&A Model** — returns `{ response, answer, score, source, sources }`: `response` and `answer` are the quoted answer (empty if none was found), `score` is the model's confidence, and `source` names the document it came from (when its metadata has a source, file name, title, or URL).
@@ -44,6 +72,14 @@ Retrieved passages are added to the prompt as fenced reference data, not instruc
 `sources` is present when a knowledge base is connected (it may be empty). Each entry has `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`. After a run, the node shows a badge such as **3 sources cited**.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model, local qa | Yes | One |
+| **Knowledge** | vector store | No | One |
+| **Output Parser** | output parser | No | One |
+{/* AUTO:deps:end */}
 
 - **Model** (required) — a chat model, or a [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/) to answer on-device.
 - **Knowledge** — optional with a chat model, **required** with a Local Q&A Model.

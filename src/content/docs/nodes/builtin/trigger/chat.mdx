@@ -3,6 +3,12 @@ title: "Chat Trigger"
 description: "Run the flow on each chat message from the user."
 sidebar:
   label: "Chat Trigger"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/chat
+  family: trigger
 ---
 
 import { Aside } from "@astrojs/starlight/components";
@@ -37,17 +43,35 @@ Workflows built with the older Local Memory, Persistent Chat Memory or Window Bu
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Assistant name | Title shown in the chat header. Default: `Assistant`. On web pages, falls back to the workflow name when empty. |
-| Icon | Emoji or image URL shown in the chat header. Optional. |
-| Greeting | Message shown before the conversation starts. Default: `How can I help you today?` |
-| Input placeholder | Placeholder text of the message box. Default: `Type a message…` |
-| Starter prompts | Suggested prompts shown before the conversation begins. |
-| Allow clearing the conversation | Shows a button that deletes the conversation's messages. Default: on. |
-| URL Patterns | Pages where the chat bubble appears, in the same format as [Page Load](/nodes/builtin/trigger/pageload/). Default: `<all_urls>` (every page). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Assistant name** | Text | `Assistant` | No |  |
+| **Icon** | Text |  | No | Emoji or image URL shown in the chat header. |
+| **Greeting** | Long text | `How can I help you today?` | No |  |
+| **Input placeholder** | Text | `Type a message…` | No |  |
+| **Starter prompts** | Tags |  | No | Suggested prompts shown before the conversation begins. |
+| **Allow clearing the conversation** | Toggle | On | No |  |
+| **URL Patterns** | Tags | `["<all_urls>"]` | No |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `triggerType` | Choice |  |
+| `triggeredAt` | Text |  |
+| `chatInput` | Text | The message the user sent |
+| `sessionId` | Text | The connected Chat Memory conversation |
+| `url` | Text |  |
+| `title` | Text |  |
+| `tabId` | Number |  |
+{/* AUTO:outputs:end */}
 
 Each message produces one run whose trigger output is:
 
@@ -86,6 +110,14 @@ Running the workflow opens a chat popup instead of running once. This happens wh
 When the workflow is **activated**, a chat bubble appears on every page matching one of its **URL Patterns**. If several chat workflows match the page, the bubble lets you pick one. You can also right-click and choose **Open chat** to open it on any page.
 
 The run still happens in the AWFlow app tab: the extension opens that tab if needed, runs the workflow there, and passes the page's `url`, `title` and `tabId` to the trigger.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Memory** | chat memory | Yes | One |
+{/* AUTO:deps:end */}
 
 ## Example workflow
 

@@ -3,6 +3,12 @@ title: "Todoist"
 description: "Create and manage Todoist tasks from the current page, with natural-language due dates."
 sidebar:
   label: "Todoist"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/todoist
+  family: integration
 ---
 
 Create and manage Todoist tasks from the current page — "task from this page", the canonical browser-extension action.
@@ -21,22 +27,76 @@ Creates, updates, closes and lists Todoist tasks, and lists projects and labels.
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | Your Todoist personal API token (see below). |
-| Resource / Operation | What to act on and how. |
-| Content | The task text (supports Markdown, e.g. a `[link](url)`). |
-| Description | A longer description (Markdown). |
-| Source URL | The page URL to attach — appended to the description when present. |
-| Project ID | The project a new task belongs to, or a filter for **Task → List** (use **Project → List** to find IDs). |
-| Due (natural language) | A human due date like `tomorrow 9am` or `every Friday`. |
-| Priority | Priority 1 (urgent) → Priority 4 (normal). |
-| Labels | Label names to attach. |
-| Task ID | The task to update or close. |
+| Task | Create, Update, Close, List |
+| Project | List |
+| Label | List |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | A Todoist personal API token (Settings → Integrations → Developer). It grants full access to your Todoist account — keep it secret. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Task → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Content** | Text |  | Yes | The task text (supports Markdown, e.g. a \[link\](url)). |
+| **Description** | Text |  | No | A longer task description (Markdown supported). |
+| **Source URL** | Text |  | No | The page URL to attach — appended to the description when present. |
+| **Project ID** | Text |  | No | The project the task belongs to (use Project → List to find its ID). |
+| **Due (natural language)** | Text |  | No | A human due date like "tomorrow 9am" or "every Friday". |
+| **Priority** | Choice |  | No | Task priority (p1 is highest). Options: Priority 1 (urgent), Priority 2, Priority 3, Priority 4 (normal). |
+| **Labels** | List |  | No | Label names to attach to the task. |
+
+**Task → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Task ID** | Text |  | Yes | The Todoist task ID. |
+| **Content** | Text |  | No | The task text (supports Markdown, e.g. a \[link\](url)). |
+| **Description** | Text |  | No | A longer task description (Markdown supported). |
+| **Due (natural language)** | Text |  | No | A human due date like "tomorrow 9am" or "every Friday". |
+| **Priority** | Choice |  | No | Task priority (p1 is highest). Options: Priority 1 (urgent), Priority 2, Priority 3, Priority 4 (normal). |
+| **Labels** | List |  | No | Label names to attach to the task. |
+
+**Task → Close**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Task ID** | Text |  | Yes | The Todoist task ID. |
+
+**Task → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Project ID** | Text |  | No | Only list tasks in this project (optional). |
+
+**Project → List**
+
+No further settings.
+
+**Label → List**
+
+No further settings.
+{/* AUTO:settings:end */}
 
 **Page-anchored tasks:** put the page title in **Content** and the page URL in **Source URL** (e.g. from Get Page Metadata) — the URL is appended to the task description as a `Source: <url>` line.
 
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth type:** Bearer Token — store a Todoist **personal API token** (Settings → Integrations → Developer). It grants full access to your account; keep it secret.
 - The token is stored in your credential vault and resolved at run time (never from a node parameter), and sent as `Authorization: Bearer <token>`.

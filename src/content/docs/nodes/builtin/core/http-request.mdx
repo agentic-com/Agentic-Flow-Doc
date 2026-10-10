@@ -3,6 +3,12 @@ title: "Http Request"
 description: "Makes a HTTP request and returns the response data"
 sidebar:
   label: "Http Request"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/http-request
+  family: core
 ---
 
 Makes a HTTP request and returns the response data
@@ -17,31 +23,38 @@ Use this node to call REST APIs, fetch data from web services, or integrate with
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Method | Source-backed field from the node schema. |
-| URL | Source-backed field from the node schema. |
-| Authentication | Source-backed field from the node schema. |
-| Headers | Source-backed field from the node schema. |
-| Query Params | Source-backed field from the node schema. |
-| Body Content Type | Source-backed field from the node schema. |
-| Body | Source-backed field from the node schema. |
-| Follow redirects | Source-backed field from the node schema. |
-| Max redirects | Source-backed field from the node schema. |
-| Redirects | Source-backed field from the node schema. |
-| Include response header and status | Source-backed field from the node schema. |
-| Response format | Source-backed field from the node schema. |
-| Response | Source-backed field from the node schema. |
-| Timeout (ms) | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Method** | Choice | GET | No | The request method to use. Options: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD. |
+| **URL** | URL |  | Yes | Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters. |
+| **Authentication** | Credential |  | No | The authentication to use to make the request. |
+| **Headers** | Key-value pairs |  | No | The headers to send with the request. |
+| **Query Params** | Key-value pairs |  | No | The query params to send with the request. |
+| **Body** | Group |  | No | The body to send with the request. |
+| Body › **Body Content Type** | Choice | application/json | No | Content-Type to use to send body parameters. Options: application/json, application/x-www-form-urlencoded, multipart/form-data. |
+| Body › **Body** | Key-value pairs |  | No | The body to send with the request. |
+| **Options** | Group |  | No | The options to send with the request. |
+| Options › **Redirects** | Group |  | No | The options to send with the request. |
+| Options › Redirects › **Follow redirects** | Toggle | On | No | Follow redirects. |
+| Options › Redirects › **Max redirects** | Number | 10 | No | The maximum number of redirects to follow. |
+| Options › **Response** | Group |  | No | The options for the response. |
+| Options › Response › **Include response header and status** | Toggle | Off | No | Whether to return the full response (headers and response status code) data instead of only the body. |
+| Options › Response › **Response format** | Choice | autodetect | No | The format in which the data gets returned from the URL. Options: autodetect, json, text, file. |
+| Options › **Timeout (ms)** | Number | 10000 | No | Time in ms to wait for the server to send response headers (and start the response body) before aborting the request. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Authentication** (credential): optional. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -52,7 +65,6 @@ Connect data into Http Request, configure the settings above, and use the output
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

@@ -3,6 +3,12 @@ title: "Answer Question"
 description: "Extract an answer from a passage, on-device"
 sidebar:
   label: "Answer Question"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/answer-question
+  family: ai
 ---
 
 Extractive question answering that runs locally in your browser (DistilBERT-SQuAD on transformers.js). Given a question and a passage, it returns the span of the passage that answers it. Private, offline, no cost.
@@ -17,18 +23,37 @@ Pull a specific fact out of a document, email, or scraped page — the answer co
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** question-answering model. |
-| Question | The question to answer. |
-| Context | The passage to find the answer in. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker |  | No | Any installed question-answering model, across engines. |
+| **Question** | Text |  | No |  |
+| **Context** | Text |  | No | The passage to find the answer in. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `answer` | Text |  |
+| `score` | Number |  |
+{/* AUTO:outputs:end */}
 
 Returns `{ answer, score }`:
 
 - `answer` — the extracted answer string (empty if none found).
 - `score` — the model's confidence.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

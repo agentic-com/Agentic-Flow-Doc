@@ -3,6 +3,12 @@ title: "Sort"
 description: "Order the incoming items by one or more fields, or shuffle them randomly"
 sidebar:
   label: "Sort"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/sort
+  family: data
 ---
 
 Order the incoming items by one or more fields, or shuffle them randomly.
@@ -19,13 +25,15 @@ Use this node to present results newest-first or cheapest-first, to feed a [Limi
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | `By fields` sorts by the keys you define, `Random (shuffle)` puts the items in a random order. Defaults to `By fields`. |
-| Sort By | The ordered list of sort keys, applied first to last. Later keys only break ties left by earlier ones. Empty by default. Each key has the three fields below. |
-| Field | The field to sort by, addressed by dot path for nested fields, e.g. `user.profile.name`. |
-| Direction | `Ascending` or `Descending` for this key. Defaults to `Ascending`. |
-| Compare As | How values in this field are compared: `Automatic`, `Number`, `Text`, `Text (natural)`, or `Date`. Defaults to `Automatic`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | By fields | No | Sort by field values, or shuffle into a random order. Options: By fields, Random (shuffle). |
+| **Sort By** | List of entries |  | No | Fields to sort by, applied in order. |
+| Sort By (each entry) › **Field** | Text |  | Yes | Field to sort by. Use dots for nested fields, e.g. user.profile.name. |
+| Sort By (each entry) › **Direction** | Choice | Ascending | No | Options: Ascending, Descending. |
+| Sort By (each entry) › **Compare As** | Choice | Automatic | No | How values in this field are compared. Options: Automatic, Number, Text, Text (natural), Date. |
+{/* AUTO:settings:end */}
 
 ### How values are compared
 
@@ -40,9 +48,17 @@ A value that is `undefined`, `null`, or an empty string (`''`) carries no orderi
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 Returns the same items in their new order. No items are added or removed, and the upstream collection is never reordered in place.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

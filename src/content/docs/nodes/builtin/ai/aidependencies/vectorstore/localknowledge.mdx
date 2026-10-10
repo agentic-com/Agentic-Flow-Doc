@@ -3,6 +3,12 @@ title: "Local Knowledge"
 description: "Connect one of your on-device knowledge bases to an AI agent or the Indexer"
 sidebar:
   label: "Local Knowledge"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/vectorstore/localknowledge
+  family: ai
 ---
 
 Connect one of your on-device knowledge bases to an AI agent or the Indexer.
@@ -17,9 +23,11 @@ Connect it to the Knowledge port of a [RAG Agent](/nodes/builtin/ai/aiagents/rag
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Knowledge | The knowledge base to use. Pick it from the list. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Knowledge base** | Knowledge base picker |  | Yes | The knowledge base the connected agent searches. |
+{/* AUTO:settings:end */}
 
 The picker shows, for each knowledge base:
 
@@ -33,9 +41,23 @@ How the agent searches it (number of passages, similarity or MMR, keywords and m
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Knowledge | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/) |
+{/* AUTO:outputs:end */}
+
 Returns a vector store dependency for the connected agent or Indexer.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Embeddings** | embeddings | No | One |
+{/* AUTO:deps:end */}
 
 - **Embeddings** (optional) — not needed for a knowledge base that already has content: it is always searched with its own model. See [Embedding models](#embedding-models).
 

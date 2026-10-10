@@ -3,6 +3,12 @@ title: "Poll Until"
 description: "Call an endpoint on an interval until a condition is met, or give up"
 sidebar:
   label: "Poll Until"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/polluntil
+  family: flow
 ---
 
 Call an endpoint over and over on a set interval until the response satisfies your conditions — then continue — or give up after a deadline. It's the durable way to wait for a long-running external job to finish, without wiring a loop by hand.
@@ -20,15 +26,19 @@ It is fully client-side — the node only makes outbound requests, so it works w
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL | The endpoint to poll. May use `{{ $input.x }}`. |
-| Method | GET (default), POST, PUT, PATCH, or DELETE. |
-| Headers | One `Key: Value` per line — e.g. an `Authorization` header. |
-| Body | Request body, for non-GET methods. |
-| Done when | One or more conditions on the response, joined by AND / OR. Each row's **left side is a path into the response** (see below); the right side is the value to compare, and may use `{{ $input.x }}`. |
-| Poll every | How long to wait between polls. |
-| Give up after | Stop and route to **Timeout** after this long (up to 30 days). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL** | Text |  | Yes | The endpoint to poll. |
+| **Method** | Choice | GET | No | HTTP method. Options: GET, POST, PUT, PATCH, DELETE. |
+| **Headers** | Text |  | No | One "Key: Value" per line (e.g. an Authorization header). |
+| **Body** | Text |  | No | Request body, for non-GET methods. |
+| **Done when** | Conditions |  | Yes | Stop polling once these conditions on the response hold. Left side is a path into the response (e.g. body.status, or status for the HTTP code). |
+| **Poll every** | Number | 5 | No | How long to wait between polls. |
+| **Poll unit** | Choice | Minutes | No | Options: Milliseconds, Seconds, Minutes, Hours. |
+| **Give up after** | Number | 1 | No | Stop and route to Timeout after this long. |
+| **Give up unit** | Choice | Hours | No | Options: Milliseconds, Seconds, Minutes, Hours. |
+{/* AUTO:settings:end */}
 
 ### The response the conditions see
 
@@ -61,6 +71,24 @@ flowchart LR
     P -- Done --> D["Download the result"]
     P -- Timeout --> A["Alert: export stuck"]
 ```
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+2 output ports: **Done**, **Timeout**.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `routed` | Object |  |
+{/* AUTO:outputs:end */}
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Related nodes
 

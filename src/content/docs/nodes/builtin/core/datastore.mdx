@@ -3,6 +3,12 @@ title: "Data Store"
 description: "Remember values between workflow runs"
 sidebar:
   label: "Data Store"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/datastore
+  family: core
 ---
 
 Remember values between workflow runs.
@@ -17,16 +23,22 @@ Use this node to hold a last-seen timestamp or ID between runs, a page cursor fo
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | What to do to the store: `Get`, `Set`, `Delete`, `Increment`, `List keys`, or `Clear all`. Defaults to `Get`. |
-| Scope | Which keys this node can see: `This workflow only` (the default — private to this workflow) or `Shared with all workflows` (every workflow you own can read and overwrite these keys). |
-| Key | Name of the value to read or store. Required by every operation except `List keys` and `Clear all`. |
-| Value | Used by **Set**: the value to store. Accepts any resolved type — an object or number arriving from an upstream connection is stored as-is. |
-| Value Format | Used by **Set**: how to read text *typed directly* into Value — `Text`, `Number`, `True / false`, or `JSON`. It applies only to typed text; a value resolved from an upstream connection is already a real value and is stored untouched. |
-| Increment By | Used by **Increment**: how much to add. Use a negative number to count down. Defaults to `1`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Get | No | What to do to the store. Options: Get, Set, Delete, Increment, List keys, Clear all. |
+| **Scope** | Choice | This workflow only | No | Which keys this node can see. Options: This workflow only, Shared with all workflows. |
+| **Key** | Text |  | No | Name of the value to store or read. |
+| **Value** | Value |  | No | The value to store. Used by Set. |
+| **Value Format** | Choice | Text | No | How to read text typed into Value. Options: Text, Number, True / false, JSON. |
+| **Increment By** | Number | 1 | No | How much to add. Use a negative number to count down. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Depends on the operation:
 
@@ -38,6 +50,10 @@ Depends on the operation:
 - **Clear all** — `{ cleared }`, the number of entries removed from the current scope.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser, and works without an account.
 - Stored values live in this browser profile. Nothing is sent anywhere, the same workflow on another device keeps its own separate store, and clearing the extension's data clears these entries too.

@@ -3,6 +3,12 @@ title: "Push Notification"
 description: "Send a push notification to your phone via ntfy or Pushover, with priority and a click-through URL."
 sidebar:
   label: "Push Notification"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/push-notification
+  family: integration
 ---
 
 Deliver a notification to your phone — with the browser closed and no tab focused. This is the sink that completes the watcher story: an **Element Change Trigger** detects a change, **Digest** batches it, and this delivers it to a device.
@@ -20,16 +26,37 @@ Sends a push notification via **ntfy** or **Pushover**, with a title, priority, 
 
 ## Inputs and settings
 
-### ntfy
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | No | Optional. ntfy public topics need none. For a protected ntfy server use a Bearer Token; for Pushover use a Basic Auth credential with the application token in Username and your user key in Password. |
 
-| Setting | Notes |
-| --- | --- |
-| Topic | The topic to publish to. **Anyone who knows it can read it** — pick something unguessable. |
-| Message / Title | The notification body and title. |
-| Priority | Min, Low, Default, High, or Max. |
-| Tags | Emoji shortcodes (e.g. `warning`, `tada`) render as icons. |
-| Click URL | Open this URL when the notification is tapped. |
-| Server | Defaults to `https://ntfy.sh`; set your self-hosted URL for a private instance. |
+Pick **Provider** first; the fields below change with your choice.
+
+**ntfy**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Topic** | Text |  | Yes | The ntfy topic to publish to (anyone who knows it can read it — pick something unguessable). |
+| **Message** | Text |  | Yes | The notification body. |
+| **Title** | Text |  | No | The notification title. |
+| **Priority** | Choice |  | No | ntfy priority. Options: Min, Low, Default, High, Max. |
+| **Tags** | List |  | No | ntfy tags — emoji shortcodes (e.g. warning, tada) show as icons. |
+| **Click URL** | Text |  | No | Open this URL when the notification is tapped — e.g. the page it is about. |
+| **Server** | Text |  | No | ntfy server (defaults to https://ntfy.sh; use your self-hosted URL for a private instance). |
+
+**Pushover**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Message** | Text |  | Yes | The notification body. |
+| **Title** | Text |  | No | The notification title. |
+| **Priority** | Choice |  | No | Pushover priority. Options: Lowest (no alert), Low, Normal, High. |
+| **Click URL** | Text |  | No | Open this URL when the notification is tapped — e.g. the page it is about. |
+| **Click URL title** | Text |  | No | A label for the click URL (Pushover). |
+{/* AUTO:settings:end */}
+
+### ntfy
 
 ### Pushover
 
@@ -39,7 +66,17 @@ Sends a push notification via **ntfy** or **Pushover**, with a title, priority, 
 | Priority | Lowest, Low, Normal, or High. |
 | Click URL / Click URL title | A URL to include, and its label. |
 
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential): optional. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **ntfy (public topic):** no credential needed — leave it empty. For an access-controlled server, use a **Bearer Token** credential.
 - **Pushover:** create an application at [pushover.net](https://pushover.net) for the **application token**, and copy your **user key** from your dashboard. Store both as a **Basic Auth** credential:

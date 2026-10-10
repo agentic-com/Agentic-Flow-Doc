@@ -3,6 +3,12 @@ title: "Add To A Date"
 description: "Add a number of days to a date"
 sidebar:
   label: "Add To A Date"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/datetime/addtoadate
+  family: data
 ---
 
 Add a number of days to a date
@@ -17,22 +23,28 @@ Use this node to calculate future dates, schedule events, or set expiration time
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Date to add to | Source-backed field from the node schema. |
-| Time unit to add | Source-backed field from the node schema. |
-| Duration | Source-backed field from the node schema. |
-| Output field name | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Date to add to** | Date and time |  | Yes | The date to add days to. |
+| **Time unit to add** | Choice |  | Yes | The time unit to add to the date. Options: year, quarter, month, week, day, hour, minute, second. |
+| **Duration** | Number |  | Yes | The duration to add to the date. |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns transformed data for downstream nodes.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -43,7 +55,6 @@ Connect data into Add To A Date, configure the settings above, and use the outpu
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
 ## Related nodes
 

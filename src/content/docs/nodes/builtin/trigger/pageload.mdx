@@ -3,6 +3,12 @@ title: "Page Load"
 description: "Run the flow when a matching browser tab finishes loading."
 sidebar:
   label: "Page Load"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/pageload
+  family: trigger
 ---
 
 Run the flow when a matching browser tab finishes loading.
@@ -17,17 +23,35 @@ Use this trigger to automate actions on specific websites, such as scraping data
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL Patterns | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL Patterns** | Tags | `["<all_urls>"]` | No |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes when context is available.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `triggerType` | Choice |  |
+| `triggeredAt` | Text |  |
+| `url` | Text |  |
+| `title` | Text |  |
+| `tabId` | Number |  |
+| `windowId` | Number |  |
+| `status` | Text |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -38,7 +62,6 @@ Create a workflow with Page Load as the first node, then connect it to the actio
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

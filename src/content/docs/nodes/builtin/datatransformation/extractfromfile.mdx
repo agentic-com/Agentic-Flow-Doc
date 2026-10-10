@@ -3,6 +3,12 @@ title: "Extract From File"
 description: "Turn a file into items, with the format auto-detected"
 sidebar:
   label: "Extract From File"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/extractfromfile
+  family: data
 ---
 
 Turn a file into workflow items, whatever its format.
@@ -42,16 +48,26 @@ If none of these decides, the node throws a clear error asking you to pick the f
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Format | The decoder to use, or `Auto-detect` (default). Choose CSV, JSON, XML, Text or PDF to override detection. |
-| Binary Field | Which `$binary` key on the incoming item holds the file. Defaults to `data` (where HTTP Request stores a downloaded file). Ignored when the item carries plain text content. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Format** | Choice | Auto-detect | No | The file format to decode, or auto-detect it. Options: Auto-detect, CSV, JSON, XML, Text, PDF. |
+| **Binary Field** | Text | `data` | No | Which $binary key on the incoming item holds the file. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 An array of items whose shape depends on the format (see above). CSV and JSON arrays can produce many items; XML, PDF and single-object JSON produce one.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required. Decoding runs in the browser.
 

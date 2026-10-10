@@ -3,6 +3,13 @@ title: "MCP Client Tool"
 description: "Connect an agent to a remote MCP server and let it call the server's tools — with an approval gate on every call."
 sidebar:
   label: "MCP Client Tool"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/tools/mcp-client
+  family: ai
+  agentTool: true
 ---
 
 Connects to a remote [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server and exposes the server's tools to an AI agent. **Each remote tool the model calls is gated — you approve or reject it before it runs.**
@@ -21,13 +28,23 @@ Only **remote HTTP/SSE** MCP servers are supported. The extension cannot launch 
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Server URL | The remote MCP server endpoint (HTTP/SSE), e.g. `https://mcp.example.com`. |
-| Authentication | Optional credential sent as the `Authorization` header on every request. Resolved from the credential store; never logged or shown in the approval prompt. |
-| Allowed Tools | Optional comma-separated allow-list of remote tool names (e.g. `search, write`). When set, only those tools are exposed to the agent; leave empty to expose all of the server's tools. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Server URL** | Text |  | Yes | The remote MCP server URL (Streamable HTTP/SSE endpoint) to connect to. |
+| **Authentication** | Credential |  | No | The credential to send as the Authorization header on every request. |
+| **Allowed Tools** | List |  | No | If set, only remote tools with these names are exposed to the model. Leave empty to expose every tool the server advertises. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Tools | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) |
+{/* AUTO:outputs:end */}
 
 Returns one or more tool dependencies (one per exposed remote tool) for agent nodes such as [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). No output port — connect it into an agent's tools input.
 
@@ -39,6 +56,10 @@ Returns one or more tool dependencies (one per exposed remote tool) for agent no
 - **Unattended runs auto-reject.** Calls are rejected after the approval timeout when no one is present.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Authentication** (credential): optional. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - A reachable remote HTTP/SSE MCP server.
 - Optional **Authentication** credential for servers that require an `Authorization` header.

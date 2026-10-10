@@ -3,6 +3,12 @@ title: "Wait"
 description: "Pause the workflow for a specified amount of time"
 sidebar:
   label: "Wait"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/wait
+  family: flow
 ---
 
 Pause the workflow for a specified amount of time
@@ -17,10 +23,12 @@ Use this node to add delays between actions, implement rate limiting, or wait fo
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Amount | How long to wait. |
-| Unit | Milliseconds, seconds, minutes, or hours. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Amount** | Number |  | Yes | How long to wait. Waits of a minute or more are durable — the run survives a closed tab and resumes at the deadline (up to 30 days). Shorter waits run in-memory. |
+| **Unit** | Choice | Seconds | Yes | The unit of time to wait. Options: Milliseconds, Seconds, Minutes, Hours. |
+{/* AUTO:settings:end */}
 
 ## Short waits vs. durable waits
 
@@ -35,11 +43,17 @@ When a durable wait is pending, the run shows as **waiting** in the Executions p
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 When the wait finishes, the data that flowed into the node passes straight through, unchanged, to the next node.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -50,7 +64,6 @@ Place Wait between data-producing nodes and downstream actions to control which 
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

@@ -3,6 +3,12 @@ title: "Code"
 description: "Run custom python code"
 sidebar:
   label: "Code"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/code
+  family: core
 ---
 
 Run custom python code
@@ -17,9 +23,11 @@ Use this node for custom data transformations, calculations, or logic that isn't
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Code to Execute | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Code to Execute** | Code |  | Yes | The code will be executed in the context of the node. |
+{/* AUTO:settings:end */}
 
 ## Reading input
 
@@ -78,11 +86,23 @@ Each run of the Code node gets a **fresh Python interpreter in its own isolated 
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `result` | Any | What the code returned; null when it returned nothing |
+{/* AUTO:outputs:end */}
+
 The value of the last expression, visible in the workflow execution data and passed to the next node.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -94,7 +114,6 @@ Connect data into Code, configure the settings above, and use the output in the 
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - `PermissionError: Network access is disabled…` — the Code node cannot make HTTP calls; use an Http Request node instead.
 - `Code execution timed out after 30000ms` — the code (or the interpreter start-up on a slow machine) took longer than 30 seconds.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
 ## Related nodes
 

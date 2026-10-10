@@ -3,6 +3,12 @@ title: "Custom API"
 description: "Call any REST API from its OpenAPI (Swagger) spec — pick an operation and its fields are generated for you."
 sidebar:
   label: "Custom API"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/custom-api
+  family: integration
 ---
 
 One node for any REST API that publishes an OpenAPI (Swagger) description. Point it at the spec URL, pick an operation, and the node builds the request fields for you — no per-service node required.
@@ -20,12 +26,14 @@ Fetches a public OpenAPI 3 document, lists its operations, and generates a form 
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| OpenAPI spec URL | URL of a public OpenAPI (Swagger) **JSON** document. Requires a host access grant. |
-| Operation | The operation to call, loaded from the spec. |
-| Parameters | Generated from the selected operation — path, query, header, and JSON body fields. |
-| Credential | Optional. Matches the API's security scheme (see below). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | No | Optional. A credential matching the API’s security scheme: Bearer Token for bearer / API-key schemes, Basic Auth for basic. |
+| **OpenAPI spec URL** | URL |  | Yes | URL of a public OpenAPI (Swagger) JSON document. Grant access, then pick an operation. |
+| **Operation** | Choice (loaded from your account) |  | Yes | Choose an operation from the spec. |
+| **Parameters** | Field list |  | No | Fields generated from the selected operation (path, query, header and body). |
+{/* AUTO:settings:end */}
 
 ## Authentication
 
@@ -54,6 +62,18 @@ This node is **extension-only**. Arbitrary API hosts aren't assumed to send CORS
 - **JSON request bodies** — non-JSON request bodies (form-encoded, multipart) aren't generated yet.
 - **API-key, Basic, and Bearer** security schemes are supported; per-operation **OAuth2** flows are not (use a dedicated integration node, or a Bearer token, instead).
 - Local `$ref`s inside the same document are resolved; remote `$ref`s and `allOf`/`oneOf` composition are not.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential): optional. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

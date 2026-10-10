@@ -3,6 +3,12 @@ title: "Merge"
 description: "Merge multiple streams into one"
 sidebar:
   label: "Merge"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/merge
+  family: flow
 ---
 
 Merge multiple streams into one
@@ -17,18 +23,24 @@ Use this node to synchronize parallel workflow paths or combine data from differ
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | Source-backed field from the node schema. |
-| Match Keys | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | Inner Join | Yes | The mode to use for merging the inputs. Options: Inner Join, Left Join, Right Join, Left Outer Join, Right Outer Join. |
+| **Match Keys** | Key mapping |  | Yes | The keys to use for matching the inputs. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the original input, filtered input, branched output, merged items, loop state, or an intentional error depending on the node.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -39,7 +51,6 @@ Place Merge between data-producing nodes and downstream actions to control which
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

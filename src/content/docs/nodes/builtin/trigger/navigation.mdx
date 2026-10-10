@@ -3,6 +3,12 @@ title: "Navigation"
 description: "Run the flow when a tab is created, navigated to a matching URL, or closed."
 sidebar:
   label: "Navigation"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/navigation
+  family: trigger
 ---
 
 Start a workflow on browser navigation — when a tab is created, its URL changes to match a pattern, or it is closed.
@@ -18,12 +24,30 @@ Start a workflow on browser navigation — when a tab is created, its URL change
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL Patterns | One or more match patterns (glob-style, e.g. `https://*.example.com/*`, or `<all_urls>`). Applied to the tab's URL for **created** and **updated** events. |
-| Events | Which tab events fire the trigger: **Created**, **Navigated** (URL changed), and/or **Closed**. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL Patterns** | Tags | `["<all_urls>"]` | No |  |
+| **Events** | Multiple choice | Navigated | No | Which tab events fire this trigger. Options: Created, Navigated, Closed. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `triggerType` | Choice |  |
+| `triggeredAt` | Text |  |
+| `event` | Text |  |
+| `url` | Text |  |
+| `title` | Text |  |
+| `tabId` | Number |  |
+| `windowId` | Number |  |
+{/* AUTO:outputs:end */}
 
 Starts the workflow and passes trigger context to downstream nodes:
 
@@ -32,6 +56,10 @@ Starts the workflow and passes trigger context to downstream nodes:
 - `url`, `title`, `tabId`, `windowId` — details of the tab (a closed tab reports only its id).
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required.
 - Uses the already-held `tabs` permission — no extra permission is needed.

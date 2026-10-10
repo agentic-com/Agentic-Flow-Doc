@@ -3,6 +3,13 @@ title: "Edit Image"
 description: "Resize, crop, rotate, convert, compress or annotate an image in the browser"
 sidebar:
   label: "Edit Image"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/editimage
+  family: data
+  since: "0.7.0"
 ---
 
 Resize, crop, rotate, convert the format, compress, or annotate an image — entirely in the browser.
@@ -39,24 +46,45 @@ The fix is to bring the image into `$binary` first: fetch it with an [HTTP Reque
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | The single edit to apply: Resize, Crop, Rotate, Convert format / compress, or Annotate. |
-| Binary Field | The `$binary` slot the input image is read from and the result is written to. Defaults to `data`. |
-| Width / Height | Resize: target dimensions in px. Leave one empty to derive it from the other. |
-| Keep aspect ratio | Resize: fit inside the given box without distorting the image. Defaults to on. |
-| X / Y | Crop / Annotate: the left and top offset in px. |
-| Width / Height (w / h) | Crop: the size of the cropped rectangle. Annotate (box): the size of the box. |
-| Degrees | Rotate: clockwise angle. Use 90 / 180 / 270 for right-angle turns. |
-| Format | Convert: output format — PNG, JPEG or WebP. |
-| Quality (0–1) | Convert / compress: applies to JPEG and WebP only. Lower means a smaller file. |
-| Annotation | Annotate: draw Text or a Box. |
-| Text | Annotate (text): the string to draw. |
-| Color | Annotate: the CSS color of the text fill or box stroke. |
-| Font | Annotate (text): a CSS font shorthand, e.g. `16px sans-serif`. |
-| Line width | Annotate (box): the stroke width in px. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Resize | No | The single edit to apply. Options: Resize, Crop, Rotate, Convert format / compress, Annotate (text or box). |
+| **Binary Field** | Text | `data` | No | The $binary slot the input image is read from and the result is written to. |
+| **Width (px)** | Number |  | No | Resize: target width. Leave empty to derive it from the height. |
+| **Height (px)** | Number |  | No | Resize: target height. Leave empty to derive it from the width. |
+| **Keep aspect ratio** | Toggle | On | No | Resize: fit inside the given box without distorting the image. |
+| **X** | Number |  | No | Crop/annotate: left offset in px. |
+| **Y** | Number |  | No | Crop/annotate: top offset in px. |
+| **Width** | Number |  | No | Crop/annotate box: width in px. |
+| **Height** | Number |  | No | Crop/annotate box: height in px. |
+| **Degrees** | Number | 90 | No | Rotate: clockwise angle (90/180/270 for right-angle turns). |
+| **Format** | Choice | PNG | No | Convert: output image format. Options: PNG, JPEG, WebP. |
+| **Quality (0-1)** | Number |  | No | Convert/compress: 0..1, applies to JPEG and WebP only. Lower = smaller file. |
+| **Annotation** | Choice | Text | No | Annotate: draw text or a rectangle. Options: Text, Box. |
+| **Text** | Text |  | No | Annotate (text): the text to draw. |
+| **Color** | Text | `#ff0000` | No | Annotate: stroke/fill color (CSS color). |
+| **Font** | Text | `16px sans-serif` | No | Annotate (text): CSS font shorthand. |
+| **Line width** | Number | 2 | No | Annotate (box): stroke width in px. |
+{/* AUTO:settings:end */}
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `$binary` | Key-value pairs |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required.
 - No node dependency is required. The node runs entirely in the browser via `OffscreenCanvas`.

@@ -3,6 +3,12 @@ title: "Detect Objects"
 description: "Find objects and bounding boxes in an image, on-device"
 sidebar:
   label: "Detect Objects"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/detect-objects
+  family: ai
 ---
 
 Find objects **and their bounding boxes** in an image, running locally in your browser (COCO-SSD on TensorFlow.js, DETR on transformers.js). Private, offline, no cost.
@@ -17,20 +23,40 @@ Count or locate things in an image: how many people are in a photo, where a prod
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** object-detection model, across engines. |
-| Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
-| Confidence threshold | Drop detections below this score (default `0.5`). |
-| Max objects | Keep at most this many objects, highest score first (default `20`). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker |  | No | Any installed object-detection model, across engines. |
+| **Image** | Media |  | No | Image URL, data URL, or $binary from a previous node. |
+| **Confidence threshold** | Number | 0.5 | No |  |
+| **Max objects** | Number | 20 | No | Keep at most this many objects (highest score first). |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `objects` | List of entries |  |
+| `count` | Number |  |
+| `top` | Text | The best label, or null when none passed |
+{/* AUTO:outputs:end */}
 
 Returns `{ objects, count, top }`:
 
 - `objects` — array of `{ label, score, box }`, highest confidence first. `box` holds the bounding-box coordinates.
 - `count` — number of objects returned (after the threshold and Max objects).
 - `top` — label of the most confident detection (or `null`).
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

@@ -3,6 +3,12 @@ title: "Context Menu"
 description: "Run the flow from the browser context menu."
 sidebar:
   label: "Context Menu"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/contextmenu
+  family: trigger
 ---
 
 Run the flow from the browser context menu.
@@ -17,19 +23,43 @@ Use this trigger to create custom context menu actions for quick access to workf
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Menu Contexts | Source-backed field from the node schema. |
-| Document URL Patterns | Source-backed field from the node schema. |
-| Target URL Patterns | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Menu Contexts** | Multiple choice | Page | No | Options: Page, Selection, Link, Editable Field, Image, Video, Audio. |
+| **Document URL Patterns** | List |  | No | Optional browser match patterns for the page URL. |
+| **Target URL Patterns** | List |  | No | Optional browser match patterns for link, image, video, or audio targets. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes when context is available.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `triggerType` | Choice |  |
+| `triggeredAt` | Text |  |
+| `pageUrl` | Text |  |
+| `selectionText` | Text |  |
+| `linkUrl` | Text |  |
+| `srcUrl` | Text |  |
+| `frameUrl` | Text |  |
+| `editable` | True/false |  |
+| `mediaType` | Text |  |
+| `tabId` | Number |  |
+| `windowId` | Number |  |
+| `tabUrl` | Text |  |
+| `tabTitle` | Text |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -40,7 +70,6 @@ Create a workflow with Context Menu as the first node, then connect it to the ac
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

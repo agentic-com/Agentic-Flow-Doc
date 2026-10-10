@@ -3,6 +3,12 @@ title: "OpenAI Embeddings"
 description: "Leverage OpenAI to use embeddings locally directly on your device"
 sidebar:
   label: "OpenAI Embeddings"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/embeddings/openai
+  family: ai
 ---
 
 Leverage OpenAI to use embeddings locally directly on your device
@@ -17,17 +23,28 @@ Connect this to indexer or RAG nodes when you need to create embeddings for sema
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Text |  | Yes | The model to use. |
+| **Authentication** | Credential |  | Yes | Use a Bearer Token. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns an embeddings dependency for vector stores and retrieval workflows.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Embeddings | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Authentication** (credential): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -38,7 +55,6 @@ Connect OpenAI Embeddings to an AI agent or dependency input that accepts this d
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
 ## Related nodes
 

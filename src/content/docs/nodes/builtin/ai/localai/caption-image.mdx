@@ -3,6 +3,12 @@ title: "Caption Image"
 description: "Describe an image in words, on-device"
 sidebar:
   label: "Caption Image"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/caption-image
+  family: ai
 ---
 
 Describe an image in a short sentence, running locally in your browser (ViT-GPT2 on transformers.js). Private, offline, no cost.
@@ -17,14 +23,32 @@ Generate alt text, summarize an image for a downstream text step, or make a sear
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** image-captioning (image-to-text) model. |
-| Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker |  | No | Any installed image-captioning model. |
+| **Image** | Media |  | No | Image URL, data URL, or $binary from a previous node. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `text` | Text |  |
+{/* AUTO:outputs:end */}
+
 Returns `{ text }` — the generated caption string.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

@@ -3,6 +3,12 @@ title: "Summarize"
 description: "Condense long text on-device"
 sidebar:
   label: "Summarize"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/summarize
+  family: ai
 ---
 
 Condense long text into a short summary, running locally in your browser with a summarization model (e.g. *DistilBART CNN* on transformers.js). Private, offline, no cost.
@@ -17,22 +23,41 @@ Get the gist of an article, a long email thread, meeting notes, or a scraped pag
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to summarize. Any length — long input is chunked automatically. |
-| Length | **Short** (≈ 20–60 words), **Medium** (≈ 60–130, default), or **Detailed** (≈ 130–250). |
-| Model | An **installed** summarization model. Only summarization models are listed here. |
-| Min tokens (advanced) | Overrides the preset's minimum length. |
-| Max tokens (advanced) | Overrides the preset's maximum length. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | No | Long input is split into chunks and summarized piece by piece. |
+| **Length** | Choice | Medium | No | Short ≈ 20–60 words · Medium ≈ 60–130 · Detailed ≈ 130–250. Options: Short, Medium, Detailed. |
+| **Model** | Model picker |  | No | Only summarization models are listed here. |
+| **Min tokens (advanced)** | Number |  | No | Overrides the length preset minimum. |
+| **Max tokens (advanced)** | Number |  | No | Overrides the length preset maximum. |
+{/* AUTO:settings:end */}
 
 Lengths are counted in tokens — roughly one per word in English.
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `summary` | Text |  |
+| `words` | Number | Words in the summary |
+{/* AUTO:outputs:end */}
+
 Returns `{ summary, words }`:
 
 - `summary` — the summary text.
 - `words` — its word count.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

@@ -4,6 +4,12 @@ description: "Load a web page as text to feed into the Indexer"
 sidebar:
   label: "URL Document Loader"
   order: 1
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/loaders/urldocumentloader
+  family: ai
 ---
 
 Load a web page as text to feed into the Indexer.
@@ -21,15 +27,22 @@ manually copying the page text.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL | The page to fetch, e.g. `https://example.com`. |
-| Output field name | Field that holds the extracted text. Defaults to `text`. |
-| Timeout | Optional request timeout in milliseconds. |
-| Headers | Optional request headers (toggle **Send Headers**). |
-| Include input fields | When enabled, the incoming item's fields are merged into the output. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL** | Text |  | Yes | The URL to load text from. |
+| **Output field name** | Text | `text` | No | The name of the output field that will hold the loaded text. |
+| **Timeout** | Number | 10000 | No | The timeout for the request in milliseconds. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Headers** | Key-value pairs |  | No | The headers to send with the request. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 An item with the extracted page text under the chosen output field (default `text`).
 
@@ -41,6 +54,12 @@ An item with the extracted page text under the chosen output field (default `tex
   the extension instead.
 - Uses the same fetch + HTML-to-text conversion as
   [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/).
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

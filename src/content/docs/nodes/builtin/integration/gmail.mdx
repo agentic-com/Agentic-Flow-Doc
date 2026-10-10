@@ -3,6 +3,12 @@ title: "Gmail"
 description: "Integrate with Gmail to perform operations on messages and drafts."
 sidebar:
   label: "Gmail"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/integration/gmail
+  family: integration
 ---
 
 Integrate with Gmail to perform operations on messages and drafts.
@@ -17,21 +23,90 @@ Use this node to automate email workflows, send notifications, or process incomi
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Resource | Source-backed field from the node schema. |
-| Operation | Source-backed field from the node schema. |
-| Message ID | Source-backed field from the node schema. |
-| Draft ID | Source-backed field from the node schema. |
-| To | Source-backed field from the node schema. |
-| Subject | Source-backed field from the node schema. |
-| Body | Source-backed field from the node schema. |
-| HTML Body | Source-backed field from the node schema. |
-| CC | Source-backed field from the node schema. |
-| BCC | Source-backed field from the node schema. |
-| Attachments | (Message → Send) The `$binary` keys on the incoming item to attach to the email. Each selected key is read from the item and added as a file; leave empty to send with no attachments. |
-| Search Query | Source-backed field from the node schema. |
-| Page Size | Source-backed field from the node schema. |
+| Message | Send, Get, Delete, Search |
+| Draft | Create, Get, Update, Delete, List |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The Credential to use to make request. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Message → Send**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **To** | List |  | Yes | Email addresses to send to. |
+| **Subject** | Text |  | Yes | Email subject. |
+| **Body** | Long text |  | Yes | Email body (plain text). |
+| **HTML Body** | Text |  | No | Email body (HTML). |
+| **CC** | List |  | No | Carbon copy recipients. |
+| **BCC** | List |  | No | Blind carbon copy recipients. |
+| **Attachments** | List |  | No | Logical `$binary` keys on the incoming item to attach as email files. Each selected key is read from the item and added to the message; leave empty to send with no attachments. |
+
+**Message → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Message ID** | Choice (loaded from your account) |  | Yes | The Gmail message ID to work with. |
+
+**Message → Delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Message ID** | Choice (loaded from your account) |  | Yes | The Gmail message ID to work with. |
+
+**Message → Search**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Search Query** | Text |  | No | Gmail search query. |
+| **Page Size** | Number | 100 | No | Number of results per page (1-100). |
+
+**Draft → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **To** | List |  | Yes | Email addresses to send to. |
+| **Subject** | Text |  | Yes | Email subject. |
+| **Body** | Long text |  | No | Email body (plain text). |
+| **HTML Body** | Text |  | No | Email body (HTML). |
+| **CC** | List |  | No | Carbon copy recipients. |
+| **BCC** | List |  | No | Blind carbon copy recipients. |
+
+**Draft → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Draft ID** | Choice (loaded from your account) |  | Yes | The Gmail draft ID to work with. |
+
+**Draft → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Draft ID** | Choice (loaded from your account) |  | Yes | The Gmail draft ID to work with. |
+| **To** | List |  | Yes | Email addresses to send to. |
+| **Subject** | Text |  | Yes | Email subject. |
+| **Body** | Long text |  | No | Email body (plain text). |
+| **HTML Body** | Text |  | No | Email body (HTML). |
+| **CC** | List |  | No | Carbon copy recipients. |
+| **BCC** | List |  | No | Blind carbon copy recipients. |
+
+**Draft → Delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Draft ID** | Choice (loaded from your account) |  | Yes | The Gmail draft ID to work with. |
+
+**Draft → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Page Size** | Number | 100 | No | Number of results per page (1-100). |
+{/* AUTO:settings:end */}
 
 ## Attachments
 
@@ -44,9 +119,15 @@ binary on the incoming item, the node fails with a clear error.
 
 ## Outputs
 
-Returns the service response or a success object from the selected operation.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - Credential type: OAuth2 — create your own Google OAuth client first: [Create your OAuth client](/usage/using-the-app/credentials/oauth-client/#google).
 
@@ -59,7 +140,6 @@ Connect prepared data into Gmail, select the credential, choose the operation, t
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
 ## Related nodes
 

@@ -3,6 +3,12 @@ title: "Get Accessibility Tree"
 description: "Get visible interactive and semantic elements from the opened page"
 sidebar:
   label: "Get Accessibility Tree"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getaccessibilitytree
+  family: inpage
 ---
 
 Get visible interactive and semantic elements from the opened page
@@ -17,17 +23,38 @@ Use this node to analyze page accessibility, identify interactive elements, or b
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| domSelector | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each run returns a list of items with these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `selector` | Text |  |
+| `tagName` | Text |  |
+| `role` | Text |  |
+| `name` | Text | The accessible name |
+| `text` | Text |  |
+| `disabled` | True/false |  |
+| `checked` | True/false |  |
+| `selected` | True/false |  |
+| `expanded` | True/false |  |
+| `boundingBox` | Object |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -38,7 +65,6 @@ Run Get Accessibility Tree after opening the target page, then pass its output t
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

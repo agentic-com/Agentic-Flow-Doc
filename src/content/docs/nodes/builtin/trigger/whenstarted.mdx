@@ -3,6 +3,12 @@ title: "When Started"
 description: "Run the flow on clicking the start button. Good for getting started quickly."
 sidebar:
   label: "When Started"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/whenstarted
+  family: trigger
 ---
 
 Run the flow on clicking the start button. Good for getting started quickly.
@@ -17,17 +23,27 @@ Use this trigger for testing workflows or running them on-demand without automat
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Node form | This node uses the default workflow node configuration. |
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes when context is available.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `started` | Choice |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -38,7 +54,6 @@ Create a workflow with When Started as the first node, then connect it to the ac
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

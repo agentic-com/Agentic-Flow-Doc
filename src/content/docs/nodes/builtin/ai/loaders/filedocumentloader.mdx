@@ -4,6 +4,12 @@ description: "Load a file (PDF, HTML, text) as text to feed into the Indexer"
 sidebar:
   label: "File Document Loader"
   order: 2
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/loaders/filedocumentloader
+  family: ai
 ---
 
 Load a file (PDF, HTML, text) as text to feed into the Indexer.
@@ -27,15 +33,22 @@ Markdown doc — into a knowledge base.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Binary key / field | The binary attachment key on the input item (its `$binary` map), or a field holding a base64 / data-URL string. Defaults to `data`. |
-| Output field name | Field that holds the extracted text. Defaults to `text`. |
-| MIME type | Optional hint used to pick the decoder. Required for a raw base64 string with no data-URL prefix. |
-| File name | Optional hint — its extension is used to pick the decoder when no MIME type is known. |
-| Include input fields | When enabled, the incoming item's fields are merged into the output. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Binary key / field** | Text | `data` | No | The binary attachment key on the input item (its $binary map), or a field holding a base64 / data-URL string. |
+| **Output field name** | Text | `text` | No | The name of the output field that will hold the loaded text. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **MIME type** | Text |  | No | Override / hint for the MIME type. Required when loading a raw base64 string with no data-URL prefix. |
+| Options › **File name** | Text |  | No | File name hint — its extension is used to dispatch when no MIME type is known. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the original input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 An item with the extracted text under the chosen output field (default `text`).
 
@@ -47,6 +60,12 @@ An item with the extracted text under the chosen output field (default `text`).
 - For a PDF you already have on an item you can use either this loader or the
   [PDF Parser](/nodes/builtin/datatransformation/pdfparser/) — this loader is the choice when
   the goal is to feed the Indexer and you may be handling PDF, HTML, or text interchangeably.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

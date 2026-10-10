@@ -3,6 +3,12 @@ title: "Limit"
 description: "Cap the number of items that flow through the workflow"
 sidebar:
   label: "Limit"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/limit
+  family: data
 ---
 
 Cap the number of items that flow through the workflow.
@@ -17,16 +23,26 @@ Use this node to process only a sample of a large dataset, to keep the most rece
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Max items | Maximum number of items to keep. Integer, minimum `1`, defaults to `10`. |
-| Keep | Which end of the collection to keep: `first` (from the start) or `last` (from the end). Defaults to `first`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Max Items** | Number | 10 | No | The maximum number of items to keep. |
+| **Keep** | Choice | First items | No | Whether to keep the first or the last items. Options: First items, Last items. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Returns at most **Max items** items. If the collection already has fewer items than the limit, it passes through unchanged.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

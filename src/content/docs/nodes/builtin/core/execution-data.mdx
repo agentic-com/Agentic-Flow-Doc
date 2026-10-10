@@ -3,6 +3,12 @@ title: "Execution Data"
 description: "Read this run's id, trigger and timing, or attach searchable metadata to it"
 sidebar:
   label: "Execution Data"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/execution-data
+  family: core
 ---
 
 Read the current run's context, or attach searchable metadata to it.
@@ -22,15 +28,21 @@ Every run is otherwise anonymous: run history can only show a timestamp and a st
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | `Read run context` (output the run's id, trigger type and timing) or `Attach metadata` (save a key/value pair on the run). Defaults to `Read run context`. |
-| Key | The name of the metadata field to attach — for example `orderId`. Required for **Attach metadata**. |
-| Value | The value to store under the key — for example `4471`. Non-text values are stored as text so they stay searchable. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Read run context | No | Read run context, or attach metadata to the run. Options: Read run context, Attach metadata. |
+| **Key** | Text |  | No | Name of the metadata field to attach (Attach metadata only). |
+| **Value** | Text |  | No | Value to store under the key (Attach metadata only). |
+{/* AUTO:settings:end */}
 
 The trigger type is read from the trigger node upstream of this one, the same information that flows down every branch of a run. If nothing upstream identifies the trigger, the trigger type reads as `unknown`.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 **Read run context** outputs an object:
 
@@ -55,6 +67,10 @@ The trigger type is read from the trigger node upstream of this one, the same in
 Attached metadata appears in **run history**: each run's row shows its metadata, the detail panel lists every pair and the run id, and the history search box matches a run by its metadata (either half of a pair), its run id, or its status. Search "4471" and the run that processed order 4471 comes back.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser and works without an account.
 - Metadata is saved with runs recorded in **this browser profile** (local mode). Run context — id, trigger type, timing — is available in every mode.

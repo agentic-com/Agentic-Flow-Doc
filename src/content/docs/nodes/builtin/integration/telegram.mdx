@@ -3,6 +3,12 @@ title: "Telegram"
 description: "Send messages, photos and documents to a Telegram chat via the Bot API."
 sidebar:
   label: "Telegram"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/integration/telegram
+  family: integration
 ---
 
 Send messages, photos and documents to a Telegram chat via the Bot API — the best "notify me on my phone" sink without building push infrastructure.
@@ -21,15 +27,43 @@ Posts to a Telegram chat: a text message, a photo (with caption), or a document 
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | The Telegram bot token (see below). |
-| Operation | Send message, photo, or document. |
-| Chat ID | The target chat: a numeric chat ID, or a channel username like `@mychannel`. |
-| Text | The message text (Send message). |
-| Photo / Document | An HTTP URL, a Telegram `file_id`, or a base64 `data:` URL (e.g. from Screenshot Page — it is uploaded to Telegram as a file). |
-| Caption | Optional caption under a photo/document. |
-| Formatting | None, Markdown, MarkdownV2, or HTML — applied to the text/caption. |
+| Message | Send message, Send photo, Send document |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The Telegram bot token (from @BotFather). It is the whole credential and grants full control of the bot — keep it secret. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Message → Send message**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Chat ID** | Text |  | Yes | The target chat: a numeric chat ID, or a channel username like @mychannel. |
+| **Text** | Text |  | Yes | The message text. |
+| **Formatting** | Choice |  | No | How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML. |
+
+**Message → Send photo**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Chat ID** | Text |  | Yes | The target chat: a numeric chat ID, or a channel username like @mychannel. |
+| **Photo** | Text |  | Yes | An image URL, a Telegram file\_id, or a base64 data URL (e.g. from Screenshot Page). |
+| **Caption** | Text |  | No | Optional caption shown under the photo/document. |
+| **Formatting** | Choice |  | No | How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML. |
+
+**Message → Send document**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Chat ID** | Text |  | Yes | The target chat: a numeric chat ID, or a channel username like @mychannel. |
+| **Document** | Text |  | Yes | A file URL, a Telegram file\_id, or a base64 data URL. |
+| **Caption** | Text |  | No | Optional caption shown under the photo/document. |
+| **Formatting** | Choice |  | No | How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML. |
+{/* AUTO:settings:end */}
 
 ## Getting a bot token
 
@@ -37,7 +71,17 @@ Posts to a Telegram chat: a text message, a photo (with caption), or a document 
 2. Follow the prompts; BotFather gives you a token like `123456:ABC-DEF...`.
 3. Start a chat with your new bot (or add it to a group/channel) so it can message you, and note the chat ID.
 
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth type:** Bearer Token — store the **bot token**.
 - The bot token **is the whole credential and grants full control of the bot** — treat it like a password. It is stored in your credential vault and resolved at run time (never read from a node parameter); the node places it in the request path (`/bot<token>/sendMessage`), not a header.

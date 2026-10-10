@@ -3,6 +3,12 @@ title: "No Operation"
 description: "Forward input unchanged, to end a branch explicitly or park a sub-graph"
 sidebar:
   label: "No Operation"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/nooperation
+  family: flow
 ---
 
 Forward input unchanged.
@@ -20,15 +26,23 @@ This is not a convergence node. It takes a **single input** connection and passe
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| _(none)_ | The node has no configuration of its own. Every node already carries a built-in **Notes** field for annotating the canvas, so No Operation adds nothing further. |
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Returns the upstream data untouched, so the node can be inserted anywhere without changing the shape of what flows through it. When there is no upstream data to forward, it emits a `{ passed: true }` marker so the engine still sees a non-empty result and continues the run.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

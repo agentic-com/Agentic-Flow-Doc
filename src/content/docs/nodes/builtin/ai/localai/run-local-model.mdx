@@ -3,6 +3,12 @@ title: "Run Local Model"
 description: "Run any installed on-device model for a chosen task"
 sidebar:
   label: "Run Local Model"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/run-local-model
+  family: ai
 ---
 
 The **generic** Local AI node: pick a task, pick any installed model, feed it an input. Use it for tasks the dedicated nodes don't cover, for custom-imported models, or when you want one node that adapts. Runs locally in your browser — private, offline, no cost.
@@ -20,11 +26,13 @@ Runs the selected on-device model for the task you choose and returns the normal
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Task | One of: Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio, Moderate text, Answer question, Generate text, Embeddings, Custom model (raw output). |
-| Model | Any **installed** model for the chosen task, across engines. The picker is filtered to the selected Task. |
-| Input | Depends on the task — see below. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Task** | Choice | Classify image | No | Options: Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio, Moderate text, Answer question, Generate text, Embeddings, Custom model (raw output). |
+| **Model** | Model picker |  | No | Any installed model for the chosen task, across engines. |
+| **Input** | Text |  | No | Text; an image/audio URL / data URL / $binary; or for Answer question, JSON \{ "question": "…", "context": "…" \}. |
+{/* AUTO:settings:end */}
 
 ### Input by task
 
@@ -33,6 +41,10 @@ Runs the selected on-device model for the task you choose and returns the normal
 - **Text tasks** (Moderate text, Generate text, Embeddings) and **Custom model** — text. A non-text value from an expression is passed as JSON.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 The output shape matches the chosen task:
 
@@ -45,6 +57,12 @@ The output shape matches the chosen task:
 - **Answer question** → `{ answer, score }`
 - **Embeddings** → `{ embedding }` (a numeric vector)
 - **Custom model (raw output)** → `{ result }` — whatever the model returned, unchanged. Use it for a custom-imported model whose task isn't one of the above.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

@@ -3,6 +3,12 @@ title: "Split in Batches"
 description: "Loop over a list a batch at a time, running the body once per batch"
 sidebar:
   label: "Split in Batches"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/splitinbatches
+  family: flow
 ---
 
 Walk through a list a fixed number of items at a time, running the steps in its **Loop** branch once for each batch, then continue from **Done** when the list is exhausted.
@@ -21,10 +27,12 @@ Where the [Loop](/nodes/builtin/flow/loop/) node repeats until a condition goes 
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Items | The list to split into batches, e.g. `{{ $input.rows }}`. A single (non-array) value is treated as one batch of one; an empty or missing list goes straight to **Done**. |
-| Batch size | How many items to hand the body each pass. Default 1. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Items** | Value |  | Yes | The list to split into batches. |
+| **Batch size** | Number | 1 | No | How many items to emit per pass. |
+{/* AUTO:settings:end */}
 
 ## Ports
 
@@ -59,6 +67,28 @@ flowchart LR
 
 - **Runs are bounded.** As a safety net the node stops after 1000 passes even if the list is longer, matching the Loop node's cap, so a runaway can't freeze the tab.
 - **Durable pagination.** If a run is paused (or the tab is closed) mid-loop, its batch position is saved with the run and resumes at the right batch — you don't restart from the first batch.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+2 output ports: **Done**, **Loop**.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `done` | True/false | True once every item has been emitted |
+| `batch` | List | The items of this pass |
+| `batchIndex` | Number |  |
+| `isLast` | True/false |  |
+| `items` | List | Every item being split |
+{/* AUTO:outputs:end */}
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Related nodes
 

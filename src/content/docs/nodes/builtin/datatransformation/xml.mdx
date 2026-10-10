@@ -3,6 +3,12 @@ title: "XML"
 description: "Convert between XML and JSON"
 sidebar:
   label: "XML"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/xml
+  family: data
 ---
 
 Convert between XML and JSON.
@@ -29,14 +35,20 @@ The JSON object must have exactly one root element key, mirroring how an XML doc
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Direction | Which way to convert: `XML to JSON` or `JSON to XML`. Defaults to `XML to JSON`. |
-| Input | The XML text (for XML to JSON) or JSON data (for JSON to XML) to convert. Accepts an expression such as `{{ $json.raw }}`. |
-| Source Field | Field on the incoming item to read when the Input field above is left empty, for example `body`. |
-| Put Result In Field | Name of the field holding the answer. Defaults to `data`. For XML to JSON, leaving the default lets the parsed object become the item itself. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Direction** | Choice | XML to JSON | No | Which way to convert. Options: XML to JSON, JSON to XML. |
+| **Input** | Value |  | No | The XML text (for XML to JSON) or JSON data (for JSON to XML) to convert. |
+| **Source Field** | Text |  | No | Field on the incoming item to read, when the input above is left empty. |
+| **Put Result In Field** | Text | `data` | No | Name of the field holding the answer. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 - **XML to JSON** returns the parsed object keyed by the root element name, so its fields are addressable downstream.
 - **JSON to XML** returns the built XML string in **Put Result In Field**.
@@ -46,6 +58,10 @@ The JSON object must have exactly one root element key, mirroring how an XML doc
 Malicious XML can declare internal entities that expand exponentially — the "billion-laughs" attack — or reference an external DTD to make the parser fetch a remote resource (XXE). The XML-to-JSON direction parses through a shared bounded parser that **rejects any DTD with internal entities (`<!ENTITY …>`) or an external subset (`<!DOCTYPE … SYSTEM/PUBLIC …>`)** before any expansion can run, and caps the input size. Such a document fails fast with a clear error rather than being expanded.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser using its native `DOMParser` and `XMLSerializer`.
 

@@ -4,6 +4,12 @@ description: "Load the current tab as text to feed into the Indexer"
 sidebar:
   label: "Current Page Document Loader"
   order: 3
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/ai/loaders/currentpagedocumentloader
+  family: ai
 ---
 
 Load the current tab as text to feed into the Indexer.
@@ -22,14 +28,21 @@ tool — without needing a public URL.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Output field name | Field that holds the extracted text. Defaults to `text`. |
-| DOM Selector | Optional CSS selector to scope extraction to part of the page. |
-| Visible text only | When enabled, returns text from visible elements only. |
-| Include input fields | When enabled, the incoming item's fields are merged into the output. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Output field name** | Text | `text` | No | The name of the output field that will hold the loaded text. |
+| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Visible text only** | Toggle | Off | No | Only return text from visible elements. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 An item with the current page's text under the chosen output field (default `text`).
 
@@ -38,6 +51,12 @@ An item with the current page's text under the chosen output field (default `tex
 - **Extension only.** This loader talks to the active tab through the awflow browser extension,
   so it does not run in the web app. Install the extension to use it.
 - Uses the same page-text extraction as [Get All Text](/nodes/extension/getalltext/).
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

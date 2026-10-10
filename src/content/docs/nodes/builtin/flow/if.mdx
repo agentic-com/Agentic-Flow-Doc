@@ -3,6 +3,12 @@ title: "IF"
 description: "Route items to different branches based on conditions"
 sidebar:
   label: "IF"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/if
+  family: flow
 ---
 
 Route items to different branches based on conditions
@@ -17,17 +23,30 @@ Use this node to create conditional workflows where different actions occur base
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Conditions | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Conditions** | Conditions |  | Yes | The conditions to evaluate. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the original input, filtered input, branched output, merged items, loop state, or an intentional error depending on the node.
+{/* AUTO:outputs:start */}
+2 output ports: **True**, **False**.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `result` | True/false | Whether the conditions held |
+| `inData` | Any | The incoming data, unchanged |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -38,7 +57,6 @@ Place IF between data-producing nodes and downstream actions to control which da
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

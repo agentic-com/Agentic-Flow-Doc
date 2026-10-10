@@ -3,6 +3,12 @@ title: "Schedule"
 description: "Run the flow at a specific time."
 sidebar:
   label: "Schedule"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/schedule
+  family: trigger
 ---
 
 Run the flow at a specific time.
@@ -17,9 +23,58 @@ Use this trigger to run workflows automatically at regular intervals or specific
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| rules | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Rules** | List |  | Yes |  |
+
+**Rules** changes shape with its **Trigger Interval** choice (seconds, minutes, hours, days, weeks, months):
+
+*Rules — Trigger Interval: seconds*
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Seconds Between Triggers** | Number |  | Yes | Seconds between each run. Note: the browser floors alarms at ~1 minute, so second-level schedules are best-effort — the minimum is 10s and short intervals are effectively rounded up to about 1 minute. For reliable sub-minute timing, keep the flow running yourself. |
+
+*Rules — Trigger Interval: minutes*
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Minutes Between Triggers** | Number |  | Yes | Number of minutes between each workflow trigger. |
+
+*Rules — Trigger Interval: hours*
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Hours Between Triggers** | Number |  | No | Number of hours between each workflow trigger. |
+| **Trigger at Minute** | Number |  | No | Minute of the hour at which the workflow will be triggered. |
+
+*Rules — Trigger Interval: days*
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Days Between Triggers** | Number |  | No | Number of days between each workflow trigger. |
+| **Trigger at Hour** | Choice |  | Yes | Hour of the day at which the workflow will be triggered. 24 options. |
+| **Trigger at Minute** | Number |  | No | Minute of the hour at which the workflow will be triggered. |
+
+*Rules — Trigger Interval: weeks*
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Weeks Between Triggers** | Number |  | No | Would run every week unless specified otherwise. |
+| **Units** | Multiple choice |  | Yes | The units to subtract from the date. Options: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday. |
+| **Trigger at Hour** | Choice |  | Yes | Hour of the day at which the workflow will be triggered. 24 options. |
+| **Trigger at Minute** | Number |  | No | Minute of the hour at which the workflow will be triggered. |
+
+*Rules — Trigger Interval: months*
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Months Between Triggers** | Number |  | No | Number of months between each workflow trigger. |
+| **Trigger at Day of Month** | Number |  | No | Day of the month at which the workflow will be triggered. |
+| **Trigger at Hour** | Number |  | Yes | Hour of the day at which the workflow will be triggered. |
+| **Trigger at Minute** | Number |  | No | Minute of the hour at which the workflow will be triggered. |
+{/* AUTO:settings:end */}
 
 ## Timing and reliability
 
@@ -28,11 +83,21 @@ Use this trigger to run workflows automatically at regular intervals or specific
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes when context is available.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `scheduled` | Choice |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -43,7 +108,6 @@ Create a workflow with Schedule as the first node, then connect it to the action
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

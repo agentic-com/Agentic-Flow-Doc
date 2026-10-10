@@ -3,6 +3,12 @@ title: "Screenshot Page"
 description: "Capture a screenshot of the opened page or selected element"
 sidebar:
   label: "Screenshot Page"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/screenshotpage
+  family: inpage
 ---
 
 Capture a screenshot of the opened page or selected element
@@ -19,12 +25,29 @@ Use this node to document page states, create visual records, or capture content
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | What to capture: `Viewport` (the visible part of the page, default), `Full Page` (the entire scrollable page), or `Element` (a selected element). |
-| Selector | Used with `Element` mode: the CSS selector of the element to capture. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | viewport | Yes | Choose what to capture. Options: viewport, fullPage, element. |
+| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `mode` | Choice |  |
+| `selector` | Text |  |
+| `dataUrl` | Text | The image as a data: URL |
+| `found` | True/false |  |
+| `boundingBox` | Object |  |
+| `$binary` | Key-value pairs |  |
+{/* AUTO:outputs:end */}
 
 | Field | Notes |
 | --- | --- |
@@ -34,6 +57,10 @@ Use this node to document page states, create visual records, or capture content
 | `mode` / `selector` | The mode used and, for `Element` mode, the selector. |
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credentials are needed.
 - **One-time browser permission:** the first time a screenshot runs, AWFlow asks you to allow it to capture web pages. Chrome usually grants this without a second prompt, because it is covered by the site access you accepted when you installed the extension. After you allow it, screenshots work in every workflow, including triggered and scheduled runs.
@@ -51,7 +78,6 @@ Run Screenshot Page after opening the target page, then pass its output to Edit 
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

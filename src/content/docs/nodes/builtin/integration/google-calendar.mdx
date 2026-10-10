@@ -3,6 +3,12 @@ title: "Google Calendar"
 description: "Integrate with Google Calendar to create, list and update events."
 sidebar:
   label: "Google Calendar"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/integration/google-calendar
+  family: integration
 ---
 
 Create, list and update Google Calendar events — with the current page as context.
@@ -21,22 +27,89 @@ Manages calendar events (create, update, delete, get, list), lists your calendar
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | Sign in with Google (see below). |
-| Resource / Operation | What to act on and how. |
-| Calendar ID | The calendar to use — `primary` (default) or an ID from **Calendar → List**. |
-| Event ID | The event to get, update, or delete. |
-| Title / Description / Location | The event summary, body, and place. |
-| Source URL | The page URL to attach — appended to the event description when present. |
-| Start / End (date-time) | Timed events, as RFC3339 date-times (e.g. `2026-09-10T09:00:00`). |
-| Start / End (all-day date) | All-day events, as `YYYY-MM-DD` (use instead of the date-time fields). |
-| Time Zone | IANA time zone for timed events, e.g. `America/New_York`. |
-| Attendees | Email addresses to invite. |
-| Recurrence | RRULE strings, e.g. `RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8`. |
-| Time min / Time max | Bounds for **Event → List** and **Free/busy → Query**. |
-| Max results | Maximum events to return when listing. |
-| Calendar IDs | Calendars to check for **Free/busy** (defaults to `primary`). |
+| Event | Create, Update, Delete, Get, List |
+| Calendar | List |
+| Free/busy | Query |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The Credential to use to make request. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Event → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
+| **Title** | Text |  | Yes | The event title (summary). |
+| **Description** | Text |  | No | The event description. |
+| **Source URL** | Text |  | No | The page URL to attach — appended to the event description when present. |
+| **Location** | Text |  | No | The event location. |
+| **Start (date-time)** | Text |  | No | Timed-event start as an RFC3339 date-time, e.g. 2026-09-10T09:00:00. |
+| **End (date-time)** | Text |  | No | Timed-event end as an RFC3339 date-time. |
+| **Start (all-day date)** | Text |  | No | All-day start as YYYY-MM-DD (use instead of the date-time fields). |
+| **End (all-day date)** | Text |  | No | All-day end as YYYY-MM-DD (exclusive). |
+| **Time Zone** | Text |  | No | IANA time zone for the start/end, e.g. America/New\_York (timed events). |
+| **Attendees** | List |  | No | Email addresses to invite. |
+| **Recurrence** | List |  | No | RRULE strings, e.g. RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8. |
+
+**Event → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Event ID** | Text |  | Yes | The event to act on. |
+| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
+| **Title** | Text |  | No | The event title (summary). |
+| **Description** | Text |  | No | The event description. |
+| **Source URL** | Text |  | No | The page URL to attach — appended to the event description when present. |
+| **Location** | Text |  | No | The event location. |
+| **Start (date-time)** | Text |  | No | Timed-event start as an RFC3339 date-time, e.g. 2026-09-10T09:00:00. |
+| **End (date-time)** | Text |  | No | Timed-event end as an RFC3339 date-time. |
+| **Start (all-day date)** | Text |  | No | All-day start as YYYY-MM-DD (use instead of the date-time fields). |
+| **End (all-day date)** | Text |  | No | All-day end as YYYY-MM-DD (exclusive). |
+| **Time Zone** | Text |  | No | IANA time zone for the start/end, e.g. America/New\_York (timed events). |
+| **Attendees** | List |  | No | Email addresses to invite. |
+| **Recurrence** | List |  | No | RRULE strings, e.g. RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8. |
+
+**Event → Delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
+| **Event ID** | Text |  | Yes | The event to act on. |
+
+**Event → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
+| **Event ID** | Text |  | Yes | The event to act on. |
+
+**Event → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
+| **Time min** | Text |  | No | Lower bound (RFC3339 date-time) for the query. |
+| **Time max** | Text |  | No | Upper bound (RFC3339 date-time) for the query. |
+| **Max results** | Number | 50 | No | Maximum number of events to return (1-2500). |
+
+**Calendar → List**
+
+No further settings.
+
+**Free/busy → Query**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Time min** | Text |  | Yes | Lower bound (RFC3339 date-time) for the query. |
+| **Time max** | Text |  | Yes | Upper bound (RFC3339 date-time) for the query. |
+| **Calendar IDs** | List |  | No | Calendars to check for free/busy (defaults to primary). |
+{/* AUTO:settings:end */}
 
 ### Dates, time zones, and recurrence
 
@@ -44,7 +117,17 @@ Manages calendar events (create, update, delete, get, list), lists your calendar
 - For timed events, set **Time Zone** so the start/end are unambiguous.
 - Make an event recurring by adding one or more **Recurrence** RRULEs.
 
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth:** OAuth2 — sign in with Google, using your own Google OAuth client ([create it](/usage/using-the-app/credentials/oauth-client/#google)). The node runs entirely client-side on the PKCE flow with a refreshing token; no calendar data passes through awflow's backend.
 - **Scopes:** managing events needs write access, so the node requests `calendar.events` (read/write events) plus `calendar.readonly` (read calendars and free/busy). This is broader than read-only, so the Google consent screen will ask for it.

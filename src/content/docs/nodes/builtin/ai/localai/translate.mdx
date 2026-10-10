@@ -3,6 +3,12 @@ title: "Translate"
 description: "Translate text between languages on-device"
 sidebar:
   label: "Translate"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/translate
+  family: ai
 ---
 
 Translate text between languages, running locally in your browser. With a multilingual model (*NLLB-200*) you pick the source and target languages; a fixed-pair model (`opus-mt-xx-yy`) always translates its own pair. Private, offline, no cost.
@@ -17,16 +23,30 @@ Translate incoming messages, product descriptions, or scraped pages before proce
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to translate. |
-| From | Source language (default **English**). Ignored by fixed-pair `opus-mt` models. |
-| To | Target language (default **French**). Ignored by fixed-pair `opus-mt` models. |
-| Model | An **installed** translation model. Only translation models are listed here. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | No | The text to translate. |
+| **From** | Choice | English | No | Source language. Ignored by fixed-pair opus-mt models. 59 options. |
+| **To** | Choice | French | No | Target language. Ignored by fixed-pair opus-mt models. 59 options. |
+| **Model** | Model picker |  | No | Only translation models are listed here. |
+{/* AUTO:settings:end */}
 
 The From / To lists offer 59 common languages by name. Through an expression you can also pass an English language name (`Spanish`), a two-letter code (`es`), or any NLLB-200 code (`spa_Latn`) — so the full 200-language NLLB set stays reachable.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `text` | Text | The translated text |
+| `from` | Text |  |
+| `to` | Text |  |
+{/* AUTO:outputs:end */}
 
 Returns `{ text, from, to }`:
 
@@ -34,6 +54,12 @@ Returns `{ text, from, to }`:
 - `from`, `to` — the language codes actually used: NLLB codes (e.g. `eng_Latn`, `fra_Latn`) for NLLB, or the model's own pair (e.g. `en`, `de`) for an `opus-mt` model.
 
 If From and To are the same (with NLLB), the text is returned unchanged without running the model.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

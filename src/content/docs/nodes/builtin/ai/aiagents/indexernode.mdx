@@ -3,6 +3,12 @@ title: "Indexer"
 description: "Splitting text into chunks and embedding them into a vector store"
 sidebar:
   label: "Indexer"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/indexernode
+  family: ai
 ---
 
 Splitting text into chunks and embedding them into a vector store
@@ -17,12 +23,14 @@ Use it to fill a [knowledge base](/usage/using-the-app/knowledge-bases/overview/
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Input | The text to index. |
-| Source name | Optional. Shown in citations and in the knowledge base's source list. Supports expressions, for example `{{ $json.title }}`. |
-| Source link | Optional. Where the text comes from; citations link to it. |
-| Source ID | Optional. A stable id for this document, for example `invoices/2026-10`. Defaults to the source link, then the source name, then the text itself. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Input** | Text |  | Yes | The input to index. |
+| **Source ID** | Text |  | No | A stable id for this document. Indexing again with the same id updates it instead of adding a copy. Defaults to the source link or name, else to the text itself. |
+| **Source name** | Text |  | No | Shown in citations and in the knowledge base source list. Indexing again with the same source name (or link) updates that source in place instead of adding a copy. |
+| **Source link** | Text |  | No | Where the text comes from, linked from citations. |
+{/* AUTO:settings:end */}
 
 ### Update in place
 
@@ -31,6 +39,22 @@ Indexing again with the **same source** updates it instead of adding a copy. The
 Give each document a Source name or Source link (or an ID) when a workflow re-indexes the same pages on a schedule; without one, a changed text counts as a new source.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+This node has no output port: nothing runs after it on this branch.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `success` | True/false |  |
+| `chunks` | Number |  |
+| `added` | Number |  |
+| `updated` | Number |  |
+| `failed` | Number |  |
+| `removed` | Number |  |
+| `sourceId` | Text |  |
+{/* AUTO:outputs:end */}
 
 | Field | Description |
 | --- | --- |
@@ -47,6 +71,14 @@ After a run, the node on the canvas shows a badge such as **24 added · 3 update
 With a vector store other than Local Knowledge, the chunks are simply added (`updated` is always 0).
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model | No | One |
+| **Knowledge** | vector store | Yes | One |
+| **Text Splitter** | text splitter | Yes | One |
+{/* AUTO:deps:end */}
 
 - **Knowledge** (required) — a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node. The chunks are embedded with that knowledge base's own model.
 - **Text Splitter** (required) — how the text is split, for example [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/).

@@ -3,6 +3,12 @@ title: "Baserow / NocoDB"
 description: "Create, read, update, and delete rows in a Baserow or NocoDB table — hosted or self-hosted, including localhost."
 sidebar:
   label: "Baserow / NocoDB"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/baserow-nocodb
+  family: integration
 ---
 
 Read and write rows in [Baserow](https://baserow.io) or [NocoDB](https://nocodb.com) — open-source, self-hostable Airtable alternatives. Because both can run on your own machine, this keeps your workflow data entirely local if you want — the same local-first story as Local Knowledge, Ollama, and WebLLM.
@@ -19,19 +25,113 @@ Full row CRUD against a table you point it at: create, get, update, list, and de
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | A Baserow database token or a NocoDB API token (see below). |
-| Provider | Baserow or NocoDB. |
-| Base URL | Your instance — `https://api.baserow.io`, `https://app.nocodb.com`, or a self-hosted address like `http://localhost:8080`. **Plain HTTP on localhost is fine.** |
-| Table ID | The table to work with (Baserow's numeric ID, or NocoDB's table ID). |
-| Fields | Field name → value pairs for Create / Update (use your table's column names). |
-| Row ID | The row/record to get, update, or delete. |
-| Limit | Maximum rows to return (List). |
+| — | Create row, Get row, Update row, List rows, Delete row |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | A Baserow database token or a NocoDB API token, stored as a Bearer Token credential. Keep it secret — it grants access to your tables. |
+
+Pick **Provider** and **Operation** first; the fields below change with your choice.
+
+**Baserow → Create row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Fields** | Key-value pairs |  | Yes | Field name → value pairs (use the column names from your table). |
+
+**NocoDB → Create row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Fields** | Key-value pairs |  | Yes | Field name → value pairs (use the column names from your table). |
+
+**Baserow → Get row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Row ID** | Number |  | Yes | The ID of the row/record. |
+
+**NocoDB → Get row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Row ID** | Number |  | Yes | The ID of the row/record. |
+
+**Baserow → Update row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Row ID** | Number |  | Yes | The ID of the row/record. |
+| **Fields** | Key-value pairs |  | Yes | Field name → value pairs (use the column names from your table). |
+
+**NocoDB → Update row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Row ID** | Number |  | Yes | The ID of the row/record. |
+| **Fields** | Key-value pairs |  | Yes | Field name → value pairs (use the column names from your table). |
+
+**Baserow → List rows**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Limit** | Number |  | No | Maximum number of rows to return. |
+
+**NocoDB → List rows**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Limit** | Number |  | No | Maximum number of rows to return. |
+
+**Baserow → Delete row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Row ID** | Number |  | Yes | The ID of the row/record. |
+
+**NocoDB → Delete row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base URL** | Text |  | Yes | Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080. |
+| **Table ID** | Text |  | Yes | The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with. |
+| **Row ID** | Number |  | Yes | The ID of the row/record. |
+{/* AUTO:settings:end */}
 
 Field names are used directly — Baserow requests use `user_field_names`, and NocoDB uses column names natively — so you never deal with internal field IDs.
 
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Baserow:** create a **database token** (Settings → Database tokens), stored as a **Bearer Token** credential. Sent as `Authorization: Token <token>`.
 - **NocoDB:** create an **API token** (Account → Tokens), stored as a **Bearer Token** credential. Sent as the `xc-token` header.

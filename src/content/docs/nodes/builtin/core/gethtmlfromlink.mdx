@@ -3,6 +3,12 @@ title: "Get HTML from Link"
 description: "Get the HTML content from a given URL"
 sidebar:
   label: "Get HTML from Link"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/gethtmlfromlink
+  family: core
 ---
 
 Get the HTML content from a given URL
@@ -17,22 +23,28 @@ Use this node to retrieve HTML for parsing, analysis, or when you need the compl
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL | Source-backed field from the node schema. |
-| Output field name | Source-backed field from the node schema. |
-| Timeout | Source-backed field from the node schema. |
-| Headers | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL** | Text |  | Yes | The URL to get the HTML from. |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Timeout** | Number | 10000 | No | The timeout for the request. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Headers** | Key-value pairs |  | No | The headers to send with the request. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -43,7 +55,6 @@ Connect data into Get HTML from Link, configure the settings above, and use the 
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

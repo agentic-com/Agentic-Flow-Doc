@@ -3,6 +3,12 @@ title: "Browser Startup"
 description: "Run the flow when the browser starts."
 sidebar:
   label: "Browser Startup"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/browserstartup
+  family: trigger
 ---
 
 Run the flow when the browser starts.
@@ -17,17 +23,30 @@ Use this trigger to run initialization workflows or background tasks that should
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Node form | This node uses the default workflow node configuration. |
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes when context is available.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `triggerType` | Choice |  |
+| `triggeredAt` | Text |  |
+| `reason` | Text |  |
+| `startedAt` | Any |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -38,7 +57,6 @@ Create a workflow with Browser Startup as the first node, then connect it to the
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

@@ -3,6 +3,12 @@ title: "Get Page Assets"
 description: "Get asset and downloadable link URLs from the opened page"
 sidebar:
   label: "Get Page Assets"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getpageassets
+  family: inpage
 ---
 
 Get asset and downloadable link URLs from the opened page
@@ -17,22 +23,41 @@ Use this node to inventory page resources, download assets, or analyze page depe
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Images | Source-backed field from the node schema. |
-| Downloadable Links | Source-backed field from the node schema. |
-| Media | Source-backed field from the node schema. |
-| Scripts | Source-backed field from the node schema. |
-| Styles | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+| **Options** | Group |  | No |  |
+| Options › **Images** | Toggle | On | No |  |
+| Options › **Downloadable Links** | Toggle | On | No |  |
+| Options › **Media** | Toggle | On | No |  |
+| Options › **Scripts** | Toggle | Off | No |  |
+| Options › **Styles** | Toggle | Off | No |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each run returns a list of items with these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `url` | Text |  |
+| `category` | Choice |  |
+| `tagName` | Text |  |
+| `selector` | Text |  |
+| `text` | Text |  |
+| `filename` | Text |  |
+| `extension` | Text |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -43,7 +68,6 @@ Run Get Page Assets after opening the target page, then pass its output to Edit 
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

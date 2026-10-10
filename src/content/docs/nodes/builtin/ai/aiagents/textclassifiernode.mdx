@@ -3,6 +3,12 @@ title: "Text Classifier"
 description: "Classify text into one of a set of given categories using a LLM, or on-device with a Local Classifier"
 sidebar:
   label: "Text Classifier"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/textclassifiernode
+  family: ai
 ---
 
 Classify text into one of a set of given categories using a LLM, or on-device with a Local Classifier
@@ -26,18 +32,38 @@ Use this node to route or tag text by topic or intent — for example, sorting i
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to classify. Rendered as a text area. |
-| Categories | Comma-separated category names to classify the text into. Rendered as a text area. |
-| Options → System message | Optional additional system message appended to the classification instructions. Rendered as a text area. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | Yes | The text to classify. |
+| **Categories** | Long text |  | Yes | Comma-separated category names to classify the text into. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **System message** | Long text |  | No | The system message to use. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `category` | Any | The chosen category |
+| `scores` | Key-value pairs | Every label's score, on-device |
+{/* AUTO:outputs:end */}
 
 - **Chat model** — returns `{ category }`, a string with the trimmed category name returned by the model — one of the categories you supplied, or `"unknown"` if none fit.
 - **Local Classifier** — returns `{ category, scores }`: the top label (or `"unknown"` if the model returned none) and a `{ label: score }` map of every label's score.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model, local classifier | Yes | One |
+{/* AUTO:deps:end */}
 
 - **Model** (required) — connect a language model dependency (e.g. Chat OpenAI), or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to classify on-device.
 

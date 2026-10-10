@@ -3,6 +3,12 @@ title: "Element Change"
 description: "Run the flow when any of one or more CSS selectors on a matching page changes."
 sidebar:
   label: "Element Change"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/elementchange
+  family: trigger
 ---
 
 Run the flow when any of one or more CSS selectors on a matching page changes.
@@ -17,17 +23,35 @@ Use this trigger to react to live changes on a page without polling: a price upd
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| CSS Selectors | A list of elements to watch. Each row is a DOM picker — type a selector, or use the crosshair to pick an element directly on the page. The flow fires when **any** selector meets the condition. At least one selector is required. |
-| Fire when | The condition each selector is tested against: **Content changes**, **Element appears**, **Element disappears**, or **Text matches**. |
-| Match text | The text to look for when *Fire when* is **Text matches**. |
-| Debounce (ms) | Single-page apps mutate constantly; the debounce coalesces bursts of mutations into one fire. Defaults to 500 ms. |
-| URL Patterns | The pages the observers are injected into. Defaults to `<all_urls>`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **CSS Selectors** | List |  | Yes | One or more elements to watch. The flow fires when any of them meets the condition. Use the crosshair to pick an element on the page. |
+| **Fire when** | Choice | Content changes | No | Options: Content changes, Element appears, Element disappears, Text matches. |
+| **Match text** | Text |  | No | Text to match when condition is "Text matches". |
+| **Debounce (ms)** | Number | 500 | No | SPAs mutate constantly; debounce coalesces bursts into one fire. |
+| **URL Patterns** | Tags | `["<all_urls>"]` | No |  |
+{/* AUTO:settings:end */}
 
 The condition, match text, debounce, and URL patterns are shared by every selector in the list.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `triggerType` | Choice |  |
+| `triggeredAt` | Text |  |
+| `selector` | Text |  |
+| `condition` | Text |  |
+| `url` | Text |  |
+| `tabId` | Number |  |
+| `matchedText` | Text |  |
+{/* AUTO:outputs:end */}
 
 When a watched selector fires, the workflow starts with this trigger context:
 
@@ -42,7 +66,10 @@ When a watched selector fires, the workflow starts with this trigger context:
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
 - Runs inside the awflow browser extension only.
 
 ## Example workflow

@@ -3,6 +3,12 @@ title: "Classify Image"
 description: "Label an image on-device with any installed image-classification model"
 sidebar:
   label: "Classify Image"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/classify-image
+  family: ai
 ---
 
 Label an image **entirely in your browser** with an installed image-classification model (MobileNet on TensorFlow.js, ViT on transformers.js). No cloud call, no cost, no data leaving the device.
@@ -17,14 +23,28 @@ Tag or route images by content: sort uploads, flag categories, or branch a workf
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** image-classification model, across engines. Download one from the picker if the list is empty. |
-| Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
-| Confidence threshold | Drop predictions scoring below this value (default `0.1`). |
-| Top-K results | Keep at most this many labels (default `5`). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker |  | No | Any installed image-classification model, across engines. |
+| **Image** | Media |  | No | Image URL, data URL, or $binary from a previous node. |
+| **Confidence threshold** | Number | 0.1 | No | Drop predictions below this score. |
+| **Top-K results** | Number | 5 | No |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `predictions` | List of entries | Labels above the threshold, best first |
+| `top` | Text | The best label, or null when none passed |
+| `score` | Number |  |
+{/* AUTO:outputs:end */}
 
 Returns `{ predictions, top, score }`:
 
@@ -35,6 +55,12 @@ Returns `{ predictions, top, score }`:
 ## Before you run
 
 Install an image-classification model from the picker or the [Local AI](/usage/using-the-app/local-models/) page. The first run loads the model into memory; later runs are fast.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

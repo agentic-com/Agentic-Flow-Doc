@@ -3,6 +3,12 @@ title: "Download as file"
 description: "Download the input data as a file"
 sidebar:
   label: "Download as file"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/downloadasfile
+  family: data
 ---
 
 Download the input data as a file
@@ -17,20 +23,27 @@ Use this node to export workflow results as files for download or storage.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| File type | Source-backed field from the node schema. |
-| File name | Source-backed field from the node schema. |
-| Return input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **FieldPath** | Text |  | Yes | The path to the field to pick from the input object (without the node's name or id) that contains the url to download. |
+| **File type** | Choice | json | No | The type to use for the file to download in case the type can't be determined from the input data. 17 options. |
+| **File name** | Text | `file` | No | The name of the file to download. If not provided, a random file name will be generated based on the input data. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Return input fields** | Toggle | Off | No | Whether to return the input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns transformed data for downstream nodes.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -41,7 +54,6 @@ Connect data into Download as file, configure the settings above, and use the ou
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

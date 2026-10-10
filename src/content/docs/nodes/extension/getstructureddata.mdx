@@ -3,6 +3,12 @@ title: "Get Structured Data"
 description: "Extract structured data from a table or list in the opened tab"
 sidebar:
   label: "Get Structured Data"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getstructureddata
+  family: inpage
 ---
 
 Extract structured data from a table or list in the opened tab
@@ -17,20 +23,35 @@ Use this node to scrape tabular data from web pages for analysis, storage, or pr
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | Source-backed field from the node schema. |
-| List Format | Source-backed field from the node schema. |
-| Table first row is header | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
+| **Options** | Group |  | No | Structured extraction options. |
+| Options › **Mode** | Choice | Auto | No | Choose what to extract. Options: Auto, Table, List. |
+| Options › **List Format** | Choice | Text | No | How list items are represented. Options: Text, Key/Value. |
+| Options › **Table first row is header** | Toggle | On | No | Use first table row as headers when no thead is present. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each run returns a list of items with these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `sourceType` | Choice |  |
+| `selector` | Text |  |
+| `items` | List of entries | One item per row or list entry |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -41,7 +62,6 @@ Run Get Structured Data after opening the target page, then pass its output to E
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

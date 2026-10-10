@@ -3,6 +3,12 @@ title: "Round a Date"
 description: "Round a date up or down to a chosen unit of time"
 sidebar:
   label: "Round a Date"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/datetime/roundadate
+  family: data
 ---
 
 Round a date up or down to a chosen unit of time.
@@ -17,19 +23,30 @@ Use this node to normalise timestamps (e.g. bucket events by day or month), to c
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Date to round | The date to round. Accepts the same date input as the other Date & Time nodes. |
-| Unit | The unit to round to: `year`, `month`, `week`, `day`, `hour`, or `minute`. |
-| Direction | `down` for the start of the unit (floor), `up` for the end of the unit (ceil). |
-| Output field name | Name of the field the rounded date is written to. |
-| Include input fields | Optionally keep the incoming fields alongside the result. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Date to round** | Date and time |  | Yes | The date to round. |
+| **Unit** | Choice |  | Yes | The unit to round the date to. Options: year, month, week, day, hour, minute. |
+| **Direction** | Choice |  | Yes | Round down (start of the unit) or up (end of the unit). Options: down, up. |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Returns the rounded value as a date in the field named by **Output field name**. When **Include input fields** is enabled, the incoming fields are spread in alongside it.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

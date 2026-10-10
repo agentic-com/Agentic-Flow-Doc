@@ -3,6 +3,12 @@ title: "Get All Links"
 description: "Get all the links from the page of the actual openend tab"
 sidebar:
   label: "Get All Links"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getalllinks
+  family: inpage
 ---
 
 Get all the links from the page of the actual openend tab
@@ -17,20 +23,27 @@ Use this node for web crawling, link discovery, or building navigation maps of w
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Output field name | Source-backed field from the node schema. |
-| Max links | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+| **Max links** | Number |  | No | The maximum number of links to return. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -41,7 +54,6 @@ Run Get All Links after opening the target page, then pass its output to Edit Fi
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

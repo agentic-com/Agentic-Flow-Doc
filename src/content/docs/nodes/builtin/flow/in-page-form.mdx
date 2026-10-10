@@ -3,6 +3,12 @@ title: "In-Page Form"
 description: "Pause the run and ask the user to fill a form; continue with the values they enter."
 sidebar:
   label: "In-Page Form"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/in-page-form
+  family: flow
 ---
 
 Pause a run to ask the user for input, then continue with whatever they enter.
@@ -21,14 +27,25 @@ The paused run waits in the **Executions** pane, where the form is shown; it sur
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Form title | The heading shown above the form on the paused run. |
-| Fields | The fields to render. Each field has a **name** (the output key), an optional **label**, a **type**, optional **options**, and a **required** flag. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Form title** | Text | `Please provide input` | No |  |
+| **Fields** | List of entries |  | Yes |  |
+| Fields (each entry) › **Field name** | Text |  | Yes | Key the entered value is stored under, referenced downstream. |
+| Fields (each entry) › **Label** | Text |  | No | Shown above the control. |
+| Fields (each entry) › **Type** | Choice | text | No | Options: text, textarea, number, checkbox, select, date. |
+| Fields (each entry) › **Options** | Text |  | No | Comma-separated choices, for a select field. |
+| Fields (each entry) › **Required** | Toggle |  | No |  |
+{/* AUTO:settings:end */}
 
 Supported field types: **text**, **textarea**, **number**, **checkbox**, **select** (comma-separated options), and **date**.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 When the user submits, the entered values flow out as the node's output, keyed by each field's **name**. Downstream nodes reference them by that name — e.g. a field named `email` becomes available as `email`.
 
@@ -37,6 +54,10 @@ When the user submits, the entered values flow out as the node's output, keyed b
 A paused run appears in the **Executions** pane with the form rendered inline. It waits indefinitely — it does not time out on its own — and persists across browser restarts. Cancelling the paused run stops it without producing output.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required.
 - No extra permission is needed.

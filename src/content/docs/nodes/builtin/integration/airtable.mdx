@@ -3,6 +3,12 @@ title: "Airtable"
 description: "Integrate with AirTable to perform operations on tables."
 sidebar:
   label: "Airtable"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/integration/airtable
+  family: integration
 ---
 
 Integrate with AirTable to perform operations on tables.
@@ -17,25 +23,83 @@ Use this node to sync data with Airtable, manage databases, or build workflows a
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | Source-backed field from the node schema. |
-| Resource | Source-backed field from the node schema. |
-| Operation | Source-backed field from the node schema. |
-| Base | Source-backed field from the node schema. |
-| Table | Source-backed field from the node schema. |
-| Record | Source-backed field from the node schema. |
-| Fields | Source-backed field from the node schema. |
-| Filter By Formula | Source-backed field from the node schema. |
-| Limits | Source-backed field from the node schema. |
+| Base | Get many, Get schema |
+| Record | Create a record in a table, Update data in a table, Delete data from a table, Get data from a table, Search data in a table |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The Credential to use to make the request. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Record → update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
+| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
+| **Record** | Text |  | Yes | The ID of the record to update. |
+| **Fields** | Field list |  | Yes | The fields to update. |
+
+**Record → create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
+| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
+| **Fields** | Field list |  | Yes | The fields to update. |
+
+**Record → delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
+| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
+| **Record** | Text |  | Yes | The ID of the record to update. |
+
+**Record → get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
+| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
+| **Record** | Text |  | Yes | The ID of the record to update. |
+
+**Record → search**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
+| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
+| **Filter By Formula** | Text |  | No | The formula will be evaluated for each record, and if the result is not 0, false, "", NaN, \[\], or #Error! the record will be included in the response. More info. |
+
+**Base → Get schema**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
+
+**Base → Get many**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Limits** | Number |  | No | The maximum number of records to return. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the service response or a success object from the selected operation.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -46,7 +110,6 @@ Connect prepared data into Airtable, select the credential, choose the operation
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

@@ -3,6 +3,12 @@ title: "Character Text Splitter"
 description: "Breaks down text into smaller parts."
 sidebar:
   label: "Character Text Splitter"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/textsplitter/charactertextsplitter
+  family: ai
 ---
 
 Breaks down text into smaller parts.
@@ -17,19 +23,29 @@ Connect this to indexer nodes when you need simple, predictable text chunking fo
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Chunk Size | Source-backed field from the node schema. |
-| Separator | Source-backed field from the node schema. |
-| Chunk Overlap | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Chunk Size** | Number | 1000 | No | The size of each chunk. |
+| **Separator** | Text |  | No | The separator to use. |
+| **Chunk Overlap** | Number | 200 | No | The overlap between chunks. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns a text splitter dependency used before indexing or retrieval.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Text Splitter | [Indexer](/nodes/builtin/ai/aiagents/indexernode/) |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -40,7 +56,6 @@ Connect Character Text Splitter to an AI agent or dependency input that accepts 
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

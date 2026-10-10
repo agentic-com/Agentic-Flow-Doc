@@ -3,6 +3,12 @@ title: "Rename Keys"
 description: "Rename and move keys on an item"
 sidebar:
   label: "Rename Keys"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/renamekeys
+  family: data
 ---
 
 Rename and move keys on an item.
@@ -17,21 +23,33 @@ Use this node to fix the one wrong field name on a twenty-field scraped object w
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | How keys are chosen: `Named keys` (rename the ones you list) or `Pattern` (rewrite every key that matches). Defaults to `Named keys`. |
-| Renames | Used by **Named keys**: a list of `From` → `To` pairs. In `From`, dots address nested keys (`user.firstName`); in `To`, dots move the value to a different place (`first_name`). |
-| Pattern | Used by **Pattern**: a regular expression matched against each key name, for example `^data_` to strip a prefix. |
-| Replacement | Used by **Pattern**: what the matched part becomes. Use `$1` for groups. Leaving it empty removes the matched part. |
-| Ignore Case | Used by **Pattern**: match the pattern regardless of case. Off by default. |
-| Apply To Nested Keys | Used by **Pattern**: off rewrites only the top-level keys; on rewrites every key at every depth, including inside arrays of objects. Off by default. |
-| On Collision | What to do when a new name is already taken: `Fail` (the default), `Overwrite`, or `Keep the existing key`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | Named keys | No | Rename keys you name, or every key matching a pattern. Options: Named keys, Pattern. |
+| **Renames** | List of entries |  | No | Keys to rename, and what to rename them to. |
+| Renames (each entry) › **From** | Text |  | Yes | Current key. Dots address nested keys. |
+| Renames (each entry) › **To** | Text |  | Yes | New key. Dots move the value to a different place. |
+| **Pattern** | Text |  | No | Regular expression matched against each key name. |
+| **Replacement** | Text |  | No | What the matched part becomes. Use $1 for groups. Empty removes it. |
+| **Ignore Case** | Toggle | Off | No | Match the pattern regardless of case. |
+| **Apply To Nested Keys** | Toggle | Off | No | Rewrite keys inside nested objects too. |
+| **On Collision** | Choice | Fail | No | What to do when the new name is already taken. Options: Fail, Overwrite, Keep the existing key. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 The same item (or collection) with its keys renamed. Values are preserved; only the key names — and, when you rename to a dot path, the place a value sits — change.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

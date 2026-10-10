@@ -3,6 +3,12 @@ title: "Obsidian"
 description: "Append the current page, a selection, or workflow output to a note in a local Obsidian vault — nothing leaves your machine."
 sidebar:
   label: "Obsidian"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/obsidian
+  family: integration
 ---
 
 Clip the page you're on straight into your **local** Obsidian vault, through the [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) community plugin. This is the strongest local-first path there is: page → local vault, with **no cloud service anywhere in the middle**. Nothing leaves your machine.
@@ -22,15 +28,49 @@ Appends to a note, creates a note, reads a note, and searches the vault. Append 
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | The plugin's API key (see below). |
-| Operation | What to do in the vault. |
-| Server URL | Defaults to `http://127.0.0.1:27123`. **Prefer the HTTP port** — see the note below. |
-| Note path | Path within the vault, including `.md` (e.g. `Clippings/Web.md`). |
-| Content | Markdown to write (the page text, a selection, or workflow output). |
-| Source URL | Attached as a `[Source](…)` link when present (Append / Create). |
-| Query | Text to search for (Search). |
+| — | Append to note, Create note, Get note, Search vault |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The API key from the Obsidian "Local REST API" plugin settings, stored as a Bearer Token credential. Everything stays on your machine — nothing leaves for a cloud service. |
+
+Pick **Operation** first; the fields below change with your choice.
+
+**Append to note**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Server URL** | Text |  | No | The Local REST API address — defaults to http://127.0.0.1:27123. Prefer the HTTP port; the HTTPS port uses a self-signed cert that fetch will reject. |
+| **Note path** | Text |  | Yes | Path to the note within the vault, including the .md extension. |
+| **Content** | Text |  | Yes | Markdown to write (the page text, a selection, or workflow output). |
+| **Source URL** | Text |  | No | The page URL — appended as a Markdown \[Source\](…) link when present. |
+
+**Create note**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Server URL** | Text |  | No | The Local REST API address — defaults to http://127.0.0.1:27123. Prefer the HTTP port; the HTTPS port uses a self-signed cert that fetch will reject. |
+| **Note path** | Text |  | Yes | Path to the note within the vault, including the .md extension. |
+| **Content** | Text |  | Yes | Markdown to write (the page text, a selection, or workflow output). |
+| **Source URL** | Text |  | No | The page URL — appended as a Markdown \[Source\](…) link when present. |
+
+**Get note**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Server URL** | Text |  | No | The Local REST API address — defaults to http://127.0.0.1:27123. Prefer the HTTP port; the HTTPS port uses a self-signed cert that fetch will reject. |
+| **Note path** | Text |  | Yes | Path to the note within the vault, including the .md extension. |
+
+**Search vault**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Server URL** | Text |  | No | The Local REST API address — defaults to http://127.0.0.1:27123. Prefer the HTTP port; the HTTPS port uses a self-signed cert that fetch will reject. |
+| **Query** | Text |  | Yes | Text to search for across the vault. |
+{/* AUTO:settings:end */}
 
 ## Setup
 
@@ -45,6 +85,18 @@ The plugin exposes an HTTPS port (`27124`) with a **self-signed certificate** an
 ## Web and extension builds
 
 This node is **extension-only**. It talks to software running on your own machine (`http://127.0.0.1`), which is already covered by the extension's host permissions — no new permission and no cloud round-trip.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

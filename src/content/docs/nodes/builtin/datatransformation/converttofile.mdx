@@ -3,6 +3,13 @@ title: "Convert to File"
 description: "Turn items into a file (CSV, JSON, text, base64 or binary)"
 sidebar:
   label: "Convert to File"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/converttofile
+  family: data
+  since: "0.7.0"
 ---
 
 Turn items into a file (CSV, JSON, text, base64 or binary).
@@ -17,12 +24,14 @@ Use this node when a later step needs a real file rather than text on a field: u
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Format | The kind of file to produce: `CSV`, `JSON`, `Text`, `Base64` or `Binary`. Defaults to `CSV`. |
-| File name | Name recorded on the produced file. Left empty, a sensible default per format is used (`data.csv`, `data.json`, `data.txt`, `data.bin`). |
-| MIME type | Content type recorded on the file. Left empty, a sensible default per format is used (see below). Set it explicitly for `Base64`, where it cannot be inferred. |
-| Source Field | Field to read from the item. For `Text`: the text to write per item. For `Base64`: the field holding the base64 string. For `Binary`: the binary slot (defaults to `data`) or a field holding the bytes. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Format** | Choice | CSV | No | The kind of file to produce. Options: CSV, JSON, Text, Base64, Binary. |
+| **File name** | Text |  | No | Name of the produced file. Left empty, a sensible default per format is used. |
+| **MIME type** | Text |  | No | Content type recorded on the file. Left empty, a sensible default per format is used. Required to be set explicitly for Base64. |
+| **Source Field** | Text |  | No | Field to read from the item. For Text: the text per item. For Base64: the field holding the base64 string. For Binary: the binary slot (defaults to "data") or a field holding the bytes. |
+{/* AUTO:settings:end */}
 
 ## Formats
 
@@ -34,9 +43,27 @@ Use this node when a later step needs a real file rather than text on a field: u
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `fileName` | Text |  |
+| `mimeType` | Text |  |
+| `format` | Text | The format the content was converted from |
+| `size` | Number |  |
+| `$binary` | Key-value pairs |  |
+{/* AUTO:outputs:end */}
+
 A single item carrying the produced file on `$binary.data`, plus `fileName`, `mimeType`, `format` and `size` on its JSON for reference. Downstream nodes that accept a **Binary source** (Download as File, Google Drive, Slack, HTTP Request) read the file straight off `$binary.data`.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

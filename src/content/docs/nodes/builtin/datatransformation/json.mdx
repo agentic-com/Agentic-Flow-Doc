@@ -3,6 +3,12 @@ title: "JSON"
 description: "Parse, build, pick from and repair JSON"
 sidebar:
   label: "JSON"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/json
+  family: data
 ---
 
 Parse, build, pick from and repair JSON.
@@ -17,18 +23,24 @@ Use this node to turn JSON-LD scraped off a page into fields the next node can a
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | What to do with the JSON: `Parse`, `Stringify`, `Pick by path`, `Merge` or `Repair`. Defaults to `Parse`. |
-| JSON | The JSON text or data to work on. Accepts an expression such as `{{ $json.raw }}`. |
-| Source Field | Field on the incoming item to read when the JSON field above is left empty, for example `body`. |
-| Path | Dot path read by `Pick by path`, for example `product.offers.price`. |
-| Merge With | The object `Merge` folds into the JSON. Its values win on conflict. |
-| Repair If Needed | For `Parse`: try to fix nearly-valid JSON before parsing it. Fixes code fences, surrounding prose, comments, single quotes, unquoted keys, trailing commas and cut-off tails. Valid JSON is never touched. Defaults to `on`. |
-| Pretty Print | For `Stringify`: indent the output. Defaults to `off`. |
-| Put Result In Field | Name of the field holding the answer. Defaults to `data`. For Parse and Merge, leaving the default lets the parsed object become the item itself when it is an object. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Parse | No | What to do with the JSON. Options: Parse, Stringify, Pick by path, Merge, Repair. |
+| **JSON** | Value |  | No | The JSON text or data to work on. |
+| **Source Field** | Text |  | No | Field on the incoming item to read, when JSON above is left empty. |
+| **Path** | Text |  | No | Dot path to read, for example product.offers.price. |
+| **Merge With** | Value |  | No | The object merged into the JSON. Its values win on conflict. |
+| **Repair If Needed** | Toggle | On | No | Try to fix nearly-valid JSON before parsing it. |
+| **Pretty Print** | Toggle | Off | No | Indent the output of Stringify. |
+| **Put Result In Field** | Text | `data` | No | Name of the field holding the answer. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 - **Parse** turns text into data. A parsed object becomes the outgoing item itself, so its fields are addressable downstream without a wrapper; an array becomes one item per entry; anything else is placed in **Put Result In Field**. When repair was needed, the steps applied are attached as a `_repaired` field.
 - **Stringify** returns the JSON text in **Put Result In Field**, indented when Pretty Print is on.
@@ -43,6 +55,10 @@ Repair applies up to seven passes in order — strip a markdown code fence, trim
 Repair never guesses values. A truncated payload is *closed* — open brackets are shut and a half-written string is ended — but a key whose value never arrived is dropped, not filled with `null`, because downstream could not tell an invented `null` from a real one. Non-JSON prose with no bracketed payload stays unparseable rather than being coerced. Strings are respected throughout: a brace, comma or comment marker inside a quoted string is treated as data, not syntax.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

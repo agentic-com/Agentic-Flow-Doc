@@ -3,6 +3,12 @@ title: "HTML Extract"
 description: "Pull values out of HTML with CSS selectors"
 sidebar:
   label: "HTML Extract"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/html-extract
+  family: data
 ---
 
 Pull values out of HTML with CSS selectors.
@@ -17,22 +23,36 @@ Use this node to pull a title, price or link off scraped HTML, or to turn a list
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| HTML | The HTML to extract from, usually bound from a previous node. Accepts an expression such as `{{ $json.body }}`. |
-| Mode | Read one value, or one item per matched container: `Single value` or `Repeating list`. Defaults to `Single value`. |
-| Selector | CSS selector for the element to read (single value mode), for example `h1.title`. |
-| Return | What the single-value selector returns: `Text`, `HTML`, or `Attribute`. Defaults to `Text`. |
-| Attribute | Attribute to read when Return is set to Attribute, for example `href`. |
-| Container Selector | CSS selector matching each repeating container (list mode), for example `ul.results > li`. |
-| Fields | One mapping per column, used in list mode: a field name, a selector read relative to the container, and what to return (`Text`, `HTML`, or `Attribute`, with an attribute name when needed). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **HTML** | Long text |  | No | The HTML to extract from, usually bound from a previous node. |
+| **Mode** | Choice | Single value | No | Read one value, or one item per matched container. Options: Single value, Repeating list. |
+| **Selector** | Text |  | No | CSS selector for the element to read (single value mode). |
+| **Return** | Choice | Text | No | Text, inner HTML, or an attribute of the matched element. Options: Text, HTML, Attribute. |
+| **Attribute** | Text |  | No | Attribute to read when Return is set to Attribute. |
+| **Container Selector** | Text |  | No | CSS selector matching each repeating container (list mode). |
+| **Fields** | List of entries |  | No | One mapping per column: name, selector, what to return (list mode). |
+| Fields (each entry) › **Field name** | Text |  | Yes |  |
+| Fields (each entry) › **Selector** | Text |  | Yes |  |
+| Fields (each entry) › **Return** | Choice | Text | No | Options: Text, HTML, Attribute. |
+| Fields (each entry) › **Attribute** | Text |  | No |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 - **Single value** returns one item: `{ value }`, where `value` is the text, sanitized HTML, or attribute read from the matched element, or `undefined` if nothing matched.
 - **Repeating list** returns one item per matched container, each an object keyed by the field names in **Fields**.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

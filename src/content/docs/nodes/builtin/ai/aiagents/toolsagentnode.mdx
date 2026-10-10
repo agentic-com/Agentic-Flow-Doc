@@ -3,6 +3,12 @@ title: "Tools Agent"
 description: "Generate an action plan and execute it. Can use external tools."
 sidebar:
   label: "Tools Agent"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/toolsagentnode
+  family: ai
 ---
 
 Generate an action plan and execute it. Can use external tools.
@@ -27,16 +33,23 @@ You approve or reject each action in the **Executions** pane. This is automatic 
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| System message | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
-| Options → Max iterations | How many times the agent may call tools before it must answer with what it has. Defaults to `10`. |
-| Options → Knowledge documents (k) | How many passages to retrieve from the connected knowledge base (default `4`). |
-| Options → Max knowledge context length | Maximum characters of retrieved passages added to the prompt (default `4000`). |
-| Options → Fail on knowledge error | Fail when the knowledge base can't be searched, instead of answering without it (default off). |
-| Options → Knowledge search | How the agent uses the connected knowledge base. See [Knowledge search](#knowledge-search). |
-| Options → Search type, Match by, Minimum relevance, Metadata filter, Device-only knowledge with a cloud model | Same as on the RAG Agent: see [Knowledge base options](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Prompt** | Text |  | Yes |  |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **System message** | Long text |  | No | The system message to use. |
+| Options › **Max iterations** | Number | 10 | No | How many times the agent may call tools before it must answer with what it has. |
+| Options › **Knowledge documents (k)** | Number | 4 | No | How many documents to retrieve from the connected knowledge base. |
+| Options › **Max knowledge context length** | Number | 4000 | No | Maximum characters of retrieved knowledge to inject into the prompt. |
+| Options › **Fail on knowledge error** | Toggle | Off | No | If enabled, the node fails when knowledge retrieval errors instead of answering without context. |
+| Options › **Knowledge search** | Choice | Search before answering | No | How the agent uses the connected knowledge base. Options: Search before answering, Let the agent search the knowledge base on its own, Both. |
+| Options › **Search type** | Choice | Most similar | No | How passages are picked from the connected knowledge base. Options: Most similar, Diverse (MMR). |
+| Options › **Match by** | Choice | Keywords and meaning | No | How a knowledge base is searched with "Most similar". Diverse (MMR) and other vector stores always match by meaning. Options: Keywords and meaning, Meaning only. |
+| Options › **Minimum relevance** | Number | 0 | No | Drop passages less similar to the question than this (0 to 1). 0 keeps every passage. |
+| Options › **Metadata filter** | Key-value pairs |  | No | Only search passages whose metadata matches every key = value (e.g. sourceType = web). Keys use letters, numbers and \_; numbers and true/false are matched as such. |
+| Options › **Device-only knowledge with a cloud model** | Choice | Stop with an error | No | A knowledge base marked "Device only" is never sent to a cloud model. Choose what the node does when its model is a cloud model. Options: Stop with an error, Answer without it. |
+{/* AUTO:settings:end */}
 
 When the agent reaches **Max iterations**, it stops calling tools and is asked for a final answer with what it has; the run log says *Agent reached its max iterations and answered with what it had*.
 
@@ -56,6 +69,19 @@ Passages given up front are fenced as reference data too, and a **Device only** 
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `response` | Any | The model reply; the parsed result when an output parser is connected |
+| `steps` | List of entries | The tool calls the agent made, in order |
+| `usage` | Object | Tokens the model used, as reported by the provider |
+| `sources` | List of entries | The knowledge base sources used for the answer |
+{/* AUTO:outputs:end */}
+
 | Field | Description |
 | --- | --- |
 | `response` | The agent's final answer. |
@@ -70,6 +96,16 @@ Passages given up front are fenced as reference data too, and a **Device only** 
 - When the model asks for a tool in a malformed way, the error is sent back to the model so it can correct the call, instead of failing the node.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model | Yes | One |
+| **Memory** | chat memory | No | One |
+| **Knowledge** | vector store | No | One |
+| **Tools** | tools | No | Several |
+| **Output Parser** | output parser | No | One |
+{/* AUTO:deps:end */}
 
 - **Model** (required) — a chat model that supports tool calling.
 - **Tools**, **Knowledge**, **Memory** and **Output Parser** (optional).
@@ -96,7 +132,6 @@ Connect Tools Agent to an AI agent or dependency input that accepts this depende
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

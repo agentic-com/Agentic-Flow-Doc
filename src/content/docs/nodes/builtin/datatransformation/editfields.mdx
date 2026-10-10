@@ -3,6 +3,12 @@ title: "Edit Fields"
 description: "Modify, add or remove item fields"
 sidebar:
   label: "Edit Fields"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/editfields
+  family: data
 ---
 
 Modify, add or remove item fields
@@ -17,17 +23,23 @@ Use this node to reshape data structure between workflow steps, such as renaming
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| fields | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Fields** | Key-value pairs |  | Yes |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns transformed data for downstream nodes.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -38,7 +50,6 @@ Connect data into Edit Fields, configure the settings above, and use the output 
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

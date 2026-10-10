@@ -3,6 +3,12 @@ title: "Split Out"
 description: "Turn one item with an array field into many items"
 sidebar:
   label: "Split Out"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/splitout
+  family: data
 ---
 
 Turn one item with an array field into many items.
@@ -17,17 +23,27 @@ Use this node when an upstream step returns a list packed inside a single item (
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Field to split out | Dot-notation path to the array field on the input item (e.g. `tags` or `data.items`). |
-| Output field name | Name each element is stored under on the output items. Defaults to the last segment of the path. |
-| Include other fields | When on, the item's remaining top-level fields are copied onto every output item. Defaults to off. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Field To Split Out** | Text |  | Yes | The path to the array field to split out (without the node name or id). |
+| **Output field name** | Text |  | No | The name of the field each element is placed under. Defaults to the field being split out. |
+| **Include Other Fields** | Toggle | Off | No | Whether to carry the remaining input fields onto each output item. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Emits one item per array element: `{ [outputFieldName]: element }`, plus the carried-over fields when **Include other fields** is enabled. An empty array produces no items; a value that is not an array passes through as a single item.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

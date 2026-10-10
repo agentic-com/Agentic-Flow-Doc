@@ -3,6 +3,12 @@ title: "Compression"
 description: "Compress or decompress binary data with gzip"
 sidebar:
   label: "Compression"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/compression
+  family: data
 ---
 
 Compress or decompress binary data with gzip.
@@ -31,16 +37,28 @@ When either ceiling is crossed the node stops immediately and raises a clear err
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | Direction: `Compress (gzip)` or `Decompress (gunzip)`. Defaults to `Compress (gzip)`. |
-| Binary Field | The `$binary` slot the input bytes are read from and the result is written to. Defaults to `data`. |
-| Text to compress | For gzip only: text to compress when the item carries no `$binary` attachment. Accepts an expression such as `{{ $json.data }}`. |
-| Output file name | For gzip: name of the produced file. Left empty, the source file name with a `.gz` suffix (or `data.gz`) is used. |
-| Output MIME type | For gunzip: content type recorded on the decompressed file. Left empty, `application/octet-stream` is used. |
-| Decode to text | For gunzip: place the decompressed content as UTF-8 text on the item (under the binary field name) instead of a `$binary` attachment. Defaults to `off`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Compress (gzip) | No | Compress (gzip) or decompress (gunzip) the input. Options: Compress (gzip), Decompress (gunzip). |
+| **Binary Field** | Text | `data` | No | The $binary slot to read the input bytes from and write the result to. |
+| **Text to compress** | Long text |  | No | For gzip only: text to compress when the item has no $binary attachment. |
+| **Output file name** | Text |  | No | For gzip: name of the produced file. Left empty, the source name with a ".gz" suffix (or "data.gz") is used. |
+| **Output MIME type** | Text |  | No | For gunzip: content type recorded on the decompressed file. Left empty, application/octet-stream is used. |
+| **Decode to text** | Toggle | Off | No | For gunzip: place the decompressed content as UTF-8 text on the item (in the binary field name) instead of a $binary attachment. |
+{/* AUTO:settings:end */}
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required.
 - No node dependency is required. The node runs entirely in the browser via `CompressionStream` / `DecompressionStream`.

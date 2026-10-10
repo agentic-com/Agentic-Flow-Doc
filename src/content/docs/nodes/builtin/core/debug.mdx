@@ -3,6 +3,12 @@ title: "Debug"
 description: "Generate sample data, delay, or throw on demand"
 sidebar:
   label: "Debug"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/debug
+  family: core
 ---
 
 Generate sample data, delay, or throw on demand.
@@ -21,17 +27,23 @@ Use this node while you are building or debugging a workflow:
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | What the node does: `Generate` (the default), `Delay`, or `Throw`. |
-| Shape | Used by **Generate**: which sample data shape to emit — `Indexed items` (the default), `Long string`, `Nested object`, or `Random JSON`. |
-| Count | Used by **Generate → Indexed items**: how many items to emit. Defaults to `5`. |
-| Length | Used by **Generate → Long string**: the exact length, in characters, of the generated string. Defaults to `1000`. |
-| Depth | Used by **Generate → Nested object**: how many levels deep to nest. Defaults to `3`. |
-| Delay (ms) | Used by **Delay**: how long to wait, in milliseconds. Defaults to `1000`. |
-| Error message | Used by **Throw**: the error message to raise. Defaults to `Debug node threw on demand`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | Generate | No | What this node does when it runs. Options: Generate, Delay, Throw. |
+| **Shape** | Choice | Indexed items | No | Used by Generate: which sample data shape to emit. Options: Indexed items, Long string, Nested object, Random JSON. |
+| **Count** | Number | 5 | No | Used by Generate → Indexed items: how many items to emit. |
+| **Length** | Number | 1000 | No | Used by Generate → Long string: the exact length of the string. |
+| **Depth** | Number | 3 | No | Used by Generate → Nested object: how many levels deep to nest. |
+| **Delay (ms)** | Number | 1000 | No | Used by Delay: how long to wait, in milliseconds. |
+| **Error message** | Long text | `Debug node threw on demand` | No | Used by Throw: the error message to raise. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Depends on the mode:
 
@@ -44,6 +56,10 @@ Depends on the mode:
 - **Throw** — produces no output; it raises the configured error.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser and works without an account. Nothing is sent anywhere.
 

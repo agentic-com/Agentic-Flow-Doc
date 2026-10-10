@@ -3,6 +3,12 @@ title: "Microsoft 365"
 description: "Integrate with Microsoft 365 via Graph: send and read Outlook mail, manage OneDrive files, create calendar events and To Do tasks."
 sidebar:
   label: "Microsoft 365"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/microsoft-graph
+  family: integration
 ---
 
 One node covering Microsoft 365 via the Graph API — Outlook mail, OneDrive files, calendar, and To Do — with the current page as context.
@@ -22,21 +28,118 @@ Sends and reads Outlook mail, uploads and shares OneDrive files, creates calenda
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | Sign in with Microsoft (see below). |
-| Resource / Operation | What to act on and how. |
-| Subject / Body / To | Compose an email (Mail → Send/Draft). |
-| Body type | Text or HTML (mail). |
-| Source URL | The page URL to attach — appended to the mail body / event description / task note when present. |
-| Message ID | The message to fetch (Mail → Get). |
-| File path / File content / Content type | Upload text content to a OneDrive path (File → Upload). |
-| Item ID / Link type / Link scope | Create a sharing link for a OneDrive item (File → Get link). |
-| Subject / Location / Start / End / Time Zone / Attendees | Create a calendar event (Time Zone defaults to UTC). |
-| Title / Note / List ID | Create a task; List ID defaults to your default To Do list. |
-| Limit | Number of results for list operations. |
+| Mail | Send, List, Get, Draft |
+| File | Upload, List, Get link |
+| Calendar | Create event, List |
+| To Do | Create task, List |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | Sign in with Microsoft. Register a public client (auth-code + PKCE) with delegated permissions; the credential only needs the Application (client) ID. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Mail → Send**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Subject** | Text |  | Yes | The email/event subject. |
+| **Body** | Text |  | Yes | The email body. |
+| **To** | List |  | Yes | Recipient email addresses. |
+| **Body type** | Choice |  | No | How to interpret the body. Options: Text, HTML. |
+| **Source URL** | Text |  | No | The page URL to attach — appended to the body/description when present. |
+
+**Mail → Draft**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Subject** | Text |  | Yes | The email/event subject. |
+| **Body** | Text |  | Yes | The email body. |
+| **To** | List |  | Yes | Recipient email addresses. |
+| **Body type** | Choice |  | No | How to interpret the body. Options: Text, HTML. |
+| **Source URL** | Text |  | No | The page URL to attach — appended to the body/description when present. |
+
+**Mail → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Limit** | Number | 10 | No | Number of results to return (1-100). |
+
+**Mail → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Message ID** | Text |  | Yes | The Outlook message ID. |
+
+**File → Upload**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **File path** | Text |  | Yes | Destination path in OneDrive (relative to the drive root). |
+| **File content** | Text |  | Yes | The text content to upload. |
+| **Content type** | Text |  | No | MIME type for the uploaded content. |
+
+**File → List**
+
+No further settings.
+
+**File → Get link**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Item ID** | Text |  | Yes | The OneDrive item (file/folder) ID to share. |
+| **Link type** | Choice |  | No | Sharing link permission. Options: View, Edit. |
+| **Link scope** | Choice |  | No | Who the link works for. Options: Anyone, Organization. |
+
+**Calendar → Create event**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Subject** | Text |  | Yes | The email/event subject. |
+| **Description** | Text |  | No | The event description. |
+| **Source URL** | Text |  | No | The page URL to attach — appended to the body/description when present. |
+| **Location** | Text |  | No | The event location. |
+| **Start (date-time)** | Text |  | No | Event start as an ISO date-time, e.g. 2026-09-10T09:00:00. |
+| **End (date-time)** | Text |  | No | Event end as an ISO date-time. |
+| **Time Zone** | Text |  | No | IANA time zone (defaults to UTC), e.g. America/New\_York. |
+| **Attendees** | List |  | No | Email addresses to invite. |
+
+**Calendar → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Limit** | Number | 10 | No | Number of results to return (1-100). |
+
+**To Do → Create task**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Title** | Text |  | Yes | The task title. |
+| **Note** | Text |  | No | A note/body for the task. |
+| **Source URL** | Text |  | No | The page URL to attach — appended to the body/description when present. |
+| **List ID** | Text |  | No | The To Do list ID (defaults to your default list). |
+
+**To Do → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **List ID** | Text |  | No | The To Do list ID (defaults to your default list). |
+{/* AUTO:settings:end */}
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth:** OAuth2 (auth-code + PKCE) against the Microsoft `common` tenant. Register a **public client** (no secret) with delegated permissions and the extension redirect ([step-by-step](/usage/using-the-app/credentials/oauth-client/#microsoft-365)); the credential only needs the **Application (client) ID**.
 - **Delegated least-privilege scopes** (requested together in one consent): `offline_access` (refresh), `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite`, `Tasks.ReadWrite`.

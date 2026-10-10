@@ -3,6 +3,13 @@ title: "HTTP Request Tool"
 description: "Let an agent send HTTP requests — with a user approval gate on every call."
 sidebar:
   label: "HTTP Request Tool"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/tools/http-request
+  family: ai
+  agentTool: true
 ---
 
 Gives an AI agent the ability to send HTTP requests. **Every call the model makes is gated: you see the exact request and approve or reject it before it is sent.**
@@ -21,13 +28,23 @@ This tool exists so an agent can call APIs *safely*. Because page content an age
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Authentication | Optional credential applied to the requests this tool makes. Resolved from the credential store at call time; the secret never travels in the workflow or the approval prompt. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Authentication** | Credential |  | No | The authentication to use for requests made by this tool. |
+{/* AUTO:settings:end */}
 
 The model supplies the rest of each request at call time: **method** (GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD), **URL**, optional **headers**, and an optional **body**.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Tools | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) |
+{/* AUTO:outputs:end */}
 
 Returns a tool dependency that agent nodes (such as [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)) can call. It has no output port of its own — connect it into an agent's tools input.
 
@@ -39,6 +56,10 @@ Returns a tool dependency that agent nodes (such as [Tools Agent](/nodes/builtin
 - **Unattended runs auto-reject.** If no one responds within the approval timeout, the call is rejected so a background run can't act without a human.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Authentication** (credential): optional. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - Optional **Authentication** credential (Basic Auth, Bearer token, etc.). Reuses the same credential types as the built-in HTTP Request node.
 

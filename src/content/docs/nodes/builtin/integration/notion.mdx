@@ -3,6 +3,12 @@ title: "Notion"
 description: "Integrate with Notion to perform operations on databases, pages, and blocks."
 sidebar:
   label: "Notion"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/notion
+  family: integration
 ---
 
 Integrate with Notion to perform operations on databases, pages, and blocks.
@@ -17,24 +23,96 @@ Use this node to automate documentation, sync data to Notion, or build workflows
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | Source-backed field from the node schema. |
-| Resource | Source-backed field from the node schema. |
-| Operation | Source-backed field from the node schema. |
-| Database | Source-backed field from the node schema. |
-| Page | Source-backed field from the node schema. |
-| Block | Source-backed field from the node schema. |
-| Title | Source-backed field from the node schema. |
-| Content | Source-backed field from the node schema. |
-| Block Type | For **Block → Create**: `Paragraph`, headings, list items, to-do, plus `File (from binary)` and `Image (from binary)`. |
-| Binary Field | For File / Image block types: which `$binary` key on the incoming item holds the file (defaults to `data`). |
-| Caption | Optional caption shown under a File / Image block. |
-| Properties | Source-backed field from the node schema. |
-| Filter | Source-backed field from the node schema. |
-| Sort | Source-backed field from the node schema. |
-| Page Size | Source-backed field from the node schema. |
-| Search Query | Source-backed field from the node schema. |
+| Database | Get many, Get schema |
+| Page | Create, Get, Update, Delete, Search |
+| Block | Create, Get, Update, Delete |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The Credential to use to make the request. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Database → Get many**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Search Query** | Text |  | No | Search query to filter databases. |
+
+**Database → Get schema**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Database** | Choice (loaded from your account) |  | Yes | The Notion database to work with. |
+
+**Page → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Database** | Choice (loaded from your account) |  | Yes | The Notion database to work with. |
+| **Properties** | Field list |  | Yes | The properties to set for the page. |
+
+**Page → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Page** | Choice (loaded from your account) |  | Yes | The Notion page to work with. |
+
+**Page → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Page** | Choice (loaded from your account) |  | Yes | The Notion page to work with. |
+| **Properties** | Field list |  | Yes | The properties to update for the page. |
+
+**Page → Delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Page** | Choice (loaded from your account) |  | Yes | The Notion page to work with. |
+
+**Page → Search**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Search Query** | Text |  | Yes | Search query for pages. |
+| **Filter** | Key-value pairs |  | No | Filter criteria for database query. |
+| **Sort** | List |  | No | Sort criteria for database query. |
+| **Page Size** | Number | 100 | No | Number of results to return (1-100). |
+
+**Block → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Block** | Text |  | Yes | The ID of the block to work with. |
+| **Block Type** | Choice | Paragraph | No | The type of block to create. File / Image upload the file attached to the incoming item ($binary). Options: Paragraph, Heading 1, Heading 2, Heading 3, Bulleted List, Numbered List, To-Do Item, File (from binary), Image (from binary). |
+| **Content** | Text |  | No | The content for the block. |
+| **Binary Field** | Text | `data` | No | Which $binary key on the incoming item holds the file. Used only for the File / Image block types. HTTP Request / Local File Read store under "data" by default. |
+| **Caption** | Text |  | No | Optional caption shown under the File / Image block. |
+
+**Block → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Block** | Text |  | Yes | The ID of the block to work with. |
+
+**Block → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Block** | Text |  | Yes | The ID of the block to work with. |
+| **Block Type** | Choice |  | Yes | The type of block to create. Options: Paragraph, Heading 1, Heading 2, Heading 3, Bulleted List, Numbered List, To-Do Item. |
+| **Content** | Text |  | Yes | The content for the block. |
+
+**Block → Delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Block** | Text |  | Yes | The ID of the block to work with. |
+{/* AUTO:settings:end */}
 
 ## Attaching files and images to a page
 
@@ -57,11 +135,15 @@ in the web app (with the extension installed and Notion's host consented).
 
 ## Outputs
 
-Returns the service response or a success object from the selected operation.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -72,7 +154,6 @@ Connect prepared data into Notion, select the credential, choose the operation, 
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Running in the web app
 

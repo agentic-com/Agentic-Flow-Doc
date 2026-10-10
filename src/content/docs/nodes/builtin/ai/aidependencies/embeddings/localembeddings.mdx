@@ -3,6 +3,12 @@ title: "Local Embeddings"
 description: "Turn text into vectors on this device — free and private"
 sidebar:
   label: "Local Embeddings"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/embeddings/localembeddings
+  family: ai
 ---
 
 Turn text into vectors **on this device** with an in-browser embeddings model. Connect it to [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to index and search documents without an API key or any data leaving your browser.
@@ -20,11 +26,21 @@ The embeddings carry their model's identity, so a knowledge store knows which mo
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | An on-device embeddings model (default **all-MiniLM-L6-v2**, recommended). **Universal Sentence Encoder** keeps older knowledge stores readable. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker | `Xenova/all-MiniLM-L6-v2` | No | An on-device embeddings model. all-MiniLM-L6-v2 is the recommended default; Universal Sentence Encoder keeps older stores readable. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Embeddings | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
+{/* AUTO:outputs:end */}
 
 Returns an embeddings dependency for Local Knowledge and other nodes that accept embeddings.
 
@@ -36,6 +52,12 @@ A knowledge store is built with **one** embeddings model and remembers it. Pick 
 - Connecting a different model to an existing store later doesn't re-embed it — the store keeps using its own model, with a warning in the run log.
 
 See [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/#embedding-models) for details.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

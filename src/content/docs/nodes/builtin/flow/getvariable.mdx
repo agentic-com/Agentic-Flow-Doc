@@ -3,6 +3,12 @@ title: "Get Variable"
 description: "Emit a previously-set run variable as the item itself"
 sidebar:
   label: "Get Variable"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/getvariable
+  family: flow
 ---
 
 Emit a stored value as the item.
@@ -18,15 +24,21 @@ Reads a variable set earlier in the run (with [Set Variable](/nodes/builtin/flow
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Name | Name of the variable to read. |
-| Path | Optional dot path inside the value, for example `page.next`. Leave blank to emit the whole value. |
-| Use A Fallback | Off by default: an unset variable fails the node, so an ordering mistake cannot pass unnoticed. On: the fallback below is emitted instead. |
-| Fallback | The value emitted when the variable is not set and **Use A Fallback** is on. |
-| Put Value In Field | Field the value is placed in when the value is not itself an object. Defaults to `value`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Name** | Text |  | No | Name of the variable to read. |
+| **Path** | Text |  | No | Optional dot path inside the value, for example page.next. |
+| **Use A Fallback** | Toggle | Off | No | Emit a fallback value instead of failing when the variable is not set. |
+| **Fallback** | Value |  | No | Value emitted when the variable is not set. |
+| **Put Value In Field** | Text | `value` | No | Field holding the value, when the value is not itself an object. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 - A list becomes a collection, so downstream nodes iterate it the way they iterate any other input.
 - An object becomes the item directly.
@@ -37,6 +49,10 @@ Reads a variable set earlier in the run (with [Set Variable](/nodes/builtin/flow
 Fails, naming the variable, rather than emitting an empty value — unless **Use A Fallback** is on, which makes the intent explicit. Ordering between parallel branches is decided by how the graph is walked and is not visible on the canvas, so a quietly-empty read is exactly how that mistake would go unnoticed until something downstream produced nonsense. See the ordering note on [Set Variable](/nodes/builtin/flow/setvariable/).
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 - Variables exist only while a workflow is running. Running this node on its own, outside an execution, has nothing to read and reports so.

@@ -3,6 +3,12 @@ title: "Aggregate"
 description: "Fold many items into a single item"
 sidebar:
   label: "Aggregate"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/aggregate
+  family: data
 ---
 
 Fold many items into a single item.
@@ -24,12 +30,16 @@ To join two separate branches together on matching keys, use Merge instead — t
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | `Individual fields` collects chosen fields into arrays, `All item data` wraps every item into one field. Defaults to `Individual fields`. |
-| Fields To Aggregate | (Individual fields mode) The list of fields to collect. Each entry has a **Field** (dot path, e.g. `user.profile.name`) and an optional **Output field name** for the resulting array — this defaults to the last segment of the path, mirroring how Split Out names the field it emits. Empty by default. |
-| Put Output In Field | (All item data mode) The name of the field that holds every input item. Defaults to `data`. |
-| Keep Missing Values | Off by default. **Off**: items that lack the collected field are skipped, so the array is shorter. **On**: they contribute `null`, so positions stay aligned across several aggregated fields. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | Individual fields | No | Collect chosen fields into arrays, or wrap every item into one field. Options: Individual fields, All item data. |
+| **Fields To Aggregate** | List of entries |  | No | Fields to collect into arrays. |
+| Fields To Aggregate (each entry) › **Field** | Text |  | Yes | Field to collect. Use dots for nested fields, e.g. user.profile.name. |
+| Fields To Aggregate (each entry) › **Output field name** | Text |  | No | Name for the resulting array. Defaults to the field being collected. |
+| **Put Output In Field** | Text | `data` | No | Name of the field holding every input item. |
+| **Keep Missing Values** | Toggle | Off | No | Include an empty entry for items that lack the field. |
+{/* AUTO:settings:end */}
 
 ### What counts as missing
 
@@ -37,12 +47,20 @@ Only an **absent key** — a field path that cannot be reached — is treated as
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 Returns a single item.
 
 - In **Individual fields** mode, one field per collected entry, each holding an array of the gathered values.
 - In **All item data** mode, one field (named by **Put Output In Field**) holding the array of every input item.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 

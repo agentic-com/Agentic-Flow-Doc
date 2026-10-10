@@ -3,6 +3,12 @@ title: "Analyze Text"
 description: "On-device sentiment, toxicity and moderation of text"
 sidebar:
   label: "Analyze Text"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/analyze-text
+  family: ai
 ---
 
 Classify text — **sentiment, toxicity, or moderation** — locally in your browser (DistilBERT-SST2, toxic-bert on transformers.js). Private, offline, no cost.
@@ -17,20 +23,40 @@ Moderate user-generated content, gauge feedback tone, or gate a workflow branch 
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** text-moderation model, across engines. |
-| Text | The text to analyze. |
-| Confidence threshold | Drop labels below this score (default `0`). |
-| Top-K labels | Keep at most this many labels (default `5`). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker |  | No | Any installed text-moderation model, across engines. |
+| **Text** | Text |  | No | The text to analyze. |
+| **Confidence threshold** | Number | 0 | No |  |
+| **Top-K labels** | Number | 5 | No |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `predictions` | List of entries | Labels above the threshold, best first |
+| `top` | Text | The best label, or null when none passed |
+| `score` | Number |  |
+{/* AUTO:outputs:end */}
 
 Returns `{ predictions, top, score }`:
 
 - `predictions` — array of `{ label, score }`, highest first.
 - `top` — the highest-scoring label (or `null`).
 - `score` — that label's score.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Related nodes
 

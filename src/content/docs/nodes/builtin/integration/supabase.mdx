@@ -3,6 +3,12 @@ title: "Supabase"
 description: "Read and write rows in your Supabase project via PostgREST — select, insert, update, upsert, delete, and RPC — using the anon key with RLS."
 sidebar:
   label: "Supabase"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/supabase
+  family: integration
 ---
 
 Persist workflow data to a real database. Where the **Data Store** node covers browser-local state, this covers state you want to keep, query, and share outside the browser — a scrape that accumulates into a table you can actually use.
@@ -46,7 +52,83 @@ Supabase gives you two keys, and only one is safe to use here:
 
 The two keys sit next to each other in the dashboard, and `service_role` "just works" when RLS blocks you — which is exactly the trap. **This node reads the key's JWT role and rejects a `service_role` key outright**, before making any request. Use the **anon** key and control access with RLS policies.
 
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+| Resource | Operations |
+| --- | --- |
+| — | Select rows, Insert row, Update rows, Upsert row, Delete rows, Call function (RPC) |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | Your Supabase project’s anon (public) key, stored as a Bearer Token credential. Do NOT use the service\_role key — it bypasses Row Level Security and is rejected. Access is enforced by your RLS policies. |
+
+Pick **Operation** first; the fields below change with your choice.
+
+**Select rows**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Project URL** | URL |  | Yes | Your Supabase project URL (Project Settings → API), e.g. https://abcd.supabase.co. |
+| **Table** | Text |  | Yes | The table name. |
+| **Columns** | Text |  | No | Comma-separated columns to return, or \* for all. |
+| **Filters** | Key-value pairs |  | No | column → operator.value pairs, e.g. id → eq.42, age → gt.18, name → like.\*acme\* (PostgREST operators). |
+| **Limit** | Number |  | No | Maximum rows to return. |
+
+**Insert row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Project URL** | URL |  | Yes | Your Supabase project URL (Project Settings → API), e.g. https://abcd.supabase.co. |
+| **Table** | Text |  | Yes | The table name. |
+| **Row** | Key-value pairs |  | Yes | Column → value pairs for the row. |
+
+**Update rows**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Project URL** | URL |  | Yes | Your Supabase project URL (Project Settings → API), e.g. https://abcd.supabase.co. |
+| **Table** | Text |  | Yes | The table name. |
+| **Fields** | Key-value pairs |  | Yes | Column → value pairs to change. |
+| **Filters** | Key-value pairs |  | Yes | column → operator.value pairs, e.g. id → eq.42, age → gt.18, name → like.\*acme\* (PostgREST operators). |
+
+**Upsert row**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Project URL** | URL |  | Yes | Your Supabase project URL (Project Settings → API), e.g. https://abcd.supabase.co. |
+| **Table** | Text |  | Yes | The table name. |
+| **Row** | Key-value pairs |  | Yes | Column → value pairs for the row. |
+| **On conflict** | Text |  | No | Column(s) that identify a duplicate for upsert (e.g. email). Defaults to the primary key. |
+
+**Delete rows**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Project URL** | URL |  | Yes | Your Supabase project URL (Project Settings → API), e.g. https://abcd.supabase.co. |
+| **Table** | Text |  | Yes | The table name. |
+| **Filters** | Key-value pairs |  | Yes | column → operator.value pairs, e.g. id → eq.42, age → gt.18, name → like.\*acme\* (PostgREST operators). |
+
+**Call function (RPC)**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Project URL** | URL |  | Yes | Your Supabase project URL (Project Settings → API), e.g. https://abcd.supabase.co. |
+| **Function** | Text |  | Yes | The Postgres function to call via RPC. |
+| **Arguments** | Key-value pairs |  | No | Named arguments for the function. |
+{/* AUTO:settings:end */}
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Credential:** your project's **anon (public) key** (Project Settings → API), stored as a **Bearer Token** credential. Sent as both the `apikey` header and `Authorization: Bearer`.
 - **Project URL:** set per operation (Project Settings → API), e.g. `https://abcd.supabase.co`.

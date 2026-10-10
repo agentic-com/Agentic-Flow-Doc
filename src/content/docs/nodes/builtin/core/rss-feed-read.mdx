@@ -3,6 +3,12 @@ title: "RSS Feed Read"
 description: "Reads an RSS feed from a URL and returns the parsed data"
 sidebar:
   label: "RSS Feed Read"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/rss-feed-read
+  family: core
 ---
 
 Reads an RSS feed from a URL and returns the parsed data
@@ -26,24 +32,38 @@ Use this node to monitor blogs, news sites, or any RSS-enabled content source fo
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL | Source-backed field from the node schema. |
-| Authentication | Source-backed field from the node schema. |
-| Headers | Source-backed field from the node schema. |
-| Max redirects | Source-backed field from the node schema. |
-| Redirects | Source-backed field from the node schema. |
-| Timeout (ms) | Source-backed field from the node schema. |
-| Reject unauthorized | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL** | Text |  | Yes | Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters. |
+| **Authentication** | Credential |  | No | The authentication to use to make the request. |
+| **Headers** | Key-value pairs |  | No | The headers to send with the request. |
+| **Options** | Group |  | No | The options to send with the request. |
+| Options › **Redirects** | Group |  | No | The options to send with the request. |
+| Options › Redirects › **Max redirects** | Number | 10 | No | The maximum number of redirects to follow. |
+| Options › **Timeout (ms)** | Number | 10000 | No | Time in ms to wait for the server to send response headers (and start the response body) before aborting the request. |
+| Options › **Reject unauthorized** | Toggle | Off | No | Whether to reject unauthorized requests. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `title` | Text |  |
+| `link` | Text |  |
+| `items` | List of entries |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Authentication** (credential): optional. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -55,7 +75,6 @@ Connect data into RSS Feed Read, configure the settings above, and use the outpu
 - If the feed fails to load with a CORS or network error on the web build, run the workflow from the extension build instead — arbitrary cross-origin feeds require the extension's host permissions.
 - A non-OK HTTP response or an empty body raises a clear error; verify the URL returns a valid feed.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

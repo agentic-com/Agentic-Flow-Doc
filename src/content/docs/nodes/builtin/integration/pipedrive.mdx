@@ -3,6 +3,12 @@ title: "Pipedrive"
 description: "Log the person or organization you're viewing to Pipedrive CRM — create or update records and attach the page as a note."
 sidebar:
   label: "Pipedrive"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/pipedrive
+  family: integration
 ---
 
 Turn the page you're on into a CRM record. Read a profile, extract the details, and create or update a person or organization in Pipedrive — then attach the page itself as a note.
@@ -27,20 +33,70 @@ Creates or updates **persons** and **organizations** (deduplicated by email / na
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | A Pipedrive API token (see below). |
-| Resource / Operation | What to act on and how. |
-| Email | Person unique key (Person → Create or update). |
-| Name | Person name, and the Organization unique key. |
-| Phone | Person field. |
-| Address | Organization field. |
-| Query | Search term matched across the record's fields (Search). |
-| Note / Source URL / Selection | The note text, the page URL, and any quoted selection (Note → Create). |
-| Person ID / Organization ID | Attach the note to a person and/or organization (Note → Create). |
-| Limit | Number of results for search. |
+| Person | Create or update, Search |
+| Organization | Create or update, Search |
+| Note | Create |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | A Pipedrive API token (Settings → Personal preferences → API). It is account-wide — it acts with your full user access. Keep it secret. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Person → Create or update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Email** | Text |  | Yes | The person’s email — the unique key used to find an existing person. |
+| **Name** | Text |  | No |  |
+| **Phone** | Text |  | No |  |
+
+**Person → Search**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Query** | Text |  | Yes | Search term matched across the record’s fields. |
+| **Limit** | Number |  | No | Maximum number of results. |
+
+**Organization → Create or update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Name** | Text |  | Yes | The organization name — the unique key used to find an existing organization. |
+| **Address** | Text |  | No |  |
+
+**Organization → Search**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Query** | Text |  | Yes | Search term matched across the record’s fields. |
+| **Limit** | Number |  | No | Maximum number of results. |
+
+**Note → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Note** | Text |  | Yes | The note text. |
+| **Source URL** | Text |  | No | The page URL to attach — appended to the note when present. |
+| **Selection** | Text |  | No | Selected text to quote in the note (optional). |
+| **Person ID** | Number |  | No | Attach the note to this person (optional). |
+| **Organization ID** | Number |  | No | Attach the note to this organization (optional). |
+{/* AUTO:settings:end */}
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth:** a Pipedrive **API token**, sent as the `api_token` query parameter. Copy it from **Settings → Personal preferences → API** in Pipedrive.
 - **⚠️ Scope guidance:** a Pipedrive API token is **account-wide** — it acts with your full user access across the company account. There is no per-record scoping. Treat it like a password — a leak exposes your CRM.

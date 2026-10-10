@@ -3,6 +3,12 @@ title: "Sentiment Analysis"
 description: "Analyze the sentiment of a text using a LLM, or on-device with a Local Classifier"
 sidebar:
   label: "Sentiment Analysis"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/sentimentanalysisnode
+  family: ai
 ---
 
 Analyze the sentiment of a text using a LLM, or on-device with a Local Classifier
@@ -28,19 +34,41 @@ Use this node to classify the tone of customer feedback, reviews, support ticket
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to analyze the sentiment of. Rendered as a text area. |
-| Options → Custom categories | Comma-separated list of custom sentiment categories to use instead of the default positive/negative/neutral. Rendered as a text area. |
-| Options → System message | Optional additional system message appended to the analysis instructions. Rendered as a text area. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | Yes | The text to analyze the sentiment of. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Custom categories** | Long text |  | No | Comma-separated list of custom sentiment categories to use instead of positive/negative/neutral. |
+| Options › **System message** | Long text |  | No | The system message to use. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `sentiment` | Any | The sentiment label |
+| `score` | Number |  |
+| `scores` | Key-value pairs |  |
+| `predictions` | Any |  |
+{/* AUTO:outputs:end */}
 
 - **Chat model** — returns `{ sentiment }`, the trimmed category name returned by the model (one of the default three categories, or one of your custom categories).
 - **Local Classifier** — returns `{ sentiment, score, scores }`: the top label, its confidence, and a `{ label: score }` map of every label.
 - **Legacy Engine = On-device** (older workflows) — returns `{ sentiment, score, predictions }`: the model's raw top label, its confidence, and the list of `{ label, score }` predictions.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model, local classifier | Yes | One |
+{/* AUTO:deps:end */}
 
 - **Model** (required) — connect a language model dependency (e.g. Chat OpenAI), or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to run on-device.
 

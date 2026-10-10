@@ -3,6 +3,12 @@ title: "Remove Duplicates"
 description: "Drop repeated items from a collection, optionally across runs"
 sidebar:
   label: "Remove Duplicates"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/removeduplicates
+  family: data
 ---
 
 Drop repeated items from a collection.
@@ -21,13 +27,15 @@ Use this node to clean a scraped list that repeats the same row in several place
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Compare | Which part of each item decides sameness: `All fields`, `Selected fields`, or `All fields except`. Defaults to `All fields`. |
-| Fields | The field names used by `Selected fields` (compare only these) and `All fields except` (ignore these). Dots address nested fields. Ignored by `All fields`. Empty by default. |
-| Also Compare Against Previous Runs | Off by default. **Off**: only items repeated inside this run are dropped. **On**: the node remembers what it has emitted and never emits the same item twice, across runs. |
-| Remember | (When cross-run is on) How far back the history reaches: `Last N items` or `Time window`. Defaults to `Last N items`. |
-| History Size | (When cross-run is on) How many items to remember, or how many days to look back. Defaults to `1000` items. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Compare** | Choice | All fields | No | Which part of each item decides whether two items are the same. Options: All fields, Selected fields, All fields except. |
+| **Fields** | Tags |  | No | Field names to compare on, or to ignore. Dots address nested fields. |
+| **Also Compare Against Previous Runs** | Toggle | Off | No | Skip items this node has already emitted on an earlier run. |
+| **Remember** | Choice | Last N items | No | How far back the history reaches. Options: Last N items, Time window. |
+| **History Size** | Number | 1000 | No | How many items to remember, or how many days to look back. |
+{/* AUTO:settings:end */}
 
 ### Compare modes
 
@@ -48,9 +56,17 @@ The history is bounded, and oversized settings are **clamped, not refused**, so 
 
 ## Outputs
 
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 Returns the collection with later duplicates removed, survivors in input order.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required. The node runs in the browser.
 - Cross-run comparison uses the [Data Store](/nodes/builtin/core/datastore/) to remember history between runs, and needs the node to run as part of a saved workflow (it needs a stable node id to write against).

@@ -4,6 +4,13 @@ description: "Lets an agent remember the conversation, across runs or within one
 sidebar:
   label: "Chat Memory"
   order: 0
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/chatmemories/chatmemory
+  family: ai
+  since: "0.8.2"
 ---
 
 Lets an agent remember the conversation, across runs or within one run.
@@ -27,16 +34,9 @@ Works with the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) and the
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| **Storage** | Where the conversation is kept: **Conversation**, **Key** or **This run only** (see below). Default: **Conversation**. |
-| **Conversation** | *(Conversation storage)* The saved conversation to use. Leave it empty to give this node **its own conversation** in this workflow. |
-| **Key** | *(Key storage)* Runs with the same key share one conversation. Type a fixed key (`support-bot`) or an expression for one conversation per user or thread (`{{ $json.userId }}`). |
-| **Key scope** | *(Key storage)* **This workflow** (default): the same key in another workflow is a different conversation. **Shared**: every workflow using this key shares one conversation. |
-| **History sent to the model** | **As much as fits** (default): the newest messages that fit the model's context window. **Last N messages**: at most a fixed number. |
-| **Messages** | *(Last N messages)* How many of the newest messages to send. A question and its answer are two. Default: `20`. |
-| **Summarise older messages** | Messages that no longer fit are folded into a short summary the model still sees. Costs an extra model call now and then. Default: on. |
-| **Remember tool results** | Keep what the agent's tools returned with each reply, so later turns can use it without calling the tools again. Default: on. |
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
 
 ### Storage
 
@@ -57,6 +57,14 @@ With **As much as fits**, each turn sends the newest messages that fit the conne
 With **Remember tool results** on, the agent's tool calls and their results are saved with its replies, so a later message can refer to them ("what was the price you found?") without running the tools again.
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Memory | [Chat Trigger](/nodes/builtin/trigger/chat/), [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) |
+{/* AUTO:outputs:end */}
 
 Chat Memory is a dependency: it doesn't run on its own and has no output. It hands its memory to the node it is connected to.
 
@@ -87,6 +95,12 @@ Connect the same Chat Memory to the trigger's memory input and to the agent's. T
 | [Window Buffer Memory](/nodes/builtin/ai/aidependencies/chatmemories/windowbuffermemory/) | **This run only**, **Last N messages** with N = 2 × the old window size *k*. |
 
 Upgraded nodes keep **Summarise older messages** off, as before. Turn it on if you want it.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Troubleshooting
 

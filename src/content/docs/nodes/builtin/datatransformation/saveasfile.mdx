@@ -3,6 +3,13 @@ title: "Save as file"
 description: "Save text content as a downloadable file"
 sidebar:
   label: "Save as file"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/saveasfile
+  family: data
+  since: "0.7.0"
 ---
 
 Save generated text — CSV, Markdown, JSON, or plain text — as a downloadable file.
@@ -17,17 +24,27 @@ Use it as the final step when you want the workflow's result saved to a file rat
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Content | The text to save. Usually an expression such as `{{ $input.csv }}`. |
-| File name | Optional. Without the extension (added from File type). Defaults to `file`. |
-| File type | `txt`, `csv`, `json`, `md`, `html`, or `xml`. Sets the extension and content type. Defaults to `txt`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Content** | Text |  | Yes | The text to save to the file. |
+| **File name** | Text | `file` | No | Without the extension. |
+| **File type** | Choice | txt | No | Options: txt, csv, json, md, html, xml. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Triggers the download as a side effect and passes control to the next node.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credentials. Runs in the browser (it needs a page/window to trigger the download).
 

@@ -3,6 +3,12 @@ title: "GitHub"
 description: "Integrate with GitHub to work with issues, pull requests, repositories, and releases."
 sidebar:
   label: "GitHub"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/integration/github
+  family: integration
 ---
 
 Integrate with GitHub to work with issues, pull requests, repositories, and releases — anchored to the page you are looking at.
@@ -26,27 +32,173 @@ Use this node to open an issue from a page you are reading, comment on the PR yo
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | The GitHub credential to authenticate with (see below). |
-| Resource | Which GitHub resource to act on. |
-| Operation | The operation to perform on the selected resource. |
-| Owner | The account owner of the repository (user or organization), e.g. `octocat`. |
-| Repository | The repository name without the owner, e.g. `hello-world`. |
-| Issue Number / Pull Request Number | The number identifying the issue or pull request. |
-| Title / Body | Title and Markdown body for creating or updating an issue. |
-| Labels / Assignees | Labels and GitHub logins to attach to an issue. |
-| Comment | The comment text for an issue or pull request. |
-| State | Open/Closed (updates) or Open/Closed/All (list filters). |
-| Review Event / Review Body | Approve, Request changes, or Comment — with optional review text. |
-| Search Query | The repository search query, e.g. `language:typescript stars:>100`. |
-| Limit | Number of results to return (1–100). |
+| Issue | Create, Get, Update, Comment, List, Close |
+| Pull request | Get, List, Comment, Review, List files |
+| Repository | Get, List, Search |
+| Release | Get latest, List |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The Credential to use to make the request. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Issue → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Title** | Text |  | Yes | The title of the issue. |
+| **Body** | Text |  | No | The contents (Markdown supported). |
+| **Labels** | List |  | No | Labels to associate with the issue. |
+| **Assignees** | List |  | No | GitHub logins to assign to the issue. |
+
+**Issue → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Issue Number** | Number |  | Yes | The number that identifies the issue. |
+
+**Issue → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Issue Number** | Number |  | Yes | The number that identifies the issue. |
+| **Title** | Text |  | No | The title of the issue. |
+| **Body** | Text |  | No | The contents (Markdown supported). |
+| **State** | Choice |  | No | The open or closed state to set. Options: Open, Closed. |
+| **Labels** | List |  | No | Labels to associate with the issue. |
+| **Assignees** | List |  | No | GitHub logins to assign to the issue. |
+
+**Issue → Comment**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Issue Number** | Number |  | Yes | The number that identifies the issue. |
+| **Comment** | Text |  | Yes | The comment text (Markdown supported). |
+
+**Issue → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **State** | Choice |  | No | Filter by state. Options: Open, Closed, All. |
+| **Labels** | Text |  | No | Comma-separated list of label names to filter by. |
+| **Limit** | Number | 30 | No | Number of results to return (1-100). |
+
+**Issue → Close**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Issue Number** | Number |  | Yes | The number that identifies the issue. |
+
+**Pull request → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Pull Request Number** | Number |  | Yes | The number that identifies the pull request. |
+
+**Pull request → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **State** | Choice |  | No | Filter by state. Options: Open, Closed, All. |
+| **Limit** | Number | 30 | No | Number of results to return (1-100). |
+
+**Pull request → Comment**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Pull Request Number** | Number |  | Yes | The number that identifies the pull request. |
+| **Comment** | Text |  | Yes | The comment text (Markdown supported). |
+
+**Pull request → Review**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Pull Request Number** | Number |  | Yes | The number that identifies the pull request. |
+| **Review Event** | Choice |  | Yes | The kind of review to submit. Options: Approve, Request changes, Comment. |
+| **Review Body** | Text |  | No | The body text of the review (required for Request changes and Comment). |
+
+**Pull request → List files**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Pull Request Number** | Number |  | Yes | The number that identifies the pull request. |
+| **Limit** | Number | 30 | No | Number of results to return (1-100). |
+
+**Repository → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+
+**Repository → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Limit** | Number | 30 | No | Number of results to return (1-100). |
+
+**Repository → Search**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Search Query** | Text |  | Yes | The repository search query. |
+| **Limit** | Number | 30 | No | Number of results to return (1-100). |
+
+**Release → Get latest**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+
+**Release → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
+| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
+| **Limit** | Number | 30 | No | Number of results to return (1-100). |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Returns the GitHub API response for the selected operation — for example the created issue, the pull request, a list of files, or the latest release.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth type:** Bearer Token. Paste a **fine-grained personal access token (PAT)**.
 - Prefer a fine-grained PAT scoped to a **single repository** with only the permissions you need (e.g. Issues: Read and write). Its leak radius is that one repository — not your whole account.

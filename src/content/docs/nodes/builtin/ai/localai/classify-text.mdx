@@ -3,6 +3,12 @@ title: "Classify Text"
 description: "Sort text into your own labels on-device — no training needed"
 sidebar:
   label: "Classify Text"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/classify-text
+  family: ai
 ---
 
 Sort text into **your own labels** — any words you like, no training — running locally in your browser with a zero-shot model (e.g. *DeBERTa zero-shot* on transformers.js). Private, offline, no cost.
@@ -19,21 +25,41 @@ Scores the text against every label you list using a zero-shot (NLI) model, then
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to classify. |
-| Labels | Comma-separated list of labels, e.g. `billing, bug report, other`. An expression may return a list or a comma/newline-separated string (e.g. `{{ $json.labels }}`). Duplicates are ignored (case-insensitive). |
-| Model | An **installed** zero-shot (NLI) model. Only zero-shot models are listed here. |
-| Allow several labels | Off by default: labels compete for one answer (scores sum to 1). On: each label is scored independently, so several can be high at once. |
-| Confidence threshold | Below this score the top `label` is `null` (default `0.3`). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | No | The text to classify. |
+| **Labels** | Text |  | No | Any words you like, no training needed — e.g. billing, bug report, other. |
+| **Model** | Model picker |  | No | Only zero-shot (NLI) models are listed here. |
+| **Allow several labels** | Toggle | Off | No | Score each label independently (several can be high) instead of making them compete for one answer. |
+| **Confidence threshold** | Number | 0.3 | No | Below this, label is null. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `label` | Text | The best label, or null below the threshold |
+| `score` | Number |  |
+| `labels` | List of entries |  |
+{/* AUTO:outputs:end */}
 
 Returns `{ label, score, labels }`:
 
 - `label` — the best label, or `null` when its score is below the threshold.
 - `score` — the top label's score (reported even when `label` is `null`).
 - `labels` — every label as `{ label, score }`, highest first.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 

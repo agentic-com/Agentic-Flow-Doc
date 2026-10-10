@@ -3,6 +3,12 @@ title: "Wait For Approval"
 description: "Pause a run until a person approves or rejects it"
 sidebar:
   label: "Wait For Approval"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/wait-for-approval
+  family: flow
 ---
 
 Pause a run and wait for a human decision before continuing.
@@ -19,11 +25,23 @@ Pauses the run until a person approves or rejects it. The node produces no outpu
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Prompt | The question or text shown to the person making the decision. Appears on the paused run in the Executions pane. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Prompt** | Text |  | No | What the person is being asked to approve. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+2 output ports: **Approved**, **Rejected**.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `routed` | Object |  |
+{/* AUTO:outputs:end */}
 
 The node draws two output handles:
 
@@ -43,6 +61,12 @@ You're told when a run needs you: a **“waiting for you” count** in the top b
 ## Wait For Approval vs. action approval
 
 This node is a **durable checkpoint you design into a flow**: it pauses a whole step, waits indefinitely, and survives browser restarts. It is different from the **live action approval** that gates the model-driven action tools ([Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/), [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/), [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)) — that gate is automatic, fires on each action the model decides to take, and auto-rejects after a timeout. Use this node for deliberate human sign-off on a step; the action gate is always-on and requires no node. See [Action Approval](/advanced-ai/concepts/action-approval/).
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Related nodes
 

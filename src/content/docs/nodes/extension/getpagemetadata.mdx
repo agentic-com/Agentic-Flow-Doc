@@ -3,6 +3,12 @@ title: "Get Page Metadata"
 description: "Get metadata from the opened page"
 sidebar:
   label: "Get Page Metadata"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getpagemetadata
+  family: inpage
 ---
 
 Get metadata from the opened page
@@ -17,17 +23,34 @@ Use this node to collect SEO data, social media previews, or page information fo
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Node form | This node uses the default workflow node configuration. |
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `url` | Text |  |
+| `title` | Text |  |
+| `canonicalUrl` | Text |  |
+| `description` | Text |  |
+| `lang` | Text |  |
+| `favicon` | Text |  |
+| `openGraph` | Key-value pairs | og:\* meta tags |
+| `twitter` | Key-value pairs | twitter:\* meta tags |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -38,7 +61,6 @@ Run Get Page Metadata after opening the target page, then pass its output to Edi
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

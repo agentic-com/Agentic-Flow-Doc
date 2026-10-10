@@ -3,6 +3,12 @@ title: "Clipboard Write"
 description: "Write text to the system clipboard from a workflow."
 sidebar:
   label: "Clipboard Write"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/clipboardwrite
+  family: inpage
 ---
 
 Write text to the system clipboard so it is ready to paste elsewhere.
@@ -18,15 +24,31 @@ Copies a piece of text — a workflow result, a formatted value, an extracted sn
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to place on the clipboard. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | Yes |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `written` | Choice |  |
+{/* AUTO:outputs:end */}
 
 - `written` — `true` once the text has been written.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required.
 - Writing to the clipboard needs no special permission.

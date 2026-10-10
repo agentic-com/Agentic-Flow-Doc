@@ -3,6 +3,12 @@ title: "Web Search"
 description: "Run a web search and return the results as structured data"
 sidebar:
   label: "Web Search"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/websearch
+  family: inpage
 ---
 
 Run a web search and return the results as structured data.
@@ -17,13 +23,27 @@ Use this node to feed live web results into a workflow — for example to gather
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Query | The search query. |
-| Engine | Which search engine to use: `DuckDuckGo` (default, most reliable), `Bing`, or `Brave`. |
-| Max results | Optional cap on how many results to return. Leave empty (or `0`) to return all results found on the first page. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Query** | Text |  | Yes | The text to search for. |
+| **Engine** | Choice | DuckDuckGo | No | Which search engine to query. Options: DuckDuckGo, Bing, Brave. |
+| **Max Results** | Number |  | No | Maximum number of results to return. Leave empty or 0 to return all first-page results. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+
+Each run returns a list of items with these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `title` | Text |  |
+| `url` | Text |  |
+| `snippet` | Text |  |
+{/* AUTO:outputs:end */}
 
 Returns an array of result objects, each shaped like:
 
@@ -34,6 +54,10 @@ Returns an array of result objects, each shaped like:
 ```
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required.
 - Requires the awflow **browser extension** to be installed — the search runs inside the browser.

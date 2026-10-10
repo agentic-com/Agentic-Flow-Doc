@@ -7,6 +7,13 @@ sidebar:
   badge:
     text: Replaced
     variant: caution
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/chatmemories/persistentmemory
+  family: ai
+  deprecated: true
 ---
 
 :::caution[Replaced by Chat Memory]
@@ -34,3 +41,27 @@ For a new workflow, prefer **Key scope: This workflow** unless several workflows
 - [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/)
 - [Chat Trigger](/nodes/builtin/trigger/chat/)
 - [Memory page](/usage/using-the-app/memory/overview/)
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Conversation Key** | Text |  | Yes | A stable, user-chosen identifier used to persist this memory across runs. |
+{/* AUTO:settings:end */}
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Memory | [Chat Trigger](/nodes/builtin/trigger/chat/), [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) |
+{/* AUTO:outputs:end */}
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}

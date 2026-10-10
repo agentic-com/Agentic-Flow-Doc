@@ -3,6 +3,12 @@ title: "Set Element Attribute Style"
 description: "Set attributes and styles on selected elements in the opened page"
 sidebar:
   label: "Set Element Attribute Style"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/ui/set-element-attribute-style
+  family: inpage
 ---
 
 Set attributes and styles on selected elements in the opened page
@@ -17,22 +23,36 @@ Use this node to customize page appearance, modify element behavior, or apply dy
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Name | Source-backed field from the node schema. |
-| Value | Source-backed field from the node schema. |
-| Remove | Source-backed field from the node schema. |
-| Attributes | Source-backed field from the node schema. |
-| CSS property | Source-backed field from the node schema. |
-| Styles | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
+| **Attributes** | List of entries |  | No |  |
+| Attributes (each entry) › **Name** | Text |  | Yes |  |
+| Attributes (each entry) › **Value** | Text |  | No |  |
+| Attributes (each entry) › **Remove** | Toggle | Off | No |  |
+| **Styles** | List of entries |  | No |  |
+| Styles (each entry) › **CSS property** | Text |  | Yes |  |
+| Styles (each entry) › **Value** | Text |  | Yes |  |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `result` | Object |  |
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -43,7 +63,6 @@ Run Set Element Attribute Style after opening the target page, then pass its out
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

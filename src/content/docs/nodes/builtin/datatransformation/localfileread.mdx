@@ -3,6 +3,12 @@ title: "Local File Read"
 description: "Pick a local file through the browser's file picker and read it into the workflow."
 sidebar:
   label: "Local File Read"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/localfileread
+  family: data
 ---
 
 Read a local file the user picks through the browser's file picker.
@@ -20,18 +26,28 @@ Opens the operating system file picker at runtime and reads the chosen file into
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Read as | **Text**, **Data URL**, or **Base64** — how to read the file's content. |
-| Allow multiple files | Let the picker select more than one file. |
-| Accepted file types | Optional. Comma-separated extensions or MIME types to filter the picker, e.g. `.csv,.txt`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Read as** | Choice | Text | No | How to read the content of the selected file(s). Options: Text, Data URL, Base64. |
+| **Allow multiple files** | Toggle | Off | No | Allow selecting more than one file in the picker. |
+| **Accepted file types** | Text |  | No | Comma-separated list of extensions and/or MIME types to filter the picker, e.g. ".csv,.txt". |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 - For a single file: `{ name, size, type, content }`, where `content` is the file read in the chosen format.
 - For multiple files: an array of those objects.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential is required.
 - No permission is needed — the picker is user-gesture gated by design.

@@ -3,6 +3,12 @@ title: "Extract Part Of A Date"
 description: "Extract a part of a date"
 sidebar:
   label: "Extract Part Of A Date"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/datetime/extractpartofadate
+  family: data
 ---
 
 Extract a part of a date
@@ -17,21 +23,27 @@ Use this node to isolate date components for filtering, grouping, or display pur
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Date to extract part from | Source-backed field from the node schema. |
-| Part of date to extract | Source-backed field from the node schema. |
-| Output field name | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Date to extract part from** | Date and time |  | Yes | The date to extract part from. |
+| **Part of date to extract** | Choice |  | Yes | The part of the date to extract. Options: year, month, week, day, hour, minute, second. |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns transformed data for downstream nodes.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -42,7 +54,6 @@ Connect data into Extract Part Of A Date, configure the settings above, and use 
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
 
 ## Related nodes
 

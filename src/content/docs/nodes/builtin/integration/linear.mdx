@@ -3,6 +3,12 @@ title: "Linear"
 description: "Create and update Linear issues, add comments, and list teams and projects — with the current page as context."
 sidebar:
   label: "Linear"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/linear
+  family: integration
 ---
 
 Create and update Linear issues, add comments, and list teams and projects — anchored to the page you're on.
@@ -22,23 +28,86 @@ Files and updates Linear issues from the page you're reading: the current URL an
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | Your Linear personal API key (see below). |
-| Resource / Operation | What to act on and how. |
-| Team ID | The team the new issue belongs to (use **Team → List** to find it). |
-| Title / Description | The issue title and Markdown body. |
-| Source URL | The page URL to attach — appended to the description when present. |
-| Selection | Selected text to quote — appended to the description when present. |
-| Priority | None, Urgent, High, Medium, or Low. |
-| Issue ID | The issue to act on (its UUID or identifier like `ENG-123`). |
-| State ID | The workflow state to move an issue to (Issue → Update). |
-| Comment | The comment body (Comment → Create). |
-| Limit | Number of results to return for list operations (1–100). |
+| Issue | Create, Update, Get, List |
+| Comment | Create |
+| Team | List |
+| Project | List |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | A Linear personal API key (Settings → Security & access → Personal API keys). It is scoped to your whole workspace, so choose the workspace deliberately. |
+
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Issue → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Team ID** | Text |  | Yes | The Linear team the issue belongs to (use Team → List to find its ID). |
+| **Title** | Text |  | Yes | The issue title. |
+| **Description** | Text |  | No | The issue description (Markdown supported). |
+| **Source URL** | Text |  | No | The page URL to attach — appended to the description when present. |
+| **Selection** | Text |  | No | Selected text to quote — appended to the description when present. |
+| **Priority** | Choice |  | No | The issue priority. Options: None, Urgent, High, Medium, Low. |
+
+**Issue → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Issue ID** | Text |  | Yes | The Linear issue ID or identifier (e.g. ENG-123). |
+| **Title** | Text |  | No | The issue title. |
+| **Description** | Text |  | No | The issue description (Markdown supported). |
+| **Priority** | Choice |  | No | The issue priority. Options: None, Urgent, High, Medium, Low. |
+| **State ID** | Text |  | No | The workflow state ID to move the issue to. |
+
+**Issue → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Issue ID** | Text |  | Yes | The Linear issue ID or identifier (e.g. ENG-123). |
+
+**Issue → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Limit** | Number | 50 | No | Number of results to return (1-100). |
+
+**Comment → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Issue ID** | Text |  | Yes | The Linear issue ID or identifier (e.g. ENG-123). |
+| **Comment** | Text |  | Yes | The comment body (Markdown supported). |
+
+**Team → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Limit** | Number | 50 | No | Number of results to return (1-100). |
+
+**Project → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Limit** | Number | 50 | No | Number of results to return (1-100). |
+{/* AUTO:settings:end */}
 
 **Page-anchored issues:** wire the current page URL into **Source URL** and selected text into **Selection** (e.g. from Get Page Metadata / Get Selected Text). When present, they're appended to the issue description — a quoted selection and a `Source: <url>` line.
 
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
 - **Auth type:** Bearer Token — store a Linear **personal API key** (Settings → Security & access → Personal API keys).
 - The key is **scoped to your whole workspace**, so pick the workspace deliberately. It's stored in your credential vault and resolved at run time (never from a node parameter); the node sends it directly in the `Authorization` header.

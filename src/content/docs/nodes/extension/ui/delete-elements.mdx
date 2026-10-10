@@ -3,6 +3,12 @@ title: "Delete UI Elements"
 description: "Delete selected UI elements from the opened web page"
 sidebar:
   label: "Delete UI Elements"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/ui/delete-elements
+  family: inpage
 ---
 
 Delete selected UI elements from the opened web page
@@ -17,18 +23,23 @@ Use this node to clean up page content, remove distractions, or modify page layo
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Target Element | Source-backed field from the node schema. |
-| Elements | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Elements** | List |  | Yes | List of DOM elements to delete from the opened web page. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
@@ -39,7 +50,6 @@ Run Delete UI Elements after opening the target page, then pass its output to Ed
 - Check that required settings are present before running the node.
 - If the node uses browser page data, run it on the target tab after the page has loaded.
 - If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
 
 ## Related nodes
 

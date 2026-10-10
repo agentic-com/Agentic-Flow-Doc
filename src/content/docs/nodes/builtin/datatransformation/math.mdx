@@ -3,6 +3,12 @@ title: "Math"
 description: "Calculate with numbers and format them for people"
 sidebar:
   label: "Math"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/math
+  family: data
 ---
 
 Calculate with numbers and format them for people.
@@ -19,29 +25,39 @@ Use this node to turn a scraped price string into a real number and round it sen
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | The calculation to perform. One of: `Add`, `Subtract`, `Multiply`, `Divide`, `Remainder`, `Power`, `Round`, `Round down`, `Round up`, `Drop decimals`, `Absolute value`, `Negate`, `Square root`, `Minimum`, `Maximum`, `Sum`, `Average`, `Percentage of`, `Percentage change`, `Random number`, `Format`. Defaults to `Add`. |
-| Value | The number to work on. Accepts an expression such as `{{ $json.price }}`. When left empty, the value is read from the incoming item (the item itself if it is a number, otherwise its `value` field). |
-| Second Value | The second number, used by Add, Subtract, Multiply, Divide, Remainder, Power, Percentage of and Percentage change. |
-| Values | The list of numbers for Minimum, Maximum, Sum and Average. Point it at an array such as `{{ $json.prices }}`. If left empty, the numbers are taken from the Value field of every incoming item instead. |
-| Decimal Places | How many decimal places `Round` keeps. Integer, defaults to `0`. |
-| Format As | How `Format` presents the number: `Plain number`, `Currency` or `Percentage`. Defaults to `Plain number`. |
-| Locale | Language tag deciding separators, such as `en-US` or `fr-FR`. Leave empty to follow the browser. An unusable tag falls back to the default rather than failing the run. |
-| Currency | Three-letter currency code used when Format As is `Currency`. Defaults to `USD`. |
-| Minimum Decimals | Fewest decimal places `Format` shows. Defaults to `0`. |
-| Maximum Decimals | Most decimal places `Format` shows. Defaults to `2`. |
-| Whole Number | Whether `Random number` returns a whole number. Defaults to `on`. |
-| Put Result In Field | Name of the field holding the answer. Defaults to `result`. |
-| Include Input Fields | On: the answer is added to the incoming item. Off: the item is replaced by the answer alone. Defaults to `on`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Add | No | The calculation to perform. 21 options. |
+| **Value** | Value |  | No | The number to work on. |
+| **Second Value** | Value |  | No | The second number, for Add, Subtract, Percentage and the rest. |
+| **Values** | Value |  | No | The list of numbers, for Minimum, Maximum, Sum and Average. |
+| **Decimal Places** | Number | 0 | No | How many decimal places Round keeps. |
+| **Format As** | Choice | Plain number | No | How Format presents the number. Options: Plain number, Currency, Percentage. |
+| **Locale** | Text |  | No | Language tag deciding separators, such as en-US or fr-FR. |
+| **Currency** | Text | `USD` | No | Three-letter currency code, used when formatting as currency. |
+| **Minimum Decimals** | Number | 0 | No | Fewest decimal places Format shows. |
+| **Maximum Decimals** | Number | 2 | No | Most decimal places Format shows. |
+| **Whole Number** | Toggle | On | No | Whether Random returns a whole number. |
+| **Put Result In Field** | Text | `result` | No | Name of the field holding the answer. |
+| **Include Input Fields** | Toggle | On | No | Keep the incoming item’s fields alongside the answer. |
+{/* AUTO:settings:end */}
 
 ## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
 Per-item operations answer once per incoming item, placing the result in **Put Result In Field**. List operations (Minimum, Maximum, Sum, Average) fold the whole collection into a single answer. `Random number` needs no input and can run without a connected item, taking its range from **Value** (low, default `0`) and **Second Value** (high, default `1`).
 
 Formatting uses `Intl` under the hood, so separators, currency and percent follow the chosen locale.
 
 ## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 - No credential or node dependency is required. The node runs entirely in the browser.
 
