@@ -33,7 +33,7 @@ Finish with **Create team**, or **Create & start a thread**.
 | **Pipeline** | Members work in a fixed order; each gets your request plus the previous member's result. The lead can check the final result. | Repeatable jobs |
 | **Open table** | You — or any member — @mention whoever should answer. | Brainstorming |
 
-**Who can hand work to whom** is a map: click one agent, then another, to add or remove a connection. A handoff carries **only the task and the results it needs**, not your whole chat, so small models stay within their context.
+**Who can hand work to whom** is a map: click one agent, then another, to add or remove a connection. A handoff carries **the task and the results it needs**, plus a short slice of the thread so far — the thread's summary and its last few turns, fitted to the member's model (at most about a third of its context window). Members know what was already said without reading your whole chat, and small models stay within their context.
 
 Thread options: show agent-to-agent messages, let agents work in parallel, @mention any member, have the lead check results before replying, and allow guest agents.
 
@@ -52,7 +52,7 @@ Thread options: show agent-to-agent messages, let agents work in parallel, @ment
 
 When a limit is reached, the thread **pauses and asks you** or **stops**. A paused thread shows a **Not done yet** card with **Continue · 30 more steps** and **Change the limit**.
 
-**Shared by the team**: team memory (facts every member can read, plus the memories each agent marked *Shared with team* in its Memory tab), team [knowledge bases](/usage/using-the-app/chat-and-agents/knowledge/#teams-and-projects) (each member also uses its own), and one browser tab group that members share.
+**Shared by the team**: team memory (facts every member can read, plus the memories an agent shared with **this** team in its Memory tab — see [Team memory](/usage/using-the-app/chat-and-agents/memory/#team-memory)), team [knowledge bases](/usage/using-the-app/chat-and-agents/knowledge/#teams-and-projects) (each member also uses its own), and one browser tab group that members share.
 
 ## Team threads
 
@@ -72,6 +72,8 @@ A handoff pill reads **Failed** when the member hit an error (expand it to see w
 ## Manage a team
 
 The team page has tabs for **Threads**, **Members** (roles, who each can hand work to, model, status; add, remove, make lead), **How they work**, **Rules & limits**, **Shared memory** and **Routines**.
+
+**Shared memory** lists the team's own facts and, under **Shared by members**, the facts each agent shared with this team — **Stop sharing** keeps one with its agent only. Deleting a team asks whether to delete its memories too. See [Team memory](/usage/using-the-app/chat-and-agents/memory/#team-memory).
 
 A thread starts with the team's setup at that moment. When you change the team, new threads use the new setup, and AWFlow asks whether running threads should **keep it as is** or **apply** the change.
 

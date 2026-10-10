@@ -1,53 +1,38 @@
 ---
-title: "Persistent Chat Memory"
-description: "Chat memory persisted across runs and workflows under a named conversation key"
+title: "Persistent Chat Memory (replaced)"
+description: "Replaced by Chat Memory. Workflows that use Persistent Chat Memory keep working and are upgraded on save."
 sidebar:
   label: "Persistent Chat Memory"
+  order: 11
+  badge:
+    text: Replaced
+    variant: caution
 ---
 
-# Persistent Chat Memory
+# Persistent Chat Memory (replaced)
 
-Chat memory persisted across runs and workflows under a named conversation key
+:::caution[Replaced by Chat Memory]
+Persistent Chat Memory is no longer in the node palette. Use [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) with **Storage: Key** instead.
+:::
 
-## What it does
+## What happens to existing workflows
 
-Maintains conversation history that persists across separate workflow runs, keyed off a conversation key you choose. Any two executions — in this workflow or another — that use the same key share the same persisted memory.
+Workflows that already use Persistent Chat Memory **keep working**, with the same key and the same history:
 
-It stores messages exactly like [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/) — in your browser (IndexedDB), read and saved by the connected agent (see [How messages are read and saved](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/#how-messages-are-read-and-saved)). The only difference is how the conversation is chosen: instead of picking one, you type a key, which always maps to the same conversation.
+- The node runs through Chat Memory with **Storage: Key**, your conversation key, and **Key scope: Shared** — old keys were shared by every workflow, and they stay that way.
+- When you open the workflow, the node shows that it was **upgraded from Persistent Chat Memory**. Saving the workflow turns it into a Chat Memory node.
+- **Summarise older messages** stays off, as before; turn it on in Chat Memory if you want it.
 
-## When to use it
-
-Connect this to AI agents that need to remember context across multiple, separate executions of a workflow (not just within a single run), such as a long-running support bot thread. Unlike Local Memory, the conversation key is meant to be set explicitly rather than wired dynamically.
-
-## Inputs and settings
-
-| Setting | Notes |
+| Persistent Chat Memory setting | Chat Memory setting |
 | --- | --- |
-| Conversation Key | A stable, user-chosen identifier used to persist this memory across runs. Placeholder: `e.g. support-bot-main-thread`. Required — the node throws an error if left empty. |
+| Conversation Key | **Storage: Key**, same key, **Key scope: Shared** |
 
-## Outputs
+Conversations saved under a key used to be invisible in the app. They now appear on the [Memory page](/usage/using-the-app/memory/overview/) under **Workflows**, marked **Recovered**.
 
-Returns a memory dependency for conversational AI workflows.
+For a new workflow, prefer **Key scope: This workflow** unless several workflows really need to share the conversation.
 
-## Dependencies and credentials
+## Related
 
-- No explicit credential dependency is declared in the node description.
-
-## Example workflow
-
-Connect Persistent Chat Memory to an AI agent or dependency input that accepts this dependency type, set a stable Conversation Key, then run the agent with data from previous nodes. Reuse the same key in a later run to continue the same conversation.
-
-It can also back a [Chat Trigger](/nodes/builtin/trigger/chat/): connect it as the trigger's Chat Memory and give the downstream Agent the same Persistent Chat Memory (same key). The chat window then shows the conversation stored under that key, so any other workflow using the key sees the same thread.
-
-## Troubleshooting
-
-- Check that Conversation Key is set — the node throws an error if it is empty.
-- Using a different Conversation Key starts a fresh, unrelated memory; reuse the exact same key to continue a prior conversation.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
-
-## Related nodes
-
-- [Local Memory](/nodes/builtin/ai/aidependencies/chatmemories/localmemory/)
+- [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/)
 - [Chat Trigger](/nodes/builtin/trigger/chat/)
-- [Memory & Context](/advanced-ai/concepts/memory-context/)
-- [Q&A](/nodes/builtin/ai/aiagents/qanode/)
+- [Memory page](/usage/using-the-app/memory/overview/)
