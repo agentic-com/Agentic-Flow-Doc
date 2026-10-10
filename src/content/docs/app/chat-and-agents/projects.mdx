@@ -6,6 +6,8 @@ sidebar:
 section: app
 ---
 
+import { GuidedShot } from "@components/awflow";
+
 A **project** groups conversations and gives them shared context. Every chat in a project — with Aria, any agent, or a [team thread](/app/chat-and-agents/teams/) — automatically uses:
 
 - **Project instructions** — added after each agent's own instructions (the agent's rules still apply).
@@ -17,7 +19,21 @@ Projects, their files and their memory are stored **only on this device**.
 
 ## Create a project
 
-In the assistant's side panel, click **+ New** next to **Projects** (or open **Projects** and click **New project**). Give it a name and a colour, and optionally:
+In the assistant's side panel, click **+ New** next to **Projects** (or open **Projects** and click **New project**). Then fill in the **New project** dialog:
+
+<GuidedShot
+  shot="project-new"
+  steps={[
+    { spot: 'name', title: 'Name it', body: 'For example *Lisbon move*.' },
+    { spot: 'colour', title: 'Pick a colour', body: 'It marks the project in the side panel.' },
+    { spot: 'instructions', title: 'Add instructions (optional)', body: 'Added after each agent\'s own instructions in this project.' },
+    { spot: 'files', title: 'Add files (optional)', body: 'Drop PDFs, documents, spreadsheets or images. They are indexed on this device.' },
+    { spot: 'default-agent', title: 'Choose the default agent or team', body: 'New chats in the project start with it.' },
+    { spot: 'create', title: 'Click Create project', check: 'the project is listed under **Projects** in the side panel.' },
+  ]}
+/>
+
+What each field is for:
 
 - **Instructions** — for example "We are a family of 3. Budget €1,400/month rent. Answer in English, prices in euros." You can use `{today}`, `{my name}` and `{current tab}`.
 - **Files** — drop PDFs, documents, spreadsheets or text files.

@@ -6,6 +6,8 @@ sidebar:
 section: app
 ---
 
+import { StepCard, StepShot } from "@components/awflow";
+
 A **team** is a group of agents with a lead, a way of working and shared rules. Every conversation with a team is a **team thread**: you give the team a job, the agents hand work to each other, and the lead comes back with one answer.
 
 Open **Agents › Teams**.
@@ -17,12 +19,29 @@ Open **Agents › Teams**.
 
 The wizard has four steps:
 
-1. **Goal** — name and what the team is for.
-2. **Members** — Aria's suggestions; add your agents, create suggested agents inline, pick the **lead** and give each member a **role in this team**. Agents keep their own skills and rules.
-3. **How they work** — the coordination mode and who can hand work to whom.
-4. **Rules & limits** — team rules, approvals, limits per thread, and what the team shares.
+<StepCard n={1} title="Goal" check="the Suggest members button is enabled.">
+  Give the team a **Name** and say what it is for under **Goal**, then click **Suggest members**.
 
-Finish with **Create team**, or **Create & start a thread**.
+  <StepShot shot="team-goal" spot="goal" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Members" check="the team has at least two members and Continue is enabled.">
+  Aria suggests members from your goal. Add your agents, or create suggested agents inline, pick the **lead** and give each member a **role in this team**. Agents keep their own skills and rules.
+
+  <StepShot shot="team-members" spot="role" n={2} />
+</StepCard>
+
+<StepCard n={3} title="How they work">
+  Pick the coordination mode and who can hand work to whom (click two agents to add or remove a connection). See **Ways of working** below.
+
+  <StepShot shot="team-how" spot="mode" n={3} />
+</StepCard>
+
+<StepCard n={4} title="Rules & limits" check="the team is listed under Teams.">
+  Set the team rules, where approvals go, the limits per thread and what the team shares. Finish with **Create team**, or **Create & start a thread**.
+
+  <StepShot shot="team-rules" spot="create-team" n={4} />
+</StepCard>
 
 ## Ways of working
 

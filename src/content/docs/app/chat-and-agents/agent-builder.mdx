@@ -7,7 +7,47 @@ sidebar:
   label: "Agent builder"
 ---
 
+import { StepCard, StepShot } from "@components/awflow";
+
 Open an agent from **Agents** to edit it. Changes save automatically.
+
+## Build an agent, step by step
+
+<StepCard n={1} title="Start a blank agent" check="the builder opens on the Identity tab, for an agent called New agent.">
+  Open **Agents & teams** in the sidebar and click **Blank agent**. To start from a sentence or a template instead, see [Create an agent](/app/chat-and-agents/agents/#create-an-agent).
+
+  <StepShot shot="agents" spot="blank-agent" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Name it" check="the preview on the right shows the new name.">
+  On **Identity**, enter a **Name** (its @handle follows) and a **One-line role**. Pick a look if you like.
+
+  <StepShot shot="agent-identity" spot="name" n={2} />
+</StepCard>
+
+<StepCard n={3} title="Write its instructions" check="the token count under the editor says the instructions fit the model.">
+  On **Instructions**, say what its job is, how to work and what to avoid. Insert variables like `{today}`, or click **Improve with Aria**.
+
+  <StepShot shot="agent-instructions" spot="editor" n={3} />
+</StepCard>
+
+<StepCard n={4} title="Choose its model" check="the Try it panel shows the model in its chips.">
+  On **Model**, keep **Same as Aria** or pick an on-device, Ollama or cloud model, then set **Creativity** and **Max steps per task**.
+
+  <StepShot shot="agent-model" spot="choose-model" n={4} />
+</StepCard>
+
+<StepCard n={5} title="Turn on its skills" check="the Skills tab shows the number of skills that are on.">
+  On **Skills**, switch on what it may use: browser control, web search, workflows, on-device AI, teammates or MCP servers.
+
+  <StepShot shot="agent-skills" spot="skill-switch" n={5} />
+</StepCard>
+
+<StepCard n={6} title="Try it" check="the agent answers in the Try it panel, using your settings.">
+  Send a message in the **Try it** panel on the right. Edits apply on your next message; changes save automatically.
+
+  <StepShot shot="agent-instructions" spot="try-it" n={6} />
+</StepCard>
 
 ## The builder tabs
 

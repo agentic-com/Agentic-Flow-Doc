@@ -7,8 +7,7 @@ sidebar:
   label: "Install & manage"
 ---
 
-import { Steps } from "@astrojs/starlight/components";
-import { Callout } from "@components/awflow";
+import { Callout, StepCard, StepShot } from "@components/awflow";
 
 ## Find a model
 
@@ -28,13 +27,19 @@ The **model detail view** adds its task, engine and backend, context window, par
 
 ## Install and test
 
-<Steps>
+<StepCard n={1} title="Install a variant" check="the download shows in the download panel in the corner.">
+  Open the model and click **Install** on a variant under **Variants**. Downloads run **in the background, one at a time**: keep working, and cancel from the download panel in the corner.
 
-1. Click **Install** on a variant. Downloads run **in the background, one at a time**: keep working, and cancel from the download panel in the corner.
-2. When it's done, click **Test**. AWFlow loads the model and runs a quick check, to confirm it works on this device.
-3. For a chat model, click **Set default** to make it your default in-browser model. The assistant prefers it, and new Web LLM nodes are pre-filled with it.
+  <StepShot shot="local-models-install" spot="install" n={1} zoom={40} />
+</StepCard>
 
-</Steps>
+<StepCard n={2} title="Test it" check="the test ends without an error.">
+  When it's done, click **Test**. AWFlow loads the model and runs a quick check, to confirm it works on this device.
+</StepCard>
+
+<StepCard n={3} title="Make it your default (chat models)">
+  For a chat model, click **Set default** to make it your default in-browser model. The assistant prefers it, and new Web LLM nodes are pre-filled with it.
+</StepCard>
 
 <Callout type="tip" title="Check it worked">
 
