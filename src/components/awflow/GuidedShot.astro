@@ -1,0 +1,50 @@
+---
+/**
+ * <GuidedShot> (GuideB.dc.html, "13B"): a task whose actions all happen on ONE screen.
+ * One full screenshot with numbered markers on the controls, and the numbered steps beside it
+ * (below it in a narrow column). Hovering, focusing or clicking a step highlights its marker;
+ * clicking a marker selects its step. Marker n is always step n.
+ *
+ *   import GuidedShot from '@components/awflow/GuidedShot.astro';
+ *   <GuidedShot shot="credentials-new" steps={[
+ *     { spot: 'app', title: 'Pick the app', body: 'Open **Integration App / Service**…', check: 'Slack shows in the field.' },
+ *   ]} />
+ *
+ * `shot` is a file name in src/assets/screenshots/ (without .json), `spot` an id from its `hotspots`.
+ * Both are checked while the site builds.
+ */
+import { getSpot, inlineMarkdown, resolveShot } from '../../data/shots';
+import GuidedShotIsland from './GuidedShot.svelte';
+
+interface Step {
+	/** Spot id in the shot's JSON (`hotspots[].id`). */
+	spot: string;
+	title: string;
+	/** One or two sentences. Inline **bold**, *italic* and `code` are supported. */
+	body?: string;
+	/** What the reader sees when the step worked. Rendered as "Check: …". */
+	check?: string;
+}
+interface Props {
+	shot: string;
+	steps: Step[];
+	caption?: string;
+	/** Overrides the shot's alt text from its JSON. */
+	alt?: string;
+}
+
+const { shot, steps, caption, alt } = Astro.props;
+if (!Array.isArray(steps) || steps.length === 0) throw new Error(`<GuidedShot shot="${shot}">: give at least one step.`);
+const r = await resolveShot(shot, 'GuidedShot');
+const items = steps.map((s, i) => {
+	if (!s.title) throw new Error(`<GuidedShot shot="${shot}">: step ${i + 1} has no title.`);
+	const spot = getSpot(r.entry, s.spot, 'GuidedShot');
+	return { n: i + 1, title: s.title, bodyHtml: s.body ? inlineMarkdown(s.body) : undefined, check: s.check, label: spot.label, box: spot.box };
+});
+// Stable per page: shot name + position among this page's GuidedShots.
+const counter = ((Astro.locals as { __awfGuided?: number }).__awfGuided ?? 0) + 1;
+(Astro.locals as { __awfGuided?: number }).__awfGuided = counter;
+const uid = `awf-guided-${shot}-${counter}`;
+---
+
+<GuidedShotIsland client:visible uid={uid} alt={alt ?? r.entry.alt} light={r.light} dark={r.dark} items={items} caption={caption} />

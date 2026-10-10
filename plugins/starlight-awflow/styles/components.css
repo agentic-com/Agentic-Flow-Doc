@@ -607,6 +607,369 @@
 	text-align: center;
 }
 
+/* ---------- GuidedShot (GuideB.dc.html · 13B) and StepShot (GuideA.dc.html · 13A) ---------- */
+
+:root {
+	--awf-guide-ring: #d97706;
+	--awf-guide-ring-glow: rgba(217, 119, 6, 0.22);
+	--awf-guide-marker: #b45309;
+	--awf-guide-marker-idle: #57534e;
+	--awf-guide-active-bg: #2a1a0b;
+	--awf-guide-active-line: #92400e;
+	--awf-guide-check: #bbf7d0;
+	--awf-guide-check-bg: #0f2a1a;
+}
+:root[data-theme='light'] {
+	--awf-guide-active-bg: #fef3e2;
+	--awf-guide-active-line: #f3c98b;
+	--awf-guide-check: #14532d;
+	--awf-guide-check-bg: #f0fdf4;
+}
+
+.awf-guided {
+	margin-block: 1.5rem;
+	container-type: inline-size;
+}
+.awf-guided__layout {
+	display: grid;
+	gap: 1rem;
+	align-items: start;
+}
+@container (min-width: 56rem) {
+	.awf-guided__layout {
+		grid-template-columns: minmax(0, 1fr) 20rem;
+		gap: 1.5rem;
+	}
+}
+.awf-guided__frame,
+.awf-stepshot__crop,
+.awf-shotdialog__frame {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--awf-radius);
+	border: 1px solid var(--awf-line);
+	background: var(--awf-surface-2);
+	box-shadow: var(--awf-shadow);
+	line-height: 0;
+}
+/* The picture stays in view while the reader goes through the steps (stacked or side by side). */
+@media (min-height: 48rem) {
+	.awf-guided__frame {
+		position: sticky;
+		top: calc(var(--sl-nav-height, 4rem) + var(--sl-mobile-toc-height, 0rem) + 0.75rem);
+		z-index: 2;
+	}
+}
+.awf-guided__img,
+.awf-shotdialog__frame img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+.awf-guided__ring,
+.awf-stepshot__ring,
+.awf-shotdialog__ring {
+	position: absolute;
+	box-sizing: content-box;
+	margin: -7px 0 0 -7px;
+	padding: 4px;
+	border: 3px solid var(--awf-guide-ring);
+	border-radius: 10px;
+	box-shadow: 0 0 0 4px var(--awf-guide-ring-glow);
+	pointer-events: none;
+}
+.awf-guided__ring {
+	opacity: 0;
+	transform: scale(1.06);
+	transition:
+		opacity var(--awf-base) var(--awf-ease),
+		transform var(--awf-base) var(--awf-ease);
+}
+.awf-guided__ring.is-active {
+	opacity: 1;
+	transform: none;
+}
+.awf-guided__marker {
+	--size: 30px;
+	position: absolute;
+	left: clamp(calc(var(--size) / 2 + 2px), var(--x), calc(100% - var(--size) / 2 - 2px));
+	top: clamp(calc(var(--size) / 2 + 2px), var(--y), calc(100% - var(--size) / 2 - 2px));
+	width: var(--size);
+	height: var(--size);
+	margin: 0;
+	padding: 0;
+	transform: translate(-50%, -50%);
+	border-radius: 999px;
+	border: 2px solid #fff;
+	background: var(--awf-guide-marker-idle);
+	color: #fff;
+	font: 700 0.8125rem/1 var(--sl-font);
+	cursor: pointer;
+	box-shadow: 0 2px 6px rgba(28, 25, 23, 0.35);
+	transition:
+		transform var(--awf-base) var(--awf-ease),
+		background-color var(--awf-base) var(--awf-ease);
+}
+.awf-guided__marker.is-active {
+	background: var(--awf-guide-marker);
+	transform: translate(-50%, -50%) scale(1.2);
+	z-index: 1;
+}
+.awf-guided__marker:focus-visible,
+.awf-guided__step:focus-visible,
+.awf-stepshot__full:focus-visible,
+.awf-shotdialog__close:focus-visible {
+	outline: 3px solid var(--sl-color-accent-high);
+	outline-offset: 2px;
+}
+@container (max-width: 32rem) {
+	.awf-guided__marker {
+		--size: 22px;
+		font-size: 0.6875rem;
+		border-width: 1.5px;
+	}
+}
+
+.awf-guided__steps {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.625rem;
+}
+.awf-guided__step {
+	display: flex;
+	gap: 0.75rem;
+	width: 100%;
+	margin: 0;
+	padding: 0.875rem;
+	text-align: start;
+	font: inherit;
+	color: inherit;
+	cursor: pointer;
+	border-radius: var(--awf-radius);
+	border: 1px solid var(--awf-line);
+	background: var(--awf-surface);
+	transition:
+		background-color var(--awf-fast) var(--awf-ease),
+		border-color var(--awf-fast) var(--awf-ease);
+}
+.awf-guided__step.is-active {
+	background: var(--awf-guide-active-bg);
+	border-color: var(--awf-guide-active-line);
+}
+.awf-guided__num,
+.awf-shotdialog__n {
+	flex: none;
+	width: 1.75rem;
+	height: 1.75rem;
+	border-radius: 999px;
+	background: var(--awf-guide-marker-idle);
+	color: #fff;
+	font-weight: 700;
+	font-size: 0.8125rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color var(--awf-fast) var(--awf-ease);
+}
+.awf-guided__step.is-active .awf-guided__num,
+.awf-shotdialog__n {
+	background: var(--awf-guide-marker);
+}
+.awf-guided__text {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	min-width: 0;
+}
+.awf-guided__title {
+	font-weight: 650;
+	font-size: 1rem;
+	line-height: 1.4;
+	color: var(--sl-color-white);
+}
+.awf-guided__body {
+	font-size: 0.875rem;
+	line-height: 1.55;
+	color: var(--sl-color-gray-2);
+}
+.awf-guided__body code {
+	font-family: var(--sl-font-mono);
+	font-size: 0.85em;
+	padding: 0.0625rem 0.3rem;
+	border-radius: 4px;
+	background: var(--sl-color-bg-inline-code);
+}
+.awf-guided__check {
+	margin-top: 0.25rem;
+	font-size: 0.8125rem;
+	line-height: 1.5;
+	color: var(--awf-guide-check);
+	background: var(--awf-guide-check-bg);
+	border-radius: 8px;
+	padding: 0.375rem 0.625rem;
+}
+.awf-guided__caption {
+	margin-top: 0.625rem;
+	font-size: 0.875rem;
+	color: var(--awf-muted);
+}
+
+/* StepShot: the crop window's geometry comes from --d-* (desktop) / --m-* (narrow) set by StepShot.astro. */
+.awf-stepshot {
+	--ar: var(--d-ar);
+	--img-w: var(--d-img-w);
+	--img-h: var(--d-img-h);
+	--img-x: var(--d-img-x);
+	--img-y: var(--d-img-y);
+	--ring-x: var(--d-ring-x);
+	--ring-y: var(--d-ring-y);
+	--ring-w: var(--d-ring-w);
+	--ring-h: var(--d-ring-h);
+	container-type: inline-size;
+	margin-block: 0.75rem;
+}
+@container (max-width: 30rem) {
+	.awf-stepshot__crop {
+		--ar: var(--m-ar);
+		--img-w: var(--m-img-w);
+		--img-h: var(--m-img-h);
+		--img-x: var(--m-img-x);
+		--img-y: var(--m-img-y);
+		--ring-x: var(--m-ring-x);
+		--ring-y: var(--m-ring-y);
+		--ring-w: var(--m-ring-w);
+		--ring-h: var(--m-ring-h);
+	}
+}
+.awf-stepshot__crop {
+	aspect-ratio: var(--ar);
+	transition: box-shadow var(--awf-base) var(--awf-ease);
+}
+.awf-stepshot__img {
+	position: absolute;
+	left: var(--img-x);
+	top: var(--img-y);
+	width: var(--img-w);
+	height: var(--img-h);
+	max-width: none;
+}
+.awf-stepshot__ring {
+	left: var(--ring-x);
+	top: var(--ring-y);
+	width: var(--ring-w);
+	height: var(--ring-h);
+	animation: awf-guide-ring-in 0.5s var(--awf-ease) both;
+}
+.awf-stepshot__badge {
+	position: absolute;
+	left: max(18px, calc(var(--ring-x) - 7px));
+	top: max(18px, calc(var(--ring-y) - 7px));
+	transform: translate(-50%, -50%);
+	width: 30px;
+	height: 30px;
+	border-radius: 999px;
+	border: 2px solid #fff;
+	background: var(--awf-guide-marker);
+	color: #fff;
+	font: 700 0.875rem/26px var(--sl-font);
+	text-align: center;
+}
+.awf-stepshot__full {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.375rem;
+	padding: 0.375rem 0.625rem;
+	border-radius: 8px;
+	background: rgba(28, 25, 23, 0.85);
+	color: #fff;
+	font: 600 0.75rem/1.2 var(--sl-font);
+	text-decoration: none;
+	transition: transform var(--awf-fast) var(--awf-ease);
+}
+.awf-stepshot__full:hover {
+	color: #fff;
+	transform: scale(1.04);
+}
+@keyframes awf-guide-ring-in {
+	from {
+		opacity: 0;
+		transform: scale(1.12);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* Full-screen dialog of a StepShot. */
+.awf-shotdialog {
+	width: min(96vw, 110rem);
+	max-width: none;
+	max-height: 94vh;
+	padding: 0.75rem;
+	border: 1px solid var(--awf-line);
+	border-radius: var(--awf-radius-lg);
+	background: var(--sl-color-black);
+	color: var(--sl-color-white);
+	overflow: auto;
+}
+.awf-shotdialog::backdrop {
+	background: rgba(12, 10, 9, 0.75);
+}
+.awf-shotdialog__bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0.75rem;
+}
+.awf-shotdialog__title {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.625rem;
+	font-weight: 600;
+}
+.awf-shotdialog__bar form {
+	margin: 0;
+}
+.awf-shotdialog__close {
+	padding: 0.375rem 0.875rem;
+	border-radius: 8px;
+	border: 1px solid var(--awf-line);
+	background: var(--awf-surface);
+	color: var(--sl-color-white);
+	font: 600 0.875rem/1.2 var(--sl-font);
+	cursor: pointer;
+}
+.awf-shotdialog__frame {
+	box-shadow: none;
+	max-height: calc(94vh - 5rem);
+	margin-inline: auto;
+	/* Fit the whole image in the viewport height. */
+	width: min(100%, calc((94vh - 5rem) * var(--awf-shot-ratio, 1.6)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.awf-guided__ring,
+	.awf-guided__marker,
+	.awf-guided__step,
+	.awf-guided__num,
+	.awf-stepshot__crop,
+	.awf-stepshot__ring,
+	.awf-stepshot__full {
+		animation: none !important;
+		transition: none !important;
+	}
+	.awf-guided__ring {
+		transform: none;
+	}
+}
+
 /* ---------- PageActions ---------- */
 
 .awf-actions {
