@@ -11,15 +11,23 @@ node:
   family: flow
 ---
 
-Stop the workflow and throw an error
+Stop the run on purpose, with an error message you write.
 
 ## What it does
 
-Immediately stops workflow execution and throws a custom error message.
+When data reaches Stop and Error, the node fails right away with your message. The run stops and shows as failed, as if any other step had failed. Nothing can be connected after it.
+
+The message comes from a field named `message` in **Fields**. Without one, the error reads `Error throwed by : <Stop and Error node>`.
+
+A failure from this node behaves like any other failure: a [Try / Catch](/nodes/builtin/flow/try/) around it sends it to the **Catch** branch, and an [Error Trigger](/nodes/builtin/trigger/errortrigger/) workflow can react to it.
 
 ## When to use it
 
-Use this node to handle error conditions, validate data, or halt execution when specific criteria aren't met.
+- Stop when the data is wrong: after an [IF](/nodes/builtin/flow/if/), end the run if a required field is empty.
+- Stop when a page didn't load what you expected, instead of saving empty results.
+- Make a run show as failed, with a clear reason, so an error workflow can alert you.
+
+To simply drop items without failing, use [Filter](/nodes/builtin/flow/filter/), or leave an IF branch unconnected.
 
 ## Inputs and settings
 
@@ -28,6 +36,8 @@ Use this node to handle error conditions, validate data, or halt execution when 
 | --- | --- | --- | --- | --- |
 | **Fields** | Key-value pairs |  | Yes |  |
 {/* AUTO:settings:end */}
+
+Add a field with the key `message` and your text as the value. Expressions work, so the message can say what went wrong, for example `No price found for {{ $input.url }}`. Other keys are ignored.
 
 ## Outputs
 
@@ -43,16 +53,20 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Place Stop and Error between data-producing nodes and downstream actions to control which data continues through the workflow.
+Stop when a page has no price:
+
+1. [Get Element Data](/nodes/extension/getelementdata/) with **Output field name** `price` reads the price on the open page.
+2. [IF](/nodes/builtin/flow/if/) with the condition `{{ $input.price }}` (**String**) **Is Empty**.
+3. From **True**: Stop and Error with a field `message` set to `No price found on this page`.
+4. From **False**: [Google Sheets](/nodes/builtin/integration/google-sheets/) appends the price.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The error says `Error throwed by : <Stop and Error node>`.** No field is named exactly `message`. Rename the key (it is case-sensitive).
+- **The run fails even though the data looks fine.** Data reached Stop and Error, so check the IF or Switch in front of it: open the run and see which branch the item took.
 
 ## Related nodes
 
-- [Filter](/nodes/builtin/flow/filter/)
-- [Merge](/nodes/builtin/flow/merge/)
-- [Wait](/nodes/builtin/flow/wait/)
+- [Try / Catch](/nodes/builtin/flow/try/): handle the failure in a separate branch.
+- [Error Trigger](/nodes/builtin/trigger/errortrigger/): run a workflow when another one fails.
+- [IF](/nodes/builtin/flow/if/): decide when to stop.

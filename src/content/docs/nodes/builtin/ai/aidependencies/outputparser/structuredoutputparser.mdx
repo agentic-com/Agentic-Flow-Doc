@@ -11,15 +11,21 @@ node:
   family: ai
 ---
 
-Return data in a defined JSON format
+Make an AI node answer with JSON in the exact shape you give as an example.
 
 ## What it does
 
-Ensures AI agent responses follow a specific JSON schema structure.
+Structured Output Parser is not a step on its own: it has no output port and never runs by itself. You plug it into the **Output Parser** slot of an AI node, and that node uses it.
+
+From your **JSON Output Example**, the parser works out the fields and their types (text, number, true/false, lists, nested objects). The AI node then adds formatting instructions to what it sends the model, asking for JSON in that shape. When the reply comes back, the parser reads it and checks it against the shape, so the AI node returns real data instead of text.
 
 ## When to use it
 
-Connect this to AI agents when you need structured, parseable output in a defined format for downstream processing.
+- Turn free text into fields you can use later, such as a name, an email and a company.
+- Get a fixed set of values back, for example `{ "sentiment": "positive", "score": 0.9 }`, to route with an If or Switch.
+- When the model sometimes breaks the JSON, put an [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) in front of it.
+
+For a plain list of words, [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/) is simpler.
 
 ## Inputs and settings
 
@@ -32,6 +38,19 @@ Connect this to AI agents when you need structured, parseable output in a define
 }` | Yes | An example of the JSON output you expect. |
 {/* AUTO:settings:end */}
 
+Write a real example, not a description. The value types matter more than the values: `"John"` means text, `30` means a number, `true` means true/false, `["a"]` means a list of text. For example:
+
+```json
+{
+  "name": "Ada Lovelace",
+  "email": "ada@example.com",
+  "company": "Analytical Engines",
+  "interested": true
+}
+```
+
+The example must be valid JSON: double quotes around names and text, no trailing commas, no comments.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -43,7 +62,7 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Base Parser | [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
 {/* AUTO:outputs:end */}
 
-Returns an output parser dependency used to structure model responses.
+The data appears on the node it is plugged into. On [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) and the agents, `response` becomes an object, so you can read single fields downstream, for example `{{ $input.response.email }}`. On [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) the object is in `extracted`.
 
 ## Dependencies and credentials
 
@@ -53,16 +72,20 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect Structured Output Parser to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads an email signature you highlighted, with **Output field name** `text`.
+2. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) with **Prompt** `Extract the contact details from: {{ $input.text }}`. Connect an [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model to its **Model** slot.
+3. Structured Output Parser connected to the **Output Parser** slot of Basic LLM Chain, with **JSON Output Example** `{ "name": "Ada Lovelace", "email": "ada@example.com", "company": "Analytical Engines" }`.
+4. [Display Markdown](/nodes/extension/displaymarkdown/) with **Content** `{{ $input.response.name }} works at {{ $input.response.company }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The run fails with a JSON error such as "Unexpected token" before the model is called.** **JSON Output Example** is not valid JSON. Fix the quotes and commas.
+- **"Failed to parse".** The model's reply was not JSON in the expected shape. Use a stronger model, simplify the example, or wrap this parser in an [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/).
+- **A field has the wrong type.** The type comes from the example value: write `30`, not `"30"`, if you want a number.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/): retry with a model when the JSON is broken.
+- [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/): get a simple list instead.
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/): pull named fields out of text.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): one prompt, one structured answer.

@@ -11,17 +11,21 @@ node:
   family: inpage
 ---
 
-Show a system-level notification through the operating system's notification center — visible even when no browser tab is focused.
+Show a system notification through your computer's notification center, visible even when no browser tab is in view.
 
 ## What it does
 
-Creates a native OS notification with a title, message, icon, priority, and up to two action buttons. Unlike [Show Notification](/nodes/extension/shownotification/), which renders **inside the current page** and therefore only works while a tab is open and in view, this node reaches the user through the system notification center regardless of what they are looking at.
+Browser Notification shows a native notification with a **Title**, a **Message**, an icon and a **Priority**, and can add up to two buttons. The notification comes from the operating system, so it reaches you whatever you are looking at, and stays in the notification center like any other alert.
+
+- With **Icon URL** empty, the AWFlow icon is used.
+- **Buttons**: only the first two are shown. Firefox shows the notification without buttons.
+- The node does not wait for you: the workflow continues as soon as the notification is shown. Clicking the notification or a button does not send anything back to the workflow yet; buttons are for display only.
 
 ## When to use it
 
-- A scheduled or background workflow finishes while the user is in another app and needs to be told.
-- You want the alert to persist in the OS notification center rather than disappear with the tab.
-- You need an alert that does not depend on a page being open.
+- Tell yourself that a scheduled or background workflow has finished, while you work in another app.
+- Alert on something a workflow found: a price drop, a new message, a failed check.
+- If you need a notification you can replace later, kept on screen until dismissed, or silent, use [Show Notification](/nodes/extension/shownotification/). If the workflow must wait for your answer, use [In-Page Form](/nodes/builtin/flow/in-page-form/) or [Wait For Approval](/nodes/builtin/flow/wait-for-approval/).
 
 ## Inputs and settings
 
@@ -36,6 +40,8 @@ Creates a native OS notification with a title, message, icon, priority, and up t
 | Buttons (each entry) › **Button Title** | Text |  | Yes |  |
 {/* AUTO:settings:end */}
 
+**Title** and **Message** accept expressions, for example **Message** = `{{ $input.count }} new items found`.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -44,10 +50,8 @@ One output port.
 Each output item has the fields `notificationId` (text), `shown` (always true).
 {/* AUTO:outputs:end */}
 
-Returns a small confirmation object:
-
-- `notificationId` — the id of the created notification.
-- `shown` — `true` once the notification has been created.
+- `notificationId`: the id of the notification that was created.
+- `shown`: `true` once the notification has been created.
 
 ## Dependencies and credentials
 
@@ -55,21 +59,24 @@ Returns a small confirmation object:
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential is required.
-- Uses the extension's already-held `notifications` permission — no extra permission is needed.
+No credential and no extra permission is needed. Notifications must be allowed for your browser in your operating system's settings.
 
 ## Example workflow
 
-Run a scheduled workflow that gathers a daily summary, then end with Browser Notification to alert the user that the digest is ready — even if the browser is in the background.
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every day at 8:00.
+2. [RSS Feed Read](/nodes/builtin/core/rss-feed-read/) and [Limit](/nodes/builtin/datatransformation/limit/) pick the 5 newest posts of a feed.
+3. [Aggregate](/nodes/builtin/datatransformation/aggregate/) combines them into one item.
+4. **Browser Notification** with **Title** = `Your morning digest` and **Message** = `5 new posts are waiting`.
 
 ## Troubleshooting
 
-- If nothing appears, check that notifications are enabled for your browser in the operating system's settings.
-- A custom **Icon URL** must resolve to a reachable image; when in doubt, leave it blank to use the default extension icon.
-- Button clicks are not yet routed back into the workflow — buttons are display-only for now. For a gate that resumes a run based on the user's response, use [In-Page Form](/nodes/builtin/flow/in-page-form/).
+- **Nothing appears.** Notifications for your browser are turned off in the operating system's settings, or a focus / do-not-disturb mode is on. Allow them and run the node again.
+- **"Notification title and message are required".** **Title** or **Message** is empty, often because an expression resolved to nothing. Check the previous node's output.
+- **The custom icon does not show.** **Icon URL** must point to an image the browser can load. Leave it empty to use the default icon.
+- **Clicking a button does nothing.** Buttons are display-only for now. To let the user choose and resume the run, use [In-Page Form](/nodes/builtin/flow/in-page-form/).
 
 ## Related nodes
 
-- [Show Notification](/nodes/extension/shownotification/)
-- [In-Page Form](/nodes/builtin/flow/in-page-form/)
-- [Tab Control](/nodes/extension/tabcontrol/)
+- [Show Notification](/nodes/extension/shownotification/): a system notification you can replace, keep on screen or make silent.
+- [In-Page Form](/nodes/builtin/flow/in-page-form/): ask the user and wait for the answer.
+- [Display Markdown](/nodes/extension/displaymarkdown/): show a longer result on the page itself.

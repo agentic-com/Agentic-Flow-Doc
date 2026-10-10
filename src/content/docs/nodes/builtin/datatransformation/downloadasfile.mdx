@@ -11,15 +11,19 @@ node:
   family: data
 ---
 
-Download the input data as a file
+Download the file behind a link (an image, a PDF, a document) to your computer.
 
 ## What it does
 
-Converts workflow data into a downloadable file in various formats (JSON, CSV, etc.).
+Download as file reads a web address from a field of the incoming item, fetches that address and saves what it gets to your Downloads folder. It runs once per item, so ten items with ten image links give ten downloads.
+
+The saved file is named **File name** plus the extension of **File type**, for example `file.json` with the defaults. It does not convert data into a file: the field must hold a link to an existing file.
 
 ## When to use it
 
-Use this node to export workflow results as files for download or storage.
+- Save images or PDFs whose links you scraped from a page.
+- Download a report from a link that an API returned.
+- To save text you generated (CSV, JSON, Markdown), use [Save as File](/nodes/builtin/datatransformation/saveasfile/) instead. To build a file for an upload or attachment, use [Convert to File](/nodes/builtin/datatransformation/converttofile/).
 
 ## Inputs and settings
 
@@ -33,11 +37,17 @@ Use this node to export workflow results as files for download or storage.
 | Options › **Return input fields** | Toggle | Off | No | Whether to return the input fields in the output. |
 {/* AUTO:settings:end */}
 
+- **FieldPath** is the field name only, without `{{ }}`: `imageUrl`, or `image.src` for a nested field.
+- Set **File type** to match the file (for example *png* or *pdf*). It also sets the extension of the saved file, so a PDF saved with the default *json* ends up as `file.json`.
+- Type **File name** without an extension. Use an expression such as `{{ $input.title }}` to give each download its own name.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+By default the node outputs an empty item, so the next step simply runs after the download starts. Turn on **Return input fields** to pass the incoming item on unchanged.
 
 ## Dependencies and credentials
 
@@ -47,14 +57,20 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect data into Download as file, configure the settings above, and use the output in the next workflow step.
+1. [Get Images from Link](/nodes/builtin/core/getimagesfromlink/) lists the image addresses of a product page in a field named `images`.
+2. [Split Out](/nodes/builtin/datatransformation/splitout/) on `images` gives one item per image.
+3. [Limit](/nodes/builtin/datatransformation/limit/) keeps the first 5.
+4. Download as file with **FieldPath** `images`, **File type** *jpg* and **File name** `product` saves each image.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Field "…" does not exist in the input object"** The name in **FieldPath** does not match the incoming data. Open the previous node's output and copy the exact field name.
+- **"Field "…" is not a string in the input object"** The field holds a list or an object, not a single link. Point **FieldPath** at the link itself, or use [Split Out](/nodes/builtin/datatransformation/splitout/) first to get one link per item.
+- **The file has the wrong extension or will not open.** **File type** decides the extension. Pick the type that matches the file.
+- **Nothing is downloaded, and no error appears.** The node does not wait for the download, so a link that cannot be fetched fails quietly. Check that the address opens in your browser.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Save as File](/nodes/builtin/datatransformation/saveasfile/): save text you generated as a file.
+- [Convert to File](/nodes/builtin/datatransformation/converttofile/): build a file for uploads and attachments.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): turn a list of links into one item per link.

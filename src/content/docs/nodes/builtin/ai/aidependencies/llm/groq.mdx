@@ -11,15 +11,21 @@ node:
   family: ai
 ---
 
-Run open models on Groq for fast, low-latency inference.
+Give an AI node access to open models (such as Llama) running on Groq's very fast servers, using your own Groq API key.
 
 ## What it does
 
-Provides access to open-weight models served on Groq's low-latency inference infrastructure for AI agent nodes. Groq exposes an OpenAI-compatible API, so this node runs the OpenAI client against Groq's base URL.
+Chat Groq is a model you plug into the **Model** slot of an AI node, such as the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/). It does not run on its own and has no output. When the AI node runs, it sends its messages to Groq with your key and gets the reply back.
+
+- **Temperature** is 0 when you leave it empty, so answers are focused and repeatable.
+- Replies are capped at **Max Tokens** (4096 by default).
+- A failed request is retried up to **Max Retries** times (2 by default). A request that gets no answer within 60 seconds fails.
 
 ## When to use it
 
-Connect this to AI agents when you want fast, low-latency inference on open models such as `llama-3.3-70b-versatile`.
+- Speed matters: a quick reply while you wait, or many items in a loop.
+- You want open models such as Llama without running them yourself.
+- Classifying or tagging lots of short texts cheaply.
 
 ## Inputs and settings
 
@@ -34,6 +40,8 @@ Connect this to AI agents when you want fast, low-latency inference on open mode
 | Options › **Max Tokens** | Number | 4096 | No | The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window. |
 {/* AUTO:settings:end */}
 
+Type the **Model** id as Groq lists it, for example `llama-3.3-70b-versatile`. Groq adds and retires models often, so check its model list if a model stops working.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -44,26 +52,32 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Model | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
 {/* AUTO:outputs:end */}
 
+The AI node you connect it to produces the output. Chat Groq only decides which model answers.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 - **Authentication** (credential): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- Requires an Authentication credential holding your Groq API key, sent as a Bearer token.
-- The node throws an error if Model is empty.
+In **Authentication**, use a Bearer Token credential that holds your Groq API key. Create the key on the API Keys page of the Groq console. See [Create a credential](/usage/using-the-app/credentials/create/).
 
 ## Example workflow
 
-Connect Chat Groq to an AI agent or dependency input that accepts this dependency type, set the Model to a Groq-hosted model such as `llama-3.3-70b-versatile`, attach your Groq API key credential, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on selected text.
+2. [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/) with **Text** `{{ $input.selectionText }}` and **Categories** `bug, feature request, question`.
+3. Chat Groq in its **Model** slot, **Model** `llama-3.3-70b-versatile`.
+4. [Browser Notification](/nodes/extension/browsernotification/) with **Message** `{{ $input.category }}`.
 
 ## Troubleshooting
 
-- Ensure Model is filled in — the node rejects an empty value.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Model parameter is required and cannot be empty".** Fill in **Model**.
+- **A "model decommissioned" or "model not found" error.** Groq retired the model. Pick a current one from its model list.
+- **A 429 "rate limit" error.** You sent too many requests or tokens per minute for your plan. Slow the workflow down (fewer items at once) or upgrade the plan.
+- **A 401 error.** The key is wrong or revoked. Create a new key and update the credential.
 
 ## Related nodes
 
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Model Dependencies](/advanced-ai/concepts/model-dependencies/)
+- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/): sort text into your categories.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): send one prompt and get a reply.
+- [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/): run open models on your own computer instead.

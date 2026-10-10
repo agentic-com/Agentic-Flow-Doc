@@ -11,25 +11,30 @@ node:
   family: integration
 ---
 
-Turn the page you're on into a CRM record. Read a profile, extract the details, and create or update a person or organization in Pipedrive — then attach the page itself as a note.
+Turn the profile or company page you are viewing into a Pipedrive contact, and log the page as a note on it.
 
 ## What it does
 
-Creates or updates **persons** and **organizations** (deduplicated by email / name) and logs **notes** from the current page against a record. This is the classic sales-extension pattern — "log the profile I'm viewing" — as a composable workflow: read the page, extract with the Information Extractor, upsert the person, attach the URL.
+The Pipedrive node works on three kinds of things (**Resource**):
 
-## Resources and operations
+- **Person**: create or update a contact, or search contacts.
+- **Organization**: create or update a company, or search companies.
+- **Note**: add a note, linked to a person, an organization, or both.
 
-| Resource | Operations |
-| --- | --- |
-| Person | Create or update (dedup by email), Search |
-| Organization | Create or update (dedup by name), Search |
-| Note | Create (attach the current page to a person or organization) |
+**Create or update** never makes a duplicate on purpose. It first looks for an exact match: by **Email** for a person, by **Name** for an organization. If it finds one, it updates that record; if not, it creates a new one. The result tells you which happened (`created: true` or `false`). Fields you leave empty are not sent, so an update never wipes a value you did not fill.
 
-### Create or update (deduplication)
+**Note → Create** builds the note from **Note**, then the **Selection** in quotes, then a `Source:` line with the **Source URL**.
 
-"Create or update" searches for an existing record by its unique field first — **email** for persons, **name** for organizations. If an exact match is found the record is **updated** (`PUT`); otherwise a new one is **created** (`POST`). The result includes `created: true | false` so the rest of your workflow knows which happened.
+**Search** returns 10 matches unless you set **Limit**.
 
-> **Note:** search indexing can lag record creation slightly, so two upserts fired back-to-back for the same email/name can create a duplicate. Space them out if you fan out in parallel.
+## When to use it
+
+- Log the LinkedIn-style profile you are viewing as a person, with the page attached as a note.
+- Add a company you found on the web as an organization, with its address.
+- Check whether someone is already in your CRM before reaching out.
+- Keep a trail of the pages and quotes that led to a deal.
+
+For HubSpot or Attio, use [HubSpot](/nodes/builtin/integration/hubspot/) or [Attio](/nodes/builtin/integration/attio/).
 
 ## Inputs and settings
 
@@ -86,11 +91,20 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 | **Organization ID** | Number |  | No | Attach the note to this organization (optional). |
 {/* AUTO:settings:end */}
 
+- When a person is new, fill **Name** as well: Pipedrive needs a name to create a person.
+- On an update, **Phone** replaces the person's phone list with the one number you give.
+- **Person ID** and **Organization ID** are numbers. Take them from the `id` of a **Create or update** result, for example `{{ $('Pipedrive').id }}`, or from `items[0].item.id` of a **Search**.
+- Link each note to at least one record (**Person ID** or **Organization ID**); Pipedrive refuses notes that are linked to nothing.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+- **Create or update** returns the person or organization as Pipedrive stores it, including its `id` and `name`, plus `created` (`true` for a new record, `false` for an update).
+- **Search** returns one item with an `items` list. Each entry has a `result_score` and the matching record under `item` (with its `id` and `name`).
+- **Note → Create** returns the new note, including its `id` and `content`.
 
 ## Dependencies and credentials
 
@@ -98,22 +112,26 @@ One output port.
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- **Auth:** a Pipedrive **API token**, sent as the `api_token` query parameter. Copy it from **Settings → Personal preferences → API** in Pipedrive.
-- **⚠️ Scope guidance:** a Pipedrive API token is **account-wide** — it acts with your full user access across the company account. There is no per-record scoping. Treat it like a password — a leak exposes your CRM.
-- The token is stored in your credential vault and never passes through awflow's backend.
+Use your Pipedrive API token, saved as a Bearer Token credential. In Pipedrive, open **Settings → Personal preferences → API** and copy the token. See [Create a credential](/usage/using-the-app/credentials/create/).
 
-## Web and extension builds
+The token is account-wide: it can do anything your Pipedrive user can, and it has no per-record limits. Keep it like a password.
 
-This node is **extension-only**. The Pipedrive API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+## Example workflow
+
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger with **Menu Contexts** `Selection`: highlight the contact details on a profile page and pick "Save to Pipedrive". It passes on `selectionText` and `pageUrl`.
+2. [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) with **Text** `{{ $input.selectionText }}`, an [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model and a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) whose **JSON Output Example** is `{ "name": "Jane Doe", "email": "jane@example.com", "phone": "+33 6 12 34 56 78" }`.
+3. Pipedrive, **Person → Create or update**, **Email** `{{ $input.extracted.email }}`, **Name** `{{ $input.extracted.name }}`, **Phone** `{{ $input.extracted.phone }}`.
+4. Pipedrive, **Note → Create**, **Note** `Found while browsing`, **Person ID** `{{ $input.id }}`, **Source URL** `{{ $('Context Menu').pageUrl }}`.
 
 ## Troubleshooting
 
-- **`401` / unauthorized** — the API token is missing or wrong. Copy it again from Pipedrive (Settings → Personal preferences → API) and update the credential. The node calls this out in the error.
-- **A duplicate was created** — two "create or update" calls for the same email/name ran before Pipedrive's search index caught up. Space them out, or search first.
-- **Note isn't attached** — set **Person ID** and/or **Organization ID**; a note with neither is created standalone.
+- **"Pipedrive API Error: 401 … the API token is missing or invalid".** Copy the token again from **Settings → Personal preferences → API** and update the credential. A regenerated token makes the old one stop working.
+- **"Pipedrive API Error: …" when creating a person.** Often the **Name** is empty for a new person. Fill it.
+- **A duplicate record appeared.** Two runs created the same email or name a moment apart, before Pipedrive's search caught up. Run them one after another, or search first.
+- **The run is blocked in the web app.** Pipedrive runs through the browser extension. Install the extension and allow Pipedrive for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/usage/troubleshooting/extension-only-integrations-in-the-web-app/).
 
 ## Related nodes
 
-- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/)
-- [Screenshot Page](/nodes/extension/screenshotpage/)
-- [Custom API](/nodes/builtin/integration/custom-api/)
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/): pull name, email and company out of a page.
+- [HubSpot](/nodes/builtin/integration/hubspot/) and [Attio](/nodes/builtin/integration/attio/): other CRMs.
+- [Http Request](/nodes/builtin/core/http-request/): deals, activities and other Pipedrive objects this node does not cover.

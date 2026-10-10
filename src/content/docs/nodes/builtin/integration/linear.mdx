@@ -11,20 +11,29 @@ node:
   family: integration
 ---
 
-Create and update Linear issues, add comments, and list teams and projects — anchored to the page you're on.
+File and update Linear issues, add comments, and look up teams and projects, with the page you are reading attached as context.
 
 ## What it does
 
-Files and updates Linear issues from the page you're reading: the current URL and any selected text can be attached to the issue automatically. Comment on an issue, and list teams and projects to find the IDs you need.
+The Linear node works on four kinds of things (**Resource**), each with its own **Operation**:
 
-## Resources and operations
+- **Issue**: create an issue, update its title, description, priority or state, get one issue, or list issues.
+- **Comment**: add a comment to an issue.
+- **Team**: list your teams, mainly to find the **Team ID** a new issue needs.
+- **Project**: list your projects and their ids.
 
-| Resource | Operations |
-| --- | --- |
-| Issue | Create, Update, Get, List |
-| Comment | Create |
-| Team | List |
-| Project | List |
+When you create an issue, anything in **Source URL** and **Selection** is added to the end of the description: the selection as a quote, then a `Source:` line with the URL. This is how you file an issue "about this page" in one step.
+
+The list operations return up to **Limit** results (50 by default, 100 at most). **Issue → List** returns issues from the whole workspace, without a filter.
+
+## When to use it
+
+- File a bug report from the page you are on, with the selected text quoted and the URL attached.
+- Turn feedback collected by an earlier node (a form, an email) into issues for a team.
+- Comment on an issue when something happens elsewhere, for example a deploy page changes.
+- Read an issue's title, description and state to feed an AI node.
+
+For GitHub issues use [GitHub](/nodes/builtin/integration/github/) instead.
 
 ## Inputs and settings
 
@@ -95,7 +104,10 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 | **Limit** | Number | 50 | No | Number of results to return (1-100). |
 {/* AUTO:settings:end */}
 
-**Page-anchored issues:** wire the current page URL into **Source URL** and selected text into **Selection** (e.g. from Get Page Metadata / Get Selected Text). When present, they're appended to the issue description — a quoted selection and a `Source: <url>` line.
+- **Team ID** is the team's id, not its name or key. Run **Team → List** once and copy the `id` of the team you want.
+- **Issue ID** accepts the short identifier you see in Linear (`ENG-123`) or the issue's long id.
+- **Source URL** and **Selection** are usually expressions, for example `{{ $input.pageUrl }}` and `{{ $input.selectionText }}` after a [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger. Leave them empty to send only the **Description**.
+- **State ID** is the id of a workflow state (such as "In Progress"), not its name. The node cannot list states, so copy the id from Linear.
 
 ## Outputs
 
@@ -103,30 +115,37 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 One output port.
 {/* AUTO:outputs:end */}
 
+- **Issue → Create**, **Update** and **Get** return one issue with its `id`, `identifier` (like `ENG-123`), `title` and `url`. **Get** also returns the `description` and the `state` name.
+- **Issue → List** returns one item per issue, with the same four fields.
+- **Comment → Create** returns the new comment's `id` and `body`.
+- **Team → List** returns `id`, `name` and `key` for each team; **Project → List** returns `id` and `name`.
+
+Use `{{ $input.url }}` after **Create** to link to the new issue in a notification.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- **Auth type:** Bearer Token — store a Linear **personal API key** (Settings → Security & access → Personal API keys).
-- The key is **scoped to your whole workspace**, so pick the workspace deliberately. It's stored in your credential vault and resolved at run time (never from a node parameter); the node sends it directly in the `Authorization` header.
+Create a Linear personal API key in Linear under **Settings → Security & access → Personal API keys**, and save it as a Bearer Token credential. Paste the key as Linear shows it. The key works on the whole workspace it was created in, so create it in the workspace you want the workflow to use. See [Create a credential](/usage/using-the-app/credentials/create/).
 
-## Web and extension builds
+## Example workflow
 
-This node is **extension-only**. Linear's GraphQL API does not send permissive CORS headers, so the calls can only be made from the awflow browser extension.
-
-## Notes
-
-- Linear is **GraphQL-only**: every operation is a single `POST` with `{ query, variables }`. Errors are returned with **HTTP 200** and an `errors` array — the node surfaces the first error message.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger with **Menu Contexts** set to `Selection` adds an entry to the right-click menu when you highlight text. It passes on `selectionText` and `pageUrl`.
+2. Linear, **Issue → Create**, with **Team ID** set to your team's id, **Title** `Bug report from the web`, **Selection** `{{ $input.selectionText }}`, **Source URL** `{{ $input.pageUrl }}`, **Priority** `High`.
+3. [Browser Notification](/nodes/extension/browsernotification/) shows `Filed {{ $input.identifier }}`.
 
 ## Troubleshooting
 
-- **`Authentication required`** — the API key is missing or invalid; recreate it in Linear's settings.
-- **`Entity not found: Team`** — the Team ID is wrong; run **Team → List** to get valid IDs.
-- **Issue not found on Update/Get** — use the issue's identifier (e.g. `ENG-123`) or its UUID.
+- **"Missing credential".** No credential is selected. Pick or create one in **Credential**.
+- **"Linear API Error: Authentication required…".** The API key is wrong or was revoked. Create a new key in Linear and update the credential.
+- **"Linear API Error: Entity not found…".** The **Team ID**, **Issue ID** or **State ID** does not exist in this workspace. Run **Team → List**, or check the issue identifier.
+- **The run is blocked in the web app.** Linear runs through the browser extension. Install the extension and allow Linear for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/usage/troubleshooting/extension-only-integrations-in-the-web-app/).
 
 ## Related nodes
 
-- [Get Selected Text](/nodes/extension/getselectedtext/)
-- [GitHub](/nodes/builtin/integration/github/)
+- [GitHub](/nodes/builtin/integration/github/): issues and pull requests on GitHub.
+- [Get Selected Text](/nodes/extension/getselectedtext/): the highlighted text to quote in an issue.
+- [Todoist](/nodes/builtin/integration/todoist/): personal tasks instead of team issues.
+- [Http Request](/nodes/builtin/core/http-request/): call Linear's API for things this node does not cover.

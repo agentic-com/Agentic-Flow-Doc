@@ -5,7 +5,7 @@ sidebar:
   label: "Window Buffer Memory"
   order: 12
   badge:
-    text: Replaced
+    text: Deprecated
     variant: caution
 kind: node
 section: nodes
@@ -16,28 +16,21 @@ node:
   deprecated: true
 ---
 
-:::caution[Replaced by Chat Memory]
-Window Buffer Memory is no longer in the node palette. Use [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) with **Storage: This run only** instead.
+:::caution[Deprecated: replaced by Chat Memory]
+Window Buffer Memory is no longer in the node palette. Use [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) with **Storage: This run only** instead. Existing workflows keep running.
 :::
 
-## What happens to existing workflows
+Gave an agent a short memory of the last few messages.
 
-Workflows that already use Window Buffer Memory **keep working**:
+## What it does
 
-- The node runs through Chat Memory with **Storage: This run only** and **History sent to the model: Last N messages**, where N is twice the old window size *k* (a question and its answer are two messages). With the default *k* of 5, that is the last 10 messages.
-- The conversation is now really kept for the length of the run — the old node didn't remember anything. Nothing is saved after the run.
-- When you open the workflow, the node shows that it was **upgraded from Window Buffer Memory**. Saving the workflow turns it into a Chat Memory node.
+Workflows that already use Window Buffer Memory keep working. The node now runs as a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) with **Storage: This run only** and **History sent to the model: Last N messages**, where N is twice the old window size (a question and its answer are two messages). With the default size of 5, that is the last 10 messages.
 
-| Window Buffer Memory setting | Chat Memory setting |
-| --- | --- |
-| Window Size (k) | **Storage: This run only**, **Last N messages** with N = 2 × k |
+The conversation is now really kept for the length of the run (the old node didn't remember anything). Nothing is saved after the run. When you open the workflow, the node shows that it was upgraded; saving the workflow turns it into a Chat Memory node.
 
-Because nothing is saved, it still can't give a [Chat Trigger](/nodes/builtin/trigger/chat/) a chat history. Use **Conversation** or **Key** storage for that.
+## When to use it
 
-## Related
-
-- [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/)
-- [Memory & Context](/advanced-ai/concepts/memory-context/)
+Don't add it to new workflows. Use [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/).
 
 ## Inputs and settings
 
@@ -46,6 +39,8 @@ Because nothing is saved, it still can't give a [Chat Trigger](/nodes/builtin/tr
 | --- | --- | --- | --- | --- |
 | **Window Size (k)** | Number | 5 | No | Only the last k message exchanges are kept in memory. |
 {/* AUTO:settings:end */}
+
+**Window Size (k)** becomes Chat Memory's **Messages**, doubled.
 
 ## Outputs
 
@@ -62,3 +57,18 @@ This node has no output port. It plugs into a slot on another node instead of pa
 {/* AUTO:deps:start */}
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
+
+## Example workflow
+
+1. Open a workflow that uses Window Buffer Memory with **Window Size (k)** `5`.
+2. Save it. The node becomes a Chat Memory with **Storage: This run only**, **Last N messages** and **Messages** `10`.
+
+## Troubleshooting
+
+- **The agent forgets between runs.** That is expected: nothing is saved after the run. Switch the Chat Memory to **Conversation** or **Key** storage to remember across runs.
+- **The Chat Trigger shows no history.** A run-only memory can't give a [Chat Trigger](/nodes/builtin/trigger/chat/) a chat history. Use **Conversation** or **Key** storage.
+
+## Related nodes
+
+- [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/): the node that replaces it.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an agent that uses a memory.

@@ -11,18 +11,19 @@ node:
   family: data
 ---
 
-Read a local file the user picks through the browser's file picker.
+Let the person running the workflow pick a file from their computer and read it in.
 
 ## What it does
 
-Opens the operating system file picker at runtime and reads the chosen file into the workflow — as text, a data URL, or base64. It is the input counterpart to [Download as file](/nodes/builtin/datatransformation/downloadasfile/): the browser-legal answer to "read a file from disk".
+When the node runs, it opens your computer's file picker. You choose one file (or several, if allowed), and the node reads it as text, a data URL or base64.
 
-**Safe by construction:** the File System Access API requires a user gesture and a picker, so *the user chooses the file — the workflow can never name one*. That is exactly what makes this node safe without any special permission.
+You always choose the file yourself. A workflow can never name or open a file on its own, so the node needs no special permission. It is the reading counterpart of [Download as file](/nodes/builtin/datatransformation/downloadasfile/).
 
 ## When to use it
 
-- Feed a local CSV, JSON, text, or image file into a workflow.
-- Let the user hand a file to an automation without uploading it anywhere first.
+- Feed a CSV, JSON or text file from your disk into a workflow.
+- Hand an image or PDF to a workflow without uploading it anywhere first.
+- Not for unattended runs: a scheduled or background workflow cannot open a picker. Use an [Http Request](/nodes/builtin/core/http-request/) to fetch files from a URL instead.
 
 ## Inputs and settings
 
@@ -34,14 +35,25 @@ Opens the operating system file picker at runtime and reads the chosen file into
 | **Accepted file types** | Text |  | No | Comma-separated list of extensions and/or MIME types to filter the picker, e.g. ".csv,.txt". |
 {/* AUTO:settings:end */}
 
+- **Read as**: pick *Text* for CSV, JSON, XML and plain text. Pick *Data URL* for images and PDFs, so later nodes keep the file type. *Base64* gives the raw bytes as base64 with no type prefix.
+- **Accepted file types**: list extensions with a leading dot, for example `.csv,.json`. Extensions are the reliable choice here.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
 
-- For a single file: `{ name, size, type, content }`, where `content` is the file read in the chosen format.
-- For multiple files: an array of those objects.
+With one file, the output is a single object:
+
+| Field | Description |
+| --- | --- |
+| `name` | The file name, for example `report.csv`. |
+| `size` | The size in bytes. |
+| `type` | The file's type, for example `text/csv`. Can be empty for unknown types. |
+| `content` | The file content, read as chosen in **Read as**. |
+
+With **Allow multiple files** on, the output is a list of these objects, so the next node runs once per file. Use `{{ $input.content }}` to pass the content on.
 
 ## Dependencies and credentials
 
@@ -49,20 +61,22 @@ One output port.
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential is required.
-- No permission is needed — the picker is user-gesture gated by design.
-
 ## Example workflow
 
-Local File Read (**Read as** Text, **Accepted file types** `.csv`) → [Edit Fields](/nodes/builtin/datatransformation/editfields/) or an AI node to process the contents.
+1. Start with a [When Started](/nodes/builtin/trigger/whenstarted/) trigger and run the workflow yourself.
+2. **Local File Read** with **Read as** *Text* and **Accepted file types** `.csv`.
+3. [Extract From File](/nodes/builtin/datatransformation/extractfromfile/) on *Auto-detect* turns the CSV into one item per row.
+4. [Limit](/nodes/builtin/datatransformation/limit/) with **Max Items** `20` keeps the first 20 rows for the next steps.
 
 ## Troubleshooting
 
-- This node needs an **interactive run**: the file picker requires a user gesture, so run the workflow yourself rather than from a background trigger.
-- The File System Access API is available in Chromium-based browsers; on other browsers the node reports that it cannot open a picker.
-- If the picker is dismissed without choosing a file, the node reports that the selection was cancelled.
+- **"Local File Read needs an interactive run in a Chromium-based browser (File System Access API unavailable)."** The file picker only exists in Chromium-based browsers such as Chrome or Edge. Run the workflow there.
+- **"File selection cancelled."** The picker was closed without choosing a file. Run again and pick one.
+- **The picker does not open on a scheduled run.** The browser only opens a picker after you click or press a key. Start the workflow yourself.
+- **The picker fails when Accepted file types contains a type like `text/csv`.** Use extensions with a leading dot instead, for example `.csv`.
 
 ## Related nodes
 
-- [Download as file](/nodes/builtin/datatransformation/downloadasfile/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Extract From File](/nodes/builtin/datatransformation/extractfromfile/): turn the picked file into items.
+- [Download as file](/nodes/builtin/datatransformation/downloadasfile/): save data to a file.
+- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/): read text from a picked PDF.

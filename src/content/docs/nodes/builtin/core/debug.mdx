@@ -11,19 +11,26 @@ node:
   family: core
 ---
 
-Generate sample data, delay, or throw on demand.
+Generate sample data, add a short pause, or force an error while you build and test a workflow.
 
 ## What it does
 
-A helper for building and troubleshooting workflows. It does one of three things, chosen by its **Mode** setting: emits predictable sample data, waits for a short moment, or forces an error. It never touches the network, credentials, or storage — it is purely a way to exercise the rest of a flow.
+Debug does one of three things, chosen with **Mode**:
+
+- **Generate** emits predictable sample data in the **Shape** you pick. It ignores the incoming data.
+- **Delay** waits **Delay (ms)** milliseconds, then passes the incoming data through unchanged.
+- **Throw** fails on purpose with **Error message**.
+
+It never touches the network, your credentials or your stored data.
 
 ## When to use it
 
-Use this node while you are building or debugging a workflow:
+- Feed a node sample data so you can test it before connecting a real source.
+- Check how a step copes with a long text or a deeply nested object.
+- Slow a step down to watch the run, or space out two actions.
+- Fail on purpose to test [Try / Catch](/nodes/builtin/flow/try/), retries or **Continue On Fail**.
 
-- Feed a downstream step **sample data** so you can test it without wiring up a real source.
-- Add a short **delay** to slow a step down and watch it run.
-- **Throw** an error on purpose to see how Continue On Fail, retries, and downstream error handling behave.
+For waits longer than a few seconds, or that must survive closing the tab, use [Wait](/nodes/builtin/flow/wait/).
 
 ## Inputs and settings
 
@@ -39,21 +46,21 @@ Use this node while you are building or debugging a workflow:
 | **Error message** | Long text | `Debug node threw on demand` | No | Used by Throw: the error message to raise. |
 {/* AUTO:settings:end */}
 
+Each **Generate** setting applies to one shape only: **Count** to *Indexed items* (default 5), **Length** to *Long string* (default 1000), **Depth** to *Nested object* (default 3). The others are ignored. **Error message** defaults to "Debug node threw on demand".
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
 
-Depends on the mode:
-
-- **Generate** — depends on the chosen shape:
-  - *Indexed items* — an array of `Count` items, each `{ index, id }` where `index` runs from `0` and `id` is `item-<index>`.
-  - *Long string* — one item `{ value }` whose string is exactly `Length` characters, built deterministically.
-  - *Nested object* — one item nested `Depth` levels deep, `{ level: 1, child: { level: 2, child: { … } } }`, where the leaf's `level` equals `Depth`.
-  - *Random JSON* — one item with randomized primitive fields: `{ id, name, active, score, tags }` (a number, a string, a boolean, a number, and an array of strings).
-- **Delay** — passes the upstream input straight through after waiting, or an empty item when there is no upstream input.
-- **Throw** — produces no output; it raises the configured error.
+- **Generate**, by shape:
+  - *Indexed items*: **Count** items, each `{ index, id }`, with `index` from `0` and `id` like `item-0`.
+  - *Long string*: one item `{ value }` whose text is exactly **Length** characters.
+  - *Nested object*: one item nested **Depth** levels deep, `{ level: 1, child: { level: 2, ... } }`; the deepest level has `leaf: true`.
+  - *Random JSON*: one item `{ id, name, active, score, tags }` with random values (number, text, true/false, number, list of text).
+- **Delay**: the incoming data, unchanged (an empty item if nothing came in).
+- **Throw**: no output; the node fails.
 
 ## Dependencies and credentials
 
@@ -61,22 +68,27 @@ Depends on the mode:
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential or node dependency is required. The node runs entirely in the browser and works without an account. Nothing is sent anywhere.
-
 ## Example workflow
 
-To exercise a step that iterates: put a Debug node in **Generate** mode with the **Indexed items** shape and a `Count` of, say, `10`, then wire it into the node you want to test. It emits ten predictable items so you can confirm the downstream node handles a list before you connect a real source.
+Test an error branch before connecting the real step:
 
-To test error handling: put a Debug node in **Throw** mode, enable **Continue On Fail** on it, and confirm the run carries on past it — the node logs the error and outputs a single empty item instead of stopping the workflow.
+1. [When Started](/nodes/builtin/trigger/whenstarted/) trigger.
+2. [Try / Catch](/nodes/builtin/flow/try/).
+3. From **Try**: Debug, **Mode** Throw, **Error message** `Simulated API failure`.
+4. From **Catch**: [Browser Notification](/nodes/extension/browsernotification/) with **Message** `{{ $input.nodeLabel }} failed: {{ $input.message }}`.
+
+Once the catch branch works, replace Debug with the real step.
 
 ## Troubleshooting
 
-- **Delay is not durable.** The delay uses a plain in-run timer and does not survive a closed tab. For waits that must survive a closed tab or run for minutes or more, use the [Wait](/nodes/builtin/flow/wait/) node instead.
-- **Generate settings are per shape.** `Count`, `Length`, and `Depth` each apply only to their matching shape; the others are ignored.
-- **Throw always fails the node.** Unless **Continue On Fail** is enabled (or retries are configured), a Debug node in Throw mode stops the run — that is what it is for.
+- **The run stops with "Debug node threw on demand".** That is Throw mode doing its job. Switch **Mode** back, or handle the error with [Try / Catch](/nodes/builtin/flow/try/) or **Continue On Fail** in the node's settings.
+- **Count, Length or Depth seems ignored.** Each only applies to its own **Shape**.
+- **The delay is lost when you close the tab.** Delay is a plain in-run timer. Use [Wait](/nodes/builtin/flow/wait/) for waits that must survive a closed tab.
+- **The data from the previous node is gone.** Generate replaces it with sample data. Only Delay passes data through.
 
 ## Related nodes
 
-- [Wait](/nodes/builtin/flow/wait/) — pause the workflow durably, surviving a closed tab
-- [Code](/nodes/builtin/core/code/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Wait](/nodes/builtin/flow/wait/): pause longer, even across a closed tab.
+- [Try / Catch](/nodes/builtin/flow/try/): handle the error Throw raises.
+- [Stop and Error](/nodes/builtin/flow/stopanderror/): fail a run on purpose in a finished workflow.
+- [Code](/nodes/builtin/core/code/): build custom test data.

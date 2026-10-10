@@ -1,6 +1,6 @@
 ---
 title: "OpenAI Embeddings"
-description: "Leverage OpenAI to use embeddings locally directly on your device"
+description: "Turn text into OpenAI embeddings for knowledge bases."
 sidebar:
   label: "OpenAI Embeddings"
 kind: node
@@ -11,15 +11,22 @@ node:
   family: ai
 ---
 
-Leverage OpenAI to use embeddings locally directly on your device
+Turn text into vectors with OpenAI's embedding models, so a knowledge base can find passages by meaning.
 
 ## What it does
 
-Converts text into vector embeddings using OpenAI's embedding models.
+OpenAI Embeddings plugs into the **Embeddings** slot of a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node. It does not run on its own and has no output. When the knowledge base is filled or searched, the text is sent to OpenAI with your key and comes back as vectors (lists of numbers that capture meaning).
+
+A knowledge base remembers the embedding model it was built with and always uses it. So this node decides the model when a **new, empty** knowledge base is first filled. After that, connect the same node to search it, or leave the slot empty.
+
+Your passages and questions are sent to OpenAI. For text that must stay on your device, use [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/).
 
 ## When to use it
 
-Connect this to indexer or RAG nodes when you need to create embeddings for semantic search and retrieval.
+- A knowledge base of large or many documents where you want good search quality.
+- You already use OpenAI and want one account for everything.
+
+Most knowledge bases work well with the free, on-device [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/), which is the default.
 
 ## Inputs and settings
 
@@ -29,6 +36,8 @@ Connect this to indexer or RAG nodes when you need to create embeddings for sema
 | **Model** | Text |  | Yes | The model to use. |
 | **Authentication** | Credential |  | Yes | Use a Bearer Token. |
 {/* AUTO:settings:end */}
+
+Type the **Model** id as OpenAI names it, for example `text-embedding-3-small` (cheaper) or `text-embedding-3-large`. Don't change it on a knowledge base that already has content: vectors from different models can't be compared.
 
 ## Outputs
 
@@ -40,24 +49,34 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Embeddings | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
 {/* AUTO:outputs:end */}
 
+The vectors go to the knowledge base, not to the next node.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 - **Authentication** (credential): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
+In **Authentication**, save your OpenAI API key. Create it on the API keys page of the OpenAI platform ([platform.openai.com/api-keys](https://platform.openai.com/api-keys)). See [Create a credential](/usage/using-the-app/credentials/create/).
+
 ## Example workflow
 
-Connect OpenAI Embeddings to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on the page.
+2. [Get All Text](/nodes/extension/getalltext/) with **Output field name** `pageText`.
+3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.pageText }}`, a [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) in its **Text Splitter** slot, and a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) pointing to a new knowledge base in its **Knowledge** slot.
+4. OpenAI Embeddings in the Local Knowledge's **Embeddings** slot, **Model** `text-embedding-3-small`.
+
+Later, a [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) answers questions from that knowledge base.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Model parameter is required and cannot be empty".** Fill in **Model**.
+- **"… was built with … embeddings. Connect that embeddings node to use it."** The knowledge base was built with this cloud model. Connect OpenAI Embeddings with the same **Model** to its Local Knowledge.
+- **A "Model mismatch" warning in the run log.** The knowledge base was built with another model, so this node was ignored. Disconnect it, or re-embed the knowledge base with this model from its settings.
+- **A 401 or 429 error.** The key is wrong, or your OpenAI account has no credit or hit its rate limit.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): the knowledge base it plugs into.
+- [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/): free and on your device.
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/): fill a knowledge base from a workflow.

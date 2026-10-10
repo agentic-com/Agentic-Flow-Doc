@@ -11,15 +11,23 @@ node:
   family: trigger
 ---
 
-Run the flow on clicking the start button. Good for getting started quickly.
+Start a workflow by hand, whenever you choose to run it.
 
 ## What it does
 
-Triggers workflow execution manually by clicking the start button in the workflow editor.
+When Started waits for nothing. The workflow runs when you click **Test Workflow** in the designer, run it from the workflow list, or press the trigger's own run button. The trigger has no settings and passes `{ "started": true }` to the next node.
+
+A workflow whose only trigger is When Started also appears in the browser's right-click menu (under **Personal Workflows**), so you can run it on the page you are looking at.
+
+If a workflow has several triggers, clicking **Test Workflow** asks you which one to start from. Only the branch after the chosen trigger runs.
 
 ## When to use it
 
-Use this trigger for testing workflows or running them on-demand without automatic triggers.
+- Try out a new workflow while you build it.
+- Run a workflow on demand: clean up tabs, export data, send a one-off message.
+- Keep a manual entry point next to an automatic trigger, so you can test the same steps without waiting for the event.
+
+To run on a timer, use [Schedule](/nodes/builtin/trigger/schedule/). To run from a keyboard shortcut, use [Hotkey](/nodes/builtin/trigger/hotkey/).
 
 ## Inputs and settings
 
@@ -35,6 +43,8 @@ One output port.
 Each output item has the fields `started` (always true).
 {/* AUTO:outputs:end */}
 
+The output carries no data of its own. The first real step after it usually fetches or reads something, for example the current page or an API.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
@@ -43,14 +53,21 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Create a workflow with When Started as the first node, then connect it to the action nodes that should run after the trigger fires.
+Save the text of the current page:
+
+1. Add **When Started**.
+2. Add [Get All Text](/nodes/extension/getalltext/) with **Output field name** `text` to read the page you have open.
+3. Add [Data Store](/nodes/builtin/core/datastore/) with **Operation** set to **Set**, **Key** `last-page-text` and **Value** `{{ $input.text }}`.
+4. Open the page you want, then click **Test Workflow**.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The workflow does not run on its own.** That is expected: When Started only runs when you start it. Add an automatic trigger such as [Schedule](/nodes/builtin/trigger/schedule/) or [Page Load](/nodes/builtin/trigger/pageload/) and activate the workflow.
+- **A "Choose a trigger to run" dialog opens.** The workflow has more than one trigger. Pick When Started to run the branch that follows it.
+- **The workflow is missing from the right-click menu.** It also has an automatic trigger (such as Schedule or Page Load), or it is not activated. Right-click and choose **Get / Refresh Workflows** after changing it.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Schedule](/nodes/builtin/trigger/schedule/): run at set times instead of by hand.
+- [Hotkey](/nodes/builtin/trigger/hotkey/): run from a keyboard shortcut.
+- [Context Menu](/nodes/builtin/trigger/contextmenu/): run from the right-click menu, with details of what you clicked.

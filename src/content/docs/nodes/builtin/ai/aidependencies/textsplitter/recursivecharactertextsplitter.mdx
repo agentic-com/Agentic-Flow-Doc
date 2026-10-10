@@ -11,15 +11,21 @@ node:
   family: ai
 ---
 
-Breaks down text into smaller parts.
+Tell the Indexer how to cut long text into chunks, trying a list of separators in order.
 
 ## What it does
 
-Splits text intelligently by trying multiple separators (paragraphs, sentences, words) to maintain context.
+Recursive Character Text Splitter is not a step on its own: it has no output port and never runs by itself. You plug it into the **Text Splitter** slot of the [Indexer](/nodes/builtin/ai/aiagents/indexernode/), which uses it to cut its **Input** into chunks before saving them to a knowledge base.
+
+It splits the text at the first separator in **Separators** that appears in it. Any piece still longer than **Chunk Size** characters is split again with the next separator, and so on. Small pieces are then joined back up to about **Chunk Size** characters, with **Chunk Overlap** characters repeated between neighbouring chunks so a sentence cut at the border is not lost.
+
+When **Separators** is empty, the only separator is a line break. A piece of text with no line break in it, longer than **Chunk Size**, then stays one oversized chunk.
 
 ## When to use it
 
-Connect this to indexer nodes for better text chunking that preserves semantic meaning and document structure.
+- Index articles, notes or page text where line breaks mark paragraphs. This is the usual choice for the Indexer.
+- Index Markdown, HTML or source code: pick its **Language** so chunks break at headings, tags or functions.
+- For one fixed separator and no retries, use [Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/charactertextsplitter/).
 
 ## Inputs and settings
 
@@ -32,6 +38,10 @@ Connect this to indexer nodes for better text chunking that preserves semantic m
 | **Language** | Choice |  | No | The language of the text. 16 options. |
 {/* AUTO:settings:end */}
 
+- **Chunk Size** and **Chunk Overlap** count characters. Keep the overlap smaller than the chunk size. A value of `0` in either field is replaced by its default (1000 and 200).
+- **Separators** are tried in the order you add them. Add a full stop `.` after the line break to split long paragraphs into sentences.
+- **Language** has separators built in for `markdown`, `html`, `latex`, `rst` and programming languages such as `python` or `js`. When a language is set, **Separators** is ignored.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -42,6 +52,8 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Text Splitter | [Indexer](/nodes/builtin/ai/aiagents/indexernode/) |
 {/* AUTO:outputs:end */}
 
+The chunks are counted in the Indexer's output (`chunks`) and stored in the knowledge base connected to it.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
@@ -50,16 +62,21 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect Recursive Character Text Splitter to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. [Schedule](/nodes/builtin/trigger/schedule/) runs every Monday.
+2. [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/) with **URL** `https://example.com/docs/getting-started` and **Output field name** `text`.
+3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.text }}` and **Source link** `https://example.com/docs/getting-started`. Connect [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to its **Knowledge** slot.
+4. Recursive Character Text Splitter connected to the Indexer's **Text Splitter** slot, with **Chunk Size** `800` and **Chunk Overlap** `100`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Cannot have chunkOverlap >= chunkSize".** **Chunk Overlap** is as large as **Chunk Size** or larger. Lower the overlap.
+- **The Indexer reports `chunks: 1` for a long text.** The text has no line breaks. Add `.` to **Separators**, or set a **Language**.
+- **You cannot turn overlap off.** `0` falls back to 200. Use `1` for almost no overlap.
+- **"Text splitter not found" on the Indexer.** This node is not set up correctly. Reopen it and check its values.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/): the node this splitter plugs into.
+- [Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/charactertextsplitter/): split on a single separator.
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): the knowledge base the chunks go to.
+- [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/): get page text to index.

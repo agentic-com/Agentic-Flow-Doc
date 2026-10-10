@@ -11,15 +11,20 @@ node:
   family: ai
 ---
 
-Leverage Voyage AI to create embeddings.
+Turn text into vectors with Voyage AI's embedding models, so a knowledge base can find passages by meaning.
 
 ## What it does
 
-Converts text into vector embeddings using a Voyage AI embeddings model.
+Voyage Embeddings plugs into the **Embeddings** slot of a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node. It does not run on its own and has no output. When the knowledge base is filled or searched, the text is sent to Voyage AI with your key and comes back as vectors (lists of numbers that capture meaning).
+
+A knowledge base remembers the embedding model it was built with and always uses it. So this node decides the model when a **new, empty** knowledge base is first filled. After that, connect the same node to search it.
+
+Your passages and questions are sent to Voyage AI. For text that must stay on your device, use [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/).
 
 ## When to use it
 
-Connect this to indexer or RAG nodes when you need to create embeddings for semantic search and retrieval using Voyage AI.
+- You want Voyage's retrieval-focused models, for example for long technical or legal documents.
+- You already have a Voyage AI account.
 
 ## Inputs and settings
 
@@ -29,6 +34,8 @@ Connect this to indexer or RAG nodes when you need to create embeddings for sema
 | **Model** | Text |  | Yes | The embeddings model to use. |
 | **Authentication** | Credential |  | Yes | Use your Voyage API key. |
 {/* AUTO:settings:end */}
+
+Type the **Model** id as Voyage AI names it, for example `voyage-large-2`. Don't change it on a knowledge base that already has content.
 
 ## Outputs
 
@@ -40,26 +47,32 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Embeddings | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
 {/* AUTO:outputs:end */}
 
+The vectors go to the knowledge base, not to the next node.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 - **Authentication** (credential): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- Requires an Authentication credential (Voyage API key).
+In **Authentication**, save your Voyage AI API key. Create it on the API keys page of the Voyage AI dashboard. See [Create a credential](/usage/using-the-app/credentials/create/).
 
 ## Example workflow
 
-Connect Voyage Embeddings to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on the page.
+2. [Get All Text](/nodes/extension/getalltext/) with **Output field name** `pageText`.
+3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.pageText }}`, a [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) in its **Text Splitter** slot, and a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) pointing to a new knowledge base in its **Knowledge** slot.
+4. Voyage Embeddings in the Local Knowledge's **Embeddings** slot, **Model** `voyage-large-2`.
 
 ## Troubleshooting
 
-- Check that the Model field is set — the node throws an error if it is empty.
-- Verify the Voyage API key credential is valid.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Model parameter is required and cannot be empty".** Fill in **Model**.
+- **"… was built with … embeddings. Connect that embeddings node to use it."** The knowledge base was built with this Voyage model. Connect Voyage Embeddings with the same **Model** to its Local Knowledge.
+- **A "Model mismatch" warning in the run log.** The knowledge base was built with another model, so this node was ignored. Disconnect it, or re-embed the knowledge base from its settings.
+- **A 401 error.** The key is wrong or revoked. Create a new key and update the credential.
 
 ## Related nodes
 
-- [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
-- [Embeddings & Vectors](/advanced-ai/concepts/embeddings-vectors/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): the knowledge base it plugs into.
+- [Cohere Embeddings](/nodes/builtin/ai/aidependencies/embeddings/cohere/), [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/): other cloud embedding models.
+- [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/): free and on your device.

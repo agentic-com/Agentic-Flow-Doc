@@ -11,23 +11,28 @@ node:
   family: integration
 ---
 
-Save the page you're on to [Raindrop.io](https://raindrop.io) — with its title, excerpt, tags, and cover. Bookmarking with page metadata is what a browser extension is for; this is the sink for the page-metadata nodes.
+Save the page you are on to [Raindrop.io](https://raindrop.io), with a title, a short description, tags and a cover, and skip pages you already saved.
 
 ## What it does
 
-Creates, updates, and searches bookmarks, and lists collections and tags. Where it becomes more than a bookmark button: pair it with **Get Page Metadata** / **Get Page Assets** on the input side, auto-tag with the **Text Classifier**, or summarise the page into the excerpt with an **LLM node** before saving — a workflow Raindrop's own extension can't do.
+The Raindrop node works on three kinds of things (**Resource**):
 
-## Resources and operations
+- **Bookmark**: save a new bookmark (**Create**), change one (**Update**), or find bookmarks (**Search**).
+- **Collection**: list your top-level collections, to find a **Collection ID**.
+- **Tag**: list the tags you use, in the whole account or in one collection.
 
-| Resource | Operations |
-| --- | --- |
-| Bookmark | Create, Update, Search |
-| Collection | List |
-| Tag | List |
+When **Title** or **Cover image URL** is empty, Raindrop fills them in from the page itself.
 
-### Duplicate handling
+With **Skip if already saved** on, **Bookmark → Create** first checks whether the **Link** is already bookmarked anywhere in your account. If it is, nothing is saved and the output says so, with the ids of the existing bookmarks. Without it, every run saves a new bookmark, even for the same address.
 
-Saving the same URL twice is the common accident. On **Bookmark → Create**, enable **Skip if already saved** and the node checks whether the URL is already bookmarked (via Raindrop's `url/exists`) before saving. If it exists, the create is skipped and the result reports `created: false`, `duplicate: true`, and the existing bookmark IDs — so your workflow can branch instead of saving a duplicate.
+**Search** returns 25 bookmarks unless you set **Limit** (50 at most), from all collections unless you set **Collection ID**.
+
+## When to use it
+
+- Save the current page in one click, with tags chosen for you by an AI node.
+- Store an AI-written summary of an article as the bookmark's excerpt.
+- Bookmark every new item of an RSS feed into a "To read" collection.
+- Find bookmarks matching a word to reuse their links.
 
 ## Inputs and settings
 
@@ -85,11 +90,24 @@ No further settings.
 | **Collection ID** | Number |  | No | List tags in this collection only (optional). |
 {/* AUTO:settings:end */}
 
+- **Link** is usually an expression, such as `{{ $input.url }}` after [Get Page Metadata](/nodes/extension/getpagemetadata/).
+- **Tags** takes one tag per entry, or a list from an earlier node, for example the label from [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/).
+- **Collection ID** is a number. Run **Collection → List** once and copy the `_id` of the collection. When empty, new bookmarks go to Unsorted.
+- **Query** accepts Raindrop's search syntax, for example `#recipes` for a tag or `type:article`.
+- **Bookmark ID** comes from the `item._id` of a **Create** result or from a **Search** result.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+- **Bookmark → Create** returns the saved bookmark under `item` (with its `_id`, `title`, `link` and `tags`) and `created: true`. When **Skip if already saved** found the page, it returns `created: false`, `duplicate: true` and `ids`, the existing bookmark ids.
+- **Bookmark → Update** returns the updated bookmark under `item`.
+- **Bookmark → Search** returns the matches under `items`, plus `count`, the total number of matches.
+- **Collection → List** and **Tag → List** return their entries under `items`. For tags, each entry's `_id` is the tag name and `count` its number of bookmarks.
+
+Use an [IF](/nodes/builtin/flow/if/) node on `{{ $input.duplicate }}` to treat pages you already had differently.
 
 ## Dependencies and credentials
 
@@ -97,21 +115,32 @@ One output port.
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- **Auth:** a Raindrop **test token** (Settings → Integrations → create an app → **Test token**) or an OAuth token, sent as `Authorization: Bearer <token>`. The test token ships immediately and is the quickest way to start.
-- The token grants access to your Raindrop account. It's stored in your credential vault and never passes through awflow's backend.
+Use a Raindrop test token, saved as a Bearer Token credential:
 
-## Web and extension builds
+1. On raindrop.io, open **Settings → Integrations** and, under **For Developers**, create a new app (any name).
+2. Open the app and click **Create test token**, then copy it.
+3. Paste it as the token of a new credential. See [Create a credential](/usage/using-the-app/credentials/create/).
 
-This node is **extension-only**. The Raindrop API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+The token gives full access to your Raindrop account, so keep it private.
+
+## Example workflow
+
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger adds "Save to Raindrop" to the right-click menu.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the page's `url` and `title`.
+3. Raindrop, **Bookmark → Create**, **Link** `{{ $input.url }}`, **Tags** `read-later`, **Collection ID** `12345678`, **Skip if already saved** on.
+4. [Browser Notification](/nodes/extension/browsernotification/) shows `Saved` or `Already saved`, chosen with an [IF](/nodes/builtin/flow/if/) on `{{ $input.duplicate }}`.
 
 ## Troubleshooting
 
-- **A duplicate was still created** — enable **Skip if already saved**; without it, every Create saves a new bookmark even for a URL you already have.
-- **Title/cover are empty** — leave those fields blank so Raindrop parses them from the page, or set them explicitly (e.g. from Get Page Metadata).
-- **`401 Unauthorized`** — the token is missing or wrong; regenerate the test token in your Raindrop app settings.
+- **"Missing credential".** No credential is selected. Pick or create one in **Credential**.
+- **"Raindrop API Error: 401 Unauthorized".** The token is wrong or was deleted. Create a new test token in your Raindrop app settings and update the credential.
+- **The same page is saved twice.** **Skip if already saved** is off. Turn it on.
+- **The bookmark landed in Unsorted.** **Collection ID** is empty or not a number. Copy the `_id` from **Collection → List**.
+- **The run is blocked in the web app.** Raindrop runs through the browser extension. Install the extension and allow Raindrop for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/usage/troubleshooting/extension-only-integrations-in-the-web-app/).
 
 ## Related nodes
 
-- [Get Page Metadata](/nodes/extension/getpagemetadata/)
-- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/)
-- [Custom API](/nodes/builtin/integration/custom-api/)
+- [Get Page Metadata](/nodes/extension/getpagemetadata/): the page's address, title and description to save.
+- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/): pick tags automatically.
+- [Readwise / Reader](/nodes/builtin/integration/readwise/): save to Readwise Reader instead.
+- [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/): write a short excerpt for the bookmark.

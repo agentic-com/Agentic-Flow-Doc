@@ -11,15 +11,27 @@ node:
   family: data
 ---
 
-Match, extract and replace text with a regular expression.
+Pull a price, an id or any other fragment out of text, rewrite text, or check whether it contains a pattern.
 
 ## What it does
 
-Runs a regular expression against a piece of text and does one of four things with it: takes the first match, takes every match, replaces the matches, or simply tests whether the text matches at all. Named capture groups are the reason this is usually a one-node job: a group like `(?<amount>[\d.,]+)` becomes a field called `amount` on the outgoing item, so you rarely need to drop to a Code node to reshape the result.
+Regex runs a regular expression on the text of each incoming item and does one of four things, set by **Operation**:
+
+- **Match**: finds the first match.
+- **Match all**: finds every match and sends one item per match.
+- **Replace**: puts **Replacement** in place of the match.
+- **Test**: answers `true` or `false`.
+
+Named groups do most of the work. A group such as `(?<amount>[\d.,]+)` becomes a field called `amount` on the outgoing item, so one Regex node can split a sentence into clean fields.
+
+Matching runs with a 2-second time limit. A pattern that would take too long is stopped with an error instead of freezing the browser. The text can be up to 2,000,000 characters and the pattern up to 2,000.
 
 ## When to use it
 
-Use this node to pull a price, an ID, a date or any other fragment out of text — most often text you have just scraped from a page. Reach for it when you want to reshape a string, split one field into several, or branch a workflow on whether some text contains a pattern.
+- Extract a price, order number or date from text you scraped from a page.
+- Split one text field into several fields with named groups.
+- Clean text, for example remove every non-digit from a phone number.
+- Branch on whether text contains something: run **Test**, then an [IF](/nodes/builtin/flow/if/) on the result. For a simple "contains" check, IF alone is enough.
 
 ## Inputs and settings
 
@@ -31,11 +43,16 @@ Use this node to pull a price, an ID, a date or any other fragment out of text �
 | **Flags** | Multiple choice |  | No | How the pattern matches. Options: Ignore case (i), All matches (g), Multiline anchors (m), Dot matches newlines (s), Unicode (u). |
 | **Text** | Value |  | No | The text to match against. |
 | **Source Field** | Text |  | No | Field holding the text, when the field above is left empty. |
-| **Replacement** | Text |  | No | Text put in place of each match. Use $1 or $ for groups. |
+| **Replacement** | Text |  | No | Text put in place of each match. Use $1 or $&lt;name&gt; for groups. |
 | **Maximum Matches** | Number | 1000 | No | Most matches collected before stopping. |
 | **Include Input Fields** | Toggle | On | No | Keep the incoming item’s fields alongside the result. |
 | **Put Result In Field** | Text | `match` | No | Field holding the match, the replaced text, or the test result. |
 {/* AUTO:settings:end */}
+
+- **Where the text comes from.** **Text** wins if it is filled, for example with `{{ $input.description }}`. Otherwise the node reads the field named in **Source Field** (dots reach nested fields, such as `product.title`).
+- **Replace changes only the first match** unless you turn on the **All matches (g)** flag. **Match all** always finds every match, with or without the flag.
+- **Replacement** can reuse groups: `$1` for the first group, `$<amount>` for a named group.
+- **Maximum Matches** can be raised to 10,000 at most.
 
 ## Outputs
 
@@ -43,14 +60,12 @@ Use this node to pull a price, an ID, a date or any other fragment out of text �
 One output port.
 {/* AUTO:outputs:end */}
 
-The shape depends on the operation:
+The result goes in **Put Result In Field** (`match` by default). With **Include Input Fields** on, the incoming fields stay on the item too.
 
-- **Test** — the item with your result field set to `true` or `false`.
-- **Replace** — the item with your result field set to the replaced text.
-- **Match** — the item with the result field set to the first match (or `null`), plus `matched`, a `groups` array of positional groups, and one field per named group. For example, `(?<currency>[£$€])(?<amount>[\d.,]+)` run against `"Now $19.99"` produces `{ currency: "$", amount: "19.99", match: "$19.99", matched: true }`.
-- **Match all** — one item per match, each carrying `match`, `matched`, `index`, the `groups` array and the same named-group fields. If nothing matched, a single item comes through with the result field `null` and `matched: false`.
-
-When **Include Input Fields** is on, the incoming item's fields ride along with each result.
+- **Test**: the result field is `true` or `false`.
+- **Replace**: the result field holds the new text.
+- **Match**: the result field holds the first match, or `null`. The item also gets `matched` (`true` or `false`), `groups` (a list of the numbered groups) and one field per named group. `(?<currency>[£$€])(?<amount>[\d.,]+)` on `"Now $19.99"` gives `match: "$19.99"`, `currency: "$"`, `amount: "19.99"`.
+- **Match all**: one item per match, each with the same fields plus `index`, the match's position in the text. If the match count hit **Maximum Matches**, each item also has `truncated: true`. If nothing matched, one item comes out with `matched: false`.
 
 ## Dependencies and credentials
 
@@ -58,22 +73,24 @@ When **Include Input Fields** is on, the incoming item's fields ride along with 
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential or node dependency is required. The node runs entirely in the browser.
-
 ## Example workflow
 
-Scrape a product page, then connect it into Regex. Set **Operation** to `Match`, **Source Field** to `description`, and **Pattern** to `(?<currency>[£$€])(?<amount>[\d.,]+)`. Each item now carries `currency` and `amount` fields you can feed straight into Edit Fields or a downstream request — no array indexing, no Code node.
+1. [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/) loads a product page, and [HTML Extract](/nodes/builtin/datatransformation/html-extract/) reads the price text into a `price` field.
+2. Regex with **Operation** *Match*, **Source Field** `price` and **Pattern** `(?<currency>[£$€])(?<amount>[\d.,]+)`.
+3. An [IF](/nodes/builtin/flow/if/) checks whether `{{ $input.amount }}` is below your budget, as a number.
+4. On the true branch, a [Browser Notification](/nodes/extension/browsernotification/) shows `Now {{ $input.currency }}{{ $input.amount }}`.
 
 ## Troubleshooting
 
-- **A malformed pattern** fails immediately with a clear message. Fix the pattern rather than the input.
-- **Nothing matched** is not an error. In `Match` the result field is `null` and `matched` is `false`; in `Match all` a single `matched: false` item comes through. Check your flags — case sensitivity and the `g` flag are the usual culprits.
-- **Patterns are safe to run on large pages.** Matching happens inside a worker that is terminated when a deadline passes, so a catastrophically backtracking pattern like `(a+)+$` reports a timeout instead of freezing the tab. Caps on input length (~2M characters), pattern length (~2k characters) and match count (~10k) sit on top of that. If you hit a timeout, simplify the pattern rather than the text.
-- To reference a named group in a replacement, write `$<name>`; for a positional group, write `$1`.
+- **"This is not a valid regular expression: …".** The pattern has a syntax error, often an unclosed bracket or group. Write it without surrounding slashes: `\d+`, not `/\d+/`.
+- **"This pattern took longer than 2000ms against this text and was stopped."** Nested repeats such as `(a+)+` can take forever on some text. Make the pattern more specific, or match against less text.
+- **"No text to match against. Fill in the Text field, or name the field holding it."** Both **Text** and **Source Field** are empty. Fill one of them.
+- **"Field "…" does not exist on the incoming item."** **Source Field** names a field the item does not have, or it is empty. Check the spelling.
+- **`matched` is `false` but the text looks right.** Matching is case sensitive by default: add the **Ignore case (i)** flag. For `^` and `$` to work on every line, add **Multiline anchors (m)**.
 
 ## Related nodes
 
-- [Rename Keys](/nodes/builtin/datatransformation/renamekeys/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Code](/nodes/builtin/core/code/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Text / Formatter](/nodes/builtin/datatransformation/text-formatter/): ready-made text changes without writing a pattern.
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/): read values from a page by CSS selector.
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): reshape the item after extraction.
+- [Code](/nodes/builtin/core/code/): for logic a pattern cannot express.

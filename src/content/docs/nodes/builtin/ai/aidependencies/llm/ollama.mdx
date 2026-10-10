@@ -1,6 +1,6 @@
 ---
 title: "Ollama"
-description: "Leverage OLLAM to use LLM locally directly on your device"
+description: "Connect a chat model running in Ollama on your computer."
 sidebar:
   label: "Ollama"
 kind: node
@@ -11,15 +11,23 @@ node:
   family: ai
 ---
 
-Leverage OLLAM to use LLM locally directly on your device
+Give an AI node a model that runs on your own computer through Ollama: free, private, and no API key.
 
 ## What it does
 
-Provides access to locally-run Ollama models for AI agent nodes without external API calls.
+Ollama is a model you plug into the **Model** slot of an AI node, such as the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/). It does not run on its own and has no output. When the AI node runs, it sends its messages to the Ollama app on your computer, at `http://localhost:11434`, and gets the reply back. Nothing leaves your machine.
+
+- The **Model** list shows the models installed in your Ollama, read live from it. Use the refresh button next to the list after you pull a new model.
+- **Temperature** is 0 when you leave it empty. Replies are capped at **Max Tokens** (4096 by default).
+- There is no time limit on a request, because a large model can take a while to load the first time.
 
 ## When to use it
 
-Connect this to AI agents when you want to use local, privacy-focused LLMs running on your machine via Ollama.
+- Private data that must not go to a cloud AI service.
+- Many runs without paying per token.
+- Open models such as Llama, Mistral, Qwen or Gemma, at the size your computer can handle.
+
+If you can't install Ollama, use [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/), which runs a model inside the browser.
 
 ## Inputs and settings
 
@@ -33,6 +41,15 @@ Connect this to AI agents when you want to use local, privacy-focused LLMs runni
 | Options › **Max Tokens** | Number | 4096 | No | The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window. |
 {/* AUTO:settings:end */}
 
+Before the list can fill:
+
+1. Install Ollama from [ollama.com](https://ollama.com) and pull a model, for example `ollama pull llama3.2`.
+2. Let AWFlow talk to it. Start Ollama with the `OLLAMA_ORIGINS` variable set to the extension:
+   - Chrome: `OLLAMA_ORIGINS=chrome-extension://linlkeaipfpnhddjkpcbmldionajfifa ollama serve`
+   - Firefox: `OLLAMA_ORIGINS=moz-extension://* ollama serve`
+
+When you publish or share the workflow, **Model** is cleared, so whoever installs it picks a model from their own Ollama.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -43,6 +60,8 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Model | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
 {/* AUTO:outputs:end */}
 
+The AI node you connect it to produces the output. Ollama only decides which model answers.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
@@ -51,19 +70,20 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect Ollama to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on selected text.
+2. [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) with **Text** `{{ $input.selectionText }}` and **Max words** `60`.
+3. Ollama in its **Model** slot, with **Model** `llama3.2:latest` picked from the list.
+4. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.summary }}`.
 
 ## Troubleshooting
 
-- **Ollama refuses the request (403 / CORS error):** Ollama only answers browser origins it allows. Start it with the extension's origin allowed:
-  - **Chrome:** `OLLAMA_ORIGINS=chrome-extension://linlkeaipfpnhddjkpcbmldionajfifa ollama serve`
-  - **Firefox:** `OLLAMA_ORIGINS=moz-extension://* ollama serve` (a Firefox add-on's origin is different on every install)
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Could not reach Ollama at localhost:11434. Make sure it is running and allows this extension (OLLAMA_ORIGINS)."** Start Ollama, and restart it with `OLLAMA_ORIGINS` set as shown above.
+- **The list says "No models available".** Ollama runs but has no models. Pull one (`ollama pull llama3.2`), then press the refresh button.
+- **"Model parameter is required and cannot be empty".** Pick a model in **Model**.
+- **The first run is very slow.** Ollama loads the model into memory on first use. Later runs are faster. A smaller model helps on a laptop.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Ollama Embeddings](/nodes/builtin/ai/aidependencies/embeddings/ollamaembeddings/): Ollama vectors for a knowledge base.
+- [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/): a local model inside the browser, nothing to install.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an agent that can use tools and memory.

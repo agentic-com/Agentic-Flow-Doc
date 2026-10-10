@@ -1,55 +1,73 @@
 ---
 title: "Lambda Workflow"
-description: "Runs a reusable workflow as a node. Its input schema is derived from the selected lambda workflow input node."
+description: "Runs one of your lambda workflows as a single step inside another workflow."
 sidebar:
   label: "Lambda Workflow"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/lambda/lambdaworkflow
+  family: lambda
 ---
 
-Runs a reusable workflow as a node. Its input schema is derived from the selected lambda workflow input node.
+Lambda Workflow runs one of your lambda workflows as a single step, so you can build a set of steps once and reuse it in many workflows.
 
 ## What it does
 
-Executes a reusable lambda workflow as a node within a larger workflow.
+Every lambda workflow you create appears as its own node, named after the workflow. When the run reaches it, the node starts that workflow with the values you filled in, waits for it to finish, and outputs what its [Lambda Output](/nodes/builtin/lambda/lambdaoutput/) returned.
+
+- **Settings come from the lambda workflow.** The node shows one field per input declared in the workflow's [Lambda Input](/nodes/builtin/lambda/lambdainput/), with the same defaults.
+- **Errors name the real cause.** If a step inside the sub-workflow fails, the error tells you the workflow, the failing step and its message.
+- **Changes apply everywhere.** Edit the lambda workflow once and every workflow that calls it uses the new version.
 
 ## When to use it
 
-Use this node to call modular sub-workflows, enabling workflow composition and reusability.
+- The same group of steps appears in several workflows, for example "clean up a contact" or "post to the team channel".
+- A workflow is getting large and you want to split it into named, testable parts.
+- You want a reusable "get an approval" or "wait for the job" step (see pausing below).
+
+To let an AI agent decide when to call a workflow, use [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Node form | This node uses the default workflow node configuration. |
+There is no fixed list of settings: the fields are the inputs of the lambda workflow you picked. Fill them with fixed values or expressions such as `{{ $input.email }}`. A field left empty uses the default set in the lambda workflow's Lambda Input.
+
+To add the node: open the node list, switch to the **Customs** tab and pick the workflow under **My Lambda Workflows**. Only workflows created as **Lambda** appear there.
 
 ## Outputs
 
-Passes data into or out of a lambda workflow, or exposes a lambda workflow as a reusable node.
+One output port. It carries the values from the lambda workflow's Lambda Output, with the names and types declared there, for example `{ "summary": "...", "wordCount": 120 }`. Read them in the next step with `{{ $input.summary }}`.
 
 ## Pausing inside a sub-workflow
 
-A lambda workflow can contain a step that pauses — a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/), an [In-Page Form](/nodes/builtin/flow/in-page-form/), a durable [Wait](/nodes/builtin/flow/wait/), or a [Poll Until](/nodes/builtin/flow/polluntil/). When it does, the whole run pauses: the sub-workflow waits (you'll see it in the Executions pane), and the outer workflow waits at this node. When the sub-workflow finishes, its output flows into this node and the outer workflow continues — so a reusable "get an approval" or "wait for the job" sub-workflow works exactly like a single pausing step, nested up to 10 sub-workflows deep.
+A lambda workflow can contain a step that pauses, such as [Wait For Approval](/nodes/builtin/flow/wait-for-approval/), [In-Page Form](/nodes/builtin/flow/in-page-form/), a long [Wait](/nodes/builtin/flow/wait/) or [Poll Until](/nodes/builtin/flow/polluntil/). The whole run then pauses: the sub-workflow waits (you see it in the Executions pane), and the outer workflow waits at this node. When the sub-workflow finishes, its output flows into this node and the outer workflow continues.
 
-This applies to the Lambda Workflow node only. A lambda workflow used as an agent's Workflow tool or started from the workflow list can't pause mid-run: the run fails instead, and nothing is left waiting in the Executions pane.
-
-## Sub-workflows that call themselves
-
-A workflow can't call itself through sub-workflows, directly or through a chain (A calls B, B calls A). Such a run stops at the call that would loop, with an error naming the workflow, instead of repeating without end. Sub-workflows also can't nest more than 10 deep.
+This only works through the Lambda Workflow node. A lambda workflow used through [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/) cannot pause mid-run: the run fails instead.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+None. This node needs no credential and has no slots for other nodes. Credentials used inside the lambda workflow belong to its own steps.
 
 ## Example workflow
 
-Connect data into Lambda Workflow, configure the settings above, and use the output in the next workflow step.
+Reuse a "Summarize a page" lambda workflow (input `url`, output `summary`):
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger, so you can run it from the right-click menu.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) to read the page address.
+3. **Summarize a page** (this node) with **url** set to `{{ $input.url }}`.
+4. [Slack](/nodes/builtin/integration/slack/) posting `{{ $input.summary }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"Workflow "Summarize a page" failed at node "Http Request": ...".** A step inside the lambda workflow failed. Open that workflow and fix the named step; the rest of the message is that step's own error.
+- **"Workflow ... produced no output. Check that it has an Output node and that the branch reaching it ran."** The lambda workflow finished without reaching its Lambda Output. Add one, or make sure every branch leads to it.
+- **"Workflow ... calls itself through a sub-workflow, which would never end."** A workflow calls itself, directly or through a chain (A calls B, B calls A). Remove the call that leads back.
+- **"Sub-workflows are nested more than 10 deep".** Lambda workflows call each other more than 10 levels deep. Flatten the calls.
+- **The node shows an alert or "Workflow not found".** The lambda workflow it points to was deleted or can't be loaded. Replace the node with an existing lambda workflow.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Lambda Input](/nodes/builtin/lambda/lambdainput/) and [Lambda Output](/nodes/builtin/lambda/lambdaoutput/): define what a lambda workflow accepts and returns.
+- [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/): let an AI agent call a lambda workflow.
+- [Try](/nodes/builtin/flow/try/): handle a failing sub-workflow without stopping the run.

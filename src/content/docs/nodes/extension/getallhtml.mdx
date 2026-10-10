@@ -11,15 +11,24 @@ node:
   family: inpage
 ---
 
-Get all the html from the page of the actual openend tab
+Read the HTML of the page open in the active tab, or of one element on it, into a field.
 
 ## What it does
 
-Extracts the complete HTML source code from the currently active browser tab.
+Get All HTML copies the HTML markup of the active tab, as it is right now in the browser, and stores it as text in the field you name in **Output field name**.
+
+- With **DOM Selector** empty, you get the whole document, from the `<html>` tag down.
+- With a selector, you get the first matching element, including its own tag.
+- Because it reads the live page, content added by scripts after the page loaded is included.
+- The output holds only the new field. Turn on **Include input fields** to keep the incoming item's fields next to it.
+
+It reads the main page only, not embedded frames.
 
 ## When to use it
 
-Use this node to capture page structure for parsing, archiving, or analyzing DOM elements.
+- Pass a block of markup to [HTML Extract](/nodes/builtin/datatransformation/html-extract/) to pull out several values with selectors.
+- Keep a copy of part of a page, for example with [Save as File](/nodes/builtin/datatransformation/saveasfile/).
+- If you only need the readable text, [Get All Text](/nodes/extension/getalltext/) is smaller and easier to feed to an AI node. To fetch HTML from a URL without opening it, use [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/).
 
 ## Inputs and settings
 
@@ -32,11 +41,16 @@ Use this node to capture page structure for parsing, archiving, or analyzing DOM
 | Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
 {/* AUTO:settings:end */}
 
+- **Output field name**: for example `html`. Later nodes read it with `{{ $input.html }}`.
+- **DOM Selector**: click the crosshair button in the field, then click the element on the page, or type a CSS selector such as `#product`. The **Ping** button flashes the element it matches.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+One item with your field holding the HTML as text, for example `{ "html": "<div id=\"product\">…</div>" }`.
 
 ## Dependencies and credentials
 
@@ -46,15 +60,21 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Run Get All HTML after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Open a product page and run the workflow from a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger.
+2. Add **Get All HTML** with **Output field name** = `html` and **DOM Selector** set to the product box.
+3. Add [HTML Extract](/nodes/builtin/datatransformation/html-extract/) with **HTML** = `{{ $input.html }}`, **Mode** = **Single value** and **Selector** = `.price`.
+4. Remember the price with [Data Store](/nodes/builtin/core/datastore/), **Operation** = **Set**.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"No content found".** **DOM Selector** matched nothing on the page. Use **Ping** to check it, or wait for the element with [Wait For Element](/nodes/extension/ui/wait-for-element/) first.
+- **The HTML is very large.** A whole page can be hundreds of kilobytes. Pick a smaller element in **DOM Selector**.
+- **Content inside an embedded frame is missing.** Frames are not read. Open the frame's address in its own tab with [Tab Control](/nodes/extension/tabcontrol/).
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/): pull values out of HTML.
+- [Get All Text](/nodes/extension/getalltext/): the same area as plain text.
+- [Get HTML of Selected Text](/nodes/extension/gethtmlofselectedtext/): only the highlighted part.
+- [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/): fetch a URL's HTML without opening it.

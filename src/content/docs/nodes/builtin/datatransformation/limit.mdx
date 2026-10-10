@@ -15,11 +15,16 @@ Cap the number of items that flow through the workflow.
 
 ## What it does
 
-Reduces the incoming collection of items to at most a fixed number, keeping either the first or the last items. Everything beyond the limit is dropped.
+Limit takes the whole list of incoming items at once and keeps at most **Max Items** of them: either the first ones or the last ones. Everything beyond the limit is dropped.
+
+If the list already has fewer items than the limit, it passes through unchanged. A single object counts as a list of one.
 
 ## When to use it
 
-Use this node to process only a sample of a large dataset, to keep the most recent (or earliest) records, or to protect downstream nodes and external services from running on too many items at once.
+- Try a workflow on a small sample of a large list before running it on everything.
+- Keep only the most recent (or earliest) records, for example the last 5 rows after a [Sort](/nodes/builtin/datatransformation/sort/).
+- Protect an AI model or an outside service from being called for hundreds of items at once.
+- To drop items by a condition rather than by count, use [Filter](/nodes/builtin/flow/filter/) instead.
 
 ## Inputs and settings
 
@@ -30,13 +35,15 @@ Use this node to process only a sample of a large dataset, to keep the most rece
 | **Keep** | Choice | First items | No | Whether to keep the first or the last items. Options: First items, Last items. |
 {/* AUTO:settings:end */}
 
+**Max Items** must be a whole number of at least `1`.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
 
-Returns at most **Max items** items. If the collection already has fewer items than the limit, it passes through unchanged.
+The kept items, unchanged and in their original order. The next node runs once per kept item.
 
 ## Dependencies and credentials
 
@@ -44,18 +51,20 @@ Returns at most **Max items** items. If the collection already has fewer items t
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential or node dependency is required. The node runs entirely in the browser.
-
 ## Example workflow
 
-Connect a node that produces many items (for example, an HTTP request returning a list, or a "Get All Links" node) into Limit, set **Max items** to `5` and **Keep** to `first`, and only the first five items continue to the next step.
+1. [Get All Link](/nodes/extension/getalllinks/) collects every link on the current page.
+2. **Limit** with **Max Items** `5` and **Keep** *First items*.
+3. [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) reads only those five pages.
 
 ## Troubleshooting
 
-- Limit operates on the whole collection at once. If it seems to have no effect, make sure the upstream node is actually emitting multiple items rather than a single object.
-- `Max items` must be at least `1`.
+- **"No source node is connected to this node."** Limit has no input. Connect the node that produces the list.
+- **Limit seems to have no effect.** The node before it sends one object that contains a list, not a list of items. Use [Split Out](/nodes/builtin/datatransformation/splitout/) first to turn that list into items.
 
 ## Related nodes
 
-- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Filter](/nodes/builtin/flow/filter/): keep items that match a condition.
+- [Sort](/nodes/builtin/datatransformation/sort/): order items before keeping the first or last.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): turn a list inside one item into separate items.
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): drop repeated items.

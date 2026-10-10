@@ -11,15 +11,22 @@ node:
   family: inpage
 ---
 
-Run a web search and return the results as structured data.
+Search the web from a workflow and get the first page of results as a list of titles, links and snippets.
 
 ## What it does
 
-Searches the web on a chosen engine and returns the results as a list of `{ title, url, snippet }` objects. It works entirely in your browser through the extension: it opens the engine's results page in a background tab, reads the results from the page, and closes the tab again.
+Web Search runs your **Query** on the chosen **Engine** (DuckDuckGo by default, Bing or Brave). It opens the results page in a background tab, so it does not take over your screen, reads the results, then closes the tab.
+
+It returns one item per result, with `title`, `url` and `snippet`. Only the first page of results is read. **Max Results** keeps the first N; leave it empty or `0` to keep them all. Rows without a title or link are skipped, and DuckDuckGo's redirect links are turned back into the real addresses.
+
+No API key is needed: the search runs in your own browser, like a search you would type yourself.
 
 ## When to use it
 
-Use this node to feed live web results into a workflow — for example to gather sources for an AI agent, monitor mentions, or collect links for further processing.
+- Collect sources on a topic for an AI node to read and summarize.
+- Watch for new mentions of a name or product on a schedule.
+- Find the official page of something, then open it with [Tab Control](/nodes/extension/tabcontrol/).
+- To let an AI agent decide when to search, connect the [Web Search tool](/nodes/builtin/ai/aidependencies/tools/web-search/) to it instead.
 
 ## Inputs and settings
 
@@ -31,6 +38,8 @@ Use this node to feed live web results into a workflow — for example to gather
 | **Max Results** | Number |  | No | Maximum number of results to return. Leave empty or 0 to return all first-page results. |
 {/* AUTO:settings:end */}
 
+**Query** accepts expressions, for example `{{ $input.company }} pricing`. The usual search operators of the engine (quotes, `site:`) work as you would type them.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -39,7 +48,7 @@ One output port.
 Each run returns a list of items with the fields `title` (text), `url` (text), `snippet` (text).
 {/* AUTO:outputs:end */}
 
-Returns an array of result objects, each shaped like:
+For example:
 
 ```json
 [
@@ -47,26 +56,30 @@ Returns an array of result objects, each shaped like:
 ]
 ```
 
+Each result is its own item, so the next node runs once per result. Use [Aggregate](/nodes/builtin/datatransformation/aggregate/) to give all of them to an AI node at once.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential is required.
-- Requires the awflow **browser extension** to be installed — the search runs inside the browser.
-
 ## Example workflow
 
-Add Web Search with **Engine** = `DuckDuckGo` and a query, then pass its output into an AI Agent or an Edit Fields node to summarise or filter the results.
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every Monday morning.
+2. **Web Search** with **Query** = `"your product name" review`, **Engine** = DuckDuckGo and **Max Results** = `10`.
+3. [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/) with **Also Compare Against Previous Runs** on, so only new links continue.
+4. [Aggregate](/nodes/builtin/datatransformation/aggregate/), then [Slack](/nodes/builtin/integration/slack/), **Message → Send**, posts the new results to `#mentions`.
 
 ## Troubleshooting
 
-- This node runs in the extension. If it returns nothing, confirm the extension is installed and active.
-- Search engines change their page markup over time, which can affect scraping. If one engine returns no results, try another — **DuckDuckGo** is the most stable, while **Brave** is the most likely to need updates.
-- Google is intentionally not offered, because it blocks automated searches.
+- **The output is empty.** The engine showed no results, asked to confirm you are human, or changed its page layout. Open the same search in a tab to check, then try another **Engine**. DuckDuckGo is the most stable; Brave is the most likely to change.
+- **Fewer results than expected.** Only the first page is read, and rows without a title or link are skipped.
+- **Why is Google not offered?** Google blocks automated searches, so it is left out on purpose.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Get Structured Data](/nodes/extension/getstructureddata/)
-- [Get All Links](/nodes/extension/getalllinks/)
+- [Web Search tool](/nodes/builtin/ai/aidependencies/tools/web-search/): the same idea, as a tool an AI agent can call.
+- [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/): read each result page.
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): keep only results you have not seen.

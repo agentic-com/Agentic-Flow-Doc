@@ -11,15 +11,25 @@ node:
   family: inpage
 ---
 
-Show a native browser notification You can use this node when a background or browser-triggered workflow needs to notify the user..
+Show a native notification from a workflow, with options to replace an earlier one, keep it on screen or make it silent.
 
 ## What it does
 
-Displays a native browser notification with custom title, message, and icon.
+Show Notification shows a system notification (through your computer's notification center) with a **Title** and a **Message**. Under **Options** you can fine-tune it:
+
+- **Icon URL**: a picture for the notification. Empty means the AWFlow icon.
+- **Notification ID**: give the notification a fixed id. A new notification with the same id replaces the old one instead of piling up, which is handy for progress or status messages.
+- **Priority**: **Low**, **Normal** (default) or **High**.
+- **Require Interaction**: keep the notification on screen until you dismiss it (Chrome only; Firefox closes notifications on its own).
+- **Silent**: show it without a sound (Chrome only).
+
+The workflow does not wait for you to click the notification; it continues straight away.
 
 ## When to use it
 
-Use this node to alert users about workflow completion, errors, or important events from background processes.
+- Tell the user a background or triggered workflow has finished, or has found something.
+- Show a status that updates during a long run, using the same **Notification ID** each time.
+- For a notification with action buttons, use [Browser Notification](/nodes/extension/browsernotification/). To ask the user something and wait, use [In-Page Form](/nodes/builtin/flow/in-page-form/).
 
 ## Inputs and settings
 
@@ -36,6 +46,8 @@ Use this node to alert users about workflow completion, errors, or important eve
 | Options › **Silent** | Toggle | Off | No | Show the notification without a sound. Chrome only: Firefox ignores this option. |
 {/* AUTO:settings:end */}
 
+**Title** and **Message** accept expressions, for example **Message** = `Saved {{ $input.title }}`. **Notification ID** can be any text you choose, such as `price-watch`.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -44,23 +56,32 @@ One output port.
 Each output item has the fields `notificationId` (text), `title` (text), `message` (text), `created` (always true).
 {/* AUTO:outputs:end */}
 
+`notificationId` is your **Notification ID**, or a generated id when you left it empty. `title` and `message` are the text that was shown.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
+No credential is needed. Notifications must be allowed for your browser in your operating system's settings.
+
 ## Example workflow
 
-Run Show Notification after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every 30 minutes.
+2. [Http Request](/nodes/builtin/core/http-request/) checks a status page's API.
+3. [IF](/nodes/builtin/flow/if/) checks whether `{{ $input.status }}` is not `ok`.
+4. **Show Notification** on the true branch, with **Title** = `Service problem`, **Notification ID** = `status-check` and **Require Interaction** on, so the alert stays until you see it and each new alert replaces the previous one instead of stacking up.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **Nothing appears.** Notifications for your browser are turned off in the operating system's settings, or a focus / do-not-disturb mode is on. Allow them and try again.
+- **"Notification title and message are required".** **Title** or **Message** is empty, often because an expression resolved to nothing.
+- **The notification closes by itself.** Turn on **Require Interaction**. Firefox always closes notifications after a while.
+- **Notifications pile up.** Set the same **Notification ID** on every run so each one replaces the last.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Browser Notification](/nodes/extension/browsernotification/): a system notification with up to two buttons.
+- [Display Markdown](/nodes/extension/displaymarkdown/): show a longer result on the page.
+- [In-Page Form](/nodes/builtin/flow/in-page-form/): ask the user and wait for the answer.

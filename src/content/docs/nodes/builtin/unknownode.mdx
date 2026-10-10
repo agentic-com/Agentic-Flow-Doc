@@ -1,58 +1,64 @@
 ---
 title: "Unknown"
-description: "Represents a workflow node whose original implementation is not available in the current node registry."
+description: "Stands in for a step that AWFlow no longer recognises, so you can swap in the right node."
 sidebar:
   label: "Unknown"
+kind: node
+section: nodes
+node:
+  id: builtin/unknownode
 ---
 
-Represents a workflow node whose original implementation is not available in the current node registry.
+Unknown is a placeholder that appears in place of a step AWFlow can't recognise, so the rest of your workflow still opens and you can swap in the right node.
 
 ## What it does
 
-Unknown is a compatibility placeholder. It appears when a workflow references a node type that the current app build cannot resolve from the active node registry.
+When AWFlow loads a workflow and can't match one of its steps to a node it knows, it shows that step as **Unknown** (a red question-mark icon) instead of failing to open the workflow. This happens when:
 
-This can happen when a workflow was imported from another version of Agentic WorkFlow, a custom node is missing, or an older workflow still contains a node that has been renamed or removed.
+- the workflow was made with another version of AWFlow, and a node has since been renamed or removed;
+- the workflow was imported from a file or the marketplace and uses a node your version doesn't have;
+- a [Lambda Workflow](/nodes/builtin/lambda/lambdaworkflow/) step points to a workflow that can't be identified.
+
+Unknown keeps its place and its connections, but does no work: when the run reaches it, it outputs an empty item, `{}`.
 
 ## When to use it
 
-Do not add this node manually when building a new workflow. Use it as a signal that an imported or migrated workflow needs maintenance.
-
-Replace it with the current node that performs the same job, then rerun the workflow from the previous known-good step.
+You never add Unknown yourself. When you see one, treat it as a to-do: pick the node it should be and migrate it, then check the steps after it.
 
 ## Inputs and settings
 
-| Setting | Notes |
+| Setting | What it does |
 | --- | --- |
-| Target Node Type | The unresolved node type the workflow was trying to load. |
+| **Target Node Type** | A list of every node available in your version. Pick the node this step should be. |
+
+After you pick a node, click **Migrate Node** at the bottom of the settings window. The step becomes that node, in the same place and with the same connections. Then open it and fill in its settings.
 
 ## Outputs
 
-Unknown should not be treated as a reliable producer of workflow data. Any downstream node that depends on it should be reviewed after you replace the missing node.
+One output port. It sends an empty item, `{}`, so steps after it that read fields from it get nothing until you migrate it.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-An imported workflow contains:
+You import a workflow and one step shows as Unknown:
 
-```mermaid
-flowchart LR
-  Trigger["When Started"] --> Missing["Unknown"]
-  Missing --> Next["Edit Fields"]
-```
-
-Open the Unknown node, check the target node type, then replace it with the current equivalent from the [node reference](/nodes/). After replacement, inspect the output shape before keeping downstream mappings.
+1. Click the Unknown step to open its settings.
+2. In **Target Node Type**, pick the node that matches what the step should do, for example [Edit Fields](/nodes/builtin/datatransformation/editfields/).
+3. Click **Migrate Node**, then fill in the new node's settings.
+4. Click **Test step**, and check that the steps after it still read the right fields.
 
 ## Troubleshooting
 
-- Confirm the workflow was created with the same app version you are using now.
-- Check whether the missing behavior now lives under [In Page Action](/nodes/extension/), [Flow](/nodes/builtin/flow/if/), [Data Transformation](/nodes/builtin/datatransformation/editfields/), [Core](/nodes/builtin/core/http-request/), [AI](/nodes/builtin/ai/), or [Integrations](/nodes/builtin/integration/google-sheets/).
-- If downstream mappings reference fields from the missing node, update those mappings after choosing the replacement.
-- If the node came from a custom extension or plugin, reinstall that dependency before running the workflow.
+- **The Migrate Node button is greyed out.** No node is picked in **Target Node Type** yet. Pick one first.
+- **Steps after the Unknown step get empty values.** Unknown outputs `{}`. Migrate it to the right node, then update expressions in later steps if the new node names its fields differently.
+- **I don't know which node it should be.** Look at the step's name on the canvas, the steps around it, or the original author's description. The [node reference](/nodes/) lists every node by family.
+- **Many steps show as Unknown after an import.** The workflow was probably made with a newer version of AWFlow. Update the extension, then import it again.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
-- [Workflow import and export](/usage/using-the-app/workflows/export-import/)
+- [Lambda Workflow](/nodes/builtin/lambda/lambdaworkflow/): if the missing step called one of your workflows.
+- [No Operation](/nodes/builtin/flow/nooperation/): a placeholder you add on purpose.
+- [Workflow import and export](/usage/using-the-app/workflows/export-import/): bringing workflows in from files.

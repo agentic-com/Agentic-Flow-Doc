@@ -249,7 +249,7 @@ const cleanText = (t: unknown): string | undefined => {
 	if (typeof t !== 'string') return undefined;
 	const s = t
 		.replace(/<br\s*\/?>/gi, ' ')
-		.replace(/<[^>]+>/g, '')
+		.replace(/<\/?(a|b|i|u|em|strong|code|p|span|div|ul|ol|li|small|kbd)(\s[^>]*)?>/gi, '')
 		.replace(/\s+/g, ' ')
 		.trim();
 	return s || undefined;
@@ -538,8 +538,18 @@ export async function extractNodes(appDir: string): Promise<NodeDoc[]> {
 				}
 			}
 		}
+		const top = unwrap(input);
+		if (kind(top.inner) === 'union') {
+			// The whole form switches with a choice (e.g. Text Formatter's operation).
+			const ordered = searchable.length
+				? searchable.map((op) => ({ ...(op.resource !== undefined ? { resource: op.resource } : {}), operation: op.operation }))
+				: undefined;
+			const v = await expandUnion(top.inner!, top.meta, validCombo, ordered, warnings);
+			for (const w of warnings.splice(0)) console.warn(`[nodes] ${d.label}: ${w}`);
+			if (v.length) variants = { key: '', fields: v };
+		}
 		settings.push(
-			...(await fieldsOf(unwrap(input).inner, { skip: new Set(variants ? [variants.key] : []) }))
+			...(await fieldsOf(top.inner, { skip: new Set(variants ? [variants.key] : []) }))
 		);
 
 		const ports = (node.getOutputPorts?.() ?? d.outputsParams?.ports) as { id: string; label?: string }[] | undefined;

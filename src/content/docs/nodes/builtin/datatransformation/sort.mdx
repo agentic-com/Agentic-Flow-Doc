@@ -11,17 +11,23 @@ node:
   family: data
 ---
 
-Order the incoming items by one or more fields, or shuffle them randomly.
+Put your items in order by one or more fields, such as cheapest first or newest first, or shuffle them.
 
 ## What it does
 
-Reorders the whole collection of incoming items. In **By fields** mode you add one or more sort keys, each pointing at a field, with its own direction and its own way of comparing values. Keys apply in order: the second key only breaks ties left by the first. In **Random (shuffle)** mode the items are placed in a random order and no keys are used.
+Sort reorders the whole incoming list at once. No items are added or removed.
 
-Ordering is stable, so items that compare equal keep their original relative order. That makes it safe to sort by one field and then, in a later Sort node, by another.
+- **By fields**: you add sort keys under **Sort By**. Each key names a field, a **Direction** and a way to compare (**Compare As**). Keys apply in order: the second key only decides between items that tie on the first.
+- **Random (shuffle)**: the items are put in a random order and the sort keys are ignored.
+
+Items that tie keep their original order. Items where the field is missing, `null` or empty always go **last**, in both directions, so empty rows never float to the top of a descending list.
 
 ## When to use it
 
-Use this node to present results newest-first or cheapest-first, to feed a [Limit](/nodes/builtin/datatransformation/limit/) node a meaningful "top N" rather than an arbitrary one, or to sample a collection by shuffling it.
+- Show results newest first or cheapest first before you send or save them.
+- Get a real "top 5" by sorting before [Limit](/nodes/builtin/datatransformation/limit/).
+- Pick which copy [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/) keeps: it keeps the first one, so sort first.
+- Take a random sample: shuffle, then Limit.
 
 ## Inputs and settings
 
@@ -35,16 +41,14 @@ Use this node to present results newest-first or cheapest-first, to feed a [Limi
 | Sort By (each entry) › **Compare As** | Choice | Automatic | No | How values in this field are compared. Options: Automatic, Number, Text, Text (natural), Date. |
 {/* AUTO:settings:end */}
 
-### How values are compared
+**Compare As** decides how two values are compared:
 
-- **Automatic** inspects the pair of values it is comparing and picks a strategy: it prefers **numbers over dates**, so a plain numeric field such as `2` is treated as a number rather than misread as a timestamp, and falls back to natural text otherwise.
-- **Text (natural)** keeps `item 2` ahead of `item 10` by reading the digit runs as numbers. This is the fallback the automatic strategy uses for text.
-- **Text** is a plain lexical comparison, for data where the natural ordering would be wrong (for example, codes that must sort strictly by character).
-- **Number** and **Date** force those interpretations for the key.
+- **Automatic** treats values as numbers when it can, then as dates, otherwise as text in natural order.
+- **Text (natural)** reads digits as numbers inside text, so `item 2` comes before `item 10`.
+- **Text** compares character by character, so `item 10` comes before `item 2`. Use it for codes that must sort strictly by character.
+- **Number** and **Date** force that reading. Use **Number** when prices or counts arrive as text.
 
-### Missing values
-
-A value that is `undefined`, `null`, or an empty string (`''`) carries no ordering information, so it is always placed **last** — in both ascending and descending order. This keeps empty rows at the bottom rather than letting a descending sort float them to the top. A field path that cannot be reached is treated the same way: it is not an error, the item simply sorts last.
+Use dots for nested fields, for example `price.amount`. A key with an empty **Field** is ignored.
 
 ## Outputs
 
@@ -52,7 +56,7 @@ A value that is `undefined`, `null`, or an empty string (`''`) carries no orderi
 One output port.
 {/* AUTO:outputs:end */}
 
-Returns the same items in their new order. No items are added or removed, and the upstream collection is never reordered in place.
+The same items in their new order.
 
 ## Dependencies and credentials
 
@@ -60,22 +64,22 @@ Returns the same items in their new order. No items are added or removed, and th
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential or node dependency is required. The node runs entirely in the browser.
-
 ## Example workflow
 
-Connect a node that returns a list of products into Sort. Add one key on `price` with **Compare As** `Number` and **Direction** `Ascending`, then a second key on `name` to break ties. Feed the result into [Limit](/nodes/builtin/datatransformation/limit/) with **Max items** `5` to keep the five cheapest.
+1. [HTML Extract](/nodes/builtin/datatransformation/html-extract/) reads a list of products with `name` and `price` from a shop page.
+2. Sort with two keys: **Field** `price`, **Direction** *Ascending*, **Compare As** *Number*; then **Field** `name`, **Direction** *Ascending*, to break ties.
+3. [Limit](/nodes/builtin/datatransformation/limit/) with **Max Items** `5` keeps the five cheapest.
+4. A [Slack](/nodes/builtin/integration/slack/) node posts them.
 
 ## Troubleshooting
 
-- Sort operates on the whole collection at once. If it seems to have no effect, make sure the upstream node emits multiple items rather than a single object.
-- A key with no **Field** set is ignored, and if none of the keys have a field the collection passes through untouched.
-- If everything empty ends up at the bottom rather than where you expect, that is by design: missing, `null`, and empty-string values always sort last regardless of direction.
-- If numeric strings sort in an odd order, set **Compare As** to `Number`; if text with numbers sorts as `10` before `2`, use `Text (natural)`.
+- **The order does not change.** Sort needs a list. If the previous node sends one item that holds a list in a field, split it first with [Split Out](/nodes/builtin/datatransformation/splitout/). Also check that at least one key has a **Field**.
+- **`10` comes before `2`.** The values are compared as text. Set **Compare As** to *Number*, or *Text (natural)* for text with numbers inside.
+- **Empty items sit at the bottom of a descending sort.** This is on purpose: missing and empty values always go last.
+- **"No source node is connected to this node."** Connect the node that produces the list to Sort's input.
 
 ## Related nodes
 
-- [Limit](/nodes/builtin/datatransformation/limit/)
-- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/)
-- [Aggregate](/nodes/builtin/datatransformation/aggregate/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Limit](/nodes/builtin/datatransformation/limit/): keep the first or last few items after sorting.
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): drop copies, keeping the first.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): turn a list field into items you can sort.

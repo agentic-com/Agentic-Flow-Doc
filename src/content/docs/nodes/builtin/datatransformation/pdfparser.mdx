@@ -11,15 +11,20 @@ node:
   family: data
 ---
 
-Extract text from a PDF.
+Extract the text from a PDF, as one string or one string per page.
 
 ## What it does
 
-Reads a PDF from the input and returns its text content. It runs entirely in the browser.
+PDF Parser reads a PDF held in a field of the incoming item and returns its text and its number of pages. The PDF can be a base64 string, a `data:` URL with base64 content, or raw bytes. Everything happens in your browser; the file is not uploaded.
+
+With **Merge pages** on, you get the whole document as one string. Turn it off to get a list with one string per page.
 
 ## When to use it
 
-Use this node to turn an uploaded or fetched PDF into text you can search, summarise, feed to an AI node, or store.
+- Summarise or question a PDF with an AI node, using its text.
+- Search a PDF's text with [Regex](/nodes/builtin/datatransformation/regex/), for example to find an invoice number.
+- Handle each page separately: turn **Merge pages** off, then use [Split Out](/nodes/builtin/datatransformation/splitout/).
+- For a PDF downloaded by an [Http Request](/nodes/builtin/core/http-request/), use [Extract From File](/nodes/builtin/datatransformation/extractfromfile/) instead: it reads the downloaded file directly.
 
 ## Inputs and settings
 
@@ -33,13 +38,15 @@ Use this node to turn an uploaded or fetched PDF into text you can search, summa
 | Options › **Include input fields** | Toggle | Off | No | Whether to include the original input fields in the output. |
 {/* AUTO:settings:end */}
 
+**Input field** is a field name, not an expression. Use dots for nested fields, for example `file.content`. After [Local File Read](/nodes/builtin/datatransformation/localfileread/), set it to `content` and read the file as *Data URL* or *Base64*.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
 
-Returns `{ [outputFieldName]: text, pageCount }`, where `text` is a single string (merge pages on) or an array of per-page strings (merge pages off), and `pageCount` is the number of pages.
+The output has two fields: the text under the **Output field name** (`text` by default) and `pageCount`. Turn on **Include input fields** to keep the incoming fields too, such as the file name from Local File Read. Use `{{ $input.text }}` in the next node.
 
 ## Dependencies and credentials
 
@@ -47,18 +54,21 @@ Returns `{ [outputFieldName]: text, pageCount }`, where `text` is a single strin
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential is required. Parsing runs in the browser.
-
 ## Example workflow
 
-Fetch or upload a PDF so its bytes land in a field, connect it into PDF Parser, then pass the extracted `text` to an AI Agent to summarise, or to Edit Fields for further processing.
+1. [Local File Read](/nodes/builtin/datatransformation/localfileread/) with **Read as** *Data URL* and **Accepted file types** `.pdf`.
+2. **PDF Parser** with **Input field** `content`.
+3. [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) with **Text** set to `{{ $input.text }}`, using a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/).
 
 ## Troubleshooting
 
-- If parsing fails, check that the input field actually contains the PDF (base64, a `data:` URL, or raw bytes) — an undecodable value throws an error.
-- Scanned PDFs that contain images rather than real text will return little or no text; use an OCR step upstream for those.
+- **"Field "data" does not exist in the input object ..."** No field has the name in **Input field**. Set it to the field that holds the PDF, for example `content`.
+- **"Field "content" could not be decoded as base64 PDF data."** The field holds plain text, not a PDF encoding. Read the file as *Data URL* or *Base64*.
+- **"... is a non-base64 data URL, which is not supported for PDF data."** The data URL is not base64. Produce a base64 data URL instead.
+- **The text is empty or very short.** The PDF is a scan: its pages are images, not text. This node does not read text from images.
 
 ## Related nodes
 
-- [Download as File](/nodes/builtin/datatransformation/downloadasfile/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Extract From File](/nodes/builtin/datatransformation/extractfromfile/): read PDFs, CSV, JSON and more from a downloaded file.
+- [Local File Read](/nodes/builtin/datatransformation/localfileread/): pick a PDF from your computer.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): one item per page when pages are not merged.

@@ -11,18 +11,27 @@ node:
   family: trigger
 ---
 
-Start this workflow whenever a watched workflow fails, and hand it the details of what went wrong.
+Start a workflow when another workflow fails, with the details of what went wrong.
 
 ## What it does
 
-When a watched workflow errors, this trigger starts its own workflow and passes along the failure — the workflow and node that failed, the error message, and the input that node received — so downstream steps can alert, log, or clean up.
+When a watched workflow fails, a new run starts from the Error Trigger. It receives the failed workflow, the node that failed, the error message and the input that node was given, so the next steps can alert you, log the problem or clean up.
 
-Where a [Try / Catch](/nodes/builtin/flow/try/) node handles a failure *inside* one workflow, the Error Trigger reacts to an *entire workflow* failing.
+Only runs that start on their own report their failures: [Schedule](/nodes/builtin/trigger/schedule/), [Page Load](/nodes/builtin/trigger/pageload/), [Navigation](/nodes/builtin/trigger/navigation/), [Element Change](/nodes/builtin/trigger/elementchange/), [Context Menu](/nodes/builtin/trigger/contextmenu/), [Hotkey](/nodes/builtin/trigger/hotkey/) and [Browser Startup](/nodes/builtin/trigger/browserstartup/), all started by the browser extension. A run you start yourself from the designer or the workflow list shows its error to you directly and does not fire an Error Trigger, so a half-built workflow does not flood you with alerts.
+
+A few more rules:
+
+- A failure that a [Try / Catch](/nodes/builtin/flow/try/) node handled is not a failed run, so it does not reach the Error Trigger.
+- A run started by an Error Trigger never reports its own failure, so a broken alert workflow cannot keep alerting about itself.
+- Only your own activated workflows listen. An Error Trigger inside a workflow you installed from the marketplace does not run.
 
 ## When to use it
 
-- One alerting workflow that watches everything and sends a notification (or writes to a sheet/issue tracker) whenever any workflow fails.
-- A per-workflow cleanup or fallback that should run only when that workflow errors.
+- One alert workflow that watches **All workflows** and sends you a message whenever anything fails.
+- A per-workflow fallback with **This workflow**: the failure starts a separate branch of the same workflow.
+- Keeping a log of failures in a sheet or a [Data Store](/nodes/builtin/core/datastore/).
+
+To recover inside the run and keep going, use [Try / Catch](/nodes/builtin/flow/try/) instead.
 
 ## Inputs and settings
 
@@ -32,6 +41,10 @@ Where a [Try / Catch](/nodes/builtin/flow/try/) node handles a failure *inside* 
 | **Watch** | Choice | This workflow | No | Which workflows this trigger listens to. Options: This workflow, Selected workflows, All workflows. |
 | **Workflows** | Workflow picker |  | No | The workflows to watch. |
 {/* AUTO:settings:end */}
+
+- **This workflow** watches the workflow the trigger is in. It keeps pointing at the right workflow after you duplicate or import it.
+- **Selected workflows** watches the ones you pick in **Workflows**. The list is ignored with the other two options.
+- **All workflows** watches every workflow, including the one it is in.
 
 ## Outputs
 
@@ -53,19 +66,7 @@ Each output item has these fields:
 | `triggeredAt` | Text |  |
 {/* AUTO:outputs:end */}
 
-The trigger outputs the failure details for downstream nodes:
-
-| Field | Meaning |
-| --- | --- |
-| `workflowId`, `workflowName` | The workflow that failed. |
-| `nodeId`, `nodeLabel` | The node that failed. |
-| `message` | The error message. |
-| `input` | The input that node received (when available). |
-| `failedAt` | When it failed. |
-
-## Important: only unattended runs report failures
-
-Only **unattended** runs report their failures to an Error Trigger — schedule, page load, navigation, context menu, and browser startup. A run you start yourself from the canvas surfaces its error to you directly and does **not** fire an Error Trigger.
+`workflowName` and `nodeLabel` are the names you see in the app, so they read well in a message. `input` is left out when the failing node had no input. When you test the trigger yourself in the designer, only `triggerType` and `triggeredAt` are set.
 
 ## Dependencies and credentials
 
@@ -73,7 +74,25 @@ Only **unattended** runs report their failures to an Error Trigger — schedule,
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
+## Example workflow
+
+Get a desktop alert whenever any workflow fails:
+
+1. Create a new workflow and add **Error Trigger** with **Watch** set to **All workflows**.
+2. Add [Browser Notification](/nodes/extension/browsernotification/) with **Title** `{{ $input.workflowName }} failed` and **Message** `{{ $input.nodeLabel }}: {{ $input.message }}`.
+3. Activate the workflow.
+
+## Troubleshooting
+
+- **A workflow failed but the Error Trigger did not run.** The failed run was started by hand, or a Try / Catch handled the error. Only runs started on their own by the extension report failures.
+- **Nothing runs even for scheduled failures.** The workflow with the Error Trigger is not activated, or **Watch** does not include the failed workflow. With **Selected workflows**, check the list in **Workflows**.
+- **The fields are empty.** You ran the trigger yourself to test it. Real values only arrive when a watched workflow fails.
+- **Failures are not reported in the web app.** The runs that report failures are started by the browser extension. Install it and activate your workflows there.
+
 ## Related nodes
 
-- [Try / Catch](/nodes/builtin/flow/try/)
-- [Error handling](/usage/key-concepts/flow-logic/error-handling/)
+- [Try / Catch](/nodes/builtin/flow/try/): handle a failure inside the run and continue.
+- [Stop and Error](/nodes/builtin/flow/stopanderror/): fail a run on purpose, with your own message.
+- [Browser Notification](/nodes/extension/browsernotification/): alert yourself when something fails.
+
+See also [Error handling](/usage/key-concepts/flow-logic/error-handling/).

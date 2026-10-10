@@ -11,25 +11,27 @@ node:
   family: flow
 ---
 
-Pause the workflow, record audio from the microphone, and continue with the recording as a `$binary` value. Audio is captured **locally** and never leaves your device — pair it with [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) for a fully on-device voice-to-text step.
+Pause a run, record a voice clip from your microphone, and continue with the recording.
 
 ## What it does
 
-When the run reaches this node it **suspends** and shows a recording popup — a live waveform and a timer that counts up to your **Max length**, with **Cancel**, **Restart**, and **Stop & send**. You record, then stop, and the captured audio flows out of the node as `$binary`. Like other interactive pauses (approvals, in-page forms), the run signals that it is waiting for you, and the popup reappears whenever you reopen the paused workflow.
+When the run reaches Record Audio, it pauses and opens a recording window in the app: press **Start recording**, then **Stop & send** to continue the run with the clip, or **Restart** to begin again. A timer counts up to **Max length (seconds)**. The audio is recorded in your browser and never leaves your device.
 
-## Recording on the page you're on (browser extension)
+In the browser extension, a small recording card also appears on the web page you are viewing, so you can record without switching to the app:
 
-In the browser extension, when a run pauses at this node, a small **recording card** also appears on the web page you're currently viewing — so you can record without switching to the app. It moves through three steps:
+1. **Start recording** begins; **Skip** closes the card.
+2. While recording, a waveform and timer show; recording stops on its own at the maximum length. Use **Cancel**, **Restart** or **Stop**.
+3. Play the clip back, then **Send & continue run**, or **Re-record**.
 
-1. **Waiting** — shows your Prompt and the maximum length. **Start recording** begins; **Skip** just closes the card.
-2. **Recording** — a live waveform and a timer counting up to **Max length** (recording stops automatically there). **Cancel**, **Restart**, or **Stop**.
-3. **Review** — play back the clip, then **Send & continue run** to resume the workflow with it, or **Re-record**.
-
-The audio stays on your device: it goes straight from the page to your workflow. Because the card runs inside the page, the browser asks for **that site's** microphone permission the first time. If the site blocks the microphone or no microphone is found, the card says so — record from the recording popup in the app instead. Closing or skipping the card doesn't cancel anything: the run keeps waiting, and you can still record from the app.
+Like the other pausing steps, the run is kept while it waits and you are told it needs you (a "waiting for you" count, a sound, a desktop notification). Closing the window or the card doesn't cancel the run; it keeps waiting until you send a recording or cancel the run in the **Executions** pane. The node pauses once for everything that reaches it, not once per item.
 
 ## When to use it
 
-Capture a voice note, a spoken command, or dictation as part of a workflow — then transcribe, summarize, or store it. Because it's a durable suspend, it fits anywhere you'd pause for human input.
+- Dictate a note and turn it into text with [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/).
+- Speak a command or a reply that later steps summarize, translate or send.
+- Capture a short voice memo to save as a file.
+
+For typed input, use [In-Page Form](/nodes/builtin/flow/in-page-form/).
 
 ## Inputs and settings
 
@@ -40,6 +42,8 @@ Capture a voice note, a spoken command, or dictation as part of a workflow — t
 | **Max length (seconds)** | Number | 60 | No |  |
 {/* AUTO:settings:end */}
 
+**Prompt** is the instruction shown above the record button, for example `Dictate your reply`. **Max length (seconds)** caps the clip; recording stops automatically when it is reached.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -48,13 +52,7 @@ One output port.
 Each output item has the fields `recordedAt` (text), `$binary` (key-value pairs).
 {/* AUTO:outputs:end */}
 
-Resumes with the recording as a **`$binary`** value (an audio blob, e.g. `audio/webm`) plus a `recordedAt` timestamp. Feed the `$binary` straight into [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) or any node that accepts binary media.
-
-## Notes
-
-- The microphone is accessed via `getUserMedia`; the browser asks for permission the first time (per site, for the in-page card).
-- Audio is captured client-side and **never uploaded** by this node.
-- If no audio is captured (the popup is dismissed), the node continues with an empty output.
+`$binary` holds the audio file (usually `audio/webm`) and `recordedAt` the time it was sent. Pass the item straight into [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) or any node that accepts a file. The incoming item is not passed on.
 
 ## Dependencies and credentials
 
@@ -62,7 +60,23 @@ Resumes with the recording as a **`$binary`** value (an audio blob, e.g. `audio/
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
+## Example workflow
+
+Dictate a task:
+
+1. [Hotkey](/nodes/builtin/trigger/hotkey/) starts the workflow.
+2. Record Audio with **Prompt** `What do you need to do?` and **Max length (seconds)** `30`.
+3. [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) turns the clip into text.
+4. [Todoist](/nodes/builtin/integration/todoist/), **Task** › **Create**, with **Content** `{{ $input.transcript }}`.
+
+## Troubleshooting
+
+- **The page card says the microphone is blocked or missing.** The card runs inside the website, so the browser asks for that site's microphone permission. Allow it in the site settings, plug in a microphone, or record from the window in the app instead.
+- **No card appears on the page.** The card only shows on normal web pages (`http` or `https`) in the extension. Record from the app window or open the paused run from the **Executions** pane.
+- **The run is still waiting after I closed the window.** Closing doesn't cancel. Record and send, or cancel the run in the **Executions** pane.
+
 ## Related nodes
 
-- [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/)
-- [In-Page Form](/nodes/builtin/flow/in-page-form/) — the other interactive pause pattern.
+- [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/): turn the recording into text on your device.
+- [In-Page Form](/nodes/builtin/flow/in-page-form/): pause for typed input.
+- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/): pause for a yes or no.

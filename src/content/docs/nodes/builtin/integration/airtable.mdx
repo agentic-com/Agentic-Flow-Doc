@@ -11,15 +11,25 @@ node:
   family: integration
 ---
 
-Integrate with AirTable to perform operations on tables.
+Read, add, change and delete rows (records) in an Airtable table, and list your bases and their tables.
 
 ## What it does
 
-Creates, reads, updates, and deletes records in Airtable bases and tables.
+The Airtable node works on two kinds of things (**Resource**):
+
+- **Base**: list the bases your token can open (**Get many**), or get a base's tables, fields and views (**Get schema**).
+- **Record**: create, get, update or delete one record by its id, or search a table with an Airtable formula.
+
+Once the credential is set, **Base** and **Table** are lists loaded from your account. After you pick a table, **Fields** shows one input per column of that table (choice columns show their options), so you fill values by column name instead of writing JSON. **Update** only changes the fields you fill; the others keep their values.
+
+**Search** returns the records of a single response from Airtable; it does not page through very large tables.
 
 ## When to use it
 
-Use this node to sync data with Airtable, manage databases, or build workflows around your Airtable data.
+- Log every new lead, form entry or scraped product as a row in a table.
+- Look up a record before deciding what to do next, for example with [IF](/nodes/builtin/flow/if/).
+- Find rows that match a condition (status, date, price) and process them one by one.
+- Use [Google Sheets](/nodes/builtin/integration/google-sheets/) or [Baserow / NocoDB](/nodes/builtin/integration/baserow-nocodb/) instead if your data lives there.
 
 ## Inputs and settings
 
@@ -89,11 +99,19 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 | **Limits** | Number |  | No | The maximum number of records to return. |
 {/* AUTO:settings:end */}
 
+- **Record** is the record id, which starts with `rec` (for example `recA1b2C3d4E5f6G7`). Map it from a previous step, such as `{{ $input.id }}` after a **Search**.
+- **Filter By Formula** uses Airtable's formula language. Field names go in braces, and the whole formula is sent as is, for example `AND({Status} = 'New', {Price} < 100)`. Leave it empty to return records without filtering.
+- **Limits** on **Base → Get many** is not applied: the node returns all bases the token can see.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+- **Record** operations return the record as `id`, `createdTime` and `fields` (an object keyed by column name), for example `{{ $input.fields.Email }}`.
+- **Search** returns a list of records. Use [Split Out](/nodes/builtin/datatransformation/splitout/) to handle them one per item.
+- **Base → Get many** returns each base's `id`, `name` and `permissionLevel`. **Get schema** returns each table with its `fields` and `views`.
 
 ## Dependencies and credentials
 
@@ -101,17 +119,25 @@ One output port.
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
+Use an Airtable **personal access token**. Create it at airtable.com under **Builder hub → Personal access tokens**, give it the scopes `data.records:read`, `data.records:write` and `schema.bases:read`, and add the bases it may access. Save it as a Bearer Token credential: see [Create a credential](/usage/using-the-app/credentials/create/).
+
 ## Example workflow
 
-Connect prepared data into Airtable, select the credential, choose the operation, then map previous node values into the operation fields.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger runs when you right-click a product page.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the page title and URL.
+3. Airtable, **Record → Create a record in a table**, base `Shopping`, table `Wishlist`, with **Fields** `Name` = `{{ $input.title }}` and `Link` = `{{ $input.url }}`.
+4. [Browser Notification](/nodes/extension/browsernotification/) confirms the row was added.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Airtable API Error: Invalid permissions, or the requested model was not found".** The token has no access to this base, or lacks a scope. Edit the token on Airtable, add the base and scopes, and run again.
+- **"Missing base ID" or "Missing table ID" when a list loads.** Pick **Base** first, then **Table**; each list depends on the one above it.
+- **The Fields form is empty or a column is missing.** Pick the table first. The form only shows text, email, URL, long text, number, duration, date, checkbox and single select columns. To fill other kinds (attachments, multiple selects, linked records, currency), use [Http Request](/nodes/builtin/core/http-request/).
+- **Search returns nothing.** Check the formula in Airtable's own formula field first; a field name that does not match exactly makes every record fail the test.
 
 ## Related nodes
 
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Google Sheets](/nodes/builtin/integration/google-sheets/): the same job in a spreadsheet.
+- [Baserow / NocoDB](/nodes/builtin/integration/baserow-nocodb/): open-source Airtable alternatives.
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): shape data before writing it.
+- [Http Request](/nodes/builtin/core/http-request/): call Airtable API endpoints this node does not cover.

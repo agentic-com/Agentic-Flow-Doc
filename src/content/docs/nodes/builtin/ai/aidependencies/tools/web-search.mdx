@@ -12,15 +12,22 @@ node:
   agentTool: true
 ---
 
-Search the web and return results.
+Let an AI agent search the web for current information while it works.
 
 ## What it does
 
-Exposes the same web search the "Web Search" in-page action node performs as a tool the Tools Agent can call. It sends a `webSearch` message to the browser extension, which opens the chosen search engine in a background tab, scrapes the first page of results, and returns them to the agent as JSON. This only works inside the awflow browser extension; outside it, the call fails.
+Web Search is a tool for an agent, not a step in the flow. It has no output port: you connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/).
+
+The agent sees a tool named `web_search` and calls it with a search query. The browser extension opens the chosen **Engine** in a background tab, reads the first page of results and returns them to the model as a list of `title`, `url` and `snippet`. The model only gets these result snippets, not the full pages.
+
+It reads search results only, so no approval is needed.
 
 ## When to use it
 
-Connect this to Tools Agent nodes to give them the ability to search the web for up-to-date information the model doesn't already know.
+- The agent needs facts newer than its training: prices, releases, news, opening hours.
+- The agent should find a source link to cite in its answer.
+
+To run one fixed search as a step in the flow, use the [Web Search](/nodes/extension/websearch/) page node instead. For encyclopedia facts, [Wikipedia Query](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/) gives longer summaries.
 
 ## Inputs and settings
 
@@ -30,6 +37,8 @@ Connect this to Tools Agent nodes to give them the ability to search the web for
 | **Engine** | Choice | duckduckgo | No | Which search engine to query. Options: duckduckgo, bing, brave. |
 | **Max Results** | Number |  | No | Maximum number of results to return. Leave empty or 0 to return all first-page results. |
 {/* AUTO:settings:end */}
+
+A small **Max Results**, such as 5, keeps the model's input short and the run cheaper. The model writes the query itself on each call.
 
 ## Outputs
 
@@ -41,7 +50,7 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Tools | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) |
 {/* AUTO:outputs:end */}
 
-Returns a tool dependency named `web_search` that agent nodes can call with a `query` string. It returns the scraped search results as a JSON string.
+The results go back to the model, not to the next node. The agent's `steps` output lists each search it ran, and its `response` holds the final answer.
 
 ## Dependencies and credentials
 
@@ -49,22 +58,23 @@ Returns a tool dependency named `web_search` that agent nodes can call with a `q
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- Requires the awflow browser extension — the tool sends a runtime message to the extension to perform the search, and the call rejects outside the extension.
-- No explicit credential is declared in the node description.
+The search runs in the AWFlow browser extension, so the workflow must run from the extension.
 
 ## Example workflow
 
-Connect Web Search to a Tools Agent's tools input, then ask the agent a question that requires current information. The agent can call the `web_search` tool with a query, and the extension scrapes results from the configured engine for the agent to use.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads a product name you highlighted, with **Output field name** `text`.
+2. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Find the latest price and release date of {{ $input.text }}. Cite your sources.`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and Web Search connected to **Tools** with **Engine** `brave` and **Max Results** `5`.
+3. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- This tool only works inside the awflow browser extension; running it outside the extension causes the runtime message call to reject.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The search fails right away.** This node runs in the browser extension; install it or run the workflow from the extension.
+- **The model gets no results.** The engine may have shown a captcha or changed its page layout. Switch **Engine** and try again.
+- **The answer is vague.** Snippets are short. Raise **Max Results**, or ask the agent in the **Prompt** to search more than once with different queries.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Wikipedia Query](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/)
-- [Tool Selection](/advanced-ai/concepts/tool-selection/)
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): the agent this tool plugs into.
+- [Web Search](/nodes/extension/websearch/): one fixed search as a step in the flow.
+- [Wikipedia Query](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/): encyclopedia summaries for the agent.
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/): let the agent read a specific API.

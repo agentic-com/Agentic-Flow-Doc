@@ -11,15 +11,25 @@ node:
   family: integration
 ---
 
-Integrate with Google Drive to manage files and folders.
+Upload files to Google Drive, find, copy and delete them, and create and manage folders.
 
 ## What it does
 
-Manages files and folders in Google Drive, including upload, download, search, and organization operations.
+The Google Drive node works on two kinds of things (**Resource**):
+
+- **File**: **List** or **Search** files, **Get** one file's details, **Create** (upload) a file, **Copy** a file, or **Delete** it.
+- **Folder**: **List** your folders, **Get** one folder, **Create** a folder, or **Delete** it.
+
+**Create** uploads the file that the previous node produced (the key in **Binary source**, `data` by default). If the incoming item has no file under that key, the text in **Content** becomes the file. **Delete** removes the file or folder for good, without going through the Drive trash.
+
+The node works with file details (name, type, dates, link), not file contents: **Get** does not download the file.
 
 ## When to use it
 
-Use this node to automate file storage, backup workflows, or integrate document management into your processes.
+- Save a screenshot, a CSV export or a generated report to a Drive folder.
+- Make a dated copy of a template document each week.
+- Find files by name or type and send their links in a message.
+- Create a folder per client or per project from a form entry.
 
 ## Inputs and settings
 
@@ -106,11 +116,21 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 | **Folder ID** | Choice (loaded from your account) |  | Yes | The Google Drive folder ID. |
 {/* AUTO:settings:end */}
 
+- **Search Query** uses Google Drive's search syntax, for example `name contains 'invoice'`, `mimeType = 'application/pdf'`, or both joined with `and`. On **File → List** it is optional; leave it empty to list all files.
+- **Folder → List** returns all your folders that are not in the trash.
+- **Parent ID** picks the folder to create or copy into. Leave it empty to use the top of your Drive. **File ID**, **Folder ID** and **Parent ID** are lists loaded from your Drive once the credential is set; you can also map an id from a previous step, such as `{{ $input.id }}`.
+- **MIME Type** is optional: without it, the type of the incoming file is used, for example `image/png` for a screenshot.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+- Each file or folder has `id`, `name`, `mimeType`, `createdTime`, `modifiedTime` and `webViewLink`, the link that opens it in Drive.
+- **List** and **Search** return a list of these, up to **Page Size** (100 by default). Use [Split Out](/nodes/builtin/datatransformation/splitout/) to handle them one per item.
+- **Create** and **Copy** return the new file, so you can share `{{ $input.webViewLink }}` in the next step.
+- **Delete** returns `success`, `deleted` and the id of the file or folder.
 
 ## Dependencies and credentials
 
@@ -118,19 +138,25 @@ One output port.
 - **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- Credential type: OAuth2 — create your own Google OAuth client first: [Create your OAuth client](/usage/using-the-app/credentials/oauth-client/#google).
+Google Drive connects by signing in to your Google account (OAuth). You first create your own Google OAuth client once, with the Google Drive API enabled: follow [Create your OAuth client](/usage/using-the-app/credentials/oauth-client/#google). Then create a Google Drive credential, paste the **Client ID** and **Client Secret**, click **Check connection** and approve the Google window. AWFlow asks for full access to your Drive, which it needs to list, copy and delete files it did not create itself. The sign-in is kept and refreshed for you. See also [Create a credential](/usage/using-the-app/credentials/create/).
 
 ## Example workflow
 
-Connect prepared data into Google Drive, select the credential, choose the operation, then map previous node values into the operation fields.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger runs when you right-click a page.
+2. [Screenshot Page](/nodes/extension/screenshotpage/) captures the page as a file under the key `data`.
+3. Google Drive, **File → Create**, **Name** `{{ $('Context Menu').tabTitle }}.png`, **Parent ID** your `Screenshots` folder.
+4. [Clipboard Write](/nodes/extension/clipboardwrite/) copies `{{ $input.webViewLink }}` so you can paste the link anywhere.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The uploaded file contains text instead of your file.** No file arrived under the key in **Binary source**, so **Content** was used. Check the key name the previous node uses.
+- **"Google Drive Error: … File not found".** The id is wrong, or the file is in a shared drive or folder your account cannot open.
+- **"Google Drive Error: … Invalid Value" on List or Search.** **Search Query** is not valid Drive syntax. Put text values in single quotes, for example `name contains 'report'`.
+- **"… insufficient authentication scopes" or a 403 error.** The Google Drive API is not enabled for your OAuth client, or the sign-in is older than the current permissions. Enable the API, then click **Check connection** again on the credential.
 
 ## Related nodes
 
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Google Sheets](/nodes/builtin/integration/google-sheets/): read and write spreadsheet values.
+- [Convert to File](/nodes/builtin/datatransformation/converttofile/): turn data into a file to upload.
+- [Gmail](/nodes/builtin/integration/gmail/): send the file or its link by email.
+- [Microsoft 365](/nodes/builtin/integration/microsoft-graph/): OneDrive instead.

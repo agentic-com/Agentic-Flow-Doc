@@ -11,19 +11,28 @@ node:
   family: integration
 ---
 
-Create and manage Todoist tasks from the current page — "task from this page", the canonical browser-extension action.
+Turn the page you are on into a Todoist task in one step, and create, update, complete or list tasks from a workflow.
 
 ## What it does
 
-Creates, updates, closes and lists Todoist tasks, and lists projects and labels. Task creation can attach the current page's URL, and due dates accept natural language like `tomorrow 9am`. Paired with the **Hotkey Trigger** it becomes a one-keystroke capture.
+The Todoist node works on three kinds of things (**Resource**):
 
-## Resources and operations
+- **Task**: create a task, update it, close it (mark it complete), or list your open tasks.
+- **Project**: list your projects, to find a **Project ID**.
+- **Label**: list your labels.
 
-| Resource | Operations |
-| --- | --- |
-| Task | Create, Update, Close, List |
-| Project | List |
-| Label | List |
+**Due (natural language)** takes dates the way you type them in Todoist, like `tomorrow 9am`, `next Monday` or `every Friday`. When you fill **Source URL** on **Task → Create**, a `Source:` line with the link is added at the end of the description, so the task always points back to its page.
+
+Without a **Project ID**, new tasks go to your Inbox, and **Task → List** returns open tasks from all projects.
+
+## When to use it
+
+- Save the page you are reading as a "read later" or "follow up" task, with a hotkey.
+- Create a task with a due date when a form, an email or a page change needs action.
+- Mark a task complete when a workflow has done the work.
+- List today's tasks and send them to an AI node or a chat.
+
+For team issue tracking, use [Linear](/nodes/builtin/integration/linear/) or [GitHub](/nodes/builtin/integration/github/). For Microsoft To Do, use [Microsoft 365](/nodes/builtin/integration/microsoft-graph/).
 
 ## Inputs and settings
 
@@ -84,7 +93,10 @@ No further settings.
 No further settings.
 {/* AUTO:settings:end */}
 
-**Page-anchored tasks:** put the page title in **Content** and the page URL in **Source URL** (e.g. from Get Page Metadata) — the URL is appended to the task description as a `Source: <url>` line.
+- **Content** is the task title. Markdown links work, for example `[Read: {{ $input.title }}]({{ $input.url }})`.
+- **Priority 1 (urgent)** is Todoist's red p1; **Priority 4 (normal)** is the default with no flag.
+- **Labels** take label names as you see them in Todoist, one per entry.
+- **Project ID** and **Task ID** are ids, not names. Run **Project → List** or **Task → List** and copy the `id`.
 
 ## Outputs
 
@@ -92,27 +104,38 @@ No further settings.
 One output port.
 {/* AUTO:outputs:end */}
 
+- **Task → Create** and **Update** return the task, including its `id`, `content`, `description`, `due`, `priority`, `labels` and `url` (the link to open it in Todoist).
+- **Task → Close** returns an empty result when it worked.
+- **Task → List**, **Project → List** and **Label → List** return one item per task, project or label, each with its `id` and name.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- **Auth type:** Bearer Token — store a Todoist **personal API token** (Settings → Integrations → Developer). It grants full access to your account; keep it secret.
-- The token is stored in your credential vault and resolved at run time (never from a node parameter), and sent as `Authorization: Bearer <token>`.
-- Todoist also supports OAuth with PKCE (a public client). This node is structured so an OAuth token can be used through the same credential later, with no changes to the node.
+Use your Todoist API token, saved as a Bearer Token credential. In Todoist, open **Settings → Integrations → Developer** and copy the **API token**. See [Create a credential](/usage/using-the-app/credentials/create/).
 
-## Web and extension builds
+The token gives full access to your Todoist account. If it leaks, issue a new one on the same page and update the credential.
 
-This node is **extension-only**. Todoist's REST API is not confirmed to send permissive CORS headers, so the calls are made from the awflow browser extension.
+## Example workflow
+
+1. A [Hotkey](/nodes/builtin/trigger/hotkey/) trigger starts the workflow with a keyboard shortcut.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the page's `title` and `url`.
+3. Todoist, **Task → Create**, **Content** `Read: {{ $input.title }}`, **Source URL** `{{ $input.url }}`, **Due (natural language)** `tomorrow 9am`, **Labels** `reading`.
+4. [Browser Notification](/nodes/extension/browsernotification/) confirms the task was added.
 
 ## Troubleshooting
 
-- **`403 Forbidden` / `401 Unauthorized`** — the API token is missing, invalid, or expired; recreate it in Todoist's Developer settings.
-- **Task not created in the expected project** — pass a valid **Project ID** (run **Project → List** to get IDs); without one the task lands in the Inbox.
-- **A due date didn't parse** — Todoist interprets `Due (natural language)` in your account language; use a clearer phrase like `tomorrow 9am`.
+- **"Todoist API Error: 401 Unauthorized" or "403 Forbidden".** The token is wrong or was replaced. Copy the current token from **Settings → Integrations → Developer** and update the credential.
+- **"Todoist API Error: 400 Bad Request…".** Usually a **Project ID** or **Task ID** that does not exist, or a due date Todoist cannot read. Check the id with a List operation, or try a simpler date like `tomorrow`.
+- **"Todoist API Error: 404 Not Found" on Update or Close.** The task does not exist or is already completed.
+- **The task went to the Inbox.** **Project ID** was empty. Copy the project's `id` from **Project → List**.
+- **The run is blocked in the web app.** Todoist runs through the browser extension. Install the extension and allow Todoist for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/usage/troubleshooting/extension-only-integrations-in-the-web-app/).
 
 ## Related nodes
 
-- [Get Page Metadata](/nodes/extension/getpagemetadata/)
-- [Linear](/nodes/builtin/integration/linear/)
+- [Hotkey](/nodes/builtin/trigger/hotkey/): capture the current page with a keyboard shortcut.
+- [Get Page Metadata](/nodes/extension/getpagemetadata/): the page's title and address for the task.
+- [Linear](/nodes/builtin/integration/linear/): issues for a team instead of personal tasks.
+- [Trello](/nodes/builtin/integration/trello/): cards on a board.

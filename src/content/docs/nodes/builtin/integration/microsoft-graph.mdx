@@ -11,20 +11,29 @@ node:
   family: integration
 ---
 
-One node covering Microsoft 365 via the Graph API — Outlook mail, OneDrive files, calendar, and To Do — with the current page as context.
+Send and read Outlook mail, put files in OneDrive, add calendar events and To Do tasks, all from one Microsoft 365 node.
 
 ## What it does
 
-Sends and reads Outlook mail, uploads and shares OneDrive files, creates calendar events, and creates and lists To Do tasks. Mail, events, and tasks created "from this page" can carry the page URL, so a signup, confirmation, or deadline captures its own link.
+The Microsoft 365 node works on four kinds of things (**Resource**), each with its own **Operation**:
 
-## Resources and operations
+- **Mail** (Outlook): send an email, save one as a draft, list your latest messages, or get one message.
+- **File** (OneDrive): upload text as a file, list the files at the top of your OneDrive, or create a sharing link for a file or folder.
+- **Calendar** (Outlook calendar): create an event, or list events.
+- **To Do**: create a task, or list the tasks of a list.
 
-| Resource | Operations |
-| --- | --- |
-| Mail | Send, List, Get, Draft |
-| File (OneDrive) | Upload, List, Get link |
-| Calendar | Create event, List |
-| To Do | Create task, List |
+Everything happens in the signed-in account (your own mailbox, drive, calendar and lists). When you fill **Source URL**, the node adds a `Source:` line with that link to the end of the email body, event description or task note, so you can keep track of the page it came from.
+
+**Mail → List** and **Calendar → List** return 10 items by default (up to 100). **File → Upload** sends the text in **File content** as a single upload, which suits files up to about 4 MB. When **List ID** is empty, To Do uses your default task list.
+
+## When to use it
+
+- Email yourself or a colleague a summary built by an AI node, with the source page linked.
+- Save a report as a text or CSV file in OneDrive, then share a view link to it.
+- Add a meeting or deadline you found on a page to your Outlook calendar.
+- Turn a page into a To Do task, "read later" style.
+
+If you use Google's apps, see [Gmail](/nodes/builtin/integration/gmail/), [Google Drive](/nodes/builtin/integration/google-drive/) and [Google Calendar](/nodes/builtin/integration/google-calendar/).
 
 ## Inputs and settings
 
@@ -129,11 +138,26 @@ No further settings.
 | **List ID** | Text |  | No | The To Do list ID (defaults to your default list). |
 {/* AUTO:settings:end */}
 
+- **To** and **Attendees** take one email address per entry.
+- **Body type** decides whether **Body** is read as plain text or as HTML. It is plain text when not set.
+- **File path** is relative to the top of your OneDrive, with folders separated by `/`, for example `Reports/daily.csv`. An existing file at that path is replaced.
+- **Content type** is the file's type, such as `text/csv` or `application/json`. It is `text/plain` when empty.
+- **Start (date-time)** and **End (date-time)** take a date and time without an offset, like `2026-09-10T09:00:00`. They are read in **Time Zone**, which is `UTC` when empty, so set it (for example `Europe/Paris`) to avoid events at the wrong hour.
+- **Link type** is `View` and **Link scope** is `Anyone` when not set. Your organization may not allow `Anyone` links; use `Organization` then.
+- **Message ID**, **Item ID** and **List ID** come from the `id` field of a list operation's output.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+- **Mail → Send** returns `success: true` once Outlook accepts the email. The email is also saved in Sent Items.
+- **Mail → Draft**, **Mail → Get**, **Calendar → Create event** and **To Do → Create task** return the created or fetched item as Microsoft sends it, with its `id`.
+- **Mail → List** returns one item per message with `id`, `subject`, `from`, `receivedDateTime`, `webLink` and `bodyPreview`.
+- **File → List**, **Calendar → List** and **To Do → List** return one item per file, event or task.
+- **File → Upload** returns the file's details, including its `id`, which you can pass to **File → Get link**.
+- **File → Get link** returns the sharing link; the address is in `link.webUrl`.
 
 ## Dependencies and credentials
 
@@ -141,21 +165,28 @@ One output port.
 - **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- **Auth:** OAuth2 (auth-code + PKCE) against the Microsoft `common` tenant. Register a **public client** (no secret) with delegated permissions and the extension redirect ([step-by-step](/usage/using-the-app/credentials/oauth-client/#microsoft-365)); the credential only needs the **Application (client) ID**.
-- **Delegated least-privilege scopes** (requested together in one consent): `offline_access` (refresh), `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite`, `Tasks.ReadWrite`.
-- The token is stored in your credential vault, refreshes transparently, and never passes through awflow's backend.
+The credential is a Microsoft sign-in (OAuth2). You first register a small app in the Azure portal, as a public client with no secret, and paste its **Application (client) ID** into the credential. Give it these delegated Microsoft Graph permissions: `offline_access`, `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite` and `Tasks.ReadWrite`. Then sign in with your Microsoft account and accept the permissions.
 
-## Web and extension builds
+Follow [Create your OAuth client](/usage/using-the-app/credentials/oauth-client/#microsoft-365) for the step-by-step registration, then [Create a credential](/usage/using-the-app/credentials/create/). The sign-in renews itself, so you do not need to sign in again for each run.
 
-This node is **extension-only**. The public-client token exchange isn't guaranteed to be CORS-enabled from the web build, so run it in the awflow browser extension.
+## Example workflow
+
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger adds "Remind me" to the right-click menu on any page.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the page's `title` and `url`.
+3. Microsoft 365, **To Do → Create task**, with **Title** `Read: {{ $input.title }}` and **Source URL** `{{ $input.url }}`. Leave **List ID** empty to use your default list.
+4. [Browser Notification](/nodes/extension/browsernotification/) confirms the task was added.
 
 ## Troubleshooting
 
-- **`access denied` / consent blocked** — your organization's admin may have blocked the app, or a scope needs admin consent. Ask an admin to grant consent, or use an account/tenant that allows it. The node reports this instead of a raw 403.
-- **Sign-in loops or "need admin approval"** — the app registration must be a **public client** with the delegated scopes above and the extension redirect URI.
-- **Event created at the wrong time** — set **Time Zone**; it defaults to UTC.
+- **"Microsoft Graph Error: access denied — your organization's admin may have blocked this app…".** Your organization blocks the app, or one of the permissions needs an admin's consent. Ask your Microsoft 365 admin to approve the app, or use an account that allows it.
+- **"Missing credential".** No credential is selected. Pick or create one in **Credential**.
+- **"Microsoft Graph Error: no To Do lists found for this account".** **List ID** is empty and the account has no To Do list. Open Microsoft To Do once to create one, or set **List ID**.
+- **The event is at the wrong time.** **Time Zone** is empty, so the times were read as UTC. Set your time zone.
+- **The run is blocked in the web app.** Microsoft 365 runs through the browser extension. Install the extension and allow Microsoft 365 for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/usage/troubleshooting/extension-only-integrations-in-the-web-app/).
 
 ## Related nodes
 
-- [Screenshot Page](/nodes/extension/screenshotpage/)
-- [Google Calendar](/nodes/builtin/integration/google-calendar/)
+- [Gmail](/nodes/builtin/integration/gmail/) and [Google Calendar](/nodes/builtin/integration/google-calendar/): the same jobs with a Google account.
+- [CSV](/nodes/builtin/datatransformation/csv/): turn items into CSV text to put in **File content**.
+- [Todoist](/nodes/builtin/integration/todoist/): tasks in Todoist instead of To Do.
+- [Http Request](/nodes/builtin/core/http-request/): call Microsoft Graph endpoints this node does not cover.

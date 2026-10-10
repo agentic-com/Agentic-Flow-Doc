@@ -11,24 +11,24 @@ node:
   family: ai
 ---
 
-An **on-device extractive question-answering model** you plug into the **Model** port of the [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/). With it connected, the agent answers locally in your browser by **quoting** the most relevant passage from its connected Knowledge — free, private, offline, and without made-up answers.
+Let the Q&A Agent answer on your device by quoting the right passage from your knowledge base, instead of asking a chat model.
 
 ## What it does
 
-Exposes an installed extractive Q&A model (e.g. *DistilBERT SQuAD*) as a dependency. When the Q&A Agent runs with it, the agent:
+Local Q&A Model is a model you plug into the **Model** slot of the [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/). With it connected, the agent answers in your browser, free and private, and only with text that is really in your documents. When the agent runs:
 
-1. Retrieves the top passages from its connected [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) (the agent's **Knowledge documents (k)** option, default `4`).
-2. Runs the model over each passage (each capped to **Max knowledge context length**, default `4000` characters).
-3. Keeps the highest-scoring answer and tells you which document it came from.
+1. It finds the most relevant passages in its connected [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) (**Knowledge documents (k)** on the agent, 4 by default).
+2. The model looks for the answer in each passage (each cut to **Max knowledge context length**, 4000 characters by default).
+3. The best-scoring answer wins, with the document it came from.
 
-Extractive models can only return text that is present in a passage, so the Q&A Agent **must have a Knowledge connected** in this mode.
+Because it can only quote, the Q&A Agent **must have a Knowledge connected** when you use this model.
 
 ## When to use it
 
 - Look up facts in your own documents without sending them or the question to a server.
-- You want answers that are verbatim quotes you can trust, not generated text.
+- You want short answers quoted word for word, not generated text.
 
-For open-ended, synthesized answers, connect a chat model instead.
+For open questions that need a written, combined answer, connect a chat model such as [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) instead.
 
 ## Inputs and settings
 
@@ -37,6 +37,8 @@ For open-ended, synthesized answers, connect a chat model instead.
 | --- | --- | --- | --- | --- |
 | **Model** | Model picker |  | No | An on-device extractive Q&A model (e.g. DistilBERT SQuAD). Install one from Local AI, or download it from the picker. |
 {/* AUTO:settings:end */}
+
+The **Model** picker lists on-device question-answering models (for example DistilBERT SQuAD). Install one from the [Local Models](/usage/using-the-app/local-models/) page, or download it from the picker. When you publish or share the workflow, **Model** is cleared, so whoever installs it picks their own.
 
 ## Outputs
 
@@ -48,7 +50,7 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Model | [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) |
 {/* AUTO:outputs:end */}
 
-Returns a Q&A model dependency for the Q&A Agent's Model port. See the [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) for the output shape (`response`, `answer`, `score`, `source`).
+The Q&A Agent produces the output: `answer` (the quoted text), `score` (how sure the model is; higher is better) and `source` (the document it came from).
 
 ## Dependencies and credentials
 
@@ -56,15 +58,22 @@ Returns a Q&A model dependency for the Q&A Agent's Model port. See the [Q&A Agen
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
+## Example workflow
+
+1. Fill a knowledge base with your product manuals on the [knowledge bases page](/usage/using-the-app/knowledge-bases/overview/).
+2. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on selected text (the question).
+3. [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) with **Prompt** `{{ $input.selectionText }}`, with Local Q&A Model in its **Model** slot and [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) (your manuals) in its **Knowledge** slot.
+4. [Browser Notification](/nodes/extension/browsernotification/) with **Message** `{{ $input.answer }} ({{ $input.source }})`.
+
 ## Troubleshooting
 
-- **"… it needs a context: connect a Knowledge to the Q&A Agent."** — connect a Local Knowledge to the agent.
-- **"Choose an on-device Q&A model in the Local Q&A Model node."** — the Model field is empty.
-- **Empty answer** — none of the retrieved passages contained an answer (a warning is logged). Raise **Knowledge documents (k)**, rephrase the question, or check the knowledge store actually holds the information.
+- **"The Local Q&A Model answers by quoting a passage, so it needs a context: connect a Knowledge to the Q&A Agent."** Connect a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to the agent.
+- **"Choose an on-device Q&A model in the Local Q&A Model node."** **Model** is empty. Pick a model.
+- **"Model "…" isn't available. Install it from Local AI."** Install it from [Local Models](/usage/using-the-app/local-models/), or download it from the picker.
+- **The answer is empty.** None of the passages found contained an answer (the run log shows a warning). Raise **Knowledge documents (k)**, rephrase the question, or check that the knowledge base holds the information.
 
-## Related pages
+## Related nodes
 
-- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) — the agent that accepts it.
-- [Answer Question](/nodes/builtin/ai/localai/answer-question/) — standalone extractive Q&A over a passage you provide.
-- [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/)
-- [Local AI](/usage/using-the-app/local-models/) — install and manage on-device models.
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/): the node that accepts it.
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): the knowledge base it quotes from.
+- [Answer Question](/nodes/builtin/ai/localai/answer-question/): on-device Q&A over a passage you provide.

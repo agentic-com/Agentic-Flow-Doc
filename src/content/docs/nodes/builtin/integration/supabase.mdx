@@ -11,46 +11,31 @@ node:
   family: integration
 ---
 
-Persist workflow data to a real database. Where the **Data Store** node covers browser-local state, this covers state you want to keep, query, and share outside the browser — a scrape that accumulates into a table you can actually use.
+Read and write rows in a Supabase database, or call one of its functions, so your workflow's data lands in a real table you can query and share.
 
 ## What it does
 
-Full row access to your Supabase project through PostgREST: **select** (with filters), **insert**, **update**, **upsert**, **delete**, and **RPC** function calls.
+Pick an **Operation**:
 
-## Operations
+- **Select rows**: read rows from a table, with optional filters, chosen columns and a limit.
+- **Insert row**: add one row.
+- **Update rows**: change the rows that match your filters.
+- **Upsert row**: add a row, or update it if a row with the same key already exists.
+- **Delete rows**: remove the rows that match your filters.
+- **Call function (RPC)**: run a Postgres function in your database with named arguments.
 
-| Operation | Notes |
-| --- | --- |
-| Select rows | Columns, PostgREST filters, and a limit. |
-| Insert row | Column → value pairs. |
-| Update rows | Fields to change + filters (**a filter is required**). |
-| Upsert row | Insert or merge on a conflict column. |
-| Delete rows | Filters (**a filter is required**). |
-| Call function (RPC) | A Postgres function with named arguments. |
+**Update rows** and **Delete rows** refuse to run without at least one filter, so a missing filter can never change or erase a whole table.
 
-### Filters
+The node uses your project's anon (public) key. What that key may read and write is decided by the Row Level Security (RLS) policies on each table. If you paste the secret `service_role` key by mistake, the node stops before sending anything, because that key ignores RLS.
 
-Filters are **column → `operator.value`** pairs, matching PostgREST syntax:
+Where [Data Store](/nodes/builtin/core/datastore/) keeps small values in your browser, Supabase keeps them in a database outside it.
 
-| Filter | Meaning |
-| --- | --- |
-| `id` → `eq.42` | `id = 42` |
-| `age` → `gt.18` | `age > 18` |
-| `name` → `like.*acme*` | `name` matches `*acme*` |
-| `status` → `in.(new,open)` | `status` in a set |
+## When to use it
 
-**Update and Delete require at least one filter** — without one they would affect *every* row, so the node refuses to run.
-
-## ⚠️ Use the anon key — never service_role
-
-Supabase gives you two keys, and only one is safe to use here:
-
-| Key | Use it? | Why |
-| --- | --- | --- |
-| **anon** (public) | ✅ Yes | Designed to be public and shipped in browser clients. **Row Level Security (RLS)** enforces what it can actually read and write. |
-| **service_role** | ❌ Never | **Bypasses RLS entirely** — full read/write to every table — and would be recoverable from extension storage. |
-
-The two keys sit next to each other in the dashboard, and `service_role` "just works" when RLS blocks you — which is exactly the trap. **This node reads the key's JWT role and rejects a `service_role` key outright**, before making any request. Use the **anon** key and control access with RLS policies.
+- Collect scraped prices, job offers or leads into a table, one row per run.
+- Check whether a record already exists before acting on it.
+- Mark rows as processed after a workflow handled them.
+- Trigger logic you wrote in the database, such as a function that computes a report.
 
 ## Inputs and settings
 
@@ -118,11 +103,32 @@ Pick **Operation** first; the fields below change with your choice.
 | **Arguments** | Key-value pairs |  | No | Named arguments for the function. |
 {/* AUTO:settings:end */}
 
+- **Project URL** is the address shown in Supabase under **Project Settings → API**, like `https://abcd.supabase.co`. Do not add `/rest/v1`.
+- **Filters** take the column name as key and `operator.value` as value. Common operators:
+
+  | Value | Means |
+  | --- | --- |
+  | `eq.42` | equals 42 |
+  | `neq.done` | is not `done` |
+  | `gt.18` / `lt.100` | greater than 18 / less than 100 |
+  | `like.*acme*` | contains `acme` (case-sensitive; `ilike` ignores case) |
+  | `in.(new,open)` | is one of the listed values |
+  | `is.null` | is empty |
+
+  A value without an operator, like just `42`, does not work.
+- **Columns** is a comma-separated list such as `id,title,price`. Empty means all columns.
+- **Row** and **Fields** take column names as keys. Use expressions for values, for example `title` → `{{ $input.title }}`.
+- **On conflict** names the column that identifies the same row, for example `url` or `email`. That column needs a unique constraint in the table. Empty means the primary key.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+- **Select rows** returns the matching rows, one item per row.
+- **Insert row**, **Update rows**, **Upsert row** and **Delete rows** return the rows as they are after the change (for Delete, the rows that were removed). An empty result on Update or Delete means no row matched the filters, or RLS hid them.
+- **Call function (RPC)** returns whatever the function returns.
 
 ## Dependencies and credentials
 
@@ -130,22 +136,31 @@ One output port.
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- **Credential:** your project's **anon (public) key** (Project Settings → API), stored as a **Bearer Token** credential. Sent as both the `apikey` header and `Authorization: Bearer`.
-- **Project URL:** set per operation (Project Settings → API), e.g. `https://abcd.supabase.co`.
-- The key is stored in your credential vault and never passes through awflow's backend.
+Use your project's **anon public** key, saved as a Bearer Token credential:
 
-## Web and extension builds
+1. In Supabase, open **Project Settings → API**.
+2. Copy the key labelled `anon` `public`. Do not use `service_role` (`secret`).
+3. Create a Bearer Token credential with it. See [Create a credential](/usage/using-the-app/credentials/create/).
 
-This node is **extension-only**.
+Then give the anon role the access the workflow needs with RLS policies on each table, for example a policy that allows `insert` on `prices`.
+
+## Example workflow
+
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger adds "Save to my table" to the right-click menu.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the page's `url` and `title`.
+3. Supabase, **Upsert row**, **Project URL** `https://abcd.supabase.co`, **Table** `saved_pages`, **Row** `url` → `{{ $input.url }}` and `title` → `{{ $input.title }}`, **On conflict** `url`. Saving the same page twice updates its row instead of adding a second one.
 
 ## Troubleshooting
 
-- **"service_role key … rejected"** — you pasted the wrong key. Use the **anon** key.
-- **Blocked with an RLS message** — the anon key is working, but a Row Level Security policy denies the operation. Add or adjust a policy on the table for select/insert/update/delete as needed.
-- **Nothing selected / everything returned** — check your **filters** use the `operator.value` form (e.g. `eq.42`, not just `42`).
+- **"This is a Supabase service_role key, which bypasses Row Level Security…".** You saved the secret key. Replace it with the `anon` key in the credential.
+- **"Supabase Error: 401 … the request was blocked" (or 403).** An RLS policy does not allow this operation for the anon role. Add a policy for it on the table in Supabase.
+- **"Update requires at least one filter…" / "Delete requires at least one filter…".** Add a filter such as `id` → `eq.{{ $input.id }}`.
+- **"Supabase Error: 404 …".** The **Table** or **Function** name is wrong, or the table is not in the `public` schema.
+- **Select returns an empty list.** The filters match nothing, or RLS hides the rows from the anon role. Check the filter format (`eq.42`, not `42`) and the table's select policy.
 
 ## Related nodes
 
-- [Data Store](/nodes/builtin/core/datastore/)
-- [Baserow / NocoDB](/nodes/builtin/integration/baserow-nocodb/)
-- [Custom API](/nodes/builtin/integration/custom-api/)
+- [Data Store](/nodes/builtin/core/datastore/): keep small values in the browser, no account needed.
+- [Baserow / NocoDB](/nodes/builtin/integration/baserow-nocodb/): a spreadsheet-like database.
+- [Airtable](/nodes/builtin/integration/airtable/): rows in an Airtable base.
+- [Http Request](/nodes/builtin/core/http-request/): call other Supabase services, such as Storage.

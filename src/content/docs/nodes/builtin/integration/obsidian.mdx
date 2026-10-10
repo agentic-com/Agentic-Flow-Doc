@@ -11,20 +11,29 @@ node:
   family: integration
 ---
 
-Clip the page you're on straight into your **local** Obsidian vault, through the [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) community plugin. This is the strongest local-first path there is: page → local vault, with **no cloud service anywhere in the middle**. Nothing leaves your machine.
+Clip the page you are on, a selection or a workflow's result into a note in your local Obsidian vault. Nothing goes through a cloud service.
 
 ## What it does
 
-Appends to a note, creates a note, reads a note, and searches the vault. Append and Create can attach the page URL as a Markdown source link — pair it with page-extraction nodes to clip web content into your notes.
+The node talks to Obsidian on your own computer through the [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) community plugin. It has four operations:
 
-## Operations
+- **Append to note**: add content to the end of a note. The note is created if it does not exist.
+- **Create note**: write a note at a path. An existing note at that path is replaced.
+- **Get note**: read a note's Markdown.
+- **Search vault**: find notes that contain some text.
 
-| Operation | Notes |
-| --- | --- |
-| Append to note | Add content to the end of a note (creates it if missing). |
-| Create note | Create or replace a note at a path. |
-| Get note | Read a note's Markdown. |
-| Search vault | Full-text search across the vault. |
+When you fill **Source URL**, **Append to note** and **Create note** add a `[Source](…)` link on its own line after your content, so every clip links back to its page.
+
+Obsidian must be open, with the plugin enabled, while the workflow runs.
+
+## When to use it
+
+- Save an article's text or an AI summary of it to a "Reading" note.
+- Keep a daily log: append one line per run to `Journal/2026-09-10.md`.
+- Read a note (a prompt, a checklist) and use it in later nodes.
+- Look up whether you already have notes on a topic before clipping again.
+
+For a cloud workspace, use [Notion](/nodes/builtin/integration/notion/) instead.
 
 ## Inputs and settings
 
@@ -72,19 +81,9 @@ Pick **Operation** first; the fields below change with your choice.
 | **Query** | Text |  | Yes | Text to search for across the vault. |
 {/* AUTO:settings:end */}
 
-## Setup
-
-1. In Obsidian, install and enable the **Local REST API** community plugin.
-2. Copy the **API key** from the plugin's settings and save it as a **Bearer Token** credential here.
-3. Leave the **Server URL** at `http://127.0.0.1:27123` unless you changed the port.
-
-### Use the HTTP port, not HTTPS
-
-The plugin exposes an HTTPS port (`27124`) with a **self-signed certificate** and an HTTP port (`27123`). A self-signed cert makes `fetch` fail without manual browser intervention, so this node defaults to and recommends the **HTTP port** — safe here because the connection never leaves `127.0.0.1`.
-
-## Web and extension builds
-
-This node is **extension-only**. It talks to software running on your own machine (`http://127.0.0.1`), which is already covered by the extension's host permissions — no new permission and no cloud round-trip.
+- **Note path** is relative to the vault folder and includes `.md`, for example `Clippings/Article.md`. You can build it with an expression, like `Clippings/{{ $input.title }}.md`.
+- **Server URL** can stay empty: the node uses `http://127.0.0.1:27123`, the plugin's HTTP port. Only change it if you changed the port in the plugin. Use the HTTP address, not the HTTPS one (port 27124), which the browser rejects because of its self-signed certificate.
+- **Content** is Markdown, so headings, lists and links show up formatted in Obsidian.
 
 ## Outputs
 
@@ -92,19 +91,39 @@ This node is **extension-only**. It talks to software running on your own machin
 One output port.
 {/* AUTO:outputs:end */}
 
+- **Append to note** and **Create note** return `success: true` and the note's `path`.
+- **Get note** returns the `path` and the note's Markdown in `content`.
+- **Search vault** returns the plugin's search results: one item per matching note, with its `filename` and the matching passages.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
+1. In Obsidian, open **Settings → Community plugins**, install **Local REST API** and enable it.
+2. In the plugin's settings, copy the **API key**.
+3. In AWFlow, create a Bearer Token credential and paste the key. See [Create a credential](/usage/using-the-app/credentials/create/).
+
+The key and your notes stay on your computer.
+
+## Example workflow
+
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger with **Menu Contexts** set to `Selection` adds "Clip to Obsidian" to the right-click menu for highlighted text.
+2. Obsidian, **Append to note**, **Note path** `Clippings/Inbox.md`, **Content** `> {{ $input.selectionText }}`, **Source URL** `{{ $input.pageUrl }}`.
+3. [Browser Notification](/nodes/extension/browsernotification/) confirms `Clipped to {{ $input.path }}`.
+
 ## Troubleshooting
 
-- **"Could not reach the Obsidian Local REST API…"** — Obsidian isn't running, the Local REST API plugin is disabled, or the port doesn't match. Open Obsidian, enable the plugin, and confirm the **Server URL** matches the plugin's HTTP port.
-- **`401`** — the API key is wrong. Recopy it from the plugin settings into the credential.
-- **`404` on Get/Append** — check the **Note path** (including the `.md` extension and any folders).
+- **"Could not reach the Obsidian Local REST API at…".** Obsidian is closed, the plugin is turned off, or **Server URL** does not match the plugin's port. Open Obsidian, enable the plugin, and check the HTTP port in its settings.
+- **"Obsidian API Error: 401 … check the API key from the plugin settings".** The key in the credential is wrong, or it was regenerated in the plugin. Copy it again.
+- **"Obsidian API Error: 404…" on Get note.** No note at **Note path**. Check folders, spelling, capitals and the `.md` extension.
+- **A note you wanted to keep was replaced.** **Create note** overwrites. Use **Append to note** to add to an existing note.
+- **The run is blocked in the web app.** Obsidian runs through the browser extension. Install it, or run the workflow from the extension.
 
 ## Related nodes
 
-- [Get Page Metadata](/nodes/extension/getpagemetadata/)
-- [Custom API](/nodes/builtin/integration/custom-api/)
+- [Notion](/nodes/builtin/integration/notion/): notes and databases in Notion's cloud.
+- [Get All Text](/nodes/extension/getalltext/): grab a page's text to clip.
+- [Markdown](/nodes/builtin/datatransformation/markdown/): convert HTML to Markdown before writing a note.
+- [Readwise / Reader](/nodes/builtin/integration/readwise/): save highlights to Readwise instead.

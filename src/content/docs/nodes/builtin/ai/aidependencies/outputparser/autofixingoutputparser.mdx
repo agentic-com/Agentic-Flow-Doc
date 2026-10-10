@@ -11,15 +11,21 @@ node:
   family: ai
 ---
 
-Wraps another output parser and retries with a model when the output fails to parse
+Wrap another output parser so a model repairs replies that fail to parse, instead of the run failing.
 
 ## What it does
 
-Wraps a base output parser (for example Structured Output Parser or Item List Output Parser) and, when the model's raw output fails to parse against it, sends the malformed output back to a model with instructions to fix it, then retries parsing.
+Auto-fixing Output Parser is not a step on its own: it has no output port and never runs by itself. You plug it into the **Output Parser** slot of an AI node, in place of the parser you would normally use.
+
+It needs two nodes of its own: a base parser (for example [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/)) on **Base Parser**, and a chat model on **Model**. The base parser still decides the format. When a reply does not parse, this node sends the broken reply, the error and the format instructions to its model, asks for a corrected version, and parses that. It tries to fix a reply once; if the corrected reply also fails, the run fails.
 
 ## When to use it
 
-Connect this in place of a base output parser when the model's responses are prone to malformed output (e.g. slightly invalid JSON) and you want automatic self-correction instead of the agent failing outright.
+- The model usually returns good JSON but sometimes adds a stray sentence or a missing quote.
+- You use a small or on-device model that is less reliable with formats.
+- A failed run is costly, for example in a scheduled workflow nobody watches.
+
+If the model gets the format wrong most of the time, choose a stronger model on the AI node instead: each fix is an extra model call.
 
 ## Inputs and settings
 
@@ -27,7 +33,7 @@ Connect this in place of a base output parser when the model's responses are pro
 This node has no settings.
 {/* AUTO:settings:end */}
 
-This node has no editable settings of its own. It requires two connected dependencies:
+Everything is set on the two connected nodes: the format on the base parser, the fixing model on the model node.
 
 ## Outputs
 
@@ -40,7 +46,7 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Base Parser | [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
 {/* AUTO:outputs:end */}
 
-Returns an output parser dependency that first tries the base parser, and on failure asks the connected model to fix the output before retrying.
+The node it is plugged into returns the same data as with the base parser alone, for example an object in `response`.
 
 ## Dependencies and credentials
 
@@ -51,21 +57,28 @@ Returns an output parser dependency that first tries the base parser, and on fai
 | **Base Parser** | output parser | Yes | One |
 {/* AUTO:deps:end */}
 
-- Requires a connected Model dependency and a connected Base Parser (output parser) dependency; both are required for this node to function.
-- No explicit credential is declared in the node description beyond what the connected model itself requires.
+- **Model**: any chat model node, such as [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/). The model node holds the API key; this node has no credential of its own.
+- **Base Parser**: the parser that defines the format, usually [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) or [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/).
 
 ## Example workflow
 
-Connect a model (e.g. Chat OpenAI) and a base output parser (e.g. Structured Output Parser) into Auto-fixing Output Parser, then connect Auto-fixing Output Parser to an AI agent's output parser input. If the agent's raw output fails to parse against the base parser, it is automatically sent back to the connected model for correction before parsing is retried.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads a highlighted job post, with **Output field name** `text`.
+2. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) with **Prompt** `Extract the job details from: {{ $input.text }}`, and an [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/) model on its **Model** slot.
+3. Auto-fixing Output Parser connected to the **Output Parser** slot of Basic LLM Chain.
+4. On Auto-fixing Output Parser, connect a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) to **Base Parser** with **JSON Output Example** `{ "title": "Designer", "company": "Acme", "remote": true }`, and an [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model to **Model**.
+
+The local model does the work; OpenAI is only called when its reply needs repair.
 
 ## Troubleshooting
 
-- Check that both the Model and Base Parser dependencies are connected before running the node — both are required.
-- If parsing still fails after fixing, verify the base parser's expected format matches what you're asking the model to produce.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Dependency model is required" or "Dependency parser is required".** Connect a chat model to **Model** and a parser to **Base Parser**. Both are required.
+- **"Model not found".** The model node on **Model** is not set up: open it and choose a model and its credential.
+- **"Base output parser not found".** The node on **Base Parser** gave no parser. Reconnect a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) or [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/) and check its settings.
+- **"Failed to parse" even with this node.** The fixing model's answer also failed. Simplify the base parser's format, or connect a stronger model to **Model**.
 
 ## Related nodes
 
-- [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/)
-- [Prompting and Outputs](/advanced-ai/concepts/prompting-and-outputs/)
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/): the usual base parser.
+- [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/): a base parser for simple lists.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): one prompt, one parsed answer.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an agent that also accepts an output parser.

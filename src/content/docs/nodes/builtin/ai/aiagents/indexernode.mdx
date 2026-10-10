@@ -11,15 +11,22 @@ node:
   family: ai
 ---
 
-Splitting text into chunks and embedding them into a vector store
+Save text from a workflow into a knowledge base, so agents can search it later.
 
 ## What it does
 
-Splits text into chunks and saves them, with their embeddings, into the connected knowledge base so agents can search them later.
+Indexer splits **Input** into chunks with the connected text splitter, then saves the chunks into the knowledge base connected to **Knowledge**. Each chunk is embedded with that knowledge base's own embedding model.
+
+With a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) store, indexing the **same source** again updates it instead of adding a copy: its chunks are overwritten, and if the new text is shorter, the extra old chunks are removed. Empty chunks are skipped.
+
+Indexer is an end point: it has no output port, so nothing runs after it on its branch.
 
 ## When to use it
 
-Use it to fill a [knowledge base](/usage/using-the-app/knowledge-bases/overview/) from a workflow: pages you scrape, files you load, results of an API call. To add files, pages or text by hand, use **Add sources** on the knowledge bases page instead.
+- Fill a [knowledge base](/usage/using-the-app/knowledge-bases/overview/) from a workflow: pages you scrape, files you load, results of an API call.
+- Keep a knowledge base up to date on a schedule, by re-indexing the same pages.
+
+To add files, pages or text by hand, use **Add sources** on the knowledge bases page instead. To ask questions about indexed content, use [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) or [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/).
 
 ## Inputs and settings
 
@@ -32,11 +39,9 @@ Use it to fill a [knowledge base](/usage/using-the-app/knowledge-bases/overview/
 | **Source link** | Text |  | No | Where the text comes from, linked from citations. |
 {/* AUTO:settings:end */}
 
-### Update in place
+Fill **Input** with an expression such as `{{ $input.text }}`.
 
-Indexing again with the **same source** updates it instead of adding a copy. The source is identified by its Source ID, or else its Source link, or else its Source name. Its passages are overwritten in place, and if the new text is shorter, the old passages beyond it are removed.
-
-Give each document a Source name or Source link (or an ID) when a workflow re-indexes the same pages on a schedule; without one, a changed text counts as a new source.
+A source is identified by its **Source ID**, else its **Source link**, else its **Source name**. With none of them, the text itself is the identity, so a changed text counts as a new source. When a workflow re-indexes the same pages, always set one of the three. Citations show **Source name**, or the link, or "Workflow input" when both are empty.
 
 ## Outputs
 
@@ -46,19 +51,15 @@ This node has no output port: nothing runs after it on this branch.
 Each output item has the fields `success` (true/false), `chunks` (number), `added` (number), `updated` (number), `failed` (number), `removed` (number), `sourceId` (text).
 {/* AUTO:outputs:end */}
 
-| Field | Description |
-| --- | --- |
-| `success` | `false` when some chunks could not be saved (see `failed`). |
-| `chunks` | How many chunks the input was split into. |
-| `added` | New chunks written. |
-| `updated` | Chunks that replaced the same source's previous version. |
-| `failed` | Chunks that could not be saved. |
-| `removed` | Old chunks removed because the source got shorter. |
-| `sourceId` | The source the chunks are stored under. Index again with the same id to update it. |
+The result is visible in the run data:
 
-After a run, the node on the canvas shows a badge such as **24 added · 3 updated**, and the node settings show the last run's **Added / Updated / Failed** counts. When some chunks fail, the run log has a warning; when none can be saved, the node fails.
+- `chunks`: how many chunks the input was split into.
+- `added` and `updated`: new chunks, and chunks that replaced the same source's previous version.
+- `failed`: chunks that could not be saved. `success` is `false` when any failed.
+- `removed`: old chunks deleted because the source got shorter.
+- `sourceId`: the source the chunks are stored under. Index again with the same id to update it.
 
-With a vector store other than Local Knowledge, the chunks are simply added (`updated` is always 0).
+After a run, the node on the canvas shows a badge such as **24 added · 3 updated**. With a vector store other than Local Knowledge, chunks are simply added and `updated` is always 0.
 
 ## Dependencies and credentials
 
@@ -70,23 +71,28 @@ With a vector store other than Local Knowledge, the chunks are simply added (`up
 | **Text Splitter** | text splitter | Yes | One |
 {/* AUTO:deps:end */}
 
-- **Knowledge** (required) — a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node. The chunks are embedded with that knowledge base's own model.
-- **Text Splitter** (required) — how the text is split, for example [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/).
-- **Model** (optional) — not used for indexing. Existing workflows that have one connected keep working.
+- **Knowledge**: a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node pointing at the knowledge base to fill.
+- **Text Splitter**: how the text is cut, for example [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/).
+- **Model**: not used for indexing. Workflows that already have one connected keep working.
 
 ## Example workflow
 
-A Schedule Trigger → HTTP Request (or a page extraction node) → Indexer, with Local Knowledge and a text splitter connected to the Indexer. Set **Source link** to the page URL so each run updates the same source, and citations in chats link back to it.
+1. [Schedule](/nodes/builtin/trigger/schedule/) runs every day.
+2. [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) with **URL** `https://example.com/pricing` and **Output field name** `text`.
+3. Indexer with **Input** `{{ $input.text }}`, **Source name** `Pricing page` and **Source link** `https://example.com/pricing`. Connect [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to **Knowledge** and [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) to **Text Splitter**.
+
+Each day the same source is updated in place, and chat citations link back to the page.
 
 ## Troubleshooting
 
-- **"None of the N chunks could be saved to the knowledge base."** — nothing was written; check the knowledge base and its embedding model in [Local AI](/usage/using-the-app/local-models/).
-- **"N of M chunks could not be saved…"** (warning) — part of the text was saved; `success` is `false` and `failed` counts the rest.
-- **Duplicates after each run** — set a Source name, Source link or Source ID so the same document is updated in place.
-- **Citations read "Workflow input"** — set a Source name.
+- **"None of the N chunks could be saved to the knowledge base."** Nothing was written. Check that the knowledge base exists and that its embedding model is installed in [Local models](/usage/using-the-app/local-models/).
+- **"N of M chunks could not be saved to the knowledge base."** (a warning in the run log) Part of the text was saved; `success` is `false` and `failed` counts the rest. Run again to retry.
+- **Duplicates appear after each run.** No stable identity is set. Fill **Source ID**, **Source link** or **Source name**.
+- **Citations read "Workflow input".** Set **Source name**.
+- **"Vector store not found" or "Text splitter not found".** The node on that slot is not set up. Open it and complete its settings.
 
 ## Related nodes
 
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
-- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
-- [File Document Loader](/nodes/builtin/ai/loaders/filedocumentloader/), [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): the knowledge base Indexer writes to.
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) and [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/): answer questions from what you indexed.
+- [File Document Loader](/nodes/builtin/ai/loaders/filedocumentloader/) and [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/): load documents to index.

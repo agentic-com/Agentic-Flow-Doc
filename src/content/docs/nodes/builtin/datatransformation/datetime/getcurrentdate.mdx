@@ -11,15 +11,17 @@ node:
   family: data
 ---
 
-Get the current date
+Get the date and time at the moment the node runs.
 
 ## What it does
 
-Returns the current date and time as a timestamp.
+Get Current Date writes the current date and time into a field named by **Output field name**. It reads the clock of the computer running the workflow, down to the millisecond. It ignores the incoming data unless you turn on **Include input fields**, which keeps the incoming fields next to the date.
 
 ## When to use it
 
-Use this node to add timestamps to data, calculate relative dates, or log when workflows run.
+- Stamp an item with the time it was processed before saving it.
+- Start a date calculation from "now", such as "now plus 7 days".
+- Build a dated file name or message.
 
 ## Inputs and settings
 
@@ -37,6 +39,8 @@ Use this node to add timestamps to data, calculate relative dates, or log when w
 One output port.
 {/* AUTO:outputs:end */}
 
+The item holds the current date under **Output field name**, for example `{ now: "2026-03-05T09:30:12.418Z" }`. Pass it to [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) for a readable version.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
@@ -45,14 +49,21 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect data into Get Current Date, configure the settings above, and use the output in the next workflow step.
+Log each run to a sheet with a timestamp:
+
+1. [Schedule](/nodes/builtin/trigger/schedule/) trigger, every hour.
+2. Get Current Date, **Output field name** `checkedAt`.
+3. [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/), **Date to format** `{{ $input.checkedAt }}`, **Format** `YYYY-MM-DD`, **Output field name** `day`, **Include input fields** on.
+4. [Google Sheets](/nodes/builtin/integration/google-sheets/), append a row with `{{ $input.day }}` and `{{ $input.checkedAt }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The incoming data is gone after this node.** By default only the date is output. Turn on **Include input fields** under **Options**.
+- **The time looks a few hours off.** The date is stored in UTC (the `Z` at the end). [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) shows it in your local time zone.
+- **The date field is missing.** With **Include input fields** on, an incoming field with the same name as **Output field name** replaces the date. Use a different name.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/): turn the date into readable text.
+- [Add To A Date](/nodes/builtin/datatransformation/datetime/addtoadate/): compute a date relative to now.
+- [Round a Date](/nodes/builtin/datatransformation/datetime/roundadate/): get the start of today, this week or this month.

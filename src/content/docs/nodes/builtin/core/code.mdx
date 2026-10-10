@@ -11,15 +11,24 @@ node:
   family: core
 ---
 
-Run custom python code
+Run your own Python code on the incoming data when no other node does what you need.
 
 ## What it does
 
-Executes custom Python code to transform data or perform complex logic within your workflow.
+Code runs the Python in **Code to Execute** and passes on the value of its **last line**. The language is Python only (Python 3 with its standard library, running in the browser). There is no JavaScript mode.
+
+- The incoming data is available as a variable named `input`.
+- The value of the final expression becomes the output, under `result`.
+- Anything you `print()` appears in the run's activity log, which helps with debugging.
+- Each run starts from a clean slate in an isolated sandbox: no network, no access to the page or your stored data, and a 30-second time limit. The first run after a pause takes a couple of seconds while Python starts.
 
 ## When to use it
 
-Use this node for custom data transformations, calculations, or logic that isn't available in other nodes.
+- A calculation or text transformation that would take many nodes otherwise.
+- Reshape a complex structure: regroup a list, merge fields, count values.
+- Parse an unusual format with Python's standard library (`re`, `json`, `csv`, `datetime`, `statistics`).
+
+For simple field changes, [Edit Fields](/nodes/builtin/datatransformation/editfields/) or [Math](/nodes/builtin/datatransformation/math/) need no code. To call an API, use [Http Request](/nodes/builtin/core/http-request/).
 
 ## Inputs and settings
 
@@ -29,60 +38,42 @@ Use this node for custom data transformations, calculations, or logic that isn't
 | **Code to Execute** | Code |  | Yes | The code will be executed in the context of the node. |
 {/* AUTO:settings:end */}
 
-## Reading input
+### Reading `input`
 
-The data flowing into the node is available to your code as a variable named **`input`** — a normal Python value (dict, list, or scalar), mirroring what `{{ $input }}` holds elsewhere. Its shape depends on how many nodes are wired into the Code node:
+`input` is a normal Python value (a dict, a list or a single value), the same data that `{{ $input }}` holds in other nodes. Its shape depends on how many nodes are connected:
 
-- **One node connected** — `input` is that node's output, exactly as it produced it:
+- **One node connected.** `input` is that node's output as it produced it:
 
   ```python
-  # from a single upstream node
-  # input == {"selection": "Hello", "triggerType": "contextMenu"}
-  input["selection"]  # -> "Hello"
+  # input == {"selectionText": "Hello", "triggerType": "contextmenu"}
+  input["selectionText"]  # -> "Hello"
   ```
 
-- **Several nodes connected (fan-in)** — `input` is a dict **keyed by each source node's label**, so you can tell the branches apart:
+- **Several nodes connected.** `input` is a dict keyed by each source node's label, so you can tell them apart:
 
   ```python
   # input == {
   #   "Get Selected Text": {"selection": "Hello"},
-  #   "HTTP Request": {"status": 200, "body": {...}},
+  #   "Http Request": {"data": {...}},
   # }
   input["Get Selected Text"]["selection"]  # -> "Hello"
   ```
 
-  Two rules keep those keys usable:
-  - A node with a **blank label** is keyed by its node id instead, so a key is never empty.
-  - If **two nodes share a label**, both keys get an id suffix — `"HTTP Request [a1b2]"` — so they stay unique. A label used only once keeps its plain name.
+  A node with a blank label is keyed by its id. If two nodes share a label, both keys get a short suffix, such as `"Http Request [a1b2]"`.
 
-- **Nothing connected** — `input` is an empty dict, `{}`. It is always defined, so you can safely read it (e.g. `input.get("selection", "")`) even when no node feeds the Code node.
+- **Nothing connected.** `input` is an empty dict, `{}`, so `input.get("selectionText", "")` is always safe.
 
-In expressions elsewhere on the canvas, the same data is reachable as `{{ $input }}`: `{{ $input.selection }}` for a single connection, or `{{ $input["Get Selected Text"].selection }}` for fan-in.
+### Returning a value
 
-## Returning output
-
-The node outputs the value of the **last expression** in your code — like a notebook cell. Put the value you want to emit on its own final line. (Assigning to a variable is *not* enough; an assignment is a statement, not an expression, so it emits nothing.)
+Put the value you want to pass on as the last line, on its own. An assignment on the last line returns nothing.
 
 ```python
-# input = {"tags": ["news", "ai"], "title": "Hello"}
-out = {
-    "title": input["title"].upper(),
-    "tag_count": len(input["tags"]),
-    "joined": ", ".join(input["tags"]),
+words = input.get("selectionText", "").split()
+{
+    "words": len(words),
+    "longest": max(words, key=len) if words else "",
 }
-out  # <- last expression: this is what the node returns
 ```
-
-## Sandbox and limits
-
-Each run of the Code node gets a **fresh Python interpreter in its own isolated background worker**, separate from the app page:
-
-- **No network access.** `pyodide.http` (`pyfetch`, `open_url`) and browser networking are disabled — calling them raises `PermissionError`. To call an API, use an [Http Request](/nodes/builtin/core/http-request/) node before or after the Code node and pass the data through `input` / the output.
-- **No access to the browser or extension.** The `js` module only exposes basic helpers (`Math`, `JSON`, `Date`, timers, `console`); it cannot reach the page, your stored credentials, browser storage, or extension APIs.
-- **Nothing is kept between runs.** Variables, imports and files from a previous run are gone; everything your code needs must come from `input`.
-- **Data in and out is JSON.** `input` is decoded from JSON and the output value is converted to JSON: dicts become objects, sets become lists, very large integers become strings, and values with no JSON form (e.g. class instances) are returned as their `str()`.
-- **Timeout.** A run is stopped after 30 seconds (including interpreter start-up); the worker is terminated, so infinite loops really stop.
-- **Standard library only.** Extra packages (e.g. `numpy`) cannot be installed.
 
 ## Outputs
 
@@ -96,7 +87,7 @@ Each output item has these fields:
 | `result` | Any | What the code returned; null when it returned nothing |
 {/* AUTO:outputs:end */}
 
-The value of the last expression, visible in the workflow execution data and passed to the next node.
+Read the returned value downstream with `{{ $input.result }}`, or a field of it with `{{ $input.result.words }}`. The value travels as JSON: dicts become objects, sets become lists, integers too large for JSON become text, and values with no JSON form (such as class instances) are returned as their text form.
 
 ## Dependencies and credentials
 
@@ -106,16 +97,23 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect data into Code, configure the settings above, and use the output in the next workflow step.
+Count the words in text you select on a page:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger, **Menu Contexts** `Selection`.
+2. Code with the snippet from **Returning a value** above.
+3. [Browser Notification](/nodes/extension/browsernotification/), **Title** `Word count`, **Message** `{{ $input.result.words }} words, longest: {{ $input.result.longest }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- `PermissionError: Network access is disabled…` — the Code node cannot make HTTP calls; use an Http Request node instead.
-- `Code execution timed out after 30000ms` — the code (or the interpreter start-up on a slow machine) took longer than 30 seconds.
+- **"Network access is disabled in the Code node sandbox. Use an HTTP Request node to call APIs."** The code tried to fetch something. Fetch it with [Http Request](/nodes/builtin/core/http-request/) before the Code node and read the response from `input`.
+- **"Code execution timed out after 30000ms".** The code ran longer than 30 seconds (start-up included), often an endless loop. Simplify it or split the work across items.
+- **`result` is `null`.** The last line is an assignment, a `print()` or `None`. End with the value itself, for example `out` on its own line.
+- **`ModuleNotFoundError`.** Only the Python standard library is available; packages such as `numpy` or `requests` cannot be installed.
+- **`KeyError` on `input[...]`.** The field is not there, or several nodes are connected and `input` is keyed by node label. Use `print(input)` to see its shape in the activity log.
 
 ## Related nodes
 
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): set or rename fields without code.
+- [Http Request](/nodes/builtin/core/http-request/): call APIs, which the Code node cannot do.
+- [JSON](/nodes/builtin/datatransformation/json/): reshape JSON without code.
+- [Debug](/nodes/builtin/core/debug/): inspect the data between steps.

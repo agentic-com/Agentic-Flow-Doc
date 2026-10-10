@@ -11,15 +11,18 @@ node:
   family: ai
 ---
 
-Turn speech into text **entirely in your browser** with Whisper (tiny/base, on transformers.js). Private, offline, no cost — audio never leaves the device.
+Turn speech into text with a Whisper model that runs in your browser, so the audio never leaves your device.
 
 ## What it does
 
-Runs the audio through an on-device speech-to-text model and returns the transcript plus timestamped segments. The audio is decoded and resampled in the browser before it reaches the model.
+Transcribe Audio loads the **Audio**, converts it to the format Whisper expects, and runs it through the speech-to-text model you pick (*Whisper tiny* or *Whisper base*). It returns the full transcript and timed segments. Long recordings are handled in 30-second windows.
+
+There is no cost per run and no API key.
 
 ## When to use it
 
-Transcribe a voice note, a recorded call, or microphone input captured by [Record Audio](/nodes/builtin/flow/record-audio/) — then summarize, search, or route the text downstream.
+- Transcribe a voice note captured during a run with [Record Audio](/nodes/builtin/flow/record-audio/).
+- Turn a recorded call or audio file into text you can summarize, search or save.
 
 ## Inputs and settings
 
@@ -30,9 +33,12 @@ Transcribe a voice note, a recorded call, or microphone input captured by [Recor
 | **Audio** | Media |  | No | Audio URL, data URL, $binary from Record Audio / a file node, or a clip recorded here. |
 {/* AUTO:settings:end */}
 
-### Record tab
+**Audio** has five tabs:
 
-Next to From input, URL, Upload and Base64, the Audio field has a **Record** tab: record a clip (up to 2 minutes) from your microphone — you can pick which mic — and it's stored with the node like an upload. Use it to try a model with **Run preview**, or as fixed audio for the node. To capture new audio each time the workflow runs, use the [Record Audio](/nodes/builtin/flow/record-audio/) node instead.
+- **From input**: an expression that points to audio from an earlier node, usually `{{ $binary }}` after Record Audio.
+- **URL**: a web address of an audio file.
+- **Upload** and **Base64**: a fixed audio file stored with the node.
+- **Record**: record a clip of up to 2 minutes from your microphone (you can pick which one). It is stored with the node like an upload. Use it to try a model with **Run preview**. To capture new audio on every run, use the Record Audio node instead.
 
 ## Outputs
 
@@ -48,11 +54,9 @@ Each output item has these fields:
 | `chunks` | Any | The raw timestamped chunks |
 {/* AUTO:outputs:end */}
 
-Returns `{ transcript, segments, chunks }`:
-
-- `transcript` — the full text.
-- `segments` — timed pieces of the transcript as `{ start, end, text }`, times in seconds. The last segment's `end` can be `null` when the audio cuts off mid-phrase.
-- `chunks` — the same timing in the model's raw form (`{ timestamp: [start, end], text }`), kept for older workflows.
+- `transcript`: the full text. Use it as `{{ $input.transcript }}`.
+- `segments`: timed pieces as `{ start, end, text }`, with times in seconds. The last `end` can be `null` when the audio stops mid-phrase.
+- `chunks`: the same timing in the model's raw form, kept for older workflows.
 
 ## Dependencies and credentials
 
@@ -60,12 +64,27 @@ Returns `{ transcript, segments, chunks }`:
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
+The **Model** picker lists your installed Whisper models first, then ones that download on first use. *Whisper tiny* is smaller and faster; *Whisper base* is more accurate. Manage them on the [Local AI](/usage/using-the-app/local-models/) page.
+
+## Example workflow
+
+Dictate a note and copy it as text:
+
+1. [Record Audio](/nodes/builtin/flow/record-audio/) with **Prompt** `Dictate your note` and **Max length (seconds)** 60.
+2. Transcribe Audio with **Model** *Whisper base* and **Audio** (From input) `{{ $binary }}`.
+3. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.transcript }}`.
+
 ## Troubleshooting
 
-- **Empty transcript** — check the audio actually contains speech and is a format the browser can decode (e.g. `webm`, `wav`, `mp3`).
-- **Slow first run** — Whisper loads on first use, then stays warm for the session. Prefer `tiny` on low-memory devices.
+- **"Choose a speech-to-text model."** **Model** is empty. Pick one.
+- **"No audio provided. Pass a URL, a data URL, or a $binary from a previous node."** **Audio** is empty, or its expression returned nothing. If Record Audio was dismissed, it continues with no recording.
+- **"Could not load the audio (HTTP …)."** The audio address could not be downloaded. Check the URL, or download the file first.
+- **The transcript is empty or garbled.** Check that the audio really contains speech in a format your browser can play, such as webm, wav or mp3. Try *Whisper base* for better accuracy.
+- **The first run is slow.** The model downloads and loads on first use; later runs are fast.
 
 ## Related nodes
 
-- [Record Audio](/nodes/builtin/flow/record-audio/)
-- [Generate Text](/nodes/builtin/ai/localai/generate-text/)
+- [Record Audio](/nodes/builtin/flow/record-audio/): capture microphone audio during a run.
+- [Summarize](/nodes/builtin/ai/localai/summarize/): condense a long transcript.
+- [Translate](/nodes/builtin/ai/localai/translate/): translate the transcript on-device.
+- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/): its **Transcribe audio** task does the same in a generic node.

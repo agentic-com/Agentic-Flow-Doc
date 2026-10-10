@@ -11,15 +11,21 @@ node:
   family: core
 ---
 
-Get all the text content from a given URL
+Download a web page by its address and get its readable text, without opening it in a tab.
 
 ## What it does
 
-Extracts all visible text content from a web page at the specified URL.
+Get All Text from Link downloads the page at **URL** and turns its HTML into plain text: headings, paragraphs and list items are kept with their line breaks, while link and image addresses are left out. Long lines wrap at 120 characters. The text goes into the field named by **Output field name**.
+
+The page is downloaded as the server sends it. Scripts on the page do not run, so text that a site loads afterwards with JavaScript (common on modern apps and feeds) is not included.
 
 ## When to use it
 
-Use this node to scrape text from websites for analysis, indexing, or content extraction workflows.
+- Read an article or documentation page to summarise it or send it to an AI model.
+- Watch a simple page for a word or a change, without opening it.
+- Read many URLs from a list, one per item.
+
+To read the page you are looking at (including content loaded by scripts), use [Get All Text](/nodes/extension/getalltext/) instead. To get the raw HTML, use [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/).
 
 ## Inputs and settings
 
@@ -34,11 +40,17 @@ Use this node to scrape text from websites for analysis, indexing, or content ex
 | Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
 {/* AUTO:settings:end */}
 
+- **URL** must be a full address starting with `https://` or `http://`. It can be an expression, such as `{{ $input.linkUrl }}`.
+- **Timeout** is in milliseconds (10000 = 10 seconds).
+- **Headers** let you send extra request headers, such as a cookie or a language preference (`Accept-Language: fr`).
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+The item holds the page text under **Output field name**, for example `{ text: "Page title\n\nFirst paragraph..." }`. Turn on **Include input fields** to keep the incoming fields next to it.
 
 ## Dependencies and credentials
 
@@ -48,16 +60,23 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect data into Get All Text from Link, configure the settings above, and use the output in the next workflow step.
+Summarise any link you right-click:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger, **Menu Contexts** `Link`.
+2. Get All Text from Link, **URL** `{{ $input.linkUrl }}`, **Output field name** `text`.
+3. [Summarize](/nodes/builtin/ai/localai/summarize/), **Text** `{{ $input.text }}`, **Length** Short.
+4. [Display Markdown](/nodes/extension/displaymarkdown/) to show the summary.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Invalid URL: …".** The address is malformed, or the request could not be sent at all. Check the address. If it is correct and the node runs in the web app, the site likely refuses requests from other websites; run the workflow from the extension.
+- **"HTTP error! status: 403".** The site blocks automated requests or needs you to be signed in. Try adding headers, or use [Get All Text](/nodes/extension/getalltext/) on the page open in your browser.
+- **"Request timeout".** The site took longer than **Timeout**. Raise it, for example to `30000`.
+- **"No content found", or the text is nearly empty.** The page has no text in its HTML, often because it is built by JavaScript. Open the page and use [Get All Text](/nodes/extension/getalltext/) instead.
 
 ## Related nodes
 
-- [Code](/nodes/builtin/core/code/)
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/): get the raw HTML to pick out specific parts.
+- [Get All Text](/nodes/extension/getalltext/): read the text of a page open in a tab.
+- [Http Request](/nodes/builtin/core/http-request/): call an API or send a custom request.
+- [Summarize](/nodes/builtin/ai/localai/summarize/): shorten the text on your device.

@@ -11,26 +11,24 @@ node:
   family: ai
 ---
 
-Analyze the sentiment of a text using a LLM, or on-device with a Local Classifier
+Label the tone of a text as positive, negative or neutral (or your own categories), with a chat model or on-device.
 
 ## What it does
 
-Sends the input text to a language model and asks it to classify the sentiment as one of `positive`, `negative`, or `neutral` by default, or into a custom set of categories you define. The model is instructed to respond with only the category name, with no explanation.
+Sentiment Analysis reads **Text** and returns one label in `sentiment`. What you connect to **Model** decides how; there is no setting to switch:
 
-It can also run **on-device** — see [Run on-device](#run-on-device).
+- **A chat model** (for example [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/)) is told to answer with only one of `positive`, `negative`, `neutral`, or one of your **Custom categories**, without explanation.
+- **A [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/)** runs in your browser: free, private and offline. A fixed-label sentiment model uses its own labels, mapped onto `positive`, `negative` and `neutral` (for example `POSITIVE`/`NEGATIVE` or `1 star` to `5 stars`). A zero-shot model scores your **Custom categories** word for word, or `positive, negative, neutral` when none are set. **System message** does not apply.
 
-## Run on-device
-
-What you connect to the **Model** port decides the engine:
-
-- **A chat model** (e.g. Chat OpenAI, Web LLM) — the LLM path described above.
-- **A [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/)** — classifies in your browser: free, private, offline. A fixed-label sentiment model uses its own labels, mapped onto `positive` / `negative` / `neutral` (e.g. `POSITIVE`/`NEGATIVE`, `1 star`–`5 stars`). A **zero-shot** model scores your **Custom categories** (kept verbatim), or `positive, negative, neutral` when none are set. System message doesn't apply.
-
-**Older workflows:** the node used to have an **Engine** setting (*LLM* / *On-device*) with an **On-device model** field. That setting is now hidden but still honoured: a workflow saved with Engine = *On-device* and nothing connected to the Model port keeps running its chosen on-device model, with the same output as before. To change it, connect a Local Classifier instead.
+Older workflows saved with the former **Engine** setting on *On-device* and nothing connected to **Model** keep running their chosen on-device model. To change one, connect a Local Classifier.
 
 ## When to use it
 
-Use this node to classify the tone of customer feedback, reviews, support tickets, or social media text — for example, routing negative feedback to a different workflow branch than positive feedback.
+- Route negative reviews or support messages to a person, and the rest to an automatic reply.
+- Tag feedback by mood (`angry, satisfied, confused`) before saving it.
+- Screen customer messages privately, on-device, with a Local Classifier.
+
+To sort text by topic rather than tone, use [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/).
 
 ## Inputs and settings
 
@@ -42,6 +40,8 @@ Use this node to classify the tone of customer feedback, reviews, support ticket
 | Options › **Custom categories** | Long text |  | No | Comma-separated list of custom sentiment categories to use instead of positive/negative/neutral. |
 | Options › **System message** | Long text |  | No | The system message to use. |
 {/* AUTO:settings:end */}
+
+Fill **Text** with an expression such as `{{ $input.text }}`. Write **Custom categories** as a comma-separated list, for example `angry, satisfied, confused`. Keep them short and clearly different from each other.
 
 ## Outputs
 
@@ -58,9 +58,11 @@ Each output item has these fields:
 | `predictions` | Any |  |
 {/* AUTO:outputs:end */}
 
-- **Chat model** — returns `{ sentiment }`, the trimmed category name returned by the model (one of the default three categories, or one of your custom categories).
-- **Local Classifier** — returns `{ sentiment, score, scores }`: the top label, its confidence, and a `{ label: score }` map of every label.
-- **Legacy Engine = On-device** (older workflows) — returns `{ sentiment, score, predictions }`: the model's raw top label, its confidence, and the list of `{ label, score }` predictions.
+- With a **chat model**, you get only `sentiment`: the category the model answered.
+- With a **Local Classifier**, you also get `score` (the confidence of the top label, 0 to 1) and `scores`, every label with its score.
+- Older workflows on the former on-device engine return `sentiment`, `score` and `predictions` (the raw list of labels and scores).
+
+Branch on the label with an [IF](/nodes/builtin/flow/if/) or [Switch](/nodes/builtin/flow/switch/) node, using `{{ $input.sentiment }}`.
 
 ## Dependencies and credentials
 
@@ -70,25 +72,25 @@ Each output item has these fields:
 | **Model** | chat model, local classifier | Yes | One |
 {/* AUTO:deps:end */}
 
-- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI), or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to run on-device.
+Connect a chat model, which holds its own API key, or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to run on-device. The Local Classifier needs an installed model: install one from its picker or the [Local AI](/usage/using-the-app/local-models/) page.
 
 ## Example workflow
 
-Connect a Chat OpenAI node to the Model dependency, feed text from an upstream node into Text, optionally set Custom categories (e.g. "angry, satisfied, confused"), then branch downstream logic on the `sentiment` output using a router or condition node.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads a review you highlighted, with **Output field name** `text`.
+2. Sentiment Analysis with **Text** `{{ $input.text }}` and a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) on **Model**.
+3. [IF](/nodes/builtin/flow/if/) checks that `{{ $input.sentiment }}` (**String**) is equal to `negative`.
+4. **True** goes to a [Slack](/nodes/builtin/integration/slack/) node that alerts your support channel.
 
 ## Troubleshooting
 
-- If the output includes extra words instead of just the category, add a stronger instruction via the System message option, or verify the connected model follows instructions well.
-- **"Connect a chat model or a Local Classifier to the Model port."** — nothing is connected to the Model port.
-- **On-device** — the Local Classifier needs an installed model; install one from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
-- Keep Custom categories short and mutually exclusive so the model can reliably pick one.
+- **"Connect a chat model or a Local Classifier to the Model port."** Nothing is connected to **Model**.
+- **"Model not found".** The connected chat model node is not set up: open it and choose a model and its credential.
+- **The label has extra words or a different capitalisation.** Some chat models add text. Add a **System message** such as `Answer in lowercase, one word.`, or use a stronger model.
+- **"Model "…" isn't available. Install it from Local AI."** An older workflow on the former on-device engine uses a model that is not installed. Install it, or connect a Local Classifier.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
-- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
-- [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) — the on-device model for this node.
-- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/) — the dedicated on-device classifier.
-- [AI Agents](/advanced-ai/concepts/ai-agents/)
+- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/): sort text into your own categories.
+- [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/): the on-device model for this node.
+- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/): on-device text classification without a model node.
+- [Guardrails](/nodes/builtin/ai/aiagents/guardrails/): pass or fail text against a policy.

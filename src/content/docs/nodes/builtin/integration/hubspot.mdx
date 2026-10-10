@@ -11,26 +11,27 @@ node:
   family: integration
 ---
 
-Turn the page you're on into a CRM record. Read a profile, extract the details, and create or update a contact or company in HubSpot — then attach the page itself as a note.
+Add or update contacts and companies in HubSpot, search them, log notes from the page you are on, and list deals.
 
 ## What it does
 
-Creates or updates **contacts** and **companies** (deduplicated by email / domain), logs **notes** from the current page against a record, and lists **deals**. This is the classic sales-extension pattern — "log the profile I'm viewing" — as a composable workflow: read the page, extract with the Information Extractor, upsert the contact, attach the URL.
+The HubSpot node works on four kinds of things (**Resource**):
 
-## Resources and operations
+- **Contact**: **Create or update** a contact, keyed by email; **Update** a contact by its id; or **Search** contacts.
+- **Company**: **Create or update** a company, keyed by domain, or **Search** companies.
+- **Note**: **Create** a note, optionally attached to a contact, company or deal.
+- **Deal**: **List** deals with their name, stage, amount and pipeline.
 
-| Resource | Operations |
-| --- | --- |
-| Contact | Create or update (dedup by email), Update, Search |
-| Company | Create or update (dedup by domain), Search |
-| Note | Create (attach the current page to a record) |
-| Deal | List |
+**Create or update** first looks for a record with the same email (contacts) or domain (companies). If one exists, it is updated; otherwise a new record is created. The result says which happened. Fields you leave empty are not sent, so an update never blanks a value already in HubSpot.
 
-### Create or update (deduplication)
+A **Note** is your **Note** text, then the **Selection** in quotes, then `Source:` and the **Source URL**, each separated by a blank line. It is dated with the time the node runs.
 
-"Create or update" searches for an existing record by its unique property first — **email** for contacts, **domain** for companies. If a match is found the record is **updated**; otherwise a new one is **created**. The result includes `created: true | false` so the rest of your workflow knows which happened.
+## When to use it
 
-> **Note:** HubSpot search is *eventually consistent* — a record created moments earlier may not be searchable yet, so two upserts fired back-to-back for the same email can create a duplicate.
+- Log the profile or company page you are viewing as a HubSpot contact or company.
+- Keep a lead up to date each time you visit their page, without creating duplicates.
+- Save a quote or a page link as a note on the right contact, company or deal.
+- Pull your deal list into a daily summary.
 
 ## Inputs and settings
 
@@ -115,11 +116,19 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 | **Limit** | Number |  | No | Maximum number of results. |
 {/* AUTO:settings:end */}
 
+- **Domain** is the bare domain, for example `acme.com`, not a full URL.
+- **Search** looks for **Query** in the record's main fields (name, email, domain and so on). **Search** and **Deal → List** return 10 results unless you set **Limit**.
+- **Associated record ID** is the id of the contact, company or deal, for example `{{ $('HubSpot').id }}` after a **Create or update**. Set **Associate with** too, or the note is created without a link to any record.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+- **Create or update** returns the record with its `id`, `properties` and `created`, which is `true` for a new record and `false` for an update. Branch on it with [IF](/nodes/builtin/flow/if/).
+- **Update** and **Note → Create** return the record with its `id` and `properties`.
+- **Search** and **Deal → List** return the matches in `results`. Contacts come with `email`, `firstname`, `lastname` and `company`; companies with `name`, `domain` and `city`; deals with `dealname`, `dealstage`, `amount` and `pipeline`.
 
 ## Dependencies and credentials
 
@@ -127,25 +136,25 @@ One output port.
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- **Auth:** a HubSpot **Private App token**, sent as `Authorization: Bearer <token>`. Create one under **Settings → Integrations → Private Apps** in HubSpot.
-- **⚠️ Scope guidance:** a private app token is **account-wide** — it is scope-limited but not scoped per-record. Grant only the scopes you need:
-  - `crm.objects.contacts.read`, `crm.objects.contacts.write`
-  - `crm.objects.companies.read`, `crm.objects.companies.write`
-  - `crm.objects.deals.read`
-- The token is stored in your credential vault and never passes through awflow's backend. Treat it like a password — a leak exposes your CRM to the extent of those scopes.
+Use a HubSpot **private app token**. In HubSpot, open **Settings → Integrations → Private Apps**, create an app, and give it only the scopes you need: `crm.objects.contacts.read` and `crm.objects.contacts.write`, `crm.objects.companies.read` and `crm.objects.companies.write`, and `crm.objects.deals.read`. Copy its access token and save it as a Bearer Token credential: see [Create a credential](/usage/using-the-app/credentials/create/). Keep it secret: it opens your CRM within those scopes.
 
-## Web and extension builds
+## Example workflow
 
-This node is **extension-only**. The HubSpot API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger runs when you right-click a profile page.
+2. [Get All Text](/nodes/extension/getalltext/) reads the page.
+3. [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) pulls out `email`, `firstName`, `lastName` and `company`.
+4. HubSpot, **Contact → Create or update**, **Email** `{{ $input.email }}`, **First name** `{{ $input.firstName }}`, and so on.
+5. HubSpot, **Note → Create**, **Note** `Seen on the web`, **Source URL** `{{ $('Context Menu').pageUrl }}`, **Associate with** `Contact`, **Associated record ID** `{{ $input.id }}`.
 
 ## Troubleshooting
 
-- **`403` / missing scope** — the private app is missing a scope the operation needs. Add it in HubSpot (Settings → Integrations → Private Apps) and retry. The node calls this out in the error.
-- **A duplicate was created** — two "create or update" calls for the same email/domain ran before HubSpot's search index caught up. Space them out, or search first.
-- **Note isn't attached** — set both **Associate with** and **Associated record ID**; a note with neither is created standalone.
+- **"HubSpot API Error: 403 Forbidden — the private app token is missing a required scope".** Add the scope this operation needs to the private app in HubSpot, then run again.
+- **"HubSpot API Error: 401 Unauthorized".** The token is wrong or was rotated. Copy the current token from the private app and update the credential.
+- **A duplicate contact was created.** Two **Create or update** steps for the same email ran back to back, before HubSpot could find the first one. Space them out, or run them one at a time.
+- **The run is blocked in the web app.** HubSpot runs through the browser extension. Install the extension and allow HubSpot for this workflow when asked, or run the workflow from the extension.
 
 ## Related nodes
 
-- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/)
-- [Screenshot Page](/nodes/extension/screenshotpage/)
-- [Custom API](/nodes/builtin/integration/custom-api/)
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/): turn page text into contact fields.
+- [Attio](/nodes/builtin/integration/attio/) and [Pipedrive](/nodes/builtin/integration/pipedrive/): other CRMs.
+- [Http Request](/nodes/builtin/core/http-request/): call HubSpot API endpoints this node does not cover.

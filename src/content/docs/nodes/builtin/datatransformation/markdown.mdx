@@ -15,11 +15,18 @@ Convert HTML to Markdown, or Markdown to HTML.
 
 ## What it does
 
-Converts between HTML and Markdown in either direction. **HTML to Markdown** walks the document and emits Markdown for the structures that matter — headings, bold/italic, inline and block code, links, images, lists, blockquotes and tables. **Markdown to HTML** renders GitHub-flavoured Markdown to HTML.
+**HTML to Markdown** turns a web page's markup into clean Markdown. It keeps headings, bold, italic and strikethrough, code, links, images, lists (including nested ones), quotes and tables. Scripts, styles and the page head are dropped.
+
+**Markdown to HTML** turns Markdown (GitHub style, with tables) into HTML. Anything unsafe, such as scripts, is removed from the result.
+
+The node runs once per incoming item and adds the converted text to it. Content of up to about 2 MB is accepted.
 
 ## When to use it
 
-Use **HTML to Markdown** before an AI node: feeding raw scraped HTML into a model wastes tokens on markup the model doesn't need, and converting to Markdown first strips the tag soup while keeping the structure a model actually reads. Use **Markdown to HTML** to turn Markdown (model output, a saved note) into HTML for display.
+- Before an AI node: raw HTML wastes a lot of the model's budget on tags. Markdown keeps the structure the model needs at a fraction of the size.
+- Save a web page as readable notes, for example in a [Notion](/nodes/builtin/integration/notion/) page.
+- Turn an AI answer written in Markdown into HTML for an email or a web page.
+- To pick out specific values rather than convert the whole page, use [HTML Extract](/nodes/builtin/datatransformation/html-extract/) instead.
 
 ## Inputs and settings
 
@@ -36,13 +43,17 @@ Use **HTML to Markdown** before an AI node: feeding raw scraped HTML into a mode
 | **Put Result In Field** | Text | `result` | No | Field holding the converted text. |
 {/* AUTO:settings:end */}
 
+Give the content one of two ways: an expression in **Content**, such as `{{ $input.data }}`, or a field name in **Source Field**, such as `data`. **Content** wins when both are filled. **Source Field** accepts dots for nested fields.
+
+**Keep Links**, **Keep Images** and **Keep Tables** only affect HTML to Markdown. Turning **Keep Images** off is a good way to shrink text for an AI node.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
 
-Returns each incoming item with the converted text written to **Put Result In Field**. When **Include Input Fields** is on, the item's original fields travel alongside the result; when off, only the result field is returned. A single incoming item produces a single output item; multiple items produce one output item each.
+Each item comes out with the converted text in **Put Result In Field** (`result` by default). With **Include Input Fields** off, the item holds only that field. Read it downstream with `{{ $input.result }}`.
 
 ## Dependencies and credentials
 
@@ -50,21 +61,21 @@ Returns each incoming item with the converted text written to **Put Result In Fi
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential is required. HTML to Markdown parses the document in the browser; Markdown to HTML renders with `marked`, time-bounded in a worker, and the resulting HTML is sanitized with DOMPurify before it is returned. No node dependency is required.
-
 ## Example workflow
 
-Place Markdown after an HTTP Request or HTML Extract node returning scraped markup, set **Operation** to `HTML to Markdown`, and feed the result into an AI Agent node — the model reads clean structure instead of raw tags, at a fraction of the token cost. For the reverse, set **Operation** to `Markdown to HTML` to turn model output or a stored note into HTML ready for display.
+1. [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/) fetches an article page.
+2. **Markdown** with **Operation** *HTML to Markdown*, **Source Field** set to the field that holds the HTML, and **Keep Images** off.
+3. [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) with **Text** `{{ $input.result }}`.
 
 ## Troubleshooting
 
-- If neither **Content** nor **Source Field** resolves to a value, the node fails with a message asking you to fill in one of them.
-- **Source Field** failing means the named field does not exist on the incoming item — check the field name against the actual data.
-- This node parses untrusted Markdown and HTML and is bounded: very large input, or content that would take pathologically long to render, fails the node with a clear error instead of freezing the tab, and rendered HTML is sanitized before it is returned.
+- **"No content to convert. Fill in the Content field, or name the field holding it."** Both **Content** and **Source Field** are empty. Fill in one of them.
+- **"Field "..." does not exist on the incoming item."** **Source Field** names a field the item does not have. Check the spelling against the previous node's output.
+- **"Input is ... bytes, larger than the 2000000-byte limit this node will parse."** The content is over about 2 MB. Extract the part you need first with [HTML Extract](/nodes/builtin/datatransformation/html-extract/).
+- **The Markdown is mostly menus and footers.** The node converts the whole page. Narrow it first with HTML Extract (**Return** *HTML*) on the main content, for example `article`.
 
 ## Related nodes
 
-- [HTML Extract](/nodes/builtin/datatransformation/html-extract/)
-- [Regex](/nodes/builtin/datatransformation/regex/)
-- [JSON](/nodes/builtin/datatransformation/json/)
-- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/)
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/): pick values or a section out of HTML.
+- [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/): fetch a page's HTML.
+- [Text / Formatter](/nodes/builtin/datatransformation/text-formatter/): other text clean-ups.

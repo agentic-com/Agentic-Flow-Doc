@@ -11,19 +11,22 @@ node:
   family: data
 ---
 
-Drop repeated items from a collection.
+Drop repeated items from a list, and optionally skip items you already handled on an earlier run.
 
 ## What it does
 
-Looks at the whole collection of incoming items and keeps only the **first** occurrence of each distinct value, dropping later ones. Because the first occurrence wins, the surviving items stay in their original order — which composes predictably with [Sort](/nodes/builtin/datatransformation/sort/): sort first, and Remove Duplicates keeps the winner of each group.
+Remove Duplicates looks at the whole incoming list and keeps the **first** item of each kind, dropping the later copies. The items that remain stay in their original order, so you can [Sort](/nodes/builtin/datatransformation/sort/) first to choose which copy wins.
 
-Two items count as the same regardless of the order their object keys were built in, at every depth: `{ a: 1, b: 2 }` and `{ b: 2, a: 1 }` are duplicates.
+You decide what "the same" means with **Compare**. The order of keys inside an object does not matter: `{ "a": 1, "b": 2 }` and `{ "b": 2, "a": 1 }` are duplicates.
 
-You choose which part of each item decides sameness, and, separately, whether to remember items across runs.
+With **Also Compare Against Previous Runs** on, the node also remembers what it let through before and drops those items on later runs. That turns any repeated scrape into a "new items only" feed.
 
 ## When to use it
 
-Use this node to clean a scraped list that repeats the same row in several places, to ignore a volatile field such as a timestamp when deciding what counts as the same record, or — with cross-run comparison on — to build a "notify me only about new listings" workflow that never re-emits a row it has already handled.
+- Clean a scraped list that shows the same row in several places on the page.
+- Treat two records as the same even when a changing field, such as a timestamp, differs.
+- Get notified only about new listings, posts or jobs, by turning on **Also Compare Against Previous Runs**.
+- To see what changed between two lists (new, gone, edited), use [Compare Datasets](/nodes/builtin/flow/comparedatasets/) instead.
 
 ## Inputs and settings
 
@@ -37,22 +40,9 @@ Use this node to clean a scraped list that repeats the same row in several place
 | **History Size** | Number | 1000 | No | How many items to remember, or how many days to look back. |
 {/* AUTO:settings:end */}
 
-### Compare modes
-
-- **All fields** compares the entire item.
-- **Selected fields** compares only the named fields (dot paths allowed).
-- **All fields except** compares everything but the named **top-level** keys. Only top-level keys can be excluded, since a nested path does not identify a whole key to drop.
-
-The field-based modes need at least one field — they will not silently fall back to comparing everything.
-
-### Cross-run history
-
-The "Also compare against previous runs" switch is independent of the compare mode: *what makes two items the same* and *how far back to look* are separate questions. History is stored through the [Data Store](/nodes/builtin/core/datastore/) and is scoped to this node, so two Remove Duplicates nodes in one workflow keep separate histories. It is listed under **Settings → Preferences**, where you can view and clear it.
-
-The history is bounded, and oversized settings are **clamped, not refused**, so the node keeps running with a shorter horizon:
-
-- By **count**: default `1000` items, capped at `2000`.
-- By **age**: default `30` days, capped at `365`.
+- **Compare**: *All fields* compares the whole item. *Selected fields* compares only the names in **Fields**, and dots reach nested fields (`seller.id`). *All fields except* compares everything but the names in **Fields**; it can only leave out top-level fields, so `seller.id` would not work there.
+- **Remember** and **History Size** only matter when **Also Compare Against Previous Runs** is on. With *Last N items*, **History Size** is a number of items (1000 by default, at most 2000). With *Time window*, it is a number of days (at most 365). Larger values are lowered to the maximum instead of failing.
+- Each Remove Duplicates node keeps its own history, inside the workflow's stored data.
 
 ## Outputs
 
@@ -60,7 +50,7 @@ The history is bounded, and oversized settings are **clamped, not refused**, so 
 One output port.
 {/* AUTO:outputs:end */}
 
-Returns the collection with later duplicates removed, survivors in input order.
+The same list with the copies removed, in the original order. Items are not changed. If every item was a duplicate, the output is an empty list.
 
 ## Dependencies and credentials
 
@@ -68,25 +58,26 @@ Returns the collection with later duplicates removed, survivors in input order.
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential is required. The node runs in the browser.
-- Cross-run comparison uses the [Data Store](/nodes/builtin/core/datastore/) to remember history between runs, and needs the node to run as part of a saved workflow (it needs a stable node id to write against).
-
 ## Example workflow
 
-A scheduled workflow re-scrapes a listings page each hour. Connect it into Remove Duplicates, set **Compare** to `Selected fields` with **Fields** `url`, turn on **Also Compare Against Previous Runs**, and leave **Remember** on `Last N items`. Each run only passes on URLs the node has not seen before, which you can send straight to a notification.
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every hour.
+2. [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/) and [HTML Extract](/nodes/builtin/datatransformation/html-extract/) read the listings on a page, each with a `url` and a `title`.
+3. Remove Duplicates with **Compare** *Selected fields*, **Fields** `url`, and **Also Compare Against Previous Runs** on.
+4. A [Browser Notification](/nodes/extension/browsernotification/) shows `{{ $input.title }}` for each listing that comes through.
+
+The first run lets every listing through. After that, you only hear about listings you have not seen before.
 
 ## Troubleshooting
 
-- The node operates on the whole collection at once. If it seems to have no effect, make sure the upstream node emits multiple items.
-- `Selected fields` and `All fields except` report an error if no field is set — add a field, or switch to `All fields`.
-- Comparison fails with a clear error if an item contains a circular reference or a value that cannot be serialized. Switch to `Selected fields` to compare on simple fields instead.
-- If cross-run history is not being remembered, confirm the workflow is saved: the node needs a stable id to write history against.
-- Setting a very large **History Size** is safe — it is reduced to the cap rather than rejected.
+- **"Compare mode "…" needs at least one field. Add a field, or switch to "All fields"."** You chose *Selected fields* or *All fields except* without filling **Fields**.
+- **"Cannot compare these items: one of them contains a circular reference or a value that cannot be serialized."** An item holds something that cannot be written as plain data. Use *Selected fields* and compare on simple fields such as `id` or `url`.
+- **Nothing is removed.** The items differ in a field you did not expect, such as a timestamp or a tracking parameter in a link. Compare only the fields that identify an item, or leave out the changing ones with *All fields except*.
+- **Items you already saw come back on every run.** Remembering across runs only works when the node runs as part of a saved workflow; otherwise the run log warns "nothing was remembered for next time". Save the workflow and run it again.
+- **You want old items to come through again.** Open the **Stored data** tab in the canvas side panel and delete this node's history entry (it starts with `remove-duplicates-history`).
 
 ## Related nodes
 
-- [Sort](/nodes/builtin/datatransformation/sort/)
-- [Data Store](/nodes/builtin/core/datastore/)
-- [Aggregate](/nodes/builtin/datatransformation/aggregate/)
-- [Limit](/nodes/builtin/datatransformation/limit/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Sort](/nodes/builtin/datatransformation/sort/): choose which copy is kept.
+- [Compare Datasets](/nodes/builtin/flow/comparedatasets/): sort two lists into new, gone and changed items.
+- [Data Store](/nodes/builtin/core/datastore/): keep your own values between runs.
+- [Limit](/nodes/builtin/datatransformation/limit/): keep only the first or last few items.

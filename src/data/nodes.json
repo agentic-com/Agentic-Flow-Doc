@@ -1348,6 +1348,182 @@
 		"credentials": [],
 		"dependencies": [],
 		"settings": [],
+		"variants": {
+			"key": "",
+			"fields": [
+				{
+					"when": [
+						{
+							"key": "storage",
+							"label": "Storage",
+							"value": "conversation",
+							"valueLabel": "Conversation"
+						}
+					],
+					"fields": [
+						{
+							"key": "conversationId",
+							"label": "Conversation",
+							"type": "Memory picker",
+							"required": false,
+							"description": "The saved conversation to use. Leave empty to give this node its own conversation in this workflow."
+						},
+						{
+							"key": "window",
+							"label": "History sent to the model",
+							"type": "Choice",
+							"required": false,
+							"default": "fit",
+							"options": [
+								{
+									"value": "fit",
+									"label": "As much as fits"
+								},
+								{
+									"value": "lastN",
+									"label": "Last N messages"
+								}
+							],
+							"description": "How much of the conversation each turn sends"
+						},
+						{
+							"key": "summarize",
+							"label": "Summarise older messages",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Messages that no longer fit are folded into a short summary the model still sees. Costs an extra model call now and then."
+						},
+						{
+							"key": "rememberTools",
+							"label": "Remember tool results",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Keep what the agent’s tools returned with each reply, so later turns can use it without calling the tools again."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "storage",
+							"label": "Storage",
+							"value": "key",
+							"valueLabel": "Key"
+						}
+					],
+					"fields": [
+						{
+							"key": "key",
+							"label": "Key",
+							"type": "Text",
+							"required": false,
+							"default": "",
+							"description": "Runs with the same key share one conversation. Use an expression for one conversation per user or thread."
+						},
+						{
+							"key": "keyScope",
+							"label": "Key scope",
+							"type": "Choice",
+							"required": false,
+							"default": "workflow",
+							"options": [
+								{
+									"value": "workflow",
+									"label": "This workflow"
+								},
+								{
+									"value": "shared",
+									"label": "Shared"
+								}
+							],
+							"description": "Whether other workflows using the same key share this conversation"
+						},
+						{
+							"key": "window",
+							"label": "History sent to the model",
+							"type": "Choice",
+							"required": false,
+							"default": "fit",
+							"options": [
+								{
+									"value": "fit",
+									"label": "As much as fits"
+								},
+								{
+									"value": "lastN",
+									"label": "Last N messages"
+								}
+							],
+							"description": "How much of the conversation each turn sends"
+						},
+						{
+							"key": "summarize",
+							"label": "Summarise older messages",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Messages that no longer fit are folded into a short summary the model still sees. Costs an extra model call now and then."
+						},
+						{
+							"key": "rememberTools",
+							"label": "Remember tool results",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Keep what the agent’s tools returned with each reply, so later turns can use it without calling the tools again."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "storage",
+							"label": "Storage",
+							"value": "run",
+							"valueLabel": "This run only"
+						}
+					],
+					"fields": [
+						{
+							"key": "window",
+							"label": "History sent to the model",
+							"type": "Choice",
+							"required": false,
+							"default": "fit",
+							"options": [
+								{
+									"value": "fit",
+									"label": "As much as fits"
+								},
+								{
+									"value": "lastN",
+									"label": "Last N messages"
+								}
+							],
+							"description": "How much of the conversation each turn sends"
+						},
+						{
+							"key": "summarize",
+							"label": "Summarise older messages",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Messages that no longer fit are folded into a short summary the model still sees. Costs an extra model call now and then."
+						},
+						{
+							"key": "rememberTools",
+							"label": "Remember tool results",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Keep what the agent’s tools returned with each reply, so later turns can use it without calling the tools again."
+						}
+					]
+				}
+			]
+		},
 		"inputs": 1,
 		"outputs": {
 			"ports": []
@@ -9674,7 +9850,7 @@
 				"type": "Text",
 				"required": false,
 				"default": "",
-				"description": "Text put in place of each match. Use $1 or $ for groups."
+				"description": "Text put in place of each match. Use $1 or $<name> for groups."
 			},
 			{
 				"key": "maxMatches",
@@ -10182,6 +10358,595 @@
 		"credentials": [],
 		"dependencies": [],
 		"settings": [],
+		"variants": {
+			"key": "",
+			"fields": [
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "uppercase",
+							"valueLabel": "Uppercase"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "lowercase",
+							"valueLabel": "Lowercase"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "titlecase",
+							"valueLabel": "Title Case"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "camelcase",
+							"valueLabel": "camelCase"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "snakecase",
+							"valueLabel": "snake_case"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "kebabcase",
+							"valueLabel": "kebab-case"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "trim",
+							"valueLabel": "Trim"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "slugify",
+							"valueLabel": "Slugify"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "extractEmails",
+							"valueLabel": "Extract emails"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "extractUrls",
+							"valueLabel": "Extract URLs"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "extractNumbers",
+							"valueLabel": "Extract numbers"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "extractPhones",
+							"valueLabel": "Extract phone numbers"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "wordCount",
+							"valueLabel": "Word count"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "charCount",
+							"valueLabel": "Character count"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "pad",
+							"valueLabel": "Pad"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						},
+						{
+							"key": "padLength",
+							"label": "Target Length",
+							"type": "Number",
+							"required": false,
+							"default": 0,
+							"description": "Pad until the text reaches this many characters"
+						},
+						{
+							"key": "padString",
+							"label": "Pad With",
+							"type": "Text",
+							"required": false,
+							"default": " ",
+							"description": "The characters repeated to fill the space"
+						},
+						{
+							"key": "padSide",
+							"label": "Pad Side",
+							"type": "Choice",
+							"required": false,
+							"default": "start",
+							"options": [
+								{
+									"value": "start",
+									"label": "Start"
+								},
+								{
+									"value": "end",
+									"label": "End"
+								}
+							],
+							"description": "Which end to pad"
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "replace",
+							"valueLabel": "Replace"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						},
+						{
+							"key": "search",
+							"label": "Find",
+							"type": "Text",
+							"required": false,
+							"default": "",
+							"description": "The text or pattern to look for"
+						},
+						{
+							"key": "replaceWith",
+							"label": "Replace With",
+							"type": "Text",
+							"required": false,
+							"default": "",
+							"description": "The text put in place of each match"
+						},
+						{
+							"key": "useRegex",
+							"label": "Treat Find As Regex",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Read the Find field as a regular expression"
+						},
+						{
+							"key": "regexFlags",
+							"label": "Regex Flags",
+							"type": "Text",
+							"required": false,
+							"default": "g",
+							"description": "Flags for the pattern, such as gi"
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "split",
+							"valueLabel": "Split"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						},
+						{
+							"key": "separator",
+							"label": "Separator",
+							"type": "Text",
+							"required": false,
+							"default": ",",
+							"description": "The string to split on. Empty splits into characters."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "join",
+							"valueLabel": "Join"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						},
+						{
+							"key": "separator",
+							"label": "Separator",
+							"type": "Text",
+							"required": false,
+							"default": ",",
+							"description": "The string placed between joined items"
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "truncate",
+							"valueLabel": "Truncate"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						},
+						{
+							"key": "maxLength",
+							"label": "Maximum Length",
+							"type": "Number",
+							"required": false,
+							"default": 20,
+							"description": "Keep at most this many characters"
+						},
+						{
+							"key": "ellipsis",
+							"label": "Ellipsis",
+							"type": "Text",
+							"required": false,
+							"default": "…",
+							"description": "Appended when the text is shortened"
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "defaultIfEmpty",
+							"valueLabel": "Default if empty"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						},
+						{
+							"key": "defaultValue",
+							"label": "Default Value",
+							"type": "Text",
+							"required": false,
+							"default": "",
+							"description": "Returned when the text is empty or only whitespace"
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "encode",
+							"valueLabel": "Encode"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						},
+						{
+							"key": "scheme",
+							"label": "Scheme",
+							"type": "Choice",
+							"required": false,
+							"default": "base64",
+							"options": [
+								{
+									"value": "base64",
+									"label": "Base64"
+								},
+								{
+									"value": "url",
+									"label": "URL (whole URL)"
+								},
+								{
+									"value": "uriComponent",
+									"label": "URI component"
+								},
+								{
+									"value": "html",
+									"label": "HTML entities"
+								},
+								{
+									"value": "hex",
+									"label": "Hex"
+								}
+							],
+							"description": "Which encoding to convert to or from"
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "operation",
+							"label": "Operation",
+							"value": "decode",
+							"valueLabel": "Decode"
+						}
+					],
+					"fields": [
+						{
+							"key": "text",
+							"label": "Text",
+							"type": "Value",
+							"required": false,
+							"description": "The text to transform. Bind an upstream value with {{ }}."
+						},
+						{
+							"key": "scheme",
+							"label": "Scheme",
+							"type": "Choice",
+							"required": false,
+							"default": "base64",
+							"options": [
+								{
+									"value": "base64",
+									"label": "Base64"
+								},
+								{
+									"value": "url",
+									"label": "URL (whole URL)"
+								},
+								{
+									"value": "uriComponent",
+									"label": "URI component"
+								},
+								{
+									"value": "html",
+									"label": "HTML entities"
+								},
+								{
+									"value": "hex",
+									"label": "Hex"
+								}
+							],
+							"description": "Which encoding to convert to or from"
+						}
+					]
+				}
+			]
+		},
 		"inputs": 1,
 		"outputs": {
 			"ports": [
@@ -23516,6 +24281,72 @@
 		"credentials": [],
 		"dependencies": [],
 		"settings": [],
+		"variants": {
+			"key": "",
+			"fields": [
+				{
+					"when": [
+						{
+							"key": "mode",
+							"label": "Mode",
+							"value": "auto",
+							"valueLabel": "auto"
+						}
+					],
+					"fields": [
+						{
+							"key": "formSelector",
+							"label": "Form",
+							"type": "Page element",
+							"required": true,
+							"description": "The form to fill. You can select the form, a container containing it, or a field inside it."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "mode",
+							"label": "Mode",
+							"value": "manual",
+							"valueLabel": "manual"
+						}
+					],
+					"fields": [
+						{
+							"key": "formSelector",
+							"label": "Form",
+							"type": "Page element",
+							"required": true,
+							"description": "The form to fill. You can select the form, a container containing it, or a field inside it."
+						},
+						{
+							"key": "values",
+							"label": "Values",
+							"type": "List of entries",
+							"required": true,
+							"description": "List of field ids and values to fill"
+						},
+						{
+							"key": "id",
+							"label": "Field ID",
+							"type": "Text",
+							"required": true,
+							"group": "Values (each entry)",
+							"description": "The id or name of the form field to fill"
+						},
+						{
+							"key": "value",
+							"label": "Value",
+							"type": "Text",
+							"required": true,
+							"group": "Values (each entry)",
+							"description": "The value to set for the field"
+						}
+					]
+				}
+			]
+		},
 		"inputs": 1,
 		"outputs": {
 			"ports": [

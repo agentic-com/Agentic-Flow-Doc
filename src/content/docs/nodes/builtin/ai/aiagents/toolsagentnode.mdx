@@ -11,25 +11,33 @@ node:
   family: ai
 ---
 
-Generate an action plan and execute it. Can use external tools.
+An AI agent that can call tools (search, calculate, browse, call APIs) step by step until it can answer.
 
 ## What it does
 
-Creates an AI agent that can use external tools to complete complex tasks by planning and executing actions.
+Tools Agent sends **Prompt** to the chat model on **Model**, together with the tools connected to **Tools**. The model decides which tool to call and with what; the agent runs it, sends the result back, and repeats until the model gives a final answer or **Max iterations** is reached.
+
+Some tools only read or compute. Others take real actions on your behalf, and those are **gated**: the model can call them, but each call pauses for your approval before it runs. You approve or reject each action in the **Executions** pane. This is automatic and cannot be turned off; see [Action Approval](/advanced-ai/concepts/action-approval/). The gated tools are:
+
+- [Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/): click, fill, type, select, submit or navigate on the active page.
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/): send HTTP requests to APIs.
+- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/): call the tools of a remote MCP server.
+
+While it runs:
+
+- Each tool call appears in the run log as it happens (*Agent calls tool …*, then *Tool … finished in 840 ms*, or a warning when it failed or timed out).
+- **Stop** interrupts the agent mid-reply: the model call and any running tool are cancelled, and the log says *Agent stopped before it finished*.
+- When the model asks for a tool in a malformed way, the error is sent back to the model so it can correct the call, instead of failing the node.
+
+With a chat memory on **Memory**, the agent has a conversation: it loads the earlier messages as chat history, saves the prompt as a `user` message, and saves the reply as an `assistant` message (a structured reply from an output parser is saved as JSON text). This is how a [Chat Trigger](/nodes/builtin/trigger/chat/) gets its replies: connect the **same** memory to the trigger and to this agent.
 
 ## When to use it
 
-Use this agent when you need an LLM to interact with external APIs, databases, or services to accomplish multi-step tasks.
+- A chatbot that can look things up on the web, do maths or query an API before it answers.
+- A task in several steps, such as "find the price on this page, convert it to euros, and fill it into the form".
+- An assistant that searches your knowledge base and also uses tools.
 
-## Tools that take actions
-
-Connect tool dependency nodes into this agent's tools input to give it capabilities. Some tools only read or compute; others take real actions on your behalf. The action tools are **gated** — the model can call them, but each call pauses for your approval before it runs:
-
-- [Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/) — click, fill, type, select, submit, or navigate the active page.
-- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/) — send HTTP requests to APIs.
-- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/) — call the tools of a remote MCP server.
-
-You approve or reject each action in the **Executions** pane. This is automatic and cannot be turned off — see [Action Approval](/advanced-ai/concepts/action-approval/) for why.
+For a single prompt with no tools, use [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/). To answer only from your documents, [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) is simpler.
 
 ## Inputs and settings
 
@@ -51,21 +59,19 @@ You approve or reject each action in the **Executions** pane. This is automatic 
 | Options › **Device-only knowledge with a cloud model** | Choice | Stop with an error | No | A knowledge base marked "Device only" is never sent to a cloud model. Choose what the node does when its model is a cloud model. Options: Stop with an error, Answer without it. |
 {/* AUTO:settings:end */}
 
+Behind a Chat Trigger, set **Prompt** to `{{ $input.chatInput }}`. Use **System message** to tell the agent its role and when to use which tool.
+
 When the agent reaches **Max iterations**, it stops calling tools and is asked for a final answer with what it has; the run log says *Agent reached its max iterations and answered with what it had*.
 
-## Knowledge search
+When a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) is connected to **Knowledge**, **Knowledge search** decides how the agent uses it:
 
-When a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) is connected to the Knowledge port, **Knowledge search** decides how the agent uses it:
+- **Search before answering** (default): the knowledge base is searched with the prompt and the passages are given to the agent up front. Best for small and on-device models.
+- **Let the agent search the knowledge base on its own**: the agent gets a knowledge search tool and decides when and what to search, for example several searches with better questions. Best for capable models.
+- **Both**: passages up front, and the tool to search again.
 
-| Option | What happens |
-| --- | --- |
-| **Search before answering** (default) | The knowledge base is searched with the prompt and the passages are given to the agent up front. Best for small and on-device models. |
-| **Let the agent search the knowledge base on its own** | The agent gets a knowledge search tool and decides when and what to search, for example several searches with better questions. Best for capable models. |
-| **Both** | Passages up front, and the tool to search again. |
+The search tool returns passages numbered `[S1]`, `[S2]`… (the numbering continues across calls), fenced as reference data. It only reads, so it does not need your approval. Its calls appear in `steps` like any other tool, and the sources it found are added to `sources`.
 
-The search tool returns passages numbered `[S1]`, `[S2]`… (the numbering continues across calls), fenced as reference data. It reads only; it doesn't need your approval. Its calls appear in `steps` like any other tool, and the sources it found are added to `sources`.
-
-Passages given up front are fenced as reference data too, and a **Device only** knowledge base is never sent to a cloud model (see [Device-only knowledge bases](/nodes/builtin/ai/aiagents/ragnode/#device-only-knowledge-bases)).
+The other knowledge options work as on the RAG Agent: see [Knowledge base options](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options). A **Device only** knowledge base is never sent to a cloud model.
 
 ## Outputs
 
@@ -82,18 +88,10 @@ Each output item has these fields:
 | `sources` | List of entries | The knowledge base sources used for the answer |
 {/* AUTO:outputs:end */}
 
-| Field | Description |
-| --- | --- |
-| `response` | The agent's final answer. |
-| `steps` | The tool calls the agent made, in order: `name`, `args`, `status` (`ok`, `error`, `timeout`, `aborted` or `skipped`), `durationMs`, `result` (shortened) and `truncated`. Present when tools are connected. |
-| `sources` | Present when a knowledge base is connected (may be empty): the sources of the passages used, each with `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`. |
-| `usage` | Tokens used over every model call of the run: `inputTokens`, `outputTokens`, `cachedTokens` (served from the provider's prompt cache) and `totalTokens`. Present when the provider reports usage. |
-
-## How it runs
-
-- Each tool call appears in the run log as it happens (*Agent calls tool …*, then *Tool … finished in 840 ms*, or a warning when it failed or timed out).
-- **Stop** interrupts the agent mid-reply: the model call and any running tool are cancelled, and the log says *Agent stopped before it finished*.
-- When the model asks for a tool in a malformed way, the error is sent back to the model so it can correct the call, instead of failing the node.
+- `response`: the agent's final answer.
+- `steps`: present when tools are connected. Each entry has `name`, `args`, `status` (`ok`, `error`, `timeout`, `aborted` or `skipped`), `durationMs`, `result` (shortened) and `truncated`.
+- `sources`: present when a knowledge base is connected (it may be empty). Each entry has `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`.
+- `usage`: tokens used over every model call of the run: `inputTokens`, `outputTokens`, `cachedTokens` (served from the provider's prompt cache) and `totalTokens`. Present when the provider reports usage.
 
 ## Dependencies and credentials
 
@@ -107,37 +105,31 @@ Each output item has these fields:
 | **Output Parser** | output parser | No | One |
 {/* AUTO:deps:end */}
 
-- **Model** (required) — a chat model that supports tool calling.
-- **Tools**, **Knowledge**, **Memory** and **Output Parser** (optional).
-
-## Memory
-
-Connect a chat memory to the agent's memory input to give it a conversation:
-
-1. Before calling the model, the agent loads the conversation's earlier messages and adds them to the prompt as chat history.
-2. It saves the incoming prompt as a `user` message.
-3. After the model answers, it saves the reply as an `assistant` message (structured replies from an output parser are saved as JSON text).
-
-Use a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/): with **Conversation** or **Key** storage the conversation is kept across runs; with **This run only** it lasts for one run. It sends as much history as fits the connected model (or the last N messages), summarises what no longer fits, and can keep tool results so later turns can use them.
-
-This is also how a [Chat Trigger](/nodes/builtin/trigger/chat/) gets its replies: connect the **same** memory to the trigger and to this agent, and set the prompt to `{{ $json.chatInput }}`. The chat window shows the messages this agent saves.
+- **Model**: a chat model that supports tool calling. Cloud models do, and so do the on-device [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/) and [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) models (prompt-based tool calling). The model node holds the API key.
+- **Tools**: any number of tool nodes, such as [Calculator](/nodes/builtin/ai/aidependencies/tools/calculator/), [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/), [Wikipedia Query](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/) or [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/).
+- **Memory**: a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/), to remember the conversation. It can keep tool results so later turns can use them.
+- **Knowledge**: a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node.
+- **Output Parser**: shapes the final answer.
 
 ## Example workflow
 
-Connect Tools Agent to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. [Chat Trigger](/nodes/builtin/trigger/chat/) opens a chat window.
+2. Tools Agent with **Prompt** `{{ $input.chatInput }}` and **System message** `You are a research assistant. Search the web for recent facts and use the calculator for any maths.`
+3. Connect an [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model to **Model**, [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/) and [Calculator](/nodes/builtin/ai/aidependencies/tools/calculator/) to **Tools**, and one [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) to both **Memory** and the Chat Trigger.
+
+Ask "What is the population of Lyon divided by 12?" and watch the run log: the agent searches, then calculates, then answers.
 
 ## Troubleshooting
 
-- **"This agent requires that the bind_tools() method be implemented on the input model"** — the connected chat model can't call tools. Cloud models support it, and so do the on-device [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/) and [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) models (prompt-based tool calling). Check that the model node is up to date and connected to the agent's **Model** input.
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"This agent requires that the bind_tools() method be implemented on the input model".** The connected chat model cannot call tools. Use a cloud model, or Transformers Chat or Web LLM on-device, and check that it is connected to **Model**.
+- **The run pauses and nothing happens.** A gated tool (Browser, HTTP Request, MCP Client) is waiting for your approval. Open the **Executions** pane and approve or reject the action.
+- **"Agent reached its max iterations and answered with what it had".** The agent needed more tool calls. Raise **Max iterations**, or make the prompt and **System message** more precise so it needs fewer steps.
+- **The agent never uses a tool.** Say in **System message** when each tool should be used. Small models often skip tools; try a more capable model.
+- **"Model not found".** The connected model node is not set up: open it and choose a model and its credential.
 
 ## Related nodes
 
-- [Chat Trigger](/nodes/builtin/trigger/chat/)
-- [Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/)
-- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/)
-- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Chat Trigger](/nodes/builtin/trigger/chat/): turn the workflow into a chatbot.
+- [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/): let the agent run another workflow.
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/): answer from your documents, no tools.
+- [Run agent](/nodes/builtin/ai/aiagents/runagentnode/): run one of your saved agents.

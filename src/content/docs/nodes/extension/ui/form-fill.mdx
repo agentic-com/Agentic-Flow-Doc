@@ -11,21 +11,54 @@ node:
   family: inpage
 ---
 
-Fill a form on the opened web page
+Fill the fields of a form on the active tab with values you set or values from earlier nodes.
 
 ## What it does
 
-Automatically fills form fields on a web page with specified values.
+Form Fill finds a form on the active tab and fills its fields from a list of `{ id, value }` pairs. Each `id` is matched against the field's id first, then its name.
+
+- Text fields and text areas get the value as text.
+- Drop-down lists get the option whose value matches exactly.
+- Checkboxes and radio buttons are ticked when the value equals the field's own value, or is `true`, `1`, `yes`, `on` or `checked`; anything else unticks them.
+
+After each change the node tells the page the field was edited, so sites built with modern frameworks see the new value. It fills only; it does not submit the form.
 
 ## When to use it
 
-Use this node to automate form submissions, data entry, or testing workflows.
+- Fill a sign-up, contact or order form with data from a spreadsheet, an API or an AI node.
+- Fill the same form many times, one item at a time, from a list.
+- To click, type step by step or choose from custom drop-downs that are not real form fields, use [UI Automation](/nodes/extension/ui/automation/).
 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-This node has no settings.
+Pick **Mode** first; the fields below change with your choice.
+
+**auto**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Form** | Page element |  | Yes | The form to fill. You can select the form, a container containing it, or a field inside it. |
+
+**manual**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Form** | Page element |  | Yes | The form to fill. You can select the form, a container containing it, or a field inside it. |
+| **Values** | List of entries |  | Yes | List of field ids and values to fill. |
+| Values (each entry) › **Field ID** | Text |  | Yes | The id or name of the form field to fill. |
+| Values (each entry) › **Value** | Text |  | Yes | The value to set for the field. |
 {/* AUTO:settings:end */}
+
+In short:
+
+- **Mode**: **Automatic** takes the `{ id, value }` pairs from the incoming data. **Manual** lets you type them in the node.
+- **Form**: the form to fill. Click the crosshair button and click the form, a box around it, or any field inside it.
+- **Values** (Manual mode only): one entry per field, each with a **Field ID** (the field's id or name) and a **Value**. Values can use expressions, such as `{{ $input.email }}`.
+
+In **Automatic** mode, the incoming data must be a list of `{ "id": "...", "value": "..." }` objects, or a single item with `id` and `value` fields.
+
+To find each field's id or name, run [Get Forms Schema](/nodes/extension/getformsschema/) on the page first.
 
 ## Outputs
 
@@ -35,6 +68,8 @@ One output port.
 Each output item has the fields `result` (list of entries).
 {/* AUTO:outputs:end */}
 
+`result` has one entry per value you sent: `id`, `filled` (`true` or `false`) and, when it was not filled, a `reason`: `Field not found`, `Option not found`, `Unsupported field type` or `Form not found`. The incoming fields are not passed on.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
@@ -43,15 +78,20 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Run Form Fill after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. [Tab Control](/nodes/extension/tabcontrol/), **Operation** = **Open**, opens a contact page with **Wait For Load** on.
+2. **Form Fill** with **Mode** = **Manual**, **Form** set to the contact form, and **Values**: `name` = `Jane Doe`, `email` = `jane@example.com`, `topic` = `support`.
+3. [Submit Form](/nodes/extension/ui/submit-form/) with **DOM Selector** set to the form's send button.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **A `reason` of "Field not found".** No field in the form has that id or name. Check the exact spelling with [Get Forms Schema](/nodes/extension/getformsschema/); it is case-sensitive.
+- **A `reason` of "Option not found".** For a drop-down, the value must match an option's value, not its visible label. Get Forms Schema lists both.
+- **The wrong form was filled.** When **Form** matches nothing, the node falls back to the first form on the page. Pick the form again with the crosshair, and check it with **Ping**.
+- **A `reason` of "Unsupported field type".** The id points at something that is not a text field, text area, drop-down, checkbox or radio button (for example a custom widget). Use [UI Automation](/nodes/extension/ui/automation/) to click and type into it.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Get Forms Schema](/nodes/extension/getformsschema/): find field ids, names and options.
+- [Submit Form](/nodes/extension/ui/submit-form/): send the form after filling it.
+- [UI Automation](/nodes/extension/ui/automation/): clicks, typing and other step-by-step actions.

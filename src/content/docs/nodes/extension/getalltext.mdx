@@ -11,15 +11,23 @@ node:
   family: inpage
 ---
 
-Get the selected text from the page of the actual openend tab
+Read the text of the page open in the active tab, or of one part of it, into a field.
 
 ## What it does
 
-Extracts all visible text content from the currently active browser tab.
+Get All Text reads the readable text of the active tab and stores it, as one piece of text, in the field you name in **Output field name**.
+
+- With **DOM Selector** empty, it reads the whole page body. With a selector, it reads only the first element that matches.
+- By default it returns the text the way the browser lays it out, with line breaks between blocks. Turn on **Visible text only** to skip anything hidden on the page (hidden menus, collapsed sections, invisible elements). Each visible piece of text then comes on its own line, with extra spaces removed.
+- The output holds only the new field. Turn on **Include input fields** to keep the fields of the incoming item next to it.
+
+It reads the main page only: text inside embedded frames is not included.
 
 ## When to use it
 
-Use this node to scrape text from web pages for analysis, indexing, or AI processing.
+- Feed an article, a product page or a ticket to an AI node to summarize, classify or extract from it.
+- Read just one area of a page (a price box, a comment thread) by picking it in **DOM Selector**.
+- To read a page that is not open in a tab, use [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) instead. To read only what the user highlighted, use [Get Selected Text](/nodes/extension/getselectedtext/).
 
 ## Inputs and settings
 
@@ -33,11 +41,16 @@ Use this node to scrape text from web pages for analysis, indexing, or AI proces
 | Options › **Visible text only** | Toggle | Off | No | Only return text from visible elements. |
 {/* AUTO:settings:end */}
 
+- **Output field name**: any name you like, for example `pageText`. Later nodes read it with `{{ $input.pageText }}`.
+- **DOM Selector**: click the crosshair button in the field, then click the element on the page; the selector is filled in for you. You can also type a CSS selector such as `article` or `#main`. The **Ping** button flashes the element the selector matches, so you can check it.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+One item with your field, for example `{ "pageText": "Welcome to …" }`. The value is plain text, not HTML.
 
 ## Dependencies and credentials
 
@@ -47,15 +60,21 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Run Get All Text after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Start with a [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger so you can run the workflow from any page.
+2. Add **Get All Text** with **Output field name** = `pageText` and **Visible text only** on.
+3. Add a [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) node with **Text** = `{{ $input.pageText }}`, and connect a chat model to it.
+4. End with [Display Markdown](/nodes/extension/displaymarkdown/) to show the summary on the page.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"No content found".** The page or the selected element had no text, or **DOM Selector** matched nothing. Use **Ping** to check the selector, and make sure the page has finished loading. Add [Wait For Element](/nodes/extension/ui/wait-for-element/) before this node on pages that load content late.
+- **The text is missing a part you can see.** That part is probably inside an embedded frame, which this node does not read. Open the frame's address in its own tab with [Tab Control](/nodes/extension/tabcontrol/) and read it there.
+- **The text includes menus or hidden content.** Turn on **Visible text only**, or narrow the read with **DOM Selector**.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Get All HTML](/nodes/extension/getallhtml/): the same area as HTML instead of text.
+- [Get Structured Data](/nodes/extension/getstructureddata/): tables and lists as rows.
+- [Get Selected Text](/nodes/extension/getselectedtext/): only what the user highlighted.
+- [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/): read a URL without opening it.

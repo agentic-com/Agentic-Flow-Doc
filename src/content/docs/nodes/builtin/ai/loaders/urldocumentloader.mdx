@@ -12,18 +12,19 @@ node:
   family: ai
 ---
 
-Load a web page as text to feed into the Indexer.
+Load a web page as plain text, ready to index into a knowledge base.
 
 ## What it does
 
-Fetches the given URL and converts its HTML response into clean plain text, then outputs that
-text under a configurable field (default `text`). Connect that output to the
-[Indexer](/nodes/builtin/ai/aiagents/indexernode/) node's `Input` port to index a web page.
+URL Document Loader downloads the page at **URL** and turns its HTML into clean plain text: no tags, no image or link addresses, line breaks kept. It puts the text in one output field, named by **Output field name** (`text` by default).
+
+It is meant to feed the [Indexer](/nodes/builtin/ai/aiagents/indexernode/), but the output is ordinary text you can send to any node. It reads the page as the server sends it, so content that only appears after scripts run in the browser is missing.
 
 ## When to use it
 
-Use it to index the content of a public web page into a knowledge base for RAG or Q&A, without
-manually copying the page text.
+- Index a public web page, such as documentation or a pricing page, into a knowledge base.
+- Refresh a knowledge base on a schedule with the latest version of a page.
+- For the page open in your current tab, including pages behind a login, use [Current Page Document Loader](/nodes/builtin/ai/loaders/currentpagedocumentloader/).
 
 ## Inputs and settings
 
@@ -38,22 +39,17 @@ manually copying the page text.
 | Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
 {/* AUTO:settings:end */}
 
+- **URL** must be a full address including `https://`. It can be an expression, such as `{{ $input.url }}`, to load one page per incoming item.
+- **Timeout** is in milliseconds: `10000` is 10 seconds.
+- Use **Headers** for pages that need a header, for example `Accept-Language: fr`.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
 
-An item with the extracted page text under the chosen output field (default `text`).
-
-## Notes
-
-- Runs in the web app or the extension. Pages that block cross-origin requests may not be
-  reachable from the web app — in that case use the
-  [Current Page Document Loader](/nodes/builtin/ai/loaders/currentpagedocumentloader/) inside
-  the extension instead.
-- Uses the same fetch + HTML-to-text conversion as
-  [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/).
+Each item has the page text in the field you named (default `text`). With **Include input fields** on, the incoming fields are kept next to it. Pass it to the Indexer's **Input** as `{{ $input.text }}`.
 
 ## Dependencies and credentials
 
@@ -61,14 +57,24 @@ An item with the extracted page text under the chosen output field (default `tex
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
+## Example workflow
+
+1. [Schedule](/nodes/builtin/trigger/schedule/) runs every day.
+2. URL Document Loader with **URL** `https://example.com/pricing` and **Output field name** `text`.
+3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.text }}`, **Source name** `Pricing page` and **Source link** `https://example.com/pricing`. Connect [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to **Knowledge** and [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) to **Text Splitter**.
+
+Each day the same source is updated in place in the knowledge base.
+
 ## Troubleshooting
 
-- A `HTTP error! status: …` means the server returned a non-2xx response.
-- An `Invalid URL` error means the URL is malformed.
-- A `Request timeout` means the page took longer than the configured timeout.
+- **"HTTP error! status: 404"** (or another number). The server refused the page: 404 means not found, 403 means access denied. Check the address in a browser.
+- **"Invalid URL: …".** The address is malformed, or the page could not be reached at all (offline, or the site blocks the request). Check the address; if it opens fine in a tab, try running the workflow from the browser extension.
+- **"Request timeout".** The page took longer than **Timeout**. Raise it, for example to `30000`.
+- **"No content found".** The page has no text in its HTML, often because it is built by scripts. Open it in a tab and use [Current Page Document Loader](/nodes/builtin/ai/loaders/currentpagedocumentloader/).
 
 ## Related nodes
 
-- [Indexer](/nodes/builtin/ai/aiagents/indexernode/)
-- [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/)
-- [File Document Loader](/nodes/builtin/ai/loaders/filedocumentloader/)
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/): save the text into a knowledge base.
+- [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/): the same page-to-text, when you don't need to index.
+- [Current Page Document Loader](/nodes/builtin/ai/loaders/currentpagedocumentloader/): load the open tab instead.
+- [File Document Loader](/nodes/builtin/ai/loaders/filedocumentloader/): load a PDF, HTML or text file.

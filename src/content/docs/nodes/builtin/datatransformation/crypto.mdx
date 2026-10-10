@@ -11,15 +11,25 @@ node:
   family: data
 ---
 
-Hash, HMAC and generate random values with WebCrypto.
+Hash or sign text, or generate random values and UUIDs, right in the browser.
 
 ## What it does
 
-Hashes text with SHA-1, SHA-256, SHA-512 or MD5, HMACs text with a secret key held in the credential store, generates cryptographically random bytes, or mints a random UUID (v4). The result is presented as hex or base64 text. Everything runs through `crypto.subtle` and `crypto.getRandomValues`, so the node needs no external dependency — except MD5, which `crypto.subtle.digest` does not implement (it was never part of the WebCrypto spec), so it is computed with a small self-contained implementation instead. MD5 is offered for Hash only; WebCrypto's HMAC accepts SHA-1/256/512, and choosing MD5 for HMAC fails with a clear error rather than pretending to support it.
+Crypto runs once per incoming item and puts its result in **Put Result In Field** (`result` by default). It has four operations:
+
+- **Hash** turns text into a fingerprint with SHA-1, SHA-256, SHA-512 or MD5. The same text always gives the same hash.
+- **HMAC** signs text with a secret key taken from a saved credential, using SHA-1, SHA-256 or SHA-512.
+- **Random bytes** generates random bytes, 32 by default and at most 1024.
+- **UUID v4** generates a random unique id such as `3f2b8c1e-…`.
+
+Hashes, signatures and random bytes come out as lowercase hex or base64 text, depending on **Encoding**.
 
 ## When to use it
 
-Use this node to checksum scraped content or compare it against a known digest, to sign a webhook payload with HMAC before sending it onward, or to mint an idempotency key or random identifier for an outgoing item.
+- Fingerprint scraped content so you can tell later whether it changed.
+- Sign a payload with HMAC before you send it to an API or webhook that checks signatures.
+- Create an idempotency key or a random id for each outgoing item.
+- Use MD5 only when another system expects an MD5 checksum. It is not safe for security purposes.
 
 ## Inputs and settings
 
@@ -37,11 +47,16 @@ Use this node to checksum scraped content or compare it against a known digest, 
 | **Put Result In Field** | Text | `result` | No | Field holding the hash, HMAC, random bytes or UUID. |
 {/* AUTO:settings:end */}
 
+- For Hash and HMAC, the node reads the text from **Text** first, for example `{{ $input.body }}`. If **Text** is empty, it reads the field named in **Source Field** (dots work for nested fields).
+- **Byte Length** only matters for *Random bytes*. Values above 1024 are reduced to 1024.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+Each item comes out with the result as text in **Put Result In Field**, next to its original fields. Turn off **Include Input Fields** to output only the result. Use it downstream with `{{ $input.result }}`.
 
 ## Dependencies and credentials
 
@@ -49,23 +64,24 @@ One output port.
 - **HMAC Key** (credential): optional. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- **HMAC** requires a credential holding the secret key, selected in **HMAC Key**. The key is never typed into a plain parameter — that would travel with a shared workflow export or marketplace publish — it is resolved from the credential store at run time and used only in memory. `Hash`, `Random bytes` and `UUID v4` need no credential.
-- No node dependency is required. The node runs entirely in the browser via WebCrypto.
+Only *HMAC* needs a credential. Save the shared secret as a token credential (API Token / Bearer) and pick it in **HMAC Key**; see [Create a credential](/usage/using-the-app/credentials/create/). The secret stays in your credential store, so it is not included when you export or share the workflow.
 
 ## Example workflow
 
-Place Crypto after a node producing a webhook payload, set **Operation** to `HMAC`, choose an `SHA-256` **Algorithm**, and select a credential holding the shared secret in **HMAC Key**. Point **Text** at `{{ $json.body }}` and set **Encoding** to `Hex`. The signature lands in `result`, ready to attach as a header before the request goes out.
+1. [Edit Fields](/nodes/builtin/datatransformation/editfields/) builds the payload text in a field named `body`.
+2. Crypto with **Operation** *HMAC*, **Algorithm** *SHA-256*, **HMAC Key** set to your saved secret, **Text** `{{ $input.body }}` and **Encoding** *Hex*.
+3. [Http Request](/nodes/builtin/core/http-request/) sends `body` and adds a signature header with the value `{{ $input.result }}`.
 
 ## Troubleshooting
 
-- `HMAC` fails without a credential in **HMAC Key** — select one, since the key can never be typed inline.
-- Choosing `MD5` with `Operation` set to `HMAC` fails immediately: MD5 is not a valid HMAC algorithm. Choose SHA-1, SHA-256, or SHA-512 instead.
-- `Random bytes` silently caps **Byte Length** at 1024, so a typo cannot allocate gigabytes.
-- If there is no text to hash, fill in **Text** or name the field holding it in **Source Field**.
+- **"HMAC requires a credential holding the secret key. Select one in the HMAC Key field."** Pick or create a credential in **HMAC Key**.
+- **"MD5 is not a valid HMAC algorithm. Choose SHA-1, SHA-256, or SHA-512."** MD5 works for *Hash* only. Change **Algorithm**.
+- **"No text to hash. Fill in the Text field, or name the field holding it."** Both **Text** and **Source Field** are empty.
+- **"Field "…" does not exist on the incoming item."** The name in **Source Field** is wrong or the field is empty. Check its spelling against the previous node's output.
+- **The signature does not match what the other service expects.** Check that both sides use the same algorithm and encoding (hex vs base64), and that you sign exactly the same text, including spaces and line breaks.
 
 ## Related nodes
 
-- [JSON](/nodes/builtin/datatransformation/json/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Code](/nodes/builtin/core/code/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): prepare the text before hashing it.
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): drop items you have already seen.
+- [Code](/nodes/builtin/core/code/): for cryptography this node does not cover.

@@ -11,15 +11,23 @@ node:
   family: ai
 ---
 
-Summarize a text using a LLM
+Turn a long text into a short summary with a chat model.
 
 ## What it does
 
-Sends the input text to a language model with instructions to summarize it concisely while preserving the key points. You can optionally cap the approximate length and set a style (e.g. "bullet points", "one paragraph", "formal").
+Summarization sends **Text** to the chat model connected to **Model**, asking for a concise summary that keeps the key points. The reply comes back in `summary`.
+
+**Max words** and **Style** are added to the model's instructions. They guide the model; they do not cut the text afterwards, so a summary can run a little over **Max words**.
+
+The whole text is sent in one request, so it must fit the model's context window.
 
 ## When to use it
 
-Use this node to condense long text — articles, transcripts, documents, chat threads — into a shorter summary for display, storage, or as compact context for a downstream agent.
+- Summarise an article or a long page before you read it.
+- Shorten a transcript, an email thread or a report before you save or send it.
+- Make compact context for another AI step.
+
+To summarise on-device without a model node, use [Summarize](/nodes/builtin/ai/localai/summarize/). For any other kind of rewrite, use [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/).
 
 ## Inputs and settings
 
@@ -33,6 +41,8 @@ Use this node to condense long text — articles, transcripts, documents, chat t
 | Options › **System message** | Long text |  | No | The system message to use. |
 {/* AUTO:settings:end */}
 
+Fill **Text** with an expression such as `{{ $input.text }}`. **Style** is free text: `bullet points`, `one paragraph`, `formal`, `for a ten-year-old`. Use **System message** for other rules, such as `Write in French.`
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -45,7 +55,7 @@ Each output item has these fields:
 | `summary` | Any | The model reply; the parsed result when an output parser is connected |
 {/* AUTO:outputs:end */}
 
-Returns `{ summary }`, the model's generated summary of the input text.
+`summary` is the summary as text. This node has no output parser slot. Use it downstream with `{{ $input.summary }}`.
 
 ## Dependencies and credentials
 
@@ -55,22 +65,23 @@ Returns `{ summary }`, the model's generated summary of the input text.
 | **Model** | chat model | Yes | One |
 {/* AUTO:deps:end */}
 
-- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). Used to generate the summary.
+Connect a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/) or an on-device [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/). The model node holds the API key; Summarization has no credential of its own.
 
 ## Example workflow
 
-Connect a Chat OpenAI node to the Model dependency, feed long text from an upstream node (e.g. a scraped page or transcript) into Text, optionally set Max words and Style, then pass the `summary` output to a display node or as context for another agent.
+1. [Get All Text](/nodes/extension/getalltext/) reads the current page, with **Output field name** `text` and **Visible text only** on.
+2. Summarization with **Text** `{{ $input.text }}`, **Max words** `120` and **Style** `bullet points`, with an [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model on **Model**.
+3. [Display Markdown](/nodes/extension/displaymarkdown/) with **Content** `{{ $input.summary }}`.
 
 ## Troubleshooting
 
-- If summaries run longer than expected, set Max words explicitly — it is an approximate instruction to the model, not a hard truncation.
-- Verify the Model dependency is connected — the node throws if no model is found.
-- For very long input text, check the connected model's context window; excessively long text may need to be chunked upstream.
+- **The summary is longer than Max words.** The limit is an instruction, not a hard cut. Lower it, or add `Never exceed the word limit.` in **System message**.
+- **The model fails on a very long page.** The text is larger than the model's context window. Use a model with a larger window, or shorten the text first (for example with a **DOM Selector** in Get All Text).
+- **"Dependency model is required".** Connect a chat model to the **Model** slot.
+- **"Model not found".** The connected model node is not set up: open it and choose a model and its credential.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
-- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
-- [AI Agents](/advanced-ai/concepts/ai-agents/)
+- [Summarize](/nodes/builtin/ai/localai/summarize/): on-device summaries, no model node needed.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): any prompt, any rewrite.
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/): pull specific fields instead of a summary.

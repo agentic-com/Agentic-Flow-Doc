@@ -176,7 +176,7 @@ export function renderOutputs(n: NodeDoc): string {
 			...fields.map((f) => `| ${code(f.name)} | ${mdx(f.type)} | ${f.description ? mdx(f.description) : ''} |`)
 		);
 	} else if (fields.length) {
-		out.push('', `${lead} the fields ${fields.map((f) => `${code(f.name)} (${mdx(f.type.toLowerCase())})`).join(', ')}.`);
+		out.push('', `${lead} the fields ${fields.map((f) => `${code(f.name)} (${mdx(f.type.startsWith("Always") ? "a" + f.type.slice(1) : f.type.toLowerCase())})`).join(', ')}.`);
 	}
 	return out.join('\n').trim();
 }

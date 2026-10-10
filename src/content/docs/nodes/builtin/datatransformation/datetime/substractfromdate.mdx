@@ -11,15 +11,21 @@ node:
   family: data
 ---
 
-Subtract a number of days from a date
+Move a date back by a number of years, months, days, hours or other units.
 
 ## What it does
 
-Subtracts a specified duration (days, hours, minutes, etc.) from a date value.
+Subtract From A Date takes **Date to subtract from**, removes **Duration** of the chosen **Time unit to subtract**, and writes the new date into a field named by **Output field name**.
+
+- Units: year, quarter (3 months), month, week (7 days), day, hour, minute, second.
+- The calculation uses your computer's local time zone.
+- Going back a month from the 31st rolls over when the earlier month is shorter: 31 March minus 1 month gives 3 March (or 2 March in a leap year), not 28 February.
 
 ## When to use it
 
-Use this node to calculate past dates, determine deadlines, or find historical timestamps.
+- Build the start of a "last 7 days" or "last 24 hours" window.
+- Work out when a reminder should fire before a deadline.
+- Find a date one year ago for a comparison.
 
 ## Inputs and settings
 
@@ -34,11 +40,15 @@ Use this node to calculate past dates, determine deadlines, or find historical t
 | Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
 {/* AUTO:settings:end */}
 
+**Date to subtract from** accepts a picked date or an expression such as `{{ $input.deadline }}`. ISO dates (`2026-03-01`, `2026-03-01T09:30:00Z`) are the safest format.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+The item holds the new date under **Output field name**. Turn on **Include input fields** to keep the incoming fields next to it.
 
 ## Dependencies and credentials
 
@@ -48,14 +58,23 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect data into Subtract From A Date, configure the settings above, and use the output in the next workflow step.
+Keep only feed items from the last 24 hours:
+
+1. [RSS Feed Read](/nodes/builtin/core/rss-feed-read/), **URL** of a news feed.
+2. [Split Out](/nodes/builtin/datatransformation/splitout/), **Field To Split Out** `items`, **Output field name** `article`, so each article becomes its own item.
+3. [Get Current Date](/nodes/builtin/datatransformation/datetime/getcurrentdate/), **Output field name** `now`, **Include input fields** on.
+4. Subtract From A Date, **Date to subtract from** `{{ $input.now }}`, **Time unit to subtract** `day`, **Duration** `1`, **Output field name** `since`, **Include input fields** on.
+5. [Filter](/nodes/builtin/flow/filter/): `{{ $input.article.isoDate }}` is after `{{ $input.since }}`, type **Date-Time**.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The output is "Invalid Date" or empty.** The incoming value is not a date the browser understands. Use an ISO date such as `2026-03-01`.
+- **The month result lands in the wrong month.** Subtracting months from the 29th to the 31st can roll forward into the next month. Round the date down to `month` first with [Round a Date](/nodes/builtin/datatransformation/datetime/roundadate/) when you only care about the month.
+- **The new date is missing after the node.** With **Include input fields** on, an incoming field with the same name as **Output field name** replaces the result. Use a different name.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Add To A Date](/nodes/builtin/datatransformation/datetime/addtoadate/): move a date forward.
+- [Round a Date](/nodes/builtin/datatransformation/datetime/roundadate/): snap to the start of a day or month.
+- [Get Current Date](/nodes/builtin/datatransformation/datetime/getcurrentdate/): start from "now".
+- [Filter](/nodes/builtin/flow/filter/): keep items newer than the computed date.

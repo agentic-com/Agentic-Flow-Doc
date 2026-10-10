@@ -11,15 +11,25 @@ node:
   family: inpage
 ---
 
-Get metadata from the opened page
+Read the address, title, description, language, icon and social-sharing tags of the page open in the active tab.
 
 ## What it does
 
-Extracts page metadata including title, description, Open Graph tags, and other meta information.
+Get Page Metadata reads the information a page publishes about itself and returns it as one item. It has no settings.
+
+- `url`: the address of the tab. `title`: the title shown on the browser tab.
+- `canonicalUrl`: the page's preferred address, when it declares one (empty otherwise).
+- `description`: the page's description, or its social-sharing description when it has none.
+- `lang`: the page language, such as `en` or `fr-FR` (empty when not declared).
+- `favicon`: the full address of the page icon. When the page declares none, it falls back to `/favicon.ico` on the same site.
+- `openGraph`: the social-sharing tags (`og:` tags) without their prefix, for example `title`, `image`, `type`.
+- `twitter`: the `twitter:` card tags, also without their prefix.
 
 ## When to use it
 
-Use this node to collect SEO data, social media previews, or page information for cataloging.
+- Save a bookmark or reading-list entry with a clean title, description and preview image.
+- Know which page a workflow started from, to log it or to branch on the site.
+- Check that a page has a description and sharing image before you publish it.
 
 ## Inputs and settings
 
@@ -46,6 +56,8 @@ Each output item has these fields:
 | `twitter` | Key-value pairs | twitter:\* meta tags |
 {/* AUTO:outputs:end */}
 
+Read the sharing tags with expressions such as `{{ $input.openGraph.image }}` or `{{ $input.twitter.card }}`. A tag the page does not set is simply absent.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
@@ -54,15 +66,20 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Run Get Page Metadata after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Add a [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger, so you can save any page from the right-click menu.
+2. Add **Get Page Metadata**.
+3. Add [Edit Fields](/nodes/builtin/datatransformation/editfields/) with three fields: `title` = `{{ $input.title }}`, `link` = `{{ $input.url }}` and `image` = `{{ $input.openGraph.image }}`.
+4. Keep it with [Data Store](/nodes/builtin/core/datastore/), **Operation** = **Set**, **Key** = `{{ $input.link }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **`description`, `canonicalUrl` or `lang` is empty.** The page does not declare it. Fall back to another field, or read the text with [Get All Text](/nodes/extension/getalltext/).
+- **`openGraph` is empty.** The page has no social-sharing tags.
+- **The title is out of date on a single-page app.** Some sites change the title only after content loads. Add [Wait For Element](/nodes/extension/ui/wait-for-element/) before this node.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Get All Text](/nodes/extension/getalltext/): the page's content.
+- [Screenshot Page](/nodes/extension/screenshotpage/): a picture of the page.
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): shape the metadata into the record you need.

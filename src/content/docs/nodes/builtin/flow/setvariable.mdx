@@ -11,18 +11,26 @@ node:
   family: flow
 ---
 
-Remember a value for the rest of this run.
+Remember a named value for the rest of this run, so any later node can read it as `{{ $run.name }}`.
 
 ## What it does
 
-Stores a named value that any later node can read as `{{ $run.name }}` — no edge or connection required. It is how you carry a value to a node several steps away without dragging it through every node in between, and how you accumulate a running total or a list across the iterations of a [Loop](/nodes/builtin/flow/loop/).
+Set Variable stores a value under a name. Any node that runs after it can read the value with `{{ $run.name }}` in any field, with no edge to this node. That lets you carry a value to a node far away on the canvas, or build up a total or a list across the passes of a [Loop](/nodes/builtin/flow/loop/).
 
-Variables live for **one execution** and are gone when the run ends. If you need to remember something between runs, that is the Data Store, not this node — the lifetime is why the expression token says `$run`.
+The **Operation** decides what happens to the variable:
+
+- **Set**: store the **Value**, replacing what was there.
+- **Add to number**: add the **Value** to the number already stored. A variable that is not set yet starts at 0, so you don't need to set it first.
+- **Append to list**: add the **Value** to the end of a list. A variable that is not set yet starts as an empty list.
+- **Delete**: forget the variable.
+
+Variables last for **one run** and are gone when it ends. To remember something between runs, use [Data Store](/nodes/builtin/core/datastore/).
 
 ## When to use it
 
-- To hand a value to a node far away on the canvas without running an edge across the whole graph.
-- To build up a total or a list over a Loop, which is otherwise hard without reaching for persistent storage.
+- Hand a value (a page cursor, a user name) to a step much further on without wiring it through every node in between.
+- Count items or add up amounts over a Loop.
+- Collect results from each pass of a Loop into one list.
 
 ## Inputs and settings
 
@@ -35,19 +43,16 @@ Variables live for **one execution** and are gone when the run ends. If you need
 | **Pass The Item Through** | Toggle | On | No | Emit the incoming item unchanged, so this node can sit inline. |
 {/* AUTO:settings:end */}
 
+- **Name** may contain letters, digits, `_` and `$`, and must not start with a digit, for example `cursor` or `total_price`.
+- **Value** is usually an expression such as `{{ $input.nextPage }}`. For **Add to number** it must be a number (or text that is a number, like `5`).
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
 
-By default the incoming item passes through unchanged, so Set Variable can sit inline without disturbing the stream. With pass-through off, it emits a summary of the write (`name`, `value`, `operation`) instead.
-
-## Reading a variable later
-
-Any downstream node reads the value inline with `{{ $run.name }}` in any input field — no connection to this node is needed.
-
-A variable is only reliably readable by nodes **guaranteed to run after** the one that sets it — that is, nodes downstream of this one. A node runs once every node feeding into it has run, but between two branches that do not feed into each other there is no ordering at all. Reading a variable from a parallel branch may work today and break when someone inserts a node elsewhere. Reading a variable that was never set **fails loudly, naming the variable**, rather than resolving to an empty string, so that mistake cannot pass unnoticed. The canvas shows a design-time warning when a read may happen before the write.
+With **Pass The Item Through** on (the default), the incoming item goes out unchanged, so you can drop Set Variable in the middle of a chain. With it off, the item is replaced by a summary: `name`, `value` (what the variable now holds) and `operation`.
 
 ## Dependencies and credentials
 
@@ -55,23 +60,27 @@ A variable is only reliably readable by nodes **guaranteed to run after** the on
 None. This node needs no credential and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
-- No credential or node dependency is required. The node runs entirely in the browser.
-- Variables exist only while a workflow is running. Running this node on its own, outside an execution, has nothing to store into and reports so.
-
 ## Example workflow
 
-Early in a run, use Set Variable with **Operation** `Set`, **Name** `cursor`, and **Value** `{{ $json.nextPage }}`. Later, a Loop increments a `count` variable each pass with **Operation** `Add to number`. A final node reads `{{ $run.cursor }}` and `{{ $run.count }}` directly, with no edge back to either Set Variable node.
+Count the links on a page that point to PDFs:
+
+1. [Get All Link](/nodes/extension/getalllinks/) with **Output field name** `links` reads the links of the open page.
+2. [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** `links` makes one item per link.
+3. [Filter](/nodes/builtin/flow/filter/) keeps items where `{{ $input.links }}` (**String**) **Ends With** `.pdf`.
+4. Set Variable with **Operation** **Add to number**, **Name** `pdfCount`, **Value** `1`. It runs once per kept link.
+5. A later [Show Notification](/nodes/extension/shownotification/) shows `Found {{ $run.pdfCount }} PDFs`.
 
 ## Troubleshooting
 
-- "Variables only exist while a workflow is running." Run the whole workflow rather than this node on its own.
-- "A variable name is required" / the name is rejected: use letters, digits, underscore or `$`, not starting with a digit, so `{{ $run.name }}` can address it.
-- "Cannot append … not a list": **Append to list** needs the variable to hold a list. Set it to a list first, or start fresh.
-- A downstream read fails naming the variable: the reading node is not guaranteed to run after this one. Move it downstream, or heed the canvas warning about a read before the write.
+- **"Variable "x" has not been set at this point in the run."** A node read `{{ $run.x }}` before Set Variable ran. Only nodes downstream of Set Variable are sure to run after it; a node on a parallel branch may run first. Connect Set Variable upstream of the reader. The canvas also warns you when a read may come before the write.
+- **"Variables only exist while a workflow is running."** You ran the node on its own. Run the whole workflow.
+- **"... cannot be used as a variable name."** Use only letters, digits, `_` and `$`, not starting with a digit.
+- **"Cannot append to "x" because it holds ..., not a list."** The variable was set to something else earlier. Use a new name, or **Delete** it first.
+- **"The amount to add is not a number."** With **Add to number**, the **Value** must be a number.
 
 ## Related nodes
 
-- [Get Variable](/nodes/builtin/flow/getvariable/)
-- [Loop](/nodes/builtin/flow/loop/)
-- [$run expressions](/usage/key-concepts/data/data-mapping/data-mapping-expressions/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Get Variable](/nodes/builtin/flow/getvariable/): turn a stored value back into items.
+- [Loop](/nodes/builtin/flow/loop/): repeat steps while updating a variable.
+- [Data Store](/nodes/builtin/core/datastore/): remember values between runs.
+- [Expressions](/usage/key-concepts/data/data-mapping/data-mapping-expressions/): how `$run` and other expressions work.

@@ -11,24 +11,25 @@ node:
   family: integration
 ---
 
-Integrate with GitHub to work with issues, pull requests, repositories, and releases — anchored to the page you are looking at.
+Open, update and comment on GitHub issues, read and review pull requests, and look up repositories and releases.
 
 ## What it does
 
-Calls the GitHub REST API directly to create and manage issues, comment on and review pull requests, read repositories, and fetch releases. Because the request is made from the browser, it can act on the exact repository, issue, or PR you are currently viewing.
+The GitHub node works on four kinds of things (**Resource**):
+
+- **Issue**: create, get, update, comment on, list or close issues.
+- **Pull request**: get or list pull requests, comment on one, submit a review (approve, request changes, comment), or list the files it changes.
+- **Repository**: get one repository, list your own repositories, or search all public ones.
+- **Release**: get the latest release, or list releases.
+
+Every operation that targets a repository takes **Owner** and **Repository** as two fields. List operations return 30 results by default (**Limit**, up to 100).
 
 ## When to use it
 
-Use this node to open an issue from a page you are reading, comment on the PR you are reviewing, file a bug from a stack trace you just selected, or pull the latest release of a project into a workflow.
-
-## Resources and operations
-
-| Resource | Operations |
-| --- | --- |
-| Issue | Create, Get, Update, Comment, List, Close |
-| Pull request | Get, List, Comment, Review, List files |
-| Repository | Get, List, Search |
-| Release | Get latest, List |
+- File an issue from a page or a stack trace you just selected.
+- Post a comment on a pull request from a review checklist.
+- Check a project's latest release every morning and get notified when it changes.
+- List open issues with a given label and summarize them with an AI node.
 
 ## Inputs and settings
 
@@ -186,13 +187,21 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 | **Limit** | Number | 30 | No | Number of results to return (1-100). |
 {/* AUTO:settings:end */}
 
+- Split the repository address: for `github.com/octocat/hello-world`, **Owner** is `octocat` and **Repository** is `hello-world`.
+- **Issue Number** and **Pull Request Number** are the number after `#`, for example `42`.
+- On **Issue → List**, **Labels** is a comma-separated list such as `bug,urgent`; on **Create** and **Update**, **Labels** and **Assignees** are lists of names.
+- **Review Body** is required when **Review Event** is **Request changes** or **Comment**.
+- **Search Query** uses GitHub's search syntax, for example `topic:automation language:typescript stars:>100`.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
 
-Returns the GitHub API response for the selected operation — for example the created issue, the pull request, a list of files, or the latest release.
+- Issue, pull request, repository and release operations return the GitHub object, with fields such as `number`, `title`, `state` and `html_url` (the link to open it in the browser).
+- List operations return a list, one entry per issue, pull request, file or release. GitHub counts pull requests as issues, so **Issue → List** can include them.
+- **Repository → Search** returns `total_count` and the matches in `items`.
 
 ## Dependencies and credentials
 
@@ -200,23 +209,24 @@ Returns the GitHub API response for the selected operation — for example the c
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
-- **Auth type:** Bearer Token. Paste a **fine-grained personal access token (PAT)**.
-- Prefer a fine-grained PAT scoped to a **single repository** with only the permissions you need (e.g. Issues: Read and write). Its leak radius is that one repository — not your whole account.
-- Create one under GitHub → Settings → Developer settings → Fine-grained tokens. Classic PATs also work but are broader; prefer fine-grained.
-- The credential is stored in your credential vault and resolved at run time — it is never read from a node parameter.
+Use a GitHub **personal access token**. A fine-grained token is safest: on GitHub, open **Settings → Developer settings → Personal access tokens → Fine-grained tokens**, limit it to the repositories you need, and give it only the permissions you use, for example **Issues: Read and write** or **Pull requests: Read and write** (plus **Contents: Read** for releases). A classic token also works but opens your whole account. See [Create a credential](/usage/using-the-app/credentials/create/).
 
-## Web and extension builds
+## Example workflow
 
-GitHub's REST API sends permissive CORS headers, so this node works in **both** the browser extension and the web app — unlike integrations that require the extension to bypass CORS.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger runs when you right-click selected text.
+2. [Get Selected Text](/nodes/extension/getselectedtext/) reads the error message you selected.
+3. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) writes a short bug title and description.
+4. GitHub, **Issue → Create**, **Owner** `my-org`, **Repository** `my-app`, **Title** and **Body** from the previous step, **Labels** `bug`.
 
 ## Troubleshooting
 
-- **`Bad credentials`** — the token is missing, mistyped, or expired. Recreate the fine-grained PAT.
-- **`rate limit exceeded`** — you have hit GitHub's rate limit; wait for it to reset or reduce request frequency.
-- **404 on a private repository** — the token's repository scope does not include that repo, or the fine-grained PAT lacks the needed permission.
-- Owner and Repository must be provided separately (owner `octocat`, repository `hello-world`), not as `octocat/hello-world`.
+- **"GitHub API Error: Bad credentials".** The token is wrong, expired or revoked. Create a new one and update the credential.
+- **"GitHub API Error: Not Found" on a repository you can see.** The token does not include that repository, or lacks the permission for this operation. Edit the token on GitHub.
+- **"GitHub API Error: rate limit exceeded".** You made too many requests in the last hour. Wait, or run the workflow less often.
+- **"GitHub API Error: Validation Failed".** A value is not accepted, for example an unknown assignee, or an empty **Review Body** with **Request changes**.
 
 ## Related nodes
 
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Slack](/nodes/builtin/integration/slack/)
+- [Linear](/nodes/builtin/integration/linear/): issues in Linear instead.
+- [RSS Feed Read](/nodes/builtin/core/rss-feed-read/): follow a repository's release feed without a token.
+- [Http Request](/nodes/builtin/core/http-request/): call GitHub API endpoints this node does not cover.

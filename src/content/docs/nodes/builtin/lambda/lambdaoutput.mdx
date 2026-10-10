@@ -11,15 +11,18 @@ node:
   family: lambda
 ---
 
-Define the outputs for the lambda workflow.
+Lambda Output is the end point of a lambda workflow: it sets the values the workflow hands back to whoever called it.
 
 ## What it does
 
-Defines the output values returned by a lambda workflow to its caller.
+Each entry under **Outputs** has a name, a type and a value. The value is usually an expression that reads data from earlier steps. When the run reaches Lambda Output, each value is converted to its type (number, true/false, and so on) and the result is returned to the caller.
+
+Lambda Output is a dead end on the canvas: nothing connects after it. In the calling workflow, the [Lambda Workflow](/nodes/builtin/lambda/lambdaworkflow/) node outputs these values, and the next steps continue from there.
 
 ## When to use it
 
-Use this node as the exit point of a lambda workflow to specify what data it returns.
+- You are building a lambda workflow. It needs a Lambda Output before you can test it or call it.
+- You want the caller to get a small, predictable result (for example `summary` and `wordCount`) instead of whatever the last step produced.
 
 ## Inputs and settings
 
@@ -29,11 +32,15 @@ Use this node as the exit point of a lambda workflow to specify what data it ret
 | **Outputs** | Field list |  | Yes | The outputs for the lambda workflow. |
 {/* AUTO:settings:end */}
 
+Fill each value with an expression, for example `{{ $input.text }}` for the incoming data, or `{{ $('Http Request').body }}` for a named earlier step. Pick the type that matches what callers expect: a number output turns `"42"` into `42`, and an object or array output reads JSON text into real data.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+The result is one item with the output names you declared, for example `{ "summary": "...", "wordCount": 120 }`. This is exactly what the calling Lambda Workflow node outputs, and what an AI agent gets back when it uses the workflow through [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/).
 
 ## Dependencies and credentials
 
@@ -43,14 +50,23 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect data into Lambda Output, configure the settings above, and use the output in the next workflow step.
+A lambda workflow that counts the words in a text:
+
+1. [Lambda Input](/nodes/builtin/lambda/lambdainput/) with one input `text`.
+2. [Code](/nodes/builtin/core/code/) that returns `{ count: ... }` for the text.
+3. **Lambda Output** with two outputs: `text` = `{{ $('Lambda Input').text }}` (string) and `wordCount` = `{{ $input.count }}` (number).
+4. A calling workflow adds this lambda from **My Lambda Workflows** and reads `{{ $input.wordCount }}` in its next step.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The caller fails with "Workflow ... produced no output. Check that it has an Output node and that the branch reaching it ran."** The run ended without reaching Lambda Output, for example because an [IF](/nodes/builtin/flow/if/) sent the data down a branch that does not lead here. Make every branch end in Lambda Output, or use a [Merge](/nodes/builtin/flow/merge/) before it.
+- **A number output comes back as `0`.** The value is not a number (for example `"12 items"`), so it falls back to `0`. Make the expression return only the number.
+- **A true/false output is always true.** Any value that is not already a real true/false (including the text `"false"`) becomes true. Make the earlier step return a real true/false, or use a string output.
+- **An object or array output fails or comes back empty.** Text must be valid JSON to become an object or array. An invalid array becomes `[]`; an invalid object stops the run with "Failed to parse object".
+- **There is no Test Workflow button on the canvas.** The lambda workflow is missing its Lambda Input or Lambda Output. Use the **Add Lambda Output** button in the top right.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Lambda Input](/nodes/builtin/lambda/lambdainput/): the values the lambda workflow accepts.
+- [Lambda Workflow](/nodes/builtin/lambda/lambdaworkflow/): call a lambda workflow from another one.
+- [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/): let an AI agent call it.

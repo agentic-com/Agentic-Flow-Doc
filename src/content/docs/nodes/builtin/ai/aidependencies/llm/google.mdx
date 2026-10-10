@@ -1,6 +1,6 @@
 ---
 title: "Chat Google"
-description: "Leverage Google to use LLM locally directly on your device"
+description: "Connect a Google Gemini chat model to AI nodes."
 sidebar:
   label: "Chat Google"
 kind: node
@@ -11,15 +11,21 @@ node:
   family: ai
 ---
 
-Leverage Google to use LLM locally directly on your device
+Give an AI node access to Google's Gemini models, through Google AI Studio or Vertex AI.
 
 ## What it does
 
-Provides access to Google's Gemini models for AI agent nodes.
+Chat Google is a model you plug into the **Model** slot of an AI node, such as the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/). It does not run on its own and has no output. When the AI node runs, it sends its messages to Google with your key and gets the reply back.
+
+- **Platform Type** picks the service: `gai` is Google AI Studio (the Gemini API), `gcp` is Vertex AI on Google Cloud. Empty means `gai`.
+- **Temperature** is 0 when you leave it empty, so answers are focused and repeatable.
+- Replies are capped at **Max Tokens** (4096 by default). A failed request is retried up to **Max Retries** times (2 by default).
 
 ## When to use it
 
-Connect this to AI agents when you want to use Google's Gemini models for multimodal AI capabilities.
+- You want a Gemini model, for example for long documents.
+- You have a free or paid Google AI Studio key and want to start quickly.
+- Your company runs Gemini on Google Cloud: choose `gcp`.
 
 ## Inputs and settings
 
@@ -35,6 +41,8 @@ Connect this to AI agents when you want to use Google's Gemini models for multim
 | Options › **Max Tokens** | Number | 4096 | No | The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window. |
 {/* AUTO:settings:end */}
 
+Type the **Model** id as Google names it in its model list (a `gemini-...` id). Leave **Platform Type** empty or on `gai` for an AI Studio key; choose `gcp` only for a Vertex AI key.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
@@ -45,24 +53,36 @@ This node has no output port. It plugs into a slot on another node instead of pa
 | Model | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
 {/* AUTO:outputs:end */}
 
+The AI node you connect it to produces the output. Chat Google only decides which model answers.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 - **Authentication** (credential): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
+In **Authentication**, save your Google API key (a Bearer Token or JWT Token credential both work; put only the key in it). See [Create a credential](/usage/using-the-app/credentials/create/).
+
+- For **Google AI Studio** (`gai`), create the key at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey).
+- For **Vertex AI** (`gcp`), create it in the Google Cloud Console, at [console.cloud.google.com/vertex-ai/studio/api-key](https://console.cloud.google.com/vertex-ai/studio/api-key/).
+
 ## Example workflow
 
-Connect Chat Google to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on the page.
+2. [Get All Text](/nodes/extension/getalltext/) with **Output field name** `pageText`.
+3. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) with **Prompt** `List the 5 key points of this article: {{ $input.pageText }}`.
+4. Chat Google in its **Model** slot, with a Gemini model id and **Platform Type** `gai`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Model parameter is required and cannot be empty".** Fill in **Model**.
+- **An "API key not valid" or permission error.** The key does not match **Platform Type**: an AI Studio key needs `gai`, a Vertex AI key needs `gcp`. Or the key was deleted; create a new one.
+- **A "model not found" error.** The model id is misspelled or not available on that platform. Copy it from Google's model list.
+- **The answer stops mid-sentence.** It hit **Max Tokens**. Raise it under **Options**.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Google Embeddings](/nodes/builtin/ai/aidependencies/embeddings/google/): Gemini vectors for a knowledge base.
+- [Chrome AI](/nodes/builtin/ai/aidependencies/llm/chrome-ai/): Gemini Nano, built into Chrome, no key.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): send one prompt and get a reply.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an agent that can use tools and memory.

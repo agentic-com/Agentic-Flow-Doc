@@ -11,15 +11,22 @@ node:
   family: data
 ---
 
-Add a number of days to a date
+Move a date forward by a number of years, months, days, hours or other units.
 
 ## What it does
 
-Adds a specified duration (days, hours, minutes, etc.) to a date value.
+Add To A Date takes **Date to add to**, adds **Duration** of the chosen **Time unit to add**, and writes the new date into a field named by **Output field name**.
+
+- Units: year, quarter (3 months), month, week (7 days), day, hour, minute, second.
+- The calculation uses your computer's local time zone, so adding 1 day keeps the same clock time even across a daylight-saving change.
+- A negative **Duration** moves the date back, but [Subtract From A Date](/nodes/builtin/datatransformation/datetime/substractfromdate/) reads more clearly.
+- Adding a month to the 31st rolls over when the next month is shorter: January 31 plus 1 month gives March 2 or 3.
 
 ## When to use it
 
-Use this node to calculate future dates, schedule events, or set expiration times.
+- Work out a due date, for example 14 days after an order date.
+- Set an expiry time, such as "now plus 1 hour".
+- Build the end of a date range to send to an API.
 
 ## Inputs and settings
 
@@ -34,11 +41,15 @@ Use this node to calculate future dates, schedule events, or set expiration time
 | Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
 {/* AUTO:settings:end */}
 
+**Date to add to** accepts a date you pick, or an expression such as `{{ $input.createdAt }}`. ISO dates (`2026-03-01`, `2026-03-01T09:30:00Z`) are the safest format.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+The item holds one field, named by **Output field name**, with the new date. Turn on **Include input fields** to keep the incoming fields next to it, for example `{ dueDate, orderId, customer }`.
 
 ## Dependencies and credentials
 
@@ -48,14 +59,22 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Connect data into Add To A Date, configure the settings above, and use the output in the next workflow step.
+Remind yourself of a follow-up one week from today:
+
+1. [Get Current Date](/nodes/builtin/datatransformation/datetime/getcurrentdate/), **Output field name** `now`.
+2. Add To A Date, **Date to add to** `{{ $input.now }}`, **Time unit to add** `week`, **Duration** `1`, **Output field name** `followUp`.
+3. [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/), **Date to format** `{{ $input.followUp }}`, **Format** `DD/MM/YYYY`.
+4. [Browser Notification](/nodes/extension/browsernotification/) showing the formatted date.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The output is "Invalid Date" or empty.** The incoming value is not a date the browser understands. Use an ISO date such as `2026-03-01`, or reshape it first.
+- **The result is off by a few hours.** The date was read in a different time zone than you expected. Include the time zone in the input (`Z` or `+02:00`).
+- **The new date is missing after the node.** With **Include input fields** on, an incoming field with the same name as **Output field name** replaces the result. Pick a name the input does not already use.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Subtract From A Date](/nodes/builtin/datatransformation/datetime/substractfromdate/): move a date back.
+- [Round a Date](/nodes/builtin/datatransformation/datetime/roundadate/): snap the result to the start or end of a day, month or year.
+- [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/): turn the result into readable text.
+- [Get Time Between Dates](/nodes/builtin/datatransformation/datetime/gettimebetweendates/): compare two dates.
