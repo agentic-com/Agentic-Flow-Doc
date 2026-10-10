@@ -12,7 +12,9 @@ sidebar:
 ---
 
 import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
-import { StepCard, LessonProgress, LessonDone } from "@components/awflow";
+import { StepCard, LessonProgress, LessonDone, Screenshot } from "@components/awflow";
+import runHistoryLight from '@assets/screenshots/run-history.light.webp';
+import runHistoryDark from '@assets/screenshots/run-history.dark.webp';
 
 <LessonProgress
   client:visible
@@ -77,6 +79,13 @@ So far you started workflows with **Test Workflow**. An automation starts by its
 <StepCard n={5} title="Check its runs" check="the newest row says Success, started a few seconds ago.">
   Open the workflow and click the **Executions** tab at the top (it reads **Runs** in a narrow panel). Every run is listed with its status, start time and duration. Click a run to see what each step produced. See [Run history](/app/workflows/run-history/).
 </StepCard>
+
+<Screenshot
+  src={runHistoryLight}
+  srcDark={runHistoryDark}
+  alt="The Executions tab of the Hash Text workflow: a table of saved runs, each with a Success status, when it started, its duration, where it ran (Local) and its metadata, with a filter bar above."
+  hotspots={[{ x: 62, y: 9.4, label: 'Executions tab' }, { x: 58.9, y: 14.3, label: 'Filter runs' }, { x: 21.9, y: 29.2, label: 'A saved run and its status' }]}
+/>
 
 <Aside type="caution" title="Nothing happens?">
 Check three things: the workflow is **active**, the slot in the node matches the line you set in the browser's shortcut page, and you're in the browser extension, not the web app. More in [Hotkey troubleshooting](/nodes/builtin/trigger/hotkey/#common-issues).

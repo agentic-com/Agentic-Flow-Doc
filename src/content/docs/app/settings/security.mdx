@@ -8,6 +8,9 @@ sidebar:
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import settingsSecurityLight from '@assets/screenshots/settings-security.light.webp';
+import settingsSecurityDark from '@assets/screenshots/settings-security.dark.webp';
 
 **Settings › Security** has one setting: **Safe mode for my workflows**. It decides how strictly your own workflows are checked before they reach the internet.
 
@@ -22,7 +25,12 @@ For the workflows **you created**, you choose:
 - **Off (Trusted)**, the default. Your workflows run without asking. You built the graph and typed the URLs yourself.
 - **On**. Your workflows get the same check as installed ones: before a step contacts a website, that website must be allowed for this workflow.
 
-{/* SCREENSHOT: Settings › Security at #/app/settings/security with Safe mode switched on */}
+<Screenshot
+  src={settingsSecurityLight}
+  srcDark={settingsSecurityDark}
+  alt="Settings, Security: the Site access for your workflows card with Safe mode for my workflows switched on. Its text reads: On. Your workflows must be granted access to each external URL before they can contact it, the same per-host check installed workflows get, with a link to Site access."
+  hotspots={[{ x: 95.6, y: 28.2, label: 'Safe mode for my workflows: On' }, { x: 26.1, y: 54.5, label: 'Manage granted sites in Site access' }]}
+/>
 
 ## What Safe mode checks
 

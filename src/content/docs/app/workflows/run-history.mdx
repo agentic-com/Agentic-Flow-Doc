@@ -8,6 +8,9 @@ sidebar:
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import runHistoryLight from '@assets/screenshots/run-history.light.webp';
+import runHistoryDark from '@assets/screenshots/run-history.dark.webp';
 
 Every time a workflow runs, AWFlow saves a record of it: when it started, how long it took, whether it worked, and its log. You find these records in the workflow's **Executions** tab.
 
@@ -27,7 +30,12 @@ The workflow page has three tabs:
 - **Logs**: the live log of the run you started from the editor in this session. It is not kept after you leave.
 - **Executions**: every saved run of this workflow.
 
-{/* SCREENSHOT: Workflow page at #/app/workflows/<id>, Executions tab, list with a mix of Success, Failed and Waiting runs */}
+<Screenshot
+  src={runHistoryLight}
+  srcDark={runHistoryDark}
+  alt="The Executions tab of the Hash Text workflow: a table of saved runs, each with a Success status, when it started, its duration, where it ran (Local) and its metadata, with a filter bar above."
+  hotspots={[{ x: 62, y: 9.4, label: 'Executions tab' }, { x: 58.9, y: 14.3, label: 'Filter runs' }, { x: 21.9, y: 29.2, label: 'A saved run and its status' }]}
+/>
 
 ## Read the list
 

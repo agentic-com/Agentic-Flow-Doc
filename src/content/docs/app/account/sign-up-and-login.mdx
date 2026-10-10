@@ -8,6 +8,9 @@ sidebar:
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import signUpLight from '@assets/screenshots/sign-up.light.webp';
+import signUpDark from '@assets/screenshots/sign-up.dark.webp';
 
 You don't need an account to use AWFlow. An account adds cloud storage, the Marketplace, publishing and notifications. See [Local or cloud](/app/account/local-vs-cloud/) to decide.
 
@@ -25,7 +28,12 @@ You don't need an account to use AWFlow. An account adds cloud storage, the Mark
 
 </Steps>
 
-{/* SCREENSHOT: Sign-up form at #/auth/signup */}
+<Screenshot
+  src={signUpLight}
+  srcDark={signUpDark}
+  alt="The sign-up form: Welcome, Sign up to your Agentic Workflow account, with Name, Email, Password and Confirm Password fields, the Sign up button, GitHub, Google and Hugging Face buttons under Or continue with, and an Already have an account? Login link. A photo of a person at a computer fills the right half."
+  hotspots={[{ x: 36.7, y: 39.8, label: 'Name, email and password' }, { x: 36.7, y: 62.4, label: 'Sign up' }, { x: 36.7, y: 68.6, label: 'Or continue with GitHub, Google or Hugging Face' }, { x: 42.5, y: 75.8, label: 'Already have an account? Login' }]}
+/>
 
 ## Log in
 

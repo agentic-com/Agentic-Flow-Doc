@@ -12,8 +12,10 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
-import { StepCard, LessonProgress, LessonDone, ModelTabs } from "@components/awflow";
+import { StepCard, LessonProgress, LessonDone, ModelTabs, Screenshot } from "@components/awflow";
 import FlowPreview from "@components/awflow/FlowPreview.astro";
+import llmChainLight from '@assets/screenshots/llm-chain.light.webp';
+import llmChainDark from '@assets/screenshots/llm-chain.dark.webp';
 
 <LessonProgress
   client:visible
@@ -49,8 +51,6 @@ AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **mod
   Click the **+** on the right of **Get All Text**, type `LLM` and pick **Basic LLM Chain**. Its **Model** slot sits under the node, with its own **+**.
 </StepCard>
 
-{/* SCREENSHOT: llm-chain-model-slot — Basic LLM Chain on the canvas with the Model slot "+" highlighted */}
-
 <StepCard n={3} title="Connect a model" check="a model node hangs under the chain's Model slot and shows the model you picked.">
   Click the **+** under **Model** and pick one of these:
 
@@ -76,6 +76,13 @@ AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **mod
     </div>
   </ModelTabs>
 </StepCard>
+
+<Screenshot
+  src={llmChainLight}
+  srcDark={llmChainDark}
+  alt="The workflow editor with the Summarise this page in 3 bullets example: a sticky note, then When Started, Get All Text, Basic LLM Chain and Display Markdown in a row. A Web LLM model node hangs under the chain’s Model slot. The chain has a warning badge and the Ready to run? button counts one setting still to fill."
+  hotspots={[{ x: 75.9, y: 56.5, label: 'Basic LLM Chain' }, { x: 72, y: 79.5, label: 'Model slot, with a model node under it' }, { x: 94.7, y: 56.5, label: 'Display Markdown shows the result' }]}
+/>
 
 <StepCard n={4} title="Write the prompt" check="the Prompt field shows your text, with {{ $input.text }} at the end.">
   Open **Basic LLM Chain** and paste this into **Prompt**:

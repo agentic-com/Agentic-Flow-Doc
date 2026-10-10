@@ -15,7 +15,7 @@
   "shots": [
     {
       "shot": "side-panel",
-      "page": "usage/using-the-app/side-panel",
+      "page": "app/side-panel",
       "route": "#/app/assistant",
       "alt": "The AWFlow app at side-panel width (400 px) on the Assistant page: a compact header with the sidebar button and search, a row with chat history, the Aria agent switcher, new chat and chat settings, the greeting, the message box with Chat and Build modes, context meter and model picker, and suggestion cards stacked in one column.",
       "status": "ok",
@@ -77,7 +77,7 @@
     },
     {
       "shot": "aria-chat",
-      "page": "usage/using-the-app/chat-and-agents/chat",
+      "page": "app/chat-and-agents/chat",
       "route": "#/app/assistant",
       "alt": "The Assistant page with a saved chat open: the user asks what a webhook is and whether AWFlow can start a workflow from one, and Aria answers in two short replies. The left rail lists recent chats.",
       "note": "The chat is a real conversation imported with Memory > Import from a generated .awmem file (scripts/capture/lib/awmem.ts); no model runs during capture.",
@@ -140,7 +140,7 @@
     },
     {
       "shot": "workflows-list",
-      "page": "usage/using-the-app/workflows/manage-list",
+      "page": "app/workflows/manage-list",
       "route": "#/app/workflows",
       "alt": "The Workflows page, My Workflows tab: four workflows (JSON Prettify & Repair, Hash Text, Color Converter, JWT Decoder) with their tags, active status, Local storage badge, Not published state and dates, above the Status, Storage, Published, Needs setup and Tags filters.",
       "status": "ok",
@@ -191,7 +191,7 @@
     },
     {
       "shot": "canvas",
-      "page": "usage/using-the-app/workflows/create",
+      "page": "app/workflows/create",
       "route": "#/app/workflows/<id>",
       "alt": "The workflow editor with the Hash Text example: a sticky note explaining it, then five connected steps (Run now, Your text, SHA-256, SHA-512, Show the hashes). The toolbar with Editor, Logs and Executions tabs is at the top, the Test Workflow button at the top right, and zoom controls at the bottom left.",
       "status": "ok",
@@ -377,7 +377,7 @@
     },
     {
       "shot": "run-history",
-      "page": "usage/using-the-app/workflows/run-history",
+      "page": "app/workflows/run-history",
       "route": "#/app/workflows/<id> (Executions tab)",
       "alt": "The Executions tab of the Hash Text workflow: a table of saved runs, each with a Success status, when it started, its duration, where it ran (Local) and its metadata, with a filter bar above.",
       "status": "ok",
@@ -428,7 +428,7 @@
     },
     {
       "shot": "credentials-new",
-      "page": "usage/using-the-app/credentials/create",
+      "page": "app/connections/create",
       "route": "#/app/credentials",
       "alt": "The New Credential dialog over the Credentials page: an Integration App / Service picker, Name and Description fields, an Auth Type menu set to Basic Auth with Username and Password fields, a note that the secret is saved locally and encrypted in this browser, and the Create Credential button.",
       "status": "ok",
@@ -490,7 +490,7 @@
     },
     {
       "shot": "knowledge-bases",
-      "page": "usage/using-the-app/knowledge-bases/overview",
+      "page": "app/knowledge-bases/overview",
       "route": "#/app/knowledges/<id>",
       "alt": "A new knowledge base called Product handbook: its source, chunk and size counters, the on-device MiniLM search engine and Cloud OK badges, the Sources, Test search, Used by and Settings tabs, and side cards for Used by, Privacy and Search engine. It has no sources yet.",
       "status": "ok",
@@ -552,7 +552,7 @@
     },
     {
       "shot": "local-models",
-      "page": "usage/using-the-app/local-models",
+      "page": "app/local-models",
       "route": "#/app/local-models",
       "alt": "The Local AI page: storage used by on-device models split by engine (WebLLM, TF.js, Transformers), a task list on the left (Chat, Embeddings, vision and audio tasks) and model cards on the right, such as Llama 3.2 1B Instruct with its size, variants and install state.",
       "status": "ok",
@@ -562,7 +562,7 @@
       },
       "hotspots": [
         {
-          "label": "Space used on this device, by engine",
+          "label": "Storage header: space used, by engine",
           "x": 30.1,
           "y": 25.6,
           "box": {
@@ -573,7 +573,7 @@
           }
         },
         {
-          "label": "Browse by task",
+          "label": "Tasks",
           "x": 30.4,
           "y": 37.6,
           "box": {
@@ -584,7 +584,18 @@
           }
         },
         {
-          "label": "A model, its size and install state",
+          "label": "Search and engine filter",
+          "x": 30.4,
+          "y": 32.6,
+          "box": {
+            "x": 22.2,
+            "y": 30.6,
+            "w": 16.4,
+            "h": 4.1
+          }
+        },
+        {
+          "label": "A model card: size, device fit and install state",
           "x": 52.3,
           "y": 46,
           "box": {
@@ -593,28 +604,17 @@
             "w": 10.1,
             "h": 2.4
           }
-        },
-        {
-          "label": "Add a custom model",
-          "x": 90.7,
-          "y": 13.3,
-          "box": {
-            "x": 85.8,
-            "y": 11.8,
-            "w": 9.8,
-            "h": 3.1
-          }
         }
       ],
       "appCommit": "180f8f46-dirty",
       "appVersion": "0.8.2",
-      "capturedAt": "2026-10-10T18:10:09.199Z",
+      "capturedAt": "2026-10-10T18:39:00.590Z",
       "width": 2000,
       "height": 1250
     },
     {
       "shot": "memory",
-      "page": "usage/using-the-app/memory/overview",
+      "page": "app/memory/overview",
       "route": "#/app/memory",
       "alt": "The Memory page: total space on this device split into Chats, Workflow and Facts, Import and Export all buttons, and the Conversations tab listing three Aria chats (What a webhook is, Draft a reply to Sam, Regex for order numbers) with their last message, message count and when they were updated.",
       "note": "Conversations and facts are imported from a generated .awmem file through Memory > Import.",
@@ -625,7 +625,7 @@
       },
       "hotspots": [
         {
-          "label": "Space used, by kind",
+          "label": "Storage strip: space used, by kind",
           "x": 26.5,
           "y": 24.7,
           "box": {
@@ -633,6 +633,17 @@
             "y": 23.6,
             "w": 9,
             "h": 2.1
+          }
+        },
+        {
+          "label": "Import and Export all",
+          "x": 93.5,
+          "y": 18.2,
+          "box": {
+            "x": 90.3,
+            "y": 16.2,
+            "w": 6.3,
+            "h": 4
           }
         },
         {
@@ -647,37 +658,26 @@
           }
         },
         {
-          "label": "A saved conversation",
-          "x": 30.4,
-          "y": 56.8,
+          "label": "Search titles and messages",
+          "x": 37.5,
+          "y": 37.8,
           "box": {
-            "x": 26.7,
-            "y": 55.9,
-            "w": 7.4,
-            "h": 1.8
-          }
-        },
-        {
-          "label": "Import or export memory",
-          "x": 93.5,
-          "y": 18.2,
-          "box": {
-            "x": 90.3,
-            "y": 16.2,
-            "w": 6.3,
-            "h": 4
+            "x": 23.7,
+            "y": 36.7,
+            "w": 27.6,
+            "h": 2.2
           }
         }
       ],
       "appCommit": "180f8f46-dirty",
       "appVersion": "0.8.2",
-      "capturedAt": "2026-10-10T18:14:16.367Z",
+      "capturedAt": "2026-10-10T18:39:04.833Z",
       "width": 2000,
       "height": 1250
     },
     {
       "shot": "settings-general",
-      "page": "usage/using-the-app/settings/general",
+      "page": "app/settings/general",
       "route": "#/app/settings/general",
       "alt": "Settings, General section, in a local workspace: the settings menu (Preferences, Assistant Notch, Providers, Local models, Storage, Security, Privacy, Site access) and a card explaining that the workspace is saved on this device, with a Sign in button to create an account.",
       "note": "Local (anonymous) workspace. The signed-in view (avatar, username, password, newsletter) needs an account and is not captured.",
@@ -776,6 +776,732 @@
       "appCommit": "180f8f46-dirty",
       "appVersion": "0.8.2",
       "capturedAt": "2026-10-10T18:14:50.184Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "welcome",
+      "page": "app/account/welcome",
+      "route": "#/app/welcome",
+      "alt": "The welcome page in a local workspace: a Local \u00b7 no account needed badge, the headline Press Run. Watch a workflow do its thing., the Run \u201cStart here\u201d button (about 5 seconds), and three other ways in: Start from a template, Describe it to the AI and the 2-minute tutorial, with Skip to the app below.",
+      "status": "ok",
+      "files": {
+        "light": "welcome.light.webp",
+        "dark": "welcome.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Local workspace: no account needed",
+          "x": 70.2,
+          "y": 8.9,
+          "box": {
+            "x": 64.9,
+            "y": 7.8,
+            "w": 10.7,
+            "h": 2.2
+          }
+        },
+        {
+          "label": "Run \u201cStart here\u201d",
+          "x": 30.2,
+          "y": 37.3,
+          "box": {
+            "x": 25.6,
+            "y": 35.6,
+            "w": 9.2,
+            "h": 3.6
+          }
+        },
+        {
+          "label": "Other ways in: template, describe it, tutorial",
+          "x": 32.7,
+          "y": 57.4,
+          "box": {
+            "x": 24.4,
+            "y": 50.2,
+            "w": 16.5,
+            "h": 14.4
+          }
+        },
+        {
+          "label": "Skip to the app",
+          "x": 50,
+          "y": 69.8,
+          "box": {
+            "x": 45.8,
+            "y": 68.2,
+            "w": 8.4,
+            "h": 3.1
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:39:07.176Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "sign-up",
+      "page": "app/account/sign-up-and-login",
+      "route": "#/auth/signup",
+      "alt": "The sign-up form: Welcome, Sign up to your Agentic Workflow account, with Name, Email, Password and Confirm Password fields, the Sign up button, GitHub, Google and Hugging Face buttons under Or continue with, and an Already have an account? Login link. A photo of a person at a computer fills the right half.",
+      "status": "ok",
+      "files": {
+        "light": "sign-up.light.webp",
+        "dark": "sign-up.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Name, email and password",
+          "x": 36.7,
+          "y": 39.8,
+          "box": {
+            "x": 25.6,
+            "y": 38.2,
+            "w": 22.2,
+            "h": 3.1
+          }
+        },
+        {
+          "label": "Sign up",
+          "x": 36.7,
+          "y": 62.4,
+          "box": {
+            "x": 25.6,
+            "y": 60.9,
+            "w": 22.2,
+            "h": 3.1
+          }
+        },
+        {
+          "label": "Or continue with GitHub, Google or Hugging Face",
+          "x": 36.7,
+          "y": 68.6,
+          "box": {
+            "x": 32.4,
+            "y": 67.6,
+            "w": 8.4,
+            "h": 2
+          }
+        },
+        {
+          "label": "Already have an account? Login",
+          "x": 42.5,
+          "y": 75.8,
+          "box": {
+            "x": 41.3,
+            "y": 74.8,
+            "w": 2.4,
+            "h": 2
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:45:41.533Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "settings-index",
+      "page": "app/settings",
+      "route": "#/app/settings",
+      "alt": "Settings at side-panel width (400 px), in a local workspace: three groups of rows, each with a one-line status. Account: General (Local workspace \u00b7 Sign in). App: Preferences, Assistant Notch (Off), Providers (None configured), Local models (0 installed), Storage. Safety & privacy: Security (Safe mode \u00b7 Off (Trusted)), Privacy and Site access (No hosts granted yet).",
+      "status": "ok",
+      "files": {
+        "light": "settings-index.light.webp",
+        "dark": "settings-index.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Account",
+          "x": 50,
+          "y": 14.5,
+          "box": {
+            "x": 4.3,
+            "y": 11.2,
+            "w": 91.5,
+            "h": 6.5
+          }
+        },
+        {
+          "label": "App",
+          "x": 50,
+          "y": 26.2,
+          "box": {
+            "x": 4.3,
+            "y": 22.9,
+            "w": 91.5,
+            "h": 6.6
+          }
+        },
+        {
+          "label": "Safety & privacy",
+          "x": 50,
+          "y": 64.4,
+          "box": {
+            "x": 4.3,
+            "y": 61.1,
+            "w": 91.5,
+            "h": 6.6
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:39:10.297Z",
+      "width": 800,
+      "height": 1720
+    },
+    {
+      "shot": "agents",
+      "page": "app/chat-and-agents/agents",
+      "route": "#/app/agents",
+      "alt": "The Agents tab of Agents & teams: a Describe an agent box with a Create agent button, the card for Aria (Your assistant, On-device AI) with a Chat button, and four templates to start from: Chief of staff, Inbox triager, Price watcher and Study buddy. Import and Blank agent buttons are at the top right.",
+      "status": "ok",
+      "files": {
+        "light": "agents.light.webp",
+        "dark": "agents.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Agent cards, with Chat",
+          "x": 36.4,
+          "y": 38.9,
+          "box": {
+            "x": 26.7,
+            "y": 36.4,
+            "w": 19.3,
+            "h": 4.9
+          }
+        },
+        {
+          "label": "Describe an agent",
+          "x": 56.4,
+          "y": 29.3,
+          "box": {
+            "x": 28.5,
+            "y": 28.2,
+            "w": 55.8,
+            "h": 2.3
+          }
+        },
+        {
+          "label": "Templates",
+          "x": 54,
+          "y": 54.2,
+          "box": {
+            "x": 25.6,
+            "y": 53.1,
+            "w": 57,
+            "h": 2.3
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:39:14.478Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "aria-build",
+      "page": "get-started/build-with-aria",
+      "route": "#/app/assistant",
+      "alt": "The Assistant page with the composer switched to Build: the message box holds \u201cWhen I press a keyboard shortcut, take the text I selected on the page, translate it into French with an on-device model, and show the translation.\u201d, with the Chat | Build switch, the context meter and the model picker under it, and suggestion cards below. The left rail lists recent chats.",
+      "status": "ok",
+      "files": {
+        "light": "aria-build.light.webp",
+        "dark": "aria-build.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Describe the workflow",
+          "x": 67.8,
+          "y": 46.3,
+          "box": {
+            "x": 41.2,
+            "y": 42.8,
+            "w": 53.2,
+            "h": 7
+          }
+        },
+        {
+          "label": "Chat | Build switch, set to Build",
+          "x": 56.8,
+          "y": 52.2,
+          "box": {
+            "x": 54.3,
+            "y": 50.7,
+            "w": 5,
+            "h": 3.1
+          }
+        },
+        {
+          "label": "Model picker",
+          "x": 86.4,
+          "y": 52.2,
+          "box": {
+            "x": 82.1,
+            "y": 50.7,
+            "w": 8.6,
+            "h": 3.1
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:43:30.542Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "create-workflow",
+      "page": "get-started/first-workflow",
+      "route": "#/app/workflows (Add Workflow)",
+      "alt": "The Create a workflow dialog, step 1 of 3 (Source, Choose, Details): Start from a template (recommended) at the top, then Blank canvas, which is selected, From the marketplace and Import, with Cancel and Continue buttons.",
+      "status": "ok",
+      "files": {
+        "light": "create-workflow.light.webp",
+        "dark": "create-workflow.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Steps: Source, Choose, Details",
+          "x": 29.7,
+          "y": 35.8,
+          "box": {
+            "x": 27.8,
+            "y": 34.9,
+            "w": 3.8,
+            "h": 1.8
+          }
+        },
+        {
+          "label": "Blank canvas",
+          "x": 35,
+          "y": 56.3,
+          "box": {
+            "x": 27.8,
+            "y": 49.8,
+            "w": 14.4,
+            "h": 13.1
+          }
+        },
+        {
+          "label": "Continue",
+          "x": 69.8,
+          "y": 67.6,
+          "box": {
+            "x": 67.5,
+            "y": 66,
+            "w": 4.8,
+            "h": 3.1
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:39:26.143Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "llm-chain",
+      "page": "get-started/summarize-with-ai",
+      "route": "#/app/workflows/<id>",
+      "alt": "The workflow editor with the Summarise this page in 3 bullets example: a sticky note, then When Started, Get All Text, Basic LLM Chain and Display Markdown in a row. A Web LLM model node hangs under the chain\u2019s Model slot. The chain has a warning badge and the Ready to run? button counts one setting still to fill.",
+      "status": "ok",
+      "files": {
+        "light": "llm-chain.light.webp",
+        "dark": "llm-chain.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Basic LLM Chain",
+          "x": 75.9,
+          "y": 56.5,
+          "box": {
+            "x": 71,
+            "y": 53.7,
+            "w": 9.9,
+            "h": 5.5
+          }
+        },
+        {
+          "label": "Model slot, with a model node under it",
+          "x": 72,
+          "y": 79.5,
+          "box": {
+            "x": 71,
+            "y": 77.9,
+            "w": 2.1,
+            "h": 3.3
+          }
+        },
+        {
+          "label": "Display Markdown shows the result",
+          "x": 94.7,
+          "y": 56.5,
+          "box": {
+            "x": 93,
+            "y": 53.7,
+            "w": 3.4,
+            "h": 5.5
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:43:41.640Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "workflows-bulk",
+      "page": "app/workflows/manage-list",
+      "route": "#/app/workflows",
+      "alt": "The Workflows page, My Workflows tab, with three of the listed workflows selected: their row checkboxes are ticked, the footer says how many rows are selected, and a toolbar at the bottom shows 3 selected with Export, Activate, Deactivate, Tags, Delete and Clear.",
+      "status": "ok",
+      "files": {
+        "light": "workflows-bulk.light.webp",
+        "dark": "workflows-bulk.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Select rows",
+          "x": 23.4,
+          "y": 29.8,
+          "box": {
+            "x": 22.8,
+            "y": 28.9,
+            "w": 1.1,
+            "h": 1.8
+          }
+        },
+        {
+          "label": "Bulk-action toolbar",
+          "x": 34,
+          "y": 95.4,
+          "box": {
+            "x": 32.1,
+            "y": 94.3,
+            "w": 3.8,
+            "h": 2.2
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:43:51.864Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "credentials-oauth",
+      "page": "app/connections/oauth-client",
+      "route": "#/app/credentials (Add Credential)",
+      "alt": "The New Credential dialog with Gmail picked: Name and Description fields, then the Create your Google OAuth client guide in 5 steps (create a Google Cloud project, enable the Gmail API, set up the consent screen, create a Web application client with the redirect URI shown and a Copy button, paste the Client ID and Secret), and a Step-by-step with screenshots link. This capture is the web app, so the redirect URI is https://app.awflow.io/oauth-callback/web.",
+      "status": "ok",
+      "files": {
+        "light": "credentials-oauth.light.webp",
+        "dark": "credentials-oauth.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "The app: Gmail",
+          "x": 50,
+          "y": 15.4,
+          "box": {
+            "x": 32.7,
+            "y": 13.9,
+            "w": 34.6,
+            "h": 3.1
+          }
+        },
+        {
+          "label": "Create your Google OAuth client guide",
+          "x": 50,
+          "y": 45.8,
+          "box": {
+            "x": 32.8,
+            "y": 43.8,
+            "w": 34.4,
+            "h": 4
+          }
+        },
+        {
+          "label": "Redirect URI, with Copy",
+          "x": 63.7,
+          "y": 76.5,
+          "box": {
+            "x": 61.4,
+            "y": 74.9,
+            "w": 4.7,
+            "h": 3.1
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:39:48.788Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "credentials-edit",
+      "page": "app/connections/edit",
+      "route": "#/app/credentials (row menu \u203a Open)",
+      "alt": "The Edit Credential dialog for a GitHub credential named GitHub (team): the Integration App / Service set to GitHub, the Name and Description fields, the Bearer Token field (a placeholder value), and Cancel and Update Credential buttons.",
+      "status": "ok",
+      "files": {
+        "light": "credentials-edit.light.webp",
+        "dark": "credentials-edit.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Name and description",
+          "x": 50,
+          "y": 45.3,
+          "box": {
+            "x": 32.7,
+            "y": 43.8,
+            "w": 34.6,
+            "h": 3.1
+          }
+        },
+        {
+          "label": "Secret fields: here, the token",
+          "x": 50,
+          "y": 66.7,
+          "box": {
+            "x": 32.7,
+            "y": 65.1,
+            "w": 34.6,
+            "h": 3.1
+          }
+        },
+        {
+          "label": "Update Credential",
+          "x": 63.1,
+          "y": 75.7,
+          "box": {
+            "x": 59,
+            "y": 74.1,
+            "w": 8.3,
+            "h": 3.1
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:39:57.500Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "settings-notch",
+      "page": "app/settings/notch",
+      "route": "#/app/settings/notch",
+      "alt": "Settings, Assistant Notch, with Show the assistant bubble on web pages switched on: Resting form (Orb, Pill, Edge tab, Orb + badge), Accent colours, Size S, M or L, the Blocks list (On this page, Pinned workflows, Quick actions, Page tools, and Recent marked Soon) with move and on/off controls, Where it shows (All sites; Allowlist only marked Soon), and Discard and Save buttons.",
+      "status": "ok",
+      "files": {
+        "light": "settings-notch.light.webp",
+        "dark": "settings-notch.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Show the bubble on web pages",
+          "x": 96.2,
+          "y": 16.8,
+          "box": {
+            "x": 95.2,
+            "y": 15.9,
+            "w": 1.9,
+            "h": 1.8
+          }
+        },
+        {
+          "label": "Resting form, accent and size",
+          "x": 67.2,
+          "y": 26.7,
+          "box": {
+            "x": 37.3,
+            "y": 25.8,
+            "w": 59.9,
+            "h": 1.8
+          }
+        },
+        {
+          "label": "Blocks: order and on/off",
+          "x": 64.9,
+          "y": 53.9,
+          "box": {
+            "x": 40.1,
+            "y": 52.8,
+            "w": 49.4,
+            "h": 2.2
+          }
+        },
+        {
+          "label": "Save or Discard",
+          "x": 94.9,
+          "y": 86.9,
+          "box": {
+            "x": 92.7,
+            "y": 85,
+            "w": 4.4,
+            "h": 3.8
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:40:04.963Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "settings-access",
+      "page": "app/settings/access",
+      "route": "#/app/settings/access",
+      "alt": "Settings, Site access, in a new local workspace: the Site & app access page explains that access is granted when a workflow first needs a host or an app, notes that enforcement is off for your own workflows (Trusted mode) with a link to Security, and says no site or app access has been granted yet.",
+      "note": "A fresh workspace has no grants: a granted host needs a workflow to ask for it and the user to allow it.",
+      "status": "ok",
+      "files": {
+        "light": "settings-access.light.webp",
+        "dark": "settings-access.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Enforcement for your own workflows: see Security",
+          "x": 68.1,
+          "y": 25.8,
+          "box": {
+            "x": 66.2,
+            "y": 24.7,
+            "w": 3.7,
+            "h": 2.2
+          }
+        },
+        {
+          "label": "Granted hosts and apps appear here",
+          "x": 67.2,
+          "y": 39.1,
+          "box": {
+            "x": 37.3,
+            "y": 36.9,
+            "w": 59.9,
+            "h": 4.4
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:40:08.089Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "settings-security",
+      "page": "app/settings/security",
+      "route": "#/app/settings/security",
+      "alt": "Settings, Security: the Site access for your workflows card with Safe mode for my workflows switched on. Its text reads: On. Your workflows must be granted access to each external URL before they can contact it, the same per-host check installed workflows get, with a link to Site access.",
+      "status": "ok",
+      "files": {
+        "light": "settings-security.light.webp",
+        "dark": "settings-security.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "Safe mode for my workflows: On",
+          "x": 95.6,
+          "y": 28.2,
+          "box": {
+            "x": 94.7,
+            "y": 27.3,
+            "w": 1.9,
+            "h": 1.8
+          }
+        },
+        {
+          "label": "Manage granted sites in Site access",
+          "x": 26.1,
+          "y": 54.5,
+          "box": {
+            "x": 18.9,
+            "y": 52.5,
+            "w": 14.4,
+            "h": 4
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:40:11.079Z",
+      "width": 2000,
+      "height": 1250
+    },
+    {
+      "shot": "secret-vault",
+      "page": "app/account/secret-vault",
+      "route": "#/app/settings/preferences",
+      "alt": "Settings, Preferences, Local secret protection card with protection on: the explanation and the no-recovery warning, a Memory box saying conversations and facts are encrypted with the passphrase too (All memory is encrypted.), the Change passphrase and Disable protection sections, and at the bottom the status Unlocked for this session with a Lock now button.",
+      "status": "ok",
+      "files": {
+        "light": "secret-vault.light.webp",
+        "dark": "secret-vault.dark.webp"
+      },
+      "hotspots": [
+        {
+          "label": "No recovery if you forget the passphrase",
+          "x": 67.2,
+          "y": 23.1,
+          "box": {
+            "x": 37.3,
+            "y": 21.9,
+            "w": 59.9,
+            "h": 2.2
+          }
+        },
+        {
+          "label": "Memory is encrypted too",
+          "x": 67.2,
+          "y": 36.7,
+          "box": {
+            "x": 38.2,
+            "y": 35.8,
+            "w": 58.1,
+            "h": 1.8
+          }
+        },
+        {
+          "label": "Change passphrase",
+          "x": 41.8,
+          "y": 60.2,
+          "box": {
+            "x": 37.3,
+            "y": 58.6,
+            "w": 9,
+            "h": 3.1
+          }
+        },
+        {
+          "label": "Unlocked for this session, with Lock now",
+          "x": 94.7,
+          "y": 87.1,
+          "box": {
+            "x": 92.2,
+            "y": 85.5,
+            "w": 5,
+            "h": 3.1
+          }
+        }
+      ],
+      "appCommit": "180f8f46-dirty",
+      "appVersion": "0.8.2",
+      "capturedAt": "2026-10-10T18:44:03.206Z",
       "width": 2000,
       "height": 1250
     }

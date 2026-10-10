@@ -7,9 +7,18 @@ sidebar:
   label: "Welcome page"
 ---
 
+import { Screenshot } from '@components/awflow';
+import welcomeLight from '@assets/screenshots/welcome.light.webp';
+import welcomeDark from '@assets/screenshots/welcome.dark.webp';
+
 When you install the extension, AWFlow opens a **welcome page** once. You don't need an account; in a local workspace it shows *Local · no account needed*.
 
-{/* SCREENSHOT: Welcome page at #/app/welcome in a local workspace, before running "Start here" */}
+<Screenshot
+  src={welcomeLight}
+  srcDark={welcomeDark}
+  alt="The welcome page in a local workspace: a Local · no account needed badge, the headline Press Run. Watch a workflow do its thing., the Run “Start here” button (about 5 seconds), and three other ways in: Start from a template, Describe it to the AI and the 2-minute tutorial, with Skip to the app below."
+  hotspots={[{ x: 70.2, y: 8.9, label: 'Local workspace: no account needed' }, { x: 30.2, y: 37.3, label: 'Run “Start here”' }, { x: 32.7, y: 57.4, label: 'Other ways in: template, describe it, tutorial' }, { x: 50, y: 69.8, label: 'Skip to the app' }]}
+/>
 
 ## Start here
 

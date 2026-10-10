@@ -12,8 +12,10 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
-import { StepCard, LessonProgress, LessonDone } from "@components/awflow";
+import { StepCard, LessonProgress, LessonDone, Screenshot } from "@components/awflow";
 import FlowPreview from "@components/awflow/FlowPreview.astro";
+import createWorkflowLight from '@assets/screenshots/create-workflow.light.webp';
+import createWorkflowDark from '@assets/screenshots/create-workflow.dark.webp';
 
 <LessonProgress
   client:visible
@@ -40,7 +42,12 @@ A **workflow** is a chain of steps, called **nodes**. A **trigger** starts it, a
   In the AWFlow side panel, open **Workflows** and click **Add Workflow**. In **Create a workflow**, choose **Blank canvas**, then **Triggered**. Name it `My first workflow` and click **Create & open**.
 </StepCard>
 
-{/* SCREENSHOT: create-workflow-wizard — "Create a workflow" with Blank canvas selected */}
+<Screenshot
+  src={createWorkflowLight}
+  srcDark={createWorkflowDark}
+  alt="The Create a workflow dialog, step 1 of 3 (Source, Choose, Details): Start from a template (recommended) at the top, then Blank canvas, which is selected, From the marketplace and Import, with Cancel and Continue buttons."
+  hotspots={[{ x: 29.7, y: 35.8, label: 'Steps: Source, Choose, Details' }, { x: 35, y: 56.3, label: 'Blank canvas' }, { x: 69.8, y: 67.6, label: 'Continue' }]}
+/>
 
 <StepCard n={2} title="Add a trigger" check="a When Started node is on the canvas.">
   Click **Add Trigger** (in a narrow panel: **Add trigger** in the middle of the canvas). In **Choose a node**, type `when` in the search box and pick **When Started**. It starts the workflow when you press **Test Workflow**.

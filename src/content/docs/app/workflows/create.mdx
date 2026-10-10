@@ -5,6 +5,9 @@ section: app
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
+import { Screenshot } from '@components/awflow';
+import canvasLight from '@assets/screenshots/canvas.light.webp';
+import canvasDark from '@assets/screenshots/canvas.dark.webp';
 
 A **workflow** is a set of steps (nodes) connected together.
 
@@ -31,6 +34,13 @@ Each step does one thing, like:
 6. Add more nodes and connect them.
 7. To test, open the page you want to automate, then click **Execute Workflow**.
 8. Click each node to see its output.
+
+<Screenshot
+  src={canvasLight}
+  srcDark={canvasDark}
+  alt="The workflow editor with the Hash Text example: a sticky note explaining it, then five connected steps (Run now, Your text, SHA-256, SHA-512, Show the hashes). The toolbar with Editor, Logs and Executions tabs is at the top, the Test Workflow button at the top right, and zoom controls at the bottom left."
+  hotspots={[{ x: 19.8, y: 9.6, label: 'Add a step (node)' }, { x: 58.9, y: 9.4, label: 'Editor, Logs and Executions tabs' }, { x: 86.9, y: 9.8, label: 'Test Workflow: run it now' }, { x: 61.6, y: 64.9, label: 'A step (node); drag from its handle to connect' }]}
+/>
 
 > When you open a template (or any pre-wired workflow) for the first time, the editor shows a checklist of what's missing before you can run it — such as a credential to connect or a required field to fill in. Fix each item from the checklist, then click **Run** once everything is ready.
 

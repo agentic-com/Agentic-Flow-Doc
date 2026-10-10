@@ -8,7 +8,9 @@ sidebar:
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
-import { Badge, Callout } from "@components/awflow";
+import { Badge, Callout, Screenshot } from "@components/awflow";
+import memoryLight from '@assets/screenshots/memory.light.webp';
+import memoryDark from '@assets/screenshots/memory.dark.webp';
 
 <Badge variant="no-setup" text="Free · no plan limit" /> <Badge variant="on-device" text="Stays in this browser" /> <Badge variant="new" text="New in 0.8.2" />
 
@@ -22,7 +24,12 @@ import { Badge, Callout } from "@components/awflow";
 | **Workflow conversations** | The chat history of workflows that use a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) node, such as a chatbot built with a [Chat Trigger](/nodes/builtin/trigger/chat/). |
 | **Facts** | Short things your assistant and agents learned about you ("Prefers short answers"), or that you added yourself. |
 
-{/* SCREENSHOT: memory */}
+<Screenshot
+  src={memoryLight}
+  srcDark={memoryDark}
+  alt="The Memory page: total space on this device split into Chats, Workflow and Facts, Import and Export all buttons, and the Conversations tab listing three Aria chats (What a webhook is, Draft a reply to Sam, Regex for order numbers) with their last message, message count and when they were updated."
+  hotspots={[{ x: 26.5, y: 24.7, label: 'Storage strip: space used, by kind' }, { x: 93.5, y: 18.2, label: 'Import and Export all' }, { x: 25.3, y: 31.4, label: 'Conversations, Facts and Storage tabs' }, { x: 37.5, y: 37.8, label: 'Search titles and messages' }]}
+/>
 
 1. **Storage strip.** What memory takes on this device, split into **Chats**, **Workflow** and **Facts**, with **Manage space →**.
 2. **Import** and **Export all.** Move your memory as an `.awmem` file.

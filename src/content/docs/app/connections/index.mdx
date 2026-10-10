@@ -8,11 +8,18 @@ sidebar:
 ---
 
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, Screenshot } from '@components/awflow';
+import credentialsNewLight from '@assets/screenshots/credentials-new.light.webp';
+import credentialsNewDark from '@assets/screenshots/credentials-new.dark.webp';
 
 A **connection** (a *credential* in the app) is a saved key, token or sign-in that lets a node or an agent act in another service. You create it once in **Credentials**, then pick it in any node that needs it. Each page below takes you from zero to a working connection.
 
-{/* SCREENSHOT: credentials-new */}
+<Screenshot
+  src={credentialsNewLight}
+  srcDark={credentialsNewDark}
+  alt="The New Credential dialog over the Credentials page: an Integration App / Service picker, Name and Description fields, an Auth Type menu set to Basic Auth with Username and Password fields, a note that the secret is saved locally and encrypted in this browser, and the Create Credential button."
+  hotspots={[{ x: 50, y: 19.6, label: 'Pick the app or service' }, { x: 50, y: 30.2, label: 'Name it so you can find it in nodes' }, { x: 50, y: 51.6, label: 'Auth type decides which fields you fill' }, { x: 50, y: 74.7, label: 'Where the secret is stored' }]}
+/>
 
 ## AI models
 

@@ -8,6 +8,9 @@ sidebar:
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import settingsAccessLight from '@assets/screenshots/settings-access.light.webp';
+import settingsAccessDark from '@assets/screenshots/settings-access.dark.webp';
 
 **Settings › Site access** lists the websites (hosts) and connected apps each workflow is allowed to use.
 
@@ -15,7 +18,12 @@ import { Aside } from '@astrojs/starlight/components';
 
 You don't add entries here. A workflow asks the first time it needs a website or an app's credential, and you choose to allow it. If you pick **Always allow for this workflow**, the permission is saved and shows up on this page.
 
-{/* SCREENSHOT: Settings › Site access at #/app/settings/access with two workflow cards listing hosts and apps */}
+<Screenshot
+  src={settingsAccessLight}
+  srcDark={settingsAccessDark}
+  alt="Settings, Site access, in a new local workspace: the Site & app access page explains that access is granted when a workflow first needs a host or an app, notes that enforcement is off for your own workflows (Trusted mode) with a link to Security, and says no site or app access has been granted yet."
+  hotspots={[{ x: 68.1, y: 25.8, label: 'Enforcement for your own workflows: see Security' }, { x: 67.2, y: 39.1, label: 'Granted hosts and apps appear here' }]}
+/>
 
 ## Review and change access
 

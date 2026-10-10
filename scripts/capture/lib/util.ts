@@ -23,6 +23,8 @@ export interface Locator {
 	boundingBox(): Promise<Box | null>;
 	count(): Promise<number>;
 	isVisible(): Promise<boolean>;
+	getAttribute(name: string): Promise<string | null>;
+	evaluate(fn: (el: HTMLElement) => void): Promise<void>;
 }
 export interface Page extends Pick<Locator, 'locator' | 'getByRole' | 'getByText' | 'getByPlaceholder'> {
 	goto(url: string): Promise<unknown>;
@@ -36,7 +38,7 @@ export interface Page extends Pick<Locator, 'locator' | 'getByRole' | 'getByText
 	setViewportSize(v: { width: number; height: number }): Promise<void>;
 	viewportSize(): { width: number; height: number } | null;
 	screenshot(o?: { fullPage?: boolean }): Promise<Buffer>;
-	keyboard: { press(k: string): Promise<void> };
+	keyboard: { press(k: string): Promise<void>; type(text: string): Promise<void> };
 	mouse: { move(x: number, y: number): Promise<void> };
 }
 
