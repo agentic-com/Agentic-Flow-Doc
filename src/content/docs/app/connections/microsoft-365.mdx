@@ -1,0 +1,86 @@
+---
+title: "Connect Microsoft 365"
+description: "Register a Microsoft app once, then sign in to Outlook mail, OneDrive, Calendar and To Do. No client secret is needed."
+kind: connection
+section: app
+sidebar:
+  label: "Microsoft 365"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 6 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="OAuth2" />
+
+## Before you start
+
+- A Microsoft account (personal, work or school).
+- Access to the [Azure portal](https://portal.azure.com/) to register an app (free). Work accounts may need an admin to approve the permissions.
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Microsoft 365](/nodes/builtin/integration/microsoft-graph/)
+
+## Set it up
+
+This is the only method. Microsoft 365 uses a public client: only the Application (client) ID is stored, never a secret.
+
+<Steps>
+
+1. **Register an app** in the Azure portal's [App registrations](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade): **New registration**, any name, **Accounts in any organizational directory and personal Microsoft accounts**.
+2. **Add the redirect URI** as a **Single-page application**. Copy it from the credential form in AWFlow (next step shows where), then click **Register**.
+3. **Add permissions.** In **API permissions › Add a permission › Microsoft Graph › Delegated permissions**, add `offline_access`, `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite` and `Tasks.ReadWrite`.
+4. **Start the credential.** In AWFlow, open **Credentials**, click **Add Credential**, pick **Microsoft 365** under **Integration App / Service** and click **Continue**. **Auth Type** is set to **OAuth2**, and the form shows **Create your Microsoft OAuth client** with your redirect URI.
+5. **Paste the Application (client) ID** from the app's **Overview** page into **Client ID**. There is no secret field.
+6. **Click Check connection**, sign in and accept the permissions. Choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+**Check connection** shows **Connection successful**. Then run **Mail › List** in a Microsoft 365 node: your latest messages come back.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+Only the **Application (client) ID** is saved in the credential. The tokens Microsoft returns are kept in this browser's storage and never synced to your account.
+
+The credential itself is stored where you choose:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to login.microsoftonline.com (sign-in) and graph.microsoft.com (the API). AWFlow's servers never relay the call.
+
+</Callout>
+
+## Permissions each operation needs
+
+| Operation | Delegated permission |
+| --- | --- |
+| Mail · Send | `Mail.Send` |
+| Mail · List, Get, Draft | `Mail.ReadWrite` |
+| File · Upload, List, Get link (OneDrive) | `Files.ReadWrite` |
+| Calendar · Create event, List | `Calendars.ReadWrite` |
+| To Do · Create task, List | `Tasks.ReadWrite` |
+| Stay signed in (refresh token) | `offline_access` |
+
+## Common issues
+
+- **`AADSTS50011` (redirect URI mismatch).** The URI isn't registered, or it was added as **Web** instead of **Single-page application**. Copy it again from the credential form.
+- **"Need admin approval".** Your organization lets only admins grant these permissions. Ask an admin to grant consent for the app, or use a personal account.
+- **403 on one operation.** A permission is missing in **API permissions**. Add it, then click **Check connection** again.
+- **The run is blocked in the web app.** Microsoft 365 runs through the browser extension. Install the extension and allow Microsoft 365 for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Microsoft 365 node" href="/nodes/builtin/integration/microsoft-graph/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

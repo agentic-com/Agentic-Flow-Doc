@@ -1,0 +1,73 @@
+---
+title: "Memory"
+description: "Everything AWFlow remembers on this device (chats, workflow conversations and facts) in one place, with search, export and space management."
+kind: guide
+section: app
+sidebar:
+  label: "Overview"
+---
+
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+import { Badge, Callout, Screenshot } from "@components/awflow";
+import memoryLight from '@assets/screenshots/memory.light.webp';
+import memoryDark from '@assets/screenshots/memory.dark.webp';
+
+<Badge variant="no-setup" text="Free · no plan limit" /> <Badge variant="on-device" text="Stays in this browser" /> <Badge variant="new" text="New in 0.8.2" />
+
+**In the app:** sidebar › **Your data** › **Memory**
+
+**Memory** shows everything AWFlow remembers, in one place:
+
+| What | Where it comes from |
+| --- | --- |
+| **Chats** | Your conversations with Aria, your agents and your teams: the Aria page, quick chats from the notch and the right-click card, team threads and chats in the canvas dock. |
+| **Workflow conversations** | The chat history of workflows that use a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) node, such as a chatbot built with a [Chat Trigger](/nodes/builtin/trigger/chat/). |
+| **Facts** | Short things your assistant and agents learned about you ("Prefers short answers"), or that you added yourself. |
+
+<Screenshot
+  src={memoryLight}
+  srcDark={memoryDark}
+  alt="The Memory page: total space on this device split into Chats, Workflow and Facts, Import and Export all buttons, and the Conversations tab listing three Aria chats (What a webhook is, Draft a reply to Sam, Regex for order numbers) with their last message, message count and when they were updated."
+  hotspots={[{ x: 26.5, y: 24.7, label: 'Storage strip: space used, by kind' }, { x: 93.5, y: 18.2, label: 'Import and Export all' }, { x: 25.3, y: 31.4, label: 'Conversations, Facts and Storage tabs' }, { x: 37.5, y: 37.8, label: 'Search titles and messages' }]}
+/>
+
+1. **Storage strip.** What memory takes on this device, split into **Chats**, **Workflow** and **Facts**, with **Manage space →**.
+2. **Import** and **Export all.** Move your memory as an `.awmem` file.
+3. **Tabs.** **Conversations**, **Facts** and **Storage**.
+4. **Search.** Looks in titles and in the messages themselves.
+
+:::note[Chat memories is now Memory]
+The page used to be called **Chat memories** and listed only workflow conversations. It now lists everything, and old links open it.
+:::
+
+## What you can do
+
+<CardGrid>
+  <LinkCard title="Find and read a conversation" href="/app/memory/conversations/" description="Filter by kind, search inside messages, jump to a match." />
+  <LinkCard title="Review what it knows about you" href="/app/memory/facts/" description="Add, edit or forget facts; confirm suggestions." />
+  <LinkCard title="Free space" href="/app/memory/free-space/" description="Slim, archive or delete, and see what each frees." />
+  <LinkCard title="Export, import and clean up" href="/app/memory/export-import/" description=".awmem files, and what happens when you delete an agent." />
+  <LinkCard title="Encrypt it on this device" href="/app/memory/encryption/" description="Lock messages and facts behind your passphrase." />
+  <LinkCard title="Automatic clean-up" href="/app/memory/storage/" description="Settings › Storage, nudges and rules." />
+</CardGrid>
+
+## Use it everywhere
+
+| Where | How memory works there |
+| --- | --- |
+| **Chat with Aria** | Every chat is kept here. Aria learns facts as you talk and uses the most relevant ones. See [Assistant memory](/app/chat-and-agents/memory/). |
+| **An agent or a team** | Each agent has its own facts (builder › **Memory** tab), can read Aria's, and can share a fact with a team. |
+| **A workflow** | A [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) node keeps a conversation across runs; it shows up here under **Workflows**. See [Memory and context](/concepts/ai/memory-context/). |
+
+<Callout type="info" title="Your data" href="/app/memory/export-import/" linkLabel="Export a backup">
+
+Memory is stored **only in this browser** and is never uploaded. Turn on [encryption](/app/memory/encryption/) to lock messages and facts with your passphrase. Clearing the browser's site data removes it, so export what you want to keep. It isn't limited by your plan: the only limit is the space your browser allows.
+
+</Callout>
+
+## Related
+
+- [Assistant memory](/app/chat-and-agents/memory/): how facts are learned and used
+- [Storage & clean-up](/app/memory/storage/): all local data, nudges and automatic clean-up
+- [Chat with Aria](/app/chat-and-agents/chat/): the context meter and long chats
+- [Knowledge bases](/app/knowledge-bases/overview/): answering from documents rather than from a conversation

@@ -1,0 +1,97 @@
+{
+  "name": "Summarize This Page",
+  "description": "Get a short, skimmable summary of the page you're on — written on your device, no account.",
+  "tags": ["ai", "tier-1", "on-device", "no-setup", "extension"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "📄 Summarize the page you're on.\n\nPress Run on any article or long page and get a few short bullet points. The summary is written locally in your browser — nothing is sent to a server. Pick a model the first time."
+      },
+      "width": 340,
+      "height": 180
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": { "x": 100, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": { "notes": "Starts the workflow when you press Run." }
+      }
+    },
+    {
+      "id": "get-text",
+      "type": "basic",
+      "position": { "x": 420, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:getAllTextNode" },
+        "label": "Read the current page",
+        "inputs": { "outputFieldName": "text", "options": { "visibleOnly": true } },
+        "parameters": { "notes": "Grabs the readable text from the page you're currently viewing." }
+      }
+    },
+    {
+      "id": "summarize",
+      "type": "agent",
+      "position": { "x": 740, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:agent:summarization-chain" },
+        "label": "Summarize it",
+        "inputs": {
+          "text": "{{ $input.text }}",
+          "options": { "maxWords": 120, "style": "a few bullet points" }
+        },
+        "parameters": { "notes": "Condenses the page into a few short bullet points." }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": { "x": 740, "y": 500 },
+      "data": {
+        "instance": { "id": "af-base-node:dependency:webLLM" },
+        "label": "Local AI model",
+        "inputs": { "model": "", "options": { "temperature": 0.4 } },
+        "parameters": { "notes": "Runs the summary locally in your browser. Pick a model the first time — it downloads once, then works offline." }
+      }
+    },
+    {
+      "id": "show-summary",
+      "type": "basic",
+      "position": { "x": 1060, "y": 280 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:displayMarkdownNode" },
+        "label": "Show the summary",
+        "inputs": { "title": "Page summary", "content": "{{ $input.summary }}" },
+        "parameters": { "notes": "Displays the finished summary." }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": { "x": 740, "y": 660 },
+      "data": {
+        "color": "#c9f0d1",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    { "id": "e-run-get", "source": "trigger-run", "target": "get-text", "type": "flowEdge" },
+    { "id": "e-get-summarize", "source": "get-text", "target": "summarize", "type": "flowEdge" },
+    { "id": "e-summarize-model", "source": "summarize", "target": "local-model", "type": "flowEdge", "sourceHandle": "dependency-0" },
+    { "id": "e-summarize-show", "source": "summarize", "target": "show-summary", "type": "flowEdge" }
+  ],
+  "requiredInputs": [
+    { "nodeId": "local-model", "field": "model" }
+  ]
+}

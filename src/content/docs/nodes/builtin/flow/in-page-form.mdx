@@ -3,58 +3,77 @@ title: "In-Page Form"
 description: "Pause the run and ask the user to fill a form; continue with the values they enter."
 sidebar:
   label: "In-Page Form"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/in-page-form
+  family: flow
 ---
 
-# In-Page Form
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Pause a run to ask the user for input, then continue with whatever they enter.
+Pause a run to ask a person for input, then continue with what they enter.
 
 ## What it does
 
-Workflows otherwise run start to finish with no way to ask a question. In-Page Form pauses the run, presents a form you define, and resumes once the user submits it — passing the entered values on to the next node. Anything that needs a choice mid-run (which of these results, what subject line, confirm these details) becomes possible.
+In-Page Form stops the run at this step and shows a form with the fields you define. When the form is submitted, the run picks up again and the entered values flow out of the node.
 
-The paused run waits in the **Executions** pane, where the form is shown; it survives browser restarts, like the **Wait For Approval** node.
+- The form appears on the paused run in the **Executions** pane. In the browser extension, a card with the form is also dropped onto the page you are looking at, when that page allows it.
+- You are told a run is waiting: a "waiting for you" count in the top bar, a sound, and, in the extension when the app is not in front, a desktop notification you can click.
+- The run waits until someone answers. It does not time out, and it is kept if you close the browser. Cancelling the paused run stops it with no output.
+- The node pauses **once** for everything that reaches it, not once per item.
 
 ## When to use it
 
-- Collect a value mid-run that only a person can supply.
-- Let the user pick from choices, toggle an option, or confirm details before a consequential step.
-- Gather structured input (name, date, selection) to feed downstream nodes.
+- Ask for something only a person knows mid-run: a subject line, a budget, a customer ID.
+- Let someone pick one option (a **select** field) before the next step.
+- Confirm or correct details before an action that sends or saves something.
+
+For a plain yes or no, [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) is simpler.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Form title | The heading shown above the form on the paused run. |
-| Fields | The fields to render. Each field has a **name** (the output key), an optional **label**, a **type**, optional **options**, and a **required** flag. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Form title","type":"Text","default":"Please provide input"},{"name":"Fields","type":"List of entries","required":true},{"name":"Fields (each entry) › Field name","type":"Text","required":true,"description":"Key the entered value is stored under, referenced downstream."},{"name":"Fields (each entry) › Label","type":"Text","description":"Shown above the control."},{"name":"Fields (each entry) › Type","type":"Choice","default":"text","description":"Options: text, textarea, number, checkbox, select, date."},{"name":"Fields (each entry) › Options","type":"Text","description":"Comma-separated choices, for a select field."},{"name":"Fields (each entry) › Required","type":"Toggle"}]} />
+{/* AUTO:settings:end */}
 
-Supported field types: **text**, **textarea**, **number**, **checkbox**, **select** (comma-separated options), and **date**.
+- **Field name** is how later nodes read the answer, so keep it short and unique, for example `subject`.
+- **Options** is only used by **select** fields: write the choices separated by commas, such as `Low, Medium, High`.
+- **Form title** is the question shown at the top of the form. It accepts expressions, so you can show data from earlier steps, for example `Reply to {{ $input.from }}?`.
 
 ## Outputs
 
-When the user submits, the entered values flow out as the node's output, keyed by each field's **name**. Downstream nodes reference them by that name — e.g. a field named `email` becomes available as `email`.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
 
-## Paused run visibility and control
-
-A paused run appears in the **Executions** pane with the form rendered inline. It waits indefinitely — it does not time out on its own — and persists across browser restarts. Cancelling the paused run stops it without producing output.
+The output is one item holding the submitted values, one field per **Field name**: a field named `subject` is read later as `{{ $input.subject }}`. A **checkbox** gives true or false. The incoming item is **not** passed on; to reuse its data after the form, read it from the earlier node with `{{ $('Node Label').field }}`.
 
 ## Dependencies and credentials
 
-- No credential is required.
-- No extra permission is needed.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-An automation gathers candidate subject lines with an AI node → In-Page Form (a **select** field over the candidates) → an email integration sends the chosen one.
+Turn highlighted text into a task, asking when it is due:
 
-## Troubleshooting
+1. [Get Selected Text](/nodes/extension/getselectedtext/) with **Output field name** `selection` reads the text you highlighted on a page.
+2. In-Page Form with **Form title** `When is this due?` and one field: **Field name** `due`, **Label** `Due date`, **Type** text, **Required** on.
+3. [Todoist](/nodes/builtin/integration/todoist/), **Task** › **Create**, with **Content** `{{ $('Get Selected Text').selection }}` and **Due (natural language)** `{{ $input.due }}`. Typing `tomorrow 9am` in the form sets the due date.
 
-- Required fields must be filled before the form can be submitted.
-- Give each field a distinct **name** — that name is the key downstream nodes use to read its value.
-- For a simple yes/no gate rather than a form, use the **Wait For Approval** node.
+## Common issues
+
+- **"Add at least one field to the form."** The **Fields** list is empty. Add a field with a **Field name**.
+- **No form appears on the page.** The card only appears on normal web pages (`http` or `https`). Browser settings pages, the extension store and the AWFlow app tab itself can't show it. Answer it from the **Executions** pane instead.
+- **A later node can't find the original data.** The node's output only holds the form values. Read earlier data with an expression that names the earlier node.
+- **The run is still waiting.** Nobody has submitted the form yet. Open the **Executions** pane, fill it in, or cancel the run.
 
 ## Related nodes
 
-- [IF](/nodes/builtin/flow/if/)
-- [Merge](/nodes/builtin/flow/merge/)
-- [Filter](/nodes/builtin/flow/filter/)
+- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/): a simple approve or reject pause.
+- [Record Audio](/nodes/builtin/flow/record-audio/): pause to record a voice note instead of typing.
+- [Switch](/nodes/builtin/flow/switch/): branch on the option the person picked.

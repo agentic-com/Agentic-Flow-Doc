@@ -3,60 +3,85 @@ title: "Http Request"
 description: "Makes a HTTP request and returns the response data"
 sidebar:
   label: "Http Request"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/http-request
+  family: core
 ---
 
-# Http Request
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Makes a HTTP request and returns the response data
+Call any web address or API and use the response in the next steps.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use a Http Request connection"} href="/app/connections/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Authentication** field when the service needs one.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Makes HTTP requests to external APIs and returns the response data.
+Http Request sends one request (GET, POST, PUT, DELETE, PATCH, OPTIONS or HEAD) to **URL**, with the headers, query parameters and body you set, and returns what the server sends back.
+
+- **Authentication** adds an `Authorization` header from a saved credential, so API keys stay out of the workflow.
+- **Query Params** are added to the URL for you.
+- **Body** is sent as JSON, as a URL-encoded form or as multipart form data, depending on **Body Content Type**.
+- Redirects are followed (up to **Max redirects**) unless you turn that off.
+- The response is read as JSON, text or a file. **Response format** set to *autodetect* decides from the server's content type.
+
+A file response (an image, a PDF, a download) arrives as binary data under the `data` key, ready for file uploads such as Slack **File → Upload**, Google Drive **File → Create** or Gmail attachments.
 
 ## When to use it
 
-Use this node to call REST APIs, fetch data from web services, or integrate with external systems via HTTP.
+- Call an API that has no dedicated node.
+- Download a file or a JSON feed.
+- Send data to a webhook (Zapier, Make, your own server).
+
+For apps that have their own node, such as [Slack](/nodes/builtin/integration/slack/) or [Notion](/nodes/builtin/integration/notion/), that node is easier. To read a web page as text, [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) is simpler.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Method | Source-backed field from the node schema. |
-| URL | Source-backed field from the node schema. |
-| Authentication | Source-backed field from the node schema. |
-| Headers | Source-backed field from the node schema. |
-| Query Params | Source-backed field from the node schema. |
-| Body Content Type | Source-backed field from the node schema. |
-| Body | Source-backed field from the node schema. |
-| Follow redirects | Source-backed field from the node schema. |
-| Max redirects | Source-backed field from the node schema. |
-| Redirects | Source-backed field from the node schema. |
-| Include response header and status | Source-backed field from the node schema. |
-| Response format | Source-backed field from the node schema. |
-| Response | Source-backed field from the node schema. |
-| Timeout (ms) | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Method","type":"Choice","default":"GET","description":"The request method to use. Options: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD."},{"name":"URL","type":"URL","required":true,"description":"Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters."},{"name":"Authentication","type":"Credential","description":"The authentication to use to make the request."},{"name":"Headers","type":"Key-value pairs","description":"The headers to send with the request."},{"name":"Query Params","type":"Key-value pairs","description":"The query params to send with the request."},{"name":"Body","type":"Group","description":"The body to send with the request."},{"name":"Body › Body Content Type","type":"Choice","default":"application/json","description":"Content-Type to use to send body parameters. Options: application/json, application/x-www-form-urlencoded, multipart/form-data."},{"name":"Body › Body","type":"Key-value pairs","description":"The body to send with the request."},{"name":"Options","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects › Follow redirects","type":"Toggle","default":"On","description":"Follow redirects."},{"name":"Options › Redirects › Max redirects","type":"Number","default":"10","description":"The maximum number of redirects to follow."},{"name":"Options › Response","type":"Group","description":"The options for the response."},{"name":"Options › Response › Include response header and status","type":"Toggle","default":"Off","description":"Whether to return the full response (headers and response status code) data instead of only the body."},{"name":"Options › Response › Response format","type":"Choice","default":"autodetect","description":"The format in which the data gets returned from the URL. Options: autodetect, json, text, file."},{"name":"Options › Timeout (ms)","type":"Number","default":"10000","description":"Time in ms to wait for the server to send response headers (and start the response body) before aborting the request."}]} />
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+By default the item is `{ data }`, the response body. Turn on **Include response header and status** to also get `status`, `statusText`, `headers` and the final `url` after redirects.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Authentication** (connection): optional. See [Create a connection](/app/connections/).
+{/* AUTO:deps:end */}
+
+Choose a credential of the type your API expects, for example a bearer token or basic auth. See [Create a credential](/app/connections/create/).
 
 ## Example workflow
 
-Connect data into Http Request, configure the settings above, and use the output in the next workflow step.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on a link.
+2. Http Request, **POST** to your webhook URL, **Body Content Type** `application/json`, with a body field `url` = `{{ $input.linkUrl }}`.
+3. [Browser Notification](/nodes/extension/browsernotification/): "Sent".
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"Response status: 401" or "403".** The credential is missing, wrong or lacks permission. Check the **Authentication** field and the key's rights.
+- **"Response status: 404".** Check the URL and the query parameters.
+- **"URL validation failed".** The URL is malformed or not allowed. Use a full `https://` address.
+- **"Maximum redirects exceeded".** The site redirects in a loop, or more times than **Max redirects** allows.
+- **It works in the extension but fails in the web app.** Some sites refuse requests sent from another website (a browser rule called CORS). Run the workflow from the extension.
+- **The request times out.** Raise **Timeout (ms)** under **Options**; the default is 10 seconds.
 
 ## Related nodes
 
-- [Code](/nodes/builtin/core/code/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Poll Until](/nodes/builtin/flow/polluntil/): call a URL repeatedly until it reports done.
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/): pull values out of an HTML response.
+- [JSON](/nodes/builtin/datatransformation/json/): reshape a JSON response.
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/): let an AI agent make requests.

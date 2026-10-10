@@ -3,51 +3,101 @@ title: "Information Extractor"
 description: "Extract structured information from a text using a LLM"
 sidebar:
   label: "Information Extractor"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/informationextractornode
+  family: ai
 ---
 
-# Information Extractor
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Extract structured information from a text using a LLM
+Pull named pieces of information (a name, a date, an amount) out of free text with a chat model.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/selection-to-todoist.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Sends the input text to a language model with instructions describing which fields to pull out, and returns the extracted information. The fields to extract can be described in plain language, or shaped by an optional connected Output Parser dependency for structured output.
+Information Extractor sends **Text** to the chat model connected to its **Model** slot and asks it to extract the fields you list in **What to extract**. The result comes back in one field, `extracted`.
+
+Without an output parser, `extracted` is the model's reply as text. Connect a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) to the **Output Parser** slot to get a real object whose fields you can use in later nodes.
 
 ## When to use it
 
-Use this node when you need to turn unstructured text (emails, documents, form responses, transcripts) into structured data — for example, pulling a name, date, and amount out of an invoice, or extracting entities from a support ticket for downstream processing.
+- Read an invoice or order email and pull out the customer, date and total.
+- Turn a support message into fields (product, problem, urgency) before saving it to a sheet.
+- Collect contact details from a page you are visiting.
+
+To rewrite or answer freely, use [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/). To pick one label for the text, use [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to extract information from. Rendered as a text area. |
-| What to extract | Describes the fields to extract, or connect an Output Parser. Rendered as a text area. |
-| Options → System message | Optional additional system message appended to the extraction instructions. Rendered as a text area. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to extract information from."},{"name":"What to extract","type":"Long text","required":true,"description":"Describe the fields to extract, or connect an Output Parser."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
+{/* AUTO:settings:end */}
+
+Fill **Text** with an expression such as `{{ $input.text }}`.
+
+**What to extract** is required even when an output parser is connected. List each field and its format, for example: `customer name, invoice date (YYYY-MM-DD), total amount as a number, currency code`.
+
+Use **System message** under **Options** for extra rules, such as `Leave a field empty when it is not in the text.`
 
 ## Outputs
 
-Returns `{ extracted }`, containing the model's structured extraction result (shaped by the connected Output Parser when one is provided).
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"extracted","type":"Any","description":"The data the model extracted"}]} />
+
+```json title="Shape of an output item"
+{
+  "extracted": null
+}
+```
+{/* AUTO:outputs:end */}
+
+With a Structured Output Parser connected, read single fields downstream with expressions such as `{{ $input.extracted.total }}`. Without one, `extracted` is text, so field access does not work.
 
 ## Dependencies and credentials
 
-- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). Used to perform the extraction.
-- **Output Parser** (optional) — connect an Output Parser dependency to constrain the response to a specific structured shape (e.g. JSON schema) instead of relying solely on the "What to extract" description.
+{/* AUTO:deps:start */}
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
+{/* AUTO:deps:end */}
+
+- **Model**: a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/). The model node holds the API key; this node has no credential of its own.
+- **Output Parser**: a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) whose **JSON Output Example** matches the fields you want, or an [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) to repair replies that do not parse.
 
 ## Example workflow
 
-Connect a Chat OpenAI node to the Model dependency, feed text from an upstream node (e.g. an HTTP Request or file read) into Text, describe the fields you want in "What to extract" (or connect an Output Parser for a strict schema), and consume `extracted` in the next node.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads an order email you highlighted, with **Output field name** `text`.
+2. Information Extractor with **Text** `{{ $input.text }}` and **What to extract** `customer name, order number, total`. Connect an [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model and a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) with **JSON Output Example** `{ "customer": "Jane Doe", "orderNumber": "A-1042", "total": 59.9 }`.
+3. [Display Object](/nodes/extension/displayobject/) shows `extracted`, or a [Google Sheets](/nodes/builtin/integration/google-sheets/) node appends `{{ $input.extracted.customer }}` and `{{ $input.extracted.total }}` as a row.
 
-## Troubleshooting
+## Common issues
 
-- If extracted fields are inconsistent, tighten the "What to extract" description or connect an Output Parser to enforce a schema.
-- Verify the Model dependency is connected — the node throws if no model is found.
-- Use the optional System message to add extraction constraints (e.g. output language, date formats) without changing the field description.
+- **`{{ $input.extracted.field }}` is empty.** No output parser is connected, so `extracted` is plain text. Connect a Structured Output Parser.
+- **The parser fails on the reply.** The model answered with extra text around the data. Add an [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/), or use a stronger model.
+- **"Dependency model is required".** Connect a chat model to the **Model** slot.
+- **"Model not found".** The connected model node is not set up: open it and choose a model and its credential.
+- **Fields are guessed when missing from the text.** Say in **System message** to leave missing fields empty.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Turn highlighted text into a Todoist task"} href="/recipes/capture-to-my-apps/selection-to-todoist/" level={"beginner"} minutes={6} setup={"connection"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
-- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
-- [AI Agents](/advanced-ai/concepts/ai-agents/)
+- [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/): define the shape of `extracted`.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): free-form prompts.
+- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/): route text by category.
+- [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/): route text by tone.

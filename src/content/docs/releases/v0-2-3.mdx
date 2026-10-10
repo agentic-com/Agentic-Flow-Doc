@@ -1,0 +1,28 @@
+---
+title: "Maintenance for the early builder"
+description: "A maintenance release that continues the early workflow builder iteration."
+sidebar:
+  label: v0.2.3
+  order: 8
+section: releases
+kind: release
+---
+
+import { ReleaseChanges } from '@components/awflow';
+import { getRelease } from '../../../data/releases';
+
+## What changed
+
+<ReleaseChanges release={getRelease('0.2.3')} level={3} meta />
+
+## Notes
+
+### Development Update
+
+After updating, run important workflows manually and inspect node outputs before relying on automated triggers. This is especially important for workflows that combine browser actions, data mapping, and service calls.
+
+Relevant docs:
+
+- [Execution order](/concepts/flow/execution-order/)
+- [Browser context](/concepts/flow/browser-context/)
+- [Create a workflow](/app/workflows/create/)

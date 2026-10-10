@@ -3,45 +3,71 @@ title: "Think"
 description: "Give the agent a scratchpad to reason through a problem step by step."
 sidebar:
   label: "Think"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/tools/think
+  family: ai
+  agentTool: true
 ---
 
-# Think
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Give the agent a scratchpad to reason through a problem step by step.
+Give an AI agent a scratchpad, so it can plan step by step before it acts.
 
 ## What it does
 
-Provides a "think" tool the agent can call with its reasoning as input; the reasoning text is simply returned unchanged. It is a simple, read-only scratchpad tool with no side effects and no approval gate.
+Think is a tool for an agent, not a step in the flow. It has no output port: you connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/).
+
+The agent sees a tool named `think`. When it calls it, it writes its reasoning as the `thought`, and the tool hands the same text straight back. Nothing else happens: no data is fetched, nothing is changed, and no approval is needed. The point is to give the model a moment to lay out a plan, check what it knows, or decide which tool to call next.
 
 ## When to use it
 
-Connect this to Tools Agent nodes when you want the agent to explicitly reason through a problem step by step before acting, which can improve reliability on multi-step tasks.
+- The agent has several tools and must chain them, for example search, then calculate, then answer.
+- The task has rules the agent must check before acting ("only reply if the order is older than 30 days").
+- You want to see the agent's reasoning: each thought appears in its `steps` output.
+
+For a single prompt with no tools, use [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) instead.
 
 ## Inputs and settings
 
-This node has no editable settings.
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
+
+There is nothing to configure.
 
 ## Outputs
 
-Returns a tool dependency named `think` that agent nodes can call. Calling it with a `thought` string returns that same string unchanged, giving the agent a scratchpad for step-by-step reasoning.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Tools** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+{/* AUTO:outputs:end */}
+
+The thought goes back to the model. To read it, look at the agent's `steps` output, which lists every tool call in order, including each `think` call.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect Think to a Tools Agent's tools input alongside other tools. During complex or multi-step tasks, the agent can call the `think` tool to lay out its reasoning before deciding which tool to call next.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads a word problem you highlighted, with **Output field name** `text`.
+2. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Solve this. Plan with the think tool first: {{ $input.text }}`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and both Think and [Calculator](/nodes/builtin/ai/aidependencies/tools/calculator/) connected to **Tools**.
+3. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **The agent never uses Think.** The model decides when to call it. Ask for it in the **Prompt** or **System message**, for example "Before using any other tool, plan with the think tool."
+- **The run takes longer and uses more tokens.** Each thought is an extra round with the model. Remove Think for simple tasks, or lower **Max iterations** on the Tools Agent.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Wikipedia Query](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/)
-- [Tool Selection](/advanced-ai/concepts/tool-selection/)
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): the agent this tool plugs into.
+- [Calculator](/nodes/builtin/ai/aidependencies/tools/calculator/): exact arithmetic for the agent.
+- [Tool Selection](/concepts/ai/tool-selection/): how an agent chooses between its tools.

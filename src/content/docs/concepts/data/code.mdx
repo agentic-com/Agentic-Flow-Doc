@@ -1,0 +1,84 @@
+---
+title: Processing data with code
+description: "When a mapping isn't enough, reshape items with Python in the Code node."
+sidebar:
+  order: 3
+section: concepts
+kind: concept
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+:::note[In 20 seconds]
+The [Code](/nodes/builtin/core/code/) node runs Python in your browser. The incoming data is in a variable called `input`, and the value of the **last line** becomes the output, under `result`. Like most nodes, it runs once per incoming item. Reach for it when the same change would take several nodes.
+:::
+
+## When code is the right tool
+
+Most changes need no code: drag a field, write an [expression](/concepts/data/data-mapping/data-mapping-expressions/), or use [Edit Fields](/nodes/builtin/datatransformation/editfields/). Use the Code node when you need to:
+
+- regroup or count values, for example orders per customer;
+- parse an unusual format with Python's standard library (`re`, `json`, `csv`, `datetime`);
+- combine several fields with logic that doesn't fit in one expression.
+
+## Read the input, return a value
+
+```python title="Code to Execute"
+words = input.get("text", "").split()
+{
+    "words": len(words),
+    "longest": max(words, key=len) if words else "",
+}
+```
+
+- `input` is a normal Python value: a dict, a list or a single value.
+- The last line, on its own, is what the node passes on. An assignment on the last line returns nothing.
+- The next step reads it as `{{ $input.result.words }}`.
+- `print()` writes to the run's activity log, which helps when you debug.
+
+With several steps connected to the Code node, `input` is a dict keyed by each step's label, such as `input["Get Selected Text"]["selection"]`.
+
+## One item, or the whole list?
+
+When the previous step outputs several items, the Code node runs **once per item** and `input` is one item. To work on the whole list at once (to total it or group it), put [Aggregate](/nodes/builtin/datatransformation/aggregate/) in front of the Code node. It then receives one item that holds the list.
+
+```python title="Code to Execute, after Aggregate (Put Output In Field: orders)"
+totals = {}
+for order in input["orders"]:
+    totals[order["customer"]] = totals.get(order["customer"], 0) + order["amount"]
+totals
+```
+
+## Limits
+
+Each run starts clean in an isolated sandbox: no network, no access to the page or your stored data, and a 30-second time limit. The first run after a pause takes a couple of seconds while Python starts. To call an API, use [Http Request](/nodes/builtin/core/http-request/) before or after the Code node.
+
+## You'll notice this when…
+
+<details>
+<summary>The output is null</summary>
+
+The last line is an assignment (`total = 3`) or a statement, so nothing is returned. Put the value on its own as the last line (`total`).
+
+</details>
+
+<details>
+<summary>The Code node ran once per row but you wanted one total</summary>
+
+It received a list of items, so it ran for each one. Add [Aggregate](/nodes/builtin/datatransformation/aggregate/) before it.
+
+</details>
+
+<details>
+<summary>input["title"] raises a KeyError</summary>
+
+Several steps are connected, so `input` is keyed by step label, or the field is missing on this item. Use `input.get("title", "")`, and check the shape in the previous step's **Output** tab.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Back to the Data hub" description="Items, mapping, expressions and item linking." href="/concepts/data/" />
+  <LinkCard title="Code node reference" description="Every detail of input, output and limits." href="/nodes/builtin/core/code/" />
+</CardGrid>

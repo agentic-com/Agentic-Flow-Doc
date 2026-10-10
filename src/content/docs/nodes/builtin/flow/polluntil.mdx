@@ -3,69 +3,86 @@ title: "Poll Until"
 description: "Call an endpoint on an interval until a condition is met, or give up"
 sidebar:
   label: "Poll Until"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/polluntil
+  family: flow
 ---
 
-# Poll Until
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Call an endpoint over and over on a set interval until the response satisfies your conditions — then continue — or give up after a deadline. It's the durable way to wait for a long-running external job to finish, without wiring a loop by hand.
+Call a URL again and again until the response says it is ready, or give up after a deadline.
 
 ## What it does
 
-Each interval, Poll Until makes an HTTP request and checks the response against a list of conditions (combined with AND / OR, exactly like the [IF](/nodes/builtin/flow/if/) and [Loop](/nodes/builtin/flow/loop/) nodes). When they hold, it sends the response out the **Done** port. If they never hold before the give-up deadline, it sends the last response out the **Timeout** port.
+On each poll, Poll Until sends the request you set up and checks the response against your **Done when** conditions (combined with AND / OR, as in [IF](/nodes/builtin/flow/if/)).
 
-It is fully client-side — the node only makes outbound requests, so it works without any server. Use it to wait on a service that gives you a job ID and a status endpoint to poll, or to poll any URL (including a webhook-catcher you own) until a value appears.
+- When the conditions hold, the response leaves through **Done**.
+- When the **Give up after** time passes first, the last response leaves through **Timeout**.
+
+By default it polls **every 5 minutes** and gives up **after 1 hour**. Change the numbers and units to suit the job.
+
+The conditions see the response as `{ status, ok, body }`:
+
+- `status`: the HTTP status code, for example `200`.
+- `ok`: `true` for a 2xx status.
+- `body`: the JSON (or text) the endpoint returned.
+
+So a condition's left side is a path such as `body.status`, `body.result.state` or `status`. A request that fails or times out counts as "not yet", and polling continues until the deadline.
+
+How it waits between polls depends on the interval:
+
+- **1 minute or more, in the browser extension**: durable. The run is saved between polls and resumes on time even if you close the tab or restart the browser. It shows as **waiting** in the Executions pane.
+- **Under 1 minute, or in the web app**: a simple timer that stops if you close the tab.
 
 ## When to use it
 
-- Kick off a long export/render/build via one request, then poll its status until it reports done.
-- Wait for an external system to reach a state — an order ships, a file lands, an approval flips — by polling an endpoint that reports it.
+- Start a long export, render or build with one request, then poll its status URL until it reports done.
+- Wait for an outside system to reach a state: an order ships, a file appears, an approval flips.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL | The endpoint to poll. May use `{{ $input.x }}`. |
-| Method | GET (default), POST, PUT, PATCH, or DELETE. |
-| Headers | One `Key: Value` per line — e.g. an `Authorization` header. |
-| Body | Request body, for non-GET methods. |
-| Done when | One or more conditions on the response, joined by AND / OR. Each row's **left side is a path into the response** (see below); the right side is the value to compare, and may use `{{ $input.x }}`. |
-| Poll every | How long to wait between polls. |
-| Give up after | Stop and route to **Timeout** after this long (up to 30 days). |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"URL","type":"Text","required":true,"description":"The endpoint to poll."},{"name":"Method","type":"Choice","default":"GET","description":"HTTP method. Options: GET, POST, PUT, PATCH, DELETE."},{"name":"Headers","type":"Text","description":"One \"Key: Value\" per line (e.g. an Authorization header)."},{"name":"Body","type":"Text","description":"Request body, for non-GET methods."},{"name":"Done when","type":"Conditions","required":true,"description":"Stop polling once these conditions on the response hold. Left side is a path into the response (e.g. body.status, or status for the HTTP code)."},{"name":"Poll every","type":"Number","default":"5","description":"How long to wait between polls."},{"name":"Poll unit","type":"Choice","default":"Minutes","description":"Options: Milliseconds, Seconds, Minutes, Hours."},{"name":"Give up after","type":"Number","default":"1","description":"Stop and route to Timeout after this long."},{"name":"Give up unit","type":"Choice","default":"Hours","description":"Options: Milliseconds, Seconds, Minutes, Hours."}]} />
+{/* AUTO:settings:end */}
 
-### The response the conditions see
+Put one header per line in **Headers**, as `Key: Value`, for example `Authorization: Bearer …`. **Body** is only sent for methods other than GET.
 
-Each poll exposes the response as `{ status, ok, body, headers }`:
+## Outputs
 
-- `status` — the HTTP status code (e.g. `200`).
-- `ok` — `true` for a 2xx status.
-- `body` — the parsed JSON (or text) the endpoint returned.
-- `headers` — the response headers.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Done"},{"name":"Timeout"}]} />
+{/* AUTO:outputs:end */}
 
-So a condition's left side is a path like `body.status`, `body.result.state`, or `status`. A request that errors or times out counts as "not yet" and polling continues until the deadline.
+Both ports send the response as `{ status, ok, body }` (plus `error` when the last request failed). Read the result downstream with `{{ $input.body }}`.
 
-## Ports
+## Dependencies and credentials
 
-- **Done** — the conditions held; emits the successful response. Use `{{ $input.body }}` downstream.
-- **Timeout** — the deadline passed first; emits the last response plus the attempt count, so you can alert or fall back.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
-## Short vs. durable polling
+Authentication goes in **Headers**.
 
-Like the [Wait](/nodes/builtin/flow/wait/) node, Poll Until picks how it waits between polls:
+## Example workflow
 
-- **Interval of 1 minute or more** *(in the extension)* — **durable**. Between polls the run is checkpointed and resumed by a browser alarm, so it survives closing the tab, the background worker unloading, and browser restarts. While it waits, the run shows as **waiting** in the Executions pane.
-- **Interval under 1 minute, or web/local mode** — an in-memory loop, which does not survive closing the tab.
+1. [Http Request](/nodes/builtin/core/http-request/) starts an export and returns a job id.
+2. Poll Until calls `https://api.example.com/jobs/{{ $input.data.id }}` with **Done when** `body.status` (**String**) **Is Equal To** `finished`, **Poll every** 1 **Minutes**, **Give up after** 30 **Minutes**.
+3. **Done** goes to an HTTP Request that downloads `{{ $input.body.downloadUrl }}`.
+4. **Timeout** goes to a [Browser Notification](/nodes/extension/browsernotification/): "The export is stuck."
 
-## Example
+## Common issues
 
-```mermaid
-flowchart LR
-    Start(["Start export"]) --> P["Poll Until\nbody.status equals done"]
-    P -- Done --> D["Download the result"]
-    P -- Timeout --> A["Alert: export stuck"]
-```
+- **It always ends on Timeout.** Check the path on the left of the condition. It starts with `body.` for anything in the response content (`body.status`, not `status`, unless you mean the HTTP code).
+- **It keeps polling after the job finished.** The value may differ from what you compare against, for example `Finished` versus `finished`, or a number compared as **String**.
+- **A long poll stopped when you closed the tab.** Durable polling needs the extension and an interval of at least 1 minute.
 
 ## Related nodes
 
-- [Wait](/nodes/builtin/flow/wait/)
-- [Loop](/nodes/builtin/flow/loop/)
-- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/)
+- [Wait](/nodes/builtin/flow/wait/): pause for a fixed time.
+- [Loop](/nodes/builtin/flow/loop/): repeat any group of steps.
+- [Http Request](/nodes/builtin/core/http-request/): a single call.
+- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/): wait for a person instead of a URL.

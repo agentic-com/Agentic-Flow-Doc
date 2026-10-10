@@ -1,0 +1,142 @@
+---
+title: Mapping in the UI
+description: "Put a value from an earlier step into a node's setting by dragging it from the Input panel."
+section: concepts
+kind: concept
+sidebar:
+  order: 1
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards, ItemsPlayground, Screenshot } from "@components/awflow";
+import mappingLight from "@assets/screenshots/data-mapping.light.webp";
+import mappingDark from "@assets/screenshots/data-mapping.dark.webp";
+
+:::note[In 20 seconds]
+Mapping means "use a value from an earlier step here". Open a node's settings, find the value in the **Input** panel, and drag it into a field. AWFlow writes the expression for you, such as `{{ $input.title }}`. Mapping doesn't change any data: it only fills the setting, once for every item the node runs on.
+:::
+
+## See it happen
+
+Get Page Metadata returns one item with the page's `url`, `title`, `canonicalUrl` and `description`. In Display Markdown, you drag **title** from the Input panel into the **Content** field. The field now holds `{{ $input.title }}`, and the run shows the real title.
+
+<ItemsPlayground
+  client:visible
+  steps={[
+    {
+      name: "Get Page Metadata",
+      kind: "data",
+      items: {
+        url: "https://example.com/pricing",
+        title: "Pricing · Example",
+        canonicalUrl: "https://example.com/pricing",
+        description: "Plans for teams of every size",
+      },
+    },
+    {
+      name: "Display Markdown",
+      kind: "io",
+      note: "Content: ## {{ $input.title }}",
+      count: "shows the title",
+    },
+  ]}
+  selected={0}
+  caption="Illustration of a run. Drag a field, then check the preview under the setting."
+/>
+
+## Drag a value into a field
+
+<Screenshot src={mappingLight} srcDark={mappingDark} alt="Mapping data in the SHA-512 step: the Input panel on the left is expanded to show the fields of $input and of the earlier SHA-256 step, ready to drag into a field; the Text field on the right already holds the expression $input.text, with the value from the last run previewed under it." hotspots={[{ x: 17.4, y: 18.8, label: "Fields from the previous step: drag one into a field" }, { x: 17.4, y: 32.7, label: "An earlier step and its fields" }, { x: 37.5, y: 61.7, label: "The expression the drag creates" }, { x: 90.3, y: 64.4, label: "Fixed value or Expression" }]} />
+
+
+1. Run the workflow, or the steps before this one, so they have data to show.
+2. Double-click the node to open its settings. On a narrow window, open the **Input** / **Output** pane from the dialog's footer.
+3. In the **Input** tab, find the value:
+   - **$input**: the whole data this node receives. Its fields are listed under **$input fields** when exactly one step feeds this node.
+   - **Direct inputs**: the steps connected straight to this node.
+   - **Relatives**: steps further back in the workflow.
+4. Drag the field into the setting. AWFlow inserts the matching expression.
+5. Check **Preview from last run** under the field. It shows the value the field would get.
+
+A step that hasn't run yet shows **Run this step to see its data** instead of fields. Click it to run that step on its own.
+
+## What the drag writes
+
+| You drag… | The field gets… |
+| --- | --- |
+| **$input** | `{{ $input }}`, the whole incoming data |
+| A field under **$input fields** | `{{ $input.title }}` |
+| A nested field | `{{ $input.metadata.description }}` (a dot path) |
+| A field of a step under **Direct inputs** or **Relatives** | `{{ $('Get Page Metadata').title }}`, using the step's label |
+
+Prefer `$input` when the value comes from the step right before. A `$('…')` reference breaks if you rename that step, and a reference to a step further back returns its whole output rather than the matching item (see [Item linking](/concepts/data/item-linking/)).
+
+You can mix mapped values with your own text in one field: `Summary of {{ $input.title }}`.
+
+## Drag, type, or reshape?
+
+<CompareCards
+  label="Ways to fill a setting"
+  cards={[
+    {
+      title: "Drag from Input",
+      icon: "mouse",
+      when: "The value exists as is in an earlier step.",
+      example: "The page title into a message.",
+      meta: "no typing",
+    },
+    {
+      title: "Type an expression",
+      icon: "chain",
+      href: "/concepts/data/data-mapping/data-mapping-expressions/",
+      when: "You need a fallback, a comparison or a small calculation.",
+      example: "{{ $input.title || \"Untitled\" }}",
+      meta: "{{ … }}",
+    },
+    {
+      title: "Reshape first",
+      icon: "items",
+      href: "/nodes/builtin/datatransformation/editfields/",
+      when: "Many settings need the same cleaned-up value.",
+      example: "Edit Fields builds title and url once; later steps read $input.",
+      meta: "Edit Fields",
+    },
+  ]}
+/>
+
+## You'll notice this when…
+
+<details>
+<summary>The Input panel shows no fields, only a Run button</summary>
+
+The steps before this one haven't run yet, so there's no data to show. Click **Run this step to see its data**, or run the whole workflow once.
+
+</details>
+
+<details>
+<summary>There's no "$input fields" list</summary>
+
+The list appears only when exactly one step with data feeds this node. With several incoming steps, drag fields from **Direct inputs** instead.
+
+</details>
+
+<details>
+<summary>The preview says "Run once to see a preview"</summary>
+
+The field holds an expression, but the steps it reads from have no data from a previous run. Run the workflow once and open the settings again.
+
+</details>
+
+<details>
+<summary>A mapped field is empty during the run</summary>
+
+The field isn't on the item, or it's nested deeper than you mapped. Open the previous step's **Output** tab and compare the path with your expression. Missing values become empty text rather than an error.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Mapping with expressions" description="Fallbacks, maths, comparisons and helper functions inside {{ }}." href="/concepts/data/data-mapping/data-mapping-expressions/" />
+  <LinkCard title="Practise it" description="Recipes that pass page data into messages and AI steps." href="/recipes/" />
+</CardGrid>

@@ -1,39 +1,47 @@
 ---
-title: Workflow Nodes & Integrations
-description: Source-aligned reference for every Agentic WorkFlow node.
+title: Node catalog
+description: Every AWFlow node in one place. Filter by name or task, by family, by where it runs and by what it needs.
+kind: hub
+section: nodes
+tableOfContents: false
 ---
 
-# Workflow Nodes & Integrations
+import NodeCatalog from '@components/awflow/NodeCatalog.svelte';
+import { catalogGroups, catalogNodes } from '../../../data/nodeCatalog';
 
-This section mirrors the current node registry from `src/lib/Nodes-Blocks`. Use it as the source-aligned reference for triggers, browser page actions, flow control, data transformation, core utilities, AI nodes, and integrations.
+A workflow is a chain of nodes: a trigger starts it, and each node does one step. Type what you want to do, such as "click", "pdf" or "summarise", or narrow the list by family, by where the node runs and by what it needs before it works. Each card opens the node's page: its settings, what it sends to the next node, and fixes for common problems.
 
-## How To Read Node Pages
+<NodeCatalog client:load nodes={catalogNodes()} groups={catalogGroups()} />
 
-Each reference page is written around the same questions:
+## Start with a goal
 
-- What the node does.
-- When to use it.
-- Which inputs, settings, dependencies, and credentials it expects.
-- What output it returns to downstream nodes.
-- Which errors or edge cases to check first.
+| Goal | Start with |
+| --- | --- |
+| Start by hand | [When Started](/nodes/builtin/trigger/whenstarted/) |
+| Start on a schedule | [Schedule](/nodes/builtin/trigger/schedule/) |
+| Start from the browser | [Context Menu](/nodes/builtin/trigger/contextmenu/), [Hotkey](/nodes/builtin/trigger/hotkey/) or [Page Load](/nodes/builtin/trigger/pageload/) |
+| Start on each chat message | [Chat Trigger](/nodes/builtin/trigger/chat/) |
+| Read the page you're on | [Get Selected Text](/nodes/extension/getselectedtext/), [Get All Text](/nodes/extension/getalltext/) or [Get Structured Data](/nodes/extension/getstructureddata/) |
+| Read a web address | [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/) or [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) |
+| Call an API | [HTTP Request](/nodes/builtin/core/http-request/) |
+| Reshape data | [Edit Fields](/nodes/builtin/datatransformation/editfields/) or [Pick Field](/nodes/builtin/datatransformation/pickfield/) |
+| Branch, filter, merge, loop or wait | [IF](/nodes/builtin/flow/if/), [Filter](/nodes/builtin/flow/filter/), [Merge](/nodes/builtin/flow/merge/), [Loop](/nodes/builtin/flow/loop/), [Wait](/nodes/builtin/flow/wait/) |
+| Process many items without hitting rate limits | [Split in Batches](/nodes/builtin/flow/splitinbatches/) (see [Rate limits](/nodes/builtin/rate-limits/)) |
+| Pause for a person's approval | [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) |
+| Ask an AI model | [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) with a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), or on-device with [Summarize](/nodes/builtin/ai/localai/summarize/) |
+| Let an AI agent pick tools | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) |
+| Send results to an app | [Slack](/nodes/builtin/integration/slack/), [Notion](/nodes/builtin/integration/notion/), [Google Sheets](/nodes/builtin/integration/google-sheets/) and the other integrations above |
 
-Use the reference after you know the workflow concept you are applying. For example, read [Item Linking](/usage/key-concepts/data/item-linking/) before debugging a mapping issue, then open the exact node page to confirm output fields.
+## How to read a node page
 
-## Palette order
+Every node page follows the same order, so you know where to look:
 
-1. [Trigger](/nodes/builtin/trigger/whenstarted/)
-2. [Lambda](/nodes/builtin/lambda/lambdainput/)
-3. [In Page Action](/nodes/extension/getselectedtext/)
-4. [Flow](/nodes/builtin/flow/if/)
-5. [Data Transformation](/nodes/builtin/datatransformation/editfields/)
-6. [Core](/nodes/builtin/core/http-request/)
-7. [AI](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-8. [Integrations](/nodes/builtin/integration/google-sheets/)
+- **Needs a connection**: when the node signs in to a service, a box at the top links to the connection setup.
+- **Try it**: a real workflow that uses the node, which you can open in AWFlow.
+- **What it does** and **When to use it**.
+- **Inputs and settings**: every field as the settings panel shows it. For apps with many operations, pick one to see only its settings.
+- **Outputs**: the output ports and the fields the next node receives, with the shape of one item.
+- **Dependencies and credentials**: the connection the node uses and the slots where other nodes plug in, such as a chat model for an agent.
+- **Example workflow**, **Common issues** (named by what you see), **Recipes with this node** and **Related nodes**.
 
-## Common Starting Points
-
-- Use [When Started](/nodes/builtin/trigger/whenstarted/) for a simple manual workflow.
-- Use [Get Selected Text](/nodes/extension/getselectedtext/) or [Get All Text](/nodes/extension/getalltext/) to start with page content.
-- Use [Edit Fields](/nodes/builtin/datatransformation/editfields/) to shape data for later nodes.
-- Use [If](/nodes/builtin/flow/if/), [Loop](/nodes/builtin/flow/loop/), and [Merge](/nodes/builtin/flow/merge/) when the workflow path depends on data.
-- Use [AI](/nodes/builtin/ai/) only after the input data shape is stable.
+Nodes that act on web pages or the browser itself run only in the AWFlow browser extension. Their pages say so at the top.

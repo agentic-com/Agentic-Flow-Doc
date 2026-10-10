@@ -1,0 +1,97 @@
+{
+  "name": "Save All Page Links to Sheet",
+  "description": "Grabs every link on the current page and logs each one as a row in a Google Sheet.",
+  "tags": ["capture", "tier-2", "google-sheets", "extension", "links"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "🔗 Save every link to a sheet.\n\nPress Run on any page and this collects all its links, then adds one row per link to your Google Sheet. Connect Google and choose the sheet below the first time."
+      },
+      "width": 340,
+      "height": 170
+    },
+    {
+      "id": "trigger-when-started",
+      "type": "trigger",
+      "position": { "x": 100, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "When Started",
+        "inputs": {},
+        "parameters": { "notes": "Runs on the current page when you press Run." }
+      }
+    },
+    {
+      "id": "get-links",
+      "type": "basic",
+      "position": { "x": 420, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:getAllLinksNode" },
+        "label": "Collect all links",
+        "inputs": { "outputFieldName": "links" },
+        "parameters": { "notes": "Reads every link on the current page into a list." }
+      }
+    },
+    {
+      "id": "split-links",
+      "type": "basic",
+      "position": { "x": 740, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:splitOut" },
+        "label": "One link per row",
+        "inputs": { "fieldToSplitOut": "links" },
+        "parameters": { "notes": "Splits the list so each link becomes its own item for the sheet." }
+      }
+    },
+    {
+      "id": "append-sheet",
+      "type": "basic",
+      "position": { "x": 1060, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:googleSheets" },
+        "label": "Add a row per link",
+        "inputs": {
+          "credential": "",
+          "parameters": {
+            "resource": "data",
+            "operation": "appendValuesWorksheet",
+            "spreadsheetId": "",
+            "worksheetId": "",
+            "range": "Sheet1!A:A",
+            "values": {
+              "Link": "{{ $input.links }}"
+            },
+            "valueInputOption": "USER_ENTERED"
+          }
+        },
+        "parameters": { "notes": "Appends one row for each link. Runs once per link via cross-execution over the list." }
+      }
+    },
+    {
+      "id": "sticky-sheet",
+      "type": "stickyNote",
+      "position": { "x": 1060, "y": 460 },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: connect your Google account and pick the spreadsheet and worksheet. Make sure it has a Link column, or adjust the values to match your header."
+      },
+      "width": 320,
+      "height": 140
+    }
+  ],
+  "edges": [
+    { "id": "e-trigger-links", "source": "trigger-when-started", "target": "get-links", "type": "flowEdge" },
+    { "id": "e-links-split", "source": "get-links", "target": "split-links", "type": "flowEdge" },
+    { "id": "e-split-sheet", "source": "split-links", "target": "append-sheet", "type": "flowEdge" }
+  ],
+  "requiredInputs": [
+    { "nodeId": "append-sheet", "field": "credential" },
+    { "nodeId": "append-sheet", "field": "spreadsheetId" },
+    { "nodeId": "append-sheet", "field": "worksheetId" }
+  ]
+}

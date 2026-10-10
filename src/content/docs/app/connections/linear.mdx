@@ -1,0 +1,65 @@
+---
+title: "Connect Linear"
+description: "Create a Linear personal API key and paste it to create and update issues."
+kind: connection
+section: app
+sidebar:
+  label: "Linear"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 2 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- A Linear workspace. Create the key in the workspace the workflow should use.
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Linear](/nodes/builtin/integration/linear/)
+
+## Set it up
+
+<Steps>
+
+1. **Create the key.** In Linear, open **Settings › Security & access › Personal API keys** and click **New API key**. Copy it (it starts with `lin_api_`).
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Linear** and click **Continue**. Name it, for example *Linear – product*: **Auth Type** is already set to **Bearer Token**. Then paste the key as Linear shows it into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Team › List** in a **Linear** node: your teams come back with their IDs.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `api.linear.app`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **"Authentication required".** The key is wrong or was revoked. Create a new one and update the credential.
+- **"Entity not found".** The **Team ID**, **Issue ID** or **State ID** doesn't exist in this workspace. Run **Team › List** to check.
+- **The run is blocked in the web app.** Linear runs through the browser extension. Install the extension and allow Linear for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Linear node" href="/nodes/builtin/integration/linear/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

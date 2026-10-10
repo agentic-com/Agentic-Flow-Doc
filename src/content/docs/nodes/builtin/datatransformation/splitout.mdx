@@ -3,47 +3,82 @@ title: "Split Out"
 description: "Turn one item with an array field into many items"
 sidebar:
   label: "Split Out"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/splitout
+  family: data
 ---
 
-# Split Out
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Turn one item with an array field into many items.
+Turn a list inside one item into separate items, so the next nodes handle each entry on its own.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/save-links-to-sheet.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Takes a field on the input item whose value is a list, and emits one output item for each element of that list. Optionally carries the item's other fields onto each output.
+Split Out reads the list in **Field To Split Out** and sends one item per entry. Each new item holds the entry under one field: **Output field name** if you set it, otherwise the last part of the path. Splitting `tags` with **Output field name** `tag` turns `{ "tags": ["a", "b"] }` into `{ "tag": "a" }` and `{ "tag": "b" }`.
+
+Entries are always wrapped this way, even when they are objects, so a result object ends up under `{ "result": { ... } }`.
+
+With **Include Other Fields** on, the item's other top-level fields are copied onto every new item. That is how each entry keeps track of where it came from, for example an order id next to each order line.
+
+If the field holds a single value instead of a list, you get one item. An empty list gives no items.
 
 ## When to use it
 
-Use this node when an upstream step returns a list packed inside a single item (e.g. a `tags` array, a list of results, or rows nested under a key) and you want the rest of the workflow to process each element separately.
+- An API returns one item with a `results` list, and you want the next nodes to run once per result.
+- Turn a `tags` or `emails` list into items you can [Filter](/nodes/builtin/flow/filter/), [Sort](/nodes/builtin/datatransformation/sort/) or send one by one.
+- Expand order lines while keeping the order's id and date on each line.
+- If you want the entries passed on as they are (not wrapped in a field), use [Pick Field](/nodes/builtin/datatransformation/pickfield/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Field to split out | Dot-notation path to the array field on the input item (e.g. `tags` or `data.items`). |
-| Output field name | Name each element is stored under on the output items. Defaults to the last segment of the path. |
-| Include other fields | When on, the item's remaining top-level fields are copied onto every output item. Defaults to off. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Field To Split Out","type":"Text","required":true,"description":"The path to the array field to split out (without the node name or id)."},{"name":"Output field name","type":"Text","description":"The name of the field each element is placed under. Defaults to the field being split out."},{"name":"Include Other Fields","type":"Toggle","default":"Off","description":"Whether to carry the remaining input fields onto each output item."}]} />
+{/* AUTO:settings:end */}
+
+Write **Field To Split Out** as field names joined by dots, starting from the incoming data: `results` or `data.results`, not `$input.results`.
+
+**Include Other Fields** removes the whole top-level field the path starts in. Splitting `data.results` drops everything under `data`, not just `results`.
 
 ## Outputs
 
-Emits one item per array element: `{ [outputFieldName]: element }`, plus the carried-over fields when **Include other fields** is enabled. An empty array produces no items; a value that is not an array passes through as a single item.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+One item per list entry. Read an entry downstream with `{{ $input.tag }}` (using your output field name), or `{{ $input.result.title }}` when the entries are objects.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-An HTTP request returns `{ results: [ {...}, {...}, {...} ] }`. Point Split Out at `results`, and each result becomes its own item so the next node runs once per result.
+1. An [Http Request](/nodes/builtin/core/http-request/) node returns `{ "orderId": 42, "lines": [ { "sku": "A1", "qty": 2 }, { "sku": "B7", "qty": 1 } ] }`.
+2. Split Out with **Field To Split Out** `lines`, **Output field name** `line` and **Include Other Fields** on. You get two items, each with `orderId` and `line`.
+3. A [Google Sheets](/nodes/builtin/integration/google-sheets/) node (*Data*, *Append Values into Worksheet*) adds the lines to your sheet, reading `{{ $input.orderId }}`, `{{ $input.line.sku }}` and `{{ $input.line.qty }}`.
 
-## Troubleshooting
+## Common issues
 
-- If nothing splits, confirm **Field to split out** points at an actual array. A non-array value is passed through unchanged as a single item.
-- Referencing a field that does not exist on the input throws an error — check the path and the upstream data shape.
+- **"Field "…" does not exist in the input object".** The path does not match the incoming data. The message shows the data the node received: check the spelling and upper and lower case.
+- **Only one item comes out.** The field holds a single value, not a list. Point the path at the list itself.
+- **No items come out.** The list is empty, so there is nothing to split.
+- **"No source node is connected to this node."** Connect the node that produces the data to Split Out's input.
 
 ## Related nodes
 
-- [Limit](/nodes/builtin/datatransformation/limit/)
-- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Pick Field](/nodes/builtin/datatransformation/pickfield/): keep one field, passing objects through as they are.
+- [Aggregate](/nodes/builtin/datatransformation/aggregate/): the reverse, gather many items back into one list.
+- [Limit](/nodes/builtin/datatransformation/limit/): keep only the first few entries.
+- [Split in Batches](/nodes/builtin/flow/splitinbatches/): work through the items a batch at a time.

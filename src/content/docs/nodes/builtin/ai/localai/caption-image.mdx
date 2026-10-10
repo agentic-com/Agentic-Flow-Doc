@@ -3,37 +3,84 @@ title: "Caption Image"
 description: "Describe an image in words, on-device"
 sidebar:
   label: "Caption Image"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/caption-image
+  family: ai
 ---
 
-# Caption Image
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Describe an image in a short sentence, running locally in your browser (ViT-GPT2 on transformers.js). Private, offline, no cost.
+Describe an image in a short sentence with a model that runs in your browser, so the image never leaves your device.
 
 ## What it does
 
-Runs the image through an on-device image-to-text model and returns a natural-language caption.
+Caption Image runs the **Image** through an image-to-text model, such as *ViT-GPT2 captioning*, and returns one caption, for example "a dog sitting on a couch". The image can be a web address, a data URL, raw base64, or a file passed from an earlier node. There is no cost per run and no API key.
+
+Captioning models are small: expect a short, plain description, not a detailed analysis.
 
 ## When to use it
 
-Generate alt text, summarize an image for a downstream text step, or make a searchable description of visual content — without a vision API.
+- Write draft alt text for images on a page.
+- Turn a screenshot or photo into words that a text step can store, search or summarize.
+
+To get labels with scores, use [Classify Image](/nodes/builtin/ai/localai/classify-image/). To count or locate things, use [Detect Objects](/nodes/builtin/ai/localai/detect-objects/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** image-captioning (image-to-text) model. |
-| Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"Any installed image-captioning model."},{"name":"Image","type":"Media","description":"Image URL, data URL, or $binary from a previous node."}]} />
+{/* AUTO:settings:end */}
+
+**Image** has four tabs. **From input** takes an expression that points to an image from an earlier node, such as `{{ $input.dataUrl }}` after [Screenshot Page](/nodes/extension/screenshotpage/) or `{{ $binary }}` for an attached file. **URL** takes a web address. **Upload** and **Base64** store a fixed image with the node, handy for trying a model.
 
 ## Outputs
 
-Returns `{ text }` — the generated caption string.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-## Troubleshooting
+Each output item has these fields:
 
-- **Empty or generic caption** — captioning models are small; keep expectations modest, or feed a clearer image.
-- **Empty picker** — install an image-to-text model first.
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"text","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "text": "…"
+}
+```
+{/* AUTO:outputs:end */}
+
+`text` is the caption. Use it as `{{ $input.text }}` in the next node.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The **Model** picker lists your installed models first, then models that download on first use. Manage them on the [Local AI](/app/local-models/) page.
+
+## Example workflow
+
+Copy alt text for any image you right-click:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) with **Menu Contexts** set to **Image**.
+2. Caption Image with **Model** *ViT-GPT2 captioning* and **Image** (From input) `{{ $input.srcUrl }}`.
+3. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.text }}`.
+
+## Common issues
+
+- **"Choose a captioning model."** **Model** is empty. Pick one.
+- **"No image provided. Pass an image URL, a data URL, or a $binary image from a previous node."** **Image** is empty, or its expression returned nothing. Check that the field you point to exists on the incoming item.
+- **The caption is vague or off.** Small captioning models miss details. Crop to the subject with [Edit Image](/nodes/builtin/datatransformation/editimage/), or use [Classify Image](/nodes/builtin/ai/localai/classify-image/) for labels.
+- **The first run is slow.** The model downloads and loads on first use; later runs are fast.
 
 ## Related nodes
 
-- [Classify Image](/nodes/builtin/ai/localai/classify-image/)
-- [Generate Text](/nodes/builtin/ai/localai/generate-text/)
+- [Classify Image](/nodes/builtin/ai/localai/classify-image/): labels with confidence scores.
+- [Detect Objects](/nodes/builtin/ai/localai/detect-objects/): find and count objects.
+- [Screenshot Page](/nodes/extension/screenshotpage/): capture the page to caption.
+- [Generate Text](/nodes/builtin/ai/localai/generate-text/): rewrite or translate the caption on-device.

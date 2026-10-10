@@ -3,46 +3,79 @@ title: "Get Element Data"
 description: "Get details for a selected element in the opened page"
 sidebar:
   label: "Get Element Data"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getelementdata
+  family: inpage
 ---
 
-# Get Element Data
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Get details for a selected element in the opened page
+Read everything about one element on the active tab: its text, value, link, attributes, position and whether it is visible.
 
 ## What it does
 
-Extracts detailed information about a specific DOM element selected on the page.
+Get Element Data finds the first element that matches **DOM Selector** on the active tab and returns a description of it. The most useful fields:
+
+- `found`: `true` when the element exists. When it is `false`, the other fields are left out.
+- `text`: the element's visible text. `html`: the HTML inside it.
+- `value`: what is typed or chosen in a form field. A checkbox gives `true` or `false`; a multi-select list gives a list of the chosen values.
+- `href` for links, `src` for images, video and audio.
+- `attributes`: every attribute on the element, such as `data-price` or `aria-expanded`.
+- `visible`: whether the element is shown on screen. `boundingBox`: its position and size.
+- `name`: a readable name taken from its label, title or text.
+
+When the element is not on the page, the node does not fail: it returns `found: false`, so you can branch on it.
 
 ## When to use it
 
-Use this node to inspect element properties, attributes, or styles for debugging or dynamic interactions.
+- Read one value precisely: a price, a status badge, the text in a search box.
+- Check a state before acting: is the "Next" button visible, is the checkbox ticked?
+- To read many similar elements (rows, cards), use [Get Structured Data](/nodes/extension/getstructureddata/) or [Get All HTML](/nodes/extension/getallhtml/) with [HTML Extract](/nodes/builtin/datatransformation/html-extract/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Output field name | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Output field name","type":"Text","description":"Wrap the element data under this field name. Leave empty to return the object directly."}]} />
+{/* AUTO:settings:end */}
+
+- **DOM Selector**: click the crosshair button in the field, then click the element on the page, or type a CSS selector such as `#price`. The **Ping** button flashes what it matches.
+- **Output field name**: set it (for example `price`) to get `{ "price": { … } }`, which keeps things tidy when you read several elements in a row.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+With **Output field name** empty, read the fields directly, for example `{{ $input.text }}` or `{{ $input.attributes['data-sku'] }}`. With it set to `price`, use `{{ $input.price.text }}`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Get Element Data after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every hour.
+2. [Tab Control](/nodes/extension/tabcontrol/), **Operation** = **Open**, opens the product page with **Wait For Load** on.
+3. **Get Element Data** with **DOM Selector** = the price element and **Output field name** = `price`.
+4. [IF](/nodes/builtin/flow/if/) checks that `{{ $input.price.found }}` is true. On the true branch, a [Browser Notification](/nodes/extension/browsernotification/) shows `{{ $input.price.text }}`.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **`found` is `false`.** The selector matched nothing at the moment the node ran. Check it with **Ping**, and add [Wait For Element](/nodes/extension/ui/wait-for-element/) before this node if the element appears late. A selector picked on one page may not exist on another.
+- **`text` is empty but you can see text.** The text may be drawn inside an embedded frame, or in a child element; try selecting the inner element.
+- **`value` is missing.** Only form fields (inputs, text areas, lists) have a value. For other elements read `text`.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Wait For Element](/nodes/extension/ui/wait-for-element/): wait until the element is there.
+- [Get Accessibility Tree](/nodes/extension/getaccessibilitytree/): all buttons, links and fields at once.
+- [Get Structured Data](/nodes/extension/getstructureddata/): many rows from a table or list.
+- [IF](/nodes/builtin/flow/if/): branch on what you read.

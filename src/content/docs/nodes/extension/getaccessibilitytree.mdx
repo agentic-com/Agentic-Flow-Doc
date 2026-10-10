@@ -3,46 +3,97 @@ title: "Get Accessibility Tree"
 description: "Get visible interactive and semantic elements from the opened page"
 sidebar:
   label: "Get Accessibility Tree"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getaccessibilitytree
+  family: inpage
 ---
 
-# Get Accessibility Tree
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Get visible interactive and semantic elements from the opened page
+List the buttons, links, form fields and other controls you can see on the active tab, with a name and a selector for each.
 
 ## What it does
 
-Extracts the accessibility tree showing interactive and semantic elements with their roles and labels.
+Get Accessibility Tree scans the active tab (or the part inside **DOM Selector**) for elements a person can interact with: links, buttons, inputs, lists, text areas, expandable sections, and anything the page marks with a role. It keeps only the ones that are **visible** on the page, and returns one item per element.
+
+For each element you get:
+
+- `role`: what it is, such as `link`, `button`, `textbox`, `checkbox`, `combobox` or `slider`.
+- `name`: the label a screen reader would use (its label, title or text).
+- `text`: its visible text.
+- `selector`: a selector you can pass to other page nodes to act on it.
+- `disabled`, and when relevant `checked`, `selected` and `expanded`.
+- `boundingBox`: its position and size.
 
 ## When to use it
 
-Use this node to analyze page accessibility, identify interactive elements, or build AI agents that understand page structure.
+- Give an AI model a compact map of what can be clicked or filled on a page, instead of the full HTML.
+- Find the selector of a button or field, then click it with [UI Automation](/nodes/extension/ui/automation/) or fill it with [Form Fill](/nodes/extension/ui/form-fill/).
+- Quickly check a page for unlabeled buttons or links (an empty `name`).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| domSelector | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."}]} />
+{/* AUTO:settings:end */}
+
+Leave **DOM Selector** empty to scan the whole page. To limit the scan to one area (a dialog, a sidebar), click the crosshair button in the field and click that area, or type a CSS selector.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"selector","type":"Text"},{"name":"tagName","type":"Text"},{"name":"role","type":"Text"},{"name":"name","type":"Text","description":"The accessible name"},{"name":"text","type":"Text"},{"name":"disabled","type":"True/false"},{"name":"checked","type":"True/false"},{"name":"selected","type":"True/false"},{"name":"expanded","type":"True/false"},{"name":"boundingBox","type":"Object"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "selector": "…",
+    "tagName": "…",
+    "role": "…",
+    "name": "…",
+    "text": "…",
+    "disabled": true,
+    "checked": true,
+    "selected": true,
+    "expanded": true,
+    "boundingBox": {}
+  }
+]
+```
+{/* AUTO:outputs:end */}
+
+Each element is one item, so the next node runs once per element. To give the whole list to an AI node in one go, first combine the items with [Aggregate](/nodes/builtin/datatransformation/aggregate/).
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Get Accessibility Tree after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Run the workflow from a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger on the page you want to explore.
+2. Add **Get Accessibility Tree** with **DOM Selector** empty.
+3. Add [Filter](/nodes/builtin/flow/filter/) to keep items where `{{ $input.role }}` equals `button`.
+4. Combine the buttons into one item with [Aggregate](/nodes/builtin/datatransformation/aggregate/), then show it with [Display Object](/nodes/extension/displayobject/) to see every button's name and selector.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The output is empty.** Nothing visible and interactive was found, or **DOM Selector** matched nothing. Wait for the page to finish loading, or check the selector with **Ping**.
+- **A control you can see is missing.** It may be inside an embedded frame (not scanned), or built from plain elements without a role, which the page gives no hint about.
+- **Elements in a closed menu or another tab of the page are missing.** Hidden elements are skipped on purpose. Open the menu first, for example with [UI Automation](/nodes/extension/ui/automation/).
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Get Element Data](/nodes/extension/getelementdata/): full details of one element.
+- [Get Forms Schema](/nodes/extension/getformsschema/): every field of a form, with its options.
+- [UI Automation](/nodes/extension/ui/automation/): click, type and select using the selectors found here.

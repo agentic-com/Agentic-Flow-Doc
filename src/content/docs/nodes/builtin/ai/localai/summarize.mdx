@@ -3,48 +3,85 @@ title: "Summarize"
 description: "Condense long text on-device"
 sidebar:
   label: "Summarize"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/summarize
+  family: ai
 ---
 
-# Summarize
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Condense long text into a short summary, running locally in your browser with a summarization model (e.g. *DistilBART CNN* on transformers.js). Private, offline, no cost.
+Condense long text into a short summary with a model that runs in your browser, so the text never leaves your device.
 
 ## What it does
 
-Runs the text through an on-device summarization model with a length preset. Long input is handled for you: it is split into chunks on sentence boundaries (about 2,500 characters each), each chunk is summarized, and — if the joined summaries are still long — they are summarized once more.
+Summarize runs the **Text** through a summarization model such as *DistilBART CNN (summarize)*, aiming for the size set by **Length**. It handles long text for you: text over about 2,500 characters is split into pieces at sentence ends, each piece is summarized in turn, and if the joined summaries are still long they are summarized once more.
+
+There is no cost per run and no API key.
 
 ## When to use it
 
-Get the gist of an article, a long email thread, meeting notes, or a scraped page before storing it, notifying someone, or feeding it to another step.
+- Get the gist of an article, a long email thread or meeting notes before you store or forward it.
+- Shorten scraped page text before passing it to another step.
+
+To summarize with a chat model and your own instructions, use [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to summarize. Any length — long input is chunked automatically. |
-| Length | **Short** (≈ 20–60 words), **Medium** (≈ 60–130, default), or **Detailed** (≈ 130–250). |
-| Model | An **installed** summarization model. Only summarization models are listed here. |
-| Min tokens (advanced) | Overrides the preset's minimum length. |
-| Max tokens (advanced) | Overrides the preset's maximum length. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Text","type":"Long text","description":"Long input is split into chunks and summarized piece by piece."},{"name":"Length","type":"Choice","default":"Medium","description":"Short ≈ 20–60 words · Medium ≈ 60–130 · Detailed ≈ 130–250. Options: Short, Medium, Detailed."},{"name":"Model","type":"Model picker","description":"Only summarization models are listed here."},{"name":"Min tokens (advanced)","type":"Number","description":"Overrides the length preset minimum."},{"name":"Max tokens (advanced)","type":"Number","description":"Overrides the length preset maximum."}]} />
+{/* AUTO:settings:end */}
 
-Lengths are counted in tokens — roughly one per word in English.
+Lengths count tokens, roughly one per word in English. Use **Min tokens (advanced)** and **Max tokens (advanced)** only when the presets do not fit; if the minimum is larger than the maximum, the maximum wins. On very long text the length applies to each piece, then to the final pass.
 
 ## Outputs
 
-Returns `{ summary, words }`:
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-- `summary` — the summary text.
-- `words` — its word count.
+Each output item has these fields:
 
-## Troubleshooting
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"summary","type":"Text"},{"name":"words","type":"Number","description":"Words in the summary"}]} />
 
-- **"Choose a summarization model."** — install one from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
-- **"Provide some text to summarize."** — the Text field resolved to empty.
-- **Slow on very long text** — every chunk is a separate model run, done one after another. Summarize only the part you need, or use a shorter preset.
-- **Summary too short or too long** — change the Length preset, or set exact Min/Max tokens.
+```json title="Shape of an output item"
+{
+  "summary": "…",
+  "words": 0
+}
+```
+{/* AUTO:outputs:end */}
+
+`summary` is the summary text. Use it as `{{ $input.summary }}` in the next node.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The **Model** picker lists your installed summarization models first, then ones that download on first use. Manage them on the [Local AI](/app/local-models/) page.
+
+## Example workflow
+
+Get a short summary of the page you are reading:
+
+1. [Get All Text](/nodes/extension/getalltext/) with **Output field name** `pageText` and **Visible text only** on.
+2. Summarize with **Text** `{{ $input.pageText }}`, **Length** **Short** and **Model** *DistilBART CNN (summarize)*.
+3. [Show Notification](/nodes/extension/shownotification/) with **Title** `Summary` and **Message** `{{ $input.summary }}`.
+
+## Common issues
+
+- **"Choose a summarization model."** **Model** is empty. Pick one.
+- **"Provide some text to summarize."** **Text** is empty after expressions run. Check the field name in your expression.
+- **It takes a long time on very long text.** Each piece is a separate model run, one after another. Pass only the part you need, for example with a **DOM Selector** on Get All Text.
+- **The summary is too short or too long.** Change **Length**, or set **Min tokens (advanced)** and **Max tokens (advanced)**.
 
 ## Related nodes
 
-- [Translate](/nodes/builtin/ai/localai/translate/), [Classify Text](/nodes/builtin/ai/localai/classify-text/)
-- [Generate Text](/nodes/builtin/ai/localai/generate-text/) — free-form text-to-text transforms.
-- [Summarization Chain](/nodes/builtin/ai/aiagents/summarizationchainnode/) — summarize with a chat model instead.
+- [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/): summarize with a chat model.
+- [Translate](/nodes/builtin/ai/localai/translate/): translate the summary on-device.
+- [Classify Text](/nodes/builtin/ai/localai/classify-text/): sort the text into your own labels.
+- [Get All Text](/nodes/extension/getalltext/): read the text of the current page.

@@ -1,0 +1,49 @@
+---
+title: "Settings"
+description: "Every Settings section at a glance: account, app and safety & privacy"
+kind: guide
+section: app
+sidebar:
+  label: "Overview"
+---
+
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import settingsIndexLight from '@assets/screenshots/settings-index.light.webp';
+import settingsIndexDark from '@assets/screenshots/settings-index.dark.webp';
+
+Open **Settings** from the bottom of the sidebar. On a wide window the sections are listed on the left; on a narrow one (such as the side panel) you get a list first, and each row shows a one-line status, for example *Safe mode · Off (Trusted)* or *2 providers*.
+
+<Screenshot
+  src={settingsIndexLight}
+  srcDark={settingsIndexDark}
+  alt="Settings at side-panel width (400 px), in a local workspace: three groups of rows, each with a one-line status. Account: General (Local workspace · Sign in). App: Preferences, Assistant Notch (Off), Providers (None configured), Local models (0 installed), Storage. Safety & privacy: Security (Safe mode · Off (Trusted)), Privacy and Site access (No hosts granted yet)."
+  hotspots={[{ x: 50, y: 14.5, label: 'Account' }, { x: 50, y: 26.2, label: 'App' }, { x: 50, y: 64.4, label: 'Safety & privacy' }]}
+/>
+
+## Account
+
+<CardGrid>
+	<LinkCard title="General" href="/app/settings/general/" description="Avatar, username, publisher tagline, password and newsletter." />
+	<LinkCard title="Plan" href="/app/settings/plan/" description="Compare plans and their limits." />
+</CardGrid>
+
+## App
+
+<CardGrid>
+	<LinkCard title="Preferences" href="/app/settings/preferences/" description="Language, theme, sounds, default storage, secret protection, data store." />
+	<LinkCard title="Assistant Notch" href="/app/settings/notch/" description="The assistant bubble on web pages." />
+	<LinkCard title="Providers" href="/app/settings/providers/" description="AI providers and API keys for the assistant." />
+	<LinkCard title="Local models" href="/app/local-models/" description="Models that run on this device." />
+	<LinkCard title="Storage" href="/app/settings/storage/" description="What AWFlow keeps in this browser, and clean-up." />
+</CardGrid>
+
+## Safety & privacy
+
+<CardGrid>
+	<LinkCard title="Security" href="/app/settings/security/" description="Safe mode for the workflows you build." />
+	<LinkCard title="Privacy" href="/app/settings/privacy/" description="Usage statistics, error reports, agent memory and traces." />
+	<LinkCard title="Site access" href="/app/settings/access/" description="Sites and apps each workflow may use." />
+</CardGrid>
+
+For the bigger picture of what stays on your device and what goes online, read [Privacy & data](/app/privacy-and-data/).

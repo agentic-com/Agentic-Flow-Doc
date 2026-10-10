@@ -3,49 +3,106 @@ title: "Get Structured Data"
 description: "Extract structured data from a table or list in the opened tab"
 sidebar:
   label: "Get Structured Data"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getstructureddata
+  family: inpage
 ---
 
-# Get Structured Data
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Extract structured data from a table or list in the opened tab
+Turn the tables and bullet lists on the active tab into rows of data you can filter, sort and save.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/table-to-csv.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Extracts data from HTML tables or lists and converts it into structured JSON format.
+Get Structured Data finds the tables and lists you point at with **DOM Selector** and returns one item per table or list found. You can select a table or list itself, a container that holds several, or a cell or list entry inside one (its table or list is used).
+
+**Mode** decides what to look for: **Auto** (tables and lists), **Table** only, or **List** only (bulleted and numbered lists).
+
+**Tables**: each row becomes an object keyed by the column headers, for example `{ "Name": "Ada", "Role": "Engineer" }`.
+
+- Headers come from the table's header row. When the table has none, **Table first row is header** (on by default) uses the first row as headers.
+- A column with no header is named `col_1`, `col_2`, and so on.
+- Empty rows are skipped.
+
+**Lists**: with **List Format** = **Text**, each entry becomes `{ "item": "…" }`. With **Key/Value**, an entry like `Color: Blue` becomes `{ "key": "Color", "value": "Blue" }`. Entries without a separator (`:`, `=` or `-`) stay as `{ "item": "…" }`.
+
+Cells and entries are read as plain text, with extra spaces removed. Tables or lists with no rows are left out.
 
 ## When to use it
 
-Use this node to scrape tabular data from web pages for analysis, storage, or processing.
+- Copy a price table, a schedule or a ranking from a page into a spreadsheet or a database.
+- Read a specification list ("Weight: 2 kg", "Color: Blue") as key and value pairs.
+- For data that is not in a table or list (cards, tiles), use [Get All HTML](/nodes/extension/getallhtml/) with [HTML Extract](/nodes/builtin/datatransformation/html-extract/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | Source-backed field from the node schema. |
-| List Format | Source-backed field from the node schema. |
-| Table first row is header | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group","description":"Structured extraction options."},{"name":"Options › Mode","type":"Choice","default":"Auto","description":"Choose what to extract. Options: Auto, Table, List."},{"name":"Options › List Format","type":"Choice","default":"Text","description":"How list items are represented. Options: Text, Key/Value."},{"name":"Options › Table first row is header","type":"Toggle","default":"On","description":"Use first table row as headers when no thead is present."}]} />
+{/* AUTO:settings:end */}
+
+**DOM Selector**: click the crosshair button in the field and click any cell of the table (or any entry of the list); you do not need to hit the table's edge. To read everything in an area, pick the container instead, or type a selector such as `main` or `table`.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"sourceType","type":"Choice"},{"name":"selector","type":"Text"},{"name":"items","type":"List of entries","description":"One item per row or list entry"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "sourceType": "…",
+    "selector": "…",
+    "items": []
+  }
+]
+```
+{/* AUTO:outputs:end */}
+
+`sourceType` is `table` or `list`. The rows are inside `items`. To get one workflow item per row, follow with [Split Out](/nodes/builtin/datatransformation/splitout/) on `items`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Get Structured Data after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Open a page with a pricing table and run the workflow from a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger.
+2. Add **Get Structured Data** with **DOM Selector** set to a cell of the table and **Mode** = **Table**.
+3. Add [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** = `items`, so each row becomes an item.
+4. Add [CSV](/nodes/builtin/datatransformation/csv/) with **Operation** = **Build from items**, then [Save as File](/nodes/builtin/datatransformation/saveasfile/) with **File type** = `csv`.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"No structured data found".** No table or list with content was found at **DOM Selector**, or **Mode** excludes it (a list in **Table** mode, for example). Check the selector with **Ping**, try **Auto**, or select a larger container.
+- **The first data row is used as headers.** The table has no header row and **Table first row is header** is on. Turn it off; columns are then named `col_1`, `col_2`…
+- **Menus and footers show up as lists.** In **Auto** or **List** mode on a large container, every list is read. Select the exact table or list, or use **Table** mode.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Copy any table on a page as CSV"} href="/recipes/extract-data/table-to-csv/" level={"beginner"} minutes={3} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Split Out](/nodes/builtin/datatransformation/splitout/): one item per row.
+- [CSV](/nodes/builtin/datatransformation/csv/): export the rows.
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/): data that is not in a table or list.
+- [Get All Text](/nodes/extension/getalltext/): the plain text of the page.

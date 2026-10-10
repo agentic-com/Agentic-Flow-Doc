@@ -1,0 +1,91 @@
+---
+title: Waiting
+description: "Pause a run for a set time, until a person decides, or until another service is ready."
+sidebar:
+  order: 6
+section: concepts
+kind: concept
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards } from "@components/awflow";
+
+:::note[In 20 seconds]
+**Wait** pauses for a set time and then carries on with the same data. **Wait For Approval** pauses until a person approves or rejects. **Poll Until** keeps checking a URL until it's ready. All three pause **once for everything they receive**, not once per item.
+:::
+
+## Pick the right way to pause
+
+<CompareCards
+  label="Ways to pause a run"
+  cards={[
+    {
+      title: "Wait",
+      icon: "poll",
+      href: "/nodes/builtin/flow/wait/",
+      when: "Pause for a set time.",
+      example: "Wait 30 seconds between two requests to a busy service.",
+      meta: "Amount × Unit · up to 30 days",
+    },
+    {
+      title: "Wait For Approval",
+      icon: "shield",
+      href: "/nodes/builtin/flow/wait-for-approval/",
+      when: "Pause until a person approves or rejects.",
+      example: "Check a drafted reply before it's sent.",
+      meta: "Approved · Rejected",
+    },
+    {
+      title: "Poll Until",
+      icon: "batch",
+      href: "/nodes/builtin/flow/polluntil/",
+      when: "Pause until another service says the job is done.",
+      example: "Check an export every 5 minutes, give up after 1 hour.",
+      meta: "Done · Timeout",
+    },
+  ]}
+/>
+
+## How long waits survive
+
+Wait holds the run for **Amount** × **Unit** (seconds unless you change it):
+
+- **Under 1 minute:** a simple timer. Closing the tab cancels it.
+- **1 minute or more, in the browser extension:** the run is saved and resumes at the deadline, even after you close the tab or restart the browser. It shows as **waiting** in the Executions pane and can last up to **30 days**.
+- **In the web app:** every wait is a simple timer, so a long wait doesn't survive a closed tab.
+
+Wait For Approval has no time limit. The question appears on the paused run in the **Executions** pane, and you're told a run is waiting by a count in the top bar, a sound and, in the extension, a desktop notification.
+
+## Wait for a page, not a clock
+
+To wait until something appears on a web page, don't guess a delay. Use [Wait For Element](/nodes/extension/ui/wait-for-element/), so the run continues as soon as the page is ready. See [Browser context](/concepts/flow/browser-context/).
+
+## You'll notice this when…
+
+<details>
+<summary>Ten items left a Wait together instead of one by one</summary>
+
+Wait pauses once for everything it receives. To space items out, put Wait inside a [Loop](/nodes/builtin/flow/loop/) or after [Split in Batches](/nodes/builtin/flow/splitinbatches/).
+
+</details>
+
+<details>
+<summary>A long wait was lost when you closed the tab</summary>
+
+The run was in the web app, or the wait was shorter than a minute. Long waits survive a closed tab only in the browser extension.
+
+</details>
+
+<details>
+<summary>One approval routed every item</summary>
+
+Wait For Approval pauses once and one answer routes all the items it received. For one decision per item, place it inside a Loop or after Split in Batches with a batch size of 1.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Error handling" description="Retry, carry on, or catch a failure." href="/concepts/flow/error-handling/" />
+  <LinkCard title="Practise it" description="Recipes with approvals and timed steps." href="/recipes/" />
+</CardGrid>

@@ -1,0 +1,88 @@
+---
+title: Fill and submit a web form from saved values
+description: Keep the answers you type again and again in one place. Run it on a form, confirm, and it fills the fields and submits for you.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Fill a form for me
+recipe:
+  goal: Fill forms & click
+  level: intermediate
+  minutes: 8
+  setup: none
+  awf: /examples/fill-form-from-json.awf
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="fill-form-from-saved-values" />
+
+<FlowPreview src="/examples/fill-form-from-json.awf" caption="Run it → your saved values → confirm → fill the form → submit it." />
+
+<RecipeUse slug="fill-form-from-saved-values" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="fill-form-from-saved-values"
+	steps={[
+		{
+			node: 'trigger-run',
+			title: 'Run it on the form',
+			body: 'When Started has no settings; run the workflow from the right-click menu on the page with the form.',
+			tweak: 'use a [Page Load](/nodes/builtin/trigger/pageload/) trigger with the form\'s address to offer it every time you open that page.',
+		},
+		{
+			node: 'values',
+			title: 'Keep your values',
+			body: 'Edit Fields holds one object, `formValues`, with `name`, `email` and `message`.',
+			tweak: 'replace the sample values with yours, and add a key for each extra field (phone, company, address).',
+		},
+		{
+			node: 'approve',
+			title: 'Ask before filling',
+			body: 'Wait For Approval pauses with **Fill and submit this form?**. Nothing is typed until you approve.',
+			tweak: 'remove it once you trust the workflow on that page, or reword **Prompt** to name the site.',
+		},
+		{
+			node: 'fill',
+			title: 'Fill the fields',
+			body: 'Form Fill finds the first `form` on the page and types each value into the field whose id is `name`, `email` or `message`.',
+			tweak: 'match the field ids to your form. Run [Get Forms Schema](/nodes/extension/getformsschema/) once to list them.',
+		},
+		{
+			node: 'submit',
+			title: 'Submit the form',
+			body: 'Submit Form submits the element matching `form`.',
+			tweak: 'delete this step to review the filled form and press the button yourself.',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe and open **Your form values**. Put your own values in.
+2. Open **Fill the form** and change the field ids to the ones on your form.
+3. Save the workflow, open the page with the form, right-click it and choose **Agentic Workflow** › **Personal Workflows** › **Fill Form from JSON**.
+4. Approve the request. The fields fill in and the form is sent.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Ask for one value each time | Add an [In-Page Form](/nodes/builtin/flow/in-page-form/) before Form Fill to type, say, an order number on the page. | Intermediate |
+| Fill without sending | Remove Submit Form so you check the form before you send it. | Beginner |
+| Click through several steps | Use [UI Automation](/nodes/extension/ui/automation/) to click **Next** and [Wait For Element](/nodes/extension/ui/wait-for-element/) between pages. | Advanced |
+
+## Troubleshoot
+
+- **Some fields stay empty.** Their ids differ from the ones in Form Fill. Use [Get Forms Schema](/nodes/extension/getformsschema/) to read the real ids.
+- **The wrong form is filled.** The page has several forms. Change **formSelector** in Form Fill and the **DOM Selector** in Submit Form to target the right one, such as `#contact-form`.
+- **The run seems stuck.** It's waiting for your approval. Approve it in the run panel or the in-page card.

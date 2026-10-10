@@ -3,68 +3,94 @@ title: "HubSpot"
 description: "Log the contact or company you're viewing to HubSpot CRM — create or update records, attach the page as a note, and list deals."
 sidebar:
   label: "HubSpot"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/hubspot
+  family: integration
 ---
 
-# HubSpot
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Turn the page you're on into a CRM record. Read a profile, extract the details, and create or update a contact or company in HubSpot — then attach the page itself as a note.
+Add or update contacts and companies in HubSpot, search them, log notes from the page you are on, and list deals.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a HubSpot connection"} href="/app/connections/hubspot/" linkLabel={"Connect HubSpot"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Creates or updates **contacts** and **companies** (deduplicated by email / domain), logs **notes** from the current page against a record, and lists **deals**. This is the classic sales-extension pattern — "log the profile I'm viewing" — as a composable workflow: read the page, extract with the Information Extractor, upsert the contact, attach the URL.
+The HubSpot node works on four kinds of things (**Resource**):
 
-## Resources and operations
+- **Contact**: **Create or update** a contact, keyed by email; **Update** a contact by its id; or **Search** contacts.
+- **Company**: **Create or update** a company, keyed by domain, or **Search** companies.
+- **Note**: **Create** a note, optionally attached to a contact, company or deal.
+- **Deal**: **List** deals with their name, stage, amount and pipeline.
 
-| Resource | Operations |
-| --- | --- |
-| Contact | Create or update (dedup by email), Update, Search |
-| Company | Create or update (dedup by domain), Search |
-| Note | Create (attach the current page to a record) |
-| Deal | List |
+**Create or update** first looks for a record with the same email (contacts) or domain (companies). If one exists, it is updated; otherwise a new record is created. The result says which happened. Fields you leave empty are not sent, so an update never blanks a value already in HubSpot.
 
-### Create or update (deduplication)
+A **Note** is your **Note** text, then the **Selection** in quotes, then `Source:` and the **Source URL**, each separated by a blank line. It is dated with the time the node runs.
 
-"Create or update" searches for an existing record by its unique property first — **email** for contacts, **domain** for companies. If a match is found the record is **updated**; otherwise a new one is **created**. The result includes `created: true | false` so the rest of your workflow knows which happened.
+## When to use it
 
-> **Note:** HubSpot search is *eventually consistent* — a record created moments earlier may not be searchable yet, so two upserts fired back-to-back for the same email can create a duplicate.
+- Log the profile or company page you are viewing as a HubSpot contact or company.
+- Keep a lead up to date each time you visit their page, without creating duplicates.
+- Save a quote or a page link as a note on the right contact, company or deal.
+- Pull your deal list into a daily summary.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Credential | A HubSpot Private App token (see below). |
-| Resource / Operation | What to act on and how. |
-| Email | Contact unique key (Contact → Create or update). |
-| Domain | Company unique key (Company → Create or update). |
-| First name / Last name / Phone / Company / Job title / Website | Contact properties. |
-| Name / City / Country / Website / Phone | Company properties. |
-| Contact ID | The contact to update (Contact → Update). |
-| Query | Full-text search term (Search). |
-| Note / Source URL / Selection | The note text, the page URL, and any quoted selection (Note → Create). |
-| Associate with / Associated record ID | Attach the note to a contact, company, or deal. |
-| Limit | Number of results for list/search. |
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"A HubSpot Private App token (Settings → Integrations → Private Apps). It is account-wide but scope-limited — grant only the scopes you need: crm.objects.contacts.read/write, crm.objects.companies.read/write, and crm.objects.deals.read. Keep it secret."}]} groups={[{"label":"Contact","options":[{"label":"Create or update","rows":[{"name":"Email","type":"Text","required":true,"description":"The contact’s email — the unique key used to find an existing contact."},{"name":"First name","type":"Text"},{"name":"Last name","type":"Text"},{"name":"Phone","type":"Text"},{"name":"Company","type":"Text"},{"name":"Job title","type":"Text"},{"name":"Website","type":"Text"}]},{"label":"Update","rows":[{"name":"Contact ID","type":"Text","required":true,"description":"The HubSpot contact ID to update."},{"name":"Email","type":"Text","description":"The contact’s email — the unique key used to find an existing contact."},{"name":"First name","type":"Text"},{"name":"Last name","type":"Text"},{"name":"Phone","type":"Text"},{"name":"Company","type":"Text"},{"name":"Job title","type":"Text"},{"name":"Website","type":"Text"}]},{"label":"Search","rows":[{"name":"Query","type":"Text","required":true,"description":"Full-text search across the object’s default properties."},{"name":"Limit","type":"Number","description":"Maximum number of results."}]}]},{"label":"Company","options":[{"label":"Create or update","rows":[{"name":"Domain","type":"Text","required":true,"description":"The company domain — the unique key used to find an existing company."},{"name":"Name","type":"Text"},{"name":"Phone","type":"Text"},{"name":"Website","type":"Text"},{"name":"City","type":"Text"},{"name":"Country","type":"Text"}]},{"label":"Search","rows":[{"name":"Query","type":"Text","required":true,"description":"Full-text search across the object’s default properties."},{"name":"Limit","type":"Number","description":"Maximum number of results."}]}]},{"label":"Note","options":[{"label":"Create","rows":[{"name":"Note","type":"Text","required":true,"description":"The note text."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the note when present."},{"name":"Selection","type":"Text","description":"Selected text to quote in the note (optional)."},{"name":"Associate with","type":"Choice","description":"Attach the note to a contact, company, or deal (optional). Options: Contact, Company, Deal."},{"name":"Associated record ID","type":"Text","description":"The ID of the contact/company/deal to attach the note to."}]}]},{"label":"Deal","options":[{"label":"List","rows":[{"name":"Limit","type":"Number","description":"Maximum number of results."}]}]}]} />
+
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the HubSpot API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
+
+- **Domain** is the bare domain, for example `acme.com`, not a full URL.
+- **Search** looks for **Query** in the record's main fields (name, email, domain and so on). **Search** and **Deal → List** return 10 results unless you set **Limit**.
+- **Associated record ID** is the id of the contact, company or deal, for example `{{ $('HubSpot').id }}` after a **Create or update**. Set **Associate with** too, or the note is created without a link to any record.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+- **Create or update** returns the record with its `id`, `properties` and `created`, which is `true` for a new record and `false` for an update. Branch on it with [IF](/nodes/builtin/flow/if/).
+- **Update** and **Note → Create** return the record with its `id` and `properties`.
+- **Search** and **Deal → List** return the matches in `results`. Contacts come with `email`, `firstname`, `lastname` and `company`; companies with `name`, `domain` and `city`; deals with `dealname`, `dealstage`, `amount` and `pipeline`.
 
 ## Dependencies and credentials
 
-- **Auth:** a HubSpot **Private App token**, sent as `Authorization: Bearer <token>`. Create one under **Settings → Integrations → Private Apps** in HubSpot.
-- **⚠️ Scope guidance:** a private app token is **account-wide** — it is scope-limited but not scoped per-record. Grant only the scopes you need:
-  - `crm.objects.contacts.read`, `crm.objects.contacts.write`
-  - `crm.objects.companies.read`, `crm.objects.companies.write`
-  - `crm.objects.deals.read`
-- The token is stored in your credential vault and never passes through awflow's backend. Treat it like a password — a leak exposes your CRM to the extent of those scopes.
+{/* AUTO:deps:start */}
+- **Credential** (connection, Bearer Token): required. See [Connect HubSpot](/app/connections/hubspot/).
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+Use a HubSpot **private app token**. In HubSpot, open **Settings → Integrations → Private Apps**, create an app, and give it only the scopes you need: `crm.objects.contacts.read` and `crm.objects.contacts.write`, `crm.objects.companies.read` and `crm.objects.companies.write`, and `crm.objects.deals.read`. Copy its access token and save it as a Bearer Token credential: see [Create a credential](/app/connections/create/). Keep it secret: it opens your CRM within those scopes.
 
-This node is **extension-only**. The HubSpot API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+## Example workflow
 
-## Troubleshooting
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger runs when you right-click a profile page.
+2. [Get All Text](/nodes/extension/getalltext/) reads the page.
+3. [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) pulls out `email`, `firstName`, `lastName` and `company`.
+4. HubSpot, **Contact → Create or update**, **Email** `{{ $input.email }}`, **First name** `{{ $input.firstName }}`, and so on.
+5. HubSpot, **Note → Create**, **Note** `Seen on the web`, **Source URL** `{{ $('Context Menu').pageUrl }}`, **Associate with** `Contact`, **Associated record ID** `{{ $input.id }}`.
 
-- **`403` / missing scope** — the private app is missing a scope the operation needs. Add it in HubSpot (Settings → Integrations → Private Apps) and retry. The node calls this out in the error.
-- **A duplicate was created** — two "create or update" calls for the same email/domain ran before HubSpot's search index caught up. Space them out, or search first.
-- **Note isn't attached** — set both **Associate with** and **Associated record ID**; a note with neither is created standalone.
+## Common issues
+
+- **"HubSpot API Error: 403 Forbidden — the private app token is missing a required scope".** Add the scope this operation needs to the private app in HubSpot, then run again.
+- **"HubSpot API Error: 401 Unauthorized".** The token is wrong or was rotated. Copy the current token from the private app and update the credential.
+- **A duplicate contact was created.** Two **Create or update** steps for the same email ran back to back, before HubSpot could find the first one. Space them out, or run them one at a time.
+- **The run is blocked in the web app.** HubSpot runs through the browser extension. Install the extension and allow HubSpot for this workflow when asked, or run the workflow from the extension.
 
 ## Related nodes
 
-- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/)
-- [Screenshot Page](/nodes/extension/screenshotpage/)
-- [Custom API](/nodes/builtin/integration/custom-api/)
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/): turn page text into contact fields.
+- [Attio](/nodes/builtin/integration/attio/) and [Pipedrive](/nodes/builtin/integration/pipedrive/): other CRMs.
+- [Http Request](/nodes/builtin/core/http-request/): call HubSpot API endpoints this node does not cover.

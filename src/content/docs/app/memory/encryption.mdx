@@ -1,0 +1,29 @@
+---
+title: "Encrypt memory on this device"
+description: "Lock conversation messages, summaries and facts behind the same passphrase that protects your credentials, and what changes while memory is locked."
+kind: guide
+section: app
+sidebar:
+  label: "Encryption"
+---
+
+import { Callout } from "@components/awflow";
+
+When **Local secret protection** is on (**Settings › Preferences**, the same passphrase that protects your [credentials](/app/account/secret-vault/)), conversation messages, summaries and facts are also **encrypted on this device**. Turning it on encrypts what you already have in the background; the settings card shows the progress.
+
+## While protection is on
+
+- Titles, sizes, dates and kinds stay readable, so the lists still work. Message previews are hidden.
+- To read messages or facts, **unlock** with your passphrase. While locked, the Memory page, chats and the canvas dock show **Unlock to read memory**.
+- Unlocking in one AWFlow tab also unlocks memory for your other tabs and for the notch until you lock again or close the browser. Credentials still ask for the passphrase in each tab.
+- **Search looks at titles only** (message text isn't indexed), and chats use your **pinned and newest facts** instead of the most relevant ones. Nothing about your facts is stored in a readable form.
+- While locked, nothing new is saved in plain text: the notch asks you to unlock in the app, and a workflow whose Chat Memory needs encrypted memory stops with an "unlock" error.
+- **Export and archive** need memory to be unlocked.
+
+Turning protection off decrypts everything in place and restores search.
+
+<Callout type="danger">
+
+If you forget the passphrase, encrypted memory **can't be recovered**.
+
+</Callout>

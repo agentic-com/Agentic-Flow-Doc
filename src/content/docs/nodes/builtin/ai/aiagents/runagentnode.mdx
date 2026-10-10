@@ -1,0 +1,88 @@
+---
+title: "Run agent"
+description: "Give a task to one of your agents and get its answer."
+sidebar:
+  label: "Run agent"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/runagentnode
+  family: ai
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Give a task to one of your agents and get its answer.
+
+## What it does
+
+Run agent hands a task, written in plain language, to one of your [agents](/app/chat-and-agents/agents/) or to Aria. The agent works on it like a chat turn in the background, using its own model, instructions, memory, skills and rules, and the node returns its reply.
+
+This is the node a [routine](/app/chat-and-agents/agents/#routines) runs: a trigger followed by Run agent. Because a routine is an ordinary workflow, you can open it in the canvas and add steps before or after the agent.
+
+Nobody is there to approve actions during a background run. Actions the agent's rules mark as "ask" are skipped and listed in **Activity** instead.
+
+## When to use it
+
+- Run an agent on a schedule: "Every morning, check my three saved trips for price drops and tell me what changed."
+- Let an agent react to a page: put a [Page Load](/nodes/builtin/trigger/pageload/) trigger in front of it.
+- Hand off a judgement call inside a longer workflow, then use the reply in the next steps.
+
+To give an agent extra abilities inside one workflow (tools, a specific model), use the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) node instead.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Agent","type":"Text","default":"aria","description":"The agent (id or @handle) that does the task. Default: Aria."},{"name":"Task","type":"Long text","required":true,"description":"What the agent should do, in plain language. You can use expressions."},{"name":"Save the result as a chat","type":"Toggle","default":"On","description":"Keep the answer in your chats so you can read and continue it."}]} />
+{/* AUTO:settings:end */}
+
+**Agent** takes an agent id or its @handle, for example `@travel`. Leave it as `aria` to use Aria. **Task** accepts expressions, so you can pass in data from earlier nodes.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"reply","type":"Text"},{"name":"agentId","type":"Text"},{"name":"agentName","type":"Text"},{"name":"conversationId","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "reply": "…",
+  "agentId": "…",
+  "agentName": "…",
+  "conversationId": "…"
+}
+```
+{/* AUTO:outputs:end */}
+
+`reply` is the agent's answer, `agentId` and `agentName` name the agent that did the task, and `conversationId` points to the chat the result was saved to (only when **Save the result as a chat** is on).
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The agent uses the model and connections set on the agent itself, so this node needs nothing extra.
+
+## Example workflow
+
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every weekday at 8:00.
+2. Run agent with **Agent** `@news` and **Task** "Summarise the three most important stories on my saved sites since yesterday."
+3. A [Telegram](/nodes/builtin/integration/telegram/) node sends `{{ $input.reply }}` to your phone.
+
+## Common issues
+
+- **The agent says it couldn't do part of the task.** An action needed approval and was skipped. Check **Activity**, then change the rule to allow that action in routines, or run the task in a chat instead.
+- **The wrong agent answered.** Check the id or @handle in **Agent**. An empty value falls back to Aria.
+- **No chat appears.** Turn on **Save the result as a chat**.
+
+## Related nodes
+
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an agent built inside the workflow, with its own model and tools.
+- [Chat Trigger](/nodes/builtin/trigger/chat/): start a workflow from a chat message.
+- [Schedule](/nodes/builtin/trigger/schedule/): run a routine at set times.

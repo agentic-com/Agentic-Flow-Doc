@@ -3,58 +3,111 @@ title: "Todoist"
 description: "Create and manage Todoist tasks from the current page, with natural-language due dates."
 sidebar:
   label: "Todoist"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/todoist
+  family: integration
 ---
 
-# Todoist
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Create and manage Todoist tasks from the current page — "task from this page", the canonical browser-extension action.
+Turn the page you are on into a Todoist task in one step, and create, update, complete or list tasks from a workflow.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Todoist connection"} href="/app/connections/todoist/" linkLabel={"Connect Todoist"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/selection-to-todoist.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Creates, updates, closes and lists Todoist tasks, and lists projects and labels. Task creation can attach the current page's URL, and due dates accept natural language like `tomorrow 9am`. Paired with the **Hotkey Trigger** it becomes a one-keystroke capture.
+The Todoist node works on three kinds of things (**Resource**):
 
-## Resources and operations
+- **Task**: create a task, update it, close it (mark it complete), or list your open tasks.
+- **Project**: list your projects, to find a **Project ID**.
+- **Label**: list your labels.
 
-| Resource | Operations |
-| --- | --- |
-| Task | Create, Update, Close, List |
-| Project | List |
-| Label | List |
+**Due (natural language)** takes dates the way you type them in Todoist, like `tomorrow 9am`, `next Monday` or `every Friday`. When you fill **Source URL** on **Task → Create**, a `Source:` line with the link is added at the end of the description, so the task always points back to its page.
+
+Without a **Project ID**, new tasks go to your Inbox, and **Task → List** returns open tasks from all projects.
+
+## When to use it
+
+- Save the page you are reading as a "read later" or "follow up" task, with a hotkey.
+- Create a task with a due date when a form, an email or a page change needs action.
+- Mark a task complete when a workflow has done the work.
+- List today's tasks and send them to an AI node or a chat.
+
+For team issue tracking, use [Linear](/nodes/builtin/integration/linear/) or [GitHub](/nodes/builtin/integration/github/). For Microsoft To Do, use [Microsoft 365](/nodes/builtin/integration/microsoft-graph/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Credential | Your Todoist personal API token (see below). |
-| Resource / Operation | What to act on and how. |
-| Content | The task text (supports Markdown, e.g. a `[link](url)`). |
-| Description | A longer description (Markdown). |
-| Source URL | The page URL to attach — appended to the description when present. |
-| Project ID | The project a new task belongs to, or a filter for **Task → List** (use **Project → List** to find IDs). |
-| Due (natural language) | A human due date like `tomorrow 9am` or `every Friday`. |
-| Priority | Priority 1 (urgent) → Priority 4 (normal). |
-| Labels | Label names to attach. |
-| Task ID | The task to update or close. |
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"A Todoist personal API token (Settings → Integrations → Developer). It grants full access to your Todoist account — keep it secret."}]} groups={[{"label":"Task","options":[{"label":"Create","rows":[{"name":"Content","type":"Text","required":true,"description":"The task text (supports Markdown, e.g. a [link](url))."},{"name":"Description","type":"Text","description":"A longer task description (Markdown supported)."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the description when present."},{"name":"Project ID","type":"Text","description":"The project the task belongs to (use Project → List to find its ID)."},{"name":"Due (natural language)","type":"Text","description":"A human due date like \"tomorrow 9am\" or \"every Friday\"."},{"name":"Priority","type":"Choice","description":"Task priority (p1 is highest). Options: Priority 1 (urgent), Priority 2, Priority 3, Priority 4 (normal)."},{"name":"Labels","type":"List","description":"Label names to attach to the task."}]},{"label":"Update","rows":[{"name":"Task ID","type":"Text","required":true,"description":"The Todoist task ID."},{"name":"Content","type":"Text","description":"The task text (supports Markdown, e.g. a [link](url))."},{"name":"Description","type":"Text","description":"A longer task description (Markdown supported)."},{"name":"Due (natural language)","type":"Text","description":"A human due date like \"tomorrow 9am\" or \"every Friday\"."},{"name":"Priority","type":"Choice","description":"Task priority (p1 is highest). Options: Priority 1 (urgent), Priority 2, Priority 3, Priority 4 (normal)."},{"name":"Labels","type":"List","description":"Label names to attach to the task."}]},{"label":"Close","rows":[{"name":"Task ID","type":"Text","required":true,"description":"The Todoist task ID."}]},{"label":"List","rows":[{"name":"Project ID","type":"Text","description":"Only list tasks in this project (optional)."}]}]},{"label":"Project","options":[{"label":"List","rows":[]}]},{"label":"Label","options":[{"label":"List","rows":[]}]}]} />
 
-**Page-anchored tasks:** put the page title in **Content** and the page URL in **Source URL** (e.g. from Get Page Metadata) — the URL is appended to the task description as a `Source: <url>` line.
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Todoist API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
+
+- **Content** is the task title. Markdown links work, for example `[Read: {{ $input.title }}]({{ $input.url }})`.
+- **Priority 1 (urgent)** is Todoist's red p1; **Priority 4 (normal)** is the default with no flag.
+- **Labels** take label names as you see them in Todoist, one per entry.
+- **Project ID** and **Task ID** are ids, not names. Run **Project → List** or **Task → List** and copy the `id`.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+- **Task → Create** and **Update** return the task, including its `id`, `content`, `description`, `due`, `priority`, `labels` and `url` (the link to open it in Todoist).
+- **Task → Close** returns an empty result when it worked.
+- **Task → List**, **Project → List** and **Label → List** return one item per task, project or label, each with its `id` and name.
 
 ## Dependencies and credentials
 
-- **Auth type:** Bearer Token — store a Todoist **personal API token** (Settings → Integrations → Developer). It grants full access to your account; keep it secret.
-- The token is stored in your credential vault and resolved at run time (never from a node parameter), and sent as `Authorization: Bearer <token>`.
-- Todoist also supports OAuth with PKCE (a public client). This node is structured so an OAuth token can be used through the same credential later, with no changes to the node.
+{/* AUTO:deps:start */}
+- **Credential** (connection, Bearer Token): required. See [Connect Todoist](/app/connections/todoist/).
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+Use your Todoist API token, saved as a Bearer Token credential. In Todoist, open **Settings → Integrations → Developer** and copy the **API token**. See [Create a credential](/app/connections/create/).
 
-This node is **extension-only**. Todoist's REST API is not confirmed to send permissive CORS headers, so the calls are made from the awflow browser extension.
+The token gives full access to your Todoist account. If it leaks, issue a new one on the same page and update the credential.
 
-## Troubleshooting
+## Example workflow
 
-- **`403 Forbidden` / `401 Unauthorized`** — the API token is missing, invalid, or expired; recreate it in Todoist's Developer settings.
-- **Task not created in the expected project** — pass a valid **Project ID** (run **Project → List** to get IDs); without one the task lands in the Inbox.
-- **A due date didn't parse** — Todoist interprets `Due (natural language)` in your account language; use a clearer phrase like `tomorrow 9am`.
+1. A [Hotkey](/nodes/builtin/trigger/hotkey/) trigger starts the workflow with a keyboard shortcut.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the page's `title` and `url`.
+3. Todoist, **Task → Create**, **Content** `Read: {{ $input.title }}`, **Source URL** `{{ $input.url }}`, **Due (natural language)** `tomorrow 9am`, **Labels** `reading`.
+4. [Browser Notification](/nodes/extension/browsernotification/) confirms the task was added.
+
+## Common issues
+
+- **"Todoist API Error: 401 Unauthorized" or "403 Forbidden".** The token is wrong or was replaced. Copy the current token from **Settings → Integrations → Developer** and update the credential.
+- **"Todoist API Error: 400 Bad Request…".** Usually a **Project ID** or **Task ID** that does not exist, or a due date Todoist cannot read. Check the id with a List operation, or try a simpler date like `tomorrow`.
+- **"Todoist API Error: 404 Not Found" on Update or Close.** The task does not exist or is already completed.
+- **The task went to the Inbox.** **Project ID** was empty. Copy the project's `id` from **Project → List**.
+- **The run is blocked in the web app.** Todoist runs through the browser extension. Install the extension and allow Todoist for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Turn highlighted text into a Todoist task"} href="/recipes/capture-to-my-apps/selection-to-todoist/" level={"beginner"} minutes={6} setup={"connection"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
-- [Get Page Metadata](/nodes/extension/getpagemetadata/)
-- [Linear](/nodes/builtin/integration/linear/)
+- [Hotkey](/nodes/builtin/trigger/hotkey/): capture the current page with a keyboard shortcut.
+- [Get Page Metadata](/nodes/extension/getpagemetadata/): the page's title and address for the task.
+- [Linear](/nodes/builtin/integration/linear/): issues for a team instead of personal tasks.
+- [Trello](/nodes/builtin/integration/trello/): cards on a board.

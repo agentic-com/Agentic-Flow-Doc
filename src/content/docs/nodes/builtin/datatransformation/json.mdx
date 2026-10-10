@@ -3,66 +3,82 @@ title: "JSON"
 description: "Parse, build, pick from and repair JSON"
 sidebar:
   label: "JSON"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/json
+  family: data
 ---
 
-# JSON
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Parse, build, pick from and repair JSON.
+Parse, build, pick from, merge and repair JSON.
 
 ## What it does
 
-Reads, writes and rescues JSON. It offers five operations: parse a string into real data, stringify data back into a string, pick a value out by dot path, deep-merge two objects, and repair malformed JSON while reporting what it had to fix.
+The JSON node has five operations:
+
+- **Parse** turns JSON text into data the next nodes can use. With **Repair If Needed** on (the default), it first fixes nearly-valid JSON.
+- **Stringify** turns data into JSON text, indented when **Pretty Print** is on.
+- **Pick by path** reads one value with a dot path, such as `product.offers.price`.
+- **Merge** deep-merges **Merge With** into the JSON. Objects are merged key by key; lists and plain values are replaced, and **Merge With** wins on conflicts.
+- **Repair** fixes JSON text without parsing it, and reports what it changed.
+
+Repair undoes a fixed set of common mistakes, in this order: a Markdown code fence around the JSON, text before or after it, `//` and `/* */` comments, single quotes, keys without quotes, trailing commas, and a cut-off end. It stops as soon as the text is valid. It never invents values: a cut-off end is closed, and a key whose value never arrived is dropped. Valid JSON is never changed.
 
 ## When to use it
 
-Use this node to turn JSON-LD scraped off a page into fields the next node can address, to rescue model output that is nearly valid without wrapping a Code node in a try/catch, or to hand a clean object to a downstream parser.
+- Read an AI model's answer that should be JSON but comes wrapped in a code fence or has a trailing comma.
+- Turn JSON-LD from [Get Structured Data](/nodes/extension/getstructureddata/) into fields you can address.
+- Build a JSON string for an API body or a file with **Stringify**.
+- To keep or drop whole fields of an item, [Edit Fields](/nodes/builtin/datatransformation/editfields/) or [Pick Field](/nodes/builtin/datatransformation/pickfield/) are simpler.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | What to do with the JSON: `Parse`, `Stringify`, `Pick by path`, `Merge` or `Repair`. Defaults to `Parse`. |
-| JSON | The JSON text or data to work on. Accepts an expression such as `{{ $json.raw }}`. |
-| Source Field | Field on the incoming item to read when the JSON field above is left empty, for example `body`. |
-| Path | Dot path read by `Pick by path`, for example `product.offers.price`. |
-| Merge With | The object `Merge` folds into the JSON. Its values win on conflict. |
-| Repair If Needed | For `Parse`: try to fix nearly-valid JSON before parsing it. Fixes code fences, surrounding prose, comments, single quotes, unquoted keys, trailing commas and cut-off tails. Valid JSON is never touched. Defaults to `on`. |
-| Pretty Print | For `Stringify`: indent the output. Defaults to `off`. |
-| Put Result In Field | Name of the field holding the answer. Defaults to `data`. For Parse and Merge, leaving the default lets the parsed object become the item itself when it is an object. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Parse","description":"What to do with the JSON. Options: Parse, Stringify, Pick by path, Merge, Repair."},{"name":"JSON","type":"Value","description":"The JSON text or data to work on."},{"name":"Source Field","type":"Text","description":"Field on the incoming item to read, when JSON above is left empty."},{"name":"Path","type":"Text","description":"Dot path to read, for example product.offers.price."},{"name":"Merge With","type":"Value","description":"The object merged into the JSON. Its values win on conflict."},{"name":"Repair If Needed","type":"Toggle","default":"On","description":"Try to fix nearly-valid JSON before parsing it."},{"name":"Pretty Print","type":"Toggle","default":"Off","description":"Indent the output of Stringify."},{"name":"Put Result In Field","type":"Text","default":"data","description":"Name of the field holding the answer."}]} />
+{/* AUTO:settings:end */}
+
+The node finds its input in this order: the **JSON** field (for example `{{ $input.output }}`), then the field named in **Source Field** (dots allowed), then the whole incoming item.
+
+**Repair If Needed** also applies to text given to Stringify, Pick by path and Merge, since that text is parsed first.
 
 ## Outputs
 
-- **Parse** turns text into data. A parsed object becomes the outgoing item itself, so its fields are addressable downstream without a wrapper; an array becomes one item per entry; anything else is placed in **Put Result In Field**. When repair was needed, the steps applied are attached as a `_repaired` field.
-- **Stringify** returns the JSON text in **Put Result In Field**, indented when Pretty Print is on.
-- **Pick by path** returns the value at **Path**, or fails if the path does not exist.
-- **Merge** deep-merges **Merge With** into the source (plain objects merge key by key; arrays and non-objects replace wholesale).
-- **Repair** returns the repaired `text`, a `repaired` flag, the list of `steps` applied, and a `valid` flag saying whether the result now parses.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
 
-## How repair works
-
-Repair applies up to seven passes in order — strip a markdown code fence, trim surrounding prose, remove `//` and `/* */` comments, convert single quotes to double, quote unquoted keys, drop trailing commas, and close a truncated tail. It short-circuits the moment the text parses: valid JSON is returned byte-identical with no passes applied, and each pass is kept only if the text still has a chance of parsing.
-
-Repair never guesses values. A truncated payload is *closed* — open brackets are shut and a half-written string is ended — but a key whose value never arrived is dropped, not filled with `null`, because downstream could not tell an invented `null` from a real one. Non-JSON prose with no bracketed payload stays unparseable rather than being coerced. Strings are respected throughout: a brace, comma or comment marker inside a quoted string is treated as data, not syntax.
+- **Parse**: a parsed object becomes the item itself, so you can use `{{ $input.title }}` directly. A list becomes one item per entry. Any other value goes in **Put Result In Field**. When repair was needed, a `_repaired` field lists the fixes.
+- **Stringify**: the JSON text, in **Put Result In Field**.
+- **Pick by path** and **Merge**: an object result becomes the item; anything else goes in **Put Result In Field**.
+- **Repair**: the fixed text in **Put Result In Field**, plus `repaired` (whether anything changed), `steps` (the fixes applied, such as `codeFence` or `trailingCommas`) and `valid` (whether the text now parses).
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Place JSON after a node that returns model output, set **Operation** to `Parse` and leave **Repair If Needed** on. A response wrapped in a ```json code fence with a trailing comma parses cleanly, and a `_repaired` field records which fixes were needed. Follow with `Pick by path` set to `product.offers.price` to read a single value out.
+1. A [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) is asked to answer with a JSON object holding `title` and `tags`.
+2. **JSON** with **Operation** *Parse*, **JSON** set to the model's answer, and **Repair If Needed** on. A reply wrapped in a code fence still parses.
+3. [Notion](/nodes/builtin/integration/notion/) creates a page titled `{{ $input.title }}`.
 
-## Troubleshooting
+## Common issues
 
-- With **Repair If Needed** off, invalid JSON fails and the message suggests turning repair on.
-- If Parse still fails after repair, the input is not nearly-valid JSON — repair only undoes the small, fixed set of malformations above and refuses to invent data.
-- `Pick by path` fails when the path does not exist. Check the dot path against the actual structure.
-- `Merge` fails if **Merge With** is empty. `Stringify` fails on a circular reference or a value with no JSON form.
-- `Repair` reports rather than throws: check the `valid` flag to tell rescued JSON from JSON that is still broken.
+- **"This is not valid JSON: ... Turn on "Repair If Needed" to try to fix it."** The text is broken and repair is off. Turn **Repair If Needed** on.
+- **"This could not be read as JSON even after repair: ..."** The text is more than nearly valid, for example plain prose with no braces. Ask the model for JSON only, or check the field you read.
+- **"Path "..." does not exist in this JSON."** Compare **Path** with the real structure. List entries use their number, for example `items.0.name`.
+- **"Merge needs something to merge in. Fill in "Merge With"."** Fill in **Merge With**.
+- **"Repair works on JSON text. This input is already parsed data."** The input is already data, so there is nothing to repair. Use *Parse* or *Pick by path* instead.
 
 ## Related nodes
 
-- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Code](/nodes/builtin/core/code/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): set, rename or remove fields.
+- [Pick Field](/nodes/builtin/datatransformation/pickfield/): keep one field of an item.
+- [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/): ask an AI node for JSON in a fixed shape.
+- [Code](/nodes/builtin/core/code/): for transformations no node covers.

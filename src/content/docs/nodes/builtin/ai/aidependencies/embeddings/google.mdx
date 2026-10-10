@@ -3,49 +3,80 @@ title: "Google Embeddings"
 description: "Leverage Google (Gemini) to create embeddings."
 sidebar:
   label: "Google Embeddings"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/embeddings/google
+  family: ai
 ---
 
-# Google Embeddings
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Leverage Google (Gemini) to create embeddings.
+Turn text into vectors with Google's Gemini embedding models, so a knowledge base can find passages by meaning.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Google connection"} href="/app/connections/google/" linkLabel={"Connect Google"}>
+  Pick a saved connection in the **Authentication** field, or create one from there.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Converts text into vector embeddings using a Google (Gemini) embeddings model. Google exposes an OpenAI-compatible Gemini API, so this node runs the OpenAI embeddings client against Google's base URL.
+Google Embeddings plugs into the **Embeddings** slot of a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node. It does not run on its own and has no output. When the knowledge base is filled or searched, the text is sent to the Gemini API with your key and comes back as vectors (lists of numbers that capture meaning).
+
+A knowledge base remembers the embedding model it was built with and always uses it. So this node decides the model when a **new, empty** knowledge base is first filled. After that, connect the same node to search it.
+
+Your passages and questions are sent to Google. For text that must stay on your device, use [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/).
 
 ## When to use it
 
-Connect this to indexer or RAG nodes when you need to create embeddings for semantic search and retrieval using Google (Gemini).
+- You already have a Google AI Studio key, for example for [Chat Google](/nodes/builtin/ai/aidependencies/llm/google/).
+- You want cloud embeddings with the same Google account as your chat model.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | The Google embeddings model to use, e.g. `text-embedding-004`. Placeholder: `text-embedding-004`. |
-| Authentication | Credential field. Use your Google AI (Gemini) API key as a Bearer token. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Model","type":"Text","required":true,"description":"The Google embeddings model to use, e.g. text-embedding-004."},{"name":"Authentication","type":"Credential","required":true,"description":"Use your Google AI (Gemini) API key as a Bearer token."}]} />
+{/* AUTO:settings:end */}
+
+Type the **Model** id as Google names it, for example `text-embedding-004`. Don't change it on a knowledge base that already has content.
 
 ## Outputs
 
-Returns an embeddings dependency for vector stores and retrieval workflows.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Embeddings** slot of [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+{/* AUTO:outputs:end */}
+
+The vectors go to the knowledge base, not to the next node.
 
 ## Dependencies and credentials
 
-- Requires an Authentication credential (Google AI / Gemini API key), sent as a Bearer token.
-- The node throws an error if Model is empty.
+{/* AUTO:deps:start */}
+- **Authentication** (connection): required. See [Connect Google](/app/connections/google/).
+{/* AUTO:deps:end */}
+
+In **Authentication**, save your Google AI (Gemini) API key. Create it in Google AI Studio, at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey). See [Create a credential](/app/connections/create/).
 
 ## Example workflow
 
-Connect Google Embeddings to an AI agent or dependency input that accepts this dependency type, set the Model to a Google embeddings model such as `text-embedding-004`, attach your Google AI (Gemini) API key credential, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on the page.
+2. [Get All Text](/nodes/extension/getalltext/) with **Output field name** `pageText`.
+3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.pageText }}`, a [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) in its **Text Splitter** slot, and a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) pointing to a new knowledge base in its **Knowledge** slot.
+4. Google Embeddings in the Local Knowledge's **Embeddings** slot, **Model** `text-embedding-004`.
 
-## Troubleshooting
+## Common issues
 
-- Check that the Model field is set — the node throws an error if it is empty.
-- Verify the Google AI (Gemini) API key credential is valid.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Model parameter is required and cannot be empty".** Fill in **Model**.
+- **"… was built with … embeddings. Connect that embeddings node to use it."** The knowledge base was built with this Google model. Connect Google Embeddings with the same **Model** to its Local Knowledge.
+- **A "Model mismatch" warning in the run log.** The knowledge base was built with another model, so this node was ignored. Disconnect it, or re-embed the knowledge base from its settings.
+- **An "API key not valid" or 401 error.** Use a Google AI Studio key (a Vertex AI key does not work here), and check it was not deleted.
 
 ## Related nodes
 
-- [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/)
-- [Cohere Embeddings](/nodes/builtin/ai/aidependencies/embeddings/cohere/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
-- [Embeddings & Vectors](/advanced-ai/concepts/embeddings-vectors/)
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): the knowledge base it plugs into.
+- [Chat Google](/nodes/builtin/ai/aidependencies/llm/google/): Gemini chat models.
+- [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/): free and on your device.

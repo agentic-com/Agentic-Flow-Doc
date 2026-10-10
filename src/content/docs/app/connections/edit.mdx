@@ -1,0 +1,55 @@
+---
+title: Edit a credential
+description: "Rotate a token, rename a credential, sign in again, or move it between this browser and your account."
+kind: guide
+section: app
+sidebar:
+  order: 2
+---
+
+import { Steps, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import credentialsEditLight from '@assets/screenshots/credentials-edit.light.webp';
+import credentialsEditDark from '@assets/screenshots/credentials-edit.dark.webp';
+
+Edit a credential when a token expires or is replaced, a password changes, or you want a clearer name. Every node and workflow that uses it picks up the change: you don't re-select it anywhere.
+
+## Edit a credential
+
+<Steps>
+
+1. Open **Credentials** in the sidebar.
+2. On the credential's row, open the **⋯** menu and click **Open**. The **Edit Credential** panel opens.
+3. Change what you need: the name, the description, or the secret fields (token, username and password, Client ID).
+4. For a Google or Microsoft 365 credential, click **Check connection** again. This signs in fresh, so newly added permissions are granted.
+5. Click **Update Credential**.
+
+</Steps>
+
+<Screenshot
+  src={credentialsEditLight}
+  srcDark={credentialsEditDark}
+  alt="The Edit Credential dialog for a GitHub credential named GitHub (team): the Integration App / Service set to GitHub, the Name and Description fields, the Bearer Token field (a placeholder value), and Cancel and Update Credential buttons."
+  hotspots={[{ x: 50, y: 45.3, label: 'Name and description' }, { x: 50, y: 66.7, label: 'Secret fields: here, the token' }, { x: 63.1, y: 75.7, label: 'Update Credential' }]}
+/>
+
+## Move it between this browser and your account
+
+In the same **⋯** menu, **Move to cloud** stores the credential encrypted on your AWFlow account, so you can use it on your other devices. **Move to local** brings it back into this browser only. See [Local or cloud](/app/account/local-vs-cloud/).
+
+## Delete a credential
+
+Choose **Delete** in the **⋯** menu and confirm. Workflows that used it stop at that step until you pick another credential.
+
+## If it still fails after editing
+
+- Run one step that uses it with **Test step**: the error names the problem, for example a missing scope.
+- Check the service's own dashboard: the token may be revoked, or the account over its rate limit.
+- Open the service's [connection page](/app/connections/) for the list of common errors.
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Create a credential" href="/app/connections/create/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+</CardGrid>

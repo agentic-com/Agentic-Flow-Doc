@@ -3,52 +3,96 @@ title: "Navigation"
 description: "Run the flow when a tab is created, navigated to a matching URL, or closed."
 sidebar:
   label: "Navigation"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/navigation
+  family: trigger
 ---
 
-# Navigation
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Start a workflow on browser navigation — when a tab is created, its URL changes to match a pattern, or it is closed.
+Run a workflow when a browser tab is opened, moves to a matching address, or is closed.
 
 ## What it does
 
-[Page Load](/nodes/builtin/trigger/pageload/) only covers one case: a full page finishing loading. Navigation broadens that to tab **lifecycle** events (created, updated, removed) and to **URL-pattern** matching, so a workflow can react to a user moving around the browser, not just to a single load.
+The trigger listens to three tab events. Pick any of them in **Events**:
+
+- **Created**: a new tab opens.
+- **Navigated** (the default): a tab's address changes. It fires as soon as the browser reports the new address, before the page has finished loading.
+- **Closed**: a tab is closed.
+
+For **Created** and **Navigated**, the tab's address must also match one of the **URL Patterns**. **Closed** ignores the patterns: a closed tab has no address to check, so every closed tab fires it.
+
+Each matching event runs the workflow once, from this trigger.
 
 ## When to use it
 
-- Run automation whenever the user lands on any URL under a pattern such as `https://github.com/*/pull/*`.
-- React when a tab is opened or closed, independent of what page it shows.
+- Run something whenever you go to a site, without waiting for the page to load.
+- Count or log the tabs you open and close.
+- Clean up when a tab closes, for example clear a value you stored for it.
+
+If you need the page content, use [Page Load](/nodes/builtin/trigger/pageload/) instead: it waits until the page has finished loading.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL Patterns | One or more match patterns (glob-style, e.g. `https://*.example.com/*`, or `<all_urls>`). Applied to the tab's URL for **created** and **updated** events. |
-| Events | Which tab events fire the trigger: **Created**, **Navigated** (URL changed), and/or **Closed**. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"URL Patterns","type":"Tags","default":"[\"<all_urls>\"]"},{"name":"Events","type":"Multiple choice","default":"Navigated","description":"Which tab events fire this trigger. Options: Created, Navigated, Closed."}]} />
+{/* AUTO:settings:end */}
+
+Patterns use the form `scheme://host/path` with `*` as a wildcard, for example `https://mail.google.com/*` or `https://*.example.com/*`. `<all_urls>` matches every web page. See [Page Load](/nodes/builtin/trigger/pageload/#inputs-and-settings) for more examples.
+
+A new tab often opens before it has an address, so **Created** with a narrow pattern may not fire. Use **Navigated** to catch the moment the tab reaches the site.
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes:
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-- `triggerType` — `"navigation"`.
-- `event` — `"created"`, `"updated"`, or `"removed"`.
-- `url`, `title`, `tabId`, `windowId` — details of the tab (a closed tab reports only its id).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"navigation\""},{"name":"triggeredAt","type":"Text"},{"name":"event","type":"Text"},{"name":"url","type":"Text"},{"name":"title","type":"Text"},{"name":"tabId","type":"Number"},{"name":"windowId","type":"Number"}]} />
+
+```json title="Shape of an output item"
+{
+  "triggerType": "navigation",
+  "triggeredAt": "…",
+  "event": "…",
+  "url": "…",
+  "title": "…",
+  "tabId": 0,
+  "windowId": 0
+}
+```
+{/* AUTO:outputs:end */}
+
+`event` tells you what happened: `created`, `updated` (shown as **Navigated** in the settings) or `removed` (**Closed**). `url`, `title` and `windowId` describe the tab; for a closed tab only `tabId` is set.
 
 ## Dependencies and credentials
 
-- No credential is required.
-- Uses the already-held `tabs` permission — no extra permission is needed.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Create a workflow with Navigation as the first node (Events: **Navigated**, URL Patterns: `https://mail.google.com/*`), then connect the actions that should run each time the user opens a mail URL.
+Count how many times a day you open your inbox:
 
-## Troubleshooting
+1. Add **Navigation** with **Events** set to **Navigated** and **URL Patterns** `https://mail.google.com/*`.
+2. Add [Data Store](/nodes/builtin/core/datastore/) with **Operation** **Increment**, **Key** `inbox-visits` and **Increment By** `1`.
+3. Activate the workflow and open your inbox.
 
-- A **Closed** event has no reliable URL, so it matches on the event alone rather than on a URL pattern.
-- Single-page apps that change the URL with the History API (`pushState`) without a full navigation are **not** yet detected — that needs the `webNavigation` permission and is a planned follow-up. Navigation fires on the URL changes the browser reports as tab updates.
+## Common issues
+
+- **It fires several times for one visit.** A site that redirects, or changes its address while loading, reports several address changes. Narrow the patterns to the final address, or use [Page Load](/nodes/builtin/trigger/pageload/), which fires once per completed load.
+- **It does not fire when a web app changes view.** Some web apps change the visible page without the browser reporting a new address to extensions. Use [Element Change](/nodes/builtin/trigger/elementchange/) to watch the page content instead.
+- **Closed fires for every tab.** That is expected: a closed tab has no address, so patterns cannot filter it. Use an [IF](/nodes/builtin/flow/if/) node on `tabId` if you only care about certain tabs.
+- **Nothing happens.** Check that the workflow is activated and that at least one event is selected. This node runs in the browser extension; install it and activate the workflow there.
 
 ## Related nodes
 
-- [Page Load](/nodes/builtin/trigger/pageload/)
-- [Element Change](/nodes/builtin/trigger/elementchange/)
-- [Tab Control](/nodes/extension/tabcontrol/)
+- [Page Load](/nodes/builtin/trigger/pageload/): fire once a matching page has finished loading.
+- [Element Change](/nodes/builtin/trigger/elementchange/): fire when part of a page changes.
+- [Tab Control](/nodes/extension/tabcontrol/): open, focus or close tabs.

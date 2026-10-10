@@ -3,45 +3,96 @@ title: "Page Load"
 description: "Run the flow when a matching browser tab finishes loading."
 sidebar:
   label: "Page Load"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/pageload
+  family: trigger
 ---
 
-# Page Load
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Run the flow when a matching browser tab finishes loading.
+Run a workflow every time a page whose address matches your patterns finishes loading.
 
 ## What it does
 
-Triggers workflow execution when a browser tab finishes loading a page matching specified URL patterns.
+Each time any tab finishes loading a page, the extension compares the page address with the **URL Patterns** of every activated workflow that has a Page Load trigger. When one pattern matches, that workflow runs from this trigger, with details of the tab.
+
+It fires once per completed load: opening a page, following a link to a new page, or reloading. Changes inside a page that do not reload it (many modern web apps work this way) do not fire it.
 
 ## When to use it
 
-Use this trigger to automate actions on specific websites, such as scraping data or modifying page content after load.
+- Capture data from a site every time you open it, such as an order page or a dashboard.
+- Change or check a page right after it opens, for example read its title or take a screenshot.
+- Log the pages you visit on a given site.
+
+To react when a tab is opened, closed or its address changes, use [Navigation](/nodes/builtin/trigger/navigation/). To react to a change inside an open page, use [Element Change](/nodes/builtin/trigger/elementchange/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL Patterns | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"URL Patterns","type":"Tags","default":"[\"<all_urls>\"]"}]} />
+{/* AUTO:settings:end */}
+
+Each pattern has three parts: `scheme://host/path`. Use `*` as a wildcard.
+
+- `https://*.example.com/*` matches `example.com` and every subdomain, on any path.
+- `https://github.com/*/pull/*` matches pull request pages on GitHub.
+- `*://news.ycombinator.com/*` matches the site over `http` or `https`.
+- `<all_urls>` (the default) matches every web page.
+
+The path part also covers the query string and `#` part of the address. Add several patterns to watch several sites. Keep them narrow: with the default, the workflow runs on every page you load.
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes when context is available.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"pageLoad\""},{"name":"triggeredAt","type":"Text"},{"name":"url","type":"Text"},{"name":"title","type":"Text"},{"name":"tabId","type":"Number"},{"name":"windowId","type":"Number"},{"name":"status","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "triggerType": "pageLoad",
+  "triggeredAt": "…",
+  "url": "…",
+  "title": "…",
+  "tabId": 0,
+  "windowId": 0,
+  "status": "…"
+}
+```
+{/* AUTO:outputs:end */}
+
+`url` and `title` describe the page that loaded, and `status` is `complete`. Pass `tabId` to nodes that act on a tab, such as [Tab Control](/nodes/extension/tabcontrol/), so they work on the page that fired the trigger. When you test the trigger yourself in the designer, these fields are empty.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Create a workflow with Page Load as the first node, then connect it to the action nodes that should run after the trigger fires.
+Keep a list of the GitHub pull requests you open:
 
-## Troubleshooting
+1. Add **Page Load** with **URL Patterns** `https://github.com/*/pull/*`.
+2. Add [Data Store](/nodes/builtin/core/datastore/) with **Operation** **Set**, **Key** `last-pr` and **Value** `{{ $input.url }}`.
+3. Add [Browser Notification](/nodes/extension/browsernotification/) with **Title** `PR opened` and **Message** `{{ $('Page Load').title }}`.
+4. Activate the workflow and open a pull request.
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+## Common issues
+
+- **Nothing happens when the page loads.** Check that the workflow is activated and that a pattern matches the full address, including `https://` and a path part (`/*`). `https://example.com` without a path never matches; use `https://example.com/*`.
+- **The workflow runs on every page.** **URL Patterns** is still `<all_urls>`. Replace it with the sites you want.
+- **It does not fire when a web app changes view.** The page did not reload, so no load happened. Use [Navigation](/nodes/builtin/trigger/navigation/) for address changes the browser reports, or [Element Change](/nodes/builtin/trigger/elementchange/) to watch the content.
+- **It does not run in the web app.** This node runs in the browser extension; install it and activate the workflow there.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Navigation](/nodes/builtin/trigger/navigation/): fire when a tab is opened, changes address or is closed.
+- [Element Change](/nodes/builtin/trigger/elementchange/): fire when part of an open page changes.
+- [Tab Control](/nodes/extension/tabcontrol/): act on the tab that loaded.

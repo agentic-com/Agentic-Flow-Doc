@@ -1,0 +1,185 @@
+{
+  "name": "Explain Like I'm 5",
+  "description": "Highlight anything confusing, right-click, and get a dead-simple explanation — generated on-device, no account.",
+  "tags": [
+    "rightclick",
+    "tier-1",
+    "ai",
+    "on-device",
+    "extension",
+    "no-setup"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "🧸 Explain anything, simply.\n\nHighlight some text on any page, right-click, and choose this workflow — it re-explains your selection as if you were five and shows it right there. The AI runs locally in your browser; nothing leaves your device. Pick a model the first time."
+      },
+      "width": 340,
+      "height": 190
+    },
+    {
+      "id": "trigger-context-menu",
+      "type": "trigger",
+      "position": {
+        "x": 100,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:contextMenu"
+        },
+        "label": "Right-click a selection",
+        "inputs": {
+          "contexts": [
+            "selection"
+          ]
+        },
+        "parameters": {
+          "notes": "Adds this workflow to the right-click menu whenever you have text selected."
+        }
+      }
+    },
+    {
+      "id": "get-selection",
+      "type": "basic",
+      "position": {
+        "x": 400,
+        "y": 450
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:getSelectedTextNode"
+        },
+        "label": "Get selected text",
+        "inputs": {
+          "outputFieldName": "selection",
+          "options": {
+            "includeInputFields": true
+          }
+        },
+        "parameters": {
+          "notes": "Reads the full text you highlighted on the page. The context-menu event only carries a short, truncated copy, so this node gets the complete selection reliably."
+        }
+      }
+    },
+    {
+      "id": "explain",
+      "type": "agent",
+      "position": {
+        "x": 440,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:agent:basicLLMChain"
+        },
+        "label": "Explain simply",
+        "inputs": {
+          "prompt": "Explain this simply, like I'm five:\n\n{{ $input.selection }}"
+        },
+        "parameters": {
+          "notes": "Rewrites your selection as a plain, simple explanation."
+        }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": {
+        "x": 440,
+        "y": 500
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:dependency:webLLM"
+        },
+        "label": "Local AI model",
+        "inputs": {
+          "model": "",
+          "options": {
+            "temperature": 0.5
+          }
+        },
+        "parameters": {
+          "notes": "Runs the AI model locally in your browser. Pick a model the first time — nothing is sent to a server."
+        }
+      }
+    },
+    {
+      "id": "show-explanation",
+      "type": "basic",
+      "position": {
+        "x": 780,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:displayMarkdownNode"
+        },
+        "label": "Show the explanation",
+        "inputs": {
+          "title": "Explanation",
+          "content": "{{ $input.response }}"
+        },
+        "parameters": {
+          "notes": "Displays the simple explanation right where you're working."
+        }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": {
+        "x": 440,
+        "y": 660
+      },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-ctx-get-selection",
+      "source": "trigger-context-menu",
+      "target": "get-selection",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-trigger-explain",
+      "source": "get-selection",
+      "target": "explain",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-explain-model",
+      "source": "explain",
+      "target": "local-model",
+      "type": "flowEdge",
+      "sourceHandle": "dependency-0"
+    },
+    {
+      "id": "e-explain-show",
+      "source": "explain",
+      "target": "show-explanation",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": [
+    {
+      "nodeId": "local-model",
+      "field": "model"
+    }
+  ]
+}

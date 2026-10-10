@@ -3,45 +3,77 @@ title: "Pick Field"
 description: "Pick a specific field from the input data"
 sidebar:
   label: "Pick Field"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/pickfield
+  family: data
 ---
 
-# Pick Field
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Pick a specific field from the input data
+Keep one field from the incoming data and drop everything else.
 
 ## What it does
 
-Extracts a single specified field from input data, discarding all other fields.
+Pick Field follows a dot path such as `user.name` into the incoming data and outputs only the value it finds there. What comes out depends on that value:
+
+- **An object** is passed on as it is, so its fields become the new item.
+- **A list** becomes one item per entry. Entries that are objects are passed on as they are; plain values (text, numbers) are wrapped as `{ "<name>": value }`.
+- **A single plain value** is wrapped the same way, as `{ "<name>": value }`.
+
+The `<name>` is **Output field name** if you set it, otherwise the last part of the path (`name` for `user.name`).
 
 ## When to use it
 
-Use this node to simplify data by keeping only the field you need for downstream processing.
+- Pull the useful list out of an API response, for example `data.results`, so the next nodes work on the results directly.
+- Reduce a big object to the one value you need before a message or a comparison.
+- Turn a list of plain values (such as `tags`) into separate items you can loop over.
+- To change or remove several fields at once, use [Edit Fields](/nodes/builtin/datatransformation/editfields/) instead. To split a list while keeping the other fields, use [Split Out](/nodes/builtin/datatransformation/splitout/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Output field name | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"FieldPath","type":"Text","required":true,"description":"The path to the field to pick from the input object (without the node's name or id)."},{"name":"Output field name","type":"Text","description":"The name of the output field to be used in case the target data is an array of non objects (like strings, numbers, etc.)."}]} />
+{/* AUTO:settings:end */}
+
+Write **FieldPath** as plain field names joined by dots, starting from the incoming data: `user.name`, not `$input.user.name` or the node's name. If the incoming data is a list, start with the position of the item, counting from 0: `0.title` reads the title of the first item.
 
 ## Outputs
 
-Returns transformed data for downstream nodes.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+For example, with the input `{ "user": { "name": "Ada", "tags": ["vip", "beta"] } }`:
+
+- `user` outputs `{ "name": "Ada", "tags": ["vip", "beta"] }`.
+- `user.name` outputs `{ "name": "Ada" }`.
+- `user.tags` with **Output field name** `tag` outputs two items: `{ "tag": "vip" }` and `{ "tag": "beta" }`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect data into Pick Field, configure the settings above, and use the output in the next workflow step.
+1. An [Http Request](/nodes/builtin/core/http-request/) node calls an API that answers `{ "data": { "results": [ ... ] } }`.
+2. Pick Field with **FieldPath** `data.results` outputs one item per result.
+3. [Limit](/nodes/builtin/datatransformation/limit/) with **Max Items** `5` keeps the first five.
+4. A [Slack](/nodes/builtin/integration/slack/) node posts each result's `title` with `{{ $input.title }}`.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"Field "…" does not exist in the input object".** One part of the path is missing or misspelled. The message shows the data the node received: compare the names, including upper and lower case. If the data is a list, start the path with an item position such as `0.`.
+- **"No source node is connected to this node."** Pick Field has nothing to read. Connect the node that produces the data to its input.
+- **The output field has an unexpected name.** Plain values are named after the last part of the path. Set **Output field name** to choose the name.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): add, change or remove several fields.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): turn a list field into separate items.
+- [Rename Keys](/nodes/builtin/datatransformation/renamekeys/): change field names without dropping data.

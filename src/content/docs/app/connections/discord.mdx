@@ -1,0 +1,100 @@
+---
+title: "Connect Discord"
+description: "Post to a channel with a webhook URL, or read channels and messages with a bot token."
+kind: connection
+section: app
+sidebar:
+  label: "Discord"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 4 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
+
+The secret depends on the **Resource** you use. Create one credential for each and pick the right one on the node.
+
+## Before you start
+
+- **Manage Webhooks** permission on the channel (webhook), or **Manage Server** to add a bot.
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Discord](/nodes/builtin/integration/discord/)
+
+## Pick a method
+
+| Method | Use it when |
+| --- | --- |
+| **Webhook URL** <Badge variant="new" text="Recommended" /> | **Webhook › Send**: post messages and embeds to one channel. Nothing to install. |
+| **Bot token** | **Channel** and **Message** operations: get or list channels, read messages, react. |
+
+## Set it up
+
+<Tabs syncKey="connect-discord">
+<TabItem label="Webhook URL (recommended)">
+
+<Steps>
+
+1. **Create the webhook.** In Discord, open the channel's **Edit Channel › Integrations › Webhooks**, click **New Webhook** and **Copy Webhook URL**.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Discord** and click **Continue**. Name it, for example *Discord – #alerts webhook*: **Auth Type** is already set to **Bearer Token**. Then paste the full webhook URL into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Webhook › Send** with the content *Hello from AWFlow*: the message appears in the channel.
+
+</Callout>
+
+</TabItem>
+<TabItem label="Bot token">
+
+<Steps>
+
+1. **Create a bot.** In the [Discord Developer Portal](https://discord.com/developers/applications), click **New Application**, open **Bot** and click **Reset Token**. Copy the token.
+2. **Allow message text** if you read messages: on the **Bot** page, turn on **Message Content Intent**.
+3. **Invite the bot.** In **OAuth2 › URL Generator**, tick `bot`, then **View Channels**, **Read Message History** and **Add Reactions**. Open the generated URL and add the bot to your server.
+4. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Discord** and click **Continue**. Name it, for example *Discord – reader bot*: **Auth Type** is already set to **Bearer Token**. Then paste the bot token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Channel › List** with your server's ID: its channels come back.
+
+</Callout>
+
+</TabItem>
+</Tabs>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `discord.com`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **"Unknown Webhook".** The webhook URL is wrong or the webhook was deleted. Create a new one and update the credential.
+- **"401: Unauthorized" on Channel or Message.** The credential holds a webhook URL, or the bot token was reset. Use a bot token credential.
+- **"Missing Access".** The bot isn't in that server, or its role can't see the channel.
+- **Messages come back with empty text.** Turn on **Message Content Intent** for the bot.
+- **The run is blocked in the web app.** Discord runs through the browser extension. Install the extension and allow Discord for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Discord node" href="/nodes/builtin/integration/discord/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

@@ -1,0 +1,54 @@
+---
+title: "Categories"
+description: "Create, edit and delete Marketplace workflow categories and choose which workflows belong to them"
+kind: guide
+section: app
+sidebar:
+  label: "Categories"
+---
+
+import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+
+<Badge text="Admin" variant="caution" />
+
+**Categories** (Admin panel › **Categories**) controls the workflow categories people browse on the Marketplace.
+
+The list shows each category's icon, label and description, its **Slug**, the number of **Workflows**, its **Order**, **Tags** and **Color**. Search by label or filter by tag.
+
+## Create a category
+
+<Steps>
+
+1. Click **New category**.
+
+2. Pick an **Icon** (an emoji), type a **Label**, and optionally a **Description**, **Color**, **Sort order** and comma-separated **Tags**.
+
+3. The slug is filled in from the label. Click **Edit** next to it if you want a different one. You can't change it later.
+
+4. Click **Create category** (or press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>Enter</kbd>).
+
+</Steps>
+
+The new category's page opens. If the slug is already taken, you are told so.
+
+## Edit a category
+
+Click a category, or use **⋮ › Edit**. The **Details** tab lets you change everything except the slug. Click **Save changes**, or **Reset** to undo your edits.
+
+## Choose its workflows
+
+Open the **Workflows** tab (or **⋮ › Manage workflows**):
+
+- **Add workflows** opens a search of published workflows. Tick the ones you want and click **Add workflows**.
+- The **X** on a row removes that workflow from the category straight away.
+
+## Delete a category
+
+Deleting removes the category from the Marketplace and unlinks its workflows. The workflows themselves are not deleted.
+
+- From the list, **⋮ › Delete** asks you to confirm.
+- From the category page, **Danger zone › Delete category** asks you to type the slug first.
+
+<Aside type="caution">
+Deleting can't be undone. Workflows that were only in this category won't appear under any category until you add them elsewhere.
+</Aside>

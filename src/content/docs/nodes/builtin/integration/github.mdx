@@ -3,70 +3,93 @@ title: "GitHub"
 description: "Integrate with GitHub to work with issues, pull requests, repositories, and releases."
 sidebar:
   label: "GitHub"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/integration/github
+  family: integration
 ---
 
-# GitHub
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Integrate with GitHub to work with issues, pull requests, repositories, and releases — anchored to the page you are looking at.
+Open, update and comment on GitHub issues, read and review pull requests, and look up repositories and releases.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a GitHub connection"} href="/app/connections/github/" linkLabel={"Connect GitHub"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Calls the GitHub REST API directly to create and manage issues, comment on and review pull requests, read repositories, and fetch releases. Because the request is made from the browser, it can act on the exact repository, issue, or PR you are currently viewing.
+The GitHub node works on four kinds of things (**Resource**):
+
+- **Issue**: create, get, update, comment on, list or close issues.
+- **Pull request**: get or list pull requests, comment on one, submit a review (approve, request changes, comment), or list the files it changes.
+- **Repository**: get one repository, list your own repositories, or search all public ones.
+- **Release**: get the latest release, or list releases.
+
+Every operation that targets a repository takes **Owner** and **Repository** as two fields. List operations return 30 results by default (**Limit**, up to 100).
 
 ## When to use it
 
-Use this node to open an issue from a page you are reading, comment on the PR you are reviewing, file a bug from a stack trace you just selected, or pull the latest release of a project into a workflow.
-
-## Resources and operations
-
-| Resource | Operations |
-| --- | --- |
-| Issue | Create, Get, Update, Comment, List, Close |
-| Pull request | Get, List, Comment, Review, List files |
-| Repository | Get, List, Search |
-| Release | Get latest, List |
+- File an issue from a page or a stack trace you just selected.
+- Post a comment on a pull request from a review checklist.
+- Check a project's latest release every morning and get notified when it changes.
+- List open issues with a given label and summarize them with an AI node.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Credential | The GitHub credential to authenticate with (see below). |
-| Resource | Which GitHub resource to act on. |
-| Operation | The operation to perform on the selected resource. |
-| Owner | The account owner of the repository (user or organization), e.g. `octocat`. |
-| Repository | The repository name without the owner, e.g. `hello-world`. |
-| Issue Number / Pull Request Number | The number identifying the issue or pull request. |
-| Title / Body | Title and Markdown body for creating or updating an issue. |
-| Labels / Assignees | Labels and GitHub logins to attach to an issue. |
-| Comment | The comment text for an issue or pull request. |
-| State | Open/Closed (updates) or Open/Closed/All (list filters). |
-| Review Event / Review Body | Approve, Request changes, or Comment — with optional review text. |
-| Search Query | The repository search query, e.g. `language:typescript stars:>100`. |
-| Limit | Number of results to return (1–100). |
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Credential to use to make the request."}]} groups={[{"label":"Issue","options":[{"label":"Create","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Title","type":"Text","required":true,"description":"The title of the issue."},{"name":"Body","type":"Text","description":"The contents (Markdown supported)."},{"name":"Labels","type":"List","description":"Labels to associate with the issue."},{"name":"Assignees","type":"List","description":"GitHub logins to assign to the issue."}]},{"label":"Get","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Issue Number","type":"Number","required":true,"description":"The number that identifies the issue."}]},{"label":"Update","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Issue Number","type":"Number","required":true,"description":"The number that identifies the issue."},{"name":"Title","type":"Text","description":"The title of the issue."},{"name":"Body","type":"Text","description":"The contents (Markdown supported)."},{"name":"State","type":"Choice","description":"The open or closed state to set. Options: Open, Closed."},{"name":"Labels","type":"List","description":"Labels to associate with the issue."},{"name":"Assignees","type":"List","description":"GitHub logins to assign to the issue."}]},{"label":"Comment","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Issue Number","type":"Number","required":true,"description":"The number that identifies the issue."},{"name":"Comment","type":"Text","required":true,"description":"The comment text (Markdown supported)."}]},{"label":"List","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"State","type":"Choice","description":"Filter by state. Options: Open, Closed, All."},{"name":"Labels","type":"Text","description":"Comma-separated list of label names to filter by."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]},{"label":"Close","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Issue Number","type":"Number","required":true,"description":"The number that identifies the issue."}]}]},{"label":"Pull request","options":[{"label":"Get","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Pull Request Number","type":"Number","required":true,"description":"The number that identifies the pull request."}]},{"label":"List","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"State","type":"Choice","description":"Filter by state. Options: Open, Closed, All."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]},{"label":"Comment","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Pull Request Number","type":"Number","required":true,"description":"The number that identifies the pull request."},{"name":"Comment","type":"Text","required":true,"description":"The comment text (Markdown supported)."}]},{"label":"Review","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Pull Request Number","type":"Number","required":true,"description":"The number that identifies the pull request."},{"name":"Review Event","type":"Choice","required":true,"description":"The kind of review to submit. Options: Approve, Request changes, Comment."},{"name":"Review Body","type":"Text","description":"The body text of the review (required for Request changes and Comment)."}]},{"label":"List files","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Pull Request Number","type":"Number","required":true,"description":"The number that identifies the pull request."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]}]},{"label":"Repository","options":[{"label":"Get","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."}]},{"label":"List","rows":[{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]},{"label":"Search","rows":[{"name":"Search Query","type":"Text","required":true,"description":"The repository search query."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]}]},{"label":"Release","options":[{"label":"Get latest","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."}]},{"label":"List","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]}]}]} />
+
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the GitHub API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
+
+- Split the repository address: for `github.com/octocat/hello-world`, **Owner** is `octocat` and **Repository** is `hello-world`.
+- **Issue Number** and **Pull Request Number** are the number after `#`, for example `42`.
+- On **Issue → List**, **Labels** is a comma-separated list such as `bug,urgent`; on **Create** and **Update**, **Labels** and **Assignees** are lists of names.
+- **Review Body** is required when **Review Event** is **Request changes** or **Comment**.
+- **Search Query** uses GitHub's search syntax, for example `topic:automation language:typescript stars:>100`.
 
 ## Outputs
 
-Returns the GitHub API response for the selected operation — for example the created issue, the pull request, a list of files, or the latest release.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+- Issue, pull request, repository and release operations return the GitHub object, with fields such as `number`, `title`, `state` and `html_url` (the link to open it in the browser).
+- List operations return a list, one entry per issue, pull request, file or release. GitHub counts pull requests as issues, so **Issue → List** can include them.
+- **Repository → Search** returns `total_count` and the matches in `items`.
 
 ## Dependencies and credentials
 
-- **Auth type:** Bearer Token. Paste a **fine-grained personal access token (PAT)**.
-- Prefer a fine-grained PAT scoped to a **single repository** with only the permissions you need (e.g. Issues: Read and write). Its leak radius is that one repository — not your whole account.
-- Create one under GitHub → Settings → Developer settings → Fine-grained tokens. Classic PATs also work but are broader; prefer fine-grained.
-- The credential is stored in your credential vault and resolved at run time — it is never read from a node parameter.
+{/* AUTO:deps:start */}
+- **Credential** (connection, Bearer Token): required. See [Connect GitHub](/app/connections/github/).
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+Use a GitHub **personal access token**. A fine-grained token is safest: on GitHub, open **Settings → Developer settings → Personal access tokens → Fine-grained tokens**, limit it to the repositories you need, and give it only the permissions you use, for example **Issues: Read and write** or **Pull requests: Read and write** (plus **Contents: Read** for releases). A classic token also works but opens your whole account. See [Create a credential](/app/connections/create/).
 
-GitHub's REST API sends permissive CORS headers, so this node works in **both** the browser extension and the web app — unlike integrations that require the extension to bypass CORS.
+## Example workflow
 
-## Troubleshooting
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger runs when you right-click selected text.
+2. [Get Selected Text](/nodes/extension/getselectedtext/) reads the error message you selected.
+3. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) writes a short bug title and description.
+4. GitHub, **Issue → Create**, **Owner** `my-org`, **Repository** `my-app`, **Title** and **Body** from the previous step, **Labels** `bug`.
 
-- **`Bad credentials`** — the token is missing, mistyped, or expired. Recreate the fine-grained PAT.
-- **`rate limit exceeded`** — you have hit GitHub's rate limit; wait for it to reset or reduce request frequency.
-- **404 on a private repository** — the token's repository scope does not include that repo, or the fine-grained PAT lacks the needed permission.
-- Owner and Repository must be provided separately (owner `octocat`, repository `hello-world`), not as `octocat/hello-world`.
+## Common issues
+
+- **"GitHub API Error: Bad credentials".** The token is wrong, expired or revoked. Create a new one and update the credential.
+- **"GitHub API Error: Not Found" on a repository you can see.** The token does not include that repository, or lacks the permission for this operation. Edit the token on GitHub.
+- **"GitHub API Error: rate limit exceeded".** You made too many requests in the last hour. Wait, or run the workflow less often.
+- **"GitHub API Error: Validation Failed".** A value is not accepted, for example an unknown assignee, or an empty **Review Body** with **Request changes**.
 
 ## Related nodes
 
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Slack](/nodes/builtin/integration/slack/)
+- [Linear](/nodes/builtin/integration/linear/): issues in Linear instead.
+- [RSS Feed Read](/nodes/builtin/core/rss-feed-read/): follow a repository's release feed without a token.
+- [Http Request](/nodes/builtin/core/http-request/): call GitHub API endpoints this node does not cover.

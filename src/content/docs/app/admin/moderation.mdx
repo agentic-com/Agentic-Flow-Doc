@@ -1,0 +1,59 @@
+---
+title: "Moderation"
+description: "Review submitted Marketplace listings, test them safely, then approve, reject, suspend or feature them"
+kind: guide
+section: app
+sidebar:
+  label: "Moderation"
+---
+
+import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+
+<Badge text="Admin" variant="caution" />
+
+**Moderation** (Admin panel › Marketplace › **Moderation**) is the review queue for workflows people publish to the Marketplace. Nothing goes public until a moderator approves it.
+
+## The queue
+
+- **Pending**: new listings and updates to live listings, oldest first. Updates carry an **Update** badge.
+- **Approved**: live listings, most recently updated first. Click **Load more live listings** to see more.
+
+Search by name, description, publisher or tags, and filter by **Tags**, **Publisher**, **Language**, **Featured**, and the **Submitted** and **Updated** dates.
+
+## Review a listing
+
+<Steps>
+
+1. Click **Review** on a row.
+
+2. Look at the read-only graph. It is the exact version people will install. For an update, switch between **Proposed** and **Live** to compare.
+
+3. Check the permissions panel. A red warning means the permissions the author declared don't match what the workflow really does.
+
+4. Read the listing content: icon, screenshots, description, tags and categories.
+
+5. Optionally click **Open sandbox to test** to run a throwaway copy safely. It uses no saved accounts, opens a fresh tab, asks before every site, and shows all network activity. Use test accounts, not real ones.
+
+6. Tick the **Review checklist**. The first three checks are required before you can approve.
+
+7. Click **Approve snapshot…** (or **Approve update**), **Reject…** or **Suspend…**. Rejecting and suspending need a note the author will see.
+
+</Steps>
+
+If the author changes the listing while you review it, your decision isn't saved and you are asked to load the new version.
+
+From the queue you can also reject or suspend several listings at once. Bulk approve only works for AWFlow's own official imports.
+
+## Suspend a live listing
+
+**Suspend…** needs a reason and a note. The reason decides what happens to installed copies, the same way as for [Reports](/app/admin/reports/): *Malware or data theft* and *Safety risk* stop every installed copy; *Policy* hides the listing but lets installed copies keep running with a notice.
+
+## Feature a listing
+
+On an approved listing with no pending update, click **Feature** to put it in the Marketplace's Featured banner. An optional **Rank** orders featured listings: lower numbers show first. **Unfeature** removes it.
+
+More about featuring and what authors see: [Publishing › Admin: featuring a listing](/app/workflows/publishing/#admin-featuring-a-listing).
+
+<Aside>
+Every decision, including the checklist you ticked, is recorded in the [Audit log](/app/admin/audit-log/).
+</Aside>

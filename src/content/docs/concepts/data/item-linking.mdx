@@ -1,0 +1,125 @@
+---
+title: Item linking
+description: "Which item a reference to an earlier step returns, and how to keep related values together across steps and branches."
+sidebar:
+  order: 2
+section: concepts
+kind: concept
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards, ItemsPlayground } from "@components/awflow";
+
+:::note[In 20 seconds]
+While a step works on one item, `{{ $input }}` and a reference to a **directly connected** step both point at the matching item. A reference to a step further back returns that step's **whole output**, not the matching item. To keep a title next to its URL, carry the field forward on the item, join the lists again with Merge on a shared field, or process one item at a time in a lambda workflow.
+:::
+
+## See it happen
+
+Three product links go through Get All Text from Link, then Summarization summarises each page. Get All Text from Link keeps `url` because **Include input fields** is on. Summarization outputs only `summary`, so the link is gone after it. Click each step to see where `url` disappears.
+
+<ItemsPlayground
+  client:visible
+  steps={[
+    {
+      name: "Split Out",
+      kind: "data",
+      items: [{ url: "https://shop.example/p/1" }, { url: "https://shop.example/p/2" }, { url: "https://shop.example/p/3" }],
+    },
+    {
+      name: "Get All Text from Link",
+      kind: "data",
+      runs: 3,
+      note: "Include input fields: on",
+      items: [
+        { url: "https://shop.example/p/1", text: "Trail shoe, 280 g…" },
+        { url: "https://shop.example/p/2", text: "Rain jacket, taped seams…" },
+        { url: "https://shop.example/p/3", text: "Head torch, 400 lumen…" },
+      ],
+    },
+    {
+      name: "Summarization",
+      kind: "ai",
+      runs: 3,
+      note: "outputs summary only",
+      items: [{ summary: "A light trail running shoe." }, { summary: "A waterproof jacket." }, { summary: "A bright head torch." }],
+    },
+  ]}
+  caption="Illustration of a run. The ways to keep url are below."
+/>
+
+## Which item does a reference return?
+
+| You write… | While the step works on item 2, you get… |
+| --- | --- |
+| `{{ $input.url }}` | `url` of item 2, the item this run received. |
+| `{{ $('Get All Text from Link').url }}` in a step **directly connected** to it | `url` of the item from that step used in this run. |
+| `{{ $('Split Out').url }}` in a step **further down** | Empty: that step's whole output is a list, and a list has no `url` field. |
+| `{{ $('Split Out').1.url }}` | `url` of the second item of that list (counting starts at 0), whatever item is being processed. |
+
+In a step's settings, the input panel shows the same split: steps under **Direct inputs** give you the matching item, steps under **Relatives** give you their whole output.
+
+## Three ways to keep values together
+
+<CompareCards
+  label="Ways to keep related values together"
+  cards={[
+    {
+      title: "Carry it forward",
+      icon: "items",
+      when: "Copy the field onto the item before a step that would drop it, or turn on a node's option to keep incoming fields.",
+      example: "Include Other Fields on Split Out, Include input fields on Get All Text from Link.",
+      meta: "simplest, when the nodes allow it",
+    },
+    {
+      title: "Join on a key",
+      icon: "merge",
+      href: "/nodes/builtin/flow/merge/",
+      when: "Two branches produce lists you need to line up again.",
+      example: "Merge products and prices where url equals url.",
+      meta: "Merge · Inner / Left Join",
+    },
+    {
+      title: "One item at a time",
+      icon: "loop",
+      href: "/concepts/flow/lambdaworkflows/",
+      when: "A chain of steps drops your fields and has no key to join on.",
+      example: "A lambda workflow takes url, summarises the page and returns url + summary.",
+      meta: "Lambda Workflow",
+    },
+  ]}
+/>
+
+The third option works because a lambda workflow runs once per item: inside it, every earlier step holds a single item, so `{{ $('Lambda Input').url }}` reads the right value anywhere.
+
+Add a stable field such as `id` or `url` before a workflow splits into branches. It gives Merge something reliable to match on later.
+
+## You'll notice this when…
+
+<details>
+<summary>Every row shows the same title</summary>
+
+The title comes from a step that isn't directly connected, or from a step that output a single item, so every run reads the same value. Carry the title forward on each item and read it with `$input`.
+
+</details>
+
+<details>
+<summary>A reference to an earlier step comes out empty</summary>
+
+That step is not directly connected, so the reference reads its whole output. If the output is a list, use an index (`.0.title`) or carry the field forward instead. Also check the name: `$('…')` must match the node label exactly, including capitals and spaces.
+
+</details>
+
+<details>
+<summary>After a Merge, fields are called left-title and right-title</summary>
+
+Both inputs had a `title` field with different values, so [Merge](/nodes/builtin/flow/merge/) kept both and renamed them. Rename one side before the Merge, or use the prefixed names.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Code" description="Reshape items with Python when a mapping isn't enough." href="/concepts/data/code/" />
+  <LinkCard title="Practise it" description="Recipes that read several pages and keep each result with its source." href="/recipes/" />
+</CardGrid>

@@ -1,0 +1,88 @@
+---
+title: "Agents"
+description: "Assistants with a job: their own instructions, model, skills, knowledge, memory, rules and routines. Built in a few clicks, stored on your device."
+kind: guide
+section: app
+sidebar:
+  label: "Agents"
+---
+
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+import { Badge, Callout, Screenshot } from "@components/awflow";
+import agentsLight from '@assets/screenshots/agents.light.webp';
+import agentsDark from '@assets/screenshots/agents.dark.webp';
+
+<Badge variant="no-setup" text="Free · you pay only your cloud model, if any" /> <Badge variant="on-device" text="Stays in this browser" /> <Badge variant="new" text="New in 0.8.0" />
+
+**In the app:** sidebar › **Agents**
+
+An **agent** is an assistant with a job: its own instructions, model, skills, knowledge and rules. Aria is your built-in agent; you can edit it, but not delete it. A *persona* is simply an agent without skills. Agents live in your browser, use your logins when they browse, and are stored **only on this device**.
+
+<Screenshot
+  src={agentsLight}
+  srcDark={agentsDark}
+  alt="The Agents tab of Agents & teams: a Describe an agent box with a Create agent button, the card for Aria (Your assistant, On-device AI) with a Chat button, and four templates to start from: Chief of staff, Inbox triager, Price watcher and Study buddy. Import and Blank agent buttons are at the top right."
+  hotspots={[{ x: 36.4, y: 38.9, label: 'Agent cards, with Chat' }, { x: 56.4, y: 29.3, label: 'Describe an agent' }, { x: 54, y: 54.2, label: 'Templates' }]}
+/>
+
+1. **Agent cards.** One per agent, with **Chat** to talk to it.
+2. **Describe an agent.** One sentence, and Aria drafts it for you.
+3. **Templates.** Chief of staff, Inbox triager, Price watcher, Study buddy…
+
+Open an agent to reach its **builder tabs**: Identity, Instructions, Model, Skills, Knowledge, Memory, Rules and Routines, with **Try it** on the right.
+
+## What you can do
+
+<CardGrid>
+  <LinkCard title="Build and try an agent" href="/app/chat-and-agents/agent-builder/" description="Every builder tab, Try it, and the agent's look." />
+  <LinkCard title="Give it skills" href="/app/chat-and-agents/agent-skills/" description="Browser control, web search, workflows, MCP, teammates." />
+  <LinkCard title="Set its rules" href="/app/chat-and-agents/browser-control/" description="What it does alone, asks about, or never does." />
+  <LinkCard title="Run it on a schedule" href="#routines" description="Routines: a schedule, a page that opens or changes." />
+  <LinkCard title="Put agents in a team" href="/app/chat-and-agents/teams/" description="Agents that hand work to each other." />
+  <LinkCard title="Share or install agents" href="/app/chat-and-agents/templates/" description="Marketplace and agent files." />
+</CardGrid>
+
+## Create an agent
+
+Open **Agents** in the sidebar:
+
+- **Describe an agent**: one sentence ("Every Monday, check 3 competitor pricing pages and post changes to Slack"). Aria drafts the agent for you to adjust.
+- **Start from a template**: Chief of staff, Inbox triager, Price watcher, Study buddy…
+- **Blank agent**, or **Import** an agent or team file.
+- Browse community agents and teams in [Marketplace › Agents & teams](/app/chat-and-agents/templates/).
+
+Click **Chat** on a card to talk to that agent. Open it to edit it in the [builder](/app/chat-and-agents/agent-builder/); changes save automatically.
+
+## Use it everywhere
+
+| Where | How |
+| --- | --- |
+| **Chat** | Pick the agent in the chat, or type its `@handle`. It also answers in [projects](/app/chat-and-agents/projects/) and [team threads](/app/chat-and-agents/teams/). |
+| **Another agent** | With the **Teammates** skill, an agent can hand part of a task to it. |
+| **A workflow** | The [Run Agent](/nodes/builtin/ai/aiagents/runagentnode/) node runs it as a step. A [routine](#routines) is exactly that: a trigger followed by Run Agent. |
+
+<Callout type="info" title="Your data" href="/app/privacy-and-data/" linkLabel="Privacy & your data">
+
+Agents, their chats and their memories are stored **only in this browser**. When an agent uses a cloud model, its messages go from your browser to that provider with your key; with an on-device model, nothing leaves your device. Actions are real: emails send and sheets change, so its [rules](/app/chat-and-agents/browser-control/) decide what it may do alone.
+
+</Callout>
+
+## Routines
+
+A routine is an ordinary [workflow](/app/workflows/create/): a trigger followed by a **Run agent** node. Create one from the agent's **Routines** tab:
+
+- **On a schedule**: daily, weekly or a custom time.
+- **When a page opens**: match a site or address.
+- **When a page changes**: watch a price or an element.
+- **Show it once**: do it yourself while the agent watches; your steps are recorded as a workflow.
+- Or run one of your existing workflows.
+
+Routines run while your browser is open. In the background, actions the agent's rules mark *ask* are skipped and listed in **Activity** for you to review. Each run's answer is saved as a chat. Open the routine's workflow in the canvas to change it.
+
+## Activity
+
+**Activity** in the sidebar lists what your agents did: answers, routine runs, approvals waiting for you and skipped actions, grouped by day. Click an entry to open the chat or thread.
+
+## Share an agent
+
+**Share** in the builder publishes the agent to the marketplace or downloads it as a file. See [Agent & team templates](/app/chat-and-agents/templates/) for what is, and isn't, included.

@@ -3,47 +3,123 @@ title: "Context Menu"
 description: "Run the flow from the browser context menu."
 sidebar:
   label: "Context Menu"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/contextmenu
+  family: trigger
 ---
 
-# Context Menu
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Run the flow from the browser context menu.
+Run a workflow from the browser's right-click menu, with details of what you clicked.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/save-page-to-airtable.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Triggers workflow execution from the browser's right-click context menu on pages, links, or selected content.
+An activated workflow with a Context Menu trigger shows up in the right-click menu under **Agentic Workflow**, then **Personal Workflows** (or **Downloaded Workflows** for ones you installed from the marketplace). The menu entry is the workflow's name.
+
+The entry only appears where it fits: on the kinds of content picked in **Menu Contexts**, and, when you set them, only on matching pages (**Document URL Patterns**) or matching links and media (**Target URL Patterns**). Clicking it runs the workflow from this trigger, with the clicked text, link or image and the page details as output.
+
+A workflow can have several Context Menu triggers with different settings, for example one for selected text and one for links. Only the triggers that match what you clicked run.
 
 ## When to use it
 
-Use this trigger to create custom context menu actions for quick access to workflows while browsing.
+- Act on selected text: translate it, summarize it, save it, or send it to a chat.
+- Act on a link: save it to a list or open it somewhere else.
+- Act on an image: download it or send its address to a service.
+- Run a workflow on the current page without opening AWFlow.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Menu Contexts | Source-backed field from the node schema. |
-| Document URL Patterns | Source-backed field from the node schema. |
-| Target URL Patterns | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Menu Contexts","type":"Multiple choice","default":"Page","description":"Options: Page, Selection, Link, Editable Field, Image, Video, Audio."},{"name":"Document URL Patterns","type":"List","description":"Optional browser match patterns for the page URL."},{"name":"Target URL Patterns","type":"List","description":"Optional browser match patterns for link, image, video, or audio targets."}]} />
+{/* AUTO:settings:end */}
+
+- **Menu Contexts** decides where you right-click. **Page** means a right-click on the page itself, **Selection** a right-click on selected text, **Editable Field** inside a text box, and so on.
+- **Document URL Patterns** limits the entry to pages whose address matches, for example `https://*.wikipedia.org/*`. Leave it empty to show it everywhere.
+- **Target URL Patterns** checks the address of the clicked link, image, video or audio instead, for example `https://*.youtube.com/*` to only offer the entry on YouTube links.
+
+Patterns use the form `scheme://host/path` with `*` as a wildcard; see [Page Load](/nodes/builtin/trigger/pageload/#inputs-and-settings) for examples.
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes when context is available.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"contextMenu\""},{"name":"triggeredAt","type":"Text"},{"name":"pageUrl","type":"Text"},{"name":"selectionText","type":"Text"},{"name":"linkUrl","type":"Text"},{"name":"srcUrl","type":"Text"},{"name":"frameUrl","type":"Text"},{"name":"editable","type":"True/false"},{"name":"mediaType","type":"Text"},{"name":"tabId","type":"Number"},{"name":"windowId","type":"Number"},{"name":"tabUrl","type":"Text"},{"name":"tabTitle","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "triggerType": "contextMenu",
+  "triggeredAt": "…",
+  "pageUrl": "…",
+  "selectionText": "…",
+  "linkUrl": "…",
+  "srcUrl": "…",
+  "frameUrl": "…",
+  "editable": true,
+  "mediaType": "…",
+  "tabId": 0,
+  "windowId": 0,
+  "tabUrl": "…",
+  "tabTitle": "…"
+}
+```
+{/* AUTO:outputs:end */}
+
+Which fields are filled depends on what you clicked:
+
+- `selectionText`: the selected text (Selection).
+- `linkUrl`: the address of the clicked link (Link).
+- `srcUrl` and `mediaType`: the address and type (`image`, `video`, `audio`) of the clicked media.
+- `editable`: true when you clicked inside a text field.
+- `pageUrl`, `tabTitle`, `tabId`: the page and tab you were on.
+
+Use them downstream, for example `{{ $input.selectionText }}`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Create a workflow with Context Menu as the first node, then connect it to the action nodes that should run after the trigger fires.
+Summarize selected text on any page:
 
-## Troubleshooting
+1. Add **Context Menu** with **Menu Contexts** set to **Selection**.
+2. Add [Summarize](/nodes/builtin/ai/localai/summarize/) with **Text** `{{ $input.selectionText }}` and **Length** **Short**.
+3. Add [Browser Notification](/nodes/extension/browsernotification/) with **Title** `Summary` and **Message** `{{ $input.summary }}`.
+4. Activate the workflow, select a paragraph on a page, right-click, and choose the workflow's name.
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+## Common issues
+
+- **The workflow is not in the right-click menu.** Activate the workflow, then right-click and choose **Get / Refresh Workflows** so the menu picks up your changes. Also check that you right-clicked on the right kind of content: with only **Page** selected, the entry does not show on selected text or links.
+- **The entry shows, but clicking it does nothing.** What you clicked did not match this trigger's contexts or patterns (the menu can show the entry more broadly than each trigger allows when a workflow has several Context Menu triggers). Check **Menu Contexts** and both pattern lists.
+- **`selectionText` is empty.** **Selection** is not in **Menu Contexts**, or you right-clicked outside the selected text.
+- **It does not work in the web app.** This node runs in the browser extension; install it and activate the workflow there.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Save the page you're on to an Airtable reading list"} href="/recipes/capture-to-my-apps/save-page-to-airtable/" level={"beginner"} minutes={5} setup={"connection"} />
+<AwfRecipeCard title={"Turn highlighted text into a Todoist task"} href="/recipes/capture-to-my-apps/selection-to-todoist/" level={"beginner"} minutes={6} setup={"connection"} />
+<AwfRecipeCard title={"Explain any highlighted text in plain words"} href="/recipes/research-and-reading/explain-like-im-five/" level={"beginner"} minutes={4} setup={"on-device"} />
+<AwfRecipeCard title={"Rewrite rough text in a professional tone"} href="/recipes/write-with-ai/rewrite-professionally/" level={"beginner"} minutes={4} setup={"on-device"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Hotkey](/nodes/builtin/trigger/hotkey/): run from a keyboard shortcut instead.
+- [Get Selected Text](/nodes/extension/getselectedtext/): read the selection from a workflow started another way.
+- [Funnel](/nodes/builtin/flow/funnel/): share the same steps between a Context Menu and other triggers.

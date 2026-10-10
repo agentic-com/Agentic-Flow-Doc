@@ -3,43 +3,67 @@ title: "Local Knowledge"
 description: "Connect one of your on-device knowledge bases to an AI agent or the Indexer"
 sidebar:
   label: "Local Knowledge"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/vectorstore/localknowledge
+  family: ai
 ---
 
-# Local Knowledge
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
 Connect one of your on-device knowledge bases to an AI agent or the Indexer.
 
 ## What it does
 
-Gives the connected node access to one of your [knowledge bases](/usage/using-the-app/knowledge-bases/overview/). The agents search it for passages to answer from; the [Indexer](/nodes/builtin/ai/aiagents/indexernode/) writes new passages into it. Everything is stored and searched in your browser.
+Local Knowledge is not a step on its own: it has no output port and never runs by itself. You plug it into the **Knowledge** slot of another node, and that node uses the [knowledge base](/app/knowledge-bases/overview/) you pick here.
+
+- On a [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), the agent searches the knowledge base for passages and answers from them.
+- On an [Indexer](/nodes/builtin/ai/aiagents/indexernode/), new text is written into the knowledge base.
+
+Everything is stored and searched in your browser. If the chosen knowledge base does not exist on this device, the run stops with an error instead of quietly finding nothing.
 
 ## When to use it
 
-Connect it to the Knowledge port of a [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) to answer from your documents, or to an [Indexer](/nodes/builtin/ai/aiagents/indexernode/) to fill a knowledge base from a workflow.
+- Answer questions from your own documents, notes or saved pages with an agent.
+- Fill a knowledge base from a workflow, for example with pages loaded on a schedule.
+- To add documents by hand instead, use the [knowledge bases page](/app/knowledge-bases/overview/#add-sources); no workflow is needed.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Knowledge | The knowledge base to use. Pick it from the list. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Knowledge base","type":"Knowledge base picker","required":true,"description":"The knowledge base the connected agent searches."}]} />
+{/* AUTO:settings:end */}
 
 The picker shows, for each knowledge base:
 
 - its number of passages and the embedding model it was built with;
-- its privacy badge, **Cloud OK** or **Device only** (see [Privacy](/usage/using-the-app/knowledge-bases/overview/#privacy-cloud-ok-or-device-only));
+- its privacy badge, **Cloud OK** or **Device only** (see [Privacy](/app/knowledge-bases/overview/#privacy-cloud-ok-or-device-only));
 - whether it is **empty** or still **indexing** (with a percentage).
 
 Use **New knowledge base** to create one without leaving the canvas, and **Open selected** to open the chosen knowledge base's page.
 
-How the agent searches it (number of passages, similarity or MMR, keywords and meaning, minimum relevance, metadata filter, device-only behaviour) is set on the agent node. See [RAG Agent › Knowledge base options](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options).
+How the agent searches (number of passages, most similar or diverse, keywords and meaning, minimum relevance, metadata filter, device-only behaviour) is set on the agent node, not here. See [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/).
 
 ## Outputs
 
-Returns a vector store dependency for the connected agent or Indexer.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Knowledge** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/)
+{/* AUTO:outputs:end */}
+
+The passages found show up on the agent's output, for example in `sources` on the Q&A Agent.
 
 ## Dependencies and credentials
 
-- **Embeddings** (optional) — not needed for a knowledge base that already has content: it is always searched with its own model. See [Embedding models](#embedding-models).
+{/* AUTO:deps:start */}
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Embeddings","type":"embeddings","description":"One node."}]} />
+{/* AUTO:deps:end */}
+
+**Embeddings** is optional. A knowledge base that already has content is always searched with its own model, so you only need it to choose the model of a new, empty knowledge base. See below.
 
 ## Embedding models
 
@@ -47,28 +71,33 @@ Each knowledge base **remembers the embedding model it was built with**, and is 
 
 - **New knowledge bases** use the on-device **all-MiniLM-L6-v2** model, unless another embeddings node is connected on the first run. That model is then recorded on the knowledge base.
 - **Older knowledge bases** (created before they remembered their model) keep the **Universal Sentence Encoder** they were built with, so existing results stay correct.
-- **Mismatched embeddings** — when the connected Embeddings node is a different model than the knowledge base's, the node settings show a callout before you run: the connected embeddings won't be used. Choose:
-  - **Disconnect it** — removes the connection; the knowledge base keeps its own model.
-  - **Re-embed with …** — opens the knowledge base's settings to [move it to the connected model](/usage/using-the-app/knowledge-bases/overview/#change-the-search-engine-re-embed).
+- **Mismatched embeddings**: when the connected Embeddings node is a different model than the knowledge base's, the node settings show a callout before you run, because the connected embeddings won't be used. Choose:
+  - **Disconnect it**: removes the connection; the knowledge base keeps its own model.
+  - **Re-embed with …**: opens the knowledge base's settings to [move it to the connected model](/app/knowledge-bases/overview/#change-the-search-engine-re-embed).
 
   If you run anyway, the knowledge base's own model is used and the run log has a warning.
 
-If a knowledge base was built with a cloud embeddings node (for example OpenAI), connect that same node, or re-embed it with an on-device model.
+If a knowledge base was built with a cloud embeddings node (for example [OpenAI](/nodes/builtin/ai/aidependencies/embeddings/openai/)), connect that same node, or re-embed it with an on-device model.
 
 ## Example workflow
 
-Connect Local Knowledge to the Knowledge port of a [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) and ask questions. Add content from the [knowledge bases page](/usage/using-the-app/knowledge-bases/overview/#add-sources), or from a workflow with the [Indexer](/nodes/builtin/ai/aiagents/indexernode/).
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads a question you highlighted, with **Output field name** `text`.
+2. [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) with **Prompt** `{{ $input.text }}` and an [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model on its **Model** slot.
+3. Local Knowledge connected to the Q&A Agent's **Knowledge** slot, with **Knowledge base** set to `Product handbook`.
+4. [Display Markdown](/nodes/extension/displaymarkdown/) with **Content** `{{ $input.response }}`.
 
-## Troubleshooting
+To fill the same knowledge base from a workflow, connect another Local Knowledge node to the **Knowledge** slot of an [Indexer](/nodes/builtin/ai/aiagents/indexernode/).
 
-- **"Knowledge base "…" doesn't exist on this device…"** — the knowledge base was deleted, or the workflow comes from another device or browser. Pick a knowledge base in this node, or [import the knowledge base file (.awkb)](/usage/using-the-app/knowledge-bases/export-import-backup/#import-a-file) first. When you import a workflow, AWFlow offers to [map its knowledge bases](/usage/using-the-app/knowledge-bases/export-import-backup/#importing-a-workflow-that-uses-knowledge-bases).
-- **"Model mismatch" warning in the run log** — the connected embeddings differ from the knowledge base's model; its own model was used. Disconnect the embeddings or re-embed the knowledge base.
-- **"… was built with … embeddings. Connect that embeddings node to use it."** — the knowledge base uses a cloud embeddings model; connect it, or re-embed on this device.
-- **"… is on this device only, but … is a cloud model."** — the knowledge base is *Device only* and the agent uses a cloud model. Use an on-device model, change the knowledge base's privacy, or set the agent's **Device-only knowledge with a cloud model** option to answer without it.
-- **No passages** — check the knowledge base isn't empty, and try the question in its **Test search** tab.
+## Common issues
+
+- **"Knowledge parameter is required".** No knowledge base is picked. Choose one in **Knowledge base**.
+- **"Knowledge base "…" doesn't exist on this device…".** The knowledge base was deleted, or the workflow comes from another device or browser. Pick a knowledge base in this node, or [import the knowledge base file (.awkb)](/app/knowledge-bases/export-import-backup/#import-a-file) first. When you import a workflow, AWFlow offers to [map its knowledge bases](/app/knowledge-bases/export-import-backup/#importing-a-workflow-that-uses-knowledge-bases).
+- **"Model mismatch" warning in the run log.** The connected embeddings differ from the knowledge base's model, so its own model was used. Disconnect the embeddings or re-embed the knowledge base.
+- **"… was built with … embeddings. Connect that embeddings node to use it."** The knowledge base uses a cloud embeddings model. Connect it, or re-embed on this device.
+- **"… is on this device only, but … is a cloud model."** The knowledge base is **Device only** and the agent uses a cloud model. Use an on-device model, change the knowledge base's privacy, or set the agent's **Device-only knowledge with a cloud model** option to **Answer without it**.
 
 ## Related nodes
 
-- [Indexer](/nodes/builtin/ai/aiagents/indexernode/)
-- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/)
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/): write text into a knowledge base.
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) and [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/): answer from a knowledge base.
+- [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/): an on-device embedding model.

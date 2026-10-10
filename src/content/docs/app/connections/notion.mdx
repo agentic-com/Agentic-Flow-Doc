@@ -1,0 +1,78 @@
+---
+title: "Connect Notion"
+description: "Create a Notion internal integration, paste its secret, and share the pages and databases it may use."
+kind: connection
+section: app
+sidebar:
+  label: "Notion"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- A Notion workspace where you can create integrations (workspace owners can; members may need an owner).
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Notion](/nodes/builtin/integration/notion/)
+
+## Set it up
+
+<Steps>
+
+1. **Create the integration.** Open [notion.so/my-integrations](https://www.notion.so/my-integrations) (**Settings › Connections › Develop or manage integrations**), click **New integration**, pick your workspace and keep the type **Internal**.
+2. **Copy the secret.** On the integration's page, copy the **Internal Integration Secret**.
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Notion** and click **Continue**. Name it, for example *Notion – team wiki*: **Auth Type** is already set to **Bearer Token**. Then paste the secret into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+4. **Share pages with it.** In Notion, open each page or database the workflow should use, then **⋯ › Connections › Connect to** and pick your integration. Sharing a parent page shares the pages inside it.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+In a **Notion** node, choose **Database › Get many**: the databases you shared are listed. A missing one isn't shared yet.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `api.notion.com`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Permissions each operation needs
+
+| Capability (integration settings) | Needed for |
+| --- | --- |
+| Read content | Database · Get many, Get schema; Page · Get, Search; Block · Get |
+| Update content | Page · Update, Delete; Block · Update, Delete |
+| Insert content | Page · Create; Block · Create |
+
+Set these under **Capabilities** on the integration's page. Access is also limited to the pages you shared.
+
+## Common issues
+
+- **"Could not find database with ID… (object_not_found)".** The page or database isn't shared with the integration. Use **⋯ › Connections › Connect to**.
+- **"API token is invalid (unauthorized)".** The secret is wrong or the integration was deleted. Copy it again and update the credential.
+- **"Insufficient permissions for this endpoint".** A capability is off on the integration (for example *Insert content*). Turn it on.
+- **The run is blocked in the web app.** Notion runs through the browser extension. Install the extension and allow Notion for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Notion node" href="/nodes/builtin/integration/notion/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

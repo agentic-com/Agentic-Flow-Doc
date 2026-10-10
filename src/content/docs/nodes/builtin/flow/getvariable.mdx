@@ -3,58 +3,79 @@ title: "Get Variable"
 description: "Emit a previously-set run variable as the item itself"
 sidebar:
   label: "Get Variable"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/getvariable
+  family: flow
 ---
 
-# Get Variable
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Emit a stored value as the item.
+Turn a value stored earlier in the run with Set Variable back into items for the next node.
 
 ## What it does
 
-Reads a variable set earlier in the run (with [Set Variable](/nodes/builtin/flow/setvariable/)) and emits it as **the item itself**. Most of the time you do not need this node: `{{ $run.name }}` works in any input field, which is fewer nodes and fewer edges than fetching a value into one. Reach for Get Variable when a value has to become the item — because the node you are feeding reads its incoming items rather than a configured field. Handing a collected list to Split Out, or a stored object to an integration that maps over its input, both need a node rather than an expression.
+Get Variable reads a variable that a [Set Variable](/nodes/builtin/flow/setvariable/) node stored earlier in this run, and sends it out as **the item itself**. The incoming item is ignored.
+
+- A list becomes one item per entry, so the next nodes handle each entry in turn.
+- An object becomes the item as it is.
+- Anything else (text, a number) is wrapped in a field named by **Put Value In Field**, for example `{ "value": 42 }`.
+
+If the variable was never set, the node fails with a clear message, unless you turn on **Use A Fallback**.
+
+Most of the time you don't need this node: `{{ $run.name }}` works in any field of any later node.
 
 ## When to use it
 
-- When a stored value must be the item stream itself, not a value read inside a field.
-- When feeding a collected list into a node that iterates over its input.
+- Feed a list you collected with **Append to list** into nodes that work on each item, such as an integration that creates one record per item.
+- Hand a stored object to a node that reads its incoming item rather than a field.
+- Read part of a stored value, such as `page.next`, as its own item.
+
+To use a variable inside a field, write `{{ $run.name }}` there instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Name | Name of the variable to read. |
-| Path | Optional dot path inside the value, for example `page.next`. Leave blank to emit the whole value. |
-| Use A Fallback | Off by default: an unset variable fails the node, so an ordering mistake cannot pass unnoticed. On: the fallback below is emitted instead. |
-| Fallback | The value emitted when the variable is not set and **Use A Fallback** is on. |
-| Put Value In Field | Field the value is placed in when the value is not itself an object. Defaults to `value`. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Name","type":"Text","description":"Name of the variable to read."},{"name":"Path","type":"Text","description":"Optional dot path inside the value, for example page.next."},{"name":"Use A Fallback","type":"Toggle","default":"Off","description":"Emit a fallback value instead of failing when the variable is not set."},{"name":"Fallback","type":"Value","description":"Value emitted when the variable is not set."},{"name":"Put Value In Field","type":"Text","default":"value","description":"Field holding the value, when the value is not itself an object."}]} />
+{/* AUTO:settings:end */}
+
+- **Name** is required in practice: the node fails without it. Type the name only, `results`, not `$run.results`.
+- **Path** picks a part of the stored value with dots, for example `page.next`. Leave it empty to emit the whole value.
 
 ## Outputs
 
-- A list becomes a collection, so downstream nodes iterate it the way they iterate any other input.
-- An object becomes the item directly.
-- Anything else is wrapped in the field named by **Put Value In Field** (default `value`), so it is still addressable.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
 
-## Reading a variable that was never set
-
-Fails, naming the variable, rather than emitting an empty value — unless **Use A Fallback** is on, which makes the intent explicit. Ordering between parallel branches is decided by how the graph is walked and is not visible on the canvas, so a quietly-empty read is exactly how that mistake would go unnoticed until something downstream produced nonsense. See the ordering note on [Set Variable](/nodes/builtin/flow/setvariable/).
+The output is the stored value, shaped as described above. Text and numbers sit under the **Put Value In Field** name, so the next node reads them as `{{ $input.value }}`.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
-- Variables exist only while a workflow is running. Running this node on its own, outside an execution, has nothing to read and reports so.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-A Set Variable node earlier in the run appends each result to a list variable named `results`. Downstream, Get Variable with **Name** `results` emits that list as a collection, which a Split Out node then iterates one item at a time.
+Collect page titles in a loop, then save them all at once:
 
-## Troubleshooting
+1. Inside a [Loop](/nodes/builtin/flow/loop/), [Set Variable](/nodes/builtin/flow/setvariable/) with **Operation** **Append to list**, **Name** `titles`, **Value** `{{ $input.title }}`.
+2. From the Loop's **Done** port, Get Variable with **Name** `titles` and **Put Value In Field** `title`. It sends one item per collected title.
+3. [Google Sheets](/nodes/builtin/integration/google-sheets/) appends one row per item, with `{{ $input.title }}` in a column.
 
-- "Variable … has not been set at this point in the run." The Set Variable node is not guaranteed to run before this one — often because it sits on a branch of its own. Move it upstream, or turn on **Use A Fallback**.
-- "Path … does not exist inside variable …": the dot path does not match the stored value's shape. Check the path, or clear it to emit the whole value.
-- "Variables only exist while a workflow is running." Run the whole workflow rather than this node on its own.
+## Common issues
+
+- **"Variable "x" has not been set at this point in the run."** The Set Variable node did not run before this one, often because it sits on a separate branch. Connect it upstream of Get Variable, or turn on **Use A Fallback**.
+- **"Path "x" does not exist inside variable "y"."** The stored value has no such part. Check the spelling, or clear **Path** to see the whole value first.
+- **"A variable name is required."** Fill in **Name**.
+- **"Variables only exist while a workflow is running."** You ran the node on its own. Run the whole workflow.
 
 ## Related nodes
 
-- [Set Variable](/nodes/builtin/flow/setvariable/)
-- [$run expressions](/usage/key-concepts/data/data-mapping/data-mapping-expressions/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Set Variable](/nodes/builtin/flow/setvariable/): store the value in the first place.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): split a list field of an item into items.
+- [Data Store](/nodes/builtin/core/datastore/): read values saved by earlier runs.

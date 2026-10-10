@@ -3,65 +3,96 @@ title: "Google Calendar"
 description: "Integrate with Google Calendar to create, list and update events."
 sidebar:
   label: "Google Calendar"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/integration/google-calendar
+  family: integration
 ---
 
-# Google Calendar
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Create, list and update Google Calendar events — with the current page as context.
+Create, read, update and delete Google Calendar events, list your calendars, and check when you are free or busy.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Google Calendar connection"} href="/app/connections/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with an OAuth2.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Manages calendar events (create, update, delete, get, list), lists your calendars, and runs a free/busy query. "Event from this page" is the point: a booking confirmation, a webinar signup, or a job posting with a deadline carries the date and the link, so you shouldn't retype either — events created from a page carry the page URL in their description.
+The Google Calendar node works on three kinds of things (**Resource**):
 
-## Resources and operations
+- **Event**: **Create**, **Update**, **Delete**, **Get** one event, or **List** events in a time range.
+- **Calendar**: **List** the calendars in your account, with their ids.
+- **Free/busy**: **Query** the busy times of one or more calendars between two moments.
 
-| Resource | Operations |
-| --- | --- |
-| Event | Create, Update, Delete, Get, List |
-| Calendar | List |
-| Free/busy | Query |
+Without a **Calendar ID**, the node uses your main calendar (`primary`). **Update** only changes the fields you fill; the rest of the event stays as it is. **List** expands recurring events into single occurrences and sorts them by start time, up to **Max results** (50 by default).
+
+When you fill **Source URL**, it is added at the end of the description as `Source: …`, so an event created from a booking page or a webinar sign-up keeps the link.
+
+## When to use it
+
+- Turn a booking confirmation, event page or deadline you are reading into a calendar event.
+- Send yourself a morning summary of today's events.
+- Check free/busy before proposing a meeting slot.
+- Use [Microsoft 365](/nodes/builtin/integration/microsoft-graph/) instead for an Outlook calendar.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Credential | Sign in with Google (see below). |
-| Resource / Operation | What to act on and how. |
-| Calendar ID | The calendar to use — `primary` (default) or an ID from **Calendar → List**. |
-| Event ID | The event to get, update, or delete. |
-| Title / Description / Location | The event summary, body, and place. |
-| Source URL | The page URL to attach — appended to the event description when present. |
-| Start / End (date-time) | Timed events, as RFC3339 date-times (e.g. `2026-09-10T09:00:00`). |
-| Start / End (all-day date) | All-day events, as `YYYY-MM-DD` (use instead of the date-time fields). |
-| Time Zone | IANA time zone for timed events, e.g. `America/New_York`. |
-| Attendees | Email addresses to invite. |
-| Recurrence | RRULE strings, e.g. `RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8`. |
-| Time min / Time max | Bounds for **Event → List** and **Free/busy → Query**. |
-| Max results | Maximum events to return when listing. |
-| Calendar IDs | Calendars to check for **Free/busy** (defaults to `primary`). |
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Credential to use to make request."}]} groups={[{"label":"Event","options":[{"label":"Create","rows":[{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Title","type":"Text","required":true,"description":"The event title (summary)."},{"name":"Description","type":"Text","description":"The event description."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the event description when present."},{"name":"Location","type":"Text","description":"The event location."},{"name":"Start (date-time)","type":"Text","description":"Timed-event start as an RFC3339 date-time, e.g. 2026-09-10T09:00:00."},{"name":"End (date-time)","type":"Text","description":"Timed-event end as an RFC3339 date-time."},{"name":"Start (all-day date)","type":"Text","description":"All-day start as YYYY-MM-DD (use instead of the date-time fields)."},{"name":"End (all-day date)","type":"Text","description":"All-day end as YYYY-MM-DD (exclusive)."},{"name":"Time Zone","type":"Text","description":"IANA time zone for the start/end, e.g. America/New_York (timed events)."},{"name":"Attendees","type":"List","description":"Email addresses to invite."},{"name":"Recurrence","type":"List","description":"RRULE strings, e.g. RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8."}]},{"label":"Update","rows":[{"name":"Event ID","type":"Text","required":true,"description":"The event to act on."},{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Title","type":"Text","description":"The event title (summary)."},{"name":"Description","type":"Text","description":"The event description."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the event description when present."},{"name":"Location","type":"Text","description":"The event location."},{"name":"Start (date-time)","type":"Text","description":"Timed-event start as an RFC3339 date-time, e.g. 2026-09-10T09:00:00."},{"name":"End (date-time)","type":"Text","description":"Timed-event end as an RFC3339 date-time."},{"name":"Start (all-day date)","type":"Text","description":"All-day start as YYYY-MM-DD (use instead of the date-time fields)."},{"name":"End (all-day date)","type":"Text","description":"All-day end as YYYY-MM-DD (exclusive)."},{"name":"Time Zone","type":"Text","description":"IANA time zone for the start/end, e.g. America/New_York (timed events)."},{"name":"Attendees","type":"List","description":"Email addresses to invite."},{"name":"Recurrence","type":"List","description":"RRULE strings, e.g. RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8."}]},{"label":"Delete","rows":[{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Event ID","type":"Text","required":true,"description":"The event to act on."}]},{"label":"Get","rows":[{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Event ID","type":"Text","required":true,"description":"The event to act on."}]},{"label":"List","rows":[{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Time min","type":"Text","description":"Lower bound (RFC3339 date-time) for the query."},{"name":"Time max","type":"Text","description":"Upper bound (RFC3339 date-time) for the query."},{"name":"Max results","type":"Number","default":"50","description":"Maximum number of events to return (1-2500)."}]}]},{"label":"Calendar","options":[{"label":"List","rows":[]}]},{"label":"Free/busy","options":[{"label":"Query","rows":[{"name":"Time min","type":"Text","required":true,"description":"Lower bound (RFC3339 date-time) for the query."},{"name":"Time max","type":"Text","required":true,"description":"Upper bound (RFC3339 date-time) for the query."},{"name":"Calendar IDs","type":"List","description":"Calendars to check for free/busy (defaults to primary)."}]}]}]} />
 
-### Dates, time zones, and recurrence
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Google Calendar API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
 
-- Use **either** the date-time fields (timed event) **or** the all-day date fields — not both. All-day events must not carry a time zone.
-- For timed events, set **Time Zone** so the start/end are unambiguous.
-- Make an event recurring by adding one or more **Recurrence** RRULEs.
+- For a timed event, fill **Start (date-time)** and **End (date-time)**, for example `2026-09-10T09:00:00`, and set **Time Zone** (for example `Europe/Paris`) so the time is not misread.
+- For an all-day event, fill **Start (all-day date)** and **End (all-day date)** instead, as `YYYY-MM-DD`. The end day is not included: a one-day event on 10 September ends on `2026-09-11`.
+- **Time min** and **Time max** need a full date-time with a time zone offset, for example `2026-09-10T00:00:00Z` or `2026-09-10T00:00:00+02:00`.
+- **Recurrence** takes one rule per entry, for example `RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8` for eight Mondays.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+- **Create**, **Update** and **Get** return the event, including its `id` (reuse it in **Event ID**) and `htmlLink` (a link that opens it in Google Calendar).
+- **Event → List** returns the events in `items`. Use [Split Out](/nodes/builtin/datatransformation/splitout/) on `items` to get one item per event.
+- **Calendar → List** returns your calendars in `items`, each with its `id`.
+- **Free/busy → Query** returns, for each calendar, its `busy` periods with `start` and `end`.
+- **Delete** returns `success: true`.
 
 ## Dependencies and credentials
 
-- **Auth:** OAuth2 — sign in with Google, using your own Google OAuth client ([create it](/usage/using-the-app/credentials/oauth-client/#google)). The node runs entirely client-side on the PKCE flow with a refreshing token; no calendar data passes through awflow's backend.
-- **Scopes:** managing events needs write access, so the node requests `calendar.events` (read/write events) plus `calendar.readonly` (read calendars and free/busy). This is broader than read-only, so the Google consent screen will ask for it.
+{/* AUTO:deps:start */}
+- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/).
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+Google Calendar connects by signing in to your Google account (OAuth). You first create your own Google OAuth client once, with the Google Calendar API enabled: follow [Create your OAuth client](/app/connections/oauth-client/#google). Then create a Google Calendar credential, paste the **Client ID** and **Client Secret**, click **Check connection** and approve the Google window. AWFlow asks to read and edit your events and to read your calendars. The sign-in is kept and refreshed for you. See also [Create a credential](/app/connections/create/).
 
-Works in **both** the web app and the browser extension — the Google Calendar API sends CORS headers.
+## Example workflow
 
-## Troubleshooting
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger runs when you right-click a webinar page.
+2. [Get All Text](/nodes/extension/getalltext/) reads the page.
+3. [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) pulls out `title`, `start` and `end` as date-times.
+4. Google Calendar, **Event → Create**, **Title** `{{ $input.title }}`, **Start (date-time)** `{{ $input.start }}`, **End (date-time)** `{{ $input.end }}`, **Time Zone** `Europe/Paris`, **Source URL** `{{ $('Context Menu').pageUrl }}`.
 
-- **Consent screen asks for more than before** — expected: creating events needs the `calendar.events` scope, wider than read-only.
-- **Event created at the wrong time** — set **Time Zone**; without it, a bare date-time is interpreted in the calendar's default zone.
-- **`Not Found` on Update/Get/Delete** — check the **Event ID** and that it belongs to the given **Calendar ID**.
+## Common issues
+
+- **The event is at the wrong time.** The start and end have no time zone. Set **Time Zone**, or write the offset in the date-time, such as `2026-09-10T09:00:00+02:00`.
+- **"Google Calendar Error: … Not Found".** The **Event ID** does not exist in this **Calendar ID**. Check both; an event from another calendar needs that calendar's id.
+- **"… Bad Request" on Event → List or Free/busy.** **Time min** or **Time max** lacks a time zone offset. Add `Z` or `+02:00` at the end.
+- **"… insufficient authentication scopes" or a 403 error.** The Google Calendar API is not enabled for your OAuth client, or the sign-in predates a permission change. Enable the API, then click **Check connection** again on the credential.
 
 ## Related nodes
 
-- [Screenshot Page](/nodes/extension/screenshotpage/)
-- [Google Sheets](/nodes/builtin/integration/google-sheets/)
+- [Gmail](/nodes/builtin/integration/gmail/): email the agenda.
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/): read dates from a page.
+- [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/): turn dates into the format the fields expect.
+- [Microsoft 365](/nodes/builtin/integration/microsoft-graph/): Outlook calendar instead.

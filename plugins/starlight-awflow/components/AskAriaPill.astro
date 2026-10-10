@@ -1,0 +1,37 @@
+---
+/**
+ * Floating "Ask Aria" pill (Main.dc.html · 04). The Search override's dialog picks up clicks on
+ * `[data-awf-ask-aria]` and opens its Ask Aria tab (#1340); without JS the `#ask-aria` link is inert.
+ */
+import config from 'virtual:starlight-awflow/config';
+import { getAwflowRoute } from '../route-data';
+
+const aria = config.askAria;
+const { node } = getAwflowRoute(Astro.locals);
+const title = Astro.locals.starlightRoute.entry.data.title;
+const label = aria ? (node ? `${aria.label} about ${title}` : aria.label) : '';
+---
+
+{
+	aria && (
+		<a href={aria.href} class="awf-aria-pill awf-press print:hidden" data-awf-ask-aria data-pagefind-ignore>
+			<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+				stroke-linecap="round" aria-hidden="true" class="awf-aria-pill__spark">
+				<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z" />
+			</svg>
+			<span class="awf-aria-pill__label">{label}</span>
+			<span class="awf-wave" aria-hidden="true"><i /><i /><i /><i /></span>
+			{aria.shortcut && (
+				<kbd class="awf-aria-pill__kbd" aria-hidden="true">
+					{aria.shortcut}
+				</kbd>
+			)}
+		</a>
+	)
+}
+
+<script>
+	// The footer sits inside Starlight's content column, whose stacking context puts the fixed right
+	// sidebar (TOC) above the pill on wide screens, blocking clicks. Re-parent the pill to <body>.
+	for (const pill of document.querySelectorAll('.awf-aria-pill')) document.body.append(pill);
+</script>

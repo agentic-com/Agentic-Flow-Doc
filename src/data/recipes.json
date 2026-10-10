@@ -1,0 +1,905 @@
+[
+	{
+		"slug": "article-to-markdown",
+		"href": "/recipes/capture-to-my-apps/article-to-markdown/",
+		"title": "Copy any article as clean Markdown",
+		"description": "One run turns the page you're reading into Markdown with its links, ready to paste into Obsidian, Notion or a note. No account, no AI.",
+		"goal": "Capture to my apps",
+		"level": "beginner",
+		"minutes": 3,
+		"setup": "none",
+		"apps": [],
+		"nodes": [
+			"af-base-node:trigger:whenStarted",
+			"af-base-node:basic:getAllHTMLNode",
+			"af-base-node:basic:markdown",
+			"af-base-node:basic:clipboardWriteNode"
+		],
+		"awf": "/examples/article-to-markdown.awf",
+		"marketplaceId": "85d02ab9-cac8-4780-ab93-b7636ab28205",
+		"graph": [
+			{
+				"id": "trigger-when-started",
+				"label": "When Started",
+				"registryId": "af-base-node:trigger:whenStarted",
+				"type": "When Started",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/whenstarted/"
+			},
+			{
+				"id": "get-html",
+				"label": "Read the page HTML",
+				"registryId": "af-base-node:basic:getAllHTMLNode",
+				"type": "Get All HTML",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/getallhtml/"
+			},
+			{
+				"id": "to-markdown",
+				"label": "Convert to Markdown",
+				"registryId": "af-base-node:basic:markdown",
+				"type": "Markdown",
+				"family": "data",
+				"attachment": false,
+				"docLink": "/nodes/builtin/datatransformation/markdown/"
+			},
+			{
+				"id": "copy-clipboard",
+				"label": "Copy to clipboard",
+				"registryId": "af-base-node:basic:clipboardWriteNode",
+				"type": "Clipboard Write",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/clipboardwrite/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"clipboard",
+				"page-read"
+			],
+			"domains": [],
+			"dynamic": false,
+			"apps": [],
+			"models": []
+		}
+	},
+	{
+		"slug": "save-page-to-airtable",
+		"href": "/recipes/capture-to-my-apps/save-page-to-airtable/",
+		"title": "Save the page you're on to an Airtable reading list",
+		"description": "Right-click any page and its title and link land as a new row in your Airtable base. Build a reading list without copy-paste.",
+		"goal": "Capture to my apps",
+		"level": "beginner",
+		"minutes": 5,
+		"setup": "connection",
+		"apps": [
+			"Airtable"
+		],
+		"nodes": [
+			"af-base-node:trigger:contextMenu",
+			"af-base-node:basic:getPageMetadataNode",
+			"af-base-node:basic:airTable"
+		],
+		"awf": "/examples/save-page-to-airtable.awf",
+		"marketplaceId": "5b5a9e16-9412-4762-b02e-0e0d47e405be",
+		"graph": [
+			{
+				"id": "trigger-context-menu",
+				"label": "Right-click a page",
+				"registryId": "af-base-node:trigger:contextMenu",
+				"type": "Context Menu",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/contextmenu/"
+			},
+			{
+				"id": "get-metadata",
+				"label": "Read the page details",
+				"registryId": "af-base-node:basic:getPageMetadataNode",
+				"type": "Get Page Metadata",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/getpagemetadata/"
+			},
+			{
+				"id": "save-airtable",
+				"label": "Add a record to Airtable",
+				"registryId": "af-base-node:basic:airTable",
+				"type": "AirTable",
+				"family": "integration",
+				"attachment": false,
+				"docLink": "/nodes/builtin/integration/airtable/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			},
+			{
+				"label": "A connection to AirTable",
+				"href": "/nodes/builtin/integration/airtable/"
+			},
+			{
+				"label": "Add a record to Airtable: set base id",
+				"href": "/nodes/builtin/integration/airtable/"
+			},
+			{
+				"label": "Add a record to Airtable: set table id",
+				"href": "/nodes/builtin/integration/airtable/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"network",
+				"page-read"
+			],
+			"domains": [],
+			"dynamic": true,
+			"apps": [
+				"AirTable"
+			],
+			"models": []
+		}
+	},
+	{
+		"slug": "selection-to-todoist",
+		"href": "/recipes/capture-to-my-apps/selection-to-todoist/",
+		"title": "Turn highlighted text into a Todoist task",
+		"description": "Highlight a sentence in an email or a doc, right-click, and a short task title lands in Todoist. A model on your computer drafts the title.",
+		"goal": "Capture to my apps",
+		"level": "beginner",
+		"minutes": 6,
+		"setup": "connection",
+		"apps": [
+			"Todoist"
+		],
+		"nodes": [
+			"af-base-node:trigger:contextMenu",
+			"af-base-node:basic:getSelectedTextNode",
+			"af-base-node:agent:information-extractor",
+			"af-base-node:dependency:webLLM",
+			"af-base-node:basic:todoist"
+		],
+		"awf": "/examples/selection-to-todoist.awf",
+		"marketplaceId": null,
+		"graph": [
+			{
+				"id": "trigger-context-menu",
+				"label": "Right-click a selection",
+				"registryId": "af-base-node:trigger:contextMenu",
+				"type": "Context Menu",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/contextmenu/"
+			},
+			{
+				"id": "get-selection",
+				"label": "Get selected text",
+				"registryId": "af-base-node:basic:getSelectedTextNode",
+				"type": "Get Selected Text",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/getselectedtext/"
+			},
+			{
+				"id": "extract",
+				"label": "Draft a task title",
+				"registryId": "af-base-node:agent:information-extractor",
+				"type": "Information Extractor",
+				"family": "ai",
+				"attachment": false,
+				"docLink": "/nodes/builtin/ai/aiagents/informationextractornode/"
+			},
+			{
+				"id": "local-model",
+				"label": "Local AI model",
+				"registryId": "af-base-node:dependency:webLLM",
+				"type": "Web LLM",
+				"family": "ai",
+				"attachment": true,
+				"docLink": "/nodes/builtin/ai/aidependencies/llm/wbellm/"
+			},
+			{
+				"id": "create-task",
+				"label": "Create the Todoist task",
+				"registryId": "af-base-node:basic:todoist",
+				"type": "Todoist",
+				"family": "integration",
+				"attachment": false,
+				"docLink": "/nodes/builtin/integration/todoist/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			},
+			{
+				"label": "An on-device model, downloaded once",
+				"href": "/app/local-models/"
+			},
+			{
+				"label": "A connection to Todoist",
+				"href": "/nodes/builtin/integration/todoist/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"network",
+				"page-read"
+			],
+			"domains": [],
+			"dynamic": true,
+			"apps": [
+				"Todoist"
+			],
+			"models": [
+				"An on-device model"
+			]
+		}
+	},
+	{
+		"slug": "scrape-a-list",
+		"href": "/recipes/extract-data/scrape-a-list/",
+		"title": "Turn a list on a web page into structured data",
+		"description": "Fetch a page by its address and pull each item's title and link into clean data you can reuse, without opening the page.",
+		"goal": "Extract data",
+		"level": "intermediate",
+		"minutes": 7,
+		"setup": "none",
+		"apps": [],
+		"nodes": [
+			"af-base-node:trigger:whenStarted",
+			"af-base-node:basic:getHTMLFromLinkNode",
+			"af-base-node:basic:html-extract",
+			"af-base-node:basic:displayObjectNode"
+		],
+		"awf": "/examples/web-scrape-to-json.awf",
+		"marketplaceId": "e968c7c1-7e2f-4969-ac50-fea65dcc7988",
+		"graph": [
+			{
+				"id": "trigger-run",
+				"label": "Run now",
+				"registryId": "af-base-node:trigger:whenStarted",
+				"type": "When Started",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/whenstarted/"
+			},
+			{
+				"id": "fetch-html",
+				"label": "Fetch the page",
+				"registryId": "af-base-node:basic:getHTMLFromLinkNode",
+				"type": "Get HTML from Link",
+				"family": "core",
+				"attachment": false,
+				"docLink": "/nodes/builtin/core/gethtmlfromlink/"
+			},
+			{
+				"id": "extract",
+				"label": "Pull out the items",
+				"registryId": "af-base-node:basic:html-extract",
+				"type": "HTML Extract",
+				"family": "data",
+				"attachment": false,
+				"docLink": "/nodes/builtin/datatransformation/html-extract/"
+			},
+			{
+				"id": "show-result",
+				"label": "Show the data",
+				"registryId": "af-base-node:basic:displayObjectNode",
+				"type": "Display Object",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/displayobject/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"network",
+				"page-read"
+			],
+			"domains": [
+				"news.ycombinator.com"
+			],
+			"dynamic": false,
+			"apps": [],
+			"models": []
+		}
+	},
+	{
+		"slug": "table-to-csv",
+		"href": "/recipes/extract-data/table-to-csv/",
+		"title": "Copy any table on a page as CSV",
+		"description": "Run it on a page with a table and paste clean CSV into a spreadsheet. The first row becomes the header. No account, no AI.",
+		"goal": "Extract data",
+		"level": "beginner",
+		"minutes": 3,
+		"setup": "none",
+		"apps": [],
+		"nodes": [
+			"af-base-node:trigger:whenStarted",
+			"af-base-node:basic:getStructuredDataNode",
+			"af-base-node:basic:csv",
+			"af-base-node:basic:clipboardWriteNode"
+		],
+		"awf": "/examples/table-to-csv.awf",
+		"marketplaceId": null,
+		"graph": [
+			{
+				"id": "trigger-when-started",
+				"label": "When Started",
+				"registryId": "af-base-node:trigger:whenStarted",
+				"type": "When Started",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/whenstarted/"
+			},
+			{
+				"id": "read-table",
+				"label": "Read the table",
+				"registryId": "af-base-node:basic:getStructuredDataNode",
+				"type": "Get Structured Data",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/getstructureddata/"
+			},
+			{
+				"id": "build-csv",
+				"label": "Build CSV",
+				"registryId": "af-base-node:basic:csv",
+				"type": "CSV",
+				"family": "data",
+				"attachment": false,
+				"docLink": "/nodes/builtin/datatransformation/csv/"
+			},
+			{
+				"id": "copy-clipboard",
+				"label": "Copy to clipboard",
+				"registryId": "af-base-node:basic:clipboardWriteNode",
+				"type": "Clipboard Write",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/clipboardwrite/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"clipboard",
+				"page-read"
+			],
+			"domains": [],
+			"dynamic": false,
+			"apps": [],
+			"models": []
+		}
+	},
+	{
+		"slug": "fill-form-from-saved-values",
+		"href": "/recipes/fill-forms-and-click/fill-form-from-saved-values/",
+		"title": "Fill and submit a web form from saved values",
+		"description": "Keep the answers you type again and again in one place. Run it on a form, confirm, and it fills the fields and submits for you.",
+		"goal": "Fill forms & click",
+		"level": "intermediate",
+		"minutes": 8,
+		"setup": "none",
+		"apps": [],
+		"nodes": [
+			"af-base-node:trigger:whenStarted",
+			"af-base-node:basic:editFields",
+			"af-base-node:waitForApproval:waitForApproval",
+			"af-base-node:basic:formFillNode",
+			"af-base-node:basic:submitFormNode"
+		],
+		"awf": "/examples/fill-form-from-json.awf",
+		"marketplaceId": null,
+		"graph": [
+			{
+				"id": "trigger-run",
+				"label": "Run now",
+				"registryId": "af-base-node:trigger:whenStarted",
+				"type": "When Started",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/whenstarted/"
+			},
+			{
+				"id": "values",
+				"label": "Your form values",
+				"registryId": "af-base-node:basic:editFields",
+				"type": "Edit Fields",
+				"family": "data",
+				"attachment": false,
+				"docLink": "/nodes/builtin/datatransformation/editfields/"
+			},
+			{
+				"id": "approve",
+				"label": "Confirm before filling",
+				"registryId": "af-base-node:waitForApproval:waitForApproval",
+				"type": "Wait For Approval",
+				"family": "flow",
+				"attachment": false,
+				"docLink": "/nodes/builtin/flow/wait-for-approval/"
+			},
+			{
+				"id": "fill",
+				"label": "Fill the form",
+				"registryId": "af-base-node:basic:formFillNode",
+				"type": "Form Fill",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/ui/form-fill/"
+			},
+			{
+				"id": "submit",
+				"label": "Submit the form",
+				"registryId": "af-base-node:basic:submitFormNode",
+				"type": "Submit Form",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/ui/submit-form/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"page-read",
+				"page-write"
+			],
+			"domains": [],
+			"dynamic": false,
+			"apps": [],
+			"models": []
+		}
+	},
+	{
+		"slug": "new-jobs-alert",
+		"href": "/recipes/monitor-pages/new-jobs-alert/",
+		"title": "Get a phone alert when a careers page lists new jobs",
+		"description": "Keep a careers page open and get a push notification on your phone as soon as its job list changes.",
+		"goal": "Monitor pages",
+		"level": "beginner",
+		"minutes": 6,
+		"setup": "connection",
+		"apps": [
+			"Push Notification"
+		],
+		"nodes": [
+			"af-base-node:trigger:elementChangeTrigger",
+			"af-base-node:basic:pushNotification"
+		],
+		"awf": "/examples/job-postings-watch.awf",
+		"marketplaceId": "a5371ff0-92e8-4c59-840a-794a8aa8cf26",
+		"graph": [
+			{
+				"id": "trigger-element-change",
+				"label": "Watch the job list",
+				"registryId": "af-base-node:trigger:elementChangeTrigger",
+				"type": "Element Change",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/elementchange/"
+			},
+			{
+				"id": "send-push",
+				"label": "Send a push notification",
+				"registryId": "af-base-node:basic:pushNotification",
+				"type": "Push Notification",
+				"family": "integration",
+				"attachment": false,
+				"docLink": "/nodes/builtin/integration/push-notification/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			},
+			{
+				"label": "A connection to Push Notification",
+				"href": "/nodes/builtin/integration/push-notification/"
+			},
+			{
+				"label": "Send a push notification: set topic",
+				"href": "/nodes/builtin/integration/push-notification/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"network",
+				"page-read"
+			],
+			"domains": [],
+			"dynamic": false,
+			"apps": [
+				"Push Notification"
+			],
+			"models": []
+		}
+	},
+	{
+		"slug": "price-drop-alert",
+		"href": "/recipes/monitor-pages/price-drop-alert/",
+		"title": "Get an alert when a price on a page drops",
+		"description": "Point it at the price on a product page. While the page is open, you get a notification the moment the price goes below the last one it saw.",
+		"goal": "Monitor pages",
+		"level": "intermediate",
+		"minutes": 8,
+		"setup": "none",
+		"apps": [],
+		"nodes": [
+			"af-base-node:trigger:elementChangeTrigger",
+			"af-base-node:basic:regex",
+			"af-base-node:basic:dataStore",
+			"af-base-node:if:if",
+			"af-base-node:basic:showNotificationNode"
+		],
+		"awf": "/examples/price-on-page-watch.awf",
+		"marketplaceId": null,
+		"graph": [
+			{
+				"id": "trigger-change",
+				"label": "When the price changes",
+				"registryId": "af-base-node:trigger:elementChangeTrigger",
+				"type": "Element Change",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/elementchange/"
+			},
+			{
+				"id": "extract-price",
+				"label": "Read the price",
+				"registryId": "af-base-node:basic:regex",
+				"type": "Regex",
+				"family": "data",
+				"attachment": false,
+				"docLink": "/nodes/builtin/datatransformation/regex/"
+			},
+			{
+				"id": "get-last-price",
+				"label": "Read last price",
+				"registryId": "af-base-node:basic:dataStore",
+				"type": "Data Store",
+				"family": "core",
+				"attachment": false,
+				"docLink": "/nodes/builtin/core/datastore/"
+			},
+			{
+				"id": "is-drop",
+				"label": "Did the price drop?",
+				"registryId": "af-base-node:if:if",
+				"type": "IF",
+				"family": "flow",
+				"attachment": false,
+				"docLink": "/nodes/builtin/flow/if/"
+			},
+			{
+				"id": "notify",
+				"label": "Show the drop alert",
+				"registryId": "af-base-node:basic:showNotificationNode",
+				"type": "Show Notification",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/shownotification/"
+			},
+			{
+				"id": "save-price",
+				"label": "Remember this price",
+				"registryId": "af-base-node:basic:dataStore",
+				"type": "Data Store",
+				"family": "core",
+				"attachment": false,
+				"docLink": "/nodes/builtin/core/datastore/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"network",
+				"page-read",
+				"storage"
+			],
+			"domains": [],
+			"dynamic": true,
+			"apps": [],
+			"models": []
+		}
+	},
+	{
+		"slug": "explain-like-im-five",
+		"href": "/recipes/research-and-reading/explain-like-im-five/",
+		"title": "Explain any highlighted text in plain words",
+		"description": "Highlight a confusing sentence, right-click, and read a simple explanation next to the page. A model on your computer writes it.",
+		"goal": "Research & reading",
+		"level": "beginner",
+		"minutes": 4,
+		"setup": "on-device",
+		"apps": [],
+		"nodes": [
+			"af-base-node:trigger:contextMenu",
+			"af-base-node:basic:getSelectedTextNode",
+			"af-base-node:agent:basicLLMChain",
+			"af-base-node:dependency:webLLM",
+			"af-base-node:basic:displayMarkdownNode"
+		],
+		"awf": "/examples/explain-eli5.awf",
+		"marketplaceId": "b3612bcc-259d-48fe-ab65-1db115501440",
+		"graph": [
+			{
+				"id": "trigger-context-menu",
+				"label": "Right-click a selection",
+				"registryId": "af-base-node:trigger:contextMenu",
+				"type": "Context Menu",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/contextmenu/"
+			},
+			{
+				"id": "get-selection",
+				"label": "Get selected text",
+				"registryId": "af-base-node:basic:getSelectedTextNode",
+				"type": "Get Selected Text",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/getselectedtext/"
+			},
+			{
+				"id": "explain",
+				"label": "Explain simply",
+				"registryId": "af-base-node:agent:basicLLMChain",
+				"type": "Basic LLM Chain",
+				"family": "ai",
+				"attachment": false,
+				"docLink": "/nodes/builtin/ai/aiagents/basicllmchainnode/"
+			},
+			{
+				"id": "local-model",
+				"label": "Local AI model",
+				"registryId": "af-base-node:dependency:webLLM",
+				"type": "Web LLM",
+				"family": "ai",
+				"attachment": true,
+				"docLink": "/nodes/builtin/ai/aidependencies/llm/wbellm/"
+			},
+			{
+				"id": "show-explanation",
+				"label": "Show the explanation",
+				"registryId": "af-base-node:basic:displayMarkdownNode",
+				"type": "Display Markdown",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/displaymarkdown/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			},
+			{
+				"label": "An on-device model, downloaded once",
+				"href": "/app/local-models/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"page-read"
+			],
+			"domains": [],
+			"dynamic": false,
+			"apps": [],
+			"models": [
+				"An on-device model"
+			]
+		}
+	},
+	{
+		"slug": "summarize-this-page",
+		"href": "/recipes/research-and-reading/summarize-this-page/",
+		"title": "Summarize the page you're reading, on your device",
+		"description": "Run it on any article and get a few bullet points in a panel next to the page. A model on your computer writes them, so nothing leaves the browser.",
+		"goal": "Research & reading",
+		"level": "beginner",
+		"minutes": 5,
+		"setup": "on-device",
+		"apps": [],
+		"nodes": [
+			"af-base-node:trigger:whenStarted",
+			"af-base-node:basic:getAllTextNode",
+			"af-base-node:agent:summarization-chain",
+			"af-base-node:dependency:webLLM",
+			"af-base-node:basic:displayMarkdownNode"
+		],
+		"awf": "/examples/summarize-this-page.awf",
+		"marketplaceId": "7819bf04-cf92-4c5c-90a3-3a39cb4fbc53",
+		"graph": [
+			{
+				"id": "trigger-run",
+				"label": "Run now",
+				"registryId": "af-base-node:trigger:whenStarted",
+				"type": "When Started",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/whenstarted/"
+			},
+			{
+				"id": "get-text",
+				"label": "Read the current page",
+				"registryId": "af-base-node:basic:getAllTextNode",
+				"type": "Get All Text",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/getalltext/"
+			},
+			{
+				"id": "summarize",
+				"label": "Summarize it",
+				"registryId": "af-base-node:agent:summarization-chain",
+				"type": "Summarization",
+				"family": "ai",
+				"attachment": false,
+				"docLink": "/nodes/builtin/ai/aiagents/summarizationchainnode/"
+			},
+			{
+				"id": "local-model",
+				"label": "Local AI model",
+				"registryId": "af-base-node:dependency:webLLM",
+				"type": "Web LLM",
+				"family": "ai",
+				"attachment": true,
+				"docLink": "/nodes/builtin/ai/aidependencies/llm/wbellm/"
+			},
+			{
+				"id": "show-summary",
+				"label": "Show the summary",
+				"registryId": "af-base-node:basic:displayMarkdownNode",
+				"type": "Display Markdown",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/displaymarkdown/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			},
+			{
+				"label": "An on-device model, downloaded once",
+				"href": "/app/local-models/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"page-read"
+			],
+			"domains": [],
+			"dynamic": false,
+			"apps": [],
+			"models": [
+				"An on-device model"
+			]
+		}
+	},
+	{
+		"slug": "rewrite-professionally",
+		"href": "/recipes/write-with-ai/rewrite-professionally/",
+		"title": "Rewrite rough text in a professional tone",
+		"description": "Highlight a quick draft, right-click, and paste back a clear, polite version. A model on your computer rewrites it, so your words stay private.",
+		"goal": "Write with AI",
+		"level": "beginner",
+		"minutes": 4,
+		"setup": "on-device",
+		"apps": [],
+		"nodes": [
+			"af-base-node:trigger:contextMenu",
+			"af-base-node:basic:getSelectedTextNode",
+			"af-base-node:agent:basicLLMChain",
+			"af-base-node:dependency:webLLM",
+			"af-base-node:basic:clipboardWriteNode"
+		],
+		"awf": "/examples/rewrite-professional.awf",
+		"marketplaceId": "1bc4e7da-7f6a-4e89-849b-44502b9d79ef",
+		"graph": [
+			{
+				"id": "trigger-context-menu",
+				"label": "Right-click a selection",
+				"registryId": "af-base-node:trigger:contextMenu",
+				"type": "Context Menu",
+				"family": "trigger",
+				"attachment": false,
+				"docLink": "/nodes/builtin/trigger/contextmenu/"
+			},
+			{
+				"id": "get-selection",
+				"label": "Get selected text",
+				"registryId": "af-base-node:basic:getSelectedTextNode",
+				"type": "Get Selected Text",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/getselectedtext/"
+			},
+			{
+				"id": "rewrite",
+				"label": "Rewrite professionally",
+				"registryId": "af-base-node:agent:basicLLMChain",
+				"type": "Basic LLM Chain",
+				"family": "ai",
+				"attachment": false,
+				"docLink": "/nodes/builtin/ai/aiagents/basicllmchainnode/"
+			},
+			{
+				"id": "local-model",
+				"label": "Local AI model",
+				"registryId": "af-base-node:dependency:webLLM",
+				"type": "Web LLM",
+				"family": "ai",
+				"attachment": true,
+				"docLink": "/nodes/builtin/ai/aidependencies/llm/wbellm/"
+			},
+			{
+				"id": "copy-result",
+				"label": "Copy the rewrite",
+				"registryId": "af-base-node:basic:clipboardWriteNode",
+				"type": "Clipboard Write",
+				"family": "inpage",
+				"attachment": false,
+				"docLink": "/nodes/extension/clipboardwrite/"
+			}
+		],
+		"needs": [
+			{
+				"label": "The AWFlow browser extension",
+				"href": "/get-started/install/"
+			},
+			{
+				"label": "An on-device model, downloaded once",
+				"href": "/app/local-models/"
+			}
+		],
+		"touches": {
+			"capabilities": [
+				"clipboard",
+				"page-read"
+			],
+			"domains": [],
+			"dynamic": false,
+			"apps": [],
+			"models": [
+				"An on-device model"
+			]
+		}
+	}
+]

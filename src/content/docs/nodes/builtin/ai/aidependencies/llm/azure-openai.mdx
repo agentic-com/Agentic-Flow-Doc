@@ -3,55 +3,87 @@ title: "Chat Azure OpenAI"
 description: "Use OpenAI models hosted on Azure OpenAI Service."
 sidebar:
   label: "Chat Azure OpenAI"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/llm/azure-openai
+  family: ai
 ---
 
-# Chat Azure OpenAI
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Use OpenAI models hosted on Azure OpenAI Service.
+Give an AI node access to OpenAI models that your organisation hosts on Azure OpenAI Service.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs an Azure OpenAI connection"} href="/app/connections/azure-openai/" linkLabel={"Connect Azure OpenAI"}>
+  Pick a saved connection in the **Authentication** field, or create one from there.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Provides access to OpenAI models deployed on your own Azure OpenAI resource for AI agent nodes.
+Chat Azure OpenAI is a model you plug into the **Model** slot of an AI node, such as the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/). It does not run on its own and has no output. When the AI node runs, it sends its messages to your Azure OpenAI resource and gets the reply back.
+
+- **Temperature** is 0 when you leave it empty, so answers are focused and repeatable.
+- Replies are capped at **Max Tokens** (4096 by default).
+- A failed request is retried up to **Max Retries** times (2 by default). A request that gets no answer within 60 seconds fails.
 
 ## When to use it
 
-Connect this to AI agents when your organization runs OpenAI models through an Azure OpenAI Service resource instead of the public OpenAI API, for example to meet data residency or enterprise compliance requirements.
+- Your company gives you access to GPT models through Azure rather than through OpenAI directly.
+- Your data must stay in your organisation's Azure region and contract.
+
+With a personal OpenAI account, use [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | The Azure OpenAI model name, e.g. `gpt-4o`. Placeholder: `gpt-4o`. |
-| Resource Name | Your Azure OpenAI resource (instance) name. Placeholder: `my-azure-openai`. |
-| Deployment Name | The deployment name configured in your Azure OpenAI resource. Placeholder: `gpt-4o`. |
-| API Version | The Azure OpenAI API version. Defaults to `2024-10-21`. Placeholder: `2024-10-21`. |
-| Authentication | Credential used to authenticate: "Use your Azure OpenAI API key." |
-| Options → Temperature | The temperature to use for the model. |
-| Options → Max Retries | The maximum number of retries to use for the model. Defaults to `2`. |
-| Options → Max Tokens | The most tokens the model may generate in one reply. Defaults to `4096`, which keeps providers from reserving credit for the whole output window. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Model","type":"Text","required":true,"description":"The Azure OpenAI model name, e.g. gpt-4o."},{"name":"Resource Name","type":"Text","required":true,"description":"Your Azure OpenAI resource (instance) name."},{"name":"Deployment Name","type":"Text","required":true,"description":"The deployment name configured in your Azure OpenAI resource."},{"name":"API Version","type":"Text","default":"2024-10-21","description":"The Azure OpenAI API version."},{"name":"Authentication","type":"Credential","required":true,"description":"Use your Azure OpenAI API key."},{"name":"Options","type":"Group","description":"The options to use with the model."},{"name":"Options › Temperature","type":"Number","description":"The temperature to use for the model."},{"name":"Options › Max Retries","type":"Number","default":"2","description":"The maximum number of retries to use for the model."},{"name":"Options › Max Tokens","type":"Number","default":"4096","description":"The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window."}]} />
+{/* AUTO:settings:end */}
+
+You find the values in the Azure portal, on your Azure OpenAI resource:
+
+- **Resource Name**: the name of the resource, the first part of its endpoint. For `https://my-azure-openai.openai.azure.com`, it is `my-azure-openai`.
+- **Deployment Name**: the name you gave the model deployment in the resource (not always the same as the model name).
+- **Model**: the model behind that deployment, for example `gpt-4o`.
+- **API Version**: leave `2024-10-21` unless your administrator tells you otherwise.
 
 ## Outputs
 
-Returns a chat model dependency that can be connected to AI agent nodes.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Model** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
+{/* AUTO:outputs:end */}
+
+The AI node you connect it to produces the output. This node only decides which model answers.
 
 ## Dependencies and credentials
 
-- Requires an Authentication credential holding your Azure OpenAI API key.
-- Also requires the Resource Name and Deployment Name of your Azure OpenAI resource; the node throws an error if Model, Resource Name, or Deployment Name are empty.
+{/* AUTO:deps:start */}
+- **Authentication** (connection): required. See [Connect Azure OpenAI](/app/connections/azure-openai/).
+{/* AUTO:deps:end */}
+
+In **Authentication**, save one of your resource's API keys. In the Azure portal, open the Azure OpenAI resource and copy a key from **Keys and Endpoint**. See [Create a credential](/app/connections/create/).
 
 ## Example workflow
 
-Connect Chat Azure OpenAI to an AI agent or dependency input that accepts this dependency type, set the Model, Resource Name, and Deployment Name to match your Azure OpenAI resource, attach your API key credential, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on selected text.
+2. [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) with **Text** `{{ $input.selectionText }}` and **What to extract** `the person's name, company and email address`.
+3. Chat Azure OpenAI in its **Model** slot: **Resource Name** `my-azure-openai`, **Deployment Name** `gpt-4o`, **Model** `gpt-4o`.
+4. The contact details come out in the `extracted` field, ready for a spreadsheet or CRM node.
 
-## Troubleshooting
+## Common issues
 
-- Ensure Model, Resource Name, and Deployment Name are all filled in — the node rejects empty values for these fields.
-- Verify the API Version is supported by your Azure OpenAI resource if requests fail.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **"Resource Name parameter is required and cannot be empty"** or **"Deployment Name parameter is required and cannot be empty".** Fill in both fields from the Azure portal.
+- **"Model parameter is required and cannot be empty".** Fill in **Model**.
+- **A "DeploymentNotFound" or 404 error.** **Deployment Name** does not match a deployment in that resource, or the deployment is still being created. Copy the exact name from the portal.
+- **A 401 error.** The key belongs to another resource, or was regenerated. Copy a current key from **Keys and Endpoint**.
 
 ## Related nodes
 
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Model Dependencies](/advanced-ai/concepts/model-dependencies/)
+- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/): the same models through OpenAI directly.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): send one prompt and get a reply.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an agent that can use tools and memory.

@@ -3,64 +3,78 @@ title: "Browser Tool"
 description: "Let an agent act on the live page — click, fill, type, select, submit, navigate — with an approval gate on every action."
 sidebar:
   label: "Browser Tool"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/ai/aidependencies/tools/browser
+  family: ai
+  agentTool: true
 ---
 
-# Browser Tool
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Gives an AI agent the ability to act on the active browser tab: **click, fill, type, select, submit a form, or navigate to a URL.** Every action the model decides to take is gated — you approve or reject the concrete action before it happens.
+Let an AI agent click, fill, type, select, submit or navigate on the active tab, with your approval before every action.
 
 ## What it does
 
-Exposes page interaction as a tool the model can call. The model chooses an action and a target; the tool describes it to you in plain language (for example, *"click the 'Delete account' button on example.com"* or *"fill the email field"*), and the action is performed only after you approve it. Rejected actions are never performed — the model is told you declined and adapts.
+Browser Tool is a tool for an agent, not a step in the flow. It has no output port: you connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), and the agent's model can then call it while it works on its prompt.
 
-This is the tool that makes an agent able to *do* things on a page, not just read it. Because page content is untrusted model input, letting a model drive clicks and form fills is exactly the risk the approval gate is designed to contain. See [Action Approval](/advanced-ai/concepts/action-approval/).
+Each call names one action (`click`, `fill`, `type`, `select`, `submit` or `navigate`) and a target: a CSS selector for page actions, a URL for `navigate`. **Fill** clears the field first, then types the value; **type** adds text without clearing.
+
+Before anything happens, an approval row appears in the **Executions** pane describing the action, for example "click #unsubscribe on example.com". It names the action and target, never the value being typed, so passwords and personal data stay hidden. You approve or reject. A rejected action never runs, and the model is told you declined so it can continue without it. If nobody answers within 2 minutes, the action is rejected.
 
 ## When to use it
 
-- You want an agent to operate a web page as part of a task — fill a form, click through a flow, submit an action — with a human confirming each step.
+- Let an agent work through a page for you: fill a form, click through a flow, submit a request, with you confirming each step.
 - The page is already open in the tab the workflow runs against.
-- You need the *model* to decide which element to act on. For fixed, pre-planned page actions, use the dedicated UI action nodes instead (they are not model-driven and don't need per-action approval).
+- The model should decide which element to act on, based on what it read.
+
+For fixed, planned page actions, use the regular page action nodes instead: they don't need a model or an approval for each step.
 
 ## Inputs and settings
 
-This node has no configuration of its own. The model supplies each action at call time:
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
 
-| Field (model-supplied) | Notes |
-| --- | --- |
-| Action | One of `click`, `fill`, `type`, `select`, `submit`, `navigate`. |
-| Selector | CSS selector of the target element (for element actions). |
-| Value | Text to fill/type or option to select. |
-| URL | Destination for `navigate`. |
-| Label | The model's human description of the target, used to make the approval prompt concrete. |
+There is nothing to configure. The model picks the action, the selector, the value and the URL on each call. Give it page structure to work with: pass the page's text or structured data into the agent's **Prompt** so it can choose the right selectors.
 
 ## Outputs
 
-Returns a tool dependency for agent nodes (such as [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)). It has no output port — connect it into an agent's tools input.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-## Approval and safety
+- **Tools** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+{/* AUTO:outputs:end */}
 
-- **Every action is gated.** Nothing touches the page until you approve it; the gate cannot be turned off.
-- **The prompt names the action and target, never the value.** You see *"fill the email field on example.com"* — the text being typed (which may be a password or personal data) is never shown or logged.
-- **Navigation is URL-validated.** `navigate` refuses `javascript:`, `file:`, `chrome:`, non-web schemes, and internal/loopback hosts before it runs.
-- **Unattended runs auto-reject.** With no one to respond, actions are rejected after the approval timeout, so a background run can't act on a page unsupervised.
+What each action did goes back to the model, not to the next node. The agent's own output shows the result: its `response`, and the list of tool calls it made in `steps`.
 
 ## Dependencies and credentials
 
-- No credential required. The tool acts on the tab the workflow is running against.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Read a page with a **Get All Text** or **Get Structured Data** node, feed it to a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Browser Tool** connected, and give the agent a goal like "unsubscribe from this newsletter." When it decides to click or fill, an approval row appears in the **Executions** pane naming the exact action; approve to let it proceed. Use **Approve all remaining for this run** once you trust the sequence.
+1. [Get Structured Data](/nodes/extension/getstructureddata/) reads the newsletter settings page you have open.
+2. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Unsubscribe me from all marketing emails on this page. Page data: {{ $input }}`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and Browser Tool connected to **Tools**.
+3. Run the workflow. When the agent wants to click or fill, approve each row in the **Executions** pane. Once you trust the sequence, choose **Approve all remaining for this run**.
+4. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`, the agent's summary of what it did.
 
-## Troubleshooting
+## Common issues
 
-- If an action never happens, check the **Executions** pane — it may be waiting on approval or have auto-rejected.
-- If the model says the action was denied, it was rejected (by you, the timeout, or — for `navigate` — a blocked URL).
-- If a selector doesn't match, make sure the run is on the correct, fully-loaded tab.
+- **Nothing happens on the page.** The action is waiting for your approval in the **Executions** pane, or it was rejected after 2 minutes without an answer.
+- **The agent says "The user denied this action".** You (or the timeout) rejected it. Run again and approve the step.
+- **"Action denied: invalid or blocked URL".** `navigate` only accepts `http` and `https` addresses on public hosts; local, private and `javascript:` or `file:` addresses are refused.
+- **"Action denied: no selector was provided".** The model asked for a page action without saying which element. Ask it in the **Prompt** to name the element with a CSS selector.
+- **The action runs but nothing changes.** The selector matched nothing, or the page had not finished loading. This node acts through the browser extension, so run the workflow from the extension, on the right tab.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/)
-- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)
-- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/)
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): the agent this tool plugs into.
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/): let the agent call an API instead of using the page.
+- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/): a planned approval step you place in the flow yourself.
+- [Action Approval](/concepts/ai/action-approval/): how the approval gate protects you.

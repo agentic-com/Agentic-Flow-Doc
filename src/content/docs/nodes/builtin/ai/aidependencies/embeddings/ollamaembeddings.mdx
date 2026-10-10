@@ -1,52 +1,81 @@
 ---
 title: "Ollama Embeddings"
-description: "Leverage OLLAM to use Embeddings locally directly on your device"
+description: "Turn text into embeddings with a model running in Ollama."
 sidebar:
   label: "Ollama Embeddings"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/embeddings/ollamaembeddings
+  family: ai
 ---
 
-# Ollama Embeddings
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Leverage OLLAM to use Embeddings locally directly on your device
+Turn text into vectors with an embedding model running in Ollama on your computer: free, private, no API key.
 
 ## What it does
 
-Converts text into vector embeddings using locally-run Ollama models.
+Ollama Embeddings plugs into the **Embeddings** slot of a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node. It does not run on its own and has no output. When the knowledge base is filled or searched, the text goes to the Ollama app on your computer, at `http://localhost:11434`, and comes back as vectors (lists of numbers that capture meaning). Nothing leaves your machine.
+
+A knowledge base remembers the embedding model it was built with and always uses it. So this node decides the model when a **new, empty** knowledge base is first filled. After that, connect the same node to search it.
 
 ## When to use it
 
-Connect this to indexer or RAG nodes when you want local, privacy-focused embeddings without external API calls.
+- You already run Ollama and want a specific open embedding model, such as `nomic-embed-text`.
+- Private documents that must not go to a cloud service, with a model you choose in Ollama.
+
+With nothing to install, [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/) also runs on your device.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","required":true,"description":"The model to use."}]} />
+{/* AUTO:settings:end */}
+
+The **Model** list shows the models installed in your Ollama; use the refresh button after you pull a new one. Pick an embedding model (for example after `ollama pull nomic-embed-text`), not a chat model.
+
+Ollama must allow AWFlow to call it. Start it with:
+
+- Chrome: `OLLAMA_ORIGINS=chrome-extension://linlkeaipfpnhddjkpcbmldionajfifa ollama serve`
+- Firefox: `OLLAMA_ORIGINS=moz-extension://* ollama serve`
+
+When you publish or share the workflow, **Model** is cleared, so whoever installs it picks a model from their own Ollama.
 
 ## Outputs
 
-Returns an embeddings dependency for vector stores and retrieval workflows.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Embeddings** slot of [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+{/* AUTO:outputs:end */}
+
+The vectors go to the knowledge base, not to the next node.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect Ollama Embeddings to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on the page.
+2. [Get All Text](/nodes/extension/getalltext/) with **Output field name** `pageText`.
+3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.pageText }}`, a [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) in its **Text Splitter** slot, and a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) pointing to a new knowledge base in its **Knowledge** slot.
+4. Ollama Embeddings in the Local Knowledge's **Embeddings** slot, **Model** `nomic-embed-text:latest`.
 
-## Troubleshooting
+## Common issues
 
-- **Ollama refuses the request (403 / CORS error):** Ollama only answers browser origins it allows. Start it with the extension's origin allowed:
-  - **Chrome:** `OLLAMA_ORIGINS=chrome-extension://linlkeaipfpnhddjkpcbmldionajfifa ollama serve`
-  - **Firefox:** `OLLAMA_ORIGINS=moz-extension://* ollama serve` (a Firefox add-on's origin is different on every install)
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **"Could not reach Ollama at localhost:11434. Make sure it is running and allows this extension (OLLAMA_ORIGINS)."** Start Ollama, and restart it with `OLLAMA_ORIGINS` set as shown above.
+- **The list says "No models available".** Pull an embedding model, then press the refresh button.
+- **"… was built with … embeddings. Connect that embeddings node to use it."** The knowledge base was built with this Ollama model. Connect Ollama Embeddings with the same **Model**, and make sure Ollama is running.
+- **A "Model mismatch" warning in the run log.** The knowledge base was built with another model, so this node was ignored. Disconnect it, or re-embed the knowledge base from its settings.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/): Ollama chat models for your agents.
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): the knowledge base it plugs into.
+- [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/): in-browser embeddings, nothing to install.

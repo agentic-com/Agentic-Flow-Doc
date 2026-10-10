@@ -1,0 +1,165 @@
+{
+  "name": "Summarise this page in 3 bullets",
+  "description": "Reads the page you're on and asks a chat model for three short bullets. The workflow from lesson 3 of the AWFlow learning path.",
+  "tags": [
+    "ai",
+    "tutorial",
+    "on-device",
+    "extension"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "📄 Summarise any page.\n\nOpen a long article, then press Test Workflow. Get All Text reads the page and the Basic LLM Chain asks the model for three short bullets. Pick a model the first time."
+      },
+      "width": 360,
+      "height": 180
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": {
+        "x": 100,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:whenStarted"
+        },
+        "label": "When Started",
+        "inputs": {},
+        "parameters": {
+          "notes": "Starts the workflow when you press Test Workflow."
+        }
+      }
+    },
+    {
+      "id": "get-text",
+      "type": "basic",
+      "position": {
+        "x": 420,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:getAllTextNode"
+        },
+        "label": "Get All Text",
+        "inputs": {
+          "outputFieldName": "text",
+          "options": {
+            "visibleOnly": true
+          }
+        },
+        "parameters": {
+          "notes": "Reads the readable text of the page you're viewing."
+        }
+      }
+    },
+    {
+      "id": "summarize",
+      "type": "agent",
+      "position": {
+        "x": 740,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:agent:basicLLMChain"
+        },
+        "label": "Basic LLM Chain",
+        "inputs": {
+          "prompt": "Summarise this page in 3 short bullets for a busy reader.\n\n{{ $input.text }}"
+        },
+        "parameters": {
+          "notes": "Asks the connected model for three short bullets."
+        }
+      }
+    },
+    {
+      "id": "model",
+      "type": "dependency",
+      "position": {
+        "x": 740,
+        "y": 500
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:dependency:webLLM"
+        },
+        "label": "Web LLM",
+        "inputs": {
+          "model": "",
+          "options": {
+            "temperature": 0.4
+          }
+        },
+        "parameters": {
+          "notes": "Runs the model in your browser. Pick a model the first time: it downloads once, then works offline."
+        }
+      }
+    },
+    {
+      "id": "show",
+      "type": "basic",
+      "position": {
+        "x": 1060,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:displayMarkdownNode"
+        },
+        "label": "Display Markdown",
+        "inputs": {
+          "title": "Page summary",
+          "content": "{{ $input.response }}"
+        },
+        "parameters": {
+          "notes": "Shows the three bullets."
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-run-get",
+      "source": "trigger-run",
+      "target": "get-text",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-get-sum",
+      "source": "get-text",
+      "target": "summarize",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-sum-model",
+      "source": "summarize",
+      "target": "model",
+      "type": "flowEdge",
+      "sourceHandle": "dependency-0"
+    },
+    {
+      "id": "e-sum-show",
+      "source": "summarize",
+      "target": "show",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": [
+    {
+      "nodeId": "model",
+      "field": "model"
+    }
+  ]
+}

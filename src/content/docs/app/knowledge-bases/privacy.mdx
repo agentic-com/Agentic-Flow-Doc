@@ -1,0 +1,32 @@
+---
+title: "Choose who may read a knowledge base"
+description: "Cloud OK or Device only: decide whether a knowledge base's passages may reach a cloud model, and what happens when they can't."
+kind: guide
+section: app
+sidebar:
+  label: "Privacy"
+---
+
+Every knowledge base has one privacy setting, shown with the same badge everywhere: the knowledge bases page, chats, the agent builder, projects and teams. **Click the badge** to change it, or use **Settings › On this device only** on the knowledge base page.
+
+| Setting | What it means |
+| --- | --- |
+| **Cloud OK** | Passages may be sent to the cloud model that answers. |
+| **Device only** | Only on-device models see it. Cloud chats skip it and say so. |
+
+## What happens with Device only
+
+- **In a chat, agent, project or team**: when the answer comes from a cloud model, the knowledge base is skipped and the steps above the reply say *Skipped · on this device only*, with **Answer this one on-device** when an on-device model is ready.
+- **In a workflow**: the RAG, Q&A and Tools Agent nodes never send it to a cloud model. By default the node **stops with an error**; you can set it to **answer without it** and log a warning instead. See [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options).
+
+Indexing always happens on this device for knowledge bases built with an on-device model, whatever the privacy setting.
+
+## Which to choose
+
+- **Device only** for anything you wouldn't paste into a cloud chat: contracts, health notes, client files. Pair it with an [on-device model](/app/local-models/).
+- **Cloud OK** for public or low-risk material (product docs, saved articles), when you want the best cloud model to answer.
+
+## Related
+
+- [Privacy & your data](/app/privacy-and-data/)
+- [Knowledge in chats & agents](/app/chat-and-agents/knowledge/)

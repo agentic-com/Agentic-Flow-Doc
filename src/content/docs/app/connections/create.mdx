@@ -1,0 +1,81 @@
+---
+title: Create a credential
+description: "Save a key, token or sign-in once in Credentials, then pick it in any node that needs it."
+kind: guide
+section: app
+sidebar:
+  order: 1
+---
+
+import { Steps, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Callout, Screenshot } from '@components/awflow';
+import credentialsNewLight from '@assets/screenshots/credentials-new.light.webp';
+import credentialsNewDark from '@assets/screenshots/credentials-new.dark.webp';
+
+A **credential** is a saved key, token or sign-in that lets a node act in another service: an API key for OpenAI, a Slack bot token, a Google sign-in. You create it once, then pick it in any node. When you share or export a workflow, your credentials stay behind.
+
+<Callout type="tip" title="Looking for one app?" href="/app/connections/" linkLabel="All connections">
+
+Each service has its own page with the exact steps, the permissions to grant and the common errors: Slack, Notion, Google, OpenAI and more.
+
+</Callout>
+
+<Screenshot
+  src={credentialsNewLight}
+  srcDark={credentialsNewDark}
+  alt="The New Credential dialog over the Credentials page: an Integration App / Service picker, Name and Description fields, an Auth Type menu set to Basic Auth with Username and Password fields, a note that the secret is saved locally and encrypted in this browser, and the Create Credential button."
+  hotspots={[{ x: 50, y: 19.6, label: 'Pick the app or service' }, { x: 50, y: 30.2, label: 'Name it so you can find it in nodes' }, { x: 50, y: 51.6, label: 'Auth type decides which fields you fill' }, { x: 50, y: 74.7, label: 'Where the secret is stored' }]}
+/>
+
+## From the Credentials page
+
+<Steps>
+
+1. Open **Credentials** in the sidebar and click **Add Credential**.
+2. Under **Integration App / Service**, pick the app the credential is for, for example **Slack** or **Gmail**. For an AI provider or any other API, pick **Simple Credential**. Click **Continue**.
+3. Give it a **Name** you'll recognise later (service, account and purpose, for example *Slack – marketing bot*) and, if you like, a **Description**.
+4. Check the **Auth Type**. For an app it is set for you. For a simple credential, choose it: see the table below.
+5. Fill the fields for that type. For **OAuth2** (Google, Microsoft 365), click **Check connection** and sign in.
+6. Choose the **Storage location**: **Local (this browser only)** or **Cloud (synced to your account)**.
+7. Click **Create Credential**.
+
+</Steps>
+
+## From a node
+
+In a node's **Credential** (or **Authentication**) field, open the list and click **+ Add Credential**. The same form opens. When you save, the new credential is in the list, ready to pick.
+
+## Auth types
+
+| Auth Type | Fields | Use it for |
+| --- | --- | --- |
+| **Bearer Token** | Bearer Token | Most app tokens and API keys (Slack, Notion, GitHub…). Paste only the token: AWFlow adds `Bearer`. |
+| **Basic Auth** | Username, Password | Services that take two values, such as Trello (API key + token) or Pushover. |
+| **JWT** | JWT | A value sent exactly as typed. Use it for AI provider API keys in workflow nodes. |
+| **OAuth2** | Client ID, Client Secret (optional) | Google (Gmail, Drive, Sheets, Calendar) and Microsoft 365, with [your own OAuth client](/app/connections/oauth-client/). |
+
+<Callout type="info" title="Client Secret">
+
+Microsoft 365 is a **public client**: it has no secret, so the field is hidden and any old value is cleared when you save. A Google **Web application** client needs its secret; a Google **Desktop app** client has none.
+
+</Callout>
+
+## Where credentials are stored
+
+- **Local (this browser only)**: encrypted in this browser. The key sits on the same device, which guards against casual inspection. Turn on the [local secret vault](/app/account/secret-vault/) to lock local credentials with a passphrase.
+- **Cloud (synced to your account)**: stored encrypted on your AWFlow account, so you can use them on your other devices.
+
+If you use AWFlow without an account, credentials are always local. See [Privacy & your data](/app/privacy-and-data/#credentials-and-secrets).
+
+## Tips
+
+- Create **one credential per account and purpose**, and reuse it across workflows. Updating it updates every workflow that uses it.
+- Give a token **only the permissions** your workflow needs. Each connection page lists them per operation.
+- Never paste a secret into a node's normal fields: those travel with the workflow when you share it.
+
+## Next steps
+
+<CardGrid>
+  <LinkCard title="All connections" href="/app/connections/" description="Step-by-step pages per service." />
+  <LinkCard title="Edit a credential" href="/app/connections/edit/" />
+</CardGrid>

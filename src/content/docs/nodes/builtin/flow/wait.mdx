@@ -3,59 +3,76 @@ title: "Wait"
 description: "Pause the workflow for a specified amount of time"
 sidebar:
   label: "Wait"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/wait
+  family: flow
 ---
 
-# Wait
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Pause the workflow for a specified amount of time
+Pause the workflow for a set time, then carry on with the same data.
 
 ## What it does
 
-Pauses workflow execution for a specified duration before continuing.
+Wait holds the run for **Amount** × **Unit** (the unit is **Seconds** unless you change it), then passes the data it received straight through, unchanged.
+
+It pauses **once for everything that arrives**, not once per item. Ten items reaching a 5-second Wait leave together after 5 seconds. To pause between items, put Wait inside a [Loop](/nodes/builtin/flow/loop/) or after [Split in Batches](/nodes/builtin/flow/splitinbatches/).
+
+How it waits depends on the length:
+
+- **Under 1 minute**: a simple timer, precise to the millisecond. Closing the tab cancels it.
+- **1 minute or more, in the browser extension**: a durable wait. The run is saved and resumes at the deadline, even if you close the tab or restart the browser. It resumes within about a minute of the deadline and can last up to **30 days**. Meanwhile the run shows as **waiting** in the Executions pane.
+- **In the web app**, every wait uses the simple timer, so a long wait does not survive a closed tab.
 
 ## When to use it
 
-Use this node to add delays between actions, implement rate limiting, or wait for external processes to complete.
+- Space out requests so a service does not rate-limit you.
+- Give a page or an external job time to finish before the next step.
+- Send a follow-up later: "wait 2 days, then remind me".
+
+To wait until something is actually ready rather than for a fixed time, use [Poll Until](/nodes/builtin/flow/polluntil/) or [Wait For Element](/nodes/extension/ui/wait-for-element/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Amount | How long to wait. |
-| Unit | Milliseconds, seconds, minutes, or hours. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Amount","type":"Number","required":true,"description":"How long to wait. Waits of a minute or more are durable — the run survives a closed tab and resumes at the deadline (up to 30 days). Shorter waits run in-memory."},{"name":"Unit","type":"Choice","required":true,"default":"Seconds","description":"The unit of time to wait. Options: Milliseconds, Seconds, Minutes, Hours."}]} />
+{/* AUTO:settings:end */}
 
-## Short waits vs. durable waits
-
-Wait picks how it pauses based on how long it is:
-
-- **Under 1 minute** — an in-memory timer. Precise to the millisecond, but tied to the open tab: closing the tab cancels it. That's fine for the brief pauses this covers.
-- **1 minute or more** *(in the browser extension)* — a **durable** wait. The run is checkpointed and a browser alarm resumes it at the deadline, so it survives closing the tab, the extension's background worker unloading, and even a browser restart. Durable waits resolve to within about a minute (the alarm's granularity) and can run for up to **30 days**.
-
-In web/local mode (no extension background), every wait uses the in-memory timer, so a long wait there does not survive a closed tab.
-
-When a durable wait is pending, the run shows as **waiting** in the Executions pane until its deadline — the same place a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) run waits.
+Waits longer than 30 days are cut to 30 days.
 
 ## Outputs
 
-When the wait finishes, the data that flowed into the node passes straight through, unchanged, to the next node.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+The data that came in goes out unchanged.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Place Wait between data-producing nodes and downstream actions to control which data continues through the workflow.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on a link.
+2. Wait **2** **Hours**.
+3. A [Browser Notification](/nodes/extension/browsernotification/) reminds you to read the link.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **A long wait never finished.** It ran in the web app, or was shorter than a minute, and the tab was closed. Run long waits from the extension.
+- **The run resumed a little late.** Durable waits resume within about a minute of the deadline. For precise short delays, keep the wait under a minute.
+- **All items arrived at once after the wait.** That is expected: Wait pauses once for the whole input. Use a Loop for per-item pauses.
 
 ## Related nodes
 
-- [Filter](/nodes/builtin/flow/filter/)
-- [Merge](/nodes/builtin/flow/merge/)
-- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) — Wait delays for a fixed duration; Wait For Approval suspends the run until a person approves or rejects it.
+- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/): pause until a person approves or rejects.
+- [Poll Until](/nodes/builtin/flow/polluntil/): check a URL on an interval until it reports done.
+- [Wait For Element](/nodes/extension/ui/wait-for-element/): wait for something to appear on a page.
+- [Loop](/nodes/builtin/flow/loop/): repeat steps, with a Wait inside for per-item pauses.

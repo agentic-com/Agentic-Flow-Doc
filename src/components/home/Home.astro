@@ -1,0 +1,237 @@
+---
+/**
+ * Docs home (awflow/Agentic-Flow#1317, Home.dc.html): hero + live stage, fast path, section tiles,
+ * works-with marquee, help strip and the footer links from #1323 (FAQ, Privacy & data).
+ * The header, section tabs, search dialog and Ask Aria pill come from plugins/starlight-awflow.
+ */
+import { PUBLIC_CHROME_EXTENSION_URL, PUBLIC_FIREFOX_EXTENSION_URL } from 'astro:env/client';
+import { SECTION_PALETTE } from '../../../plugins/starlight-awflow/palette';
+import { getHomeData } from './data';
+import HeroStage from './HeroStage.astro';
+import SearchTyper from './SearchTyper.astro';
+import './home.css';
+
+const data = await getHomeData();
+// The page sets `editUrl: false` so Starlight's own footer link doesn't duplicate this one.
+const editUrl = 'https://github.com/agentic-com/Agentic-Flow-Doc/edit/Dev/src/content/docs/index.mdx';
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+const explore = [
+	{
+		id: 'get-started',
+		name: 'Get started',
+		href: '/get-started/',
+		meta: plural(data.counts.getStarted, 'lesson'),
+		desc: 'Install, then build your first workflow step by step.',
+	},
+	{
+		id: 'app',
+		name: 'Use the app',
+		href: '/app/',
+		meta: plural(data.counts.app, 'guide'),
+		desc: 'Aria, agents, knowledge, settings and connections.',
+	},
+	{
+		id: 'recipes',
+		name: 'Recipes',
+		href: '/recipes/',
+		meta: data.recipeCount ? plural(data.recipeCount, 'recipe') : 'by goal',
+		desc: 'Ready workflows by goal and app.',
+	},
+	{
+		id: 'nodes',
+		name: 'Nodes',
+		href: '/nodes/',
+		meta: plural(data.nodeCount, 'node'),
+		desc: 'Every block, its settings and outputs.',
+	},
+	{
+		id: 'concepts',
+		name: 'Concepts',
+		href: '/concepts/',
+		meta: plural(data.counts.concepts, 'page'),
+		desc: 'Items, mapping, branching, agents and RAG.',
+	},
+	{
+		id: 'releases',
+		name: 'Releases',
+		href: '/releases/',
+		meta: data.latest?.version ?? 'changelog',
+		desc: 'What changed, linked to the docs.',
+	},
+] as const;
+---
+
+<div class="awh not-content" data-pagefind-ignore>
+	<section class="awh-hero" aria-labelledby="awh-title">
+		<div class="awh-hero__copy">
+			<div class="awh-eyebrow awf-rise">
+				<span class="awh-path">~/docs</span>
+				{
+					data.latest && (
+						<a class="awh-new" href={data.latest.href}>
+							<span class="awh-new__pill awf-ping">NEW</span>
+							What's new in {data.latest.version}
+							<span class="awf-arr" aria-hidden="true">
+								→
+							</span>
+						</a>
+					)
+				}
+			</div>
+			<h1 id="awh-title" class="awh-title awf-rise awf-d1">
+				Automate your browser.<br /><span class="awh-shine">Just describe it.</span>
+			</h1>
+			<p class="awh-lede awf-rise awf-d2">
+				Guides, recipes and a reference for every node. Learn to build workflows that read pages, use
+				your apps and think with AI, right in your browser.
+			</p>
+			<SearchTyper />
+			<div class="awh-install awf-rise awf-d4">
+				<a class="awh-btn awf-press" href={PUBLIC_CHROME_EXTENSION_URL}>Add to Chrome</a>
+				<a class="awh-btn awf-press" href={PUBLIC_FIREFOX_EXTENSION_URL}>Add to Firefox</a>
+				<span class="awh-muted">Free · runs in your browser</span>
+			</div>
+		</div>
+		<div class="awh-hero__stage awf-rise awf-d2">
+			<HeroStage />
+		</div>
+	</section>
+
+	<section class="awh-section" aria-labelledby="awh-fast">
+		<div class="awh-section__head">
+			<h2 id="awh-fast">Fast path</h2>
+			<span class="awh-muted"
+				>Press <kbd>⌘</kbd> <kbd>K</kbd> or <kbd>/</kbd> to search anything</span
+			>
+		</div>
+		<div class="awh-fast">
+			<a
+				class="awh-card awf-lift awf-rise awf-d1"
+				style={`--c:${SECTION_PALETTE['get-started'].color};--tint-c:${SECTION_PALETTE['get-started'].tint}`}
+				href="/app/chat-and-agents/building-workflows-in-chat/"
+			>
+				<div class="awh-card__art awh-art-chat" aria-hidden="true">
+					<span class="awh-bubble awh-bubble--me awh-log">Save every PDF I open to Drive</span>
+					<span class="awh-bubble awh-log" style="animation-delay:1s">Plan ready: 3 steps. Build it?</span>
+				</div>
+				<div class="awh-card__body">
+					<span class="awh-card__title">Describe it to Aria <span class="awf-arr" aria-hidden="true">→</span></span>
+					<span class="awh-card__desc">Plain words in, a working workflow out.</span>
+					<span class="awh-card__meta">guide · chat</span>
+				</div>
+			</a>
+			<a
+				class="awh-card awf-lift awf-rise awf-d2"
+				style={`--c:${SECTION_PALETTE.nodes.color};--tint-c:${SECTION_PALETTE.nodes.tint}`}
+				href="/get-started/first-workflow/"
+			>
+				<div class="awh-card__art awh-art-wire" aria-hidden="true">
+					<span class="awh-mini awf-run"></span><span class="awf-wire"><i></i></span><span
+						class="awh-mini awf-run awf-r2"></span><span class="awf-wire"><i style="animation-delay:.9s"></i></span><span
+						class="awh-mini awh-mini--solid awf-run awf-r3"></span>
+				</div>
+				<div class="awh-card__body">
+					<span class="awh-card__title">Build your first workflow <span class="awf-arr" aria-hidden="true">→</span></span>
+					<span class="awh-card__desc">Two nodes, a real page, a visible result.</span>
+					<span class="awh-card__meta">tutorial · quick intro</span>
+				</div>
+			</a>
+			<a
+				class="awh-card awf-lift awf-rise awf-d3"
+				style={`--c:${SECTION_PALETTE.recipes.color};--tint-c:${SECTION_PALETTE.recipes.tint}`}
+				href="/recipes/"
+			>
+				<div class="awh-card__art awh-art-stack" aria-hidden="true">
+					<span class="awh-sheet awf-float"></span>
+					<span class="awh-sheet awh-sheet--front awf-float awf-f2">Copy a table into Google Sheets</span>
+				</div>
+				<div class="awh-card__body">
+					<span class="awh-card__title">Start from a recipe <span class="awf-arr" aria-hidden="true">→</span></span>
+					<span class="awh-card__desc"
+						>{data.recipeCount ? `${data.recipeCount} ready workflows` : 'Ready workflows'}, named by outcome.</span
+					>
+					<span class="awh-card__meta">recipes · by goal</span>
+				</div>
+			</a>
+		</div>
+	</section>
+
+	<section class="awh-section" aria-labelledby="awh-explore">
+		<div class="awh-section__head">
+			<h2 id="awh-explore">Explore the docs</h2>
+		</div>
+		<div class="awh-explore">
+			{
+				explore.map((e) => (
+					<a
+						class="awh-tile awf-lift"
+						href={e.href}
+						style={`--c:${SECTION_PALETTE[e.id].color};--awf-tint:${SECTION_PALETTE[e.id].tint}`}
+					>
+						<div class="awh-tile__art" aria-hidden="true">
+							<span class="awh-tile__box" />
+							<span class="awh-tile__line" />
+							<span class="awh-tile__node awf-float" />
+							<span class="awh-tile__meta">{e.meta}</span>
+						</div>
+						<div class="awh-tile__body">
+							<span class="awh-tile__name">
+								{e.name} <span class="awf-arr" aria-hidden="true">→</span>
+							</span>
+							<span class="awh-tile__desc">{e.desc}</span>
+							<span class="awh-sr">({e.meta})</span>
+						</div>
+					</a>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="awh-works" aria-labelledby="awh-works">
+		<h2 id="awh-works" class="awh-works__label">
+			works with: {data.appCount} apps, any website, your own models
+		</h2>
+		<div class="awh-marquee" tabindex="0" aria-label="Apps and model providers">
+			<ul class="awh-marquee__track">
+				{data.marquee.map((name) => <li>{name}</li>)}
+				{
+					data.marquee.map((name) => (
+						<li aria-hidden="true" class="awh-marquee__dup">
+							{name}
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<section class="awh-help" aria-label="Help">
+		<a class="awh-help__card awh-help__card--dark awf-lift" href="/app/troubleshooting/">
+			<span class="awh-help__tag">troubleshooting</span>
+			<span class="awh-help__title">Something not working? <span class="awf-arr" aria-hidden="true">→</span></span>
+			<span class="awh-help__desc">Find your symptom: “node returns nothing”, “permission denied”…</span>
+		</a>
+		<a class="awh-help__card awf-lift" href="/app/privacy-and-data/" style="--c:#92400E">
+			<span class="awh-help__tag">privacy</span>
+			<span class="awh-help__title">What leaves your browser <span class="awf-arr" aria-hidden="true">→</span></span>
+			<span class="awh-help__desc">Storage, sync, model calls and permissions, explained.</span>
+		</a>
+		<a class="awh-help__card awf-lift" href="/app/help/help/" style={`--c:${SECTION_PALETTE.releases.color}`}>
+			<span class="awh-help__tag">community</span>
+			<span class="awh-help__title">Ask, share, request <span class="awf-arr" aria-hidden="true">→</span></span>
+			<span class="awh-help__desc">Where to get help, report a bug or request a feature.</span>
+		</a>
+	</section>
+
+	<nav class="awh-foot" aria-label="More resources">
+		<span>© {new Date().getFullYear()} Agentic Workflow</span>
+		<ul>
+			<li><a href="/app/faq/">FAQ</a></li>
+			<li><a href="/app/privacy-and-data/">Privacy &amp; data</a></li>
+			<li><a href="/llms.txt">llms.txt</a></li>
+			<li><a href="/releases/rss.xml">RSS</a></li>
+			{editUrl && <li><a href={editUrl}>Edit on GitHub</a></li>}
+		</ul>
+	</nav>
+</div>

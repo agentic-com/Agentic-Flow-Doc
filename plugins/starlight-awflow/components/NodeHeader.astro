@@ -1,0 +1,68 @@
+---
+/**
+ * Node reference header (NodeRef.dc.html): tinted card in the Nodes colour, family icon,
+ * title + description, family / Works-in / agent-tool badges and page actions.
+ */
+import config from 'virtual:starlight-awflow/config';
+import { getAwflowRoute } from '../route-data';
+import { FAMILY_ICONS } from '../lib/icons';
+import { SECTION_PALETTE } from '../palette';
+import Badge from '../../../src/components/awflow/Badge.svelte';
+import WorksIn from '../../../src/components/awflow/WorksIn.svelte';
+import PageActions from '../../../src/components/awflow/PageActions.svelte';
+
+/** Starlight's PAGE_TITLE_ID (not exported): the skip link and TOC "Overview" point at it. */
+const PAGE_TITLE_ID = '_top';
+
+const { node, section, eyebrow, markdownUrl } = getAwflowRoute(Astro.locals);
+const { entry, editUrl } = Astro.locals.starlightRoute;
+const { title, description } = entry.data;
+const color = section?.color ?? SECTION_PALETTE.nodes.color;
+const tint = section?.tint ?? SECTION_PALETTE.nodes.tint;
+const icon = node?.icon;
+const iconIsSvg = icon?.trim().startsWith('<svg');
+const glyph = FAMILY_ICONS[node?.family ?? 'default'];
+---
+
+<section class="awf-node-header awf-rise" style={`--awf-c: ${color}; --awf-t: ${tint}`}>
+	<span class="awf-node-header__wire" aria-hidden="true"></span>
+	{eyebrow && <p class="awf-eyebrow">{eyebrow}</p>}
+	<div class="awf-node-header__main">
+		<span class="awf-node-header__icon" aria-hidden="true">
+			{
+				icon && iconIsSvg ? (
+					<Fragment set:html={icon} />
+				) : icon ? (
+					<img src={icon} alt="" width="30" height="30" />
+				) : (
+					<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+						stroke-linecap="round" stroke-linejoin="round">
+						<path d={glyph} />
+					</svg>
+				)
+			}
+		</span>
+		<div class="awf-node-header__titles">
+			<h1 id={PAGE_TITLE_ID}>{title}</h1>
+			{description && <p class="awf-node-header__lede">{description}</p>}
+		</div>
+	</div>
+	<div class="awf-node-header__meta">
+		<div class="awf-node-header__badges">
+			{node?.familyLabel && <Badge text={node.familyLabel} class="awf-badge--family" />}
+			{node?.worksIn && node.worksIn.length > 0 && <WorksIn envs={node.worksIn} />}
+			{node?.agentTool && <Badge variant="agent-tool" />}
+			{node?.deprecated && <Badge variant="deprecated" />}
+			{node?.since && <Badge text={`Since ${node.since}`} />}
+		</div>
+		<div class="awf-node-header__actions" data-pagefind-ignore>
+			<PageActions
+				client:idle
+				compact
+				markdownUrl={markdownUrl}
+				editUrl={editUrl?.href}
+				askAriaHref={config.askAria?.href ?? '#ask-aria'}
+			/>
+		</div>
+	</div>
+</section>

@@ -3,47 +3,66 @@ title: "Get Current Date"
 description: "Get the current date"
 sidebar:
   label: "Get Current Date"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/datetime/getcurrentdate
+  family: data
 ---
 
-# Get Current Date
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Get the current date
+Get the date and time at the moment the node runs.
 
 ## What it does
 
-Returns the current date and time as a timestamp.
+Get Current Date writes the current date and time into a field named by **Output field name**. It reads the clock of the computer running the workflow, down to the millisecond. It ignores the incoming data unless you turn on **Include input fields**, which keeps the incoming fields next to the date.
 
 ## When to use it
 
-Use this node to add timestamps to data, calculate relative dates, or log when workflows run.
+- Stamp an item with the time it was processed before saving it.
+- Start a date calculation from "now", such as "now plus 7 days".
+- Build a dated file name or message.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Output field name | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns transformed data for downstream nodes.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+The item holds the current date under **Output field name**, for example `{ now: "2026-03-05T09:30:12.418Z" }`. Pass it to [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) for a readable version.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect data into Get Current Date, configure the settings above, and use the output in the next workflow step.
+Log each run to a sheet with a timestamp:
 
-## Troubleshooting
+1. [Schedule](/nodes/builtin/trigger/schedule/) trigger, every hour.
+2. Get Current Date, **Output field name** `checkedAt`.
+3. [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/), **Date to format** `{{ $input.checkedAt }}`, **Format** `YYYY-MM-DD`, **Output field name** `day`, **Include input fields** on.
+4. [Google Sheets](/nodes/builtin/integration/google-sheets/), append a row with `{{ $input.day }}` and `{{ $input.checkedAt }}`.
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+## Common issues
+
+- **The incoming data is gone after this node.** By default only the date is output. Turn on **Include input fields** under **Options**.
+- **The time looks a few hours off.** The date is stored in UTC (the `Z` at the end). [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) shows it in your local time zone.
+- **The date field is missing.** With **Include input fields** on, an incoming field with the same name as **Output field name** replaces the date. Use a different name.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/): turn the date into readable text.
+- [Add To A Date](/nodes/builtin/datatransformation/datetime/addtoadate/): compute a date relative to now.
+- [Round a Date](/nodes/builtin/datatransformation/datetime/roundadate/): get the start of today, this week or this month.

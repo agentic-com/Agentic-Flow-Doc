@@ -3,49 +3,79 @@ title: "Extract Part Of A Date"
 description: "Extract a part of a date"
 sidebar:
   label: "Extract Part Of A Date"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/datetime/extractpartofadate
+  family: data
 ---
 
-# Extract Part Of A Date
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Extract a part of a date
+Pull one number out of a date, such as its year, day of the month or hour.
 
 ## What it does
 
-Extracts a specific component (year, month, day, hour, etc.) from a date value.
+Extract Part Of A Date reads **Date to extract part from** and returns one number, chosen with **Part of date to extract**, in the field named by **Output field name**. Values are read in your computer's local time zone.
+
+| Part | What you get |
+| --- | --- |
+| year | The full year, for example `2026`. |
+| month | The month counted **from 0**: January is `0`, December is `11`. |
+| week | The day of the month divided by 7, a decimal (the 15th gives about `2.14`). It is not a week-of-year number. |
+| day | The day of the month, `1` to `31`. |
+| hour | `0` to `23`. |
+| minute, second | `0` to `59`. |
 
 ## When to use it
 
-Use this node to isolate date components for filtering, grouping, or display purposes.
+- Branch on the hour, for example only notify between 9 and 18 with [IF](/nodes/builtin/flow/if/).
+- Group or label items by year.
+- Check whether today is the 1st of the month.
+
+To turn a date into readable text, use [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Date to extract part from | Source-backed field from the node schema. |
-| Part of date to extract | Source-backed field from the node schema. |
-| Output field name | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Date to extract part from","type":"Date and time","required":true,"description":"The date to extract part from."},{"name":"Part of date to extract","type":"Choice","required":true,"description":"The part of the date to extract. Month counts from 1 (January); week is the ISO week of the year. Options: year, month, week, day, hour, minute, second."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
+{/* AUTO:settings:end */}
+
+**Date to extract part from** accepts a picked date or an expression such as `{{ $input.publishedAt }}`. ISO dates (`2026-03-01T09:30:00Z`) work best.
 
 ## Outputs
 
-Returns transformed data for downstream nodes.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+The item holds one number under **Output field name**, for example `{ hour: 14 }`. Turn on **Include input fields** to keep the incoming fields too.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect data into Extract Part Of A Date, configure the settings above, and use the output in the next workflow step.
+Only send a notification during working hours:
 
-## Troubleshooting
+1. [Get Current Date](/nodes/builtin/datatransformation/datetime/getcurrentdate/), **Output field name** `now`.
+2. Extract Part Of A Date, **Date to extract part from** `{{ $input.now }}`, **Part of date to extract** `hour`, **Output field name** `hour`.
+3. [IF](/nodes/builtin/flow/if/): `{{ $input.hour }}` is greater than or equal to `9` and less than `18`.
+4. On the true branch, a [Browser Notification](/nodes/extension/browsernotification/).
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+## Common issues
+
+- **The month is one lower than expected.** Months start at 0. Add 1 with [Math](/nodes/builtin/datatransformation/math/), or use [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) if you need it as text.
+- **"week" returns a decimal.** It is the day of the month divided by 7, not the week of the year.
+- **The output is empty or `NaN`.** The incoming value is not a date the browser can read. Use an ISO date such as `2026-03-01`.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/): turn a date into text.
+- [Round a Date](/nodes/builtin/datatransformation/datetime/roundadate/): snap a date to the start or end of a unit.
+- [IF](/nodes/builtin/flow/if/): branch on the extracted number.

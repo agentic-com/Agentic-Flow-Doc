@@ -3,51 +3,97 @@ title: "Get Page Assets"
 description: "Get asset and downloadable link URLs from the opened page"
 sidebar:
   label: "Get Page Assets"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getpageassets
+  family: inpage
 ---
 
-# Get Page Assets
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Get asset and downloadable link URLs from the opened page
+List the files a page uses or offers for download (images, documents, video, audio, scripts, styles) with their names and types.
 
 ## What it does
 
-Collects URLs of page assets including images, downloadable files, media, scripts, and stylesheets.
+Get Page Assets scans the active tab, or the area inside **DOM Selector**, and returns one item per file found. Turn each kind on or off under **Options**:
+
+- **Images** (on): `<img>` images and background images set by the page's styles.
+- **Downloadable Links** (on): links that point to a file. A link counts when it has a download attribute, or when its address ends in a known file type such as `.pdf`, `.zip`, `.csv`, `.docx`, `.xlsx`, `.mp3`, `.mp4`, `.png` or `.json`. Links to ordinary web pages are left out.
+- **Media** (on): video and audio sources.
+- **Scripts** (off) and **Styles** (off): the page's script files and stylesheets.
+
+Addresses are made absolute, and the same file is listed only once per kind.
 
 ## When to use it
 
-Use this node to inventory page resources, download assets, or analyze page dependencies.
+- Collect every PDF or spreadsheet linked from a page, then download or read them.
+- Build a list of the media on a page, with file names ready to use.
+- For just image URLs as a simple list, [Get All Images](/nodes/extension/getallimages/) is enough. For every link, including ordinary pages, use [Get All Link](/nodes/extension/getalllinks/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Images | Source-backed field from the node schema. |
-| Downloadable Links | Source-backed field from the node schema. |
-| Media | Source-backed field from the node schema. |
-| Scripts | Source-backed field from the node schema. |
-| Styles | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group"},{"name":"Options › Images","type":"Toggle","default":"On"},{"name":"Options › Downloadable Links","type":"Toggle","default":"On"},{"name":"Options › Media","type":"Toggle","default":"On"},{"name":"Options › Scripts","type":"Toggle","default":"Off"},{"name":"Options › Styles","type":"Toggle","default":"Off"}]} />
+{/* AUTO:settings:end */}
+
+Leave **DOM Selector** empty to scan the whole page, or click the crosshair button in the field and click the area to scan (a downloads section, an article).
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"url","type":"Text"},{"name":"category","type":"Choice"},{"name":"tagName","type":"Text"},{"name":"selector","type":"Text"},{"name":"text","type":"Text"},{"name":"filename","type":"Text"},{"name":"extension","type":"Text"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "url": "…",
+    "category": "…",
+    "tagName": "…",
+    "selector": "…",
+    "text": "…",
+    "filename": "…",
+    "extension": "…"
+  }
+]
+```
+{/* AUTO:outputs:end */}
+
+- `url`: the full address of the file.
+- `category`: `image`, `link`, `media`, `script` or `style`.
+- `filename` and `extension`: taken from the address, for example `report-2026.pdf` and `pdf`. Both are empty when the address has no file name.
+- `text`: the text of the element, such as a link's label ("Download the annual report").
+- `selector`: where the element is on the page.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Get Page Assets after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Open a page that lists reports and run the workflow from a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger.
+2. Add **Get Page Assets** with only **Downloadable Links** on.
+3. Add [Filter](/nodes/builtin/flow/filter/) to keep items where `{{ $input.extension }}` equals `pdf`.
+4. Add [Http Request](/nodes/builtin/core/http-request/) with **URL** = `{{ $input.url }}` and **Response format** = `file`, then [PDF Parser](/nodes/builtin/datatransformation/pdfparser/) to read each PDF.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The output is empty.** No file of the selected kinds was found, or **DOM Selector** matched nothing. Turn on more kinds under **Options**, or scan the whole page.
+- **A download link is missing.** Its address does not end in a known file type (for example a link like `/download?id=42`) and it has no download attribute. Use [Get All Link](/nodes/extension/getalllinks/) to see every link.
+- **Too many small images (icons, logos).** Turn **Images** off, or narrow the scan with **DOM Selector**.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Get All Images](/nodes/extension/getallimages/): image URLs only, as one list.
+- [Get All Link](/nodes/extension/getalllinks/): every link on the page.
+- [Http Request](/nodes/builtin/core/http-request/): download a file you found.
+- [Filter](/nodes/builtin/flow/filter/): keep only the file types you want.

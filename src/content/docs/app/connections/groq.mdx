@@ -1,0 +1,100 @@
+---
+title: "Connect Groq"
+description: "Create a Groq API key and use it with Aria, agents and the Groq workflow nodes."
+kind: connection
+section: app
+sidebar:
+  label: "Groq"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 2 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="JWT" />
+
+## Before you start
+
+- A Groq account. The free tier works, with lower rate limits.
+
+## Used by
+
+- [Chat Groq](/nodes/builtin/ai/aidependencies/llm/groq/)
+- [Aria and agents (Settings › Providers)](/app/settings/providers/)
+
+## Pick a method
+
+| Method | Use it when |
+| --- | --- |
+| **Aria & agents** <Badge variant="new" text="Recommended" /> | Chat with Aria or an agent on Groq models. The key is kept in **Settings › Providers**. |
+| **Workflow nodes** | Use **Chat Groq** in a workflow. The key is a saved credential. |
+
+## Set it up
+
+<Tabs syncKey="connect-groq">
+<TabItem label="Aria & agents (recommended)">
+
+<Steps>
+
+1. **Create a key.** In the Groq console, open [API Keys](https://console.groq.com/keys), click **Create API Key** and copy it. It starts with `gsk_`.
+2. Open **Settings › Providers** and click **+ Add provider**.
+3. Pick **Groq** as the **Provider**, give it a **Label** and paste the key into **API key**.
+4. Type the **Model** id, then click **Add**.
+5. Optionally click **Set as default**, so Aria and agents set to *Same as Aria* use it.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Open a chat, pick the provider's model in the model menu and send *Hello*: the reply comes from Groq. A wrong key shows a provider error in the chat right away.
+
+</Callout>
+
+</TabItem>
+<TabItem label="Workflow nodes">
+
+<Steps>
+
+1. **Create a key.** In the Groq console, open [API Keys](https://console.groq.com/keys), click **Create API Key** and copy it. It starts with `gsk_`.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field). Pick **Simple Credential** and click **Continue**. Name it, for example *Groq – personal*, set **Auth Type** to **JWT** and paste the key into **JWT**, exactly as copied. Choose the **Storage location** and click **Create Credential**.
+3. **Pick it in the node.** In **Chat Groq**, choose the credential in **Authentication** and type the **Model** id.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Connect **Chat Groq** to an AI node (for example a Basic LLM Chain with the prompt *Say hello*) and click **Test step** on the AI node: you get a reply.
+
+</Callout>
+
+</TabItem>
+</Tabs>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `api.groq.com`. AWFlow's servers never relay the call.
+
+Keys added in **Settings › Providers** are separate: they stay **on this device only**, encrypted, and are never synced to your account.
+
+</Callout>
+
+## Common issues
+
+- **A 401, "invalid API key" or "Incorrect API key" error.** The key was mistyped, revoked, or belongs to another account. Create a new key and update the credential (or the provider in **Settings › Providers**).
+- **A 429 or "quota" error.** The account is out of credit or over its rate limit. Add credit or wait, then run again.
+- **An embeddings node fails with 401 while a chat node with the same key works.** The credential is a **Bearer Token**. Embeddings nodes pass the value to the provider as it is, so use a **JWT** credential that holds only the key.
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Chat Groq node" href="/nodes/builtin/ai/aidependencies/llm/groq/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

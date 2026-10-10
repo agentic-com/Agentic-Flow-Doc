@@ -3,61 +3,96 @@ title: "Discord"
 description: "Integrate with Discord: post messages and rich embeds via a webhook, or read channels and messages with a bot token."
 sidebar:
   label: "Discord"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/discord
+  family: integration
 ---
 
-# Discord
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Post messages and rich embeds to a Discord channel via a webhook, or read channels and messages with a bot token.
+Post messages and rich embeds to a Discord channel through a webhook, or read channels and messages and add reactions with a bot.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Discord connection"} href="/app/connections/discord/" linkLabel={"Connect Discord"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Gives every scheduled watcher and page monitor somewhere to report to. In **Webhook** mode it POSTs a message — optionally a rich embed (title, URL, description, thumbnail) — to a single channel. In **Bot** mode it reads channels and messages and adds reactions.
+The Discord node has two ways in, depending on the **Resource**:
+
+- **Webhook → Send** posts to the one channel a webhook belongs to. You can send plain **Message** text, a rich embed (title, link, description, thumbnail image), or both. **Username** changes the sender name for this message only.
+- **Channel** and **Message** use a bot: get a channel's details, list a server's channels, read a channel's latest messages (50 by default, up to 100), get one message, or add a reaction.
+
+The bot cannot send messages; use **Webhook → Send** for that.
 
 ## When to use it
 
-Send a "page changed" notification with the page title and a screenshot thumbnail (pairs well with **Screenshot Page** and **Edit Image**), mirror alerts into a team channel, or read recent messages from a channel to drive a workflow.
-
-## Resources and operations
-
-| Resource | Operations | Auth |
-| --- | --- | --- |
-| Webhook | Send (message + optional rich embed) | Webhook URL |
-| Channel | Get, List (server channels), Get messages | Bot token |
-| Message | Get, React | Bot token |
+- Report a page change, price drop or failed check to a team channel.
+- Post a card with a title, link and screenshot thumbnail using the embed fields.
+- Read a channel's recent messages and summarize them with an AI node.
+- Mark a message as handled by reacting with ✅.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Credential | The Discord credential (see below). |
-| Resource / Operation | What to act on and how. |
-| Message | The message text (Webhook Send) — optional if an embed is provided. |
-| Username | Override the webhook display name for this message. |
-| Embed Title / URL / Description / Thumbnail URL | Fields of the rich embed. Any subset may be set; leave all empty to send a plain message. |
-| Server (Guild) ID | The Discord server ID (Channel → List). |
-| Channel ID / Message ID | Identify the channel or message (Bot operations). |
-| Emoji | Unicode emoji (e.g. 👍) or a custom emoji as `name:id` (Message → React). |
-| Limit | Number of messages to return (Channel → Get messages, 1–100). |
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Discord credential. For Webhook operations store the webhook URL (it is a secret — anyone with it can post to that channel); for Channel/Message operations store a bot token."}]} groups={[{"label":"Webhook","options":[{"label":"Send","rows":[{"name":"Message","type":"Text","description":"The message text to post (optional if an embed is provided)."},{"name":"Username","type":"Text","description":"Override the webhook display name for this message."},{"name":"Embed Title","type":"Text","description":"Title of the rich embed."},{"name":"Embed URL","type":"Text","description":"URL the embed title links to."},{"name":"Embed Description","type":"Text","description":"Body text of the rich embed (Markdown supported)."},{"name":"Embed Thumbnail URL","type":"Text","description":"Image URL shown as the embed thumbnail (e.g. a screenshot)."}]}]},{"label":"Channel","options":[{"label":"Get","rows":[{"name":"Channel ID","type":"Text","required":true,"description":"The Discord channel ID."}]},{"label":"List","rows":[{"name":"Server (Guild) ID","type":"Text","required":true,"description":"The Discord server (guild) ID."}]},{"label":"Get messages","rows":[{"name":"Channel ID","type":"Text","required":true,"description":"The Discord channel ID."},{"name":"Limit","type":"Number","default":"50","description":"Number of messages to return (1-100)."}]}]},{"label":"Message","options":[{"label":"Get","rows":[{"name":"Channel ID","type":"Text","required":true,"description":"The Discord channel ID."},{"name":"Message ID","type":"Text","required":true,"description":"The Discord message ID."}]},{"label":"React","rows":[{"name":"Channel ID","type":"Text","required":true,"description":"The Discord channel ID."},{"name":"Message ID","type":"Text","required":true,"description":"The Discord message ID."},{"name":"Emoji","type":"Text","required":true,"description":"Unicode emoji (e.g. 👍) or a custom emoji as name:id."}]}]}]} />
+
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Discord API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
+
+- Leave **Message** empty if you fill the embed fields; at least one of them must have content.
+- **Embed Thumbnail URL** must be a public image link. **Embed Description** accepts Discord Markdown, for example `**Price:** {{ $input.price }}`.
+- **Emoji** is a plain emoji such as `👍`, or a server emoji written as `name:id`, for example `done:123456789012345678`.
+- Channel, message and server ids are long numbers. In Discord, turn on **Developer Mode** (User settings → Advanced), then right-click a channel, message or server and choose **Copy ID**.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+- **Webhook → Send** returns the posted message, including its `id`.
+- **Channel → List** and **Get messages** return a list, one entry per channel or message, newest message first. Each message has `content`, `author` and `timestamp`.
+- **Message → React** returns an empty object when the reaction is added.
 
 ## Dependencies and credentials
 
-- **Auth type:** Bearer Token. The stored value depends on the mode:
-  - **Webhook** operations: store the **webhook URL**. A webhook URL **is a secret** — anyone holding it can post to that channel, so treat it like a password.
-  - **Channel / Message** operations: store a **bot token**. The node sends it as `Authorization: Bot <token>`.
-- Create one credential per secret (a webhook URL, or a bot token) and select it on the node. The secret is stored in your credential vault and resolved at run time — it is never read from a node parameter.
+{/* AUTO:deps:start */}
+- **Credential** (connection, Bearer Token): required. See [Connect Discord](/app/connections/discord/).
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+The secret you store depends on the resource. Create one credential for each, and pick the right one on the node.
 
-This node is **extension-only**. Discord's API does not send permissive CORS headers, so the calls can only be made from the awflow browser extension, not the web app.
+- **Webhook**: store the full webhook URL. In Discord, open the channel's **Edit Channel → Integrations → Webhooks**, create a webhook and copy its URL. Anyone with this URL can post to the channel, so keep it secret.
+- **Channel** and **Message**: store a bot token from the [Discord Developer Portal](https://discord.com/developers/applications) (your application → **Bot → Reset Token**). Invite the bot to your server, and turn on **Message Content Intent** on the Bot page if you need to read message text.
 
-## Troubleshooting
+See [Create a credential](/app/connections/create/).
 
-- **`Unknown Webhook` / 404 on Webhook Send** — the webhook URL is wrong or the webhook was deleted; recreate it in the channel's Integrations settings.
-- **`rate limited`** — Discord returned 429; reduce how often the node runs.
-- **401 on Bot operations** — the bot token is missing or invalid, or the bot isn't in the server / lacks access to the channel.
-- Discord IDs are numeric snowflakes — enable Developer Mode in Discord to copy channel, message, and server IDs.
+## Example workflow
+
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every hour.
+2. [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/) loads a product page, and [HTML Extract](/nodes/builtin/datatransformation/html-extract/) reads the price.
+3. [IF](/nodes/builtin/flow/if/) continues only when the price is below `50`.
+4. Discord, **Webhook → Send**, **Embed Title** `Price drop`, **Embed URL** the product link, **Embed Description** `Now {{ $input.price }}`.
+
+## Common issues
+
+- **"Discord API Error: Unknown Webhook".** The webhook URL is wrong or the webhook was deleted. Create a new one and update the credential.
+- **"Discord API Error: rate limited".** Discord received too many requests. Run the workflow less often.
+- **"Discord API Error: 401: Unauthorized" on Channel or Message.** The credential holds a webhook URL or an invalid token. Use a bot token credential.
+- **"Discord API Error: Missing Access".** The bot is not in that server, or cannot see the channel. Invite it, or give its role access to the channel.
+- **The run is blocked in the web app.** Discord runs through the browser extension. Install the extension and allow Discord for this workflow when asked, or run the workflow from the extension.
 
 ## Related nodes
 
-- [Screenshot Page](/nodes/extension/screenshotpage/)
-- [Slack](/nodes/builtin/integration/slack/)
+- [Slack](/nodes/builtin/integration/slack/) and [Telegram](/nodes/builtin/integration/telegram/): other chat apps.
+- [Screenshot Page](/nodes/extension/screenshotpage/): capture a page to share.
+- [Push Notification](/nodes/builtin/integration/push-notification/): a message to your phone.

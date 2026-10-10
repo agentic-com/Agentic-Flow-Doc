@@ -3,64 +3,97 @@ title: "RSS Feed Read"
 description: "Reads an RSS feed from a URL and returns the parsed data"
 sidebar:
   label: "RSS Feed Read"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/rss-feed-read
+  family: core
 ---
 
-# RSS Feed Read
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Reads an RSS feed from a URL and returns the parsed data
+Read an RSS or Atom feed, such as a blog, news site or podcast, and get its articles as data.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use a RSS Feed Read connection"} href="/app/connections/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Authentication** field when the service needs one.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Fetches and parses RSS/Atom feeds from a URL, returning structured feed data
-(feed metadata plus an `items` array). The feed body is retrieved with the
-browser `fetch` API and then parsed, so it runs client-side.
+RSS Feed Read downloads the feed at **URL** and turns it into one item: the feed's own details (`title`, `link`, and others the feed provides) plus an `items` list with one entry per article. Each entry typically has `title`, `link`, `pubDate`, `isoDate` (the date in a standard format), `content` and `contentSnippet` (the content as plain text), depending on what the feed includes.
 
-:::note
-Reading arbitrary feeds from other domains needs the **extension build**, whose
-host permissions allow cross-origin requests. The plain web build is subject to
-the browser's CORS policy, so it can only read feeds served with permissive CORS
-headers.
-:::
+**Authentication** adds an `Authorization` header from a saved credential, for private feeds. **Headers** sends any extra request headers.
 
 ## When to use it
 
-Use this node to monitor blogs, news sites, or any RSS-enabled content source for new updates.
+- Watch a blog or news site and get notified of new articles.
+- Send a daily list of headlines to Slack or by email.
+- Feed new articles to an AI model to summarise or classify.
+
+For a page without a feed, use [Get Links from Link](/nodes/builtin/core/getlinksfromlink/) or [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL | Source-backed field from the node schema. |
-| Authentication | Source-backed field from the node schema. |
-| Headers | Source-backed field from the node schema. |
-| Max redirects | Source-backed field from the node schema. |
-| Redirects | Source-backed field from the node schema. |
-| Timeout (ms) | Source-backed field from the node schema. |
-| Reject unauthorized | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"URL","type":"Text","required":true,"description":"Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters."},{"name":"Authentication","type":"Credential","description":"The authentication to use to make the request."},{"name":"Headers","type":"Key-value pairs","description":"The headers to send with the request."},{"name":"Options","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects › Max redirects","type":"Number","default":"10","description":"The maximum number of redirects to follow."},{"name":"Options › Timeout (ms)","type":"Number","default":"10000","description":"Time in ms to wait for the server to send response headers (and start the response body) before aborting the request."},{"name":"Options › Reject unauthorized","type":"Toggle","default":"Off","description":"Whether to reject unauthorized requests."}]} />
+{/* AUTO:settings:end */}
+
+- **URL** is the address of the feed itself (often ending in `/feed`, `/rss` or `.xml`), not of the website's home page.
+- Redirects are always followed. **Max redirects** and **Reject unauthorized** currently have no effect.
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"title","type":"Text"},{"name":"link","type":"Text"},{"name":"items","type":"List of entries"}]} />
+
+```json title="Shape of an output item"
+{
+  "title": "…",
+  "link": "…",
+  "items": []
+}
+```
+{/* AUTO:outputs:end */}
+
+The whole feed is a single item. To handle each article on its own, follow with [Split Out](/nodes/builtin/datatransformation/splitout/) on `items`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Authentication** (connection): optional. See [Create a connection](/app/connections/).
+{/* AUTO:deps:end */}
+
+Most public feeds need no credential. For a private feed, create a credential of the type the feed expects, such as basic auth or a bearer token. See [Create a credential](/app/connections/create/).
 
 ## Example workflow
 
-Connect data into RSS Feed Read, configure the settings above, and use the output in the next workflow step.
+Get notified of new articles every hour:
 
-## Troubleshooting
+1. [Schedule](/nodes/builtin/trigger/schedule/) trigger, every hour.
+2. RSS Feed Read, **URL** `https://blog.example.com/feed`.
+3. [Split Out](/nodes/builtin/datatransformation/splitout/), **Field To Split Out** `items`, **Output field name** `article`.
+4. [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/), **Compare** Selected fields, **Fields** `article.link`, **Also Compare Against Previous Runs** on, so only new articles go on.
+5. [Browser Notification](/nodes/extension/browsernotification/), **Title** `{{ $input.article.title }}`.
 
-- Check that required settings are present before running the node.
-- If the feed fails to load with a CORS or network error on the web build, run the workflow from the extension build instead — arbitrary cross-origin feeds require the extension's host permissions.
-- A non-OK HTTP response or an empty body raises a clear error; verify the URL returns a valid feed.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+## Common issues
+
+- **"HTTP error! status: 404"** (or another number). The address is not a feed or no longer exists. Open it in your browser: a feed shows XML, not a web page.
+- **"Failed to parse RSS/Atom feed from …".** The address returned something that is not a valid feed, often the website's HTML page. Look for the feed link on the site (an RSS icon or `/feed`).
+- **"Empty response body when fetching RSS feed from …".** The server answered with nothing. Try again later or check the address.
+- **"Request timeout while fetching RSS feed from …".** The server was too slow. Raise **Timeout (ms)** under **Options**.
+- **It works in the extension but fails in the web app.** Many sites refuse feed requests sent from another website. Run the workflow from the extension.
 
 ## Related nodes
 
-- [Code](/nodes/builtin/core/code/)
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Split Out](/nodes/builtin/datatransformation/splitout/): one item per article.
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): keep only articles you have not seen.
+- [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/): read the full article behind each link.
+- [Http Request](/nodes/builtin/core/http-request/): read a JSON feed or API instead.

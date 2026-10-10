@@ -3,48 +3,84 @@ title: "Get Selected Text"
 description: "Get the selected text from the page of the actual openend tab"
 sidebar:
   label: "Get Selected Text"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getselectedtext
+  family: inpage
 ---
 
-# Get Selected Text
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Get the selected text from the page of the actual openend tab
+Read the text you have highlighted on the active tab into a field.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/first-workflow.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Captures the text that the user has currently selected on the active browser tab.
+Get Selected Text takes whatever text is currently selected (highlighted with the mouse) on the active tab and stores it in the field you name in **Output field name**. You get plain text, without formatting.
+
+The output holds only the new field. Turn on **Include input fields** to keep the incoming item's fields next to it.
+
+The node fails when nothing is selected, so the rest of the workflow does not run on empty text.
 
 ## When to use it
 
-Use this node to process user-highlighted content, such as summarizing selected text or translating it.
+- "Select, then act" workflows: translate, summarize, look up or save the passage you just highlighted.
+- Pair it with a [Context Menu](/nodes/builtin/trigger/contextmenu/) or [Hotkey](/nodes/builtin/trigger/hotkey/) trigger so you select text and run the workflow in one gesture.
+- To keep links and formatting, use [Get HTML of Selected Text](/nodes/extension/gethtmlofselectedtext/). To read the whole page, use [Get All Text](/nodes/extension/getalltext/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Output field name | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
+{/* AUTO:settings:end */}
+
+**Output field name**: for example `selection`. Later nodes read it with `{{ $input.selection }}`.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+One item with your field, for example `{ "selection": "the text you highlighted" }`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Get Selected Text after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Add a [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger, so the workflow appears when you right-click selected text.
+2. Add **Get Selected Text** with **Output field name** = `selection`.
+3. Add [Translate](/nodes/builtin/ai/localai/translate/) with **Text** = `{{ $input.selection }}`, **From** = English and **To** = French. It runs on your device.
+4. Show the result with [Display Markdown](/nodes/extension/displaymarkdown/).
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"No content found".** Nothing was selected on the active tab when the node ran. Select the text first, and keep that tab active while the workflow runs.
+- **Selected text inside a box on the page is not picked up.** Text selected inside an embedded frame (some editors and comment widgets) is not read; only the main page is.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Turn highlighted text into a Todoist task"} href="/recipes/capture-to-my-apps/selection-to-todoist/" level={"beginner"} minutes={6} setup={"connection"} />
+<AwfRecipeCard title={"Explain any highlighted text in plain words"} href="/recipes/research-and-reading/explain-like-im-five/" level={"beginner"} minutes={4} setup={"on-device"} />
+<AwfRecipeCard title={"Rewrite rough text in a professional tone"} href="/recipes/write-with-ai/rewrite-professionally/" level={"beginner"} minutes={4} setup={"on-device"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Get HTML of Selected Text](/nodes/extension/gethtmlofselectedtext/): the same selection, with its markup.
+- [Get All Text](/nodes/extension/getalltext/): all the text of the page.
+- [Clipboard Write](/nodes/extension/clipboardwrite/): put a result back on the clipboard.

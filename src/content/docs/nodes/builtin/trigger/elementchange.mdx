@@ -3,65 +3,116 @@ title: "Element Change"
 description: "Run the flow when any of one or more CSS selectors on a matching page changes."
 sidebar:
   label: "Element Change"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/elementchange
+  family: trigger
 ---
 
-# Element Change
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Run the flow when any of one or more CSS selectors on a matching page changes.
+Run a workflow when an element on an open page changes, appears, disappears, or shows a given text.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/job-postings-watch.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Watches one or more elements on any open tab whose URL matches the configured patterns. The extension injects a `MutationObserver` for each selector while the page is open, and fires the workflow when any watched element meets the chosen condition. The trigger only runs inside the awflow browser extension — never in the web app.
+When a page matching the **URL Patterns** finishes loading, the extension starts watching each element listed in **CSS Selectors** on that page. It keeps watching while the page stays open. As soon as one of them meets the **Fire when** condition, the workflow runs from this trigger.
+
+- **Content changes**: the element's text is different from before.
+- **Element appears**: the element was not on the page and now is.
+- **Element disappears**: the element was on the page and now is not.
+- **Text matches**: the element's text now contains **Match text**. It fires once when the text starts matching, not again while it keeps matching.
+
+Web pages often change many times in a split second. The trigger waits until the page has been quiet for **Debounce (ms)** (500 by default) before it checks, so a burst of changes fires once.
 
 ## When to use it
 
-Use this trigger to react to live changes on a page without polling: a price updating, a "Back in stock" badge appearing, a status line changing, or a headline matching a keyword. Add several selectors to one node when the same reaction should fire for any of a set of elements.
+- Get told when a price changes or a "Back in stock" label appears.
+- React when a status line on a dashboard changes, or when a new message shows up.
+- Watch several elements at once: add a row per element, and any of them can fire the workflow.
+
+To run when a page opens rather than when it changes, use [Page Load](/nodes/builtin/trigger/pageload/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| CSS Selectors | A list of elements to watch. Each row is a DOM picker — type a selector, or use the crosshair to pick an element directly on the page. The flow fires when **any** selector meets the condition. At least one selector is required. |
-| Fire when | The condition each selector is tested against: **Content changes**, **Element appears**, **Element disappears**, or **Text matches**. |
-| Match text | The text to look for when *Fire when* is **Text matches**. |
-| Debounce (ms) | Single-page apps mutate constantly; the debounce coalesces bursts of mutations into one fire. Defaults to 500 ms. |
-| URL Patterns | The pages the observers are injected into. Defaults to `<all_urls>`. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"CSS Selectors","type":"List","required":true,"description":"One or more elements to watch. The flow fires when any of them meets the condition. Use the crosshair to pick an element on the page."},{"name":"Fire when","type":"Choice","default":"Content changes","description":"Options: Content changes, Element appears, Element disappears, Text matches."},{"name":"Match text","type":"Text","description":"Text to match when condition is \"Text matches\"."},{"name":"Debounce (ms)","type":"Number","default":"500","description":"SPAs mutate constantly; debounce coalesces bursts into one fire."},{"name":"URL Patterns","type":"Tags","default":"[\"<all_urls>\"]"}]} />
+{/* AUTO:settings:end */}
 
-The condition, match text, debounce, and URL patterns are shared by every selector in the list.
+- **CSS Selectors**: click the crosshair on a row and then click the element on the page, so you do not have to write the selector yourself. If a selector matches several elements, only the first one on the page is watched. Empty rows are ignored.
+- **Match text** is case-sensitive and matches part of the text: `In stock` matches "In stock now" but not "in stock".
+- **Fire when**, **Match text**, **Debounce (ms)** and **URL Patterns** apply to every selector in the list.
+- **URL Patterns** use the form `scheme://host/path` with `*` as a wildcard, for example `https://shop.example.com/product/*`. Only `http` and `https` pages are watched.
 
 ## Outputs
 
-When a watched selector fires, the workflow starts with this trigger context:
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-| Field | Notes |
-| --- | --- |
-| `triggerType` | Always `elementChange`. |
-| `selector` | The single selector that fired (not the whole list). |
-| `condition` | The condition that was met. |
-| `url` | The page URL where the change happened. |
-| `matchedText` | The element's text at the moment it fired. |
-| `tabId` | The tab the change happened in. |
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"elementChange\""},{"name":"triggeredAt","type":"Text"},{"name":"selector","type":"Text"},{"name":"condition","type":"Text"},{"name":"url","type":"Text"},{"name":"tabId","type":"Number"},{"name":"matchedText","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "triggerType": "elementChange",
+  "triggeredAt": "…",
+  "selector": "…",
+  "condition": "…",
+  "url": "…",
+  "tabId": 0,
+  "matchedText": "…"
+}
+```
+{/* AUTO:outputs:end */}
+
+- `selector`: the one selector that fired, not the whole list.
+- `condition`: `changed`, `appeared`, `disappeared` or `matches`.
+- `matchedText`: the element's text when it fired. For **Element disappears**, it is the last text the element had.
+- `url` and `tabId`: the page and tab where the change happened.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
-- Runs inside the awflow browser extension only.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Add an Element Change trigger, add a row for each element you want to watch (for example `.price` and `.availability`), set *Fire when* to **Content changes**, and restrict *URL Patterns* to the product page. Connect it to a notification node so you are alerted whenever either element changes.
+Get a notification when a product is back in stock:
 
-## Troubleshooting
+1. Add **Element Change** with **URL Patterns** `https://shop.example.com/product/*`.
+2. In **CSS Selectors**, use the crosshair to pick the stock label, for example `.availability`.
+3. Set **Fire when** to **Text matches** and **Match text** to `In stock`.
+4. Add [Browser Notification](/nodes/extension/browsernotification/) with **Title** `Back in stock` and **Message** `{{ $input.url }}`.
+5. Activate the workflow, then reload the product page and leave it open.
 
-- If nothing fires, confirm the tab's URL matches one of the *URL Patterns* and that each selector actually matches an element on the page — use the crosshair to pick it, or the ping button to highlight the current selector.
-- On single-page apps, raise the debounce if the flow fires more often than expected.
-- **Text matches** fires on the transition into a match, not on every mutation while the text keeps matching.
-- Blank selector rows are ignored; at least one non-empty selector must remain.
-- Workflows saved before the selector list existed keep working: their single selector is honoured as a one-item list.
+## Common issues
+
+- **Nothing fires after I activated the workflow.** Watching starts when a matching page finishes loading. Reload pages that were already open.
+- **Nothing fires at all.** Check that the page address matches a **URL Patterns** entry and that the selector finds the element. Pick it again with the crosshair: sites often rename their classes.
+- **It fires too often.** The page keeps changing the element (a clock, a counter, an animation). Raise **Debounce (ms)**, pick a more precise element, or use **Text matches**.
+- **It stopped firing after I moved to another page.** Watching ends when the page goes away and starts again on the next matching page load. The tab must stay open on the page you watch.
+- **It does not work in the web app.** This node runs in the browser extension; install it and activate the workflow there.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Get a phone alert when a careers page lists new jobs"} href="/recipes/monitor-pages/new-jobs-alert/" level={"beginner"} minutes={6} setup={"connection"} />
+<AwfRecipeCard title={"Get an alert when a price on a page drops"} href="/recipes/monitor-pages/price-drop-alert/" level={"intermediate"} minutes={8} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
-- [Page Load](/nodes/builtin/trigger/pageload/)
-- [Navigation](/nodes/builtin/trigger/navigation/)
-- [Browser Notification](/nodes/extension/browsernotification/)
+- [Page Load](/nodes/builtin/trigger/pageload/): fire when a matching page finishes loading.
+- [Navigation](/nodes/builtin/trigger/navigation/): fire when a tab opens, changes address or closes.
+- [Get Element Data](/nodes/extension/getelementdata/): read more data from the page after the trigger fires.
+- [Browser Notification](/nodes/extension/browsernotification/): alert yourself when it fires.

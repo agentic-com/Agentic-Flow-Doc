@@ -1,0 +1,167 @@
+---
+title: "Items: how data moves"
+description: "Every step receives items and passes items on. Most steps run once per item, which is why you rarely need a loop."
+sidebar:
+  label: Items
+  order: 1
+section: concepts
+kind: concept
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards, ItemsPlayground } from "@components/awflow";
+
+:::note[In 20 seconds]
+An **item** is one record with named fields, like a row in a table. A step receives a list of items and passes a list on. When a step receives several items, it usually **runs once for each one**. So three links in means three requests out, with no loop to build.
+:::
+
+## See it happen
+
+Get All Link returns **one** item that holds a list of URLs. Split Out turns that list into **three** items, so Edit Fields runs three times. Click a step to see what it output.
+
+<ItemsPlayground
+  client:visible
+  steps={[
+    {
+      name: "Get All Link",
+      kind: "data",
+      note: "one item, a list inside",
+      items: { links: ["https://news.example/a/1", "https://news.example/a/2", "https://news.example/a/3"] },
+    },
+    {
+      name: "Split Out",
+      kind: "data",
+      note: "Field To Split Out: links",
+      items: [
+        { links: "https://news.example/a/1" },
+        { links: "https://news.example/a/2" },
+        { links: "https://news.example/a/3" },
+      ],
+    },
+    {
+      name: "Edit Fields",
+      kind: "data",
+      runs: 3,
+      note: "url = {{ $input.links }}",
+      items: [
+        { url: "https://news.example/a/1", source: "news" },
+        { url: "https://news.example/a/2", source: "news" },
+        { url: "https://news.example/a/3", source: "news" },
+      ],
+    },
+  ]}
+  caption="Illustration of a run. In the app, open a step after a run to see its output."
+/>
+
+## What an item looks like
+
+An item is a JSON object with named fields:
+
+```json title="One item"
+{
+  "title": "Quarterly report",
+  "url": "https://example.com/report"
+}
+```
+
+A step's output is either one item or a list of items. A list can hold one item, many items, or none.
+
+```json title="Two items"
+[
+  { "title": "Page A", "url": "https://example.com/a" },
+  { "title": "Page B", "url": "https://example.com/b" }
+]
+```
+
+## A list of items is not a list inside an item
+
+This is the difference that trips people up most:
+
+- `[{ "url": "…/a" }, { "url": "…/b" }]` is **two items**. The next step runs twice.
+- `{ "links": ["…/a", "…/b"] }` is **one item** with a list in its `links` field. The next step runs once and sees the whole list.
+
+Many page nodes, like [Get All Link](/nodes/extension/getalllinks/), return the second shape. Use [Split Out](/nodes/builtin/datatransformation/splitout/) to turn it into one item per entry, and [Aggregate](/nodes/builtin/datatransformation/aggregate/) to go the other way.
+
+## How many times does a step run?
+
+| The step receives… | It runs… |
+| --- | --- |
+| One item | Once |
+| A list of N items | N times, once per item. Each run sees one item as `$input`. |
+| Lists from two connected steps | Once for **every combination**: 2 items and 3 items give 6 runs. |
+| Nothing, because a branch wasn't taken | Not at all. Steps on the untaken port of an [IF](/nodes/builtin/flow/if/) or [Switch](/nodes/builtin/flow/switch/) are skipped. |
+
+Some nodes always work on the whole list at once and run a single time: [Aggregate](/nodes/builtin/datatransformation/aggregate/), [Limit](/nodes/builtin/datatransformation/limit/), [Merge](/nodes/builtin/flow/merge/), [Compare Datasets](/nodes/builtin/flow/comparedatasets/), [Wait](/nodes/builtin/flow/wait/), [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) and [Poll Until](/nodes/builtin/flow/polluntil/).
+
+The run log shows the count too: **Running node Edit Fields (2/3)**.
+
+## When you do want to repeat work yourself
+
+Running once per item covers most jobs. Build a loop only when the repeat depends on a condition, a batch size or a deadline.
+
+<CompareCards
+  label="Ways to repeat work"
+  cards={[
+    {
+      title: "Loop",
+      icon: "loop",
+      href: "/concepts/flow/looping/#repeat-while-a-condition-holds",
+      when: "Repeat steps while a condition holds.",
+      example: "Click Next until the last page.",
+      meta: "Loop · Done",
+    },
+    {
+      title: "Split in Batches",
+      icon: "batch",
+      href: "/concepts/flow/looping/#work-through-a-list-in-batches",
+      when: "Work through a long list a few items at a time.",
+      example: "500 rows, 20 at a time, to respect a rate limit.",
+      meta: "Loop · Done",
+    },
+    {
+      title: "Poll Until",
+      icon: "poll",
+      href: "/nodes/builtin/flow/polluntil/",
+      when: "Check a URL again and again until it's ready.",
+      example: "Every 5 minutes until an export finishes.",
+      meta: "Done · Timeout",
+    },
+  ]}
+/>
+
+## You'll notice this when…
+
+<details>
+<summary>A step sent 24 emails instead of 1</summary>
+
+It received 24 items, so it ran 24 times. Put [Aggregate](/nodes/builtin/datatransformation/aggregate/) in front of it to combine the items into one, then build a single message from the combined list. [Limit](/nodes/builtin/datatransformation/limit/) set to 1 also works when you only need the first item.
+
+</details>
+
+<details>
+<summary>A step ran once but you expected one run per link</summary>
+
+The previous step output one item with a list inside it, not a list of items. Add [Split Out](/nodes/builtin/datatransformation/splitout/) on that list field.
+
+</details>
+
+<details>
+<summary>A step ran 6 times with only 2 and 3 items coming in</summary>
+
+It has two incoming connections that each carry a list, so it ran once for every combination. Join the two lists first with [Merge](/nodes/builtin/flow/merge/), or make one side a single item with [Aggregate](/nodes/builtin/datatransformation/aggregate/).
+
+</details>
+
+<details>
+<summary>The next step never ran</summary>
+
+Nothing reached it on that path: every item went down the other port of an [IF](/nodes/builtin/flow/if/) or [Switch](/nodes/builtin/flow/switch/), or a [Filter](/nodes/builtin/flow/filter/) kept nothing. Open the output of the step before it to see where the items went.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Mapping in the UI" description="Put a value from an earlier step into a setting." href="/concepts/data/data-mapping/data-mapping-ui/" />
+  <LinkCard title="Practise it" description="Pick a recipe that works through a list of links or rows." href="/recipes/" />
+</CardGrid>

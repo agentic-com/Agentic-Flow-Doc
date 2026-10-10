@@ -3,67 +3,97 @@ title: "Split in Batches"
 description: "Loop over a list a batch at a time, running the body once per batch"
 sidebar:
   label: "Split in Batches"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/splitinbatches
+  family: flow
 ---
 
-# Split in Batches
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Walk through a list a fixed number of items at a time, running the steps in its **Loop** branch once for each batch, then continue from **Done** when the list is exhausted.
+Work through a list a few items at a time, running the same steps once per batch.
 
 ## What it does
 
-Give it a list and a batch size. On each pass it hands the next slice of the list to its **Loop** branch and waits for that branch to finish before taking the next slice. When every item has been processed it stops looping and control moves to the **Done** branch.
+Split in Batches works like [Loop](/nodes/builtin/flow/loop/), but instead of a condition you give it a list. It has two inputs and two outputs:
 
-Where the [Loop](/nodes/builtin/flow/loop/) node repeats until a condition goes false, Split in Batches repeats until it has walked the whole list — you don't write a condition, you point it at the data.
+- **Input** (top): where the data first comes in.
+- **Loop Back** (bottom input): connect the last step of the repeated part here.
+- **Loop** (output): gets the next batch; the steps to repeat start here.
+- **Done** (output): runs once, after the last batch.
+
+On each pass it sends the next **Batch size** items out of **Loop** and waits for them to come back through **Loop Back** before sending the next ones. With 7 items and a batch size of 3, the steps run three times, with items 1-3, 4-6 and 7, then the workflow continues from **Done**.
+
+- An empty list goes straight to **Done**. A single value that is not a list counts as one batch of one item.
+- As a safety limit, the node stops after 1,000 passes, even if items are left.
+- If the run pauses in the middle (for example on a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) inside the loop), it resumes at the right batch.
 
 ## When to use it
 
-- Process a large list in manageable chunks — e.g. send 10 rows at a time to an API that rejects big payloads.
-- Page through results without holding everything in memory at once.
-- Run a per-item action (enrich, notify, write a record) where the body should see one small group at a time.
+- Send rows to an API 10 at a time because it rejects large requests.
+- Ask for an approval or show a form once per item (batch size 1).
+- Slow down: add a [Wait](/nodes/builtin/flow/wait/) inside the loop so a site or API isn't hit too fast.
+
+Most nodes already run once per item, so you don't need Split in Batches just to handle every item of a list. To repeat until a condition changes, use [Loop](/nodes/builtin/flow/loop/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Items | The list to split into batches, e.g. `{{ $input.rows }}`. A single (non-array) value is treated as one batch of one; an empty or missing list goes straight to **Done**. |
-| Batch size | How many items to hand the body each pass. Default 1. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Items","type":"Value","required":true,"description":"The list to split into batches."},{"name":"Batch size","type":"Number","default":"1","description":"How many items to emit per pass."}]} />
+{/* AUTO:settings:end */}
 
-## Ports
+Set **Items** to an expression that returns a list, for example `{{ $input.data.contacts }}` after an Http Request. If your data arrives as many separate items, gather them into one list first with [Aggregate](/nodes/builtin/datatransformation/aggregate/).
 
-- **Loop** — runs once per batch. Wire the end of the branch back into the node's **Loop Back** input so the next batch runs.
-- **Done** — runs once, after the last batch, when the list is exhausted.
+## Outputs
 
-## What the body receives
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Done"},{"name":"Loop"}]} />
 
-On each pass, the **Loop** branch's `$input` is the current batch state:
+Each output item has these fields:
 
-| Field | Meaning |
-| --- | --- |
-| `batch` | The items in this batch — use `{{ $input.batch }}`. |
-| `batchIndex` | Zero-based number of the current batch. |
-| `isLast` | `true` on the final batch. |
-| `items` | The full original list. |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"done","type":"True/false","description":"True once every item has been emitted"},{"name":"batch","type":"List","description":"The items of this pass"},{"name":"batchIndex","type":"Number"},{"name":"isLast","type":"True/false"},{"name":"items","type":"List","description":"Every item being split"}]} />
 
-The **Done** branch also receives `items`, so `{{ $input.items }}` gives you the original list to continue with.
-
-## Example
-
-Splitting 7 rows with a batch size of 3 runs the body three times — `[0,1,2]`, `[3,4,5]`, `[6]` — and then continues from **Done**.
-
-```mermaid
-flowchart LR
-    S["Split in Batches"] -- Loop --> B["Call API with $input.batch"]
-    B -- Loop Back --> S
-    S -- Done --> N["Continue with $input.items"]
+```json title="Shape of an output item"
+{
+  "done": true,
+  "batch": [],
+  "batchIndex": 0,
+  "isLast": true,
+  "items": []
+}
 ```
+{/* AUTO:outputs:end */}
 
-## Good to know
+In the repeated steps, read the current batch with `{{ $input.batch }}`. `batchIndex` counts batches from 0, and `isLast` is true on the final batch. From **Done**, `{{ $input.items }}` still gives you the whole list.
 
-- **Runs are bounded.** As a safety net the node stops after 1000 passes even if the list is longer, matching the Loop node's cap, so a runaway can't freeze the tab.
-- **Durable pagination.** If a run is paused (or the tab is closed) mid-loop, its batch position is saved with the run and resumes at the right batch — you don't restart from the first batch.
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+Send contacts to an API 25 at a time:
+
+1. [Http Request](/nodes/builtin/core/http-request/) gets `https://api.example.com/contacts`, which returns `{ "contacts": [...] }`.
+2. Split in Batches with **Items** `{{ $input.data.contacts }}` and **Batch size** `25`.
+3. From **Loop**: a second Http Request, **POST** to `https://api.example.com/contacts/bulk` with `{{ $input.batch }}` in the JSON body, then [Wait](/nodes/builtin/flow/wait/) with **Amount** `2` and **Unit** **Seconds**. Connect the Wait to **Loop Back**.
+4. From **Done**: [Show Notification](/nodes/extension/shownotification/) says `All contacts sent`.
+
+## Common issues
+
+- **The steps run only once.** The last repeated step is not connected to **Loop Back**, so the node never gets asked for the next batch. Connect it to the bottom input, not the top one.
+- **It goes straight to Done.** **Items** resolved to an empty list or to nothing. Check the expression in the run's input for this node; it must point to a list.
+- **Nothing runs after the loop.** Connect the next steps to **Done**, not to **Loop**.
+- **It stopped before the end of a very long list.** The node stops after 1,000 passes. Raise **Batch size** so the list fits in fewer passes.
 
 ## Related nodes
 
-- [Loop](/nodes/builtin/flow/loop/)
-- [Filter](/nodes/builtin/flow/filter/)
-- [Merge](/nodes/builtin/flow/merge/)
+- [Loop](/nodes/builtin/flow/loop/): repeat while a condition holds.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): turn a list field into separate items, without looping.
+- [Wait](/nodes/builtin/flow/wait/): pause between batches.
+- [Aggregate](/nodes/builtin/datatransformation/aggregate/): gather items back into one list.

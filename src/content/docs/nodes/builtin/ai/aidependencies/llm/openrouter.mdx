@@ -3,52 +3,81 @@ title: "Chat OpenRouter"
 description: "Route to hundreds of models across providers through OpenRouter."
 sidebar:
   label: "Chat OpenRouter"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/llm/openrouter
+  family: ai
 ---
 
-# Chat OpenRouter
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Route to hundreds of models across providers through OpenRouter.
+Give an AI node access to hundreds of models from many providers (Anthropic, OpenAI, Google, Meta, Mistral and more) with one OpenRouter API key.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs an OpenRouter connection"} href="/app/connections/openrouter/" linkLabel={"Connect OpenRouter"}>
+  Pick a saved connection in the **Authentication** field, or create one from there.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Provides access to hundreds of models across many providers through OpenRouter's unified, OpenAI-compatible API. This node runs the OpenAI client against OpenRouter's base URL.
+Chat OpenRouter is a model you plug into the **Model** slot of an AI node, such as the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/). It does not run on its own and has no output. When the AI node runs, it sends its messages to OpenRouter, which passes them to the model you chose and returns the reply. You pay OpenRouter, from one balance, whatever the model.
+
+- **Temperature** is 0 when you leave it empty, so answers are focused and repeatable.
+- Replies are capped at **Max Tokens** (4096 by default). This also stops OpenRouter from reserving credit for a model's whole output window, which can fail on a small balance.
+- A failed request is retried up to **Max Retries** times (2 by default). A request that gets no answer within 60 seconds fails.
 
 ## When to use it
 
-Connect this to AI agents when you want to pick from a wide range of provider models (for example `anthropic/claude-3.5-sonnet`) through a single OpenRouter account, without configuring each provider individually.
+- You want to try or compare models from several providers without an account at each.
+- You want one bill and one key for all your AI nodes.
+- You want free or very cheap models that OpenRouter lists.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | The OpenRouter model slug, e.g. `anthropic/claude-3.5-sonnet`. Placeholder: `anthropic/claude-3.5-sonnet`. |
-| Authentication | Credential used to authenticate: "Use your OpenRouter API key as a Bearer token." |
-| Options → Temperature | The temperature to use for the model. |
-| Options → Max Retries | The maximum number of retries to use for the model. Defaults to `2`. |
-| Options → Max Tokens | The most tokens the model may generate in one reply. Defaults to `4096`, which keeps providers from reserving credit for the whole output window. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Model","type":"Text","required":true,"description":"The OpenRouter model slug, e.g. anthropic/claude-3.5-sonnet."},{"name":"Authentication","type":"Credential","required":true,"description":"Use your OpenRouter API key as a Bearer token."},{"name":"Options","type":"Group","description":"The options to use with the model."},{"name":"Options › Temperature","type":"Number","description":"The temperature to use for the model."},{"name":"Options › Max Retries","type":"Number","default":"2","description":"The maximum number of retries to use for the model."},{"name":"Options › Max Tokens","type":"Number","default":"4096","description":"The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window."}]} />
+{/* AUTO:settings:end */}
+
+**Model** is OpenRouter's model slug, in the form `provider/model`, for example `anthropic/claude-3.5-sonnet`. Copy it from the model's page on OpenRouter.
 
 ## Outputs
 
-Returns a chat model dependency that can be connected to AI agent nodes.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Model** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
+{/* AUTO:outputs:end */}
+
+The AI node you connect it to produces the output. Chat OpenRouter only decides which model answers.
 
 ## Dependencies and credentials
 
-- Requires an Authentication credential holding your OpenRouter API key, sent as a Bearer token.
-- The node throws an error if Model is empty.
+{/* AUTO:deps:start */}
+- **Authentication** (connection): required. See [Connect OpenRouter](/app/connections/openrouter/).
+{/* AUTO:deps:end */}
+
+In **Authentication**, use a Bearer Token credential that holds your OpenRouter API key. Create the key at [openrouter.ai/keys](https://openrouter.ai/keys). See [Create a credential](/app/connections/create/).
 
 ## Example workflow
 
-Connect Chat OpenRouter to an AI agent or dependency input that accepts this dependency type, set the Model to an OpenRouter model slug such as `anthropic/claude-3.5-sonnet`, attach your OpenRouter API key credential, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on selected text.
+2. [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) with **Text** `{{ $input.selectionText }}`.
+3. Chat OpenRouter in its **Model** slot, **Model** `anthropic/claude-3.5-sonnet`.
+4. [Browser Notification](/nodes/extension/browsernotification/) with **Message** `{{ $input.sentiment }}`.
 
-## Troubleshooting
+## Common issues
 
-- Ensure Model is filled in — the node rejects an empty value.
-- Double-check the model slug format (`provider/model-name`) if requests fail.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **"Model parameter is required and cannot be empty".** Fill in **Model**.
+- **A 402 error.** Your OpenRouter balance is too low for the request. Add credit, or lower **Max Tokens**.
+- **A "not a valid model ID" error.** The slug is wrong. Copy it exactly from OpenRouter, including the `provider/` part.
+- **A 401 error.** The key is wrong or deleted. Create a new key and update the credential.
 
 ## Related nodes
 
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/)
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
+- [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/), [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/): go to one provider directly.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an agent that can use tools and memory.
+- [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/): tell if a text is positive, negative or neutral.

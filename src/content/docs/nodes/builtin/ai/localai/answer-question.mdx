@@ -3,41 +3,85 @@ title: "Answer Question"
 description: "Extract an answer from a passage, on-device"
 sidebar:
   label: "Answer Question"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/answer-question
+  family: ai
 ---
 
-# Answer Question
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Extractive question answering that runs locally in your browser (DistilBERT-SQuAD on transformers.js). Given a question and a passage, it returns the span of the passage that answers it. Private, offline, no cost.
+Find the answer to a question inside a passage of text, with a model that runs in your browser.
 
 ## What it does
 
-Runs an on-device extractive-QA model over the **context** passage to find the substring that best answers the **question**, with a confidence score.
+Answer Question reads the **Context** passage and returns the piece of it that best answers the **Question**, with a confidence score. The answer is always copied word for word from the context: the model does not write new text, so it cannot make up facts that are not there.
+
+It runs on your device with a question-answering model such as *DistilBERT SQuAD* or the TensorFlow.js *MobileBERT Q&A*. There is no cost per run and no API key.
 
 ## When to use it
 
-Pull a specific fact out of a document, email, or scraped page — the answer comes verbatim from your text, so there's no hallucination and nothing is sent to a server.
+- Pull one fact out of an email, an invoice or a scraped page: an order number, a date, a price.
+- Ask the same question of many items, such as "Who is the sender?" for every message in a list.
+
+When you need a written answer that combines several facts, use [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) with a chat model. To pull several named fields at once, use [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** question-answering model. |
-| Question | The question to answer. |
-| Context | The passage to find the answer in. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"Any installed question-answering model, across engines."},{"name":"Question","type":"Text"},{"name":"Context","type":"Text","description":"The passage to find the answer in."}]} />
+{/* AUTO:settings:end */}
+
+Both **Question** and **Context** must have text. Ask short, direct questions ("What is the delivery date?"). Keep the context focused: these small models read a limited amount of text, so pass the relevant paragraph rather than a whole page.
 
 ## Outputs
 
-Returns `{ answer, score }`:
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-- `answer` — the extracted answer string (empty if none found).
-- `score` — the model's confidence.
+Each output item has these fields:
 
-## Troubleshooting
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"answer","type":"Text"},{"name":"score","type":"Number"}]} />
 
-- **Empty or wrong answer** — make sure the answer actually appears in the context; extractive QA can only return spans that are present.
-- **Empty picker** — install a question-answering model first.
+```json title="Shape of an output item"
+{
+  "answer": "…",
+  "score": 0
+}
+```
+{/* AUTO:outputs:end */}
+
+`answer` is the extracted text (empty when the model finds nothing). `score` is the model's confidence from 0 to 1. Use an [IF](/nodes/builtin/flow/if/) on `{{ $input.score }}` to skip low-confidence answers.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The **Model** picker lists your installed models first, then models that download on first use. Manage them on the [Local AI](/app/local-models/) page.
+
+## Example workflow
+
+Pull the order number from the email text you select:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) with **Menu Contexts** set to **Selection**.
+2. Answer Question with **Model** *DistilBERT SQuAD*, **Question** `What is the order number?` and **Context** `{{ $input.selectionText }}`.
+3. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.answer }}`.
+
+## Common issues
+
+- **"Choose a Q&A model."** **Model** is empty. Pick one.
+- **"Provide both a question and a context passage."** **Question** or **Context** is empty after expressions run. Check the field names in your expressions.
+- **The answer is wrong or very short.** The answer must appear in the context. Rephrase the question with words used in the text, or trim the context to the relevant part.
+- **"Model "…" isn't available. Install it from Local AI."** The saved model is no longer in your list, for example a removed custom model. Pick another model.
 
 ## Related nodes
 
-- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/)
-- [Generate Text](/nodes/builtin/ai/localai/generate-text/)
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/): answer with a chat model.
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/): pull several fields at once.
+- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/): its **Answer question** task takes question and context as one JSON input.
+- [Summarize](/nodes/builtin/ai/localai/summarize/): condense a passage on-device.

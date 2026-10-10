@@ -3,70 +3,101 @@ title: "Q&A Agent"
 description: "Generate an action plan and execute it. Can use external tools."
 sidebar:
   label: "Q&A Agent"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/qanode
+  family: ai
 ---
 
-# Q&A Agent
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Generate an action plan and execute it. Can use external tools.
+Answer a question from your own documents, with a cloud chat model or fully on-device.
 
 ## What it does
 
-Answers questions using a knowledge base by retrieving relevant context and generating responses.
+Q&A Agent takes the question in **Prompt**, looks up the most relevant passages in the knowledge base connected to **Knowledge**, and answers from them. What you connect to **Model** decides how it answers; there is no setting to switch:
+
+- **A chat model** (for example [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/)) writes an answer in its own words, using the passages. Without a knowledge base, it answers from what the model knows.
+- **A [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/)** runs in your browser: free, private and offline. It reads each retrieved passage and **quotes** the best-scoring span, so the answer always comes word for word from your documents. It needs a knowledge base, and **System message** and the output parser do not apply.
+
+Passages are added to the prompt as reference data, not as instructions. A knowledge base marked **Device only** is never sent to a cloud model.
 
 ## When to use it
 
-Use this agent to build question-answering systems that reference specific documents or knowledge bases.
+- Answer questions about your notes, manuals or saved pages.
+- Look up a fact (a price, a date, a policy) in a knowledge base inside a workflow.
+- Keep everything on your device with a Local Q&A Model and [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/).
 
-## Run on-device
-
-What you connect to the **Model** port decides the engine — there is no setting to switch:
-
-- **A chat model** (e.g. Chat OpenAI, Web LLM) — retrieves passages from the connected Knowledge and writes an answer from them.
-- **A [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/)** — answers in your browser: free, private, offline. It retrieves the top passages from the connected Knowledge and **quotes** the best-scoring answer span, so the answer always comes verbatim from your documents. System message and Output Parser don't apply.
-
-The on-device path **needs a Knowledge**: an extractive model can only quote from a passage, so connect a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) (pair it with [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/) to keep everything on-device).
+For a multi-turn chat with memory over your documents, use [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/). To answer from one passage you already have, use [Answer Question](/nodes/builtin/ai/localai/answer-question/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Options → System message | Extra instructions appended to the Q&A prompt (chat model only). |
-| Options → Knowledge documents (k) | How many passages to retrieve from the Knowledge (default `4`). |
-| Options → Max knowledge context length | Maximum characters of retrieved knowledge to use (default `4000`). On-device, each passage is capped to this length. |
-| Options → Fail on knowledge error | Chat model only: fail when retrieval errors instead of answering without context (default off). |
-| Options → Search type, Match by, Minimum relevance, Metadata filter, Device-only knowledge with a cloud model | How the knowledge base is searched, and what happens when a *Device only* knowledge base meets a cloud model. Same as on the RAG Agent: see [Knowledge base options](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options). |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Prompt","type":"Text","required":true},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."},{"name":"Options › Knowledge documents (k)","type":"Number","default":"4","description":"How many documents to retrieve from the connected knowledge base."},{"name":"Options › Max knowledge context length","type":"Number","default":"4000","description":"Maximum characters of retrieved knowledge to inject into the prompt."},{"name":"Options › Fail on knowledge error","type":"Toggle","default":"Off","description":"If enabled, the node fails when knowledge retrieval errors instead of answering without context."},{"name":"Options › Search type","type":"Choice","default":"Most similar","description":"How passages are picked from the connected knowledge base. Options: Most similar, Diverse (MMR)."},{"name":"Options › Match by","type":"Choice","default":"Keywords and meaning","description":"How a knowledge base is searched with \"Most similar\". Diverse (MMR) and other vector stores always match by meaning. Options: Keywords and meaning, Meaning only."},{"name":"Options › Minimum relevance","type":"Number","default":"0","description":"Drop passages less similar to the question than this (0 to 1). 0 keeps every passage."},{"name":"Options › Metadata filter","type":"Key-value pairs","description":"Only search passages whose metadata matches every key = value (e.g. sourceType = web). Keys use letters, numbers and _; numbers and true/false are matched as such."},{"name":"Options › Device-only knowledge with a cloud model","type":"Choice","default":"Stop with an error","description":"A knowledge base marked \"Device only\" is never sent to a cloud model. Choose what the node does when its model is a cloud model. Options: Stop with an error, Answer without it."}]} />
+{/* AUTO:settings:end */}
 
-Retrieved passages are added to the prompt as fenced reference data, not instructions. A knowledge base marked **Device only** is never sent to a cloud model: by default the node stops with an error; set **Device-only knowledge with a cloud model** to *Answer without it* to run without it and log a warning. The Local Q&A Model runs on-device, so it can always use it.
+**Prompt** is the question, for example `{{ $input.question }}` or a fixed `What is our refund window?`.
+
+With a Local Q&A Model, **Max knowledge context length** limits how much of each passage the model reads.
 
 ## Outputs
 
-- **Chat model** — returns `{ response, sources }`: the generated answer and the sources of the passages used.
-- **Local Q&A Model** — returns `{ response, answer, score, source, sources }`: `response` and `answer` are the quoted answer (empty if none was found), `score` is the model's confidence, and `source` names the document it came from (when its metadata has a source, file name, title, or URL).
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-`sources` is present when a knowledge base is connected (it may be empty). Each entry has `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`. After a run, the node shows a badge such as **3 sources cited**.
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"response","type":"Any","description":"The model reply; the parsed result when an output parser is connected"},{"name":"answer","type":"Text"},{"name":"score","type":"Number"},{"name":"source","type":"Text"},{"name":"sources","type":"List of entries","description":"The knowledge base sources used for the answer"}]} />
+
+```json title="Shape of an output item"
+{
+  "response": null,
+  "answer": "…",
+  "score": 0,
+  "source": "…",
+  "sources": []
+}
+```
+{/* AUTO:outputs:end */}
+
+- With a **chat model**, you get `response`, plus `sources` when a knowledge base is connected.
+- With a **Local Q&A Model**, `response` and `answer` hold the quoted answer (empty when none was found), `score` is the model's confidence, and `source` names the document it came from.
+
+Each entry in `sources` has `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`. After a run, the node shows a badge such as **3 sources cited**.
 
 ## Dependencies and credentials
 
-- **Model** (required) — a chat model, or a [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/) to answer on-device.
-- **Knowledge** — optional with a chat model, **required** with a Local Q&A Model.
-- **Output Parser** (optional) — chat model only.
+{/* AUTO:deps:start */}
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local qa","description":"One node.","required":true},{"name":"Knowledge","type":"vector store","description":"One node."},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
+{/* AUTO:deps:end */}
+
+- **Model**: a chat model, or a [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/) to answer on-device. Cloud models hold their own API key.
+- **Knowledge**: a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node. Optional with a chat model, required with a Local Q&A Model.
+- **Output Parser**: shapes the chat model's answer. Ignored by the Local Q&A Model.
 
 ## Example workflow
 
-Connect Local Embeddings → Local Knowledge → the Q&A Agent's Knowledge port, and a Local Q&A Model to its Model port. Add your documents to the knowledge base (on the [knowledge bases page](/usage/using-the-app/knowledge-bases/overview/) or with the [Indexer](/nodes/builtin/ai/aiagents/indexernode/)), then send questions to the agent — the answer and its source document come back without anything leaving the browser.
+1. Add your product manual to a knowledge base on the [knowledge bases page](/app/knowledge-bases/overview/), or with the [Indexer](/nodes/builtin/ai/aiagents/indexernode/).
+2. [Get Selected Text](/nodes/extension/getselectedtext/) reads a customer question you highlighted, with **Output field name** `question`.
+3. Q&A Agent with **Prompt** `{{ $input.question }}`, a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node on **Knowledge** and a [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/) on **Model**.
+4. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.answer }}` and `{{ $input.source }}`.
 
-## Troubleshooting
+Nothing leaves the browser.
 
-- **"… it needs a context: connect a Knowledge to the Q&A Agent."** — the Local Q&A Model is connected but no Knowledge is.
-- **Empty `answer` on-device** — no retrieved passage contained an answer (a warning is logged). Raise Knowledge documents (k) or rephrase the question.
-- **"Knowledge retrieval failed: …"** — the knowledge store couldn't be searched; check the Local Knowledge node and its embeddings.
-- **"… is on this device only, but … is a cloud model."** — the knowledge base is *Device only*. Use an on-device model (such as the Local Q&A Model), change the knowledge base's privacy, or set **Device-only knowledge with a cloud model** to *Answer without it*.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+## Common issues
+
+- **"The Local Q&A Model answers by quoting a passage, so it needs a context: connect a Knowledge to the Q&A Agent."** Connect a Local Knowledge node to **Knowledge**.
+- **`answer` is empty.** None of the retrieved passages contained an answer (a warning is logged). Raise **Knowledge documents (k)**, lower **Minimum relevance**, or rephrase the question.
+- **"Knowledge retrieval failed: …".** The knowledge base could not be searched. Open the Local Knowledge node and check its knowledge base and embedding model.
+- **"… is on this device only, but … is a cloud model."** The knowledge base is marked **Device only**. Use an on-device model, change the knowledge base's privacy, or set **Device-only knowledge with a cloud model** to *Answer without it*.
+- **"Model not found".** The connected chat model node is not set up: open it and choose a model and its credential.
 
 ## Related nodes
 
-- [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
-- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
-- [Answer Question](/nodes/builtin/ai/localai/answer-question/) — on-device Q&A over a passage you provide.
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/): chat over your documents, with memory.
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): the knowledge base to search.
+- [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/): the on-device answer engine.
+- [Answer Question](/nodes/builtin/ai/localai/answer-question/): on-device Q&A over a passage you provide.

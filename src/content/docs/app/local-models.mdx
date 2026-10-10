@@ -1,0 +1,62 @@
+---
+title: "Local AI"
+description: "AI models that run entirely in your browser (chat, vision, text and audio), installed once and used by Aria, agents and workflows. Nothing leaves your device."
+kind: guide
+section: app
+sidebar:
+  label: "Local AI"
+---
+
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+import { Badge, Callout, Screenshot } from "@components/awflow";
+import localModelsLight from '@assets/screenshots/local-models.light.webp';
+import localModelsDark from '@assets/screenshots/local-models.dark.webp';
+
+<Badge variant="no-setup" text="Free · no usage cost" /> <Badge variant="on-device" text="Runs and stays on this device" /> <Badge variant="new" text="New in 0.8.0" />
+
+**In the app:** sidebar › **Local AI** (or **Settings › Local models**)
+
+**Local AI** is where you find, install and manage the AI models that run **entirely in your browser**. Once a model is installed it works offline, costs nothing per use, and no image, text or audio leaves your device. You pick a *model*; AWFlow picks the engine:
+
+- **WebLLM**: chat and text-generation models (Llama, Qwen, Phi and more) on WebGPU.
+- **TensorFlow.js**: vision, text and embedding models (MobileNet, COCO-SSD, toxicity, the Universal Sentence Encoder), WebGPU with a WebGL/WASM fallback.
+- **transformers.js**: the widest range of tasks (image classification, object detection, segmentation, depth, captioning, sentiment and zero-shot classification, question answering, summarization, translation, embeddings and Whisper speech-to-text) through ONNX on WASM.
+
+<Screenshot
+  src={localModelsLight}
+  srcDark={localModelsDark}
+  alt="The Local AI page: storage used by on-device models split by engine (WebLLM, TF.js, Transformers), a task list on the left (Chat, Embeddings, vision and audio tasks) and model cards on the right, such as Llama 3.2 1B Instruct with its size, variants and install state."
+  hotspots={[{ x: 30.1, y: 25.6, label: 'Storage header: space used, by engine' }, { x: 30.4, y: 37.6, label: 'Tasks' }, { x: 30.4, y: 32.6, label: 'Search and engine filter' }, { x: 52.3, y: 46, label: 'A model card: size, device fit and install state' }]}
+/>
+
+1. **Storage header.** How much browser storage your models use, out of what's available, and **Keep models installed**.
+2. **Tasks.** Chat, Image classification, Object detection, Speech-to-text, Embeddings… each with **Show all**.
+3. **Search and engine filter.** Narrow to WebLLM, TensorFlow.js or transformers.js.
+4. **A model card.** Its size, its **device fit** and whether it's installed, with **Install**, **Test** and the compare checkbox.
+
+## What you can do
+
+<CardGrid>
+  <LinkCard title="Install, test and remove models" href="/app/local-models-install/" description="Variants, device fit, background downloads, storage." />
+  <LinkCard title="Compare models on your device" href="/app/local-models-compare/" description="Side by side, with real load times and speed." />
+  <LinkCard title="Add a custom model" href="/app/local-models-custom/" description="Any MLC, TensorFlow.js or ONNX model by URL or id." />
+  <LinkCard title="Use a model in a workflow" href="/nodes/builtin/ai/localai/" description="The Local AI nodes, Web LLM and Transformers Chat." />
+</CardGrid>
+
+## Use it everywhere
+
+| Where | How |
+| --- | --- |
+| **Chat with Aria** | Pick an on-device model as Aria's model, or **Set default** on a chat variant. In **Ask** mode, Aria can also classify an image, moderate text or transcribe audio with a local model and answer from the result. If no suitable model is installed, it tells you which kind to add. |
+| **An agent** | Choose an on-device model on the builder's **Model** tab, or turn on the **On-device AI** skill. See [Agent skills](/app/chat-and-agents/agent-skills/). |
+| **A workflow** | The [Local AI nodes](/nodes/builtin/ai/localai/), [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/), [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/), [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/), [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/) and [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/). A model installed here is used with no re-download. |
+
+<Callout type="info" title="Your data" href="/app/privacy-and-data/" linkLabel="Privacy & your data">
+
+Models run and stay **on this device**: prompts, images and audio never reach a server. The model files are downloaded once, for example from Hugging Face, and stored per browser profile. Model search on this page sends your search text to Hugging Face; turn off **Discover models on Hugging Face** in **Settings › Local models** to keep the page fully offline.
+
+</Callout>
+
+## Add a custom model
+
+Beyond the built-in list, **Add custom model** takes any **MLC-compiled** WebLLM model, a **TensorFlow.js** `model.json`, or a **transformers.js** model id with an ONNX build. AWFlow detects its task, and you confirm that you trust the source before it downloads. [Step by step](/app/local-models-custom/).

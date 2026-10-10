@@ -3,63 +3,91 @@ title: "Slack"
 description: "Integrate with Slack to perform operations on channels, messages, users, and files."
 sidebar:
   label: "Slack"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/slack
+  family: integration
 ---
 
-# Slack
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Integrate with Slack to perform operations on channels, messages, users, and files.
+Post, read, edit and search Slack messages, look up channels and people, and share files, from a workflow.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Slack connection"} href="/app/connections/slack/" linkLabel={"Connect Slack"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Sends messages, manages channels, and performs operations within your Slack workspace.
+The Slack node works on four kinds of things (**Resource**), each with its own **Operation**:
+
+- **Channel**: list the channels the token can see, or get one channel's details.
+- **Message**: send, read, update, delete or search messages.
+- **User**: list workspace members, or get one person's profile.
+- **File**: upload a file to channels, or get a file's details.
+
+It cannot create or archive channels, or manage members.
+
+**Channel**, **User** and **Message** fields are lists loaded from your workspace once a credential is set, so you can pick instead of typing ids. You can still type an id or use an expression.
 
 ## When to use it
 
-Use this node to automate Slack notifications, post messages, create channels, or retrieve Slack data in your workflows.
+- Post an alert when something changes: a price drop, a new form entry, a failed run.
+- Send a daily digest built by earlier nodes to a channel.
+- Upload a screenshot or a generated file to a channel.
+- Search past messages and pass them to an AI node.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Credential | Source-backed field from the node schema. |
-| Resource | Source-backed field from the node schema. |
-| Operation | Source-backed field from the node schema. |
-| Channel | Source-backed field from the node schema. |
-| User | Source-backed field from the node schema. |
-| Message | Source-backed field from the node schema. |
-| Text | Source-backed field from the node schema. |
-| Thread Timestamp | Source-backed field from the node schema. |
-| Blocks | Source-backed field from the node schema. |
-| Attachments | Source-backed field from the node schema. |
-| File | Source-backed field from the node schema. |
-| Username | Source-backed field from the node schema. |
-| Icon Emoji | Source-backed field from the node schema. |
-| Search Query | Source-backed field from the node schema. |
-| Limit | Source-backed field from the node schema. |
-| Channels | Source-backed field from the node schema. |
-| Initial Comment | Source-backed field from the node schema. |
-| File Title | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Credential to use to make the request."}]} groups={[{"label":"Channel","options":[{"label":"Get many","rows":[{"name":"Limit","type":"Number","default":"100","description":"Number of results to return (1-1000)."}]},{"label":"Get info","rows":[{"name":"Channel","type":"Choice (loaded from your account)","required":true,"description":"The Slack channel to work with."}]}]},{"label":"Message","options":[{"label":"Send","rows":[{"name":"Channel","type":"Choice (loaded from your account)","required":true,"description":"The Slack channel to work with."},{"name":"Text","type":"Text","required":true,"description":"The message text."},{"name":"Thread Timestamp","type":"Text","description":"The thread timestamp to reply to."},{"name":"Blocks","type":"List","description":"Slack block elements for rich formatting."},{"name":"Attachments","type":"List","description":"Message attachments."},{"name":"Username","type":"Text","description":"Override the default username."},{"name":"Icon Emoji","type":"Text","description":"Override the default icon with an emoji."}]},{"label":"Get","rows":[{"name":"Channel","type":"Choice (loaded from your account)","required":true,"description":"The Slack channel to work with."},{"name":"Limit","type":"Number","default":"100","description":"Number of results to return (1-1000)."}]},{"label":"Update","rows":[{"name":"Channel","type":"Choice (loaded from your account)","required":true,"description":"The Slack channel to work with."},{"name":"Message","type":"Choice (loaded from your account)","required":true,"description":"The message ID to work with."},{"name":"Text","type":"Text","required":true,"description":"The message text."},{"name":"Blocks","type":"List","description":"Slack block elements for rich formatting."},{"name":"Attachments","type":"List","description":"Message attachments."}]},{"label":"Delete","rows":[{"name":"Channel","type":"Choice (loaded from your account)","required":true,"description":"The Slack channel to work with."},{"name":"Message","type":"Choice (loaded from your account)","required":true,"description":"The message ID to work with."}]},{"label":"Search","rows":[{"name":"Search Query","type":"Text","required":true,"description":"The search query for messages."},{"name":"Limit","type":"Number","default":"100","description":"Number of results to return (1-1000)."}]}]},{"label":"User","options":[{"label":"Get many","rows":[{"name":"Limit","type":"Number","default":"100","description":"Number of results to return (1-1000)."}]},{"label":"Get info","rows":[{"name":"User","type":"Choice (loaded from your account)","required":true,"description":"The Slack user to work with."}]}]},{"label":"File","options":[{"label":"Upload","rows":[{"name":"Binary source","type":"Text","default":"data","description":"The logical $binary key on the incoming item to send as the file (defaults to 'data'). Fed automatically from an upstream node that produces a binary (e.g. HTTP Request, Screenshot)."},{"name":"File","type":"File","description":"The file to upload."},{"name":"Channels","type":"List","description":"Channels to share the file with."},{"name":"Initial Comment","type":"Text","description":"Add a comment when uploading the file."},{"name":"Thread Timestamp","type":"Text","description":"The thread timestamp to reply to."},{"name":"File Title","type":"Text","description":"Override the file name."}]},{"label":"Get","rows":[{"name":"File ID","type":"Text","required":true,"description":"The ID of the file to retrieve."}]}]}]} />
+
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Slack API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
+
+To reply in a thread, put the parent message's timestamp in **Thread Timestamp** (Slack's `ts`, for example `1712345678.123456`). For **File → Upload**, the file comes from the incoming item's `$binary` data (the key named in **Binary source**, `data` by default), as produced by [Http Request](/nodes/builtin/core/http-request/), [Screenshot Page](/nodes/extension/screenshotpage/) or [Convert to File](/nodes/builtin/datatransformation/converttofile/).
 
 ## Outputs
 
-Returns the service response or a success object from the selected operation.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+**Get many** and **Get** (messages) return a list, one item per channel, user or message. **Send** returns the posted message, including its `ts`, which you can reuse to update, delete or reply to it. **Search** returns the matching messages.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Credential** (connection, Bearer Token): required. See [Connect Slack](/app/connections/slack/).
+{/* AUTO:deps:end */}
+
+Use a Slack bot or user token. The token's scopes decide what works: for example `chat:write` to send, `channels:read` to list channels, `search:read` (user token) to search, `files:write` to upload. See [Create a credential](/app/connections/create/).
 
 ## Example workflow
 
-Connect prepared data into Slack, select the credential, choose the operation, then map previous node values into the operation fields.
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every weekday at 9:00.
+2. [RSS Feed Read](/nodes/builtin/core/rss-feed-read/) and [Limit](/nodes/builtin/datatransformation/limit/) pick the 3 newest posts.
+3. [Aggregate](/nodes/builtin/datatransformation/aggregate/) puts them in one item.
+4. Slack, **Message → Send**, to `#news`, with a **Text** listing the titles and links.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The run is blocked in the web app.** Slack runs through the browser extension. Install the extension and allow Slack for this workflow when asked, or run the workflow from the extension.
+- **"missing_scope" or "not_allowed_token_type".** The token lacks the scope for this operation. Add the scope in your Slack app settings, reinstall the app to the workspace, and update the credential.
+- **"not_in_channel".** Invite the bot to the channel (`/invite @your-bot`) before sending to it.
+- **"Slack file upload: no binary found on the incoming item".** The previous node did not produce a file under the key in **Binary source**. Check the key, or add a node that produces a file.
+- **The channel list is empty.** Set the credential first; the list loads from Slack with it.
 
 ## Related nodes
 
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Discord](/nodes/builtin/integration/discord/) and [Telegram](/nodes/builtin/integration/telegram/): other chat apps.
+- [Push Notification](/nodes/builtin/integration/push-notification/): a message to your phone.
+- [Browser Notification](/nodes/extension/browsernotification/): a desktop notification, no account needed.
+- [Http Request](/nodes/builtin/core/http-request/): call Slack API methods this node does not cover.

@@ -3,47 +3,73 @@ title: "Item List Output Parser"
 description: "Parse a comma-separated list of items from the model output"
 sidebar:
   label: "Item List Output Parser"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/outputparser/itemlistoutputparser
+  family: ai
 ---
 
-# Item List Output Parser
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Parse a comma-separated list of items from the model output
+Make an AI node answer with a list of items instead of a paragraph.
 
 ## What it does
 
-Instructs the model to return a comma-separated list (e.g. "foo, bar, baz") and parses that output into a list of items.
+Item List Output Parser is not a step on its own: it has no output port and never runs by itself. You plug it into the **Output Parser** slot of an AI node, and that node uses it.
+
+The AI node tells the model to answer with comma-separated values, such as `foo, bar, baz`. The parser then splits the reply at the commas and returns a list of text items. The format is fixed: you cannot change the separator.
 
 ## When to use it
 
-Connect this to AI agents when you need a simple list of items back from the model, rather than free-form text or a full JSON schema.
+- Get keywords, tags or topics for a piece of text.
+- Ask for a few ideas (titles, subject lines) and handle each one separately.
+- Feed a list into [Split Out](/nodes/builtin/datatransformation/splitout/) to get one item per entry.
+
+When you need named fields or numbers, use [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Format note (informational) | Informational only; not sent to the parser. Reminds you that the model is instructed to return a comma-separated list, e.g. "foo, bar, baz". The comma-separated format itself is fixed by the underlying parser and cannot be changed. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Format note (informational)","type":"Text","description":"The model is instructed to return a comma-separated list, e.g. \"foo, bar, baz\". This field is not sent to the parser, it is only shown as a reminder in the editor."}]} />
+{/* AUTO:settings:end */}
+
+There is nothing to set. Use the **Prompt** of the AI node to say how many items you want and what they should be.
 
 ## Outputs
 
-Returns an output parser dependency that splits the model's comma-separated response into a list of items.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Output Parser** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/)
+- **Base Parser** slot of [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
+{/* AUTO:outputs:end */}
+
+On the node it is plugged into, `response` becomes a list of text, for example `["pricing", "onboarding", "support"]`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect Item List Output Parser to an AI agent's output parser input, then run the agent. Its response is instructed to be a comma-separated list and is parsed into individual items for downstream nodes.
+1. [Get All Text](/nodes/extension/getalltext/) reads the article on the current tab, with **Output field name** `text`.
+2. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) with **Prompt** `Give 5 keywords for this article: {{ $input.text }}`, and an [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model on its **Model** slot.
+3. Item List Output Parser connected to the **Output Parser** slot of Basic LLM Chain.
+4. [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** `response` turns the list into one item per keyword.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **You get one long item instead of several.** The model answered with line breaks or bullets instead of commas. Ask for "a comma-separated list" in the prompt, or use a stronger model.
+- **An item contains a comma.** Commas always split items. Use [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) with a list example such as `{ "items": ["a"] }` instead.
 
 ## Related nodes
 
-- [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/)
-- [Prompting and Outputs](/advanced-ai/concepts/prompting-and-outputs/)
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+- [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/): named fields in JSON.
+- [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/): retry with a model when parsing fails.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): one item per list entry.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): the simplest node to plug it into.

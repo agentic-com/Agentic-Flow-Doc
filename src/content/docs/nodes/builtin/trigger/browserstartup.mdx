@@ -3,45 +3,83 @@ title: "Browser Startup"
 description: "Run the flow when the browser starts."
 sidebar:
   label: "Browser Startup"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/browserstartup
+  family: trigger
 ---
 
-# Browser Startup
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Run the flow when the browser starts.
+Run a workflow automatically each time you open your browser.
 
 ## What it does
 
-Triggers workflow execution automatically when the browser application starts.
+When the browser starts, the AWFlow extension opens its app tab (if it is not open yet) and runs every activated workflow that has a Browser Startup trigger. Only the branch after this trigger runs.
+
+It fires on browser startup only. Installing or updating the extension does not run it, and neither does opening a new window while the browser is already running.
 
 ## When to use it
 
-Use this trigger to run initialization workflows or background tasks that should start with the browser.
+- Open the tabs you need every morning with [Tab Control](/nodes/extension/tabcontrol/).
+- Check a status page or an API once per browser session and notify yourself.
+- Reset values you keep in [Data Store](/nodes/builtin/core/datastore/) at the start of each session.
+
+For a fixed time of day, use [Schedule](/nodes/builtin/trigger/schedule/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Node form | This node uses the default workflow node configuration. |
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes when context is available.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"browserStartup\""},{"name":"triggeredAt","type":"Text"},{"name":"reason","type":"Text"},{"name":"startedAt","type":"Any"}]} />
+
+```json title="Shape of an output item"
+{
+  "triggerType": "browserStartup",
+  "triggeredAt": "…",
+  "reason": "…",
+  "startedAt": null
+}
+```
+{/* AUTO:outputs:end */}
+
+`reason` is `startup`. `triggeredAt` and `startedAt` are the date and time of the run. When you test the trigger yourself in the designer, `startedAt` is empty.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Create a workflow with Browser Startup as the first node, then connect it to the action nodes that should run after the trigger fires.
+Open your work tabs when the browser starts:
 
-## Troubleshooting
+1. Add **Browser Startup**.
+2. Add [Tab Control](/nodes/extension/tabcontrol/) with **Operation** set to **Open** and **URL** `https://mail.google.com/`.
+3. Add a second Tab Control with **Operation** **Open**, **URL** `https://calendar.google.com/` and **Open Focused** turned off.
+4. Activate the workflow, then restart the browser.
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+## Common issues
+
+- **Nothing runs when the browser opens.** The workflow must be activated. Also check that the browser really restarted: some browsers keep running in the background after you close the last window, so reopening a window is not a startup.
+- **It does not run right after installing the extension.** That is expected. The trigger only fires on the next browser startup.
+- **It does not run in the web app.** This node runs in the browser extension; install it and activate the workflow there.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Schedule](/nodes/builtin/trigger/schedule/): run at set times instead.
+- [When Started](/nodes/builtin/trigger/whenstarted/): run the same steps by hand.
+- [Tab Control](/nodes/extension/tabcontrol/): open, focus or group tabs.

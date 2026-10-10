@@ -3,70 +3,94 @@ title: "CSV"
 description: "Convert between CSV text and items"
 sidebar:
   label: "CSV"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/csv
+  family: data
 ---
 
-# CSV
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Convert between CSV text and items.
+Read CSV text into items, one per row, or turn items into CSV text.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/table-to-csv.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Converts in both directions. `Parse into items` reads CSV or TSV and emits one item per row, keyed by the header. `Build from items` folds items back into a single CSV string, ready for the Download as File node.
+CSV works in two directions, chosen with **Operation**:
 
-A real state-machine parser sits behind it, walking the text character by character rather than splitting on commas. That means commas inside quoted fields are kept as data, quoted fields may span multiple lines, and a doubled quote (`""`) is read as one literal quote.
+- **Parse into items** reads CSV (or TSV) text and outputs one item per row, with the header names as field names. All values come out as text.
+- **Build from items** takes all incoming items and writes them into one CSV text, one row per item.
+
+It reads real-world CSV correctly: commas inside quoted values stay part of the value, a quoted value can span several lines, and `""` inside quotes means one quote character. Messy files are handled rather than rejected:
+
+- A short row leaves its missing columns empty. A long row keeps the extra values as `column4`, `column5` and so on.
+- A repeated header name is made unique (a second `price` becomes `price_2`), and an empty header cell is named by position (`column1`).
+- An invisible byte order mark at the start of the file is removed, and both Windows and Unix line endings work.
+
+When building, a value is quoted only when it needs it (it contains the delimiter, a quote, a line break, or leading or trailing spaces). Empty values become empty cells, and lists or objects are written as JSON. Columns are every field found across all items, in the order they first appear. Lines end with Windows line endings, which Excel expects.
 
 ## When to use it
 
-Use this node to produce correct CSV for the Download as File node, or to read a spreadsheet export you already have into addressable fields.
+- Read a spreadsheet export or a CSV returned by an API into items you can filter and sort.
+- Produce CSV text from scraped items, to save with [Save as File](/nodes/builtin/datatransformation/saveasfile/) or send in a message.
+- To get a CSV *file* (for an upload or attachment) instead of text, use [Convert to File](/nodes/builtin/datatransformation/converttofile/) with **Format** *CSV*.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | Which direction to convert: `Parse into items` or `Build from items`. Defaults to `Parse into items`. |
-| CSV Text | For Parse: the CSV to parse. Accepts an expression such as `{{ $json.csv }}`. Leave empty to read from a field instead. |
-| Source Field | Field holding the CSV text when CSV Text is left empty, for example `body`. |
-| Delimiter | Character separating the fields: `Comma`, `Semicolon`, `Tab` or `Pipe`. Defaults to `Comma`. |
-| First Row Is A Header | For Parse: whether the first row names the columns. Off: columns are named `column1`, `column2` and so on. Defaults to `on`. |
-| Write A Header Row | For Build: whether the built CSV starts with a row naming the columns. Defaults to `on`. |
-| Columns | For Build: columns to write, in order. Left empty, every field is written. |
-| Trim Fields | For Parse: remove surrounding whitespace from every parsed value. Defaults to `off`. |
-| Skip Blank Rows | For Parse: drop rows that are entirely empty. Defaults to `on`. |
-| Quote Every Field | For Build: quote every field, not only those that need it. Off is standard; on is occasionally needed by strict readers. Defaults to `off`. |
-| Add Byte Order Mark | For Build: write the mark Excel needs to read UTF-8 correctly. Without it, Excel reads accented characters as mojibake. Defaults to `off`. |
-| Put CSV In Field | For Build: name of the field holding the built CSV text. Defaults to `csv`. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Parse into items","description":"Which direction to convert. Options: Parse into items, Build from items."},{"name":"CSV Text","type":"Value","description":"The CSV to parse. Leave empty to read from a field instead."},{"name":"Source Field","type":"Text","description":"Field holding the CSV text, when the field above is left empty."},{"name":"Delimiter","type":"Choice","default":"Comma","description":"Character separating the fields. Options: Comma, Semicolon, Tab, Pipe."},{"name":"First Row Is A Header","type":"Toggle","default":"On","description":"Whether the first row names the columns."},{"name":"Write A Header Row","type":"Toggle","default":"On","description":"Whether the built CSV starts with a row naming the columns."},{"name":"Columns","type":"Tags","description":"Columns to write, in order. Left empty, every field is written."},{"name":"Trim Fields","type":"Toggle","default":"Off","description":"Remove surrounding whitespace from every parsed value."},{"name":"Skip Blank Rows","type":"Toggle","default":"On","description":"Drop rows that are entirely empty."},{"name":"Quote Every Field","type":"Toggle","default":"Off","description":"Quote every field, not only those that need it."},{"name":"Add Byte Order Mark","type":"Toggle","default":"Off","description":"Write the mark Excel needs to read UTF-8 correctly."},{"name":"Put CSV In Field","type":"Text","default":"csv","description":"Name of the field holding the built CSV text."}]} />
+{/* AUTO:settings:end */}
+
+- **For parsing**: put the text in **CSV Text** (for example `{{ $input.body }}`), or leave it empty and name the field that holds it in **Source Field**. Turn off **First Row Is A Header** when the file has no header; the columns are then named `column1`, `column2` and so on.
+- **For building**: **Columns** picks which fields to write and in what order. **Write A Header Row**, **Quote Every Field**, **Add Byte Order Mark** and **Put CSV In Field** apply only here.
+- Choose *Tab* in **Delimiter** for TSV, and *Semicolon* for many European Excel exports.
 
 ## Outputs
 
-- **Parse into items** emits one item per data row. A file with only a header (or nothing usable) returns an empty result rather than an error.
-- **Build from items** returns a single item holding the CSV string in **Put CSV In Field**.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
 
-## Reading behaviour
-
-The parser is lenient where real exports are messy. A short row leaves its missing columns empty; a long row keeps its overflow under generated names (`column3`, `column4`, …). Duplicate header names are made unique so no column is swallowed — a second `a` becomes `a_2`. An empty header cell is named positionally (`column1`, `column2`, …). Blank rows are skipped by default, but can be kept by turning **Skip Blank Rows** off. A byte order mark is always stripped on read, and both CRLF and bare LF line endings are accepted.
-
-## Writing behaviour
-
-A field is quoted only when it needs to be: when it contains the delimiter, a quote, a line break, or surrounding whitespace (turn **Quote Every Field** on to quote unconditionally). `null` and `undefined` are written as empty cells; objects and arrays are written as JSON so nothing is lost to `[object Object]`. Columns are the union of every item's keys in first-seen order, so a row carrying an extra field does not silently lose it. The default line ending is CRLF (RFC 4180 / Excel), and the byte order mark is written only when requested.
+- **Parse into items** outputs one item per data row, such as `{ "name": "Ada", "city": "London" }`. A file with only a header gives no items, not an error.
+- **Build from items** outputs one item with the CSV text in **Put CSV In Field**, read downstream with `{{ $input.csv }}`.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect a node that produces items into CSV, set **Operation** to `Build from items` and turn **Add Byte Order Mark** on because the file will be opened in Excel, then feed the result into Download as File. To go the other way, point CSV at a spreadsheet export, set **Operation** to `Parse into items`, and each row continues as its own item.
+1. [HTML Extract](/nodes/builtin/datatransformation/html-extract/) reads a table of products from a page, one item per row.
+2. CSV with **Operation** *Build from items*, **Columns** `name`, `price`, `url`, and **Add Byte Order Mark** on, since the file will be opened in Excel.
+3. [Save as File](/nodes/builtin/datatransformation/saveasfile/) with **Content** `{{ $input.csv }}`, **File name** `products` and **File type** *csv* downloads the file.
 
-## Troubleshooting
+## Common issues
 
-- Parse fails only when there is nothing to read — fill in the CSV text or name the field holding it. A header-only file is a valid empty result, not an error.
-- If accented characters look wrong when opened in Excel, turn **Add Byte Order Mark** on when building.
-- If a column seems to disappear on read, check for duplicate or empty header names; they are renamed (`a_2`, `column1`) rather than merged.
-- Set **Delimiter** to `Tab` to read or write TSV.
+- **"No CSV to parse. Fill in the CSV text, or name the field holding it on the incoming item."** Both **CSV Text** and **Source Field** are empty.
+- **"Field "…" does not hold CSV text on the incoming item."** The field in **Source Field** is missing or is not text. Check its name in the previous node's output.
+- **"No items to build CSV from. Connect a node that produces items."** Nothing reached the node when building.
+- **Everything lands in one column.** The file uses another separator. Change **Delimiter** to *Semicolon*, *Tab* or *Pipe*.
+- **Accented letters look garbled in Excel.** Turn on **Add Byte Order Mark** when building.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Copy any table on a page as CSV"} href="/recipes/extract-data/table-to-csv/" level={"beginner"} minutes={3} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
-- [Download as File](/nodes/builtin/datatransformation/downloadasfile/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Convert to File](/nodes/builtin/datatransformation/converttofile/): produce a CSV file for uploads and attachments.
+- [Extract From File](/nodes/builtin/datatransformation/extractfromfile/): read a CSV file that arrived as an attachment.
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): tidy fields before building.
+- [Sort](/nodes/builtin/datatransformation/sort/): order rows after parsing.

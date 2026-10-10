@@ -1,0 +1,66 @@
+---
+title: "Compare local models"
+description: "Put two or three on-device models side by side and measure them on your own device"
+kind: guide
+section: app
+sidebar:
+  label: "Compare models"
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+The **Compare** page lines up two or three [Local AI](/app/local-models/) models so you can pick the right one for your device. Everything runs in your browser; nothing leaves your device.
+
+## Start a comparison
+
+<Steps>
+
+1. Open **Local AI** from the sidebar.
+
+2. Tick the small compare checkbox on a model, or click **Compare** in a model's detail view.
+
+3. Tick one or two more models **of the same task** (for example, two chat models).
+
+4. Click **Compare (N)** in the bar at the bottom. It stays disabled until you pick at least two.
+
+</Steps>
+
+You can compare **up to three** models. The first model you pick sets the task; checkboxes on models of other tasks are disabled. **Clear** empties the selection.
+
+The comparison has its own link, so you can bookmark it or send it to someone with the same models.
+
+## Read the comparison
+
+Each model has its own column, grouped into sections:
+
+- **Overview**: task, modality, engine, backend, context size, parameters and whether it supports tools natively.
+- **Storage & device fit**: approximate size, whether it fits your device's memory (*Fits*, *Tight*, *Exceeds memory* or *Not supported here*), the number of variants, and how many are installed.
+- **Performance on this device**: results of the on-device measurement (see below).
+- **Actions**: **Install** or **Set default**, and **Open details**.
+
+A short side-by-side summary closes the page.
+
+**Highlight best** (on by default) marks the winning value in each row in green: the largest context, the smallest size, the best device fit and the fastest ready time. Ties all win.
+
+On a phone, the same rows appear in a table you swipe sideways.
+
+## Measure on this device
+
+Numbers from elsewhere don't tell you how a model behaves on **your** hardware, so the page can measure it.
+
+- Click **Measure on this device** under one model, or **Measure all**.
+- You get **Ready in** (how long the model takes to load and warm up) and, where the engine supports it, **Speed** in tokens per second.
+- A **Ready time — lower is better** chart compares the results.
+- **Re-measure** runs it again.
+
+If a model has an installed variant, that one is measured; otherwise the smallest variant is.
+
+<Aside>
+Results are kept only while the page is open in this session. They are not saved.
+</Aside>
+
+## Change the models
+
+- **Add model** lists other models of the same task. It shows while fewer than three are compared.
+- The **X** on a model's card removes it.
+- **Local AI** at the top takes you back to the full list.

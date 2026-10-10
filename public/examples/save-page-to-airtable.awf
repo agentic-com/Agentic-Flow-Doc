@@ -1,0 +1,84 @@
+{
+  "name": "Save Page to Airtable Reading List",
+  "description": "Right-click any page to save its title and link to an Airtable reading list.",
+  "tags": ["capture", "tier-2", "airtable", "extension", "bookmark"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "📚 Save pages to Airtable.\n\nRight-click a page and pick this workflow — it adds the page title and link as a new record in your Airtable reading list. Connect Airtable and choose the base and table below the first time."
+      },
+      "width": 340,
+      "height": 180
+    },
+    {
+      "id": "trigger-context-menu",
+      "type": "trigger",
+      "position": { "x": 100, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:contextMenu" },
+        "label": "Right-click a page",
+        "inputs": { "contexts": ["page"] },
+        "parameters": { "notes": "Adds this workflow to the right-click menu on any page." }
+      }
+    },
+    {
+      "id": "get-metadata",
+      "type": "basic",
+      "position": { "x": 420, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:getPageMetadataNode" },
+        "label": "Read the page details",
+        "inputs": {},
+        "parameters": { "notes": "Grabs the page's title and URL to save." }
+      }
+    },
+    {
+      "id": "save-airtable",
+      "type": "basic",
+      "position": { "x": 740, "y": 260 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:airTable" },
+        "label": "Add a record to Airtable",
+        "inputs": {
+          "credential": "",
+          "parameters": {
+            "resource": "record",
+            "operation": "create",
+            "baseId": "",
+            "tableId": "",
+            "fields": {
+              "Name": "{{ $input.title }}",
+              "URL": "{{ $input.url }}"
+            }
+          }
+        },
+        "parameters": { "notes": "Creates a new Airtable record with the page title and link." }
+      }
+    },
+    {
+      "id": "sticky-airtable",
+      "type": "stickyNote",
+      "position": { "x": 740, "y": 440 },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: connect your Airtable account and pick the base and table. Make sure it has Name and URL fields, or rename these to match your columns."
+      },
+      "width": 320,
+      "height": 150
+    }
+  ],
+  "edges": [
+    { "id": "e-trigger-metadata", "source": "trigger-context-menu", "target": "get-metadata", "type": "flowEdge" },
+    { "id": "e-metadata-airtable", "source": "get-metadata", "target": "save-airtable", "type": "flowEdge" }
+  ],
+  "requiredInputs": [
+    { "nodeId": "save-airtable", "field": "credential" },
+    { "nodeId": "save-airtable", "field": "baseId" },
+    { "nodeId": "save-airtable", "field": "tableId" }
+  ]
+}

@@ -1,0 +1,130 @@
+---
+title: "Connect any API (HTTP, OpenAPI, MCP)"
+description: "Pick the right credential type for an API that has no dedicated node: HTTP Request, Custom API, RSS, MCP servers and HMAC signing."
+kind: connection
+section: app
+sidebar:
+  label: "Any API (HTTP, MCP)"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 2 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="Bearer Token" /> <Badge variant="neutral" text="Basic Auth" /> <Badge variant="neutral" text="JWT" />
+
+These nodes take any credential. The **Auth Type** decides what AWFlow sends in the `Authorization` header:
+
+| Auth Type | Fields | Sent as |
+| --- | --- | --- |
+| **Bearer Token** | Bearer Token | `Authorization: Bearer <token>` |
+| **Basic Auth** | Username, Password | `Authorization: Basic <base64 of username:password>` |
+| **JWT** | JWT | `Authorization: <value>`, exactly as typed. Use it for schemes like `Token abc123`. |
+| **OAuth2** | Client ID, Client Secret | Only for Google and Microsoft 365. See [Connect Google](/app/connections/google/). |
+
+## Before you start
+
+- The API's documentation: it says how it expects the key (header, query or Basic Auth).
+
+## Used by
+
+- [Http Request](/nodes/builtin/core/http-request/)
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/)
+- [Custom API](/nodes/builtin/integration/custom-api/)
+- [RSS Feed Read](/nodes/builtin/core/rss-feed-read/)
+- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)
+- [Crypto (HMAC)](/nodes/builtin/datatransformation/crypto/)
+
+## Pick a method
+
+| Method | Use it when |
+| --- | --- |
+| **Bearer token** <Badge variant="new" text="Recommended" /> | Most modern APIs: "send `Authorization: Bearer YOUR_KEY`". Also MCP servers that need a login. |
+| **Basic Auth** | "Use your username and password", or an API key plus secret sent as Basic Auth. |
+| **Raw header value (JWT)** | The API wants another scheme in `Authorization`, such as `Token abc123`, or a JWT you got elsewhere. |
+
+## Set it up
+
+<Tabs syncKey="connect-http-and-apis">
+<TabItem label="Bearer token (recommended)">
+
+<Steps>
+
+1. **Create a key** in the service's developer settings.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field). Pick **Simple Credential** and click **Continue**. Name it, for example *Acme API – read only*, set **Auth Type** to **Bearer Token** and paste the key into **Bearer Token**, without the word `Bearer`. Choose the **Storage location** and click **Create Credential**.
+3. **Pick it in the node**: **Authentication** on Http Request, HTTP Request Tool and RSS Feed Read; **Credential** on Custom API; **Authentication** next to the server on MCP Client Tool.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Click **Test step** on the node: the response comes back with status 200 instead of 401.
+
+</Callout>
+
+</TabItem>
+<TabItem label="Basic Auth">
+
+<Steps>
+
+1. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field). Pick **Simple Credential** and click **Continue**. Name it, for example *Acme API – basic*, set **Auth Type** to **Basic Auth** and fill **Username** and **Password**. Choose the **Storage location** and click **Create Credential**.
+2. **Pick it in the node**, the same way as a bearer token.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Click **Test step**: the response comes back without a 401.
+
+</Callout>
+
+</TabItem>
+<TabItem label="Raw header value (JWT)">
+
+<Steps>
+
+1. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field). Pick **Simple Credential** and click **Continue**. Name it, for example *Acme API – token scheme*, set **Auth Type** to **JWT** and paste the full header value (for example `Token abc123`) into **JWT**, exactly as copied. Choose the **Storage location** and click **Create Credential**.
+2. **Pick it in the node.** For a key in another header (`X-API-Key`) or in the query string, see the note below.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Click **Test step**: the response comes back without a 401.
+
+</Callout>
+
+</TabItem>
+</Tabs>
+
+**Key in another header or in the query string?** On **Custom API**, a Bearer Token credential is sent the way the API's spec says (in the named header such as `X-API-Key`, or as a query parameter such as `?api_key=`). On **Http Request**, add the header under the node's headers instead, but keep in mind that values typed into a node travel with the workflow when you share it.
+
+**Signing with HMAC.** The [Crypto](/nodes/builtin/datatransformation/crypto/) node's **HMAC Key** reads the secret from a credential so it never travels with a shared workflow. Use a Bearer Token (or JWT) credential holding only the secret.
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to only the address you call in the node. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **401 Unauthorized.** The Auth Type doesn't match what the API expects: Bearer for `Authorization: Bearer`, Basic Auth for username and password, JWT for any other scheme.
+- **The API says the key is malformed.** You pasted `Bearer …` into a Bearer Token credential. Paste only the key: AWFlow adds the word.
+- **403 Forbidden.** The key is valid but lacks access to this endpoint. Check its permissions in the service.
+- **The MCP server shows as unavailable.** The server URL is wrong or the credential was deleted. Pick it again next to the server.
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Http Request node" href="/nodes/builtin/core/http-request/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

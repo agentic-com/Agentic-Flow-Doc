@@ -1,0 +1,147 @@
+---
+title: "Manage your workflows list"
+description: "Search, filter, activate, move, tag, export and delete workflows, one at a time or in bulk"
+kind: guide
+section: app
+sidebar:
+  label: "Manage the list"
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import workflowsListLight from '@assets/screenshots/workflows-list.light.webp';
+import workflowsListDark from '@assets/screenshots/workflows-list.dark.webp';
+import workflowsBulkLight from '@assets/screenshots/workflows-bulk.light.webp';
+import workflowsBulkDark from '@assets/screenshots/workflows-bulk.dark.webp';
+
+**Workflows** in the sidebar lists every workflow you have. Use it to find a workflow, turn it on or off, move it between this device and the cloud, and clean up many workflows at once.
+
+<Screenshot
+  src={workflowsListLight}
+  srcDark={workflowsListDark}
+  alt="The Workflows page, My Workflows tab: four workflows (JSON Prettify & Repair, Hash Text, Color Converter, JWT Decoder) with their tags, active status, Local storage badge, Not published state and dates, above the Status, Storage, Published, Needs setup and Tags filters."
+  hotspots={[{ x: 94.9, y: 9.9, label: 'Add Workflow: create, import or describe one' }, { x: 32.2, y: 15.9, label: 'Filters' }, { x: 20.6, y: 26.5, label: 'Row menu: open, run, duplicate, export, delete' }]}
+/>
+
+## The two tabs
+
+- **My Workflows** holds the workflows you created or imported.
+- **From Marketplace** holds the workflows you downloaded from the Marketplace. This tab used to be a separate "Downloaded" page; old links to it now open this list.
+
+Each tab shows a count of its workflows. **Add Workflow** at the top starts a new one.
+
+## Find a workflow
+
+- Type in the **Filter...** box to search by workflow name.
+- On **My Workflows**, use the filter buttons to narrow the list:
+  - **Status**: *Active* or *Inactive*.
+  - **Storage**: *Cloud* or *Local*.
+  - **Published**: *Live*, *In review*, *Publishing draft*, *Rejected*, *Suspended* or *Not published*.
+  - **Needs setup**: *Needs setup* or *Ready to run*.
+  - **Tags**: a workflow matches if it has **any** of the tags you pick.
+- **Customize Columns** shows or hides columns. Click a column header to sort.
+
+If nothing matches, click **Clear filters**. Your sort, filters and columns are remembered in this browser.
+
+A **Needs setup** badge next to a name means the workflow is missing something before it can run, such as a connection. Hover the badge to see what.
+
+## Columns
+
+On **My Workflows**: Name, Tags, Status, Storage (*Local* or *Cloud*), Published, Last Modified, Created Date and Visibility.
+
+On **From Marketplace**: Name, Status, Tags and Version. The **Status** column tells you about the listing you downloaded from:
+
+| Status | What it means |
+| --- | --- |
+| **Active** | Everything is normal. |
+| **Update available** | The author released a newer version. Click **Update** in the Version column. |
+| **No longer listed** | The author stopped sharing it. Your copy still works. |
+| **Under review by AWFlow** | AWFlow is reviewing it. It keeps running for now. |
+| **Stopped · removed for safety** | AWFlow removed it. It can't run and its triggers are off. |
+
+Removed and under-review workflows also show a banner above the table. Click **Details** to read the explanation, or **Remove** to delete your copy.
+
+## Actions on one workflow
+
+Open the **⋮** menu at the start of a row.
+
+On **My Workflows**:
+
+- **Open** opens it in the editor.
+- **Improve with Aria** opens the assistant with this workflow attached.
+- **Run** runs it now. If it has more than one trigger, you pick which one first.
+- **Duplicate** makes a copy.
+- **Edit** changes its name and description.
+- **Manage tags** adds or removes tags.
+- **Move to cloud** / **Move to local** changes where it is stored (signed-in users only, see below).
+- **Publish** (or **Release** for a new version) shares it on the Marketplace. Only cloud workflows can be published. See [Publishing](/app/workflows/publishing/).
+- **Export** downloads it as a file. See [Export & import](/app/workflows/export-import/).
+- **Delete** removes it after you confirm.
+
+On **From Marketplace**:
+
+- **Open**, **Run** and **Export**. **Run** is disabled for a workflow removed for safety.
+- **Update to v…** when a newer version exists.
+- **Checkout a version** switches to another released version.
+- **Reset permissions** clears the site and app access you granted this workflow, so it asks again next time.
+- **Delete** removes it from your library.
+
+## Activate or deactivate
+
+A workflow's status is **Active** or **Inactive**.
+
+- **Active** turns its triggers on: schedules, page events and other triggers fire on their own.
+- **Inactive** turns its triggers off. You can still start it by hand with **Run**.
+
+To change one workflow, use the **Active** switch in the editor's header. To change many, use the bulk actions below.
+
+## Local or cloud storage
+
+Every workflow is stored in one of two places:
+
+- **Local**: in your browser, on this device only. Local workflows have no step limit, but they can't be published.
+- **Cloud**: in your account, so they follow you when you sign in elsewhere. Cloud workflows count towards your [plan's limits](/app/settings/plan/).
+
+You need to be signed in to move a workflow. A move copies the workflow, checks the copy, then deletes the original. If anything fails, the original stays where it was.
+
+<Aside type="caution">
+Only the current version of the workflow moves. Its [version history](/app/workflows/history/) stays behind. Moving to the cloud can fail if you have reached your plan's limits.
+</Aside>
+
+Run history is stored in the same place as the workflow. See [Run history](/app/workflows/run-history/).
+
+## Bulk actions
+
+<Steps>
+
+1. Tick the checkbox on each row you want, or the header checkbox to select all.
+
+2. A toolbar appears at the bottom of the screen showing how many you selected.
+
+3. Pick an action. The toolbar shows progress while it works through the list.
+
+4. A message at the end tells you how many succeeded, were skipped or failed.
+
+</Steps>
+
+<Screenshot
+  src={workflowsBulkLight}
+  srcDark={workflowsBulkDark}
+  alt="The Workflows page, My Workflows tab, with three of the listed workflows selected: their row checkboxes are ticked, the footer says how many rows are selected, and a toolbar at the bottom shows 3 selected with Export, Activate, Deactivate, Tags, Delete and Clear."
+  hotspots={[{ x: 23.4, y: 29.8, label: 'Select rows' }, { x: 34, y: 95.4, label: 'Bulk-action toolbar' }]}
+/>
+
+Bulk actions on **My Workflows**:
+
+- **Export** downloads each selected workflow. If a workflow contains embedded secrets, it is exported with the secrets removed, and the summary tells you how many.
+- **To cloud** / **To local** moves the selection. Workflows already in that place are skipped. Signed-in users only.
+- **Activate** / **Deactivate** turns their triggers on or off.
+- **Tags** opens a dialog with **Add tags** and **Remove tags** fields. The change applies to every selected workflow.
+- **Delete** removes them after you confirm. This can't be undone. If the workflows have their own chat memory, you choose whether to delete those conversations or keep them in [Memory](/app/memory/overview/).
+
+Bulk actions on **From Marketplace**:
+
+- **Export**.
+- **Remove** deletes the downloaded workflows from your library and clears the permissions you granted them.
+
+Click **Clear** to drop the selection.

@@ -3,54 +3,82 @@ title: "Workflow as Tool"
 description: "Expose another workflow as a callable tool."
 sidebar:
   label: "Workflow as Tool"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/tools/workflow-tool
+  family: ai
+  agentTool: true
 ---
 
-# Workflow as Tool
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Expose another workflow as a callable tool.
+Turn one of your workflows into a tool an AI agent can call, so the agent can hand off a sub-task you already built.
 
 ## What it does
 
-Exposes another workflow as a tool the Tools Agent can call. It reuses the same headless runner that the Lambda Workflow node uses: it resolves the selected workflow, runs it against the tool call's input, and returns whatever its Output node produced.
+Workflow as Tool is a tool for an agent, not a step in the flow. It has no output port: you connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/).
+
+The agent sees a tool with your **Tool Name** and **Tool Description**. When it calls it, it can pass one text value, `input`. The selected **Workflow** runs in the background with `{ input: "..." }` as its starting data, and what it produces goes back to the model as text:
+
+- A lambda workflow returns what its [Lambda Output](/nodes/builtin/lambda/lambdaoutput/) node produced.
+- A workflow that starts with a trigger returns the output of its last steps (the ones that feed nothing else). With several last steps, their outputs are grouped by node label.
+- If a step fails, the agent is told which step and why.
+- A workflow that pauses for an approval or a wait can't finish inside a tool call: the pause is dropped and the agent is told.
 
 ## When to use it
 
-Connect this to Tools Agent nodes when you want the agent to be able to delegate a sub-task to another, already-built workflow rather than reasoning through it directly.
+- You already have a workflow that does one job well (look up a customer, format a report, save a note) and want an agent to use it when needed.
+- The job needs several fixed steps that would be unreliable to leave to the model.
+- You want to give an agent many abilities, each as its own small workflow, connected as separate tools.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Workflow | The workflow to call, picked from a workflow selector. Only the first selection is used. |
-| Tool Name | The name the agent sees for this tool. Defaults to `workflow_tool`. |
-| Tool Description | Describes to the agent what this tool does and when to call it. Defaults to "Runs a workflow and returns its output." |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Workflow","type":"Workflow picker","description":"The workflow to call. Only the first selection is used."},{"name":"Tool Name","type":"Text","default":"workflow_tool","description":"The name the agent sees for this tool."},{"name":"Tool Description","type":"Text","default":"Runs a workflow and returns its output.","description":"Describes to the agent what this tool does and when to call it."}]} />
+{/* AUTO:settings:end */}
+
+- **Workflow**: the picker allows several, but only the first one is used.
+- **Tool Name**: short, with underscores, saying what it does, for example `lookup_customer`. Give each Workflow as Tool node on the same agent a different name.
+- **Tool Description**: the model decides when to call the tool from this text, so say what it does and what to pass as `input`, for example "Looks up a customer by email address. Pass the email as input."
+- In a lambda workflow, add a field named `input` to its [Lambda Input](/nodes/builtin/lambda/lambdainput/) node to receive the value.
 
 ## Outputs
 
-Returns a tool dependency (named per the Tool Name setting) that agent nodes can call with an optional `input` string. It runs the selected workflow with that input and returns its output, stringified as JSON if it isn't already a string.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-- A **lambda** workflow returns what its Output node produced.
-- A workflow that starts with a **trigger** returns the output of its last steps (the nodes that ran and feed nothing else). With several last steps, their outputs are keyed by node label.
-- If a step fails, the tool reports which step failed and why. A workflow that pauses (an approval or a wait) can't finish inside a tool call: the pause is dropped and the tool reports it.
+- **Tools** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+{/* AUTO:outputs:end */}
+
+The workflow's result goes back to the model, not to the next node. The agent's `steps` output lists each call, and its `response` holds the final answer.
 
 ## Dependencies and credentials
 
-- Requires a workflow to be selected in the Workflow field; if none is selected, calling the tool throws an error.
-- No explicit credential is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The called workflow uses its own nodes' credentials.
 
 ## Example workflow
 
-Connect Workflow as Tool to a Tools Agent's tools input, select a target workflow, and give it a descriptive Tool Name and Tool Description so the agent knows when to call it. When the agent calls the tool, the target workflow runs with the given input and its output is returned to the agent.
+1. Build a lambda workflow "Lookup customer": a [Lambda Input](/nodes/builtin/lambda/lambdainput/) with an `input` field, an [Http Request](/nodes/builtin/core/http-request/) to your CRM using `{{ $input.input }}`, and a [Lambda Output](/nodes/builtin/lambda/lambdaoutput/).
+2. In another workflow, add Workflow as Tool with **Workflow** "Lookup customer", **Tool Name** `lookup_customer` and **Tool Description** `Looks up a customer by email. Pass the email as input.`
+3. Connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Summarise the account of {{ $input.text }}`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, fed by [Get Selected Text](/nodes/extension/getselectedtext/) with **Output field name** `text`.
+4. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`.
 
-## Troubleshooting
+## Common issues
 
-- Check that a workflow is selected before running the node — no workflow selected causes the tool call to throw an error.
-- Write a clear Tool Description so the agent knows when it should call this tool versus others.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **"No workflow selected for this tool."** Pick a workflow in **Workflow**.
+- **"The workflow paused (for an approval or a wait) and cannot finish inside this call."** The called workflow contains a step that waits for a person or a timer. Remove it from that workflow, or call it outside the agent.
+- **The agent is told a step failed, for example `"Http Request" failed: ...`.** Open the called workflow and fix that step; run it on its own first.
+- **The agent never calls the tool.** Make **Tool Description** clearer about when to use it, and mention the tool in the agent's **Prompt**.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Wikipedia Query](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/)
-- [Tool Selection](/advanced-ai/concepts/tool-selection/)
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): the agent this tool plugs into.
+- [Lambda Input](/nodes/builtin/lambda/lambdainput/) and [Lambda Output](/nodes/builtin/lambda/lambdaoutput/): define what a lambda workflow receives and returns.
+- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/): tools from a remote server instead of your own workflows.

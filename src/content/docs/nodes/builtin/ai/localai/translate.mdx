@@ -3,48 +3,90 @@ title: "Translate"
 description: "Translate text between languages on-device"
 sidebar:
   label: "Translate"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/translate
+  family: ai
 ---
 
-# Translate
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Translate text between languages, running locally in your browser. With a multilingual model (*NLLB-200*) you pick the source and target languages; a fixed-pair model (`opus-mt-xx-yy`) always translates its own pair. Private, offline, no cost.
+Translate text between languages with a model that runs in your browser, so the text never leaves your device.
 
 ## What it does
 
-Splits the text into sentence-aligned chunks (about 1,000 characters each, to stay inside the model's input limit), translates each chunk on-device, and joins the results.
+Translate splits the **Text** into pieces of about 1,000 characters at sentence ends, translates each piece with the model you pick, and joins the results.
+
+- With *NLLB-200 distilled (translate)*, you choose the languages in **From** and **To**. It covers 200 languages.
+- With a fixed-pair model whose name ends in `opus-mt-xx-yy` (added as a custom model), the model always translates its own pair and ignores **From** and **To**.
+
+When **From** and **To** are the same, the text is returned unchanged without running the model. There is no cost per run and no API key.
 
 ## When to use it
 
-Translate incoming messages, product descriptions, or scraped pages before processing them, or localize a reply before sending it — without sending the text to a translation service.
+- Translate incoming messages or scraped pages before you process them.
+- Translate a reply before you send it.
+
+To translate with a chat model and your own instructions, use [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to translate. |
-| From | Source language (default **English**). Ignored by fixed-pair `opus-mt` models. |
-| To | Target language (default **French**). Ignored by fixed-pair `opus-mt` models. |
-| Model | An **installed** translation model. Only translation models are listed here. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Text","type":"Long text","description":"The text to translate."},{"name":"From","type":"Choice","default":"English","description":"Source language. Ignored by fixed-pair opus-mt models. 59 options."},{"name":"To","type":"Choice","default":"French","description":"Target language. Ignored by fixed-pair opus-mt models. 59 options."},{"name":"Model","type":"Model picker","description":"Only translation models are listed here."}]} />
+{/* AUTO:settings:end */}
 
-The From / To lists offer 59 common languages by name. Through an expression you can also pass an English language name (`Spanish`), a two-letter code (`es`), or any NLLB-200 code (`spa_Latn`) — so the full 200-language NLLB set stays reachable.
+**From** and **To** list 59 common languages by name. With an expression you can also pass an English language name (`Spanish`), a two-letter code (`es`) or any NLLB-200 code (`spa_Latn`), which reaches all 200 languages. For example, set **To** to `{{ $input.language }}`.
 
 ## Outputs
 
-Returns `{ text, from, to }`:
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-- `text` — the translation.
-- `from`, `to` — the language codes actually used: NLLB codes (e.g. `eng_Latn`, `fra_Latn`) for NLLB, or the model's own pair (e.g. `en`, `de`) for an `opus-mt` model.
+Each output item has these fields:
 
-If From and To are the same (with NLLB), the text is returned unchanged without running the model.
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"text","type":"Text","description":"The translated text"},{"name":"from","type":"Text"},{"name":"to","type":"Text"}]} />
 
-## Troubleshooting
+```json title="Shape of an output item"
+{
+  "text": "…",
+  "from": "…",
+  "to": "…"
+}
+```
+{/* AUTO:outputs:end */}
 
-- **"Choose a translation model."** — install one from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
-- **"Unknown source/target language …"** — the expression returned something that isn't a listed name, a two-letter code, or an NLLB code.
-- **Output is in the wrong language** — you're using an `opus-mt` model: it ignores From / To and always translates its fixed pair. Use NLLB-200 for other pairs.
-- **Slow first run** — NLLB-200 is a large model; it loads on first use, then stays warm for the session.
+`from` and `to` are the language codes actually used: NLLB codes such as `eng_Latn` and `fra_Latn`, or the model's own pair (such as `en` and `de`) for an opus-mt model.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The **Model** picker lists your installed translation models first, then ones that download on first use. *NLLB-200 distilled (translate)* is a large download (about 460 MB). To use an opus-mt model, add it on the [Local AI](/app/local-models/#add-a-custom-model) page.
+
+## Example workflow
+
+Translate the text you select into English:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) with **Menu Contexts** set to **Selection**.
+2. Translate with **Text** `{{ $input.selectionText }}`, **From** **French**, **To** **English** and **Model** *NLLB-200 distilled (translate)*.
+3. [Show Notification](/nodes/extension/shownotification/) with **Title** `Translation` and **Message** `{{ $input.text }}`.
+
+## Common issues
+
+- **"Choose a translation model."** **Model** is empty. Pick one.
+- **"Provide some text to translate."** **Text** is empty after expressions run.
+- **"Unknown source language "…"."** or **"Unknown target language "…"."** An expression in **From** or **To** returned something that is not a listed name, a two-letter code or an NLLB code.
+- **The output is in the wrong language.** You picked an opus-mt model: it ignores **From** and **To**. Use NLLB-200 for other pairs.
+- **The first run is slow.** The model downloads and loads on first use; later runs are fast.
 
 ## Related nodes
 
-- [Summarize](/nodes/builtin/ai/localai/summarize/), [Classify Text](/nodes/builtin/ai/localai/classify-text/)
-- [Generate Text](/nodes/builtin/ai/localai/generate-text/)
+- [Summarize](/nodes/builtin/ai/localai/summarize/): condense text on-device.
+- [Generate Text](/nodes/builtin/ai/localai/generate-text/): other text transforms on-device.
+- [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/): turn speech into text to translate.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): translate with a chat model.

@@ -3,53 +3,89 @@ title: "Classify Text"
 description: "Sort text into your own labels on-device — no training needed"
 sidebar:
   label: "Classify Text"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/classify-text
+  family: ai
 ---
 
-# Classify Text
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Sort text into **your own labels** — any words you like, no training — running locally in your browser with a zero-shot model (e.g. *DeBERTa zero-shot* on transformers.js). Private, offline, no cost.
+Sort text into labels you make up, such as `billing, bug report, other`, with a model that runs in your browser. No training needed.
 
 ## What it does
 
-Scores the text against every label you list using a zero-shot (NLI) model, then returns the best label and a score for each one. If even the best label scores below the **Confidence threshold**, `label` is `null`, so you can route "none of the above" separately.
+Classify Text scores the **Text** against every label in **Labels** with a zero-shot model such as *DeBERTa zero-shot*, and returns the best label plus a score for each one. If even the best label scores below **Confidence threshold**, `label` is `null`, so you can send "none of the above" to its own branch.
+
+By default the labels compete for one answer, so their scores add up to about 1. Turn on **Allow several labels** to score each label on its own, so several can be high at once. There is no cost per run and no API key.
 
 ## When to use it
 
-- Route incoming messages, tickets, or emails by topic or intent (`billing, bug report, feature request, other`).
-- Tag scraped content or notes with categories you invent on the spot.
-- Anywhere you'd use the [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/) agent but want it free, private, and offline without wiring a model dependency.
+- Route incoming messages or tickets by topic or intent.
+- Tag notes or scraped content with categories you invent on the spot.
+- Get the [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/) result for free, privately and offline, without connecting a model.
+
+For fixed sentiment or toxicity labels, [Analyze Text](/nodes/builtin/ai/localai/analyze-text/) is simpler.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to classify. |
-| Labels | Comma-separated list of labels, e.g. `billing, bug report, other`. An expression may return a list or a comma/newline-separated string (e.g. `{{ $json.labels }}`). Duplicates are ignored (case-insensitive). |
-| Model | An **installed** zero-shot (NLI) model. Only zero-shot models are listed here. |
-| Allow several labels | Off by default: labels compete for one answer (scores sum to 1). On: each label is scored independently, so several can be high at once. |
-| Confidence threshold | Below this score the top `label` is `null` (default `0.3`). |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Text","type":"Long text","description":"The text to classify."},{"name":"Labels","type":"Text","description":"Any words you like, no training needed — e.g. billing, bug report, other."},{"name":"Model","type":"Model picker","description":"Only zero-shot (NLI) models are listed here."},{"name":"Allow several labels","type":"Toggle","default":"Off","description":"Score each label independently (several can be high) instead of making them compete for one answer."},{"name":"Confidence threshold","type":"Number","default":"0.3","description":"Below this, label is null."}]} />
+{/* AUTO:settings:end */}
+
+- **Labels**: separate labels with commas or new lines. Duplicates are ignored, whatever their case. An expression can also return a list, for example `{{ $input.categories }}`.
+- Clear, descriptive labels work best: `refund request` beats `money`.
 
 ## Outputs
 
-Returns `{ label, score, labels }`:
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-- `label` — the best label, or `null` when its score is below the threshold.
-- `score` — the top label's score (reported even when `label` is `null`).
-- `labels` — every label as `{ label, score }`, highest first.
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"label","type":"Text","description":"The best label, or null below the threshold"},{"name":"score","type":"Number"},{"name":"labels","type":"List of entries"}]} />
+
+```json title="Shape of an output item"
+{
+  "label": "…",
+  "score": 0,
+  "labels": []
+}
+```
+{/* AUTO:outputs:end */}
+
+`score` is the best label's score, reported even when `label` is `null`. `labels` lists every label as `{ label, score }`, best first, which is useful with **Allow several labels**.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The **Model** picker lists your installed zero-shot models first, then ones that download on first use. Manage them on the [Local AI](/app/local-models/) page.
 
 ## Example workflow
 
-Feed an email body into **Text**, set **Labels** to `invoice, meeting request, newsletter, other`, then branch on `{{ $json.label }}` with a Switch node — and send `null` results to a manual-review branch.
+Sort the text you select into a category:
 
-## Troubleshooting
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) with **Menu Contexts** set to **Selection**.
+2. Classify Text with **Text** `{{ $input.selectionText }}`, **Labels** `invoice, meeting request, newsletter, other` and **Model** *DeBERTa zero-shot*.
+3. [Switch](/nodes/builtin/flow/switch/) with one rule per label on `{{ $input.label }}`. Items with a `null` label go to the **Anything else** fallback branch for manual review.
 
-- **"Choose a zero-shot model to classify with."** — pick a model; install one from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
-- **"Add at least one label (comma-separated)."** — the Labels field is empty after parsing.
-- **`label` is often `null`** — lower the threshold, or make labels more distinct and descriptive (`refund request` rather than `money`).
-- **Several labels look right** — turn on **Allow several labels** and read the `labels` scores.
+## Common issues
+
+- **"Choose a zero-shot model to classify with."** **Model** is empty. Pick one.
+- **"Provide some text to classify."** **Text** is empty after expressions run.
+- **"Add at least one label (comma-separated)."** **Labels** is empty, or the expression returned nothing.
+- **`label` is often null.** Lower **Confidence threshold**, or make the labels more distinct.
+- **Several labels look right.** Turn on **Allow several labels** and read the scores in `labels`.
 
 ## Related nodes
 
-- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/) — the agent version; connect a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to run it on-device.
-- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/) — fixed-label sentiment / toxicity.
-- [Summarize](/nodes/builtin/ai/localai/summarize/), [Translate](/nodes/builtin/ai/localai/translate/)
+- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/): the AI agent version; connect a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to run it on-device.
+- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/): fixed sentiment and toxicity labels.
+- [Switch](/nodes/builtin/flow/switch/): route items by label.
+- [Summarize](/nodes/builtin/ai/localai/summarize/): condense long text first.

@@ -3,45 +3,75 @@ title: "Lambda Input"
 description: "Define the inputs for the lambda workflow."
 sidebar:
   label: "Lambda Input"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/lambda/lambdainput
+  family: lambda
 ---
 
-# Lambda Input
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Define the inputs for the lambda workflow.
+Lambda Input is the starting point of a lambda workflow: it lists the values the workflow accepts from whoever calls it.
 
 ## What it does
 
-Defines the input parameters for a lambda workflow, creating a reusable workflow interface.
+A lambda workflow is a reusable sub-workflow that other workflows call, like a function. It has no trigger. Instead it starts at Lambda Input and ends at [Lambda Output](/nodes/builtin/lambda/lambdaoutput/).
+
+Each entry you add under **Inputs** has a name, a type and an optional default value. When the workflow is called, Lambda Input takes the value the caller sent for each name. If the caller sent nothing for a name, it uses the default. If there is still no value, the run stops with an error.
+
+The inputs you declare here also become the settings of the [Lambda Workflow](/nodes/builtin/lambda/lambdaworkflow/) node that calls this workflow, so callers see one field per input.
 
 ## When to use it
 
-Use this node as the entry point of a lambda workflow to specify what data it accepts.
+- You are building a lambda workflow (choose **Lambda** when you create a blank workflow). It needs exactly one Lambda Input.
+- You want a reusable step, such as "clean up a contact" or "post a report", that takes a few named values.
+
+For a workflow that starts on its own (a shortcut, a schedule, a page event), use a trigger such as [When Started](/nodes/builtin/trigger/whenstarted/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Inputs | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Inputs","type":"Field list","required":true,"description":"The inputs for the lambda workflow."}]} />
+{/* AUTO:settings:end */}
+
+Give inputs short, clear names such as `email` or `pageUrl`: they become the field labels callers see and the field names you read later with `{{ $input.email }}`.
+
+A default value is used both when a caller leaves the field empty and when you test the lambda workflow on its own from the canvas, so set realistic defaults to make testing easy.
 
 ## Outputs
 
-Passes data into or out of a lambda workflow, or exposes a lambda workflow as a reusable node.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+The output is one item with exactly the inputs you declared, for example `{ "email": "ana@example.com", "pageUrl": "https://example.com" }`. Connect the first step of your lambda workflow to it and read the values with `{{ $input.email }}`, or from later steps with `{{ $('Lambda Input').email }}`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect data into Lambda Input, configure the settings above, and use the output in the next workflow step.
+A reusable "Summarize a page" lambda workflow:
 
-## Troubleshooting
+1. Create a blank workflow, choose **Lambda**, and add **Lambda Input** with one input `url` (default `https://example.com`).
+2. Add [Http Request](/nodes/builtin/core/http-request/) with the URL `{{ $input.url }}`.
+3. Add a summarizing step, then [Lambda Output](/nodes/builtin/lambda/lambdaoutput/) with an output `summary` set to that step's result.
+4. In another workflow, open the node list, go to the **Customs** tab, and add the workflow from **My Lambda Workflows**. Its node shows a **url** field.
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+## Common issues
+
+- **"Input url is required".** The caller sent no value for that input and it has no default. Fill the field on the calling node or set a default value. A value of `0`, `false` or empty text also counts as missing, so pass those as text (for example `"0"`) or set a non-empty default.
+- **There is no Test Workflow button on the canvas.** A lambda workflow can only be tested once it has both a Lambda Input and a Lambda Output. Use the **Add Lambda Input** or **Add Lambda Output** button in the top right.
+- **A later step reads an empty value.** The name in the expression must match the input name exactly, including capital letters.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Lambda Output](/nodes/builtin/lambda/lambdaoutput/): the values the lambda workflow returns.
+- [Lambda Workflow](/nodes/builtin/lambda/lambdaworkflow/): call this workflow from another one.
+- [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/): let an AI agent call it.

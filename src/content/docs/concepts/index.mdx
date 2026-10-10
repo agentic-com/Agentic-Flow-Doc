@@ -1,0 +1,68 @@
+---
+title: Concepts
+description: The ideas behind workflows that behave the way you expect. How data moves, how a run finds its path, and how AI steps work.
+section: concepts
+kind: hub
+sidebar:
+  label: Overview
+  order: 0
+---
+
+import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+Concepts explain what happens underneath the canvas. Read them when a workflow runs but the result surprises you: a step ran ten times instead of once, a field came out empty, a branch went the wrong way, or an AI step answered from the wrong text.
+
+Each concept page opens with a 20-second summary, shows a small run you can inspect, compares the options when there are several ways to do the job, and ends with the symptoms you'll see when something is off.
+
+## Three hubs
+
+<CardGrid>
+  <Card title="Data" icon="list-format">
+    **Items, mapping, expressions, item linking.** What a node receives, what it passes on, and how you put a value from an earlier step into a setting.
+
+    [Open the Data hub](/concepts/data/)
+  </Card>
+
+  <Card title="Flow" icon="random">
+    **Branching, repeating, waiting, failures.** Which path a run takes, how work repeats, how a run pauses, and what happens when a step fails.
+
+    [Open the Flow hub](/concepts/flow/)
+  </Card>
+
+  <Card title="AI" icon="star">
+    **Models, agents and tools, knowledge (RAG).** Where a model runs, when an agent is worth it, and how to answer from your own documents.
+
+    [Open the AI hub](/concepts/ai/)
+  </Card>
+</CardGrid>
+
+## Reading order
+
+If you're new, read these five in order. Together they take about 20 minutes.
+
+1. [Items](/concepts/data/data-structure/): every step passes a list of items, and most steps run once per item.
+2. [Mapping in the UI](/concepts/data/data-mapping/data-mapping-ui/): drag a value from an earlier step into a setting.
+3. [Splitting and branching](/concepts/flow/splitting/): send items down different paths.
+4. [Error handling](/concepts/flow/error-handling/): decide what happens when a step fails.
+5. [Models and dependencies](/concepts/ai/model-dependencies/): what you connect to an AI step, and where the model runs.
+
+## Start from what you see
+
+| You notice… | Read |
+| --- | --- |
+| A step ran many times when you expected once | [Items](/concepts/data/data-structure/) |
+| A field is empty, or shows the whole list | [Mapping with expressions](/concepts/data/data-mapping/data-mapping-expressions/) |
+| A value from an earlier step belongs to the wrong record | [Item linking](/concepts/data/item-linking/) |
+| Nothing ran after an IF, Filter or Switch | [Splitting and branching](/concepts/flow/splitting/) |
+| You need to repeat steps, page by page or batch by batch | [Looping](/concepts/flow/looping/) |
+| One failing step stopped the whole run | [Error handling](/concepts/flow/error-handling/) |
+| An agent called the wrong tool, or never stopped | [AI agents](/concepts/ai/ai-agents/) |
+| An answer ignores your documents | [RAG](/concepts/ai/rag/) |
+
+## Words you'll meet
+
+The [glossary](/concepts/glossary/) defines the terms used across the docs, and links each one to the page that explains it.
+
+<LinkCard title="Glossary" description="Short definitions, each linked to its concept page." href="/concepts/glossary/" />
+
+For the exact settings and outputs of a node, use the [node reference](/nodes/). To practise a concept on a complete workflow, pick one of the [recipes](/recipes/).

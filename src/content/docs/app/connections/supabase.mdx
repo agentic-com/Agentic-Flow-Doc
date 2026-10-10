@@ -1,0 +1,70 @@
+---
+title: "Connect Supabase"
+description: "Use your project's anon public key, and let Row Level Security decide what a workflow may read and write."
+kind: connection
+section: app
+sidebar:
+  label: "Supabase"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- A Supabase project, with Row Level Security (RLS) policies for the tables you use.
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Supabase](/nodes/builtin/integration/supabase/)
+
+## Set it up
+
+This is the only method AWFlow accepts. The secret `service_role` key is refused because it bypasses RLS.
+
+<Steps>
+
+1. **Copy the key.** In Supabase, open **Project Settings › API** and copy the key labelled `anon` `public`. Also note the **Project URL** (`https://<project>.supabase.co`).
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Supabase** and click **Continue**. Name it, for example *Supabase – prices project*: **Auth Type** is already set to **Bearer Token**. Then paste the anon key into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+3. **Allow the access** with RLS policies on each table, for example a policy that lets the `anon` role `insert` into `prices`.
+4. **In the node**, pick the credential and paste the **Project URL**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Select rows** on a table with a select policy: rows come back.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to your project URL (`<project>.supabase.co`). AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **"This is a Supabase service_role key, which bypasses Row Level Security…".** Replace it with the `anon` key.
+- **"401 … the request was blocked" (or 403).** No RLS policy allows this operation for `anon`. Add one on the table.
+- **Select returns an empty list.** RLS hides the rows from `anon`, or the filter matches nothing (use `eq.42`, not `42`).
+- **The run is blocked in the web app.** Supabase runs through the browser extension. Install the extension and allow Supabase for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Supabase node" href="/nodes/builtin/integration/supabase/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

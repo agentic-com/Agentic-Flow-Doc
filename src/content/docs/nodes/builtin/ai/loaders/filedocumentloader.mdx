@@ -4,62 +4,74 @@ description: "Load a file (PDF, HTML, text) as text to feed into the Indexer"
 sidebar:
   label: "File Document Loader"
   order: 2
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/loaders/filedocumentloader
+  family: ai
 ---
 
-# File Document Loader
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Load a file (PDF, HTML, text) as text to feed into the Indexer.
+Turn a PDF, HTML or text file into plain text, ready to index into a knowledge base.
 
 ## What it does
 
-Takes a file/binary payload attached to the incoming item, decodes it to plain text based on its
-type, and outputs that text under a configurable field (default `text`). Connect that output to
-the [Indexer](/nodes/builtin/ai/aiagents/indexernode/) node's `Input` port to index a file.
+File Document Loader takes a file carried by the incoming item and puts its text in one output field, named by **Output field name** (`text` by default). It works out the file type from its MIME type, or else from the file name's extension:
 
-Supported formats:
+- **PDF**: the text of all pages, joined into one string. Uses the same extraction as [PDF Parser](/nodes/builtin/datatransformation/pdfparser/).
+- **HTML**: converted to clean plain text.
+- **Text formats**: CSV, JSON, XML, Markdown and TXT (and any `text/` type) are read as they are.
 
-- **PDF** — text is extracted with the same engine as the [PDF Parser](/nodes/builtin/datatransformation/pdfparser/).
-- **HTML** — converted to clean plain text.
-- **Text formats** — `csv`, `json`, `xml`, `markdown`, `txt` (and any `text/*`) are decoded as text.
+It first looks for a file attachment under **Binary key / field**. If there is none, it reads a field of that name holding a base64 string or a data URL (`data:application/pdf;base64,...`).
 
 ## When to use it
 
-Use it to index the contents of an uploaded or fetched file — a PDF report, an exported CSV, a
-Markdown doc — into a knowledge base.
+- Index a PDF report, a Markdown doc or an exported CSV into a knowledge base.
+- Handle a mix of PDF, HTML and text files with one node.
+- When you only need the text of a PDF and won't index it, [PDF Parser](/nodes/builtin/datatransformation/pdfparser/) gives more control.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Binary key / field | The binary attachment key on the input item (its `$binary` map), or a field holding a base64 / data-URL string. Defaults to `data`. |
-| Output field name | Field that holds the extracted text. Defaults to `text`. |
-| MIME type | Optional hint used to pick the decoder. Required for a raw base64 string with no data-URL prefix. |
-| File name | Optional hint — its extension is used to pick the decoder when no MIME type is known. |
-| Include input fields | When enabled, the incoming item's fields are merged into the output. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Binary key / field","type":"Text","default":"data","description":"The binary attachment key on the input item (its $binary map), or a field holding a base64 / data-URL string."},{"name":"Output field name","type":"Text","default":"text","description":"The name of the output field that will hold the loaded text."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › MIME type","type":"Text","description":"Override / hint for the MIME type. Required when loading a raw base64 string with no data-URL prefix."},{"name":"Options › File name","type":"Text","description":"File name hint — its extension is used to dispatch when no MIME type is known."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the original input fields in the output."}]} />
+{/* AUTO:settings:end */}
+
+- **Binary key / field** is the name only, not an expression: for example `content`, not `{{ $input.content }}`.
+- A data URL already says its type. For a plain base64 string, set **MIME type** (for example `application/pdf`) or a **File name** such as `report.pdf`.
 
 ## Outputs
 
-An item with the extracted text under the chosen output field (default `text`).
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
 
-## Notes
+Each item has the file's text in the field you named (default `text`). With **Include input fields** on, the incoming fields are kept next to it, which is handy to reuse the file name as **Source name** on the Indexer.
 
-- The loader first looks for a real binary attachment on the item's `$binary` map under the
-  configured key; if none is found it falls back to a plain field of the same name holding a
-  base64 string or a `data:` URL.
-- For a PDF you already have on an item you can use either this loader or the
-  [PDF Parser](/nodes/builtin/datatransformation/pdfparser/) — this loader is the choice when
-  the goal is to feed the Indexer and you may be handling PDF, HTML, or text interchangeably.
+## Dependencies and credentials
 
-## Troubleshooting
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
-- `No source node is connected to this node.` — connect a node that provides the file.
-- `No binary attachment or field "…" found` — check the Binary key matches the attachment or
-  field carrying the payload.
-- `Unsupported document type …` — set a MIME type or file name so the loader can pick a decoder,
-  or convert the file to a supported format first.
+## Example workflow
+
+1. [Local File Read](/nodes/builtin/datatransformation/localfileread/) with **Read as** `Data URL` and **Accepted file types** `.pdf, .md` lets you pick a file. Its content arrives in `content` and its name in `name`.
+2. File Document Loader with **Binary key / field** `content`, **Output field name** `text` and **Include input fields** on.
+3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.text }}` and **Source name** `{{ $input.name }}`. Connect [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to **Knowledge** and [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) to **Text Splitter**.
+
+## Common issues
+
+- **"No source node is connected to this node."** The loader needs an incoming item that carries the file. Connect the node that provides it.
+- **"No binary attachment or field "…" found on the input item…".** Nothing is stored under **Binary key / field**. Check the field name in the previous node's output and type it exactly.
+- **"Unsupported document type (mimeType: unknown, fileName: unknown)…".** The loader can't tell the file type. Set **MIME type** or **File name**, or convert the file to PDF, HTML or text first. Word and image files are not supported.
+- **The text is empty for a PDF.** The PDF is a scanned image with no text layer. Run it through text recognition first.
 
 ## Related nodes
 
-- [Indexer](/nodes/builtin/ai/aiagents/indexernode/)
-- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/)
-- [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/)
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/): save the text into a knowledge base.
+- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/): PDF text with per-page options.
+- [Local File Read](/nodes/builtin/datatransformation/localfileread/): pick a file from your computer.
+- [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/): load a web page instead.

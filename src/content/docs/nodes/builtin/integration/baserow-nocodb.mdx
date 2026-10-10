@@ -3,55 +3,92 @@ title: "Baserow / NocoDB"
 description: "Create, read, update, and delete rows in a Baserow or NocoDB table — hosted or self-hosted, including localhost."
 sidebar:
   label: "Baserow / NocoDB"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/baserow-nocodb
+  family: integration
 ---
 
-# Baserow / NocoDB
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Read and write rows in [Baserow](https://baserow.io) or [NocoDB](https://nocodb.com) — open-source, self-hostable Airtable alternatives. Because both can run on your own machine, this keeps your workflow data entirely local if you want — the same local-first story as Local Knowledge, Ollama, and WebLLM.
+Read and write rows in a Baserow or NocoDB table, on their cloud or on your own server.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Baserow / NocoDB connection"} href="/app/connections/baserow-nocodb/" linkLabel={"Connect Baserow / NocoDB"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Full row CRUD against a table you point it at: create, get, update, list, and delete rows. Pick the provider, give your instance URL, the table ID, and (for writes) a set of field-name → value pairs.
+Baserow and NocoDB are open-source alternatives to Airtable that you can host yourself, even on your own computer. Pick the **Provider**, then one **Operation** on a table:
 
-## Resources and operations
+- **Create row**, **Update row**: write the **Fields** you list.
+- **Get row**, **Delete row**: act on one row by its **Row ID**.
+- **List rows**: read rows from the table, up to **Limit** if set.
 
-| Provider | Operations |
-| --- | --- |
-| Baserow / NocoDB | Create row, Get row, Update row, List rows, Delete row |
+You name fields by their column name as it appears in your table, for both providers. **Update row** only changes the fields you list.
+
+## When to use it
+
+- Keep your data on your own machine: pair a local Baserow or NocoDB with local AI nodes.
+- Log scraped prices, bookmarks or leads into a table you own.
+- Read a table to drive a workflow, for example one row per URL to check.
+- Use [Airtable](/nodes/builtin/integration/airtable/) or [Google Sheets](/nodes/builtin/integration/google-sheets/) instead if your data lives there.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Credential | A Baserow database token or a NocoDB API token (see below). |
-| Provider | Baserow or NocoDB. |
-| Base URL | Your instance — `https://api.baserow.io`, `https://app.nocodb.com`, or a self-hosted address like `http://localhost:8080`. **Plain HTTP on localhost is fine.** |
-| Table ID | The table to work with (Baserow's numeric ID, or NocoDB's table ID). |
-| Fields | Field name → value pairs for Create / Update (use your table's column names). |
-| Row ID | The row/record to get, update, or delete. |
-| Limit | Maximum rows to return (List). |
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Provider and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"A Baserow database token or a NocoDB API token, stored as a Bearer Token credential. Keep it secret — it grants access to your tables."}]} groups={[{"options":[{"label":"Create row","rows":[{"name":"Base URL","type":"Text","required":true,"description":"Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080."},{"name":"Table ID","type":"Text","required":true,"description":"The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with."},{"name":"Fields","type":"Key-value pairs","required":true,"description":"Field name → value pairs (use the column names from your table)."}]},{"label":"Get row","rows":[{"name":"Base URL","type":"Text","required":true,"description":"Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080."},{"name":"Table ID","type":"Text","required":true,"description":"The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with."},{"name":"Row ID","type":"Number","required":true,"description":"The ID of the row/record."}]},{"label":"Update row","rows":[{"name":"Base URL","type":"Text","required":true,"description":"Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080."},{"name":"Table ID","type":"Text","required":true,"description":"The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with."},{"name":"Row ID","type":"Number","required":true,"description":"The ID of the row/record."},{"name":"Fields","type":"Key-value pairs","required":true,"description":"Field name → value pairs (use the column names from your table)."}]},{"label":"List rows","rows":[{"name":"Base URL","type":"Text","required":true,"description":"Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080."},{"name":"Table ID","type":"Text","required":true,"description":"The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with."},{"name":"Limit","type":"Number","description":"Maximum number of rows to return."}]},{"label":"Delete row","rows":[{"name":"Base URL","type":"Text","required":true,"description":"Your instance URL — e.g. https://api.baserow.io, https://app.nocodb.com, or a self-hosted address like http://localhost:8080."},{"name":"Table ID","type":"Text","required":true,"description":"The numeric table ID (Baserow) or table ID (NocoDB, e.g. m8f…) to work with."},{"name":"Row ID","type":"Number","required":true,"description":"The ID of the row/record."}]}]}]} />
 
-Field names are used directly — Baserow requests use `user_field_names`, and NocoDB uses column names natively — so you never deal with internal field IDs.
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Baserow / NocoDB API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
+
+- **Base URL** is the address of your instance only, without a path: `https://api.baserow.io` for Baserow cloud, `https://app.nocodb.com` for NocoDB cloud, or for example `http://localhost:8080` for a self-hosted one.
+- **Table ID**: in Baserow it is a number (for example `482`), listed in the database's API documentation; in NocoDB it is a text id that starts with `m`, shown in the table's details.
+- **Fields**: one pair per column, for example `Name` = `{{ $input.title }}` and `URL` = `{{ $input.url }}`.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+- **Create row**, **Get row** and **Update row** return the row as the provider sends it, with its id (`id` in Baserow, `Id` in NocoDB) and its columns.
+- **List rows** returns the provider's page of results: Baserow puts the rows in `results`, NocoDB in `list`. Use [Split Out](/nodes/builtin/datatransformation/splitout/) on that field to get one item per row.
 
 ## Dependencies and credentials
 
-- **Baserow:** create a **database token** (Settings → Database tokens), stored as a **Bearer Token** credential. Sent as `Authorization: Token <token>`.
-- **NocoDB:** create an **API token** (Account → Tokens), stored as a **Bearer Token** credential. Sent as the `xc-token` header.
-- Tokens are stored in your credential vault and never pass through awflow's backend.
+{/* AUTO:deps:start */}
+- **Credential** (connection, Bearer Token): required. See [Connect Baserow / NocoDB](/app/connections/baserow-nocodb/).
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+- **Baserow**: create a **database token** in Baserow under **Settings → Database tokens**, with access to the workspace that holds the table.
+- **NocoDB**: create an **API token** in NocoDB under **Account settings → Tokens**.
 
-This node is **extension-only**. Self-hosted instances are usually on `localhost` or a LAN address — reachable through the extension's host permissions, but not from the web build.
+Save the token as a Bearer Token credential: see [Create a credential](/app/connections/create/). The node sends it the way each provider expects.
 
-## Troubleshooting
+## Example workflow
 
-- **`401` / `403`** — the token is wrong, or lacks access to the table/database. Regenerate it and confirm it covers the table.
-- **`404` on a self-hosted instance** — check the **Base URL** (no trailing path, correct port) and the **Table ID**.
-- **Update/delete does nothing (NocoDB)** — NocoDB identifies the record by `Id` in the request body; make sure **Row ID** is the record's `Id`.
-- **Wrong field written** — use the exact **column name** as it appears in your table.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger runs when you right-click a page.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads its `title` and `url`.
+3. Baserow / NocoDB, **Provider** `Baserow`, **Create row**, **Base URL** `http://localhost:8080`, **Table ID** `482`, **Fields** `Title` = `{{ $input.title }}`, `Link` = `{{ $input.url }}`.
+4. [Browser Notification](/nodes/extension/browsernotification/) confirms the row was saved.
+
+## Common issues
+
+- **"Baserow API Error: 401 Unauthorized" or "NocoDB API Error: 401".** The token is wrong, or has no access to this table. Create a new token that covers the table and update the credential.
+- **"... API Error: 404 Not Found".** Check **Base URL** (no path after the address, right port) and **Table ID**.
+- **A value is not written.** The field name must match the column name exactly, including capitals and spaces.
+- **The run is blocked in the web app.** This node runs in the browser extension, which can reach self-hosted addresses like `localhost`. Install the extension, or run the workflow from it.
 
 ## Related nodes
 
-- [Airtable](/nodes/builtin/integration/airtable/)
-- [Get Page Metadata](/nodes/extension/getpagemetadata/)
-- [Custom API](/nodes/builtin/integration/custom-api/)
+- [Airtable](/nodes/builtin/integration/airtable/): the hosted service these tools replace.
+- [Supabase](/nodes/builtin/integration/supabase/): rows in a Postgres database.
+- [Data Store](/nodes/builtin/core/datastore/): keep small values inside AWFlow, no account needed.

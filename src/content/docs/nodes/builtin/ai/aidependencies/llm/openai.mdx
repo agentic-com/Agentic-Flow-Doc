@@ -1,51 +1,86 @@
 ---
 title: "Chat OpenAI"
-description: "Leverage OpenAI to use LLM locally directly on your device"
+description: "Connect an OpenAI chat model to AI nodes."
 sidebar:
   label: "Chat OpenAI"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/llm/openai
+  family: ai
 ---
 
-# Chat OpenAI
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Leverage OpenAI to use LLM locally directly on your device
+Give an AI node access to OpenAI's GPT models, using your own OpenAI API key.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs an OpenAI connection"} href="/app/connections/openai/" linkLabel={"Connect OpenAI"}>
+  Pick a saved connection in the **Authentication** field, or create one from there.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Provides access to OpenAI's language models (GPT-4, GPT-3.5, etc.) for AI agent nodes.
+Chat OpenAI is a model you plug into the **Model** slot of an AI node, such as the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/). It does not run on its own and has no output. When the AI node runs, it sends its messages to OpenAI with your key and gets the reply back.
+
+- **Temperature** is 0 when you leave it empty, so answers are focused and repeatable.
+- Replies are capped at **Max Tokens** (4096 by default).
+- A failed request is retried up to **Max Retries** times (2 by default). A request that gets no answer within 60 seconds fails.
 
 ## When to use it
 
-Connect this to AI agents when you want to use OpenAI's models for text generation, analysis, or conversation.
+- General writing, summarising, extracting and classifying with a GPT model.
+- An agent that calls tools: connect it to the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/).
+- You already have an OpenAI account with credit.
+
+If your company uses OpenAI models through Microsoft Azure, use [Chat Azure OpenAI](/nodes/builtin/ai/aidependencies/llm/azure-openai/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Source-backed field from the node schema. |
-| Options → Temperature | The temperature to use for the model. |
-| Options → Max Retries | The maximum number of retries to use for the model. Defaults to `2`. |
-| Options → Max Tokens | The most tokens the model may generate in one reply. Defaults to `4096`, which keeps providers from reserving credit for the whole output window. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Model","type":"Text","required":true,"description":"The model to use."},{"name":"Authentication","type":"Credential","required":true,"description":"Use a Bearer Token."},{"name":"Options","type":"Group","description":"The options to use with the model."},{"name":"Options › Temperature","type":"Number","description":"The temperature to use for the model."},{"name":"Options › Max Retries","type":"Number","default":"2","description":"The maximum number of retries to use for the model."},{"name":"Options › Max Tokens","type":"Number","default":"4096","description":"The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window."}]} />
+{/* AUTO:settings:end */}
+
+Type the **Model** id exactly as OpenAI names it, for example `gpt-4o-mini` or `gpt-4o`. Your account must have access to that model.
 
 ## Outputs
 
-Returns a chat model dependency that can be connected to AI agent nodes.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Model** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
+{/* AUTO:outputs:end */}
+
+The AI node you connect it to produces the output. Chat OpenAI only decides which model answers.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Authentication** (connection): required. See [Connect OpenAI](/app/connections/openai/).
+{/* AUTO:deps:end */}
+
+In **Authentication**, use a Bearer Token credential that holds your OpenAI API key. Create the key on the API keys page of the OpenAI platform ([platform.openai.com/api-keys](https://platform.openai.com/api-keys)). See [Create a credential](/app/connections/create/).
 
 ## Example workflow
 
-Connect Chat OpenAI to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on the page.
+2. [Get All Text](/nodes/extension/getalltext/) with **Output field name** `pageText`.
+3. [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) with **Text** `{{ $input.pageText }}` and **Max words** `80`, with Chat OpenAI in its **Model** slot (**Model** `gpt-4o-mini`).
+4. [Browser Notification](/nodes/extension/browsernotification/) with **Message** `{{ $input.summary }}`.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **"Model parameter is required and cannot be empty".** Fill in **Model**.
+- **An "Incorrect API key" or 401 error.** The key is wrong or revoked. Create a new key and update the credential.
+- **A 429 or "quota" error.** Your OpenAI account is out of credit or over its rate limit. Add credit or wait, then run again.
+- **The answer stops mid-sentence.** It hit **Max Tokens**. Raise it under **Options**.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Chat Azure OpenAI](/nodes/builtin/ai/aidependencies/llm/azure-openai/): the same models, hosted on Azure.
+- [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/): OpenAI vectors for a knowledge base.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): send one prompt and get a reply.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an agent that can use tools and memory.

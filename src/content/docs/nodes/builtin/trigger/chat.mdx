@@ -3,115 +3,114 @@ title: "Chat Trigger"
 description: "Run the flow on each chat message from the user."
 sidebar:
   label: "Chat Trigger"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/chat
+  family: trigger
 ---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
 import { Aside } from "@astrojs/starlight/components";
 
-# Chat Trigger
-
-Run the flow on each chat message from the user.
+Turn a workflow into a chatbot: every message you send runs the workflow once.
 
 ## What it does
 
-Turns a workflow into a chatbot. Instead of running once, the Chat Trigger opens a chat window, and **every message the user sends runs the workflow once**, with that message as the trigger's output (`chatInput`).
+The Chat Trigger opens a chat window. Each message you send starts one run of the workflow, from this trigger only, with your text in `chatInput`.
 
-The trigger itself never writes a reply. The reply comes from a downstream agent that uses the **same Chat Memory** as the trigger: the agent saves the conversation to that memory, and the chat window shows whatever the memory contains.
+The trigger never writes a reply itself. A downstream agent that uses the **same Chat Memory** as the trigger does:
+
+1. The agent saves your message to the memory.
+2. It reads the earlier conversation, calls the model (and any tools), and saves its reply to the same memory.
+3. The chat window re-reads the conversation from the memory and shows both messages. On the canvas this is immediate; on a web page the chat checks every 1.5 seconds, so the reply can take a moment to appear.
+
+Because the conversation lives in the memory, it also shows on the [Memory page](/app/memory/overview/), and other workflows using the same conversation see the same messages.
+
+**Where you can chat:**
+
+- **On the canvas.** **Test Workflow** opens the chat when the Chat Trigger is the only trigger. You can also pick it in the trigger picker or press the node's **Test step** button.
+- **On web pages (extension).** When the workflow is activated, a chat bubble appears on pages matching **URL Patterns**. If several chat workflows match, the bubble lets you pick one. You can also right-click and choose **Open chat**. The run still happens in the AWFlow app tab, and the page's `url`, `title` and `tabId` are passed to the trigger.
 
 ## When to use it
 
-- Build an assistant you can talk to from the canvas while designing a workflow.
-- Put a chat bubble on specific websites (for example a support helper on your internal tools), using **URL Patterns**.
-- Give an agent a running conversation, so each message can build on the previous ones.
+- Build an assistant you can talk to while designing a workflow.
+- Put a helper on specific websites, for example your internal tools, using **URL Patterns**.
+- Give an agent a running conversation, so each message builds on the earlier ones.
 
-## Required setup
-
-A Chat Trigger needs three things wired together:
-
-1. **A [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) connected to the trigger** — its memory input is required, and the run fails with a clear error if it's missing. Use **Conversation** storage (pick a conversation, or leave it empty for the node's own) or **Key** storage with a fixed key.
-2. **A downstream agent that uses the same memory node** — [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/). Connect the memory to the agent's memory input as well as to the trigger's.
-3. **The agent's prompt set to the chat message** — for example `{{ $json.chatInput }}`.
-
-<Aside type="caution" title="Which storage shows a history">
-The chat window shows the conversation the memory points at, so it needs to know it before a run. That works with **Conversation** storage and with a **fixed key**. With **This run only**, or a key that is an expression (`{{ $json.userId }}`), nothing is known ahead of the run: the chat keeps no history and each message is answered on its own.
-</Aside>
-
-Workflows built with the older Local Memory, Persistent Chat Memory or Window Buffer Memory keep working; those nodes are now [upgraded to Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/#replaced-memory-nodes).
+For a one-off question without a chat window, start the agent from [When Started](/nodes/builtin/trigger/whenstarted/) or [Context Menu](/nodes/builtin/trigger/contextmenu/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Assistant name | Title shown in the chat header. Default: `Assistant`. On web pages, falls back to the workflow name when empty. |
-| Icon | Emoji or image URL shown in the chat header. Optional. |
-| Greeting | Message shown before the conversation starts. Default: `How can I help you today?` |
-| Input placeholder | Placeholder text of the message box. Default: `Type a message…` |
-| Starter prompts | Suggested prompts shown before the conversation begins. |
-| Allow clearing the conversation | Shows a button that deletes the conversation's messages. Default: on. |
-| URL Patterns | Pages where the chat bubble appears, in the same format as [Page Load](/nodes/builtin/trigger/pageload/). Default: `<all_urls>` (every page). |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Assistant name","type":"Text","default":"Assistant"},{"name":"Icon","type":"Text","description":"Emoji or image URL shown in the chat header."},{"name":"Greeting","type":"Long text","default":"How can I help you today?"},{"name":"Input placeholder","type":"Text","default":"Type a message…"},{"name":"Starter prompts","type":"Tags","description":"Suggested prompts shown before the conversation begins."},{"name":"Allow clearing the conversation","type":"Toggle","default":"On"},{"name":"URL Patterns","type":"Tags","default":"[\"<all_urls>\"]"}]} />
+{/* AUTO:settings:end */}
+
+**Assistant name**, **Icon**, **Greeting**, **Input placeholder** and **Starter prompts** only change how the chat window looks. **URL Patterns** decides on which pages the chat bubble shows (`<all_urls>` means every page); it uses the form `https://*.example.com/*`.
 
 ## Outputs
 
-Each message produces one run whose trigger output is:
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-| Field | Description |
-| --- | --- |
-| `triggerType` | Always `chat`. |
-| `chatInput` | The message the user typed. |
-| `sessionId` | The conversation id of the connected Chat Memory, as a string. Empty with **This run only** storage. |
-| `triggeredAt` | ISO timestamp of the message. |
-| `url`, `title`, `tabId` | The page the chat was opened on. Only set when chatting from a web page, not from the canvas. |
+Each output item has these fields:
 
-## How a message turns into a reply
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"chat\""},{"name":"triggeredAt","type":"Text"},{"name":"chatInput","type":"Text","description":"The message the user sent"},{"name":"sessionId","type":"Text","description":"The connected Chat Memory conversation"},{"name":"url","type":"Text"},{"name":"title","type":"Text"},{"name":"tabId","type":"Number"}]} />
 
-1. **You send a message.** The workflow runs, starting from this Chat Trigger only, with your text as `chatInput`.
-2. **The agent saves your message.** Before calling the model, the agent writes your message to the Chat Memory as a `user` message.
-3. **The agent answers.** It reads the earlier conversation from the memory, calls the model (and any tools), and gets a reply.
-4. **The agent saves its reply.** The reply is written to the same memory as an `assistant` message. If an output parser is attached, the structured result is saved as JSON text.
-5. **The chat window shows it.** The chat window doesn't receive the reply from the run. It re-reads the conversation from the memory:
-   - **On the canvas**, the window updates as soon as each message is saved, so your message appears first and the reply follows.
-   - **On a web page**, the chat checks the conversation every 1.5 seconds, so messages can appear with a short delay. The "thinking" indicator stops when a new assistant message arrives.
+```json title="Shape of an output item"
+{
+  "triggerType": "chat",
+  "triggeredAt": "…",
+  "chatInput": "…",
+  "sessionId": "…",
+  "url": "…",
+  "title": "…",
+  "tabId": 0
+}
+```
+{/* AUTO:outputs:end */}
 
-Because the conversation lives in the memory, it's also visible on the [Memory page](/usage/using-the-app/memory/overview/), and any other workflow using the same conversation (or the same **shared** key) sees the same messages.
+Set the agent's prompt to `{{ $input.chatInput }}`. `sessionId` is empty when the memory uses **This run only** storage. `url`, `title` and `tabId` are only set when you chat from a web page.
 
-## Where you can chat
+## Dependencies and credentials
 
-### On the canvas
+{/* AUTO:deps:start */}
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Memory","type":"chat memory","description":"One node.","required":true}]} />
+{/* AUTO:deps:end */}
 
-Running the workflow opens a chat popup instead of running once. This happens when:
+Connect a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) to the **Memory** slot, and connect the **same** Chat Memory node to the memory slot of the agent that answers ([Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)). Use **Conversation** storage (pick a conversation, or leave it empty to give the node its own) or **Key** storage with a fixed key.
 
-- the Chat Trigger is the workflow's only trigger and you press **Run**,
-- you pick the Chat Trigger in the trigger picker, or
-- you press the node's run button (**Test Step**).
+<Aside type="caution" title="Which storage shows a history">
+The chat window needs to know the conversation before a run. That works with **Conversation** storage and with a fixed key. With **This run only**, or a key written as an expression such as `{{ $input.userId }}`, the chat keeps no history and each message is answered on its own.
+</Aside>
 
-### On web pages
-
-When the workflow is **activated**, a chat bubble appears on every page matching one of its **URL Patterns**. If several chat workflows match the page, the bubble lets you pick one. You can also right-click and choose **Open chat** to open it on any page.
-
-The run still happens in the AWFlow app tab: the extension opens that tab if needed, runs the workflow there, and passes the page's `url`, `title` and `tabId` to the trigger.
+Workflows built with the older Local Memory, Persistent Chat Memory or Window Buffer Memory keep working; those nodes are now [upgraded to Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/).
 
 ## Example workflow
 
 1. Add a **Chat Trigger**.
-2. Add a **Chat Memory** (Storage: **Conversation**; leave the conversation empty to give it its own) and connect it to the trigger's memory input.
-3. Add a **Tools Agent** after the trigger, connect a chat model, and connect the **same** Chat Memory to its memory input.
-4. Set the agent's prompt to `{{ $json.chatInput }}`.
-5. Press **Run** and start chatting.
+2. Add a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) with **Conversation** storage and connect it to the trigger's **Memory** slot.
+3. Add a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) after the trigger, connect a chat model, and connect the **same** Chat Memory to its memory slot.
+4. Set the agent's prompt to `{{ $input.chatInput }}`.
+5. Click **Test Workflow** and start chatting.
 
-## Troubleshooting
+## Common issues
 
-- **"No Chat Memory connected" / chat disabled** — connect a Chat Memory to the trigger's memory input.
-- **The chat forgets earlier messages** — the Chat Memory uses **This run only** or a key written as an expression. Use **Conversation** storage or a fixed key.
-- **Nothing appears, not even my own message** — the trigger doesn't save messages; the agent does. Check that an agent runs on every message and that it uses the same memory node as the trigger.
-- **The agent answers but the chat stays empty** — the agent is using a different memory (or a different conversation / key) than the trigger.
-- **The agent answers something unrelated** — its prompt isn't set to the chat message. Use `{{ $json.chatInput }}`.
-- **Each message appears twice, or several replies show up** — every agent connected to the same memory saves its own message and reply. Use one agent per conversation.
-- **On a web page, the "thinking" indicator never stops** — the run failed before a reply was saved. Press stop, then check the run in the app's execution history.
-- **Stop doesn't cancel the run** — stop only resets the chat window; the run keeps going and its reply appears on the next refresh.
-- **No chat bubble on a page** — check that the workflow is activated and that one of the URL Patterns matches the page.
+- **"Dependency memory is required", or the chat says no Chat Memory is connected.** Connect a Chat Memory to the trigger's **Memory** slot.
+- **Nothing appears, not even my own message.** The trigger does not save messages; the agent does. Check that an agent runs on every message and uses the same memory node as the trigger.
+- **The agent answers but the chat stays empty.** The agent uses a different memory, conversation or key than the trigger.
+- **The chat forgets earlier messages.** The memory uses **This run only** or a key written as an expression. Use **Conversation** storage or a fixed key.
+- **Each message shows twice, or several replies appear.** Every agent connected to the same memory saves its own copy. Use one agent per conversation.
+- **On a web page, the "thinking" indicator never stops.** The run failed before a reply was saved. Press stop, then check the run in the execution history. Stop only resets the chat window; a run that is still going keeps going.
+- **No chat bubble on a page.** Activate the workflow and check that a **URL Patterns** entry matches the page.
 
 ## Related nodes
 
-- [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/)
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
-- [Memory & Context](/advanced-ai/concepts/memory-context/)
+- [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/): stores the conversation the chat shows.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): answers each message, with tools.
+- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/): answers from your own documents.
+
+See also [Memory & Context](/concepts/ai/memory-context/).

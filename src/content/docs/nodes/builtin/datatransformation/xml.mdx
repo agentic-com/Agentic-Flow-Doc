@@ -3,68 +3,87 @@ title: "XML"
 description: "Convert between XML and JSON"
 sidebar:
   label: "XML"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/xml
+  family: data
 ---
 
-# XML
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Convert between XML and JSON.
+Turn an XML document (a feed, an API answer, a sitemap) into fields you can use, or build XML from your data.
 
 ## What it does
 
-Converts in both directions: **XML to JSON** turns an XML document into a JSON object whose elements and attributes become fields the next node can address, and **JSON to XML** turns a JSON object back into an XML string. It uses the browser's own XML parser and serializer, so no extra dependency is pulled in.
+The XML node converts in one of two directions, set by **Direction**:
+
+- **XML to JSON** reads XML text and turns its elements and attributes into fields. The result is keyed by the root element, so `<rss>…</rss>` becomes `{ "rss": { … } }`.
+- **JSON to XML** takes an object and writes it out as XML text.
+
+Both directions use the same simple rules:
+
+- **Attributes** get an `@` in front: `<a href="x"/>` becomes `{ "a": { "@href": "x" } }`.
+- **An element with only text** becomes that text: `<a>hello</a>` becomes `{ "a": "hello" }`.
+- **Text next to attributes or child elements** goes under `#text`: `<a href="x">hi</a>` becomes `{ "a": { "@href": "x", "#text": "hi" } }`.
+- **Repeated elements** with the same name become a list: two `<item>` elements become `"item": ["1", "2"]`. A single `<item>` stays a single value, not a list of one.
+- **An empty element** becomes empty text: `<a/>` becomes `{ "a": "" }`.
+
+For safety, XML that declares its own entities (`<!ENTITY …>`) or points to an outside definition file (`<!DOCTYPE … SYSTEM …>` or `PUBLIC`) is refused. The text can be up to about 2 MB.
 
 ## When to use it
 
-Use this node to read an XML feed, API response or config file into fields the rest of a workflow can work with, or to build an XML payload from data a previous node produced.
-
-## The `@`-attribute convention
-
-Attributes are prefixed with `@`. So `<a href="x"/>` becomes `{ "a": { "@href": "x" } }`, and the same object turns back into `<a href="x"/>`. The rest of the mapping follows from that:
-
-- **Attributes** become `@name` keys — `<a href="x"/>` → `{ "a": { "@href": "x" } }`.
-- **A leaf element with no attributes** is its own text value — `<a>hello</a>` → `{ "a": "hello" }`.
-- **Text beside attributes or child elements** is kept under a `#text` key — `<a href="x">hi</a>` → `{ "a": { "@href": "x", "#text": "hi" } }`.
-- **Repeated sibling elements** of the same name become an array — `<root><item>1</item><item>2</item></root>` → `{ "root": { "item": ["1", "2"] } }`.
-- **An empty element** is the empty string — `<a/>` → `{ "a": "" }`.
-
-The JSON object must have exactly one root element key, mirroring how an XML document has exactly one root element.
+- Read an RSS or Atom feed, a sitemap, or an API that answers in XML.
+- Pull values out of an XML file you loaded with [Extract From File](/nodes/builtin/datatransformation/extractfromfile/) or [Local File Read](/nodes/builtin/datatransformation/localfileread/).
+- Build an XML body for a service that only accepts XML, then send it with [Http Request](/nodes/builtin/core/http-request/).
+- For web pages, use [HTML Extract](/nodes/builtin/datatransformation/html-extract/) instead: HTML is rarely valid XML.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Direction | Which way to convert: `XML to JSON` or `JSON to XML`. Defaults to `XML to JSON`. |
-| Input | The XML text (for XML to JSON) or JSON data (for JSON to XML) to convert. Accepts an expression such as `{{ $json.raw }}`. |
-| Source Field | Field on the incoming item to read when the Input field above is left empty, for example `body`. |
-| Put Result In Field | Name of the field holding the answer. Defaults to `data`. For XML to JSON, leaving the default lets the parsed object become the item itself. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Direction","type":"Choice","default":"XML to JSON","description":"Which way to convert. Options: XML to JSON, JSON to XML."},{"name":"Input","type":"Value","description":"The XML text (for XML to JSON) or JSON data (for JSON to XML) to convert."},{"name":"Source Field","type":"Text","description":"Field on the incoming item to read, when the input above is left empty."},{"name":"Put Result In Field","type":"Text","default":"data","description":"Name of the field holding the answer."}]} />
+{/* AUTO:settings:end */}
+
+- **Where the input comes from.** **Input** wins if it is filled, for example `{{ $input.data }}`. Otherwise the node reads **Source Field** (dots reach nested fields). If both are empty, it uses the incoming item itself. Only the first incoming item is read.
+- **For JSON to XML**, the object needs exactly one top-level key, which becomes the root element: `{ "order": { "@id": "42", "item": ["A", "B"] } }` gives `<order id="42"><item>A</item><item>B</item></order>`. **Input** also accepts JSON text.
+- **Put Result In Field** is only used by JSON to XML. XML to JSON always outputs the converted object as the item.
 
 ## Outputs
 
-- **XML to JSON** returns the parsed object keyed by the root element name, so its fields are addressable downstream.
-- **JSON to XML** returns the built XML string in **Put Result In Field**.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
 
-## Safety: entity expansion is capped
+- **XML to JSON**: one item keyed by the root element. Read nested values with dots, for example `{{ $input.rss.channel.title }}`. Repeated elements are lists, so split them with [Split Out](/nodes/builtin/datatransformation/splitout/) on a path such as `rss.channel.item`.
+- **JSON to XML**: one item with the XML text in **Put Result In Field** (`data` by default).
 
-Malicious XML can declare internal entities that expand exponentially — the "billion-laughs" attack — or reference an external DTD to make the parser fetch a remote resource (XXE). The XML-to-JSON direction parses through a shared bounded parser that **rejects any DTD with internal entities (`<!ENTITY …>`) or an external subset (`<!DOCTYPE … SYSTEM/PUBLIC …>`)** before any expansion can run, and caps the input size. Such a document fails fast with a clear error rather than being expanded.
+Values read from XML are always text. For example, set **Compare As** to *Number* in [Sort](/nodes/builtin/datatransformation/sort/) when you sort by a price read from XML.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser using its native `DOMParser` and `XMLSerializer`.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Place XML after a node that fetches an XML feed, set **Direction** to `XML to JSON`, and the elements become fields the next node can read. To go the other way, set **Direction** to `JSON to XML` and feed it an object with a single root key, using `@` for attributes and `#text` for element text.
+1. An [Http Request](/nodes/builtin/core/http-request/) node fetches a blog's RSS feed. The XML text arrives in its `data` field.
+2. XML with **Direction** *XML to JSON* and **Source Field** `data`.
+3. [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** `rss.channel.item` and **Output field name** `post` gives one item per article.
+4. [Limit](/nodes/builtin/datatransformation/limit/) with **Max Items** `3` keeps the first three, and a [Slack](/nodes/builtin/integration/slack/) node posts `{{ $input.post.title }}` and `{{ $input.post.link }}`.
 
-## Troubleshooting
+## Common issues
 
-- Invalid XML fails with a "not valid XML" message — check the document is well-formed.
-- XML that declares a DTD with internal entities or an external subset is rejected on purpose; strip the `<!DOCTYPE …>` declaration.
-- JSON to XML needs an object with exactly one root element key. An object with several top-level keys, or an array at the top, fails.
-- An array cannot be an element value on its own; nest it under a key so it expands into repeated sibling elements.
+- **"This is not valid XML: …".** The text is not well-formed XML, often because it is an HTML page or an error message. Look at what the previous node returned.
+- **"XML to JSON needs XML text. This input is already parsed data."** The node got an object instead of text. Set **Source Field** to the field that holds the XML, such as `data`.
+- **"This XML declares a DTD with internal entities or an external subset …"** The document starts with a `<!DOCTYPE …>` block that defines entities or loads an outside file. This is refused on purpose. Remove that block before converting, for example with [Regex](/nodes/builtin/datatransformation/regex/) *Replace*.
+- **"JSON to XML needs an object with exactly one root element key; found …".** Wrap your data in one key, for example `{ "order": { … } }`.
+- **"An array cannot be an element value directly; nest it under a key."** A list sits directly where an element should be. Put it under a named key, and each entry becomes a repeated element with that name.
 
 ## Related nodes
 
-- [JSON](/nodes/builtin/datatransformation/json/)
-- [CSV](/nodes/builtin/datatransformation/csv/)
-- [HTML Extract](/nodes/builtin/datatransformation/html-extract/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [JSON](/nodes/builtin/datatransformation/json/): parse, build and reshape JSON text.
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/): read values from web pages.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): turn repeated elements into separate items.

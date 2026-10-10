@@ -1,0 +1,93 @@
+---
+title: Install AWFlow
+description: "Add the extension to your browser, pin it, open the side panel, and choose whether you need an account."
+section: get-started
+kind: lesson
+lesson:
+  level: 1
+  order: 1
+  minutes: 3
+sidebar:
+  label: "1 · Install AWFlow"
+---
+
+import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
+import { StepCard, LessonProgress, LessonDone, Screenshot } from "@components/awflow";
+import { PUBLIC_CHROME_EXTENSION_URL, PUBLIC_FIREFOX_EXTENSION_URL } from "astro:env/client";
+import welcomeLight from '@assets/screenshots/welcome.light.webp';
+import welcomeDark from '@assets/screenshots/welcome.dark.webp';
+
+<LessonProgress
+  client:visible
+  level={1}
+  order={1}
+  total={5}
+  minutes={3}
+  youWill={[
+    "Install the AWFlow extension",
+    "Pin it to your toolbar",
+    "Open the app in the side panel",
+    "Decide whether you need an account (you don't, yet)",
+  ]}
+  before={["Chrome, Edge, Brave or Firefox 140+ on a computer", "Permission to install browser extensions"]}
+/>
+
+AWFlow is a browser extension. It runs in your browser, next to the page you're on, so it can read and act on that page. You don't need an account or a server.
+
+## Install
+
+<Tabs syncKey="browser">
+<TabItem label="Chrome, Edge, Brave">
+
+<StepCard n={1} title="Add the extension" check="an “Agentic Workflow” welcome tab opens.">
+  Open <a href={PUBLIC_CHROME_EXTENSION_URL} target="_blank" rel="noopener">AWFlow on the Chrome Web Store</a> and click **Add to Chrome**, then **Add extension**. Edge, Brave and other Chromium browsers install it from the same store.
+</StepCard>
+
+<StepCard n={2} title="Pin it to the toolbar" check="the AWFlow icon stays visible next to the address bar.">
+  Click the puzzle-piece **Extensions** icon in the toolbar, then the pin next to **Agentic Workflow**.
+</StepCard>
+
+</TabItem>
+<TabItem label="Firefox">
+
+<StepCard n={1} title="Add the extension" check="an “Agentic Workflow” welcome tab opens.">
+  Open <a href={PUBLIC_FIREFOX_EXTENSION_URL} target="_blank" rel="noopener">AWFlow on Firefox Add-ons</a> and click **Add to Firefox**, then **Add**. You need Firefox 140 or later, on a computer.
+</StepCard>
+
+<StepCard n={2} title="Pin it and allow website access" check="the AWFlow icon is in the toolbar, and the app doesn't show an Allow access card.">
+  If the icon isn't in the toolbar, open the **Extensions** menu (puzzle piece) and choose **Pin to Toolbar**. Page steps need access to the sites you visit: keep **Access your data for all websites** on in `about:addons` → **Agentic Workflow** → **Permissions**. If it's off, the app shows an **Allow access** card.
+</StepCard>
+
+</TabItem>
+</Tabs>
+
+<Screenshot
+  src={welcomeLight}
+  srcDark={welcomeDark}
+  alt="The welcome page in a local workspace: a Local · no account needed badge, the headline Press Run. Watch a workflow do its thing., the Run “Start here” button (about 5 seconds), and three other ways in: Start from a template, Describe it to the AI and the 2-minute tutorial, with Skip to the app below."
+  hotspots={[{ x: 70.2, y: 8.9, label: 'Local workspace: no account needed' }, { x: 30.2, y: 37.3, label: 'Run “Start here”' }, { x: 32.7, y: 57.4, label: 'Other ways in: template, describe it, tutorial' }, { x: 50, y: 69.8, label: 'Skip to the app' }]}
+/>
+
+<StepCard n={3} title="Run “Start here”" check="the three steps light up one after the other and a quote appears, in about five seconds.">
+  On the **welcome page**, click **Run “Start here”**. A ready-made three-step workflow runs on your device. Nothing leaves your browser.
+
+  The same page also offers **Start from a template**, **Describe it to the AI** and the **2-minute tutorial**. You'll do all of these in the next lessons, so you can leave them for now. See [The welcome page](/app/account/welcome/).
+</StepCard>
+
+<StepCard n={4} title="Open the side panel" check="the AWFlow app opens beside the page you're on, and the page stays visible.">
+  Go to any website, then click the **AWFlow** icon in the toolbar. The app opens in Chrome's **side panel** (in Firefox, the **sidebar**), next to the page. Drag its left edge to make it wider; the canvas is easier to use above about 670px. See [Using the side panel](/app/side-panel/).
+</StepCard>
+
+## Local workspace or account?
+
+You start in a **local workspace**: no account, and everything is saved in this browser. That is all you need for every lesson in level 1.
+
+Sign in later if you want your workflows in the cloud on several devices, or to install and publish workflows on the Marketplace. Your local work can move to your account when you do. AI providers, chats and knowledge bases always stay on your device. See [Local or cloud](/app/account/local-vs-cloud/).
+
+<Aside type="note" title="Using Firefox?">
+Almost everything works the same. The main differences: the app opens in the **sidebar**, keyboard shortcuts are set in `about:addons`, and on-device **WebLLM** models need WebGPU, which some Firefox setups lack. See [Firefox differences](/app/troubleshooting/browser-compatibility/#firefox). Safari isn't supported yet.
+</Aside>
+
+<LessonDone client:load title="AWFlow is installed." next={{ href: "/get-started/first-workflow/", label: "Lesson 2" }}>
+  Next you'll build your own two-step workflow on the canvas.
+</LessonDone>

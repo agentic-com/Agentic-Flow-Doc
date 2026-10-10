@@ -1,0 +1,207 @@
+{
+  "name": "Selection to Todoist Task",
+  "description": "Highlight text, right-click, and turn it into a Todoist task — the title is drafted on-device.",
+  "tags": [
+    "rightclick",
+    "tier-2",
+    "ai",
+    "extension",
+    "todoist"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "✅ Turn a selection into a Todoist task.\n\nHighlight some text on any page, right-click, and choose this workflow — it drafts a concise task title from your selection and creates the task in Todoist. The title is generated locally in your browser; only the finished task is sent to Todoist. Pick a model the first time and connect your Todoist account."
+      },
+      "width": 340,
+      "height": 210
+    },
+    {
+      "id": "trigger-context-menu",
+      "type": "trigger",
+      "position": {
+        "x": 100,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:contextMenu"
+        },
+        "label": "Right-click a selection",
+        "inputs": {
+          "contexts": [
+            "selection"
+          ]
+        },
+        "parameters": {
+          "notes": "Adds this workflow to the right-click menu whenever you have text selected."
+        }
+      }
+    },
+    {
+      "id": "get-selection",
+      "type": "basic",
+      "position": {
+        "x": 400,
+        "y": 450
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:getSelectedTextNode"
+        },
+        "label": "Get selected text",
+        "inputs": {
+          "outputFieldName": "selection",
+          "options": {
+            "includeInputFields": true
+          }
+        },
+        "parameters": {
+          "notes": "Reads the full text you highlighted on the page. The context-menu event only carries a short, truncated copy, so this node gets the complete selection reliably."
+        }
+      }
+    },
+    {
+      "id": "extract",
+      "type": "agent",
+      "position": {
+        "x": 440,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:agent:information-extractor"
+        },
+        "label": "Draft a task title",
+        "inputs": {
+          "text": "{{ $input.selection }}",
+          "schemaDescription": "a concise task title"
+        },
+        "parameters": {
+          "notes": "Distills your selection into a short, concise task title."
+        }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": {
+        "x": 440,
+        "y": 500
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:dependency:webLLM"
+        },
+        "label": "Local AI model",
+        "inputs": {
+          "model": "",
+          "options": {
+            "temperature": 0.5
+          }
+        },
+        "parameters": {
+          "notes": "Runs the AI model locally in your browser. Pick a model the first time — nothing is sent to a server."
+        }
+      }
+    },
+    {
+      "id": "create-task",
+      "type": "basic",
+      "position": {
+        "x": 780,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:todoist"
+        },
+        "label": "Create the Todoist task",
+        "inputs": {
+          "credential": "",
+          "parameters": {
+            "resource": "task",
+            "operation": "create",
+            "content": "{{ $input.extracted }}"
+          }
+        },
+        "parameters": {
+          "notes": "Creates a new task in your Todoist inbox. Connect your Todoist account the first time. UNVERIFIED: the extractor output field feeding content."
+        }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": {
+        "x": 440,
+        "y": 660
+      },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline."
+      },
+      "width": 300,
+      "height": 110
+    },
+    {
+      "id": "sticky-todoist",
+      "type": "stickyNote",
+      "position": {
+        "x": 780,
+        "y": 500
+      },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: connect your Todoist account the first time. The task is created in your Todoist inbox."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-ctx-get-selection",
+      "source": "trigger-context-menu",
+      "target": "get-selection",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-trigger-extract",
+      "source": "get-selection",
+      "target": "extract",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-extract-model",
+      "source": "extract",
+      "target": "local-model",
+      "type": "flowEdge",
+      "sourceHandle": "dependency-0"
+    },
+    {
+      "id": "e-extract-create",
+      "source": "extract",
+      "target": "create-task",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": [
+    {
+      "nodeId": "local-model",
+      "field": "model"
+    },
+    {
+      "nodeId": "create-task",
+      "field": "credential"
+    }
+  ]
+}

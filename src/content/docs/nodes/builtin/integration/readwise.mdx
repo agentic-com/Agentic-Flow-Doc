@@ -3,69 +3,102 @@ title: "Readwise / Reader"
 description: "Save highlights to Readwise (batch) and full articles to Reader, carrying source URL, title and author."
 sidebar:
   label: "Readwise / Reader"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/readwise
+  family: integration
 ---
 
-# Readwise / Reader
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Save what you highlight to [Readwise](https://readwise.io) and full articles to [Reader](https://readwise.io/read). Two Readwise APIs behind one node, modeled as **resources** — one account-wide token unlocks both.
+Save highlights to [Readwise](https://readwise.io) and whole articles to [Reader](https://readwise.io/read), with their source, title and author.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Readwise / Reader connection"} href="/app/connections/readwise/" linkLabel={"Connect Readwise / Reader"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-- **Readwise (highlights)** — save one or many highlights in a single run. This is a **batch** save: every item that arrives on the node's input becomes one highlight and they all go up in one request, each carrying its source URL, title, and author when available. Pair it with the page-metadata / selection nodes upstream, or fan a list of quotes into it.
-- **Reader (articles)** — save a full page/article to your Reader library, optionally with the exact HTML you captured.
+The node has two parts (**Resource**), each with one operation:
 
-## Resources and operations
+- **Readwise (Highlights) → Save highlights**: turns the incoming items into highlights and sends them all to Readwise in one go. Each highlight carries its source page, title and author when known.
+- **Reader (Articles) → Save document**: adds a page to your Reader library. Give it the page's HTML to save exactly what you captured, or just the **URL** and let Reader fetch the page.
 
-| Resource | Operations |
+For highlights, each field you fill applies to every highlight in the run. A field you leave empty is read from each incoming item instead:
+
+| Setting | Read from the item when empty |
 | --- | --- |
-| Readwise (Highlights) | Save highlights |
-| Reader (Articles) | Save document |
+| **Highlight text** | `text`, `highlight`, `content`, `selection` or `quote` |
+| **Title** | `title` or `source_title` |
+| **Author** | `author` or `byline` |
+| **Source URL** | `source_url`, `sourceUrl`, `url` or `link` |
+| **Note**, **Location**, **Highlighted at** | `note`, `location`, `highlighted_at` or `highlightedAt` |
 
-### Batch highlight save
+Items without any highlight text are skipped.
 
-On **Readwise → Save highlights**, the node maps **every incoming item** to a highlight and sends them all in **one** `POST /v2/highlights/` request. For each item it fills:
+## When to use it
 
-| Field | Source |
-| --- | --- |
-| `text` (required) | The **Highlight text** field, else the item's `text` / `highlight` / `content` / `selection` |
-| `title` | The **Title** field, else the item's `title` |
-| `author` | The **Author** field, else the item's `author` / `byline` |
-| `source_url` | The **Source URL** field, else the item's `source_url` / `url` / `link` |
-| `note`, `location`, `highlighted_at` | The matching fields, else the item's values |
+- Send the sentence you highlighted on a page to Readwise, linked to the page.
+- Save quotes picked out by an AI node from a long article, all at once.
+- Save the article you are reading to Reader, with a summary and tags.
+- Archive a page's captured HTML in Reader before it changes or disappears.
 
-Leave a field blank to read it per-item from the incoming data; set a field to apply that value to **every** highlight in the run. Items with no highlight text are skipped.
+To keep plain bookmarks instead, use [Raindrop](/nodes/builtin/integration/raindrop/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Credential | A Readwise **access token** (see below). |
-| Resource / Operation | Readwise (highlights) or Reader (articles), and what to do. |
-| Highlight text | The highlight (Readwise). Leave blank to read it from each incoming item. |
-| Title / Author / Source URL | Provenance carried onto each highlight — blank reads from the item. |
-| Note / Location / Highlighted at | Optional per-highlight metadata. |
-| URL | The article/page URL to save (Reader → Save document). |
-| HTML | Optional full-page HTML to store the exact content you captured (Reader). |
-| Summary / Tags | Optional metadata for the saved document (Reader). |
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"A Readwise access token (readwise.io/access_token). One account-wide token works for both Readwise (highlights) and Reader (articles) — keep it secret."}]} groups={[{"label":"Readwise (Highlights)","options":[{"label":"Save highlights","rows":[{"name":"Highlight text","type":"Text","description":"The highlight text. Leave blank to read text (or highlight/content/selection) from each incoming item."},{"name":"Title","type":"Text","description":"Source title. Leave blank to read title from each incoming item."},{"name":"Author","type":"Text","description":"Source author. Leave blank to read author from each incoming item."},{"name":"Source URL","type":"Text","description":"The page the highlight came from. Leave blank to read source_url/url/link from each incoming item."},{"name":"Note","type":"Text","description":"An optional note attached to the highlight."},{"name":"Location","type":"Text","description":"An optional location/position reference (e.g. a page number or offset)."},{"name":"Highlighted at","type":"Text","description":"An optional ISO 8601 timestamp for when the highlight was made."}]}]},{"label":"Reader (Articles)","options":[{"label":"Save document","rows":[{"name":"URL","type":"Text","required":true,"description":"The URL of the article/page to save to Reader."},{"name":"HTML","type":"Text","description":"Optional full-page HTML. Provide it to save the exact content you captured."},{"name":"Title","type":"Text","description":"Source title. Leave blank to read title from each incoming item."},{"name":"Author","type":"Text","description":"Source author. Leave blank to read author from each incoming item."},{"name":"Summary","type":"Text","description":"An optional summary stored with the document."},{"name":"Tags","type":"Text","description":"Optional comma-separated tags."}]}]}]} />
+
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Readwise / Reader API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
+
+- **Highlighted at** is a date and time such as `2026-09-10T14:30:00Z`.
+- **Tags** (Reader) is one text with tags separated by commas, for example `ai, research, to-read`.
+- In **Save document**, **Title** and **Author** are only taken from these fields; they are not read from the incoming item. Use an expression such as `{{ $input.title }}` to pass them on.
+- **HTML** is optional. Fill it with a page's HTML, for example from [Get All HTML](/nodes/extension/getallhtml/), to save what you see, including content behind a login.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+- **Save highlights** returns `saved`, the number of highlights sent, and `results`, Readwise's reply (the books or articles the highlights were filed under).
+- **Save document** returns Reader's reply, including the new document's `id` and its `url` in Reader.
 
 ## Dependencies and credentials
 
-- **Auth (Class A):** a single **account-wide access token** from [readwise.io/access_token](https://readwise.io/access_token). The **same** token works for both Readwise and Reader. Because it is account-wide it grants full access to your Readwise account — keep it secret.
-- It is sent as `Authorization: Token <token>` (Readwise's scheme — not `Bearer`). It's stored in your credential vault and never passes through awflow's backend.
+{/* AUTO:deps:start */}
+- **Credential** (connection, Bearer Token): required. See [Connect Readwise / Reader](/app/connections/readwise/).
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+Get your access token at [readwise.io/access_token](https://readwise.io/access_token) and save it as a Bearer Token credential. The same token works for Readwise and Reader. It gives full access to your Readwise account, so keep it private. See [Create a credential](/app/connections/create/).
 
-This node is **extension-only**. The Readwise API isn't confirmed to send browser-CORS headers for token-authenticated requests, so run it in the awflow browser extension. In the web build the node shows the "needs the extension" block instead of running.
+## Example workflow
 
-## Troubleshooting
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger with **Menu Contexts** `Selection` adds "Save highlight" to the right-click menu when you highlight text.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the page's `title`.
+3. Readwise / Reader, **Readwise (Highlights) → Save highlights**, **Highlight text** `{{ $('Context Menu').selectionText }}`, **Source URL** `{{ $('Context Menu').pageUrl }}`, **Title** `{{ $input.title }}`.
 
-- **`401 Unauthorized` / "access token was rejected"** — the token is missing or wrong; copy a fresh one from [readwise.io/access_token](https://readwise.io/access_token).
-- **Nothing saved / "No highlight text to save"** — either set the **Highlight text** field, or connect items that carry a `text` (or `highlight` / `content` / `selection`) field.
-- **Highlights missing their source** — set **Source URL** / **Title** / **Author**, or make sure the incoming items carry `source_url` (or `url` / `link`), `title`, and `author`.
-- **`429 Too Many Requests`** — Readwise throttles bursts; enable retry on the node or wait before retrying.
+## Common issues
+
+- **"No highlight text to save — set the Highlight text field or connect items that carry a text/highlight field."** No item had text in the fields listed above. Fill **Highlight text**, often with an expression, or rename the field with [Rename Keys](/nodes/builtin/datatransformation/renamekeys/).
+- **"Readwise API Error: 401 … the access token was rejected".** The token is wrong or was replaced. Copy it again from readwise.io/access_token.
+- **"Readwise API Error: 429 … rate limited".** Too many requests in a short time. Wait a minute, or add a [Wait](/nodes/builtin/flow/wait/) between runs.
+- **Highlights show no source or title.** Fill **Source URL** and **Title**, or make sure the incoming items carry `url` and `title`.
+- **The run is blocked in the web app.** Readwise runs through the browser extension. Install the extension and allow Readwise for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
 
 ## Related nodes
 
-- [Get Page Metadata](/nodes/extension/getpagemetadata/)
-- [Raindrop](/nodes/builtin/integration/raindrop/)
-- [Custom API](/nodes/builtin/integration/custom-api/)
+- [Get Selected Text](/nodes/extension/getselectedtext/): the text you highlighted on a page.
+- [Raindrop](/nodes/builtin/integration/raindrop/): bookmarks with tags and covers.
+- [Obsidian](/nodes/builtin/integration/obsidian/): keep highlights in your local notes.
+- [Get All HTML](/nodes/extension/getallhtml/): capture a page's HTML for Reader.

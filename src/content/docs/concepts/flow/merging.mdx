@@ -1,0 +1,91 @@
+---
+title: Merging
+description: "Bring branches back together: join two lists with Merge, continue with whichever branch arrives with Funnel, or compare old and new with Compare Datasets."
+sidebar:
+  order: 4
+section: concepts
+kind: concept
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards } from "@components/awflow";
+
+:::note[In 20 seconds]
+Most steps wait until every connected branch has finished. To **join two lists** item by item, use Merge with a match key. To **continue as soon as any branch arrives**, use Funnel. To find what's **new, gone or changed** between two lists, use Compare Datasets.
+:::
+
+## Pick the right node
+
+<CompareCards
+  label="Ways to bring branches together"
+  cards={[
+    {
+      title: "Merge",
+      icon: "merge",
+      href: "/nodes/builtin/flow/merge/",
+      when: "Pair items from two lists that share a value.",
+      example: "Contacts from a sheet plus their orders, matched on email.",
+      meta: "Inner / Left / Right Join",
+    },
+    {
+      title: "Funnel",
+      icon: "filter",
+      href: "/nodes/builtin/flow/funnel/",
+      when: "Continue as soon as any one branch reaches it.",
+      example: "Three triggers sharing the same steps.",
+      meta: "passes the branch through",
+    },
+    {
+      title: "Compare Datasets",
+      icon: "switch",
+      href: "/nodes/builtin/flow/comparedatasets/",
+      when: "Sort two versions of a list into new, gone, same and changed.",
+      example: "Yesterday's prices against today's.",
+      meta: "In A only · Same · Different · In B only",
+    },
+  ]}
+/>
+
+## How Merge pairs items
+
+[Merge](/nodes/builtin/flow/merge/) has two inputs and waits for both. Each **Match Key** compares a field on the first input with a field on the second, for example `email` **Is Equal To** `email`. With no match keys, every item of the first input pairs with every item of the second.
+
+**Mode** decides what happens to items without a partner:
+
+| Mode | Output |
+| --- | --- |
+| **Inner Join** | Only the matched pairs |
+| **Left Join** | Every item of the first input, merged with its matches when it has any |
+| **Right Join** | Every item of the second input, merged with its matches when it has any |
+
+When both items have a field with the same name and different values, the result keeps both, renamed `left-<field>` and `right-<field>`.
+
+## You'll notice this when…
+
+<details>
+<summary>Merge outputs nothing</summary>
+
+No pair matched (check that both fields hold the same text, without extra spaces or different capitals), or one branch didn't run. Try **Left Join** to see the first input's items even without matches.
+
+</details>
+
+<details>
+<summary>Merge outputs far more items than you sent in</summary>
+
+There are no match keys, or the key isn't unique, so items pair with many partners. Add a match key on a field that identifies each record, such as `id` or `url`.
+
+</details>
+
+<details>
+<summary>The step after several branches waits for all of them</summary>
+
+That's the default for any step. Use [Funnel](/nodes/builtin/flow/funnel/) when the first branch to arrive is enough.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Looping" description="Repeat steps with Loop, Split in Batches or Poll Until." href="/concepts/flow/looping/" />
+  <LinkCard title="Practise it" description="Recipes that combine data from two sources." href="/recipes/" />
+</CardGrid>

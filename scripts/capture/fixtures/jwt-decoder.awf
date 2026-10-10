@@ -1,0 +1,132 @@
+{
+  "name": "JWT Decoder",
+  "description": "Paste a JSON Web Token and see its decoded header and payload — plus a readable expiry time. Nothing is verified or sent anywhere; it's all decoded locally.",
+  "tags": [
+    "jwt",
+    "decode"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "🔓 Peek inside a JWT.\n\nPress Run and paste any JSON Web Token. This flow splits it on the dots, base64url-decodes the header and payload, and shows them — with a human-readable expiry if the token has one. It does NOT verify the signature. Everything runs locally in your browser."
+      },
+      "width": 360,
+      "height": 200
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": {
+        "x": 120,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:whenStarted"
+        },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": {
+          "notes": "Starts the workflow when you press Run."
+        }
+      }
+    },
+    {
+      "id": "ask-jwt",
+      "type": "inPageForm",
+      "position": {
+        "x": 440,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:inPageForm:inPageForm"
+        },
+        "label": "Paste your JWT",
+        "inputs": {
+          "title": "Decode a JWT",
+          "fields": [
+            {
+              "name": "jwt",
+              "label": "JSON Web Token",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        "parameters": {
+          "notes": "Prompts you to paste the token you want to decode."
+        }
+      }
+    },
+    {
+      "id": "decode",
+      "type": "basic",
+      "position": {
+        "x": 760,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:code"
+        },
+        "label": "Decode header & payload",
+        "inputs": {
+          "code": "import base64, json, datetime\ntok = (input.get('jwt', '') if isinstance(input, dict) else str(input)).strip()\ndef dec(seg):\n    seg = seg + '=' * (-len(seg) % 4)\n    raw = base64.urlsafe_b64decode(seg.encode('utf-8'))\n    return json.loads(raw.decode('utf-8', 'replace'))\nparts = tok.split('.')\nout = {'valid': False, 'error': 'A JWT needs at least a header and a payload separated by dots.'}\nif len(parts) >= 2 and parts[0] and parts[1]:\n    try:\n        header = dec(parts[0])\n        payload = dec(parts[1])\n        out = {'valid': True, 'header': header, 'payload': payload}\n        exp = payload.get('exp') if isinstance(payload, dict) else None\n        if isinstance(exp, (int, float)):\n            out['expiresAt'] = datetime.datetime.utcfromtimestamp(int(exp)).isoformat() + 'Z'\n    except Exception as e:\n        out = {'valid': False, 'error': 'Could not decode: ' + str(e)}\nout"
+        },
+        "parameters": {
+          "notes": "Python: splits the token on dots, base64url-decodes the header and payload, and adds a readable expiry if the payload has an `exp` claim. The last line is the result. No signature check."
+        }
+      }
+    },
+    {
+      "id": "show",
+      "type": "basic",
+      "position": {
+        "x": 1080,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:displayObjectNode"
+        },
+        "label": "Show decoded token",
+        "inputs": {
+          "title": "Decoded JWT"
+        },
+        "parameters": {
+          "notes": "Displays the decoded header, payload, and expiry."
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-run-ask",
+      "source": "trigger-run",
+      "target": "ask-jwt",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-ask-decode",
+      "source": "ask-jwt",
+      "target": "decode",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-decode-show",
+      "source": "decode",
+      "target": "show",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": []
+}

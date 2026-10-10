@@ -1,0 +1,93 @@
+---
+title: Your first workflow
+description: "Build a two-step workflow on the canvas: read the text you select on a page, reshape it, and check each step's output."
+section: get-started
+kind: lesson
+lesson:
+  level: 1
+  order: 2
+  minutes: 6
+sidebar:
+  label: "2 · Your first workflow"
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import { StepCard, LessonProgress, LessonDone, Screenshot } from "@components/awflow";
+import FlowPreview from "@components/awflow/FlowPreview.astro";
+import createWorkflowLight from '@assets/screenshots/create-workflow.light.webp';
+import createWorkflowDark from '@assets/screenshots/create-workflow.dark.webp';
+
+<LessonProgress
+  client:visible
+  level={1}
+  order={2}
+  total={5}
+  minutes={6}
+  onDevice
+  youWill={[
+    "Create a workflow on the canvas",
+    "Add a trigger and two steps",
+    "Run it and read each step's output",
+  ]}
+  before={["AWFlow installed (lesson 1)", "A web page with some text open in a tab"]}
+/>
+
+A **workflow** is a chain of steps, called **nodes**. A **trigger** starts it, and each node passes its output to the next one. You'll build the smallest useful workflow: read the text you select on a page, and turn it into a small report.
+
+<FlowPreview src="/examples/first-workflow.awf" caption="What you'll build: When Started → Get Selected Text → Edit Fields." />
+
+## Steps
+
+<StepCard n={1} title="Create a blank workflow" check="an empty canvas opens with an Add Trigger button.">
+  In the AWFlow side panel, open **Workflows** and click **Add Workflow**. In **Create a workflow**, choose **Blank canvas**, then **Triggered**. Name it `My first workflow` and click **Create & open**.
+</StepCard>
+
+<Screenshot
+  src={createWorkflowLight}
+  srcDark={createWorkflowDark}
+  alt="The Create a workflow dialog, step 1 of 3 (Source, Choose, Details): Start from a template (recommended) at the top, then Blank canvas, which is selected, From the marketplace and Import, with Cancel and Continue buttons."
+  hotspots={[{ x: 29.7, y: 35.8, label: 'Steps: Source, Choose, Details' }, { x: 35, y: 56.3, label: 'Blank canvas' }, { x: 69.8, y: 67.6, label: 'Continue' }]}
+/>
+
+<StepCard n={2} title="Add a trigger" check="a When Started node is on the canvas.">
+  Click **Add Trigger** (in a narrow panel: **Add trigger** in the middle of the canvas). In **Choose a node**, type `when` in the search box and pick **When Started**. It starts the workflow when you press **Test Workflow**.
+</StepCard>
+
+<StepCard n={3} title="Read the selected text" check="Get Selected Text is linked to When Started by a line.">
+  Click the **+** on the right edge of **When Started**, search for **Get Selected Text** and pick it. In its settings, set **Output field name** to `text`, then click **Done**.
+</StepCard>
+
+<StepCard n={4} title="Run it" check="Get Selected Text → Output → Actual shows a text field with your sentence.">
+  Switch to your other tab and select (highlight) a sentence. Come back to the AWFlow panel and click **Test Workflow** at the top of the canvas. Then open **Get Selected Text** and look at its **Output** tab, under **Actual**.
+</StepCard>
+
+<StepCard n={5} title="Reshape it with Edit Fields" check="Edit Fields → Output → Actual shows processed_text with your sentence and its length.">
+  Click the **+** on the right of **Get Selected Text** and add **Edit Fields**. Under **Fields**, add a field named `processed_text` of type *String*, and paste this as its value:
+
+  ```text title="Value"
+  Text: {{ $input.text }}
+  Length: {{ $input.text.length }} characters
+  ```
+
+  `{{ $input.text }}` reads the `text` field from the step before. Click **Done**, select some text again, and click **Test Workflow**.
+</StepCard>
+
+<StepCard n={6} title="Save it" check="the header says Saved.">
+  AWFlow doesn't save automatically: click **Save** in the canvas header, or press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>S</kbd>. You'll reuse this canvas in the next lesson.
+</StepCard>
+
+<Aside type="tip" title="Test one step at a time">
+Hover a node and click **Test this step** to run just that step, or open it and click **Test step**. Running often, one node at a time, is the fastest way to find what's wrong.
+</Aside>
+
+## What you've learned
+
+- Every workflow has a **trigger** and one or more **nodes**, joined by lines that carry data.
+- Each node's **Output** tab shows what it produced on the last run.
+- `{{ $input.field }}` reads a field from the previous step. See [Expressions](/concepts/data/data-mapping/data-mapping-expressions/) for more.
+
+The nodes in this lesson: [Get Selected Text](/nodes/extension/getselectedtext/) and [Edit Fields](/nodes/builtin/datatransformation/editfields/).
+
+<LessonDone client:load title="You built and ran a workflow." next={{ href: "/get-started/summarize-with-ai/", label: "Lesson 3" }}>
+  Next you'll add an AI model and summarise a whole page.
+</LessonDone>

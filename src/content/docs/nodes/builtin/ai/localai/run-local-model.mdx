@@ -3,58 +3,90 @@ title: "Run Local Model"
 description: "Run any installed on-device model for a chosen task"
 sidebar:
   label: "Run Local Model"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/run-local-model
+  family: ai
 ---
 
-# Run Local Model
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-The **generic** Local AI node: pick a task, pick any installed model, feed it an input. Use it for tasks the dedicated nodes don't cover, for custom-imported models, or when you want one node that adapts. Runs locally in your browser — private, offline, no cost.
+Run any on-device model for the task you choose, including tasks and custom models the dedicated Local AI nodes do not cover.
 
 ## What it does
 
-Runs the selected on-device model for the task you choose and returns the normalized output for that task (the same shapes the dedicated nodes return).
+Pick a **Task**, pick a model that does it, and give it one **Input**. The node runs the model in your browser and returns the result in the same shape the matching dedicated node would, for example `{ predictions, top, score }` for **Classify image**.
+
+Unlike the dedicated nodes, it has no threshold or top-K settings: you get every result the model returns. There is no cost per run and no API key.
 
 ## When to use it
 
-- You imported a **custom model** and want to run it.
-- You want **embeddings** from a node, not a dependency.
-- You need **image segmentation**, a **depth map**, or extractive Q&A with the question and passage in one input.
-- You'd rather configure one flexible node than reach for the specific one.
+- Split an image into labelled regions (**Segment image**) or estimate distances (**Depth map**). No other node does these.
+- Get an embedding vector for a piece of text (**Embeddings**).
+- Run a custom model you added on the Local AI page, with **Custom model (raw output)** when its task is not in the list.
+
+For common tasks the dedicated nodes are easier, for example [Classify Image](/nodes/builtin/ai/localai/classify-image/) or [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Task | One of: Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio, Moderate text, Answer question, Generate text, Embeddings, Custom model (raw output). |
-| Model | Any **installed** model for the chosen task, across engines. The picker is filtered to the selected Task. |
-| Input | Depends on the task — see below. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Task","type":"Choice","default":"Classify image","description":"Options: Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio, Moderate text, Answer question, Generate text, Embeddings, Custom model (raw output)."},{"name":"Model","type":"Model picker","description":"Any installed model for the chosen task, across engines."},{"name":"Input","type":"Text","description":"Text; an image/audio URL / data URL / $binary; or for Answer question, JSON { \"question\": \"…\", \"context\": \"…\" }."}]} />
+{/* AUTO:settings:end */}
 
-### Input by task
+Choose **Task** first: the **Model** picker only lists models for that task. What **Input** needs depends on the task:
 
-- **Image and audio tasks** (Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio) — an image/audio **URL**, **data URL**, raw base64, or **`$binary`** from a previous node.
-- **Answer question** — JSON with both fields: `{ "question": "…", "context": "…" }`. The answer is quoted from `context`.
-- **Text tasks** (Moderate text, Generate text, Embeddings) and **Custom model** — text. A non-text value from an expression is passed as JSON.
+- **Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio**: an image or audio web address, a data URL, raw base64, or a file from an earlier node, for example `{{ $input.dataUrl }}` after [Screenshot Page](/nodes/extension/screenshotpage/).
+- **Answer question**: JSON with both fields, for example `{ "question": "What is the total?", "context": "Total due: 42 EUR" }`. The answer is copied from `context`. Text inserted with an expression must not break the JSON: quotes and line breaks in it make the input invalid.
+- **Moderate text, Generate text, Embeddings, Custom model (raw output)**: text. A value that is not text is sent as JSON.
 
 ## Outputs
 
-The output shape matches the chosen task:
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
 
-- **Classify image / Moderate text** → `{ predictions, top, score }`
-- **Detect objects** → `{ objects, count, top }`
-- **Caption image / Generate text** → `{ text }`
-- **Segment image** → `{ segments, labels, top }` — `segments` is `[{ label, score, coverage, mask }]`, largest region first; each `mask` is a black-and-white **PNG** binary (`image/png`) of that region, usable anywhere a `$binary` image is accepted.
-- **Depth map** → `{ depth, width, height, $binary }` — `depth` is a grayscale **PNG** depth map (with Depth Anything, brighter usually means closer), also exposed as `$binary` so the next node's media input picks it up via *From input*.
-- **Transcribe audio** → `{ transcript, segments, chunks }`
-- **Answer question** → `{ answer, score }`
-- **Embeddings** → `{ embedding }` (a numeric vector)
-- **Custom model (raw output)** → `{ result }` — whatever the model returned, unchanged. Use it for a custom-imported model whose task isn't one of the above.
+The output depends on **Task**:
 
-## Troubleshooting
+- **Classify image**, **Moderate text**: `{ predictions, top, score }`.
+- **Detect objects**: `{ objects, count, top }`. Each object has a `box` with `xmin`, `ymin`, `xmax`, `ymax` in pixels.
+- **Caption image**, **Generate text**: `{ text }`.
+- **Segment image**: `{ segments, labels, top }`. `segments` lists `{ label, score, coverage, mask }`, largest region first; each `mask` is a black-and-white PNG of that region you can pass to any node that takes an image.
+- **Depth map**: `{ depth, width, height }`. `depth` is a grayscale PNG (with *Depth Anything v2 small*, brighter usually means closer). It is also attached as the item's file, so the next image node picks it up with `{{ $binary }}`.
+- **Transcribe audio**: `{ transcript, segments, chunks }`, as in Transcribe Audio.
+- **Answer question**: `{ answer, score }`.
+- **Embeddings**: `{ embedding }`, a list of numbers.
+- **Custom model (raw output)**: `{ result }`, whatever the model returned, unchanged.
 
-- **Task/model mismatch** — pick a model trained for the selected task; the picker only lists models for the chosen task. Change the task first, then the model.
-- **"Answer question needs JSON input …"** — the Input must be valid JSON with non-empty `question` and `context` strings.
-- **Empty picker** — install a model for that task first, from the picker or the [Local AI](/usage/using-the-app/local-models/) page.
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The **Model** picker lists your installed models first, then models that download on first use. Install models, or add a custom model, on the [Local AI](/app/local-models/#add-a-custom-model) page.
+
+## Example workflow
+
+List the kinds of regions in the visible page:
+
+1. [Screenshot Page](/nodes/extension/screenshotpage/) with **Mode** `viewport`.
+2. Run Local Model with **Task** **Segment image**, **Model** *SegFormer B0 (ADE20k)* and **Input** `{{ $input.dataUrl }}`.
+3. [Show Notification](/nodes/extension/shownotification/) with **Title** `Regions` and **Message** `{{ $input.labels }}`.
+
+## Common issues
+
+- **"Choose a model to run."** **Model** is empty. Pick **Task** first, then a model.
+- **"Answer question needs JSON input: …"** or **"Answer question needs both "question" and "context" …"** **Input** is not valid JSON, or one of the two fields is missing or empty.
+- **"No input provided. Pass a URL, a data URL, or a $binary from a previous node."** An image or audio task got an empty **Input**. Check the field your expression points to.
+- **The results make no sense.** The model may not match the task, for example after you changed **Task** but kept the old **Model**. Pick a model again from the filtered list.
+- **"Model "…" isn't available. Install it from Local AI."** The saved model is no longer in your list, for example a removed custom model. Pick another model.
 
 ## Related nodes
 
-- [Classify Image](/nodes/builtin/ai/localai/classify-image/), [Detect Objects](/nodes/builtin/ai/localai/detect-objects/), [Caption Image](/nodes/builtin/ai/localai/caption-image/)
-- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/), [Generate Text](/nodes/builtin/ai/localai/generate-text/), [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/)
+- [Classify Image](/nodes/builtin/ai/localai/classify-image/) and [Detect Objects](/nodes/builtin/ai/localai/detect-objects/): image tasks with threshold settings.
+- [Analyze Text](/nodes/builtin/ai/localai/analyze-text/): text moderation with threshold settings.
+- [Answer Question](/nodes/builtin/ai/localai/answer-question/): separate question and context fields.
+- [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/): speech-to-text with a Record tab.

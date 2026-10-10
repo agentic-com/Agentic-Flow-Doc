@@ -1,0 +1,81 @@
+---
+title: Data
+description: How AWFlow passes items between steps, and the ways you put a value from an earlier step into a setting.
+section: concepts
+kind: hub
+sidebar:
+  label: Overview
+  order: 0
+---
+
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+import { CompareCards } from "@components/awflow";
+
+Every step receives **items** and passes items on. An item is one record: a link, a product, an email. Most data problems come down to two questions: how many items reached this step, and where does the value you need sit inside them?
+
+## Reading order
+
+1. [Items](/concepts/data/data-structure/): what an item is, and why a step runs once per item.
+2. [Mapping in the UI](/concepts/data/data-mapping/data-mapping-ui/): drag a field from an earlier step into a setting.
+3. [Mapping with expressions](/concepts/data/data-mapping/data-mapping-expressions/): what `{{ $input.title }}` means, plus fallbacks, maths and helper functions.
+4. [Item linking](/concepts/data/item-linking/): how values from earlier steps line up with the item being processed.
+5. [Code](/concepts/data/code/): when a mapping isn't enough, reshape data with Python.
+
+## Four ways to shape a value
+
+Pick the lightest one that does the job.
+
+<CompareCards
+  label="Ways to shape data"
+  cards={[
+    {
+      title: "Drag a field",
+      icon: "mouse",
+      href: "/concepts/data/data-mapping/data-mapping-ui/",
+      when: "You need a value exactly as an earlier step produced it.",
+      example: "Drop title from Get Page Metadata into a message.",
+      meta: "writes {{ $input.title }} for you",
+    },
+    {
+      title: "Expression",
+      icon: "chain",
+      href: "/concepts/data/data-mapping/data-mapping-expressions/",
+      when: "You need to combine, compare or tidy values inside one setting.",
+      example: "A fallback title, or upper(trim(name)).",
+      meta: "{{ … }} in any text field",
+    },
+    {
+      title: "Edit Fields",
+      icon: "items",
+      href: "/nodes/builtin/datatransformation/editfields/",
+      when: "Later steps need clean, named fields to rely on.",
+      example: "Add a text field filled from pageText before an AI step.",
+      meta: "one node, no code",
+    },
+    {
+      title: "Code",
+      icon: "code",
+      href: "/concepts/data/code/",
+      when: "The change takes many nodes otherwise: regroup, count, parse.",
+      example: "Group orders by customer and total them.",
+      meta: "Python, in the browser",
+    },
+  ]}
+/>
+
+## Nodes that change the number of items
+
+| Node | Items in → out |
+| --- | --- |
+| [Split Out](/nodes/builtin/datatransformation/splitout/) | One item holding a list → one item per list entry |
+| [Aggregate](/nodes/builtin/datatransformation/aggregate/) | Many items → one item holding a list |
+| [Filter](/nodes/builtin/flow/filter/) | Many → only the ones that match |
+| [Limit](/nodes/builtin/datatransformation/limit/) | Many → the first or last few |
+| [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/) | Many → no repeats |
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Start with Items" description="Why a step runs once per item, in five minutes." href="/concepts/data/data-structure/" />
+  <LinkCard title="Practise it" description="Recipes that move real data between steps." href="/recipes/" />
+</CardGrid>

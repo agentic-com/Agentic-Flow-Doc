@@ -3,58 +3,99 @@ title: "Telegram"
 description: "Send messages, photos and documents to a Telegram chat via the Bot API."
 sidebar:
   label: "Telegram"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/integration/telegram
+  family: integration
 ---
 
-# Telegram
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Send messages, photos and documents to a Telegram chat via the Bot API — the best "notify me on my phone" sink without building push infrastructure.
+Send a message, a photo or a file to a Telegram chat through your own bot, a simple way to get alerts on your phone.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Telegram connection"} href="/app/connections/telegram/" linkLabel={"Connect Telegram"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
-Posts to a Telegram chat: a text message, a photo (with caption), or a document (with caption). Formatting can be plain, Markdown, MarkdownV2, or HTML. Every scheduled watcher can suddenly reach you wherever you are — pairs directly with **Element Change Trigger** and **Digest**, and sending a photo makes **Screenshot Page** genuinely useful ("this page changed, here's what it looks like now").
+The node sends one thing to one chat each time it runs, using a Telegram bot you create:
 
-> This node is **send-only**. Receiving updates (`getUpdates` polling) needs a long-running process and is out of scope.
+- **Send message**: a text message.
+- **Send photo**: an image, with an optional **Caption**.
+- **Send document**: any file, with an optional **Caption**.
 
-## Resource and operations
+**Photo** and **Document** accept a web address, a Telegram file id, or a base64 `data:` URL. A data URL, such as the `dataUrl` from [Screenshot Page](/nodes/extension/screenshotpage/), is uploaded as a file, so you can send a picture of the page you are on.
 
-| Resource | Operations |
-| --- | --- |
-| Message | Send message, Send photo, Send document |
+The node only sends. It cannot read the messages people send to your bot.
+
+## When to use it
+
+- Get a phone alert when a page you watch changes, with a screenshot of it.
+- Receive a daily digest or an AI summary in a private chat.
+- Post updates to a group or channel your bot belongs to.
+- Send yourself a file a workflow produced, such as a PDF found on a page.
+
+For Slack or Discord channels, use [Slack](/nodes/builtin/integration/slack/) or [Discord](/nodes/builtin/integration/discord/). For a notification with no bot to set up, see [Push Notification](/nodes/builtin/integration/push-notification/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Credential | The Telegram bot token (see below). |
-| Operation | Send message, photo, or document. |
-| Chat ID | The target chat: a numeric chat ID, or a channel username like `@mychannel`. |
-| Text | The message text (Send message). |
-| Photo / Document | An HTTP URL, a Telegram `file_id`, or a base64 `data:` URL (e.g. from Screenshot Page — it is uploaded to Telegram as a file). |
-| Caption | Optional caption under a photo/document. |
-| Formatting | None, Markdown, MarkdownV2, or HTML — applied to the text/caption. |
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Telegram bot token (from @BotFather). It is the whole credential and grants full control of the bot — keep it secret."}]} groups={[{"label":"Message","options":[{"label":"Send message","rows":[{"name":"Chat ID","type":"Text","required":true,"description":"The target chat: a numeric chat ID, or a channel username like @mychannel."},{"name":"Text","type":"Text","required":true,"description":"The message text."},{"name":"Formatting","type":"Choice","description":"How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML."}]},{"label":"Send photo","rows":[{"name":"Chat ID","type":"Text","required":true,"description":"The target chat: a numeric chat ID, or a channel username like @mychannel."},{"name":"Photo","type":"Text","required":true,"description":"An image URL, a Telegram file_id, or a base64 data URL (e.g. from Screenshot Page)."},{"name":"Caption","type":"Text","description":"Optional caption shown under the photo/document."},{"name":"Formatting","type":"Choice","description":"How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML."}]},{"label":"Send document","rows":[{"name":"Chat ID","type":"Text","required":true,"description":"The target chat: a numeric chat ID, or a channel username like @mychannel."},{"name":"Document","type":"Text","required":true,"description":"A file URL, a Telegram file_id, or a base64 data URL."},{"name":"Caption","type":"Text","description":"Optional caption shown under the photo/document."},{"name":"Formatting","type":"Choice","description":"How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML."}]}]}]} />
 
-## Getting a bot token
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Telegram API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
 
-1. In Telegram, open a chat with **@BotFather** and send `/newbot`.
-2. Follow the prompts; BotFather gives you a token like `123456:ABC-DEF...`.
-3. Start a chat with your new bot (or add it to a group/channel) so it can message you, and note the chat ID.
+- **Chat ID** is a number for a person or group (groups start with `-`, like `-1001234567890`), or `@channelname` for a public channel. To find your own chat id, send any message to your bot, then open `https://api.telegram.org/bot<your token>/getUpdates` in the browser and look for `"chat":{"id":…}`.
+- **Formatting** decides how `*bold*`, `_italic_` or `<b>tags</b>` in **Text** or **Caption** are shown. Leave it on `None` for plain text. With `MarkdownV2`, characters like `.`, `-` and `!` must be escaped with `\`, so `HTML` is often easier.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+The output is the message Telegram created: its `message_id`, the `chat` it went to, the `date`, and the `text` or the `photo` / `document` details. Keep `message_id` if a later step needs to refer to the message.
 
 ## Dependencies and credentials
 
-- **Auth type:** Bearer Token — store the **bot token**.
-- The bot token **is the whole credential and grants full control of the bot** — treat it like a password. It is stored in your credential vault and resolved at run time (never read from a node parameter); the node places it in the request path (`/bot<token>/sendMessage`), not a header.
+{/* AUTO:deps:start */}
+- **Credential** (connection, Bearer Token): required. See [Connect Telegram](/app/connections/telegram/).
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+The credential is your bot's token, saved as a Bearer Token credential:
 
-The Telegram Bot API sends CORS headers, so this node works in **both** the web app and the browser extension.
+1. In Telegram, open a chat with **@BotFather** and send `/newbot`.
+2. Choose a name and a username. BotFather replies with a token like `123456789:ABCdefGhIJKlmNoPQRstuVWxyz`.
+3. Paste the token into a new credential. See [Create a credential](/app/connections/create/).
+4. Open a chat with your new bot and press **Start**, or add it to the group or channel you want to post in. A bot cannot message someone who never started it.
 
-## Troubleshooting
+Anyone with the token controls the bot, so keep it private. If it leaks, send `/revoke` to @BotFather and update the credential.
 
-- **`Unauthorized`** — the bot token is wrong or revoked; recreate it with @BotFather.
-- **`chat not found`** — the Chat ID is wrong, or the bot has never been started/added to that chat. Message the bot first (or add it to the group/channel).
-- **`Bad Request: can't parse entities`** — the text doesn't match the selected Formatting; switch Formatting to None or fix the markup.
+## Example workflow
+
+1. An [Element Change](/nodes/builtin/trigger/elementchange/) trigger watches **CSS Selectors** `.stock-status` on a product page.
+2. [Screenshot Page](/nodes/extension/screenshotpage/) captures the visible page.
+3. Telegram, **Send photo**, **Chat ID** `123456789`, **Photo** `{{ $input.dataUrl }}`, **Caption** `<b>Stock changed</b> on {{ $('Element Change').url }}`, **Formatting** `HTML`.
+
+## Common issues
+
+- **"Telegram API Error: Unauthorized".** The token is wrong or was revoked. Get the current token from @BotFather and update the credential.
+- **"Telegram API Error: Bad Request: chat not found".** The **Chat ID** is wrong, or the bot was never started in that chat or added to that group. Press **Start** in the bot's chat, or add the bot, then try again.
+- **"Telegram API Error: Bad Request: can't parse entities…".** The text does not follow the chosen **Formatting**. Fix the markup, escape special characters, or set **Formatting** to `None`.
+- **"Telegram API Error: Forbidden: bot was blocked by the user".** The person blocked the bot. They need to unblock it and press **Start** again.
+- **"Only base64 data URLs are supported".** The **Photo** or **Document** value starts with `data:` but is not base64. Use the `dataUrl` from Screenshot Page as it is, or a web address.
 
 ## Related nodes
 
-- [Screenshot Page](/nodes/extension/screenshotpage/)
-- [Slack](/nodes/builtin/integration/slack/)
+- [Screenshot Page](/nodes/extension/screenshotpage/): a picture of the page to send.
+- [Push Notification](/nodes/builtin/integration/push-notification/): phone notifications through ntfy or Pushover.
+- [Slack](/nodes/builtin/integration/slack/) and [Discord](/nodes/builtin/integration/discord/): other chat apps.
+- [Digest](/nodes/builtin/core/digest/): bundle several changes into one message.

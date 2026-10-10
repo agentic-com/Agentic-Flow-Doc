@@ -3,55 +3,76 @@ title: "Rename Keys"
 description: "Rename and move keys on an item"
 sidebar:
   label: "Rename Keys"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/renamekeys
+  family: data
 ---
 
-# Rename Keys
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Rename and move keys on an item.
+Rename fields on your items, one by one or all at once with a pattern, without touching their values.
 
 ## What it does
 
-Renames the keys of an item. You can rename keys you name one by one — including nested keys addressed by a dot path — or rewrite every key at once with a pattern. Because dots address nesting, renaming a key to a dot path *moves* its value to that place in the object.
+Rename Keys changes field names on every incoming item. It has two modes:
+
+- **Named keys**: you list each rename as **From** and **To**. Dots reach nested fields, and a dot path in **To** moves the value there. `user.firstName` to `first_name` both renames the field and lifts it to the top level.
+- **Pattern**: a regular expression is run on every field name and the matched part is replaced with **Replacement**. `^data_` with an empty replacement strips that prefix from every field.
+
+Values never change, only names and positions. A field that an item does not have is skipped, not treated as an error. Renames are worked out against the original item, so swapping `a` and `b` keeps both values.
 
 ## When to use it
 
-Use this node to fix the one wrong field name on a twenty-field scraped object without retyping the other nineteen, to strip a prefix from every key, or to normalise a whole object from camelCase to snake_case. It is the quick alternative to rebuilding an object by hand in Edit Fields.
+- Fix one badly named field on a large scraped object without rebuilding the rest.
+- Strip or change a prefix on every field, such as `data_` or `prop_`.
+- Match the field names another service expects before you send data to it.
+- To add, change or remove fields, use [Edit Fields](/nodes/builtin/datatransformation/editfields/). To keep only one field, use [Pick Field](/nodes/builtin/datatransformation/pickfield/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | How keys are chosen: `Named keys` (rename the ones you list) or `Pattern` (rewrite every key that matches). Defaults to `Named keys`. |
-| Renames | Used by **Named keys**: a list of `From` → `To` pairs. In `From`, dots address nested keys (`user.firstName`); in `To`, dots move the value to a different place (`first_name`). |
-| Pattern | Used by **Pattern**: a regular expression matched against each key name, for example `^data_` to strip a prefix. |
-| Replacement | Used by **Pattern**: what the matched part becomes. Use `$1` for groups. Leaving it empty removes the matched part. |
-| Ignore Case | Used by **Pattern**: match the pattern regardless of case. Off by default. |
-| Apply To Nested Keys | Used by **Pattern**: off rewrites only the top-level keys; on rewrites every key at every depth, including inside arrays of objects. Off by default. |
-| On Collision | What to do when a new name is already taken: `Fail` (the default), `Overwrite`, or `Keep the existing key`. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","default":"Named keys","description":"Rename keys you name, or every key matching a pattern. Options: Named keys, Pattern."},{"name":"Renames","type":"List of entries","description":"Keys to rename, and what to rename them to."},{"name":"Renames (each entry) › From","type":"Text","required":true,"description":"Current key. Dots address nested keys."},{"name":"Renames (each entry) › To","type":"Text","required":true,"description":"New key. Dots move the value to a different place."},{"name":"Pattern","type":"Text","description":"Regular expression matched against each key name."},{"name":"Replacement","type":"Text","description":"What the matched part becomes. Use $1 for groups. Empty removes it."},{"name":"Ignore Case","type":"Toggle","default":"Off","description":"Match the pattern regardless of case."},{"name":"Apply To Nested Keys","type":"Toggle","default":"Off","description":"Rewrite keys inside nested objects too."},{"name":"On Collision","type":"Choice","default":"Fail","description":"What to do when the new name is already taken. Options: Fail, Overwrite, Keep the existing key."}]} />
+{/* AUTO:settings:end */}
+
+- **Pattern** replaces every match inside a name, not just the first. If the result would be an empty name, the field keeps its old name.
+- **Apply To Nested Keys** is for Pattern mode. Off, only top-level names change. On, names at every depth change, including inside lists of objects.
+- **On Collision** decides what happens when the new name already exists: *Fail* stops the run (the default, so no value is lost by accident), *Overwrite* replaces the existing value, and *Keep the existing key* skips that rename.
 
 ## Outputs
 
-The same item (or collection) with its keys renamed. Values are preserved; only the key names — and, when you rename to a dot path, the place a value sits — change.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+The same items with the new field names. A single incoming item comes out as a single item; a list comes out as a list of the same length.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-A scraper emits objects whose keys are all prefixed `data_`. Connect them into Rename Keys, set **Mode** to `Pattern`, **Pattern** to `^data_` and leave **Replacement** empty. Every key loses the prefix in one step. To instead rename a single nested field, switch to `Named keys` and add `user.firstName` → `first_name`, which both renames and lifts the value to the top level.
+1. [HTML Extract](/nodes/builtin/datatransformation/html-extract/) returns items with fields `data_title`, `data_price` and `data_url`.
+2. Rename Keys with **Mode** *Pattern*, **Pattern** `^data_` and an empty **Replacement**. The fields become `title`, `price` and `url`.
+3. A second Rename Keys with **Mode** *Named keys* and one rename, **From** `url` **To** `link`, to match your sheet's column.
+4. A [Google Sheets](/nodes/builtin/integration/google-sheets/) node (*Data*, *Append Values into Worksheet*) adds the items to your sheet.
 
-## Troubleshooting
+## Common issues
 
-- **A missing key is not an error.** Renaming a field that only some items carry is normal for scraped data, so an absent key is simply left alone rather than failing the run.
-- **Collisions fail by default.** If a rename would land on a key that already exists, the node stops with a message rather than silently destroying the existing value. Choose `Overwrite` or `Keep the existing key` on **On Collision** if that is what you want. A destination that is itself being renamed away does *not* count as a collision — it is about to be vacated.
-- **Swaps are safe.** Renames are decided against the original item, so `a` → `b` together with `b` → `a` keeps both values rather than depending on which rename ran first.
-- **A rewrite that would empty a key name keeps the original** key instead, so you never end up with an unaddressable blank field.
-- **Patterns are safe on untrusted key names.** Pattern mode runs through the same bounded matcher as the Regex node, so a runaway pattern reports a timeout instead of freezing the tab. Each distinct key is matched once, so a deeply nested object with a repeated key costs one match, not one per occurrence.
+- **"Renaming "…" to "…" would overwrite a value that is already there."** The new name is already used on the item. Pick another name, or set **On Collision** to *Overwrite* or *Keep the existing key*.
+- **"Renaming "…" to "…" would overwrite a key of that name produced by another rename."** In Pattern mode, two names become the same, for example `data_id` and `id` after stripping `data_`. Make the pattern more specific, or change **On Collision**.
+- **"No renames configured. Add at least one, or switch to the Pattern mode."** Named keys mode needs at least one rename with both **From** and **To** filled.
+- **"The Pattern mode needs a pattern. Add one, for example ^data_ ."** Fill **Pattern**.
+- **A field did not change.** Names are case sensitive: turn on **Ignore Case** in Pattern mode, or check the spelling in **From**. For nested fields in Pattern mode, turn on **Apply To Nested Keys**.
 
 ## Related nodes
 
-- [Regex](/nodes/builtin/datatransformation/regex/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Code](/nodes/builtin/core/code/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): add, change or remove fields.
+- [Pick Field](/nodes/builtin/datatransformation/pickfield/): keep a single field.
+- [Regex](/nodes/builtin/datatransformation/regex/): change values, not names, with a pattern.

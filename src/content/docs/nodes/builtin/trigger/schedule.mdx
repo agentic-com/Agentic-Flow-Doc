@@ -3,50 +3,92 @@ title: "Schedule"
 description: "Run the flow at a specific time."
 sidebar:
   label: "Schedule"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/schedule
+  family: trigger
 ---
 
-# Schedule
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Run the flow at a specific time.
+Run the workflow automatically at set times: every few minutes, daily at 9:00, every Monday, on the 1st of the month.
 
 ## What it does
 
-Triggers workflow execution at specified times or intervals using cron-like scheduling rules.
+Schedule starts the workflow on the rules you set, once the workflow is published. Each rule picks a **Trigger Interval** and then asks only for what that interval needs:
+
+| Trigger Interval | You set |
+| --- | --- |
+| `seconds` | **Seconds Between Triggers** (at least 10) |
+| `minutes` | **Minutes Between Triggers** |
+| `hours` | **Hours Between Triggers** and, optionally, **Trigger at Minute** |
+| `days` | **Days Between Triggers**, **Trigger at Hour**, **Trigger at Minute** |
+| `weeks` | **Weeks Between Triggers**, the weekdays (field **Units**), **Trigger at Hour**, **Trigger at Minute** |
+| `months` | **Months Between Triggers**, **Trigger at Day of Month**, **Trigger at Hour**, **Trigger at Minute** |
+
+Add several rules to combine schedules, for example weekdays at 9:00 plus Saturdays at noon.
+
+Daily, weekly and monthly schedules (and hourly ones pinned to a minute) stay on the same local clock time when daylight saving time changes.
 
 ## When to use it
 
-Use this trigger to run workflows automatically at regular intervals or specific times, such as daily reports or periodic data syncs.
+- Daily reports, digests and reminders.
+- Regular checks: a price, a page, an inbox.
+- Routines that run an agent at set times, with [Run agent](/nodes/builtin/ai/aiagents/runagentnode/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| rules | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Rules","type":"List","required":true}]} />
 
-## Timing and reliability
+**Rules** changes shape with its **Trigger Interval** choice:
 
-- **Daylight saving time:** Daily, weekly and monthly schedules (and hourly schedules pinned to a specific minute) re-arm after each run, recomputing the next occurrence from the calendar. This keeps them on the correct **local** wall-clock time across daylight-saving transitions instead of drifting by an hour.
-- **Second-level schedules are best-effort:** browser alarms are floored at about one minute, so second intervals have a minimum of 10 seconds and are effectively rounded up to roughly a minute. Use them for approximate polling, not precise sub-minute timing.
+<AwfOperationTabs client:visible pick={"Trigger Interval"} groups={[{"options":[{"label":"seconds","rows":[{"name":"Seconds Between Triggers","type":"Number","required":true,"description":"Seconds between each run. Note: the browser floors alarms at ~1 minute, so second-level schedules are best-effort — the minimum is 10s and short intervals are effectively rounded up to about 1 minute. For reliable sub-minute timing, keep the flow running yourself."}]},{"label":"minutes","rows":[{"name":"Minutes Between Triggers","type":"Number","required":true,"description":"Number of minutes between each workflow trigger."}]},{"label":"hours","rows":[{"name":"Hours Between Triggers","type":"Number","description":"Number of hours between each workflow trigger."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]},{"label":"days","rows":[{"name":"Days Between Triggers","type":"Number","description":"Number of days between each workflow trigger."},{"name":"Trigger at Hour","type":"Choice","required":true,"description":"Hour of the day at which the workflow will be triggered. 24 options."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]},{"label":"weeks","rows":[{"name":"Weeks Between Triggers","type":"Number","description":"Would run every week unless specified otherwise."},{"name":"Trigger on Weekdays","type":"Multiple choice","required":true,"description":"The days of the week on which the workflow runs. Options: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday."},{"name":"Trigger at Hour","type":"Choice","required":true,"description":"Hour of the day at which the workflow will be triggered. 24 options."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]},{"label":"months","rows":[{"name":"Months Between Triggers","type":"Number","description":"Number of months between each workflow trigger."},{"name":"Trigger at Day of Month","type":"Number","description":"Day of the month at which the workflow will be triggered."},{"name":"Trigger at Hour","type":"Number","required":true,"description":"Hour of the day at which the workflow will be triggered."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]}]}]} />
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Starts the workflow and passes trigger context to downstream nodes when context is available.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"scheduled","type":"Always true"}]} />
+
+```json title="Shape of an output item"
+{
+  "scheduled": true
+}
+```
+{/* AUTO:outputs:end */}
+
+Schedule only sends `{ "scheduled": true }`. It carries no date or other context; use [Get Current Date](/nodes/builtin/datatransformation/datetime/getcurrentdate/) when the next steps need the time.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Create a workflow with Schedule as the first node, then connect it to the action nodes that should run after the trigger fires.
+1. Schedule with one rule: `days`, **Days Between Triggers** 1, **Trigger at Hour** 8 AM, **Trigger at Minute** 0.
+2. [RSS Feed Read](/nodes/builtin/core/rss-feed-read/) fetches a feed.
+3. [Limit](/nodes/builtin/datatransformation/limit/) keeps the 5 newest posts.
+4. [Telegram](/nodes/builtin/integration/telegram/) sends them to you.
 
-## Troubleshooting
+## Common issues
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The workflow never runs on its own.** Publish the workflow: schedules only run for published workflows. To test, run it from the canvas.
+- **A seconds schedule runs about once a minute.** The browser runs scheduled alarms at most about once a minute, so second-level schedules are approximate. The minimum is 10 seconds.
+- **A monthly schedule skipped a month.** That month has no such day (for example the 31st). Pick a day that every month has, such as the 1st or the 28th.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [When Started](/nodes/builtin/trigger/whenstarted/): run the workflow by hand.
+- [Browser Startup](/nodes/builtin/trigger/browserstartup/): run when the browser opens.
+- [Get Current Date](/nodes/builtin/datatransformation/datetime/getcurrentdate/): add the time to the data.
+- [Run agent](/nodes/builtin/ai/aiagents/runagentnode/): give a scheduled task to an agent.

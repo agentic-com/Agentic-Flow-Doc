@@ -1,0 +1,84 @@
+---
+title: Explain any highlighted text in plain words
+description: Highlight a confusing sentence, right-click, and read a simple explanation next to the page. A model on your computer writes it.
+kind: recipe
+section: recipes
+tableOfContents: false
+sidebar:
+  label: Explain selected text simply
+recipe:
+  goal: Research & reading
+  level: beginner
+  minutes: 4
+  setup: on-device
+  awf: /examples/explain-eli5.awf
+  marketplaceId: b3612bcc-259d-48fe-ab65-1db115501440
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import FlowPreview from '@components/awflow/FlowPreview.astro';
+import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+
+<RecipeMeta slug="explain-like-im-five" />
+
+<FlowPreview src="/examples/explain-eli5.awf" caption="Right-click a selection → read it → explain it with a local model → show the answer on the page." />
+
+<RecipeUse slug="explain-like-im-five" client:idle />
+
+## How it works
+
+<RecipeSteps
+	slug="explain-like-im-five"
+	steps={[
+		{
+			node: 'trigger-context-menu',
+			title: 'Start from the right-click menu',
+			body: 'With **Menu Contexts** set to **Selection**, the workflow shows up when you right-click selected text, under **Agentic Workflow**.',
+			tweak: 'add **Document URL Patterns** such as `https://*.wikipedia.org/*` to offer it only on the sites you read.',
+		},
+		{
+			node: 'get-selection',
+			title: 'Read the selected text',
+			body: 'Puts the highlighted text in the `selection` field.',
+			tweak: 'nothing to change here; the Context Menu trigger also passes `selectionText` if you prefer to skip this step.',
+		},
+		{
+			node: 'explain',
+			also: ['local-model'],
+			title: 'Explain it simply',
+			body: 'Basic LLM Chain sends the prompt `Explain this simply, like I\'m five:` followed by your selection to the Web LLM model.',
+			tweak: 'rewrite **Prompt**, for example `Explain this for a new team member, with one example`, or answer in another language.',
+		},
+		{
+			node: 'show-explanation',
+			title: 'Show the explanation',
+			body: 'Display Markdown opens an **Explanation** panel in the corner of the page.',
+			tweak: 'use [Browser Notification](/nodes/extension/browsernotification/) instead for a short answer.',
+		},
+	]}
+/>
+
+## Test it
+
+<Steps>
+
+1. Install the recipe and pick a model in **Local AI model** (it downloads once; see [Local models](/app/local-models/)).
+2. Save and activate the workflow.
+3. On any page, highlight a sentence, right-click it and choose **Agentic Workflow** › **Personal Workflows** › **Explain Like I'm 5**.
+4. An **Explanation** panel opens with a plain-words version.
+
+</Steps>
+
+## Variations
+
+| Variation | What to change | Level |
+| --- | --- | --- |
+| Translate instead | Replace Basic LLM Chain with [Translate](/nodes/builtin/ai/localai/translate/), which needs no chat model. | Beginner |
+| Explain code | Change **Prompt** to `Explain what this code does, step by step:` and select a code block. | Beginner |
+| Keep the answers | Branch [Notion](/nodes/builtin/integration/notion/) off Basic LLM Chain to save each term and its explanation. | Intermediate |
+
+## Troubleshoot
+
+- **The menu entry is missing.** Activate the workflow, then right-click and choose **Get / Refresh Workflows**. It only shows on selected text.
+- **The explanation is cut short or vague.** Small models struggle with long selections. Select a shorter passage or pick a larger model.
+- **Nothing happens for a while.** The first run downloads the model. Watch the progress in the run log on the canvas.

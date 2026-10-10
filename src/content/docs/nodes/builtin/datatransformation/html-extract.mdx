@@ -3,55 +3,90 @@ title: "HTML Extract"
 description: "Pull values out of HTML with CSS selectors"
 sidebar:
   label: "HTML Extract"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/html-extract
+  family: data
 ---
 
-# HTML Extract
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Pull values out of HTML with CSS selectors.
+Pull values out of HTML with CSS selectors, from one value to a whole list of rows.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/web-scrape-to-json.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Parses HTML and reads values out of it with CSS selectors. Two modes cover the common jobs: **Single value** reads one element, returning its text, its inner HTML, or one of its attributes. **Repeating list** matches a set of containers and, for each one, reads a set of mapped fields from its children — turning a results page into rows.
+HTML Extract reads the HTML you put in its **HTML** field and finds elements in it with CSS selectors. It has two modes:
+
+- **Single value** finds the first element that matches **Selector** and returns its text, its inner HTML or one of its attributes.
+- **Repeating list** finds every element that matches **Container Selector** (each search result, table row or card) and builds one item per match, reading each of your **Fields** from inside that container.
+
+Text is trimmed of surrounding spaces. Returned HTML is cleaned of scripts and other unsafe content. The HTML is only read, never run, and it can be up to about 2 MB.
 
 ## When to use it
 
-Use this node to pull a title, price or link off scraped HTML, or to turn a listing page — search results, a table, a feed — into one item per row so downstream nodes can work with structured fields instead of markup.
+- Pull a title, price or link out of a page you fetched.
+- Turn a listing page (search results, a table, a feed) into one item per row with clean fields.
+- To read straight from the page open in your browser, [Get Element Data](/nodes/extension/getelementdata/) may be simpler. To match text patterns rather than page structure, use [Regex](/nodes/builtin/datatransformation/regex/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| HTML | The HTML to extract from, usually bound from a previous node. Accepts an expression such as `{{ $json.body }}`. |
-| Mode | Read one value, or one item per matched container: `Single value` or `Repeating list`. Defaults to `Single value`. |
-| Selector | CSS selector for the element to read (single value mode), for example `h1.title`. |
-| Return | What the single-value selector returns: `Text`, `HTML`, or `Attribute`. Defaults to `Text`. |
-| Attribute | Attribute to read when Return is set to Attribute, for example `href`. |
-| Container Selector | CSS selector matching each repeating container (list mode), for example `ul.results > li`. |
-| Fields | One mapping per column, used in list mode: a field name, a selector read relative to the container, and what to return (`Text`, `HTML`, or `Attribute`, with an attribute name when needed). |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"HTML","type":"Long text","description":"The HTML to extract from, usually bound from a previous node."},{"name":"Mode","type":"Choice","default":"Single value","description":"Read one value, or one item per matched container. Options: Single value, Repeating list."},{"name":"Selector","type":"Text","description":"CSS selector for the element to read (single value mode)."},{"name":"Return","type":"Choice","default":"Text","description":"Text, inner HTML, or an attribute of the matched element. Options: Text, HTML, Attribute."},{"name":"Attribute","type":"Text","description":"Attribute to read when Return is set to Attribute."},{"name":"Container Selector","type":"Text","description":"CSS selector matching each repeating container (list mode)."},{"name":"Fields","type":"List of entries","description":"One mapping per column: name, selector, what to return (list mode)."},{"name":"Fields (each entry) › Field name","type":"Text","required":true},{"name":"Fields (each entry) › Selector","type":"Text","required":true},{"name":"Fields (each entry) › Return","type":"Choice","default":"Text","description":"Options: Text, HTML, Attribute."},{"name":"Fields (each entry) › Attribute","type":"Text"}]} />
+{/* AUTO:settings:end */}
+
+- **HTML**: bind it with an expression. After an [Http Request](/nodes/builtin/core/http-request/), the page is in `{{ $input.data }}`.
+- **Selector** and **Container Selector** take standard CSS selectors, for example `h1.title`, `#price` or `ul.results > li`.
+- In list mode, each field's **Selector** is searched inside its container, so keep it short, for example `a.title` rather than the full path.
+- **Attribute** names the attribute to read, for example `href` for links or `src` for images.
 
 ## Outputs
 
-- **Single value** returns one item: `{ value }`, where `value` is the text, sanitized HTML, or attribute read from the matched element, or `undefined` if nothing matched.
-- **Repeating list** returns one item per matched container, each an object keyed by the field names in **Fields**.
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+- **Single value** returns one item, `{ "value": ... }`. `value` is empty (undefined) when nothing matched or the element lacks the attribute.
+- **Repeating list** returns one item per matched container, with one field per entry in **Fields**. The next node runs once per row. If no container matches, there are no items.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Feed the body of an HTTP Request response into **HTML**, set **Mode** to `Repeating list`, point **Container Selector** at each result row (for example `ul.results > li`), and add fields such as `title` (`a.title`, Text) and `link` (`a.title`, Attribute, `href`). Each matched row becomes one output item with those two fields.
+1. [Http Request](/nodes/builtin/core/http-request/) with **URL** set to a search results page.
+2. **HTML Extract** with **HTML** `{{ $input.data }}`, **Mode** *Repeating list* and **Container Selector** `ul.results > li`.
+3. Under **Fields**, add `title` (Selector `a.title`, Return *Text*) and `link` (Selector `a.title`, Return *Attribute*, Attribute `href`).
+4. [Limit](/nodes/builtin/datatransformation/limit/) keeps the first 10 rows for the next steps.
 
-## Troubleshooting
+## Common issues
 
-- An empty **Selector** or **Container Selector** fails with a clear message naming the field to fill in.
-- An invalid CSS selector fails with `Invalid CSS selector: "..."` rather than silently matching nothing.
-- Return set to `Attribute` with no attribute name fails with a clear error; a missing attribute on the matched element (rather than a missing name) simply returns `undefined`.
-- This node parses untrusted HTML and is bounded: input far beyond a reasonable size fails the node with a clear error instead of freezing the tab, and any HTML the node returns is sanitized before it is handed back.
+- **"No selector given. Fill in the Selector field."** or **"No container selector given. Fill in the Container Selector field."** Fill in the selector for the mode you chose.
+- **"Invalid CSS selector: "..."."** The selector has a typo. Test it in your browser's developer tools first.
+- **"Return is set to Attribute but no attribute name was given."** Fill in **Attribute**, for example `href`.
+- **"Input is ... bytes, larger than the 2000000-byte limit this node will parse."** The HTML is over about 2 MB. Extract a smaller part of the page first.
+- **The value is empty though the element is visible in the browser.** The page builds that part with scripts after it loads, so it is not in the fetched HTML. Read it from the live page with [Get All HTML](/nodes/extension/getallhtml/) instead.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Turn a list on a web page into structured data"} href="/recipes/extract-data/scrape-a-list/" level={"intermediate"} minutes={7} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
-- [Markdown](/nodes/builtin/datatransformation/markdown/)
-- [Regex](/nodes/builtin/datatransformation/regex/)
-- [JSON](/nodes/builtin/datatransformation/json/)
-- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/)
+- [Http Request](/nodes/builtin/core/http-request/): fetch the HTML to extract from.
+- [Get HTML from Link](/nodes/builtin/core/gethtmlfromlink/): get the HTML of a page by its URL.
+- [Markdown](/nodes/builtin/datatransformation/markdown/): turn HTML into readable Markdown.
+- [Regex](/nodes/builtin/datatransformation/regex/): match text patterns instead of page structure.

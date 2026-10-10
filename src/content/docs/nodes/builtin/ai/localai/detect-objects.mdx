@@ -3,44 +3,90 @@ title: "Detect Objects"
 description: "Find objects and bounding boxes in an image, on-device"
 sidebar:
   label: "Detect Objects"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/detect-objects
+  family: ai
 ---
 
-# Detect Objects
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Find objects **and their bounding boxes** in an image, running locally in your browser (COCO-SSD on TensorFlow.js, DETR on transformers.js). Private, offline, no cost.
+Find the objects in an image, with where each one is and how sure the model is, using a model that runs in your browser.
 
 ## What it does
 
-Runs the image through the selected on-device detector and returns every object found — its label, confidence, and box — sorted by confidence and filtered by a threshold.
+Detect Objects runs the **Image** through the detection model you pick, such as *COCO-SSD (MobileNet v2)* (TensorFlow.js) or *DETR ResNet-50* (transformers.js). It returns every object found with its label, a score from 0 to 1 and a box around it. The built-in models know about 80 everyday kinds of objects, such as person, car, dog, cup and laptop.
+
+Objects below **Confidence threshold** are dropped, the rest are sorted best first and cut to **Max objects**. There is no cost per run and no API key.
 
 ## When to use it
 
-Count or locate things in an image: how many people are in a photo, where a product sits, whether a frame contains a given object — then branch or annotate downstream.
+- Count things in an image: people in a photo, cars in a screenshot.
+- Check whether an image contains a given object before you save or share it.
+- Get positions to crop or highlight an object later.
+
+For one overall label, use [Classify Image](/nodes/builtin/ai/localai/classify-image/). For a sentence describing the scene, use [Caption Image](/nodes/builtin/ai/localai/caption-image/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** object-detection model, across engines. |
-| Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
-| Confidence threshold | Drop detections below this score (default `0.5`). |
-| Max objects | Keep at most this many objects, highest score first (default `20`). |
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"Any installed object-detection model, across engines."},{"name":"Image","type":"Media","description":"Image URL, data URL, or $binary from a previous node."},{"name":"Confidence threshold","type":"Number","default":"0.5"},{"name":"Max objects","type":"Number","default":"20","description":"Keep at most this many objects (highest score first)."}]} />
+{/* AUTO:settings:end */}
+
+**Image** has four tabs. **From input** takes an expression that points to an image from an earlier node, such as `{{ $input.dataUrl }}` after [Screenshot Page](/nodes/extension/screenshotpage/) or `{{ $binary }}` for an attached file. **URL** takes a web address. **Upload** and **Base64** store a fixed image with the node, handy for trying a model.
 
 ## Outputs
 
-Returns `{ objects, count, top }`:
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-- `objects` — array of `{ label, score, box }`, highest confidence first. `box` holds the bounding-box coordinates.
-- `count` — number of objects returned (after the threshold and Max objects).
-- `top` — label of the most confident detection (or `null`).
+Each output item has these fields:
 
-## Troubleshooting
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"objects","type":"List of entries"},{"name":"count","type":"Number"},{"name":"top","type":"Text","description":"The best label, or null when none passed"}]} />
 
-- **Nothing detected** — lower the threshold, or use a model trained on the objects you expect.
-- **Fewer objects than expected in a busy image** — raise **Max objects**.
-- **Empty picker** — install an object-detection model first.
+```json title="Shape of an output item"
+{
+  "objects": [],
+  "count": 0,
+  "top": "…"
+}
+```
+{/* AUTO:outputs:end */}
+
+- `objects`: each entry is `{ label, score, box }`, best first. `box` holds `xmin`, `ymin`, `xmax` and `ymax`, in pixels from the top-left corner of the image.
+- `count`: how many objects are in `objects`, after the threshold and **Max objects**. It counts all kinds together.
+- `top`: the label of the most confident object, or `null` when nothing was found.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The **Model** picker lists your installed models first, then models that download on first use. Manage them on the [Local AI](/app/local-models/) page.
+
+## Example workflow
+
+Check whether the visible page shows a person:
+
+1. [Screenshot Page](/nodes/extension/screenshotpage/) with **Mode** `viewport` (the visible part of the page).
+2. Detect Objects with **Model** *COCO-SSD (MobileNet v2)*, **Image** (From input) `{{ $input.dataUrl }}` and **Confidence threshold** 0.6.
+3. [IF](/nodes/builtin/flow/if/) with the condition `{{ $input.top }}` equals `person`, then continue from the true branch.
+
+## Common issues
+
+- **"Choose a detection model."** **Model** is empty. Pick one.
+- **"No image provided. Pass an image URL, a data URL, or a $binary image from a previous node."** **Image** is empty, or its expression returned nothing. Check the field you point to.
+- **`count` is 0.** Nothing passed **Confidence threshold**. Lower it, or check that the object is one the model knows.
+- **Fewer objects than expected in a busy image.** Raise **Max objects**.
+- **The first run is slow.** The model downloads and loads on first use; later runs are fast.
 
 ## Related nodes
 
-- [Classify Image](/nodes/builtin/ai/localai/classify-image/)
-- [Caption Image](/nodes/builtin/ai/localai/caption-image/)
+- [Classify Image](/nodes/builtin/ai/localai/classify-image/): one label for the whole image.
+- [Caption Image](/nodes/builtin/ai/localai/caption-image/): describe the image in a sentence.
+- [Edit Image](/nodes/builtin/datatransformation/editimage/): crop or resize an image.
+- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/): segmentation and depth maps.

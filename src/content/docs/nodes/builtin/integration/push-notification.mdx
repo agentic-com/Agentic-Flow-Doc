@@ -3,63 +3,105 @@ title: "Push Notification"
 description: "Send a push notification to your phone via ntfy or Pushover, with priority and a click-through URL."
 sidebar:
   label: "Push Notification"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/push-notification
+  family: integration
 ---
 
-# Push Notification
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Deliver a notification to your phone — with the browser closed and no tab focused. This is the sink that completes the watcher story: an **Element Change Trigger** detects a change, **Digest** batches it, and this delivers it to a device.
+Send a notification to your phone through ntfy or Pushover, so you hear about a change even when you are away from the browser.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use a Push Notification connection"} href="/app/connections/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Credential** field when the service needs one.
+</AwfCallout>
+{/* AUTO:callout:end */}
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/job-postings-watch.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
-Sends a push notification via **ntfy** or **Pushover**, with a title, priority, and a click-through URL so the notification can open the page it's about. Pick the provider and its fields appear.
+Pick a **Provider** and the node sends one notification with your **Message**, an optional **Title**, a **Priority** and a **Click URL** that opens when you tap the notification.
 
-## Providers
+- **ntfy** is free and open source, and needs no account: the node publishes to a topic, and every phone subscribed to that topic in the ntfy app gets the message. It uses `https://ntfy.sh` unless you set **Server** to your own ntfy server. **Tags** add emoji icons, for example `warning` or `tada`.
+- **Pushover** is a paid app (one-time purchase) that delivers to your own devices. It needs an application token and your user key.
 
-| Provider | Why | Auth |
-| --- | --- | --- |
-| **ntfy** | Open source, self-hostable, works with **no account** — just publish to a topic. The lowest-friction path. | None for public topics; a Bearer token for a protected server. |
-| **Pushover** | A polished app with a one-off purchase, for reliability over self-hosting. | An application token + your user key. |
+The node sends one notification each time it runs. To send one summary for many items, collect them first with [Digest](/nodes/builtin/core/digest/) or [Aggregate](/nodes/builtin/datatransformation/aggregate/).
+
+## When to use it
+
+- Get pinged on your phone when a price or a stock status changes on a page you watch.
+- Know when a long workflow has finished, or failed.
+- Send yourself a short daily summary built by earlier nodes.
+
+For a desktop notification without an account, use [Browser Notification](/nodes/extension/browsernotification/). To post to a team channel, use [Slack](/nodes/builtin/integration/slack/), [Discord](/nodes/builtin/integration/discord/) or [Telegram](/nodes/builtin/integration/telegram/).
 
 ## Inputs and settings
 
-### ntfy
+{/* AUTO:settings:start */}
+<AwfOperationTabs client:visible pick={"Provider"} common={[{"name":"Credential","type":"Credential","description":"Optional. ntfy public topics need none. For a protected ntfy server use a Bearer Token; for Pushover use a Basic Auth credential with the application token in Username and your user key in Password."}]} groups={[{"options":[{"label":"ntfy","rows":[{"name":"Topic","type":"Text","required":true,"description":"The ntfy topic to publish to (anyone who knows it can read it — pick something unguessable)."},{"name":"Message","type":"Text","required":true,"description":"The notification body."},{"name":"Title","type":"Text","description":"The notification title."},{"name":"Priority","type":"Choice","description":"ntfy priority. Options: Min, Low, Default, High, Max."},{"name":"Tags","type":"List","description":"ntfy tags — emoji shortcodes (e.g. warning, tada) show as icons."},{"name":"Click URL","type":"Text","description":"Open this URL when the notification is tapped — e.g. the page it is about."},{"name":"Server","type":"Text","description":"ntfy server (defaults to https://ntfy.sh; use your self-hosted URL for a private instance)."}]},{"label":"Pushover","rows":[{"name":"Message","type":"Text","required":true,"description":"The notification body."},{"name":"Title","type":"Text","description":"The notification title."},{"name":"Priority","type":"Choice","description":"Pushover priority. Options: Lowest (no alert), Low, Normal, High."},{"name":"Click URL","type":"Text","description":"Open this URL when the notification is tapped — e.g. the page it is about."},{"name":"Click URL title","type":"Text","description":"A label for the click URL (Pushover)."}]}]}]} />
 
-| Setting | Notes |
-| --- | --- |
-| Topic | The topic to publish to. **Anyone who knows it can read it** — pick something unguessable. |
-| Message / Title | The notification body and title. |
-| Priority | Min, Low, Default, High, or Max. |
-| Tags | Emoji shortcodes (e.g. `warning`, `tada`) render as icons. |
-| Click URL | Open this URL when the notification is tapped. |
-| Server | Defaults to `https://ntfy.sh`; set your self-hosted URL for a private instance. |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Push Notification API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
+{/* AUTO:settings:end */}
 
-### Pushover
+- **Topic** works like a password on the public ntfy server: anyone who knows it can read your notifications. Pick something long and random, like `my-alerts-7f3k9q`.
+- **Priority** changes how insistently the phone alerts. On Pushover, `Lowest (no alert)` delivers without a sound or vibration.
+- **Click URL** should be a full address starting with `https://`. Use an expression such as `{{ $input.url }}` to open the page the alert is about.
 
-| Setting | Notes |
-| --- | --- |
-| Message / Title | The notification body and title. |
-| Priority | Lowest, Low, Normal, or High. |
-| Click URL / Click URL title | A URL to include, and its label. |
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+The output is the provider's reply. ntfy returns the published message, including its `id`, `time` and `topic`. Pushover returns `status: 1` and a `request` id. Most workflows end here, or continue without using these fields.
 
 ## Dependencies and credentials
 
-- **ntfy (public topic):** no credential needed — leave it empty. For an access-controlled server, use a **Bearer Token** credential.
-- **Pushover:** create an application at [pushover.net](https://pushover.net) for the **application token**, and copy your **user key** from your dashboard. Store both as a **Basic Auth** credential:
-  - **Username** → the Pushover **application token**
-  - **Password** → your Pushover **user key**
-- Tokens are stored in your credential vault and never pass through awflow's backend.
+{/* AUTO:deps:start */}
+- **Credential** (connection): optional. See [Create a connection](/app/connections/).
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+- **ntfy on ntfy.sh, public topic**: leave **Credential** empty.
+- **ntfy server with access control**: use a Bearer Token credential with an access token from that server.
+- **Pushover**: create an application at [pushover.net](https://pushover.net) to get an **application token**, and copy your **user key** from your Pushover dashboard. Save them as a Basic Auth credential: the application token as **Username**, your user key as **Password**.
 
-This node is **extension-only**. Self-hosted ntfy servers are often on `localhost` or a LAN address — reachable through the extension's host permissions, but not from the web build.
+See [Create a credential](/app/connections/create/).
 
-## Troubleshooting
+## Example workflow
 
-- **ntfy notification never arrives** — subscribe to the exact same **topic** in the ntfy app, and confirm the **Server** matches (default `https://ntfy.sh`).
-- **Pushover `user key is invalid`** — check the credential: **Username** must be the *application token*, **Password** your *user key* (a common mix-up).
-- **Click URL doesn't open** — provide an absolute `https://` URL.
+1. An [Element Change](/nodes/builtin/trigger/elementchange/) trigger watches **CSS Selectors** `.price` on a product page, limited by **URL Patterns** to that page.
+2. Push Notification, **Provider** `ntfy`, **Topic** `my-alerts-7f3k9q`, **Title** `Price changed`, **Message** `Now {{ $input.matchedText }}`, **Priority** `High`, **Tags** `moneybag`, **Click URL** `{{ $input.url }}`.
+3. On your phone, subscribe to `my-alerts-7f3k9q` in the ntfy app.
+
+## Common issues
+
+- **The ntfy notification never arrives.** The phone is subscribed to a different topic or server. Check the exact **Topic** spelling and that the app uses the same **Server** (`https://ntfy.sh` by default).
+- **"Pushover needs a Basic Auth credential with the application token in Username and your user key in Password."** No credential is selected, or it is not a Basic Auth credential with both fields filled.
+- **"Pushover Error: 400 …" followed by a message about the token or user key.** The two values are swapped or mistyped. The application token goes in **Username**, the user key in **Password**.
+- **"ntfy Error: 403 Forbidden" or "401".** The ntfy server needs an access token. Add a Bearer Token credential.
+- **The run is blocked in the web app.** Push Notification runs through the browser extension. Install it, or run the workflow from the extension. In the web app with the extension installed, only ntfy.sh and Pushover can be used, not your own ntfy server.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Get a phone alert when a careers page lists new jobs"} href="/recipes/monitor-pages/new-jobs-alert/" level={"beginner"} minutes={6} setup={"connection"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
-- [Schedule Trigger](/nodes/builtin/trigger/schedule/)
-- [Custom API](/nodes/builtin/integration/custom-api/)
+- [Browser Notification](/nodes/extension/browsernotification/): a desktop notification, no account needed.
+- [Digest](/nodes/builtin/core/digest/): bundle several changes into one notification.
+- [Element Change](/nodes/builtin/trigger/elementchange/): watch a page for the changes to alert on.
+- [Telegram](/nodes/builtin/integration/telegram/): send the alert to a Telegram chat instead.
