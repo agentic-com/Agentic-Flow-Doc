@@ -215,6 +215,50 @@ An entry has `version`, `date` (ISO), `browsers`, `headline`, `summary`, an opti
 4. Add the version to the **All versions** list in `releases/index.mdx` and to `breaking-changes.mdx`, and bump `version` in the `starlightAwflow` options in `astro.config.mjs`.
 5. Run `bun scripts/releases/check.ts`. The build runs the same check: a `new` change without a link, or a link to a page that doesn't exist, fails `bun run build`. The links validator can't see links passed to components as props, so this check covers them.
 
+## 📸 Screenshots
+
+App screenshots are generated, never taken by hand, so they can be refreshed for each release. The pipeline lives in `scripts/capture/` and writes to `src/assets/screenshots/`:
+
+- `<shot>.light.webp` and `<shot>.dark.webp`: 1440×900 viewport at 2× scale, downscaled to 2000 px wide, WebP quality 85.
+- `manifest.json`: one entry per shot with `shot`, `route`, `page` (the docs page it is meant for), `alt` (true, descriptive alt text), `status` (`ok`, `skipped` or `failed`, with a `reason`), `files`, `hotspots`, `appCommit`, `appVersion` and `capturedAt`.
+
+### Refresh the screenshots
+
+You need the app repo checked out next to this one (`../agentic-flow`, or pass `--app <dir>`) with its dependencies installed. Playwright is loaded from the app repo; if Chromium is missing, run `bunx playwright install chromium` there.
+
+```bash
+bun run docs:capture --build                 # build the app (build:prod:web), then capture every shot in both themes
+bun run docs:capture --only canvas,memory    # some shots only (the manifest keeps the others)
+bun run docs:capture --theme dark            # one theme only: light, dark or both (default)
+```
+
+- It captures the app's **production web build**, served on `127.0.0.1`. Never point it at the app's dev server: `dev:web` rewrites the app's translation files.
+- The browser starts as a fresh anonymous local workspace with first-run tours dismissed, in light or dark mode (the app's `mode-watcher-mode` key). Calls to a local Ollama are blocked so the machine's own models never show up.
+- Data is created through the app's own UI: example workflows from `scripts/capture/fixtures/*.awf` are imported with the Add Workflow wizard, runs are started from the workflow list, and the Memory and chat shots import a generated `.awmem` file (`scripts/capture/lib/awmem.ts`) with Memory › Import. No model runs during capture.
+- `local-models` and `marketplace-browse` need the network (Hugging Face list, `api.awflow.io`). The API does not allow a `127.0.0.1` origin, so the script adds CORS headers to those responses; the data is the live API's. Offline, these two are recorded as `skipped` and their old images are removed.
+- A shot that fails keeps its previous images and manifest entry, the run exits with code 1, and a screenshot plus an accessibility snapshot of the failing page are saved in your temp folder (`awflow-docs-capture-debug/`).
+- Afterwards, open the changed images and check there is no toast, dialog or half-loaded state, then commit the images and `manifest.json` together.
+
+### Add a shot
+
+1. Add an entry to `SHOTS` in `scripts/capture/shots.ts` (the array order is the manifest order): `name`, `page`, `route`, `alt`, 2–4 `hotspots` and a `prepare(session)` that brings the app to the state to capture.
+2. Use visible roles and text for locators (`p.getByRole('button', { name: 'Add Workflow' })`) and wait for what you capture. Reuse the `Session` helpers (`workflow`, `editor`, `testRun`, `savedRuns`, `importMemory`, `knowledgeBase`, `assistant`) instead of seeding storage.
+3. Set `needsNetwork: true` only when the shot cannot work offline, and `viewport` for a non-desktop size (the `side-panel` shot uses 400×860).
+4. Write `alt` as what the image really shows. If a state can't be produced reliably (it needs an account or a model), leave the shot out or let it be `skipped`; never fake it.
+5. Run `bun run docs:capture --only <name>`, open both images, then commit.
+
+### Use a shot in a page
+
+```mdx
+import { Screenshot } from '@components/awflow';
+import canvasLight from '@assets/screenshots/canvas.light.webp';
+import canvasDark from '@assets/screenshots/canvas.dark.webp';
+
+<Screenshot src={canvasLight} srcDark={canvasDark} alt="…alt from manifest.json…" hotspots={[{ x: 19.8, y: 9.6, label: 'Add a step (node)' }]} />
+```
+
+Take `alt` and the hotspots' `x`, `y` and `label` from the shot's `manifest.json` entry. Each hotspot also has a `box` (the element's bounds, in % of the image) if you need to place a marker elsewhere.
+
 ## 🌍 Languages
 
 The docs are **English only** for now. This was decided in awflow/Agentic-Flow#1332, while the docs are being restructured (epic #1308): translating pages that are still moving and being rewritten would waste the effort and leave stale copies behind.

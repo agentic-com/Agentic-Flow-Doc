@@ -1,0 +1,173 @@
+{
+  "name": "JSON Prettify & Repair",
+  "description": "Paste messy or minified JSON — even with a stray trailing comma — and get clean, indented JSON that's shown and copied to your clipboard.",
+  "tags": [
+    "json",
+    "format"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": {
+        "x": 100,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:whenStarted"
+        },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": {
+          "notes": "Starts the workflow when you press Run."
+        }
+      }
+    },
+    {
+      "id": "seed-json",
+      "type": "basic",
+      "position": {
+        "x": 300,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:editFields"
+        },
+        "label": "Your JSON",
+        "inputs": {
+          "fields": {
+            "raw": {
+              "type": "string",
+              "value": "{\"name\":\"Ada\",\"roles\":[\"admin\",\"dev\"],\"active\":true,\"score\":42,}"
+            }
+          }
+        },
+        "parameters": {
+          "notes": "Paste the messy JSON you want to clean up here. The default has a trailing comma to show the repair in action."
+        }
+      }
+    },
+    {
+      "id": "parse-json",
+      "type": "basic",
+      "position": {
+        "x": 500,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:json"
+        },
+        "label": "Repair & parse",
+        "inputs": {
+          "operation": "parse",
+          "value": "{{ $input.raw }}",
+          "repair": true,
+          "outputFieldName": "data"
+        },
+        "parameters": {
+          "notes": "Repairs the broken JSON (fixing the trailing comma) and parses it into a real object under `data`."
+        }
+      }
+    },
+    {
+      "id": "stringify",
+      "type": "basic",
+      "position": {
+        "x": 700,
+        "y": 300
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:json"
+        },
+        "label": "Pretty print",
+        "inputs": {
+          "operation": "stringify",
+          "prettyPrint": true,
+          "outputFieldName": "pretty"
+        },
+        "parameters": {
+          "notes": "Serializes the object back into neatly indented JSON text under `pretty`."
+        }
+      }
+    },
+    {
+      "id": "show",
+      "type": "basic",
+      "position": {
+        "x": 900,
+        "y": 200
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:displayMarkdownNode"
+        },
+        "label": "Show the result",
+        "inputs": {
+          "title": "Prettified JSON",
+          "content": "```json\n{{ $input.pretty }}\n```"
+        },
+        "parameters": {
+          "notes": "Displays the clean JSON in a code block."
+        }
+      }
+    },
+    {
+      "id": "copy",
+      "type": "basic",
+      "position": {
+        "x": 900,
+        "y": 400
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:clipboardWriteNode"
+        },
+        "label": "Copy to clipboard",
+        "inputs": {
+          "text": "{{ $input.pretty }}"
+        },
+        "parameters": {
+          "notes": "Copies the prettified JSON so you can paste it anywhere."
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-run-seed",
+      "source": "trigger-run",
+      "target": "seed-json",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-seed-parse",
+      "source": "seed-json",
+      "target": "parse-json",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-parse-str",
+      "source": "parse-json",
+      "target": "stringify",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-str-show",
+      "source": "stringify",
+      "target": "show",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-str-copy",
+      "source": "stringify",
+      "target": "copy",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": []
+}
