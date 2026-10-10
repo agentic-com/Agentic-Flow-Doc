@@ -16,6 +16,12 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 
 Fill the fields of a form on the active tab with values you set or values from earlier nodes.
 
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/fill-form-from-json.awf" />
+{/* AUTO:tryit:end */}
+
 ## What it does
 
 Form Fill finds a form on the active tab and fills its fields from a list of `{ id, value }` pairs. Each `id` is matched against the field's id first, then its name.
@@ -85,6 +91,12 @@ None. This node needs no connection and has no slots for other nodes.
 - **The wrong form was filled.** When **Form** matches nothing, the node falls back to the first form on the page. Pick the form again with the crosshair, and check it with **Ping**.
 - **A `reason` of "Unsupported field type".** The id points at something that is not a text field, text area, drop-down, checkbox or radio button (for example a custom widget). Use [UI Automation](/nodes/extension/ui/automation/) to click and type into it.
 - **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Fill and submit a web form from saved values"} href="/recipes/fill-forms-and-click/fill-form-from-saved-values/" level={"intermediate"} minutes={8} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 

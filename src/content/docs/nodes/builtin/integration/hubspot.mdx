@@ -17,7 +17,7 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 Add or update contacts and companies in HubSpot, search them, log notes from the page you are on, and list deals.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Needs a HubSpot connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Needs a HubSpot connection"} href="/app/connections/hubspot/" linkLabel={"Connect HubSpot"}>
   Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
 </AwfCallout>
 {/* AUTO:callout:end */}
@@ -69,7 +69,7 @@ A **Note** is your **Note** text, then the **Selection** in quotes, then `Source
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection, Bearer Token): required. See [Create a connection](/app/connections/create/).
+- **Credential** (connection, Bearer Token): required. See [Connect HubSpot](/app/connections/hubspot/).
 {/* AUTO:deps:end */}
 
 Use a HubSpot **private app token**. In HubSpot, open **Settings → Integrations → Private Apps**, create an app, and give it only the scopes you need: `crm.objects.contacts.read` and `crm.objects.contacts.write`, `crm.objects.companies.read` and `crm.objects.companies.write`, and `crm.objects.deals.read`. Copy its access token and save it as a Bearer Token credential: see [Create a credential](/app/connections/create/). Keep it secret: it opens your CRM within those scopes.

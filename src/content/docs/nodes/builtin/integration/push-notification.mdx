@@ -17,10 +17,16 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 Send a notification to your phone through ntfy or Pushover, so you hear about a change even when you are away from the browser.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Can use a Push Notification connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Can use a Push Notification connection"} href="/app/connections/" linkLabel={"Create a connection"}>
   Optional: pick a saved connection in the **Credential** field when the service needs one.
 </AwfCallout>
 {/* AUTO:callout:end */}
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/job-postings-watch.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -64,7 +70,7 @@ The output is the provider's reply. ntfy returns the published message, includin
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection): optional. See [Create a connection](/app/connections/create/).
+- **Credential** (connection): optional. See [Create a connection](/app/connections/).
 {/* AUTO:deps:end */}
 
 - **ntfy on ntfy.sh, public topic**: leave **Credential** empty.
@@ -86,6 +92,12 @@ See [Create a credential](/app/connections/create/).
 - **"Pushover Error: 400 …" followed by a message about the token or user key.** The two values are swapped or mistyped. The application token goes in **Username**, the user key in **Password**.
 - **"ntfy Error: 403 Forbidden" or "401".** The ntfy server needs an access token. Add a Bearer Token credential.
 - **The run is blocked in the web app.** Push Notification runs through the browser extension. Install it, or run the workflow from the extension. In the web app with the extension installed, only ntfy.sh and Pushover can be used, not your own ntfy server.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Get a phone alert when a careers page lists new jobs"} href="/recipes/monitor-pages/new-jobs-alert/" level={"beginner"} minutes={6} setup={"connection"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 

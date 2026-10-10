@@ -16,6 +16,12 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 
 Show the data that reaches this node as an expandable tree in a panel on the active tab.
 
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/web-scrape-to-json.awf" />
+{/* AUTO:tryit:end */}
+
 ## What it does
 
 Display Object takes the incoming item, exactly as it arrives, and shows it in a panel in the bottom-right corner of the active tab. The data is shown as a JSON tree you can expand and collapse. The panel has buttons to maximize, minimize and close it.
@@ -62,6 +68,12 @@ None. This node needs no connection and has no slots for other nodes.
 - **Only the last item is shown.** The node runs once per incoming item, and each run replaces the panel. Combine the items first with [Aggregate](/nodes/builtin/datatransformation/aggregate/) to show them all in one panel.
 - **No panel appears.** The panel is drawn on the active tab. Make sure the page you want is the active tab when the node runs; browser settings pages and the extension store cannot show it.
 - **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Turn a list on a web page into structured data"} href="/recipes/extract-data/scrape-a-list/" level={"intermediate"} minutes={7} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 

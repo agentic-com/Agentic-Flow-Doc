@@ -17,7 +17,7 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 Open, update and comment on GitHub issues, read and review pull requests, and look up repositories and releases.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Needs a GitHub connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Needs a GitHub connection"} href="/app/connections/github/" linkLabel={"Connect GitHub"}>
   Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
 </AwfCallout>
 {/* AUTO:callout:end */}
@@ -69,7 +69,7 @@ Every operation that targets a repository takes **Owner** and **Repository** as 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection, Bearer Token): required. See [Create a connection](/app/connections/create/).
+- **Credential** (connection, Bearer Token): required. See [Connect GitHub](/app/connections/github/).
 {/* AUTO:deps:end */}
 
 Use a GitHub **personal access token**. A fine-grained token is safest: on GitHub, open **Settings → Developer settings → Personal access tokens → Fine-grained tokens**, limit it to the repositories you need, and give it only the permissions you use, for example **Issues: Read and write** or **Pull requests: Read and write** (plus **Contents: Read** for releases). A classic token also works but opens your whole account. See [Create a credential](/app/connections/create/).

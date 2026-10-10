@@ -16,6 +16,12 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 
 Download the HTML source of a web page by its address, without opening it in a tab.
 
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/web-scrape-to-json.awf" />
+{/* AUTO:tryit:end */}
+
 ## What it does
 
 Get HTML from Link downloads the page at **URL** and returns its HTML exactly as the server sent it, as text, in the field named by **Output field name**.
@@ -69,6 +75,12 @@ Check a product's price every morning:
 - **"HTTP error! status: 404"** (or another number). The server answered with an error. Check the address; 403 often means the site blocks automated requests.
 - **"Request timeout".** The site took longer than **Timeout**. Raise it.
 - **The value you want is not in the HTML.** The site builds it with JavaScript. Open the page and use [Get All HTML](/nodes/extension/getallhtml/) or [Get Element Data](/nodes/extension/getelementdata/) instead.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Turn a list on a web page into structured data"} href="/recipes/extract-data/scrape-a-list/" level={"intermediate"} minutes={7} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 

@@ -16,6 +16,12 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 
 Send a form on the active tab, as if you had pressed its submit button.
 
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/fill-form-from-json.awf" />
+{/* AUTO:tryit:end */}
+
 ## What it does
 
 Submit Form finds the first element matching **DOM Selector** and submits the form it belongs to. You can point at:
@@ -81,6 +87,12 @@ None. This node needs no connection and has no slots for other nodes.
 - **`error` is "No form found for selector".** The element you picked is not inside a form. Pick the submit button itself, or use [UI Automation](/nodes/extension/ui/automation/) to click it.
 - **`submitted` is `true` but nothing happened.** The page's own checks may have blocked the submission (a required field is empty or invalid). Check the values from [Form Fill](/nodes/extension/ui/form-fill/), then confirm the result with [Wait For Element](/nodes/extension/ui/wait-for-element/).
 - **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Fill and submit a web form from saved values"} href="/recipes/fill-forms-and-click/fill-form-from-saved-values/" level={"intermediate"} minutes={8} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 

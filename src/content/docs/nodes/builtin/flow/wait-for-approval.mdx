@@ -16,6 +16,12 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 
 Pause a run until a person approves or rejects it, then continue down the matching branch.
 
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/fill-form-from-json.awf" />
+{/* AUTO:tryit:end */}
+
 ## What it does
 
 Wait For Approval stops the run at this step and asks a question, the **Prompt**. When someone answers, the items that were waiting leave through **Approved** or **Rejected**, unchanged.
@@ -69,6 +75,12 @@ Review an AI-written summary before posting it:
 - **The run stays "waiting".** Nobody has answered yet. Open the **Executions** pane and approve, reject or cancel it.
 - **No card appears on the page.** The card only appears on normal web pages (`http` or `https`), and only in the extension. Browser settings pages, the extension store and the AWFlow app tab can't show it; answer from the **Executions** pane or the desktop notification.
 - **One answer approved every item.** That is expected: the node pauses once per run. Put it inside a [Loop](/nodes/builtin/flow/loop/) for one decision per item.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Fill and submit a web form from saved values"} href="/recipes/fill-forms-and-click/fill-form-from-saved-values/" level={"intermediate"} minutes={8} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 

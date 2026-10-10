@@ -17,7 +17,7 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 Create, read, update and delete Google Calendar events, list your calendars, and check when you are free or busy.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Needs a Google Calendar connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Needs a Google Calendar connection"} href="/app/connections/" linkLabel={"Create a connection"}>
   Pick a saved connection in the **Credential** field, or create one from there. It signs in with an OAuth2.
 </AwfCallout>
 {/* AUTO:callout:end */}
@@ -71,7 +71,7 @@ When you fill **Source URL**, it is added at the end of the description as `Sour
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/create/).
+- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/).
 {/* AUTO:deps:end */}
 
 Google Calendar connects by signing in to your Google account (OAuth). You first create your own Google OAuth client once, with the Google Calendar API enabled: follow [Create your OAuth client](/app/connections/oauth-client/#google). Then create a Google Calendar credential, paste the **Client ID** and **Client Secret**, click **Check connection** and approve the Google window. AWFlow asks to read and edit your events and to read your calendars. The sign-in is kept and refreshed for you. See also [Create a credential](/app/connections/create/).

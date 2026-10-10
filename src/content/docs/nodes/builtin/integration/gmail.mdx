@@ -17,7 +17,7 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 Send email, read and search your Gmail messages, and manage drafts from a workflow.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Needs a Gmail connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Needs a Gmail connection"} href="/app/connections/" linkLabel={"Create a connection"}>
   Pick a saved connection in the **Credential** field, or create one from there. It signs in with an OAuth2.
 </AwfCallout>
 {/* AUTO:callout:end */}
@@ -70,7 +70,7 @@ Temporary Google errors (too many requests, server errors) are retried automatic
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/create/).
+- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/).
 {/* AUTO:deps:end */}
 
 Gmail connects by signing in to your Google account (OAuth). You first create your own Google OAuth client once, with the Gmail API enabled: follow [Create your OAuth client](/app/connections/oauth-client/#google). Then create a Gmail credential, paste the **Client ID** and **Client Secret**, click **Check connection** and approve the Google window. AWFlow asks for permission to read, compose and send email, and to move messages to the Trash. The sign-in is kept and refreshed for you. See also [Create a credential](/app/connections/create/).

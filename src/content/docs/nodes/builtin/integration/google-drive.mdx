@@ -17,7 +17,7 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 Upload files to Google Drive, find, copy and delete them, and create and manage folders.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Needs a Google Drive connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Needs a Google Drive connection"} href="/app/connections/" linkLabel={"Create a connection"}>
   Pick a saved connection in the **Credential** field, or create one from there. It signs in with an OAuth2.
 </AwfCallout>
 {/* AUTO:callout:end */}
@@ -69,7 +69,7 @@ The node works with file details (name, type, dates, link), not file contents: *
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/create/).
+- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/).
 {/* AUTO:deps:end */}
 
 Google Drive connects by signing in to your Google account (OAuth). You first create your own Google OAuth client once, with the Google Drive API enabled: follow [Create your OAuth client](/app/connections/oauth-client/#google). Then create a Google Drive credential, paste the **Client ID** and **Client Secret**, click **Check connection** and approve the Google window. AWFlow asks for full access to your Drive, which it needs to list, copy and delete files it did not create itself. The sign-in is kept and refreshed for you. See also [Create a credential](/app/connections/create/).

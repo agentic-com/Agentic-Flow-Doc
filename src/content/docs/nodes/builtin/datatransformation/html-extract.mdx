@@ -16,6 +16,12 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 
 Pull values out of HTML with CSS selectors, from one value to a whole list of rows.
 
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/web-scrape-to-json.awf" />
+{/* AUTO:tryit:end */}
+
 ## What it does
 
 HTML Extract reads the HTML you put in its **HTML** field and finds elements in it with CSS selectors. It has two modes:
@@ -71,6 +77,12 @@ None. This node needs no connection and has no slots for other nodes.
 - **"Return is set to Attribute but no attribute name was given."** Fill in **Attribute**, for example `href`.
 - **"Input is ... bytes, larger than the 2000000-byte limit this node will parse."** The HTML is over about 2 MB. Extract a smaller part of the page first.
 - **The value is empty though the element is visible in the browser.** The page builds that part with scripts after it loads, so it is not in the fetched HTML. Read it from the live page with [Get All HTML](/nodes/extension/getallhtml/) instead.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Turn a list on a web page into structured data"} href="/recipes/extract-data/scrape-a-list/" level={"intermediate"} minutes={7} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 

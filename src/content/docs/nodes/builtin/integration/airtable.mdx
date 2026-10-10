@@ -17,10 +17,16 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 Read, add, change and delete rows (records) in an Airtable table, and list your bases and their tables.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Needs an AirTable connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Needs an AirTable connection"} href="/app/connections/airtable/" linkLabel={"Connect AirTable"}>
   Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
 </AwfCallout>
 {/* AUTO:callout:end */}
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/save-page-to-airtable.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -67,7 +73,7 @@ Once the credential is set, **Base** and **Table** are lists loaded from your ac
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection, Bearer Token): required. See [Create a connection](/app/connections/create/).
+- **Credential** (connection, Bearer Token): required. See [Connect AirTable](/app/connections/airtable/).
 {/* AUTO:deps:end */}
 
 Use an Airtable **personal access token**. Create it at airtable.com under **Builder hub → Personal access tokens**, give it the scopes `data.records:read`, `data.records:write` and `schema.bases:read`, and add the bases it may access. Save it as a Bearer Token credential: see [Create a credential](/app/connections/create/).
@@ -85,6 +91,12 @@ Use an Airtable **personal access token**. Create it at airtable.com under **Bui
 - **"Missing base ID" or "Missing table ID" when a list loads.** Pick **Base** first, then **Table**; each list depends on the one above it.
 - **The Fields form is empty or a column is missing.** Pick the table first. The form only shows text, email, URL, long text, number, duration, date, checkbox and single select columns. To fill other kinds (attachments, multiple selects, linked records, currency), use [Http Request](/nodes/builtin/core/http-request/).
 - **Search returns nothing.** Check the formula in Airtable's own formula field first; a field name that does not match exactly makes every record fail the test.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Save the page you're on to an Airtable reading list"} href="/recipes/capture-to-my-apps/save-page-to-airtable/" level={"beginner"} minutes={5} setup={"connection"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 

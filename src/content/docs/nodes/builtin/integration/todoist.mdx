@@ -17,7 +17,7 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 Turn the page you are on into a Todoist task in one step, and create, update, complete or list tasks from a workflow.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Needs a Todoist connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Needs a Todoist connection"} href="/app/connections/todoist/" linkLabel={"Connect Todoist"}>
   Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
 </AwfCallout>
 {/* AUTO:callout:end */}
@@ -77,7 +77,7 @@ For team issue tracking, use [Linear](/nodes/builtin/integration/linear/) or [Gi
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection, Bearer Token): required. See [Create a connection](/app/connections/create/).
+- **Credential** (connection, Bearer Token): required. See [Connect Todoist](/app/connections/todoist/).
 {/* AUTO:deps:end */}
 
 Use your Todoist API token, saved as a Bearer Token credential. In Todoist, open **Settings → Integrations → Developer** and copy the **API token**. See [Create a credential](/app/connections/create/).
@@ -98,6 +98,12 @@ The token gives full access to your Todoist account. If it leaks, issue a new on
 - **"Todoist API Error: 404 Not Found" on Update or Close.** The task does not exist or is already completed.
 - **The task went to the Inbox.** **Project ID** was empty. Copy the project's `id` from **Project → List**.
 - **The run is blocked in the web app.** Todoist runs through the browser extension. Install the extension and allow Todoist for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Turn highlighted text into a Todoist task"} href="/recipes/capture-to-my-apps/selection-to-todoist/" level={"beginner"} minutes={6} setup={"connection"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 

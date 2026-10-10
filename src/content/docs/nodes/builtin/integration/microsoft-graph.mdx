@@ -17,7 +17,7 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 Send and read Outlook mail, put files in OneDrive, add calendar events and To Do tasks, all from one Microsoft 365 node.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Needs a Microsoft 365 connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Needs a Microsoft 365 connection"} href="/app/connections/" linkLabel={"Create a connection"}>
   Pick a saved connection in the **Credential** field, or create one from there. It signs in with an OAuth2.
 </AwfCallout>
 {/* AUTO:callout:end */}
@@ -78,7 +78,7 @@ If you use Google's apps, see [Gmail](/nodes/builtin/integration/gmail/), [Googl
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/create/).
+- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/).
 {/* AUTO:deps:end */}
 
 The credential is a Microsoft sign-in (OAuth2). You first register a small app in the Azure portal, as a public client with no secret, and paste its **Application (client) ID** into the credential. Give it these delegated Microsoft Graph permissions: `offline_access`, `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite` and `Tasks.ReadWrite`. Then sign in with your Microsoft account and accept the permissions.

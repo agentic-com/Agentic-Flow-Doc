@@ -80,7 +80,7 @@ function exampleIndex(): Map<string, string[]> {
 	return new Map([...byNode].map(([k, v]) => [k, v.sort((a, b) => a.size - b.size || a.src.localeCompare(b.src)).map((x) => x.src)]));
 }
 
-type Recipe = { slug: string; title: string; nodes?: string[]; level?: string; minutes?: number; setup?: string };
+type Recipe = { slug: string; href?: string; title: string; nodes?: string[]; level?: string; minutes?: number; setup?: string };
 
 /** src/data/recipes.json (written by the recipes workstream); tolerated when absent. */
 function loadRecipes(): Recipe[] {
@@ -100,8 +100,9 @@ function recipesFor(n: NodeDoc, recipes: Recipe[]): RenderContext['recipes'] {
 	const keys = new Set([n.id, n.registryId, n.id.split('/').pop()!, n.registryId.split(':').pop()!].map((k) => k.toLowerCase()));
 	return recipes
 		.filter((r) => (r.nodes ?? []).some((x) => keys.has(String(x).toLowerCase().replace(/^\/?nodes\//, '').replace(/\/$/, ''))))
-		.filter((r) => pageExists(`recipes/${r.slug}`))
-		.map((r) => ({ title: r.title, href: `/recipes/${r.slug}/`, level: r.level, minutes: r.minutes, setup: r.setup }));
+		.map((r) => ({ r, path: (r.href ?? `/recipes/${r.slug}/`).replace(/^\/|\/$/g, '') }))
+		.filter(({ path }) => pageExists(path))
+		.map(({ r, path }) => ({ title: r.title, href: `/${path}/`, level: r.level, minutes: r.minutes, setup: r.setup }));
 }
 
 const app = findApp();
