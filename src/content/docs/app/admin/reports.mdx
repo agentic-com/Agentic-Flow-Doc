@@ -1,0 +1,42 @@
+---
+title: "Reports"
+description: "Handle listings that users reported: dismiss the reports or take the listing down"
+kind: guide
+section: app
+sidebar:
+  label: "Reports"
+---
+
+import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+
+<Badge text="Admin" variant="caution" />
+
+**Reports** (Admin panel › Marketplace › **Reports**) lists every Marketplace listing with open reports from users.
+
+Each row shows the **Listing**, how many **Reports** it has, and the **Reasons** given: *Spam*, *Malware / security*, *Inappropriate*, *Copyright* or *Other*. Click **view N reports** to read each report's details and who sent it.
+
+## Handle a report
+
+<Steps>
+
+1. On the listing's row, open **⋮ › Moderate…**.
+
+2. To keep the listing, click **Dismiss reports**. A note is optional.
+
+3. To take it down, pick a **Reason**, write a **Note**, and optionally a **Message to people who installed it**. Then click **Take down**.
+
+</Steps>
+
+The reason decides what happens to people who already installed the workflow:
+
+| Reason | Effect |
+| --- | --- |
+| **Malware or data theft** | Every installed copy stops and its triggers turn off. |
+| **Safety risk** | Every installed copy stops and its triggers turn off. |
+| **Policy** | The listing is hidden. Installed copies keep running, with a notice. |
+
+<Aside>
+People who installed the workflow see your message in their notice. Keep it short and plain.
+</Aside>
+
+The decision is recorded in the [Audit log](/app/admin/audit-log/).

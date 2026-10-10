@@ -1,0 +1,40 @@
+---
+title: "Newsletter"
+description: "Write, test and send newsletter issues to subscribed members"
+kind: guide
+section: app
+sidebar:
+  label: "Newsletter"
+---
+
+import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+
+<Badge text="Admin" variant="caution" />
+
+**Newsletter** (Admin panel › **Newsletter**) is where you send product news to members who subscribed. The header shows how many subscribers and issues there are. For how members subscribe, see [Newsletter](/app/newsletter/).
+
+## Write and send an issue
+
+<Steps>
+
+1. Click **New issue**. A draft is created and the editor opens above the list.
+
+2. Fill in the **Subject** and the **Body**. The body uses Markdown. Type `{{name}}` where you want the recipient's name.
+
+3. Click **Send test** to email the issue to yourself first. It saves the draft too.
+
+4. When it looks right, click **Send now**. A confirmation shows how many members will get it. Click **Send to N**.
+
+</Steps>
+
+**Save draft** keeps your work without sending. **Send now** stays disabled until both the subject and the body are filled in.
+
+<Aside type="caution">
+Sending can't be undone. The issue goes to every subscribed member; there is no way to pick a smaller audience.
+</Aside>
+
+## The issues list
+
+The table shows each issue's **Subject**, **Status** (*draft*, *sending* or *sent*), **Recipients** and **Sent** date. It is your sending history.
+
+Drafts have a **⋮** menu with **Edit** and **Delete**. Delete removes the draft immediately, without asking. Sent issues can't be changed.

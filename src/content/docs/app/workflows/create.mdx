@@ -1,0 +1,169 @@
+---
+title: Create a Workflow
+description: "Learn how to build workflows in AWFlow — from opening the app to saving and running automations."
+section: app
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+A **workflow** is a set of steps (nodes) connected together.
+
+Each step does one thing, like:
+
+- Get text from the page
+- Click a button
+- Fill a form field
+- Clean or format the data
+- Send the result somewhere
+
+---
+
+## How to build a new workflow
+
+1. Click the AWFlow icon in your browser.
+2. Click **Add Workflow**. This opens a single wizard with three steps:
+   1. **Source** — choose how you want to start: **Template** (browse a curated gallery of ready-made templates), **Blank** (start empty, triggered or lambda), **Marketplace** (browse and install a community-published workflow, with its permissions shown before you install), or **Import** (load a workflow from a `.awf` file or a URL).
+   2. **Choose** — pick the specific template, marketplace listing, or file/URL for the source you selected (skipped for **Blank**).
+   3. **Details** — name your workflow, add an optional description, and pick where it's saved (this defaults to your storage preference; anonymous users save to **Local**).
+3. Click **Create**, then **Add first step…** on the canvas.
+4. Search for a node you want (for example **Get Selected Text**) and add it.
+5. Click the node to open its settings and choose the options you want.
+6. Add more nodes and connect them.
+7. To test, open the page you want to automate, then click **Execute Workflow**.
+8. Click each node to see its output.
+
+> When you open a template (or any pre-wired workflow) for the first time, the editor shows a checklist of what's missing before you can run it — such as a credential to connect or a required field to fill in. Fix each item from the checklist, then click **Run** once everything is ready.
+
+You can automate tasks such as:
+
+- Extracting page content
+- Interacting with forms or elements
+- Processing data with AI
+- Branching logic or loops
+- Combining browser and external data
+
+If you’re new, try the [Quick Intro Tutorial](/get-started/quick-intro/) first to experiment with basic browser nodes.
+
+---
+
+## Run workflows manually vs automatically
+
+### Manual execution
+
+Best for testing, or when you want to decide exactly when to run:
+
+1. Open the page you want to automate.
+2. Open the extension and choose your workflow.
+3. Click **Test Workflow**.
+4. Nodes will run in order using the current page state.
+
+> After a run finishes, the **Last run** tab of the panel on the right shows what actually happened in plain words — not raw logs. On success, you get the real-world effect of the run (for example, "Sent to #general") plus a link to verify it yourself. On failure, you get the plain-language cause, a few things to try, and the option to show technical details if you need them. See [Run from the canvas](/app/workflows/executions/run-from-the-canvas/).
+
+### The panel on the right
+
+One floating panel below the run buttons holds three tabs, and opens the one that matters most on its own:
+
+- **Story** — [How this flow works](/app/workflows/narration/), step by step.
+- **Ready to run** — what is still missing (a connection, a required field) with a button to fix each one. **Ready to run?** in the toolbar opens this tab; its count is the number of things left. Steps that still need setup also carry an amber dot on the canvas — hover it to see what's missing.
+- **Last run** — the outcome of the last test run.
+
+Close it with the collapse button; it shrinks to a small pill under the run buttons.
+
+### Field checks and previews
+
+In a step's settings, a field is checked against what the step expects as soon as you leave it — a required field left empty or a value in the wrong format shows a short message under the field. Fields that map data from earlier steps with `{{ }}` show **Preview from last run**: the value they resolved to in the last test run (run the workflow once to see it).
+
+### Automatic runs with triggers
+
+If your workflow starts with a **trigger node**, it can start on its own once the workflow is **Active**. Switch it on with the Active toggle in the canvas header, or with **Activate** in the workflow list.
+
+Examples:
+
+- [Page Load](/nodes/builtin/trigger/pageload/) — start when a matching page loads
+- [Schedule](/nodes/builtin/trigger/schedule/) — start at set times
+- [Hotkey](/nodes/builtin/trigger/hotkey/) — start with a keyboard shortcut
+- [Context Menu](/nodes/builtin/trigger/contextmenu/) — start from the right-click menu on a page
+- [Element Change](/nodes/builtin/trigger/elementchange/) — start when something on a page changes
+
+[When Started](/nodes/builtin/trigger/whenstarted/) is the manual trigger: it runs only when you click the run button.
+
+Even when you use triggers, manual runs are still useful for testing.
+
+---
+
+## Execution context and limitations
+
+- Workflows run in the page you currently view, so they see **real-time content** and page structure.
+- Because they run inside the browser, workflows are subject to **browser security rules** (e.g. cross-origin constraints).
+- Very large workflows or heavy processing may hit browser performance limits (memory, CPU).
+- Workflows are saved locally in your extension — they persist across browser sessions. You can export/import workflows to share or back them up.
+
+## Saving and shortcuts
+
+The status next to **Save** tells you where you stand: **Saved**, **Unsaved changes**, **Saving…**, or **Couldn't save · Retry**. Changes you make while a run is in progress stay unsaved until you save.
+
+If you try to leave the canvas with unsaved changes, you're asked whether to **Save & leave**, **Leave without saving** or **Stay**. Closing or reloading the tab shows the browser's own warning.
+
+| Shortcut | Action |
+| --- | --- |
+| <kbd>⌘</kbd> <kbd>S</kbd> / <kbd>Ctrl</kbd> <kbd>S</kbd> | Save |
+| <kbd>⌘</kbd> <kbd>Z</kbd> / <kbd>Ctrl</kbd> <kbd>Z</kbd> | Undo |
+| <kbd>⇧</kbd> <kbd>⌘</kbd> <kbd>Z</kbd> / <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>Z</kbd> or <kbd>Ctrl</kbd> <kbd>Y</kbd> | Redo |
+
+Undo and redo don't fire while you're typing in a field, so they don't fight the field's own undo.
+
+---
+
+## Tips for building reliable workflows
+
+- Add nodes gradually. Test often instead of building everything at once.
+- Use **If / conditional nodes** to manage different paths.
+- In each node, inspect results to understand what data you have.
+- Use meaningful names or notes for nodes — this helps you and others read the flow.
+- Start with small exported examples or existing workflows to learn patterns and best practices.
+
+---
+
+## What’s next?
+
+<CardGrid>
+  <Card
+    title="Quick Intro Tutorial"
+    icon="rocket"
+  >
+    A simple step‑by‑step example using browser extraction and basic processing.
+
+    [Go  →](/get-started/quick-intro/)
+
+  </Card>
+
+<Card
+title="Learning Path"
+icon="seti:pipeline"
+> 
+See a full roadmap from beginner to advanced workflows.
+
+    [Go  →](/get-started/learning-path/)
+
+  </Card>
+
+<Card
+title="Browser Nodes Reference"
+icon="puzzle"
+>
+Discover all supported browser interaction nodes (click, scroll, forms, etc.).
+
+    [Go  →](/nodes/extension/)
+
+  </Card>
+
+<Card
+title="AI & Local Models"
+icon="laptop"
+>
+Learn how to incorporate LLMs for text processing, summarization, reasoning, and more.
+
+    [Go  →](/concepts/ai/)
+
+  </Card>
+</CardGrid>

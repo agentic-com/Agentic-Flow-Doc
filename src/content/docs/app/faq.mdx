@@ -1,0 +1,94 @@
+---
+title: "FAQ"
+description: "Short answers to the questions people ask most about AWFlow"
+kind: guide
+section: app
+sidebar:
+  label: "FAQ"
+---
+
+## Getting started
+
+### Do I need an account?
+
+No. Click **Continue without an account** and everything is saved in your browser, with no limits on workflows, credentials or memories. An account adds cloud storage, the Marketplace, publishing and notifications. See [Local or cloud](/app/account/local-vs-cloud/).
+
+### Is AWFlow free?
+
+Yes. A local workspace is free and unlimited. Signed-in accounts start on the free plan, which limits how much you keep in the cloud. Paid plans are shown as *Coming soon*. See [Plan](/app/settings/plan/).
+
+### Which browsers are supported?
+
+The extension is published for **Chrome** and for **Firefox** (version 140 or newer). On Firefox, AWFlow opens in the sidebar instead of the side panel, and Chrome's built-in AI isn't available. There is no Safari version. See [Browser compatibility](/app/troubleshooting/browser-compatibility/).
+
+### Can I use it without installing the extension?
+
+Yes, in the web app. Anything that needs the browser itself won't work there: page triggers (page load, navigation, element change, right-click menu, hotkeys), steps that act on web pages, and agents browsing for you. Some integrations that browsers block from websites also need the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Running workflows
+
+### Do my workflows run when the browser is closed?
+
+No. Everything runs inside your browser, so it has to be open. Scheduled workflows and agent routines run while the browser is open; a routine missed while it was closed runs when you're back. A [Wait](/nodes/builtin/flow/wait/) of a minute or more in the extension survives closing the tab and even restarting the browser.
+
+### Why doesn't my scheduled workflow fire?
+
+Check that the workflow is **Active**: inactive workflows only run when you press **Run**. See [Activate or deactivate](/app/workflows/manage-list/#activate-or-deactivate). Very short intervals are rounded up to about one minute by the browser.
+
+### How do I see why a run failed?
+
+Open the workflow, go to **Executions**, filter by status, and open the run to read its log. See [Run history](/app/workflows/run-history/).
+
+### A run is "Waiting". What does it want?
+
+It paused for your approval or a form. Answer it from **N waiting** in the header or from the workflow's **Executions** tab. See [Runs that need you](/app/workflows/run-history/#runs-that-need-you).
+
+### Why does a workflow ask for permission to contact a website?
+
+Workflows installed from the Marketplace always ask before contacting a new website or using a connected app. Your own workflows ask too if you turned on **Safe mode**. Manage what you allowed in [Site access](/app/settings/access/).
+
+## Your data
+
+### What data leaves my browser?
+
+Only what you save to the cloud, what your workflows send on purpose, calls to AI providers you set up, and anonymous usage statistics you can turn off. Chats, memory, agents and knowledge bases stay on your device. See [Privacy & data](/app/privacy-and-data/).
+
+### Are my API keys safe?
+
+Local credentials are encrypted in your browser; add a passphrase with the [local secret vault](/app/account/secret-vault/) for stronger protection. Cloud credentials are encrypted on AWFlow's server. AI provider keys are always kept on your device.
+
+### Can I turn off analytics?
+
+Yes. Switch off **Share anonymous usage statistics** and **Send error reports** in [Settings › Privacy](/app/settings/privacy/).
+
+### I forgot my vault passphrase. Can you recover it?
+
+No. The passphrase is never stored, so nobody can recover it. The secrets it protects can't be decrypted; you'll need to enter those credentials again.
+
+### Can I use the AI without sending anything to the cloud?
+
+Yes. Install an on-device model from [Local AI](/app/local-models/), or connect Ollama running on your computer in [Providers](/app/settings/providers/). On-device models work offline once downloaded.
+
+### How do I back up or move my workflows?
+
+Export them as `.awf` files, one at a time or in bulk, and import them anywhere. See [Export & import](/app/workflows/export-import/). If you're signed in, saving them to the cloud also makes them available on other devices.
+
+### How do I delete my account?
+
+Email **hello@awflow.io**. There is no delete button in the app yet. See [Delete your data](/app/privacy-and-data/#delete-your-data).
+
+## Account
+
+### I didn't get the verification or reset email.
+
+Check your spam folder and that you typed the right address. Then ask again from the login screen with **Forgot your password?**. See [Reset your password](/app/account/reset-password/).
+
+### What happens to my local workflows when I sign in?
+
+They stay on your device. The first time you sign in, AWFlow offers to move them to your account; choose **Keep local** to leave them where they are.
+
+## Help
+
+### Where can I get help?
+
+Ask on the [community forum](https://community.awflow.io/), report bugs or request features on GitHub from the **Help** menu in the sidebar, or email **hello@awflow.io**. See [Help & community](/app/help/help/).

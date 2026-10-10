@@ -1,0 +1,213 @@
+---
+title: Nodes
+description: "Understand and use nodes — the building blocks of browser workflows in AWFlow."
+sidebar:
+  order: 1
+section: app
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+Nodes are the steps in your workflow.
+
+Each node does one thing, like extracting text from a page, clicking a button, or formatting data.
+
+---
+
+## Types of Nodes
+
+```mermaid
+graph TB
+  WorkflowNodes[Nodes] --> Browser[Browser Nodes]
+  WorkflowNodes --> Processing[Processing / Built‑In Nodes]
+  WorkflowNodes --> AI[AI Nodes]
+  WorkflowNodes --> Logic[Flow & Logic Nodes]
+```
+
+- **Browser nodes** — work with the page you’re on (extract text/HTML, click, scroll, fill forms)
+- **Built‑in nodes** — transform data, call APIs, work with files, etc.
+- **AI nodes** — summarize, classify, or analyze content
+- **Logic nodes** — choose different paths (If), wait, handle errors
+
+You can browse all available node types in the [Node Reference](/nodes/) or by category:
+
+- [Browser extension nodes](/nodes/extension/)
+- [Built-in integration / transformation nodes](/nodes/builtin/)
+- [AI nodes and dependencies](/nodes/builtin/ai/)
+- [Control / flow logic nodes](/concepts/flow/)
+
+---
+
+## Node runtime markers
+
+Some nodes show a small icon in the node list and on the canvas that tells you **where the node runs** and what it needs:
+
+- **☁️ Cloud** — the node sends your data to the AWFlow backend to do its work (for example the Google integration nodes). It needs a connected account and an internet connection.
+- **🌐 External API** — the node calls a third-party service's API directly from your browser (for example Airtable, Notion, Slack). It sends data to that service and needs an account and internet connection.
+- **🧩 Extension** — the node runs inside the AWFlow browser extension (the in-page action nodes). It needs the extension installed.
+- **No marker** — the node runs entirely in your browser (data transforms, code, and similar). No account or network required.
+
+Use these markers to see at a glance which steps in a workflow leave your device or require the extension.
+
+---
+
+## Adding a Node
+
+### In a new (empty) workflow
+
+1. Click **Add first step**.
+2. Use the Node Library panel to search or browse nodes.
+3. Click a node (e.g. **Get Selected Text**, **Get All Links**).
+4. The node appears on the canvas, ready for configuration.
+
+### In an existing workflow
+
+1. Hover between two nodes or at a free connector point.
+2. Click **Add node**.
+3. Pick a node from the panel.
+4. Connect it to previous and next nodes.
+
+Common workflows often chain patterns like:
+
+- **Extract → Analyze → Output**
+- **Get Links → Filter → Visit & Process**
+- **Click / Scroll → Extract → Condition / Branch**
+
+---
+
+## Node Controls & Actions
+
+Hover or right-click a node to see common actions:
+
+- **Execute Step** — run that node immediately
+- **Deactivate** — temporarily disable (without deleting)
+- **Delete** — remove the node
+- **Open / Configure** — adjust parameters
+- **Rename**, **Duplicate**, **Copy**, **Clear**, **Pin** — help manage and organize your workflow
+- **Node Notes** — add documentation visible on the canvas
+
+---
+
+## Behavior of Browser Nodes
+
+Browser nodes behave a little differently because they depend on the page:
+
+- They operate on the **current page state**, extracting real-time content
+- They respect browser security rules, cross-origin limits, and sandboxing
+- They are optimized for browser memory and performance
+- They can be configured (timeouts, retries, “always output”, etc.)
+- They may fail if page structure changes or if content is not present
+
+---
+
+## Node Settings & Options
+
+Under a node’s **Settings** tab, you’ll find options that control its behavior and reliability:
+
+- **Always Output Data** — ensure the node emits an (empty) result even if nothing is found
+- **Execute Once** — run only once per workflow run
+- **Retry On Fail** — retry browser operations when they fail
+- **On Error**:
+  - Stop Workflow
+  - Continue
+  - Continue (passing error info downstream)
+
+Browser nodes may have extra settings:
+
+- Page wait / load time
+- Element timeouts
+- Retry delays
+- Notes and descriptions — helpful for documenting what each node does
+
+---
+
+## Data Flow & Node Outputs
+
+Nodes pass data to the next node.
+
+Most of the time, the data is shown as JSON in the output panel.
+
+- A node can emit zero, one, or many items
+- Fields in the items can be manipulated via expressions (e.g. `{{ $json.text.length }}`)
+- Use nodes like **Edit Fields** to create or reshape output fields
+
+If you want more insight into how data moves between nodes, see [Data Structure](/concepts/data/data-structure/) and [Item Linking](/concepts/data/item-linking/).
+
+### Actual and expected output
+
+Every node declares the shape of the data it outputs. The **Output** tab of a node's settings shows
+two views:
+
+- **Expected** — what this node will output with its current configuration, before you run it. Use
+  it to write expressions for the next node without a test run.
+  - **Example** shows sample JSON with placeholder values (not real data).
+  - **Structure** lists every field with its type, and marks it as required or optional. Expand objects
+    and lists to see what they contain. "Additional fields" means the node may output more fields than
+    those listed; a note tells you when the node also passes on the fields of the item it received.
+- **Actual** — the data the node really output in its last run. It opens automatically after a run.
+
+Some nodes cannot describe their output in advance:
+
+- **Finish configuring this node** — the output depends on a choice you haven't made yet, such as the
+  operation of an integration. Choose it in **Parameters** and the preview appears.
+- **No valid content** — the output is whatever an external service or your own code returns (for
+  example **Custom API** or **Code**), so there is nothing fixed to preview. Run the node to see it.
+- **This node does not emit workflow output** — the node gives a capability to another node (for
+  example a chat model connected to an agent) or always stops the run.
+
+When a node outputs data that doesn't match its declared shape, the step fails with **Output
+validation failed**. The Actual view lists the field at fault, the type that was expected and the
+value that was received; **Compare with expected structure** opens the Expected view next to it. The
+failure behaves like any other step error: **Retry**, **Continue on fail** and **Try / Catch** all
+apply.
+
+### When a step fails
+
+A step that fails, with no **Try** guarding it, stops **its own branch**: the steps after it don't run.
+Branches that don't depend on it keep running, so a node wired in parallel next to a failing step
+(for example a **Display Markdown** next to a **Copy to clipboard**) still runs.
+
+- A step that joins several branches needs all of them, so it doesn't run if one of them failed. A
+  **Funnel** still runs as soon as any branch that didn't fail reaches it.
+- The run is still reported as **failed**, with the first step that failed as its cause, and any
+  error workflow runs once.
+
+---
+
+## What’s next?
+
+<CardGrid>
+  <Card
+    title="Using Browser Nodes"
+    icon="seti:svg"
+  >
+    Explore all nodes that let you interact with web pages (click, extract, scroll, etc.).
+
+    [Go  →](/nodes/extension/)
+
+  </Card>
+
+<Card
+title="Built-In / Integration Nodes"
+icon="seti:svg"
+
+>
+
+Discover nodes for data transformations, HTTP calls, file operations, and more.
+
+    [Go  →](/nodes/builtin/)
+
+  </Card>
+
+<Card
+title="Flow & Logic Nodes"
+icon="seti:svg"
+
+>
+
+Understand how to build branching, loops, and conditional logic in workflows.
+
+    [Go  →](/concepts/flow/)
+
+  </Card>
+</CardGrid>

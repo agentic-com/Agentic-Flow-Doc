@@ -1,0 +1,66 @@
+---
+title: Testing AI workflows
+description: "Check that an AI workflow gives good answers before you rely on it: test steps one at a time, try difficult inputs, test your knowledge base search, and watch real runs."
+section: concepts
+---
+
+import { Aside, Steps } from "@astrojs/starlight/components";
+
+AI steps don't always give the same answer twice, and a prompt that works on one page can fail on the next. Before you let a workflow run on its own, check its answers on realistic inputs, including difficult ones.
+
+## Test one step at a time
+
+Don't test the whole workflow first. Check each AI step on its own:
+
+<Steps>
+1. Click the AI node and choose **Test step**. AWFlow also runs the steps it needs before it. See [Run from the canvas](/app/workflows/executions/run-from-the-canvas/).
+2. Look at the node's **input**: is it the text you expected, or a whole page full of menus and footers?
+3. Look at the **output**: is it correct, and in the shape the next step expects?
+4. Change one thing (the prompt, the model, the input) and test again.
+</Steps>
+
+Fields that use `{{ }}` show **Preview from last run**, so you can see what each expression resolved to.
+
+## Try difficult inputs
+
+A workflow that only works on the example you built it with will fail in real use. Collect a few test cases and run them one after another:
+
+| Case | What to check |
+| --- | --- |
+| A typical input | The answer is correct and well formatted. |
+| A very long input | It still fits the model; nothing important is cut off. |
+| An empty or very short input | The workflow doesn't invent an answer. |
+| An off-topic input | The classifier returns `unknown`, or the agent says it can't help. |
+| Input in another language | The answer is in the language you want. |
+| Input that tries to give orders ("ignore your instructions…") | The model ignores it, and no action runs without your approval. See [Action approval](/concepts/ai/action-approval/). |
+
+The [Debug](/nodes/builtin/core/debug/) node can generate sample items or a long string, or throw an error on purpose, so you can test what comes after it without a real source.
+
+## Make answers easy to check
+
+- **Ask for structure.** Connect a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) so you can check fields one by one instead of reading prose.
+- **Ask for sources.** When answering from a knowledge base, ask the model to say where each fact comes from. See [RAG](/concepts/ai/rag/).
+- **Let the model say "I don't know".** Tell it in the system message what to answer when the information isn't there, and test that case.
+- **Add an automatic check.** [Guardrails](/nodes/builtin/ai/aiagents/guardrails/) can check every answer against a policy and route failures elsewhere.
+
+## Test your knowledge base search
+
+Most wrong RAG answers come from retrieving the wrong passages, not from the model. Open the knowledge base and use **Test search**: type a question and see which passages come back and how similar they are. Fix the sources or the search options before you change the prompt. See [Test search](/app/knowledge-bases/overview/#test-search).
+
+## Watch real runs
+
+Once the workflow runs on its own, check the first few runs:
+
+- The workflow's **Executions** panel shows past runs. Open one to see what each node received and returned.
+- When a run fails, the **Last run** tab explains what happened and what to try.
+- Keep a person in the loop at first: put [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) before steps that send or change things, and remove it once you trust the results.
+
+<Aside type="tip" title="Re-test after changes">
+Changing the model, the prompt or the knowledge base can change every answer. Run your test cases again after each change.
+</Aside>
+
+## Related
+
+- [Prompting and outputs](/concepts/ai/prompting-and-outputs/)
+- [Branching on AI results](/concepts/ai/workflow-intelligence/)
+- [Error handling](/concepts/flow/error-handling/)
