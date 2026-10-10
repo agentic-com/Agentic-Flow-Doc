@@ -72,17 +72,19 @@ Close it with the collapse button; it shrinks to a small pill under the run butt
 
 In a step's settings, a field is checked against what the step expects as soon as you leave it — a required field left empty or a value in the wrong format shows a short message under the field. Fields that map data from earlier steps with `{{ }}` show **Preview from last run**: the value they resolved to in the last test run (run the workflow once to see it).
 
-### Automatic execution (future feature)
+### Automatic runs with triggers
 
-If your workflow starts with a **trigger node**, it can start automatically.
+If your workflow starts with a **trigger node**, it can start on its own once the workflow is **Active**. Switch it on with the Active toggle in the canvas header, or with **Activate** in the workflow list.
 
 Examples:
 
-- Start when a page loads
-- Start on a schedule
-- Start when you click a built-in button
+- [Page Load](/nodes/builtin/trigger/pageload/) — start when a matching page loads
+- [Schedule](/nodes/builtin/trigger/schedule/) — start at set times
+- [Hotkey](/nodes/builtin/trigger/hotkey/) — start with a keyboard shortcut
+- [Context Menu](/nodes/builtin/trigger/contextmenu/) — start from the right-click menu on a page
+- [Element Change](/nodes/builtin/trigger/elementchange/) — start when something on a page changes
 
-To learn more about triggers, see [When Started](/nodes/builtin/trigger/whenstarted/) and [Schedule Trigger](/nodes/builtin/trigger/schedule/).
+[When Started](/nodes/builtin/trigger/whenstarted/) is the manual trigger: it runs only when you click the run button.
 
 Even when you use triggers, manual runs are still useful for testing.
 
