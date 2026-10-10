@@ -1,0 +1,38 @@
+---
+title: "Audit log"
+description: "See every moderation and Marketplace admin action, who took it and why"
+kind: guide
+section: app
+sidebar:
+  label: "Audit log"
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+
+<Badge text="Admin" variant="caution" />
+
+**Audit log** (Admin panel › Marketplace › **Audit log**) records every moderation and Marketplace admin action: approvals, rejections, suspensions, dismissed reports, featuring, category and template changes, agent template decisions, request merges and batch imports. It also records what authors did to their own listings, such as stopping or resuming sharing.
+
+## Read an entry
+
+Each row shows:
+
+- **Time**,
+- **Action**, such as *Approved*, *Rejected*, *Featured* or *Batch import*,
+- **About**: what kind of thing was changed and its name,
+- **By**: the admin who did it,
+- **Details**: the note and extra facts, for example the listing's previous status, the version, the reason, which review checks were ticked, or how many items an import created and updated.
+
+## Narrow it down
+
+- **Action**: pick a group such as *Approvals*, *Suspensions*, *Featuring* or *Imports*.
+- **Done by**: one admin, or *Anyone*.
+- **About**: *Listings*, *Categories*, *Templates*, *Agent templates*, *Requests* or *Imports*.
+- **From** and **To** dates.
+- Click a name in the **About** or **By** column to show only entries for it. Remove that filter with the **X** on its chip.
+
+**Clear filters** resets everything. 50 entries show per page.
+
+<Aside>
+Actions on user accounts, such as bans and password resets, are not here. You find them on each user's **Admin history** tab. See [Users](/usage/admin/users/).
+</Aside>
