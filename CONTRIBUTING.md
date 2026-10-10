@@ -47,7 +47,7 @@ bun run dev     # http://localhost:4321
 bun run build   # must pass before you open a PR
 ```
 
-The build needs `DOCS_SITE_URL`, `PUBLIC_SITE_URL`, `PUBLIC_CHROME_EXTENSION_URL` and `PUBLIC_FIREFOX_EXTENSION_URL` (a `.env` file works). `VITE_CONTENT_SET_ID` feeds the "Was this page useful?" widget. `starlight-links-validator` checks every internal link and `#anchor` during the build.
+The build needs `DOCS_SITE_URL` and `PUBLIC_SITE_URL` (a `.env` file works). The Chrome Web Store and Firefox Add-ons links are constants in `src/data/stores.ts`. `VITE_CONTENT_SET_ID` feeds the "Was this page useful?" widget. `starlight-links-validator` checks every internal link and `#anchor` during the build.
 
 ## ✍️ Docs style guide
 
