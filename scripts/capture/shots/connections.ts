@@ -159,6 +159,10 @@ export const shots: ShotDef[] = [
 			{ id: 'secret-fields', label: 'Secret fields: here, the token', locate: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Bearer Token' }) },
 			{ id: 'update-credential', label: 'Update Credential', locate: (p) => p.getByRole('dialog').getByRole('button', { name: 'Update Credential' }) }
 		],
+		spots: [
+			{ id: 'description', label: 'Description', locator: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Description' }) },
+			{ id: 'app', label: 'Integration App / Service: GitHub', locator: (p) => p.getByRole('dialog').getByRole('combobox').first() }
+		],
 		prepare: async (s) => {
 			await s.go('#/app/credentials');
 			const page = s.page;
