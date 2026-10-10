@@ -180,7 +180,7 @@ The plugin replaces Starlight's search box with its own dialog (awflow/Agentic-F
 - **Keep chrome out of the index:** wrap UI that repeats on every page in `data-pagefind-ignore` (the pill and node-header actions already are), or it shows up in excerpts.
 - **Recent searches** are kept in the reader's browser (`localStorage`, best effort).
 - **Ask Aria doesn't answer on the docs site.** The docs are static, so the question is handed to the reader's own AWFlow, with the current page URL and the top 3 search results as context. The same top 3 results show in the dialog as sources straight away.
-  - If the AWFlow extension's docs hand-off is on the page (`<html data-awflow-docs-handoff="…">` or a `awflow:docs-handoff-ready` message), the dialog posts `{ type: 'awflow:docs-handoff', id, action: 'aria', prompt }` and waits about 1.5 s for `awflow:docs-handoff-result`.
+  - If the AWFlow extension's docs hand-off is on the page (`<html data-awflow-docs-handoff="…">` or a `awflow:docs-handoff-ready` message), the dialog posts `{ type: 'awflow:docs-handoff', id, action: 'aria', mode: 'chat' | 'build', prompt }` and waits about 1.5 s for `awflow:docs-handoff-result`.
   - Otherwise, or if the extension says no, it opens the web app at `PUBLIC_APP_URL` (default `https://app.awflow.io`): `/#/app/assistant?mode=chat|build&source=docs&prompt=…`.
   - **Build this with Aria** uses the same path, in Build mode.
 - **For AI tools:** every page has a Markdown twin at `<url>.md` (starlight-md-txt), and the whole site is listed in `/llms.txt` (starlight-llms-txt). The dialog footer links both.

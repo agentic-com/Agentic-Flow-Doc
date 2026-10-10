@@ -346,7 +346,7 @@
 		"family": "ai",
 		"category": "popular",
 		"nodeType": "agent",
-		"description": "Generate an action plan and execute it. Can use external tools.",
+		"description": "Answer a question from the connected knowledge base, in one step.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -552,7 +552,7 @@
 		"family": "ai",
 		"category": "popular",
 		"nodeType": "agent",
-		"description": "Retrieve and generate an action plan and execute it. Can use external tools.",
+		"description": "Answer from your knowledge base: finds the relevant passages and replies with sources, remembering the conversation.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -1358,6 +1358,12 @@
 							"label": "Storage",
 							"value": "conversation",
 							"valueLabel": "Conversation"
+						},
+						{
+							"key": "window",
+							"label": "History sent to the model",
+							"value": "fit",
+							"valueLabel": "As much as fits"
 						}
 					],
 					"fields": [
@@ -1369,22 +1375,53 @@
 							"description": "The saved conversation to use. Leave empty to give this node its own conversation in this workflow."
 						},
 						{
+							"key": "summarize",
+							"label": "Summarise older messages",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Messages that no longer fit are folded into a short summary the model still sees. Costs an extra model call now and then."
+						},
+						{
+							"key": "rememberTools",
+							"label": "Remember tool results",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Keep what the agent’s tools returned with each reply, so later turns can use it without calling the tools again."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "storage",
+							"label": "Storage",
+							"value": "conversation",
+							"valueLabel": "Conversation"
+						},
+						{
 							"key": "window",
 							"label": "History sent to the model",
-							"type": "Choice",
+							"value": "lastN",
+							"valueLabel": "Last N messages"
+						}
+					],
+					"fields": [
+						{
+							"key": "conversationId",
+							"label": "Conversation",
+							"type": "Memory picker",
 							"required": false,
-							"default": "fit",
-							"options": [
-								{
-									"value": "fit",
-									"label": "As much as fits"
-								},
-								{
-									"value": "lastN",
-									"label": "Last N messages"
-								}
-							],
-							"description": "How much of the conversation each turn sends"
+							"description": "The saved conversation to use. Leave empty to give this node its own conversation in this workflow."
+						},
+						{
+							"key": "lastN",
+							"label": "Messages",
+							"type": "Number",
+							"required": false,
+							"default": 20,
+							"description": "How many of the newest messages to send (a question and its answer are two)"
 						},
 						{
 							"key": "summarize",
@@ -1411,6 +1448,12 @@
 							"label": "Storage",
 							"value": "key",
 							"valueLabel": "Key"
+						},
+						{
+							"key": "window",
+							"label": "History sent to the model",
+							"value": "fit",
+							"valueLabel": "As much as fits"
 						}
 					],
 					"fields": [
@@ -1441,22 +1484,72 @@
 							"description": "Whether other workflows using the same key share this conversation"
 						},
 						{
+							"key": "summarize",
+							"label": "Summarise older messages",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Messages that no longer fit are folded into a short summary the model still sees. Costs an extra model call now and then."
+						},
+						{
+							"key": "rememberTools",
+							"label": "Remember tool results",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Keep what the agent’s tools returned with each reply, so later turns can use it without calling the tools again."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "storage",
+							"label": "Storage",
+							"value": "key",
+							"valueLabel": "Key"
+						},
+						{
 							"key": "window",
 							"label": "History sent to the model",
+							"value": "lastN",
+							"valueLabel": "Last N messages"
+						}
+					],
+					"fields": [
+						{
+							"key": "key",
+							"label": "Key",
+							"type": "Text",
+							"required": false,
+							"default": "",
+							"description": "Runs with the same key share one conversation. Use an expression for one conversation per user or thread."
+						},
+						{
+							"key": "keyScope",
+							"label": "Key scope",
 							"type": "Choice",
 							"required": false,
-							"default": "fit",
+							"default": "workflow",
 							"options": [
 								{
-									"value": "fit",
-									"label": "As much as fits"
+									"value": "workflow",
+									"label": "This workflow"
 								},
 								{
-									"value": "lastN",
-									"label": "Last N messages"
+									"value": "shared",
+									"label": "Shared"
 								}
 							],
-							"description": "How much of the conversation each turn sends"
+							"description": "Whether other workflows using the same key share this conversation"
+						},
+						{
+							"key": "lastN",
+							"label": "Messages",
+							"type": "Number",
+							"required": false,
+							"default": 20,
+							"description": "How many of the newest messages to send (a question and its answer are two)"
 						},
 						{
 							"key": "summarize",
@@ -1483,26 +1576,56 @@
 							"label": "Storage",
 							"value": "run",
 							"valueLabel": "This run only"
+						},
+						{
+							"key": "window",
+							"label": "History sent to the model",
+							"value": "fit",
+							"valueLabel": "As much as fits"
 						}
 					],
 					"fields": [
 						{
+							"key": "summarize",
+							"label": "Summarise older messages",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Messages that no longer fit are folded into a short summary the model still sees. Costs an extra model call now and then."
+						},
+						{
+							"key": "rememberTools",
+							"label": "Remember tool results",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "Keep what the agent’s tools returned with each reply, so later turns can use it without calling the tools again."
+						}
+					]
+				},
+				{
+					"when": [
+						{
+							"key": "storage",
+							"label": "Storage",
+							"value": "run",
+							"valueLabel": "This run only"
+						},
+						{
 							"key": "window",
 							"label": "History sent to the model",
-							"type": "Choice",
+							"value": "lastN",
+							"valueLabel": "Last N messages"
+						}
+					],
+					"fields": [
+						{
+							"key": "lastN",
+							"label": "Messages",
+							"type": "Number",
 							"required": false,
-							"default": "fit",
-							"options": [
-								{
-									"value": "fit",
-									"label": "As much as fits"
-								},
-								{
-									"value": "lastN",
-									"label": "Last N messages"
-								}
-							],
-							"description": "How much of the conversation each turn sends"
+							"default": 20,
+							"description": "How many of the newest messages to send (a question and its answer are two)"
 						},
 						{
 							"key": "summarize",
@@ -1909,7 +2032,7 @@
 		"family": "ai",
 		"category": "indevice",
 		"nodeType": "dependency",
-		"description": "Leverage OLLAM to use Embeddings locally directly on your device",
+		"description": "Create embeddings with models served by Ollama on your own computer.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -1949,7 +2072,7 @@
 		"family": "ai",
 		"category": "indevice",
 		"nodeType": "dependency",
-		"description": "Leverage OpenAI to use embeddings locally directly on your device",
+		"description": "Leverage OpenAI to create embeddings.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -2055,7 +2178,7 @@
 		"family": "ai",
 		"category": "indevice",
 		"nodeType": "dependency",
-		"description": "Leverage Anthropic to use LLM locally directly on your device",
+		"description": "Use Anthropic Claude chat models through the Anthropic API.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -2552,7 +2675,7 @@
 		"family": "ai",
 		"category": "indevice",
 		"nodeType": "dependency",
-		"description": "Leverage Google to use LLM locally directly on your device",
+		"description": "Use Google Gemini chat models through the Gemini API.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -2591,14 +2714,14 @@
 				"options": [
 					{
 						"value": "gai",
-						"label": "gai"
+						"label": "Google AI Studio (Gemini API)"
 					},
 					{
 						"value": "gcp",
-						"label": "gcp"
+						"label": "Google Cloud (Vertex AI)"
 					}
 				],
-				"description": "What platform to run the service on."
+				"description": "Which Google platform serves the model."
 			},
 			{
 				"key": "options",
@@ -3064,7 +3187,7 @@
 		"family": "ai",
 		"category": "indevice",
 		"nodeType": "dependency",
-		"description": "Leverage OLLAM to use LLM locally directly on your device",
+		"description": "Use models served by Ollama on your own computer.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -3187,7 +3310,7 @@
 		"family": "ai",
 		"category": "indevice",
 		"nodeType": "dependency",
-		"description": "Leverage OpenAI to use LLM locally directly on your device",
+		"description": "Use OpenAI chat models (GPT) through the OpenAI API.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -4213,10 +4336,9 @@
 		"nodeType": "dependency",
 		"description": "Lets the model click/fill/type/select/submit on the active page or navigate it. Each call requires user approval.",
 		"worksIn": [
-			"extension",
-			"web"
+			"extension"
 		],
-		"runtime": "client",
+		"runtime": "extension",
 		"isDependency": true,
 		"dependencyType": "tools",
 		"agentTool": true,
@@ -4420,10 +4542,9 @@
 		"nodeType": "dependency",
 		"description": "Search the web and return results.",
 		"worksIn": [
-			"extension",
-			"web"
+			"extension"
 		],
-		"runtime": "client",
+		"runtime": "extension",
 		"isDependency": true,
 		"dependencyType": "tools",
 		"agentTool": true,
@@ -7964,7 +8085,7 @@
 						"label": "second"
 					}
 				],
-				"description": "The part of the date to extract"
+				"description": "The part of the date to extract. Month counts from 1 (January); week is the ISO week of the year."
 			},
 			{
 				"key": "outputFieldName",
@@ -8224,7 +8345,7 @@
 						"label": "millisecond"
 					}
 				],
-				"description": "The units to subtract from the date"
+				"description": "The units to express the difference in. Larger units are filled first; smaller ones get what remains."
 			},
 			{
 				"key": "outputFieldName",
@@ -18395,21 +18516,7 @@
 							"label": "Search Query",
 							"type": "Text",
 							"required": true,
-							"description": "Search query for pages"
-						},
-						{
-							"key": "filter",
-							"label": "Filter",
-							"type": "Key-value pairs",
-							"required": false,
-							"description": "Filter criteria for database query"
-						},
-						{
-							"key": "sort",
-							"label": "Sort",
-							"type": "List",
-							"required": false,
-							"description": "Sort criteria for database query"
+							"description": "Finds pages whose title contains this text"
 						},
 						{
 							"key": "pageSize",
@@ -22072,10 +22179,9 @@
 		"nodeType": "trigger",
 		"description": "Run the flow when a workflow fails.",
 		"worksIn": [
-			"extension",
-			"web"
+			"extension"
 		],
-		"runtime": "client",
+		"runtime": "extension",
 		"credentials": [],
 		"dependencies": [],
 		"settings": [
@@ -22623,7 +22729,7 @@
 							},
 							{
 								"key": "triggerOnWeekdays",
-								"label": "Units",
+								"label": "Trigger on Weekdays",
 								"type": "Multiple choice",
 								"required": true,
 								"options": [
@@ -22656,7 +22762,7 @@
 										"label": "Sunday"
 									}
 								],
-								"description": "The units to subtract from the date"
+								"description": "The days of the week on which the workflow runs"
 							},
 							{
 								"key": "triggerAtHour",
@@ -23922,15 +24028,15 @@
 				"options": [
 					{
 						"value": "viewport",
-						"label": "viewport"
+						"label": "Visible area"
 					},
 					{
 						"value": "fullPage",
-						"label": "fullPage"
+						"label": "Full page"
 					},
 					{
 						"value": "element",
-						"label": "element"
+						"label": "Element"
 					}
 				],
 				"description": "Choose what to capture"
@@ -24290,7 +24396,7 @@
 							"key": "mode",
 							"label": "Mode",
 							"value": "auto",
-							"valueLabel": "auto"
+							"valueLabel": "Automatic"
 						}
 					],
 					"fields": [
@@ -24309,7 +24415,7 @@
 							"key": "mode",
 							"label": "Mode",
 							"value": "manual",
-							"valueLabel": "manual"
+							"valueLabel": "Manual"
 						}
 					],
 					"fields": [
@@ -24576,19 +24682,19 @@
 				"options": [
 					{
 						"value": "exists",
-						"label": "exists"
+						"label": "Exists"
 					},
 					{
 						"value": "visible",
-						"label": "visible"
+						"label": "Visible"
 					},
 					{
 						"value": "hidden",
-						"label": "hidden"
+						"label": "Hidden"
 					},
 					{
 						"value": "containsText",
-						"label": "containsText"
+						"label": "Contains Text"
 					}
 				],
 				"description": "Choose what condition to wait for"

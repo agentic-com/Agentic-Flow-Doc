@@ -440,7 +440,8 @@
 		if (handoff) {
 			// Must stay synchronous inside the click: the extension checks for a user gesture.
 			const id = crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-			window.postMessage({ type: 'awflow:docs-handoff', id, action: 'aria', prompt }, location.origin);
+			// `mode`: Ask opens chat, Build opens Build mode (older extensions ignore it and use Build).
+			window.postMessage({ type: 'awflow:docs-handoff', id, action: 'aria', mode: intent === 'build' ? 'build' : 'chat', prompt }, location.origin);
 			ariaStatus = 'Sending to Aria in your AWFlow extension…';
 			fallbackUrl = '';
 			const timeout = setTimeout(() => settle(false), 1500);

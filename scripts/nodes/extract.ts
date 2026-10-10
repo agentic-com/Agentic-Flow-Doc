@@ -346,8 +346,42 @@ function discriminatorKeys(options: AnySchema[]): string[] {
 	);
 	const named = shared.filter((k) => DISCRIMINATORS.has(k));
 	if (named.length) return named;
-	// Otherwise the panel switches forms on the first shared choice (e.g. Trigger Interval).
+	// Otherwise the panel switches forms on the first shared choice (e.g. Trigger Interval);
+	// influentialKeys() widens this when the node's pickSchema reads more than one (Chat Memory).
 	return shared.length && Object.keys(shapes[0]!)[0] === shared[0] ? [shared[0]] : [];
+}
+
+/** Shared choice keys (enum/literal in every option). */
+function sharedChoiceKeys(options: AnySchema[]): string[] {
+	const shapes = options.map(shapeOf);
+	if (shapes.some((s) => !s)) return [];
+	return Object.keys(shapes[0]!).filter((k) =>
+		shapes.every((s) => {
+			const f = s![k];
+			if (!f) return false;
+			const kk = kind(unwrap(f).inner);
+			return kk === 'enum' || kk === 'literal';
+		})
+	);
+}
+
+/** The shared choices whose value changes which form pickSchema returns. */
+async function influentialKeys(
+	options: AnySchema[],
+	pick: (d: Record<string, string>) => Promise<AnySchema> | AnySchema
+): Promise<string[]> {
+	const keys = sharedChoiceKeys(options);
+	const valuesOf = (k: string) => enumOptions(unwrap(shapeOf(options[0])![k]).inner!, unwrap(shapeOf(options[0])![k]).meta).map((x) => x.value);
+	const base: Record<string, string> = {};
+	for (const k of keys) base[k] = valuesOf(k)[0] ?? '';
+	const safePick = async (c: Record<string, string>) => { try { return await pick(c); } catch { return undefined; } };
+	const out: string[] = [];
+	for (const k of keys) {
+		const seen = new Set<unknown>();
+		for (const v of valuesOf(k)) seen.add(await safePick({ ...base, [k]: v }));
+		if (seen.size > 1) out.push(k);
+	}
+	return out;
 }
 
 async function expandUnion(
@@ -359,8 +393,12 @@ async function expandUnion(
 ): Promise<SettingsVariant[]> {
 	const unreachable: AnySchema[] = [];
 	const options = (def(union).options ?? []) as AnySchema[];
-	const keys = discriminatorKeys(options);
 	const pick = meta?.pickSchema as ((d: Record<string, string>) => Promise<AnySchema> | AnySchema) | undefined;
+	let keys = discriminatorKeys(options);
+	if (pick && !keys.some((k) => DISCRIMINATORS.has(k))) {
+		const wider = await influentialKeys(options, pick);
+		if (wider.length > keys.length) keys = wider;
+	}
 	const variants: SettingsVariant[] = [];
 	const seen = new Set<AnySchema>();
 
