@@ -22,6 +22,20 @@ const { DOCS_SITE_URL } = loadEnv(process.env.NODE_ENV, process.cwd(), "");
 // https://astro.build/config
 export default defineConfig({
   site: DOCS_SITE_URL,
+  // Renamed or removed pages keep working (epic awflow/Agentic-Flow#1308).
+  redirects: {
+    "/advanced-ai/langchain/": "/advanced-ai/concepts/",
+    "/advanced-ai/langchain/getting-started/": "/advanced-ai/concepts/",
+    "/advanced-ai/langchain/components/": "/advanced-ai/concepts/model-dependencies/",
+    "/advanced-ai/langchain/workflow-patterns/": "/advanced-ai/concepts/ai-agents/",
+    "/advanced-ai/langchain/advanced-patterns/": "/advanced-ai/concepts/ai-agents/",
+    "/advanced-ai/langchain/browser-integration-guide/": "/advanced-ai/concepts/tool-selection/",
+    "/advanced-ai/langchain/langchain-learning-resources/": "/advanced-ai/",
+    "/usage/troubleshooting/troubleshooting-decision-guide/": "/usage/troubleshooting/",
+    "/usage/using-the-app/workflows/executions/execute-from-dnd-designer/": "/usage/using-the-app/workflows/executions/run-from-the-canvas/",
+    "/usage/using-the-app/workflows/executions/execute-from-webpage-contextual-menu/": "/usage/using-the-app/workflows/executions/run-from-the-right-click-menu/",
+    "/usage/using-the-app/workflows/executions/execute-from-workflow-list-table/": "/usage/using-the-app/workflows/executions/run-from-the-workflow-list/",
+  },
   markdown: {
     // Astro 7's default Sätteri processor rejects raw `html` nodes in MDX;
     // astro-mermaid emits one per ```mermaid block, so let MDX parse them.
@@ -394,8 +408,8 @@ export default defineConfig({
         },
         {
           label: {
-            en: "Advanced AI",
-            fr: "Marché",
+            en: "AI concepts",
+            fr: "Concepts IA",
           },
           link: "/advanced-ai/",
           icon: "seti:illustrator",
@@ -404,13 +418,6 @@ export default defineConfig({
               label: "Concepts",
               items: [{ autogenerate: {
                 directory: "advanced-ai/concepts",
-                collapsed: true,
-              } }],
-            },
-            {
-              label: "LangChain",
-              items: [{ autogenerate: {
-                directory: "advanced-ai/langchain",
                 collapsed: true,
               } }],
             },
