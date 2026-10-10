@@ -45,6 +45,13 @@ export function findNodeEntry(data: unknown, id: string): Raw | undefined {
 const count = (v: unknown): number | undefined =>
 	typeof v === 'number' ? v : Array.isArray(v) ? v.length : isObj(v) ? Object.keys(v).length : undefined;
 
+/** nodes.json groups operations by resource ({ resource, operations: [...] }); count the operations. */
+const countOperations = (v: unknown): number | undefined => {
+	if (!Array.isArray(v)) return count(v);
+	const grouped = v.every((g) => isObj(g) && Array.isArray(g.operations));
+	return grouped ? v.reduce((n, g) => n + (g.operations as unknown[]).length, 0) : v.length;
+};
+
 const str = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() ? v : undefined);
 
 export function normaliseNode(
@@ -71,7 +78,7 @@ export function normaliseNode(
 		worksIn: worksIn ?? entryWorksIn,
 		icon: str(e.icon),
 		needs,
-		operations: count(e.operations),
+		operations: countOperations(e.operations),
 		outputs: count(e.outputs ?? e.ports),
 		data: entry,
 	};
