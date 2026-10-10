@@ -1,0 +1,61 @@
+---
+/**
+ * Dark hero stage (Home.dc.html): four floating node cards joined by animated curved wires, a
+ * "running" badge and a run log. Decorative — the whole stage is aria-hidden and summarised by the
+ * figcaption. Below ~540px of width the cards stack vertically and the curves are hidden.
+ */
+---
+
+<figure class="awh-stage" aria-labelledby="awh-stage-cap">
+	<figcaption id="awh-stage-cap" class="awh-sr">
+		Example run: a Schedule trigger fires, Get Links collects 5 links, an on-device model summarises
+		them, and Notion saves the result.
+	</figcaption>
+	<div class="awh-stage__inner" aria-hidden="true">
+		<svg class="awh-stage__wires" viewBox="0 0 560 440" preserveAspectRatio="none">
+			<path class="awh-curve" d="M104 114 C 104 180, 104 210, 104 270" />
+			<path class="awh-curve" d="M196 298 C 250 298, 250 200, 300 198" />
+			<path class="awh-curve" d="M400 226 C 400 262, 380 270, 380 306" />
+		</svg>
+		<div class="awh-node awh-node--a awf-float awf-run">
+			<span class="awh-node__icon" style="--i:#B45309">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+					><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg
+				>
+			</span>
+			<span class="awh-node__text"><b>Schedule</b><small>every day · 08:00</small></span>
+		</div>
+		<div class="awh-node awh-node--b awf-float awf-f3 awf-run awf-r2">
+			<span class="awh-node__icon" style="--i:#BE185D">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+					><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"></path><path
+						d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"></path></svg
+				>
+			</span>
+			<span class="awh-node__text"><b>Get Links</b><small>news.ycombinator.com</small></span>
+		</div>
+		<div class="awh-node awh-node--c awh-node--light awf-float awf-f2 awf-run awf-r3">
+			<span class="awh-node__icon" style="--i:#6D28D9">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+					><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"></path></svg
+				>
+			</span>
+			<span class="awh-node__text"><b>Summarise</b><small>on-device model</small></span>
+		</div>
+		<div class="awh-node awh-node--d awf-float awf-run awf-r4">
+			<span class="awh-node__icon" style="--i:#15803D">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+					><path d="M5 4h10l4 4v12H5z"></path><path d="M9 12h6M9 16h4"></path></svg
+				>
+			</span>
+			<span class="awh-node__text"><b>Notion</b><small class="awh-ok">✓ journal updated</small></span>
+		</div>
+		<div class="awh-stage__status"><span class="awh-dot awf-ping"></span>running · 3.4s</div>
+		<div class="awh-stage__log">
+			<span class="awh-log">▶ Schedule fired</span>
+			<span class="awh-log" style="animation-delay:.9s">Get Links · 5 items</span>
+			<span class="awh-log" style="animation-delay:1.8s">Summarise · 5 × 3 bullets</span>
+			<span class="awh-log awh-ok" style="animation-delay:2.7s">Notion ✓</span>
+		</div>
+	</div>
+</figure>

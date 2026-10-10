@@ -582,7 +582,7 @@ export default defineConfig({
         exclude: ["/og/**", "#ask-aria"],
       }),
       starlightLlmsTxt({
-        // Raw MDX: the plugin cannot render Svelte components (SiteHero, src/components/awflow).
+        // Raw MDX: the plugin cannot render components (the home page, src/components/awflow).
         rawContent: true,
         projectName: "Agentic Workflow",
         description:
