@@ -1,117 +1,124 @@
 ---
-title: AI Agents
-description: "Understand when to use AI agents, how they reason, and how to keep them bounded in workflows."
+title: AI agents
+description: "When to use an agent node instead of a simple AI step, which agent to pick in AWFlow, and how to keep it focused."
 ---
 
 import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
-An AI agent is a workflow step that can reason about a goal, choose tools, inspect results, and decide what to do next. It is useful when the path to the answer is not always the same.
+An **agent** is an AI node that can decide what to do next: search your documents, call a tool, read the result, and try again until it has an answer. A **chain** does one thing: it sends your input to the model once and returns the answer.
 
-Do not use an agent just because a workflow uses AI. Use an agent when the workflow needs **decision-making**. For predictable transformations, a direct LLM chain is usually simpler and easier to test.
+Use an agent only when the step needs **decisions**. For a fixed task, such as summarizing or classifying, a chain is simpler, faster and easier to test.
 
-## Agent loop
+<Aside type="note" title="Agents in workflows and agents in the chat">
+This page is about agent **nodes** in workflows. To chat with Aria or with agents you create yourself, see [Agents](/usage/using-the-app/chat-and-agents/agents/). To hand a task from a workflow to one of those agents, use the **Run agent** node.
+</Aside>
 
-Most agents follow the same loop:
+## How an agent works
 
 ```mermaid
 flowchart TD
-  Goal["Goal + instructions"] --> Observe["Observe available data"]
-  Observe --> Decide["Decide next action"]
-  Decide --> Tool{"Need a tool?"}
-  Tool -->|Yes| Call["Call tool"]
-  Call --> Result["Read tool result"]
+  Goal["Prompt + system message"] --> Decide["Model decides the next step"]
+  Decide --> Tool{"Needs a tool?"}
+  Tool -->|Yes| Call["Calls a connected tool"]
+  Call --> Result["Reads the result"]
   Result --> Decide
-  Tool -->|No| Answer["Return final answer"]
-  Decide --> Stop{"Limit reached or unsafe?"}
-  Stop -->|Yes| Fallback["Stop with partial result or error"]
+  Tool -->|No| Answer["Returns the answer"]
+  Decide --> Stop{"Max iterations reached?"}
+  Stop -->|Yes| Partial["Answers with what it has"]
 
   style Decide fill:#e1f5fe,stroke:#0277bd
-  style Stop fill:#ffebee,stroke:#c62828
 ```
 
-The loop is powerful, but it must be bounded. Give agents clear goals, tool access, stopping conditions, and output expectations.
+The agent can only use what you connect to it. It never gets a tool you didn't add.
 
-## Agent types in AWFlow
+## Which AI node to use
 
 <Tabs>
   <TabItem label="Basic LLM Chain">
-    Use this when the model should transform known input into known output: summarize text, classify content, draft a message, or rewrite a field.
+    [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) sends your prompt to the model once and returns its answer. Use it to rewrite, draft, translate or answer from text you pass in. No tools, no search.
 
-    It is not really an agent loop. It is the best default for predictable AI steps.
+    For common tasks there are ready-made chains: [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) and [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/).
   </TabItem>
 
   <TabItem label="Q&A Agent">
-    Use this when the user asks a question about provided context. The quality depends on whether the workflow passes the right context into the node.
-
-    It is a good fit for page Q&A, document Q&A, and support-style answers.
+    [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) answers a question from a connected knowledge base. It retrieves the most relevant passages (4 by default) and answers from them. It also works with on-device question-answering models.
   </TabItem>
 
   <TabItem label="RAG Agent">
-    Use this when the answer should be grounded in a vector store or local knowledge source.
-
-    It is the right choice when the model should search before answering.
+    [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) searches a connected [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) base before answering, so its answers come from your documents. It can also use a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) and an output parser. See [RAG](/advanced-ai/concepts/rag/).
   </TabItem>
 
   <TabItem label="Tools Agent">
-    Use this when the model must choose between tools, such as searching, extracting page content, querying Wikipedia, or calling a service.
+    [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) chooses between the tools you connect: [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/), [Wikipedia](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/), [Calculator](/nodes/builtin/ai/aidependencies/tools/calculator/), [Browser](/nodes/builtin/ai/aidependencies/tools/browser/), [HTTP Request](/nodes/builtin/ai/aidependencies/tools/http-request/), [MCP Client](/nodes/builtin/ai/aidependencies/tools/mcp-client/), another workflow through the [Workflow Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/), and more.
 
-    It is the most flexible pattern, and also the one that needs the clearest limits.
+    It needs a chat model that supports tool calling. **Max iterations** (10 by default) limits how many tool calls it may make before it must answer.
   </TabItem>
 </Tabs>
+
+## What you can connect
+
+| Port | Basic LLM Chain | Q&A Agent | RAG Agent | Tools Agent |
+| --- | --- | --- | --- | --- |
+| Model (required) | Yes | Yes | Yes | Yes, with tool calling |
+| Knowledge | — | Yes | Yes | Yes |
+| Memory | — | — | Yes | Yes |
+| Tools | — | — | — | Yes |
+| Output parser | Yes | Yes | Yes | Yes |
+
+Check each node's page for the exact options.
 
 ## When to use an agent
 
 Use an agent when:
 
-- The workflow does not know in advance which tool is needed.
-- The task needs multiple steps and intermediate decisions.
-- The model should inspect results before continuing.
-- The workflow can tolerate some variability.
+- you can't know in advance which tool the step needs;
+- the step needs several actions, each depending on the last result;
+- some variation in the answer is acceptable.
 
-Avoid an agent when:
+Use a chain, or regular nodes, when:
 
-- The workflow is a fixed transformation.
-- The output must follow a strict schema and no tool choice is needed.
-- A wrong action would be expensive or destructive.
-- The task can be solved with a direct node chain.
+- the task is the same every time;
+- a wrong action would be costly. If you still need an agent, rely on [action approval](/advanced-ai/concepts/action-approval/);
+- the task can be done with a few regular nodes in a row.
 
-## Agent design checklist
+## Keep agents focused
 
-| Design question | Why it matters |
+| Question | Why it matters |
 | --- | --- |
-| What is the exact goal? | Vague goals produce wandering tool calls |
-| What data can the agent see? | Missing context leads to guesses |
-| Which tools can it use? | Too many tools increase wrong choices |
-| When should it stop? | Prevents loops and runaway execution |
-| What should the output look like? | Makes downstream nodes reliable |
-| How will you evaluate it? | Catches regressions and hallucinations |
+| What exactly should it achieve? | A vague goal leads to wandering tool calls. |
+| What data does it get? | Missing input leads to guesses. |
+| Which tools does it need? | Fewer tools mean fewer wrong choices. See [Tool selection](/advanced-ai/concepts/tool-selection/). |
+| When should it stop? | **Max iterations** is a safety net, not a plan. Say in the prompt when the task is done. |
+| What should the answer look like? | Connect an [output parser](/advanced-ai/concepts/prompting-and-outputs/) when a later step uses it. |
 
-## Example: research workflow
+## Example: research a company
 
 ```mermaid
 flowchart LR
-  Trigger["User starts research"] --> Agent["Tools Agent"]
-  Agent --> Text["Get page text"]
-  Agent --> Wiki["Wikipedia Query"]
-  Agent --> Http["Http Request"]
-  Agent --> Final["Structured report"]
+  Trigger["Hotkey"] --> Text["Get All Text"]
+  Text --> Agent["Tools Agent"]
+  Model["Chat model"] --> Agent
+  Wiki["Wikipedia tool"] --> Agent
+  Search["Web Search tool"] --> Agent
+  Agent --> Note["Display Markdown"]
 
   style Agent fill:#e1f5fe,stroke:#0277bd
 ```
 
-The agent should not be told “research this.” A stronger instruction is:
+"Research this company" is too vague. A stronger prompt is:
 
-> Find three source-backed facts about this company. Use page text first, then Wikipedia if the page lacks enough context. Return a short report with source URLs.
+> Find three facts about this company and give the source of each. Use the page text first. Search Wikipedia only if the page doesn't say enough. Return a short list with links.
 
-That instruction gives the agent a goal, tool preference, stopping condition, and output shape.
+It gives the agent a goal, an order for its tools, a point to stop, and the shape of the answer.
 
-<Aside type="tip" title="Keep agents narrow">
-  A narrow agent with two or three relevant tools is usually more reliable than a broad agent with every tool available.
+<Aside type="tip" title="Two or three tools are enough">
+An agent with two or three relevant tools is usually more reliable than one with every tool connected.
 </Aside>
 
-## Related topics
+## Related
 
 - [Tool selection](/advanced-ai/concepts/tool-selection/)
-- [Prompting and structured outputs](/advanced-ai/concepts/prompting-and-outputs/)
+- [Action approval](/advanced-ai/concepts/action-approval/)
+- [Prompting and outputs](/advanced-ai/concepts/prompting-and-outputs/)
 - [RAG](/advanced-ai/concepts/rag/)
-- [Evaluation and testing](/advanced-ai/concepts/evaluation-testing/)
+- [Testing AI workflows](/advanced-ai/concepts/evaluation-testing/)

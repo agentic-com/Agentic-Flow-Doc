@@ -87,15 +87,11 @@ Floating entitlements are a pool of entitlements that you can distribute among v
 
 #### Evaluation (AWFlow)
 
-In AWFlow, evaluation allows you to tag and organize execution history and compare it against new executions. You can use this to understand how your workflow performs over time as you make changes. This is particularly useful while developing AI-centered workflows in the browser environment.
+Checking that a workflow, especially one with AI steps, gives good results on realistic inputs before you rely on it. See [Testing AI workflows](/advanced-ai/concepts/evaluation-testing/).
 
 #### Expression
 
 In AWFlow, expressions allow you to populate node parameters dynamically by executing JavaScript code within the browser environment. You can use expressions to process browser context data, manipulate extracted text, or create dynamic values based on web page content.
-
-#### LangChain
-
-LangChain is an AI-development framework used to work with large language models (LLMs). LangChain provides a standardized system for working with a wide variety of models and other resources and linking different components together to build complex applications.
 
 #### Large language model (LLM)
 

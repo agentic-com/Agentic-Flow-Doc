@@ -1,235 +1,94 @@
 ---
-title: Tool Selection & Orchestration
-description: "How AI agents intelligently choose and coordinate multiple tools to accomplish complex tasks automatically."
+title: Tool selection
+description: "Which tool nodes to give a Tools Agent, how the agent chooses between them, and how to keep its choices reliable."
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+import { Aside } from "@astrojs/starlight/components";
 
-Tool selection is how AI agents decide which tools to use and when to use them. Instead of you manually connecting nodes, intelligent agents can automatically choose the right combination of tools to accomplish their goals.
+A [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) can only do what its connected tools allow. You choose the tools; the agent chooses **which one to call, when, and with what input**, based on your prompt and on each tool's name and description.
 
-Think of it like having a smart assistant who knows when to use a screwdriver vs. a hammer vs. a drill - they pick the right tool for each part of the job.
-
-<Image src={Social} alt="AI agent selecting and orchestrating different tools for a complex task" />
-
-## How agents choose tools
-
-Agents don't just randomly pick tools. They follow a reasoning process:
+## How the agent chooses
 
 ```mermaid
-graph TD
-    Goal[Task Goal] --> Analyze[Analyze Requirements]
-    Analyze --> Available[Check Available Tools]
-    Available --> Match[Match Tools to Needs]
-    Match --> Plan[Create Execution Plan]
-    Plan --> Execute[Execute with Tools]
-    Execute --> Evaluate[Evaluate Results]
-    Evaluate --> Success{Goal Achieved?}
-    Success -->|No| Replan[Adjust Plan]
-    Success -->|Yes| Complete[Task Complete]
-    Replan --> Match
-    
-    style Analyze fill:#6d28d9,stroke:#fff,color:#fff
-    style Match fill:#6d28d9,stroke:#fff,color:#fff
+flowchart TD
+  Prompt["Prompt + system message"] --> Read["Model reads the task and the tool list"]
+  Read --> Pick{"Is a tool needed?"}
+  Pick -->|Yes| Call["Calls one tool with an input"]
+  Call --> Result["Reads the result"]
+  Result --> Read
+  Pick -->|No| Answer["Answers"]
+
+  style Read fill:#e1f5fe,stroke:#0277bd
 ```
 
-## Tool categories
+Each tool call counts toward **Max iterations** (10 by default). When the limit is reached, the agent answers with what it has.
 
-<Tabs>
-  <TabItem label="Information Gathering">
-    **Purpose:** Collect data from various sources
-    
-    **Examples:**
-    - Reading text from a web page
-    - Extracting links or images
-    - Getting data from an API
-    
-    **Agent reasoning:**
-    "I need product information. I'll read the text on this page to find descriptions and prices."
-  </TabItem>
-  
-  <TabItem label="Content Processing">
-    **Purpose:** Analyze and transform information
-    
-    **Examples:**
-    - AI summarization
-    - Answering questions based on text
-    - Reformatting dates or currencies
-    
-    **Agent reasoning:**
-    "I have raw text. I'll use AI to summarize the key points and format the price as a number."
-  </TabItem>
-  
-  <TabItem label="Flow Control">
-    **Purpose:** Make decisions and control where the workflow goes next
-    
-    **Examples:**
-    - "If" logic (e.g., If price > $100)
-    - Filtering lists
-    - Stopping on errors
-    
-    **Agent reasoning:**
-    "The price is missing on this page. I should skip it and try the next one instead of crashing."
-  </TabItem>
-</Tabs>
+The model must support tool calling. Most cloud chat models do; for on-device use, see [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/).
 
-## Tool orchestration patterns
+## Available tools
 
-### Sequential processing
-Tools used one after another in a logical sequence:
+### Tools that only read or compute
+
+These run without asking you:
+
+| Tool | What the agent can do with it |
+| --- | --- |
+| [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/) | Search DuckDuckGo, Bing or Brave and read the first page of results. Needs the browser extension. |
+| [Wikipedia](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/) | Look up a topic on Wikipedia. |
+| [Calculator](/nodes/builtin/ai/aidependencies/tools/calculator/) | Do exact arithmetic instead of guessing. |
+| [Think](/nodes/builtin/ai/aidependencies/tools/think/) | Write down its reasoning before acting. Helps on multi-step tasks. |
+| [Workflow Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/) | Run one of your workflows and use its output. |
+
+### Tools that take actions
+
+These ask for your approval **every time** the agent calls them:
+
+| Tool | What the agent can do with it |
+| --- | --- |
+| [Browser](/nodes/builtin/ai/aidependencies/tools/browser/) | Click, fill, type, select, submit or navigate on the active page. |
+| [HTTP Request](/nodes/builtin/ai/aidependencies/tools/http-request/) | Send requests to a web service. |
+| [MCP Client](/nodes/builtin/ai/aidependencies/tools/mcp-client/) | Call the tools of a remote MCP server. |
+
+You approve or reject each call in the **Executions** panel. This can't be turned off. See [Action approval](/advanced-ai/concepts/action-approval/) for why.
+
+A connected [knowledge base](/advanced-ai/concepts/rag/) can also work like a tool: set the agent's **Knowledge search** option to **Let the agent search the knowledge base on its own**, and it decides when and what to search.
+
+## Wrap your own steps as a tool
+
+The [Workflow Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/) turns any workflow into a tool. Use it when the agent needs a step no built-in tool provides, such as "get the price from our product page" or "add a row to my sheet".
+
+- Give it a clear **Tool Name**, such as `get_product_price`, not `workflow_tool`.
+- Write a **Tool Description** that says what it does, what input it expects, and when to use it.
+- Keep the workflow small and predictable: the agent decides when to call it, the workflow decides how.
+
+## Make choices reliable
+
+- **Connect only the tools the task needs.** Two or three relevant tools work better than ten.
+- **Say in the prompt which tool to prefer.** For example: "Use the page text first. Search the web only if it isn't there."
+- **Say when to stop.** "Stop when you have three sources" is clearer than relying on **Max iterations**.
+- **Avoid overlapping tools.** Two tools that do almost the same thing make the agent hesitate or call both.
+- **Use regular nodes for fixed steps.** If a step always happens, such as reading the page before the agent starts, do it with a regular node before the agent, not as a tool.
+
+## Example: a price check
 
 ```mermaid
-graph LR
-    A[Get All Text from Link] --> B[Basic LLM Chain]
-    B --> C[Edit Fields]
-    C --> D[DownloadAsFile]
-    
-    style A fill:#e1f5fe
-    style B fill:#e8f5e8
-    style C fill:#fff3e0
-    style D fill:#f3e5f5
+flowchart LR
+  Trigger["Context Menu trigger"] --> Text["Get All Text"]
+  Text --> Agent["Tools Agent"]
+  Model["Chat model"] --> Agent
+  Search["Web Search"] --> Agent
+  Calc["Calculator"] --> Agent
+  Agent --> Show["Display Markdown"]
 ```
 
-**Example:** Research workflow
-1. Extract content from competitor websites
-2. Analyze content for key insights
-3. Format findings into structured data
-4. Export as report file
+The page text is read by a regular node, because it's always needed. The agent gets only two tools: **Web Search** to find other prices, **Calculator** to compare them.
 
-### Parallel processing
-Multiple tools working simultaneously on different aspects:
-
-```mermaid
-graph TD
-    Start[Input Data] --> Split{Split Task}
-    Split --> Tool1[Get All Text from Link]
-    Split --> Tool2[GetImagesFromLink]
-    Split --> Tool3[GetLinksFromLink]
-    Tool1 --> Merge[Merge Results]
-    Tool2 --> Merge
-    Tool3 --> Merge
-    Merge --> Final[Combined Output]
-```
-
-**Example:** Comprehensive site analysis
-- Extract text content (Tool 1)
-- Collect images (Tool 2)  
-- Gather all links (Tool 3)
-- Combine into complete site profile
-
-### Conditional branching
-Different tools based on conditions or results:
-
-```mermaid
-graph TD
-    Input[Data Input] --> Check{Check Data Type}
-    Check -->|Text| TextTool[Basic LLM Chain]
-    Check -->|HTML| HTMLTool[Get HTML from Link]
-    Check -->|API| APITool[Http-Request]
-    TextTool --> Process[Process Results]
-    HTMLTool --> Process
-    APITool --> Process
-```
-
-## Smart tool selection examples
-
-### Content extraction agent
-**Goal:** Extract product information from any e-commerce site
-
-**Agent reasoning:**
-1. "Let me first get the page content to understand the structure"
-2. "This looks like a product page with structured data - I'll use Get HTML from Link"
-3. "Now I need to extract specific product details - I'll use QANode with targeted questions"
-4. "The data needs formatting - I'll use Edit Fields to structure it properly"
-
-### Research automation agent
-**Goal:** Gather competitive intelligence from multiple sources
-
-**Agent reasoning:**
-1. "I have a list of competitor URLs - I'll use Get All Text from Link for each"
-2. "The content varies in quality - I'll use Filter to remove low-quality data"
-3. "Now I need to analyze for key insights - Basic LLM Chain for analysis"
-4. "I should combine findings from all sources - Merge to consolidate"
-5. "Finally, create a summary report - Basic LLM Chain for report generation"
-
-### Quality control agent
-**Goal:** Monitor content quality across multiple websites
-
-**Agent reasoning:**
-1. "I need to check multiple pages - Get All Text from Link for content"
-2. "Each page needs quality assessment - QANode with quality criteria"
-3. "Some pages might fail checks - If node to handle different outcomes"
-4. "Failed pages need different processing - conditional tool selection"
-5. "Results need to be organized - Edit Fields for structured output"
-
-<Steps>
-
-1. **Define clear objectives**: Agents need specific goals to choose appropriate tools
-
-2. **Provide relevant tools**: Only include tools that could be useful for the task
-
-3. **Set reasonable limits**: Prevent infinite loops with maximum step counts
-
-4. **Monitor tool usage**: Watch how agents combine tools and optimize the selection
-
-5. **Refine over time**: Adjust available tools based on agent performance
-
-</Steps>
-
-## Tool selection best practices
-
-### Start with essential tools
-Don't overwhelm agents with too many options:
-
-**Good tool set for content analysis:**
-- Get All Text from Link (data collection)
-- Basic LLM Chain (analysis)
-- Edit Fields (formatting)
-- If (decision making)
-
-**Avoid:** Giving agents 20+ tools for a simple task
-
-### Provide clear tool descriptions
-Help agents understand when to use each tool:
-
-```
-Get All Text from Link: "Extract readable text content from web pages"
-Get HTML from Link: "Get structured HTML data when you need specific elements"
-Basic LLM Chain: "Analyze, summarize, or generate text content"
-```
-
-### Monitor and optimize
-Watch how agents use tools and refine the selection:
-
-- Which tools are used most frequently?
-- Are agents choosing appropriate tools for tasks?
-- Do certain tool combinations work better than others?
-- Are there missing tools that would improve performance?
-
-<Aside type="tip" title="Less is often more">
-  Agents perform better with a focused set of relevant tools rather than access to every possible tool. Start small and add tools as needed.
+<Aside type="tip" title="Read the run log">
+After a test run, look at the agent's `steps` output: it lists each tool call in order, with its input and whether it worked. If it picked the wrong tool, improve the tool's description or the prompt before adding more tools.
 </Aside>
 
-<Aside type="caution" title="Tools that act require approval">
-  Some tools don't just read or compute — they take real actions ([Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/), [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/), [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)). Because agents read untrusted page content, every action these tools take is gated: you approve or reject the concrete action before it runs. See [Action Approval](/advanced-ai/concepts/action-approval/).
-</Aside>
+## Related
 
-## Common orchestration challenges
-
-### Tool conflicts
-When multiple tools could accomplish the same task:
-- **Solution:** Provide clear guidance on when to use each tool
-- **Example:** Get All Text from Link vs. Get HTML from Link - specify use cases
-
-### Inefficient sequences
-Agents choosing suboptimal tool combinations:
-- **Solution:** Monitor patterns and provide better tool descriptions
-- **Example:** Using multiple small tools instead of one comprehensive tool
-
-### Missing capabilities
-Agents unable to complete tasks due to tool limitations:
-- **Solution:** Add missing tools or combine existing tools creatively
-- **Example:** Need for data validation tools in quality control workflows
-
-Tool selection and orchestration transform individual tools into powerful, coordinated systems that can tackle complex, multi-step challenges automatically.
+- [AI agents](/advanced-ai/concepts/ai-agents/)
+- [Action approval](/advanced-ai/concepts/action-approval/)
+- [Testing AI workflows](/advanced-ai/concepts/evaluation-testing/)

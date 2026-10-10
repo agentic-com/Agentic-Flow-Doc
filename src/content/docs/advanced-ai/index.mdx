@@ -1,87 +1,75 @@
 ---
-title: Advanced AI Workflows
-description: "Use AI models, RAG, agents, memory, tools, and structured outputs inside reliable AWFlow automations."
+title: AI concepts
+description: "Add AI to your AWFlow workflows: pick a model, give it clean context, ground answers in your documents, let agents use tools, and check the results."
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-Advanced AI workflows are normal workflows with one extra responsibility: they must keep model behavior observable and constrained. Use this section to decide when to add an LLM, how to pass it clean context, how to ground answers in retrieved data, and how to keep agent behavior testable.
+An AI step in AWFlow is a node like any other. It takes data from earlier steps, sends it to a model, and passes the answer on. This section explains how to choose the right AI node, what to connect to it, and how to keep its results reliable.
 
 <CardGrid>
-  <Card title="AI Concepts" icon="star">
-    Learn the design ideas behind agents, embeddings, RAG, memory, model dependencies, prompting, and evaluation.
-    
-    [Explore Concepts →](/advanced-ai/concepts/)
+  <Card title="Concepts" icon="star">
+    Agents, models, prompts, knowledge, memory, tools and testing, explained with the nodes that implement them.
+
+    [Explore the concepts →](/advanced-ai/concepts/)
   </Card>
-  <Card title="LangChain Integration" icon="puzzle">
-    Understand how LangChain-style components fit into AWFlow nodes and dependencies.
-    
-    [Learn LangChain →](/advanced-ai/langchain/)
+  <Card title="AI nodes" icon="puzzle">
+    The full list of AI nodes, models, tools and memory nodes, with their settings.
+
+    [Open the AI node reference →](/nodes/builtin/ai/)
   </Card>
-  <Card title="Browser AI Automation" icon="laptop">
-    Combine page extraction, browser actions, and model calls without losing track of page state.
-    
-    [See Browser Integration →](/advanced-ai/langchain/browser-integration-guide)
+  <Card title="On-device AI" icon="laptop">
+    Models that run in your browser: free, private, and usable offline.
+
+    [See Local AI nodes →](/nodes/builtin/ai/localai/)
   </Card>
-  <Card title="Multi-Agent Systems" icon="rocket">
-    Use agent patterns only when the workflow needs planning, tool choice, or iterative decisions.
-    
-    [Advanced Patterns →](/advanced-ai/langchain/advanced-patterns)
+  <Card title="Chat with Aria" icon="rocket">
+    Not building a workflow? Ask Aria or your own agents directly in the chat.
+
+    [Chat and agents →](/usage/using-the-app/chat-and-agents/chat/)
   </Card>
 </CardGrid>
 
-## When AI Belongs In A Workflow
+## When AI belongs in a workflow
 
-Use AI when the workflow needs judgment over language or messy content. Do not use AI for work that a deterministic node can do more clearly, such as formatting a date, filtering a known field, or checking whether a number is greater than a threshold.
+Use AI when the step needs judgment over language or messy content: summarizing a page, sorting messages into categories, pulling fields out of free text. Don't use AI for work a regular node does more clearly, such as formatting a date, filtering on a known field, or comparing a number with a threshold.
 
 ```mermaid
 flowchart TD
-  Need["Workflow need"] --> Known{"Can rules solve it?"}
-  Known -->|Yes| Deterministic["Use flow, mapping, code, or transformation nodes"]
-  Known -->|No| Language{"Is the input language-heavy or ambiguous?"}
-  Language -->|Yes| AI["Use an AI node with constrained context"]
-  Language -->|No| Redesign["Clarify data shape before adding AI"]
-  AI --> Check["Validate output before downstream actions"]
+  Need["What the step must do"] --> Known{"Can a fixed rule do it?"}
+  Known -->|Yes| Deterministic["Use a flow, mapping, code or data node"]
+  Known -->|No| Language{"Is the input text or images?"}
+  Language -->|Yes| AI["Use an AI node with focused input"]
+  Language -->|No| Redesign["Clean up the data first"]
+  AI --> Check["Check the result before acting on it"]
 ```
 
-Good AI steps usually have:
+A good AI step usually has:
 
-- A clear task, such as summarize, classify, extract, answer, rank, or decide.
-- Clean input fields from previous nodes.
-- A model dependency that matches the task.
-- A structured output or parser when later nodes depend on the result.
-- A fallback path for empty context, model errors, or low-confidence answers.
+- one clear task: summarize, classify, extract, answer, or decide;
+- clean input from earlier steps (not a whole web page when one section is enough);
+- a model that fits the task (see [Models and dependencies](/advanced-ai/concepts/model-dependencies/));
+- a structured output when later steps use the result (see [Prompting and outputs](/advanced-ai/concepts/prompting-and-outputs/));
+- a plan for empty input, model errors and unexpected answers.
 
-## Learning Path
+## Pick a starting node
 
-1. Start with [Model Dependencies](/advanced-ai/concepts/model-dependencies/) so you understand chat models, embeddings, vector stores, memory, parsers, and tools.
-2. Read [Prompting and Structured Outputs](/advanced-ai/concepts/prompting-and-outputs/) before wiring model output into later automation.
-3. Use [Embeddings and Vectors](/advanced-ai/concepts/embeddings-vectors/) when you need semantic search.
-4. Use [RAG](/advanced-ai/concepts/rag/) when answers must be grounded in retrieved documents or page content.
-5. Use [AI Agents](/advanced-ai/concepts/ai-agents/) and [Tool Selection](/advanced-ai/concepts/tool-selection/) when the model must choose actions.
-6. Add [Evaluation and Testing](/advanced-ai/concepts/evaluation-testing/) before relying on the workflow for repeated production tasks.
+| You want to… | Start with |
+| --- | --- |
+| Turn text into other text (rewrite, draft, translate) | [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) |
+| Shorten a long text | [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) |
+| Sort text into your own categories | [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/) |
+| Pull named fields out of text | [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) |
+| Check text against a policy before continuing | [Guardrails](/nodes/builtin/ai/aiagents/guardrails/) |
+| Answer from your own documents | [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) with a [knowledge base](/usage/using-the-app/knowledge-bases/overview/) |
+| Let the model choose actions (search, call a service, act on the page) | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) |
+| Keep everything on your device | [Local AI nodes](/nodes/builtin/ai/localai/) |
 
-## Common Patterns
+## Learning path
 
-| Pattern | Use it for | Main risk |
-| --- | --- | --- |
-| Extract then summarize | Turning page text into a shorter result | Sending noisy or incomplete page content |
-| Classify then branch | Routing records based on language meaning | Vague categories that overlap |
-| Retrieve then answer | Answering from a knowledge base or page collection | Unsupported answers when retrieval is weak |
-| Agent with tools | Multi-step tasks where the next action depends on results | Too many tools or unclear stop conditions |
-| Structured output | Passing model results into later nodes | Missing schema validation or fallback behavior |
-
-## Design Checklist
-
-- Keep the browser extraction step separate from the AI step.
-- Trim page content before sending it to a model.
-- Prefer structured output for anything used by another node.
-- Ground factual answers with retrieved context or source text.
-- Add an error path for empty input, credential failure, rate limits, and invalid output.
-- Test with short, long, irrelevant, and malformed inputs.
-
-## Where To Go Next
-
-- For exact available AI nodes, see the [AI node reference](/nodes/builtin/ai/).
-- For browser-specific AI patterns, see [Browser Integration](/advanced-ai/langchain/browser-integration-guide/).
-- For implementation building blocks, see [LangChain Components](/advanced-ai/langchain/components/).
+1. [Models and dependencies](/advanced-ai/concepts/model-dependencies/): what you connect to an AI node.
+2. [Prompting and outputs](/advanced-ai/concepts/prompting-and-outputs/): instructions and output shapes later steps can use.
+3. [Embeddings and vectors](/advanced-ai/concepts/embeddings-vectors/) and [RAG](/advanced-ai/concepts/rag/): answering from your documents.
+4. [AI agents](/advanced-ai/concepts/ai-agents/), [Tool selection](/advanced-ai/concepts/tool-selection/) and [Action approval](/advanced-ai/concepts/action-approval/): letting the model act, safely.
+5. [Memory and context](/advanced-ai/concepts/memory-context/): conversations that continue across runs.
+6. [Testing AI workflows](/advanced-ai/concepts/evaluation-testing/): checking results before you rely on them.
