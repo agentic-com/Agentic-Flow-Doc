@@ -2,63 +2,111 @@
 title: AI agents
 description: "When to use an agent node instead of a simple AI step, which agent to pick in AWFlow, and how to keep it focused."
 section: concepts
+kind: concept
+sidebar:
+  label: Agents and tools
+  order: 3
 ---
 
-import { Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+import { Aside, CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards, ItemsPlayground } from "@components/awflow";
 
-An **agent** is an AI node that can decide what to do next: search your documents, call a tool, read the result, and try again until it has an answer. A **chain** does one thing: it sends your input to the model once and returns the answer.
-
-Use an agent only when the step needs **decisions**. For a fixed task, such as summarizing or classifying, a chain is simpler, faster and easier to test.
+:::note[In 20 seconds]
+A **chain** sends your input to the model once and returns the answer. An **agent** can decide what to do next: call a tool, read the result, and try again until it has an answer. Use an agent only when the step needs decisions, give it two or three tools, and say in the prompt when the job is done.
+:::
 
 <Aside type="note" title="Agents in workflows and agents in the chat">
 This page is about agent **nodes** in workflows. To chat with Aria or with agents you create yourself, see [Agents](/app/chat-and-agents/agents/). To hand a task from a workflow to one of those agents, use the **Run agent** node.
 </Aside>
 
+## See it happen
+
+A Tools Agent with Wikipedia and Web Search is asked for three facts about a company. Its output lists the tool calls it made in `steps`, in order, next to the final `response`.
+
+<ItemsPlayground
+  client:visible
+  view="json"
+  steps={[
+    { name: "Get All Text", kind: "data", items: { text: "Analytical Engines Ltd. Founded 1843…" } },
+    {
+      name: "Tools Agent",
+      kind: "ai",
+      note: "Wikipedia + Web Search",
+      items: {
+        response: "1. Founded in 1843 (page). 2. Based in London (Wikipedia). 3. …",
+        steps: [
+          { name: "wikipedia-api", args: { query: "Analytical Engines Ltd" }, status: "ok", durationMs: 812 },
+          { name: "web_search", args: { query: "Analytical Engines Ltd headquarters" }, status: "ok", durationMs: 1430 },
+        ],
+      },
+    },
+    { name: "Display Markdown", kind: "io", note: "Content: {{ $input.response }}", count: "shows the answer" },
+  ]}
+  selected={1}
+  caption="Illustration of a run. Each entry in steps also has result and truncated; tool names depend on the tools you connect."
+/>
+
+## Which AI node to use
+
+<CompareCards
+  label="AI nodes compared"
+  cards={[
+    {
+      title: "Basic LLM Chain",
+      icon: "chain",
+      href: "/nodes/builtin/ai/aiagents/basicllmchainnode/",
+      when: "One call to the model: rewrite, draft, translate, answer from text you pass in.",
+      example: "Turn page text into a short reply.",
+      meta: "no tools, no search",
+    },
+    {
+      title: "Q&A Agent",
+      icon: "book",
+      href: "/nodes/builtin/ai/aiagents/qanode/",
+      when: "Answer a question from a connected knowledge base.",
+      example: "What does our refund policy say about gifts?",
+      meta: "4 passages by default",
+    },
+    {
+      title: "RAG Agent",
+      icon: "book",
+      href: "/nodes/builtin/ai/aiagents/ragnode/",
+      when: "Answer from your documents, with memory and an output parser if you need them.",
+      example: "A help-desk answer that cites its sources.",
+      meta: "response · sources",
+    },
+    {
+      title: "Tools Agent",
+      icon: "agent",
+      href: "/nodes/builtin/ai/aiagents/toolsagentnode/",
+      when: "The model must choose between actions, several times if needed.",
+      example: "Research a company with Wikipedia and Web Search.",
+      meta: "Max iterations 10 by default",
+    },
+  ]}
+/>
+
+For common one-call tasks there are ready-made chains: [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) and [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/).
+
 ## How an agent works
 
 ```mermaid
 flowchart TD
-  Goal["Prompt + system message"] --> Decide["Model decides the next step"]
-  Decide --> Tool{"Needs a tool?"}
-  Tool -->|Yes| Call["Calls a connected tool"]
-  Call --> Result["Reads the result"]
-  Result --> Decide
-  Tool -->|No| Answer["Returns the answer"]
-  Decide --> Stop{"Max iterations reached?"}
-  Stop -->|Yes| Partial["Answers with what it has"]
-
-  style Decide fill:#e1f5fe,stroke:#0277bd
+  Goal[Prompt and system message] --> Decide[Model decides the next step]
+  Decide --> Tool{Needs a tool?}
+  Tool -->|Yes| Call[Calls a connected tool] --> Result[Reads the result] --> Decide
+  Tool -->|No| Answer[Returns the answer]
+  class Decide awf-ai
+  class Tool awf-flow
+  class Call awf-io
+  class Answer awf-ok
 ```
 
-The agent can only use what you connect to it. It never gets a tool you didn't add.
-
-## Which AI node to use
-
-<Tabs>
-  <TabItem label="Basic LLM Chain">
-    [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) sends your prompt to the model once and returns its answer. Use it to rewrite, draft, translate or answer from text you pass in. No tools, no search.
-
-    For common tasks there are ready-made chains: [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) and [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/).
-  </TabItem>
-
-  <TabItem label="Q&A Agent">
-    [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) answers a question from a connected knowledge base. It retrieves the most relevant passages (4 by default) and answers from them. It also works with on-device question-answering models.
-  </TabItem>
-
-  <TabItem label="RAG Agent">
-    [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) searches a connected [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) base before answering, so its answers come from your documents. It can also use a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) and an output parser. See [RAG](/concepts/ai/rag/).
-  </TabItem>
-
-  <TabItem label="Tools Agent">
-    [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) chooses between the tools you connect: [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/), [Wikipedia](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/), [Calculator](/nodes/builtin/ai/aidependencies/tools/calculator/), [Browser](/nodes/builtin/ai/aidependencies/tools/browser/), [HTTP Request](/nodes/builtin/ai/aidependencies/tools/http-request/), [MCP Client](/nodes/builtin/ai/aidependencies/tools/mcp-client/), another workflow through the [Workflow Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/), and more.
-
-    It needs a chat model that supports tool calling. **Max iterations** (10 by default) limits how many tool calls it may make before it must answer.
-  </TabItem>
-</Tabs>
+The agent can only use what you connect to it. **Max iterations** (10 by default on the Tools Agent) limits how many tool calls it may make before it must answer. The Tools Agent needs a chat model that supports tool calling.
 
 ## What you can connect
 
-| Port | Basic LLM Chain | Q&A Agent | RAG Agent | Tools Agent |
+| Slot | Basic LLM Chain | Q&A Agent | RAG Agent | Tools Agent |
 | --- | --- | --- | --- | --- |
 | Model (required) | Yes | Yes | Yes | Yes, with tool calling |
 | Knowledge | — | Yes | Yes | Yes |
@@ -70,56 +118,49 @@ Check each node's page for the exact options.
 
 ## When to use an agent
 
-Use an agent when:
+Use an agent when you can't know in advance which tool the step needs, or when each action depends on the last result. Use a chain or regular nodes when the task is the same every time, or when a wrong action would be costly. If you still need an agent there, rely on [action approval](/concepts/ai/action-approval/).
 
-- you can't know in advance which tool the step needs;
-- the step needs several actions, each depending on the last result;
-- some variation in the answer is acceptable.
+## Write a prompt that can finish
 
-Use a chain, or regular nodes, when:
-
-- the task is the same every time;
-- a wrong action would be costly. If you still need an agent, rely on [action approval](/concepts/ai/action-approval/);
-- the task can be done with a few regular nodes in a row.
-
-## Keep agents focused
-
-| Question | Why it matters |
-| --- | --- |
-| What exactly should it achieve? | A vague goal leads to wandering tool calls. |
-| What data does it get? | Missing input leads to guesses. |
-| Which tools does it need? | Fewer tools mean fewer wrong choices. See [Tool selection](/concepts/ai/tool-selection/). |
-| When should it stop? | **Max iterations** is a safety net, not a plan. Say in the prompt when the task is done. |
-| What should the answer look like? | Connect an [output parser](/concepts/ai/prompting-and-outputs/) when a later step uses it. |
-
-## Example: research a company
-
-```mermaid
-flowchart LR
-  Trigger["Hotkey"] --> Text["Get All Text"]
-  Text --> Agent["Tools Agent"]
-  Model["Chat model"] --> Agent
-  Wiki["Wikipedia tool"] --> Agent
-  Search["Web Search tool"] --> Agent
-  Agent --> Note["Display Markdown"]
-
-  style Agent fill:#e1f5fe,stroke:#0277bd
-```
-
-"Research this company" is too vague. A stronger prompt is:
+"Research this company" is too vague. A stronger prompt:
 
 > Find three facts about this company and give the source of each. Use the page text first. Search Wikipedia only if the page doesn't say enough. Return a short list with links.
 
 It gives the agent a goal, an order for its tools, a point to stop, and the shape of the answer.
 
-<Aside type="tip" title="Two or three tools are enough">
-An agent with two or three relevant tools is usually more reliable than one with every tool connected.
-</Aside>
+## You'll notice this when…
 
-## Related
+<details>
+<summary>The agent never calls a tool</summary>
 
-- [Tool selection](/concepts/ai/tool-selection/)
-- [Action approval](/concepts/ai/action-approval/)
-- [Prompting and outputs](/concepts/ai/prompting-and-outputs/)
-- [RAG](/concepts/ai/rag/)
-- [Testing AI workflows](/concepts/ai/evaluation-testing/)
+The model doesn't support tool calling, the tools aren't connected to the **Tools** slot, or the prompt doesn't say when to use them. Name the tools in the prompt and say when each one helps.
+
+</details>
+
+<details>
+<summary>The agent stops with a partial answer</summary>
+
+It reached **Max iterations**. Tighten the prompt so it knows when it's done, or remove tools it doesn't need. Raise the limit only after that.
+
+</details>
+
+<details>
+<summary>The agent picks the wrong tool</summary>
+
+Too many tools, or tools with overlapping jobs. Keep two or three, with clear names and descriptions. See [Tool selection](/concepts/ai/tool-selection/).
+
+</details>
+
+<details>
+<summary>The agent asks for approval before acting</summary>
+
+That's on purpose: actions on a page or a service ask you first. See [Action approval](/concepts/ai/action-approval/).
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Tool selection" description="Which tools to give an agent, and how it picks them." href="/concepts/ai/tool-selection/" />
+  <LinkCard title="Practise it" description="Recipes with a Tools Agent." href="/recipes/" />
+</CardGrid>

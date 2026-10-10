@@ -1,32 +1,76 @@
 ---
 title: AI concepts
-description: "The parts of an AI workflow in AWFlow: models, prompts, knowledge, memory, tools and testing, and the nodes that provide each one."
+description: "Models and where they run, agents and tools, and answers from your own documents: the parts of an AI step in AWFlow."
 section: concepts
+kind: hub
 sidebar:
   label: Overview
   order: 0
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { CompareCards } from '@components/awflow';
 
-An AI step is made of a few parts: an **AI node** that does the task, a **model** connected to it, the **input** you map from earlier steps, and optionally **knowledge**, **memory**, **tools** and an **output parser**. When an AI step behaves badly, one of these parts is usually the cause.
+An AI step is an **AI node** that does the task, plus the nodes you plug into it: a **model** (always), and optionally **knowledge**, **memory**, **tools** and an **output parser**. When an AI step behaves badly, one of these parts is usually the cause.
+
+## Reading order
+
+1. [Models and where they run](/concepts/ai/model-dependencies/): what you plug into an AI node, and cloud vs your computer vs your browser.
+2. [Prompting and outputs](/concepts/ai/prompting-and-outputs/): instructions that work, and answers later steps can read.
+3. [Agents and tools](/concepts/ai/ai-agents/): when an agent is worth it, and which one to pick.
+4. [Tool selection](/concepts/ai/tool-selection/) and [Action approval](/concepts/ai/action-approval/): what an agent may do, and why it asks you first.
+5. [Knowledge (RAG)](/concepts/ai/rag/): answers grounded in your documents, then [Embeddings and vectors](/concepts/ai/embeddings-vectors/) for how the search works.
+6. [Memory and context](/concepts/ai/memory-context/), [Branching on AI results](/concepts/ai/workflow-intelligence/) and [Testing AI workflows](/concepts/ai/evaluation-testing/) when you go further.
+
+## Three questions to settle first
+
+<CompareCards
+  label="The three AI hubs"
+  cards={[
+    {
+      title: "Which model, where?",
+      icon: "cloud",
+      href: "/concepts/ai/model-dependencies/",
+      when: "Pick a cloud model, Ollama on your computer, or a model in your browser.",
+      example: "Private data stays on-device with Web LLM or Ollama.",
+      meta: "Models and where they run",
+    },
+    {
+      title: "Chain or agent?",
+      icon: "agent",
+      href: "/concepts/ai/ai-agents/",
+      when: "A chain calls the model once. An agent chooses tools until it's done.",
+      example: "Summarise a page (chain) vs research a company (agent).",
+      meta: "Agents and tools",
+    },
+    {
+      title: "Its own knowledge or yours?",
+      icon: "book",
+      href: "/concepts/ai/rag/",
+      when: "Answers that must come from your documents need a knowledge base.",
+      example: "A help-desk reply that cites the policy page.",
+      meta: "Knowledge (RAG)",
+    },
+  ]}
+/>
 
 ## How the parts fit together
 
 ```mermaid
-flowchart TB
-  Data["Data from earlier steps"] --> Node["AI node (chain or agent)"]
-  Model["Model node"] --> Node
-  Knowledge["Local Knowledge"] -.-> Node
-  Memory["Chat Memory"] -.-> Node
-  Tools["Tool nodes"] -.-> Node
-  Parser["Output parser"] -.-> Node
-  Node --> Next["Next step in the workflow"]
-
-  style Node fill:#e1f5fe,stroke:#0277bd
+flowchart LR
+  Data[Data from earlier steps] --> Node[AI node: chain or agent]
+  Model[Model] --> Node
+  Knowledge[Local Knowledge] -.-> Node
+  Memory[Chat Memory] -.-> Node
+  Tools[Tool nodes] -.-> Node
+  Parser[Output parser] -.-> Node
+  Node --> Next[Next step]
+  class Node,Model awf-ai
+  class Knowledge,Memory,Parser awf-data
+  class Tools awf-io
 ```
 
-Dotted lines are optional. Each part is a node you connect to the AI node's ports on the canvas.
+Dotted lines are optional. Each part is a node you connect to one of the AI node's slots on the canvas.
 
 | Part | What it does | Nodes |
 | --- | --- | --- |
@@ -36,61 +80,6 @@ Dotted lines are optional. Each part is a node you connect to the AI node's port
 | Memory | The conversation so far | [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) |
 | Tools | Actions an agent can choose | [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/), [Browser](/nodes/builtin/ai/aidependencies/tools/browser/), [HTTP Request](/nodes/builtin/ai/aidependencies/tools/http-request/), [Workflow Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/) |
 | Output parser | Turns the answer into data | [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/), [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/) |
-
-## Concepts
-
-<CardGrid>
-  <Card title="Models and dependencies" icon="laptop">
-    What you connect to an AI node, and how to choose a model.
-
-    [Models and dependencies →](/concepts/ai/model-dependencies/)
-  </Card>
-  <Card title="Prompting and outputs" icon="document">
-    Instructions that work, and outputs later steps can use.
-
-    [Prompting and outputs →](/concepts/ai/prompting-and-outputs/)
-  </Card>
-  <Card title="AI agents" icon="star">
-    When to use an agent instead of a simple AI step.
-
-    [AI agents →](/concepts/ai/ai-agents/)
-  </Card>
-  <Card title="Tool selection" icon="setting">
-    Which tools to give an agent, and how it picks them.
-
-    [Tool selection →](/concepts/ai/tool-selection/)
-  </Card>
-  <Card title="Action approval" icon="approve-check">
-    Why you approve each action an agent takes on a page or a service.
-
-    [Action approval →](/concepts/ai/action-approval/)
-  </Card>
-  <Card title="Embeddings and vectors" icon="puzzle">
-    How knowledge bases find passages by meaning.
-
-    [Embeddings and vectors →](/concepts/ai/embeddings-vectors/)
-  </Card>
-  <Card title="RAG" icon="document">
-    Answers grounded in your own documents.
-
-    [RAG →](/concepts/ai/rag/)
-  </Card>
-  <Card title="Memory and context" icon="laptop">
-    Conversations that continue across runs.
-
-    [Memory and context →](/concepts/ai/memory-context/)
-  </Card>
-  <Card title="Branching on AI results" icon="rocket">
-    Route items with classifiers, guardrails and human review.
-
-    [Branching on AI results →](/concepts/ai/workflow-intelligence/)
-  </Card>
-  <Card title="Testing AI workflows" icon="approve-check">
-    Check AI results before you rely on them.
-
-    [Testing AI workflows →](/concepts/ai/evaluation-testing/)
-  </Card>
-</CardGrid>
 
 ## When AI belongs in a workflow
 
@@ -104,6 +93,10 @@ flowchart TD
   Language -->|Yes| AI["Use an AI node with focused input"]
   Language -->|No| Redesign["Clean up the data first"]
   AI --> Check["Check the result before acting on it"]
+  class Known,Language awf-flow
+  class Deterministic awf-data
+  class AI awf-ai
+  class Check awf-ok
 ```
 
 A good AI step usually has:
@@ -141,3 +134,10 @@ A good AI step usually has:
 ## Rule of thumb
 
 If the answer must come from your documents, use a knowledge base. If a later step uses the answer, give it a structure. If the model must choose between actions, use an agent. Before you rely on a workflow, try it with realistic inputs.
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Start with Models and where they run" description="What you plug into an AI node, and where the model runs." href="/concepts/ai/model-dependencies/" />
+  <LinkCard title="Practise it" description="Recipes with AI steps, on-device and in the cloud." href="/recipes/" />
+</CardGrid>

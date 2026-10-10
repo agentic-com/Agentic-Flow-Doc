@@ -2,6 +2,8 @@
 title: Tool selection
 description: "Which tool nodes to give a Tools Agent, how the agent chooses between them, and how to keep its choices reliable."
 section: concepts
+sidebar:
+  order: 4
 ---
 
 import { Aside } from "@astrojs/starlight/components";
@@ -19,7 +21,7 @@ flowchart TD
   Result --> Read
   Pick -->|No| Answer["Answers"]
 
-  style Read fill:#e1f5fe,stroke:#0277bd
+  class Read awf-ai
 ```
 
 Each tool call counts toward **Max iterations** (10 by default). When the limit is reached, the agent answers with what it has.

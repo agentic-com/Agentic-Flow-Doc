@@ -1,55 +1,171 @@
 ---
-title: Flow Logic
-description: How AWFlow controls execution order, branches, loops, waits, merges, and errors.
+title: Flow
+description: "How a run finds its path: branching, repeating, waiting, and what happens when a step fails."
+section: concepts
+kind: hub
 sidebar:
   label: Overview
   order: 0
-section: concepts
 ---
 
-import { Card, CardGrid } from "@astrojs/starlight/components";
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards } from "@components/awflow";
 
-Flow logic decides **what runs next**. It is separate from data mapping: mapping changes the shape of data, while flow logic changes the path a run takes through the workflow.
+Flow logic decides **what runs next**. Data mapping changes what an item looks like; flow logic changes the path the run takes through your workflow. Four questions cover almost everything: where does this item go, how do I repeat work, how do I pause, and what happens when a step fails?
 
-```mermaid
-flowchart TD
-  Trigger["Trigger"] --> Step["Run node"]
-  Step --> Branch{"Condition?"}
-  Branch -->|true| TruePath["True path"]
-  Branch -->|false| FalsePath["False path"]
-  TruePath --> Merge["Merge or finish"]
-  FalsePath --> Merge
-  Merge --> Next["Next step"]
-```
+## Reading order
 
-## Core Ideas
+1. [Workflow lifecycle](/concepts/flow/workflow-lifecycle/): what happens from the trigger to the last step.
+2. [Execution order](/concepts/flow/execution-order/): which step runs when, and why branches wait for each other.
+3. [Splitting and branching](/concepts/flow/splitting/): send items down different paths with IF, Switch or Filter.
+4. [Merging](/concepts/flow/merging/): bring branches back together.
+5. [Looping](/concepts/flow/looping/): repeat steps with Loop, Split in Batches or Poll Until.
+6. [Waiting](/concepts/flow/waiting/): pause for a time or for a person.
+7. [Error handling](/concepts/flow/error-handling/): retry, carry on, or catch a failure.
+
+Then, when your workflows grow: [Lambda workflows](/concepts/flow/lambdaworkflows/) to reuse steps, and [Browser context](/concepts/flow/browser-context/) for steps that read or change a web page.
+
+## Branching: where does this item go?
+
+<CompareCards
+  label="Ways to branch"
+  cards={[
+    {
+      title: "IF",
+      icon: "branch",
+      href: "/nodes/builtin/flow/if/",
+      when: "Two paths: the conditions hold, or they don't.",
+      example: "Price dropped? Send an alert, otherwise do nothing.",
+      meta: "True · False",
+    },
+    {
+      title: "Switch",
+      icon: "switch",
+      href: "/nodes/builtin/flow/switch/",
+      when: "Three or more named paths, plus a fallback.",
+      example: "Billing, Bug, or Anything else.",
+      meta: "one port per rule",
+    },
+    {
+      title: "Filter",
+      icon: "filter",
+      href: "/nodes/builtin/flow/filter/",
+      when: "Keep only some items and drop the rest.",
+      example: "Only links to your own domain.",
+      meta: "Kept",
+    },
+  ]}
+/>
+
+## Repeating: how do I do this more than once?
+
+A step already runs once for each item it receives (see [Items](/concepts/data/data-structure/)). Build a loop only when the repeat depends on a condition, a batch size or a deadline.
+
+<CompareCards
+  label="Ways to repeat work"
+  cards={[
+    {
+      title: "Loop",
+      icon: "loop",
+      href: "/concepts/flow/looping/#repeat-while-a-condition-holds",
+      when: "Repeat steps while a condition holds.",
+      example: "Click Next until the last page.",
+      meta: "Loop · Done",
+    },
+    {
+      title: "Split in Batches",
+      icon: "batch",
+      href: "/concepts/flow/looping/#work-through-a-list-in-batches",
+      when: "Work through a long list a few items at a time.",
+      example: "500 rows, 20 at a time.",
+      meta: "Loop · Done",
+    },
+    {
+      title: "Poll Until",
+      icon: "poll",
+      href: "/nodes/builtin/flow/polluntil/",
+      when: "Call a URL until the response says it's ready.",
+      example: "Every 5 minutes until an export is done.",
+      meta: "Done · Timeout",
+    },
+  ]}
+/>
+
+## Waiting: how do I pause?
+
+<CompareCards
+  label="Ways to pause a run"
+  cards={[
+    {
+      title: "Wait",
+      icon: "poll",
+      href: "/nodes/builtin/flow/wait/",
+      when: "Pause for a set time, then carry on with the same data.",
+      example: "Wait 10 minutes between two requests.",
+      meta: "Amount × Unit",
+    },
+    {
+      title: "Wait For Approval",
+      icon: "shield",
+      href: "/nodes/builtin/flow/wait-for-approval/",
+      when: "Pause until a person approves or rejects.",
+      example: "Check a drafted email before it's sent.",
+      meta: "Approved · Rejected",
+    },
+    {
+      title: "Poll Until",
+      icon: "batch",
+      href: "/nodes/builtin/flow/polluntil/",
+      when: "Pause until another service says it's done.",
+      example: "A report that takes a while to build.",
+      meta: "Done · Timeout",
+    },
+  ]}
+/>
+
+## Failures: what if a step fails?
+
+<CompareCards
+  label="Ways to handle a failure"
+  cards={[
+    {
+      title: "Retry",
+      icon: "retry",
+      href: "/concepts/flow/error-handling/#retry-a-flaky-step",
+      when: "The failure is often temporary: a timeout, a busy server.",
+      example: "Try an API call up to 3 times, 1 second apart.",
+      meta: "node Settings tab",
+    },
+    {
+      title: "Continue On Fail",
+      icon: "skip",
+      href: "/concepts/flow/error-handling/#carry-on-after-a-failure",
+      when: "The step is optional and the run should go on without it.",
+      example: "A thumbnail that's nice to have.",
+      meta: "node Settings tab",
+    },
+    {
+      title: "Try / Catch",
+      icon: "shield",
+      href: "/concepts/flow/error-handling/#catch-a-failure-with-try--catch",
+      when: "A group of steps needs a plan B when any of them fails.",
+      example: "If the page can't be read, post an alert instead.",
+      meta: "Try · Catch",
+    },
+    {
+      title: "Error Trigger",
+      icon: "alert",
+      href: "/nodes/builtin/trigger/errortrigger/",
+      when: "You want to hear about any failed run of a workflow.",
+      example: "Send yourself a message when the nightly sync fails.",
+      meta: "a separate workflow",
+    },
+  ]}
+/>
+
+## Next
 
 <CardGrid>
-  <Card title="Workflow Lifecycle" icon="refresh-cw">
-    The full path from trigger, context, data, browser changes, output, and errors.
-
-    [Read workflow lifecycle](/concepts/flow/workflow-lifecycle/)
-  </Card>
-
-  <Card title="Execution Order" icon="route">
-    How nodes run, how branches are selected, and why in-page actions can change later results.
-
-    [Read execution order](/concepts/flow/execution-order/)
-  </Card>
-
-  <Card title="Branches And Merges" icon="git-merge">
-    Use splitting, conditions, and merging to keep workflow paths understandable.
-
-    [Read splitting](/concepts/flow/splitting/)
-  </Card>
-
-  <Card title="Loops And Waiting" icon="repeat">
-    Repeat work over many items and wait for page or time-based conditions before continuing.
-
-    [Read looping](/concepts/flow/looping/)
-  </Card>
+  <LinkCard title="Start with Splitting and branching" description="IF, Switch and Filter, and what happens to the items." href="/concepts/flow/splitting/" />
+  <LinkCard title="Practise it" description="Recipes with branches, loops and approvals." href="/recipes/" />
 </CardGrid>
-
-## Practical Rule
-
-Keep browser actions, flow decisions, and data transformations visually separate when possible. That makes it much easier to find whether a failure came from page timing, an incorrect condition, a missing field, or an external service.

@@ -1,90 +1,162 @@
 ---
-title: Error Handling
-description: "Learn how to manage and recover from errors in your AWFlow workflows."
+title: Error handling
+description: "Decide what happens when a step fails: retry it, carry on without it, catch it with Try / Catch, or get alerted."
 sidebar:
-  order: 6
+  order: 7
 section: concepts
+kind: concept
 ---
 
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
-import { Card, CardGrid } from "@astrojs/starlight/components";
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards, ItemsPlayground } from "@components/awflow";
 
-Sometimes a workflow step fails.
+:::note[In 20 seconds]
+By default, a failing step ends the run. You can change that per step in its **Settings** tab: **Retry** tries again, **Continue On Fail** lets the run carry on with an empty item. For a group of steps, **Try / Catch** sends a failure down a separate branch. An **Error Trigger** starts another workflow when a run fails.
+:::
 
-Examples:
+## See it happen
 
-- A website element doesn’t exist (button/text changed)
-- A request times out
-- A service rejects an API call
+Try / Catch guards a page read. The page has changed and the step fails, so the rest of the guarded steps are skipped and the **Catch** branch receives one item describing the failure.
 
-Error handling helps your workflow react instead of stopping immediately.
+<ItemsPlayground
+  client:visible
+  steps={[
+    { name: "Try / Catch", kind: "flow", note: "Try branch", items: { url: "https://shop.example/p/1" } },
+    { name: "Get Element Data", kind: "data", note: "failed", count: "error" },
+    {
+      name: "Catch branch",
+      kind: "flow",
+      items: {
+        nodeLabel: "Get Element Data",
+        message: "No element matches the selector .price",
+        input: { url: "https://shop.example/p/1" },
+      },
+    },
+  ]}
+  caption="Illustration of a run. The Catch item names the failed step, its error and the data it was given."
+/>
 
-<Image src={Social} alt="illustration" />
+## Pick how to handle a failure
 
----
+<CompareCards
+  label="Ways to handle a failure"
+  cards={[
+    {
+      title: "Retry",
+      icon: "retry",
+      when: "The failure is often temporary: a timeout, a busy server, a rate limit.",
+      example: "Up to 3 tries, 1 second apart, transient errors only.",
+      meta: "step Settings tab",
+    },
+    {
+      title: "Continue On Fail",
+      icon: "skip",
+      when: "The step is optional and the rest of the run should go on.",
+      example: "A thumbnail that's nice to have.",
+      meta: "step Settings tab",
+    },
+    {
+      title: "Try / Catch",
+      icon: "shield",
+      href: "/nodes/builtin/flow/try/",
+      when: "A group of steps needs a plan B when any of them fails.",
+      example: "If the page can't be read, post an alert and stop.",
+      meta: "Try · Catch",
+    },
+    {
+      title: "Error Trigger",
+      icon: "alert",
+      href: "/nodes/builtin/trigger/errortrigger/",
+      when: "You want to hear about failed runs, whatever failed.",
+      example: "Message yourself when the nightly sync fails.",
+      meta: "starts a workflow",
+    },
+  ]}
+/>
 
-## Common Workflow Errors
+## Retry a flaky step
 
-Here are some common error types you may encounter in browser automation or API workflows:
+Open the step's settings, go to the **Settings** tab and turn on **Allow Retry**:
 
-- **Content Security Policy (CSP) violations**: Some websites block actions from browser extensions.
-- **DOM element not found**: When a webpage layout changes and selectors no longer match.
-- **Cross-origin restrictions**: Accessing data from other domains may fail.
-- **Page loading or timeout errors**: Slow network conditions or missing elements cause timeouts.
-- **Permission errors**: Browser or API credentials may lack the necessary access rights.
+- **Max. Tries**: how many attempts, up to 10 (3 by default).
+- **Wait Between Tries (ms)**: the pause between attempts (1,000 ms by default).
+- **Backoff**: *Fixed* waits the same each time. *Exponential (with jitter)* waits longer after each attempt, which suits rate-limited services.
+- **Retry condition**: *Any error* (the default), *Transient errors only* (429, 5xx, network errors and timeouts; fails at once on errors like 401 or 404), or *When message matches* the text or `/regex/` in **Retry if message matches**.
 
----
+## Carry on after a failure
 
-## Handle failures with Try / Catch
+Two more switches sit in the same **Settings** tab:
 
-An individual node does not have its own separate "error" output. To run steps when something goes wrong, wrap the risky work in a [**Try / Catch**](/nodes/builtin/flow/try/) node.
+- **Continue On Fail**: if the step still fails after any retries, the error is logged and the step outputs one empty item. The steps after it keep running.
+- **Always Output Data**: the step outputs one empty item when it would otherwise output nothing, so the run doesn't end at this step.
 
-The **Try** branch runs the guarded steps. If any of them fails, the rest of that branch is abandoned and control jumps to the **Catch** branch — which receives the failing node's name, its error message, and its input, so it can notify, log, or recover.
+Retry runs first. When it's used up, Continue On Fail decides whether the run stops or goes on.
+
+## Catch a failure with Try / Catch
+
+Wire the steps you want to protect to the **Try** output of a [Try / Catch](/nodes/builtin/flow/try/) node, and the plan B to **Catch**. Bring both branches back into the same step to mark where the guarded part ends.
 
 ```mermaid
 flowchart LR
-    Start(["Start"]) --> T["Try / Catch"]
-    T -- Try --> F["Fetch Data"] --> P["Process Data"]
-    T -- Catch --> A["Send Alert Email"]
+  S[Start] --> T{Try / Catch}
+  T -->|Try| F[Get Element Data] --> P[Edit Fields]
+  T -->|Catch| A[Send an alert]
+  P --> J[Save]
+  A --> J
+  class T awf-flow
+  class F,P awf-data
+  class A awf-err
+  class J awf-ok
 ```
 
-In this example, if “Fetch Data” fails, the guarded branch stops and the **Catch** branch runs “Send Alert Email”. Where the two branches join back together marks the end of the guarded region. A failure inside the Catch branch is not caught by the same Try — it propagates to an outer Try, or ends the run.
+If a guarded step fails, the rest of the Try branch is skipped and Catch runs with `nodeLabel`, `message` and `input`. A failure inside the Catch branch isn't caught by the same Try: it goes to an outer Try / Catch, or ends the run.
 
-To react when an **entire workflow** fails (rather than a single step inside it), use an [**Error Trigger**](/nodes/builtin/trigger/errortrigger/) — a workflow that runs whenever a chosen workflow errors.
+To stop a run on purpose with a clear message, use [Stop and Error](/nodes/builtin/flow/stopanderror/).
 
-Learn more about nodes in [Nodes](/app/workflows/components/nodes/).
+## Hear about failed runs
 
----
+An [Error Trigger](/nodes/builtin/trigger/errortrigger/) starts a workflow when a watched workflow fails. It receives the failed workflow, the step that failed, the error and its input. It fires for runs that start on their own (a schedule, a page load, a hotkey and so on), not for runs you start yourself from the designer, and not for failures a Try / Catch already handled.
 
-## Per-node error settings
+## You'll notice this when…
 
-Beyond Try / Catch, each node has settings that control what happens when it fails:
+<details>
+<summary>One failing step ended the whole run</summary>
 
-- **Retry** — automatically re-run the node if it errors. Set how many times (**Max tries**, up to 10) and how long to wait between attempts (**Wait between tries**). Good for flaky network calls; add a delay for rate-limited services.
-  - **Backoff** — choose how the wait changes between attempts. _Fixed_ waits the same amount every time. _Exponential (with jitter)_ grows the wait after each attempt and adds a little randomness, which is kinder to rate-limited APIs.
-  - **Retry condition** — choose which errors trigger a retry. _Any error_ retries on anything (the default). _Transient errors only_ retries just on likely-temporary failures (429, 5xx, network, timeout) and fails fast on client errors like 401/404 or validation errors. _When message matches_ retries only when the error text matches the pattern you supply in **Retry if message matches** (a substring, or a `/regex/`).
-- **Continue On Fail** — if the node still errors after any retries, log it and output a single empty item instead of stopping the workflow. Downstream nodes keep running. Use it for a step whose failure shouldn't sink the whole run.
-- **Always Output Data** — emit an empty item when the output would otherwise be empty, so the workflow doesn't finish on this node just because it produced nothing.
+That's the default. Turn on **Retry** or **Continue On Fail** in the step's **Settings** tab, or guard it with [Try / Catch](/nodes/builtin/flow/try/).
 
-Retry runs first; if it's exhausted, Continue On Fail decides whether the run stops or carries on.
+</details>
 
-## Best Practices for Error Handling
+<details>
+<summary>A step kept retrying a "401 Unauthorized" error</summary>
 
-- **Use retries wisely**: Add delay or exponential backoff when retrying failed requests.
-- **Log and monitor errors**: Capture context about failures for debugging.
-- **Handle expected errors**: For example, use conditional nodes to catch known API failure responses.
-- **Fail on purpose when needed**: if the workflow should stop with a clear message, use nodes like [Stop and Error](/nodes/builtin/flow/stopanderror/).
+**Retry condition** is set to *Any error*. Set it to *Transient errors only* so the step fails fast when the problem won't go away, then fix the connection.
 
----
+</details>
 
-## Debugging Browser Workflows
+<details>
+<summary>The steps after a Continue On Fail step get an empty item</summary>
 
-If your browser-based workflow fails:
+That's how Continue On Fail works: the failed step outputs one empty item. Add a fallback in later expressions, such as `{{ $input.title || "Untitled" }}`, or check for it with an [IF](/nodes/builtin/flow/if/).
 
-1. Open your **Execution History** in AWFlow.
-2. Check the **Browser Console Logs** for JavaScript or network errors.
-3. Verify that the target page still contains the same elements or structure.
-4. Confirm that your extension permissions are correctly configured.
+</details>
 
-These steps can help identify whether the issue is with your workflow logic or external factors.
+<details>
+<summary>The Error Trigger didn't fire</summary>
+
+You started the run yourself, a Try / Catch handled the failure, or the alert workflow isn't activated. See the [Error Trigger rules](/nodes/builtin/trigger/errortrigger/).
+
+</details>
+
+<details>
+<summary>A page step fails with an element not found</summary>
+
+The page changed, or it wasn't ready yet. Add [Wait For Element](/nodes/extension/ui/wait-for-element/) before the step, and check the selector still matches. See [Browser context](/concepts/flow/browser-context/).
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Lambda workflows" description="Reuse a group of steps in many workflows." href="/concepts/flow/lambdaworkflows/" />
+  <LinkCard title="Practise it" description="Recipes that guard page reads and API calls." href="/recipes/" />
+</CardGrid>

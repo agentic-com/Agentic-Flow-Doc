@@ -1,79 +1,125 @@
 ---
-title: Item linking and mapping
-description: "Understand how AWFlow keeps related items connected across nodes and branches."
+title: Item linking
+description: "Which item a reference to an earlier step returns, and how to keep related values together across steps and branches."
 sidebar:
   order: 2
 section: concepts
+kind: concept
 ---
 
-Item linking is how AWFlow remembers which input item produced which output item. It matters whenever a workflow produces multiple records and later needs to refer back to the original record.
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards, ItemsPlayground } from "@components/awflow";
 
-Without item linking, a workflow that extracts ten links, fetches ten pages, and summarizes ten pages would not know which summary belongs to which original link.
+:::note[In 20 seconds]
+While a step works on one item, `{{ $input }}` and a reference to a **directly connected** step both point at the matching item. A reference to a step further back returns that step's **whole output**, not the matching item. To keep a title next to its URL, carry the field forward on the item, join the lists again with Merge on a shared field, or process one item at a time in a lambda workflow.
+:::
 
-## The mental model
+## See it happen
 
-Each item carries a relationship to the item that created it.
+Three product links go through Get All Text from Link, then Summarization summarises each page. Get All Text from Link keeps `url` because **Include input fields** is on. Summarization outputs only `summary`, so the link is gone after it. Click each step to see where `url` disappears.
 
-```mermaid
-flowchart LR
-  A1["Link item 1\n/url-a"] --> B1["Fetched page 1"] --> C1["Summary 1"]
-  A2["Link item 2\n/url-b"] --> B2["Fetched page 2"] --> C2["Summary 2"]
+<ItemsPlayground
+  client:visible
+  steps={[
+    {
+      name: "Split Out",
+      kind: "data",
+      items: [{ url: "https://shop.example/p/1" }, { url: "https://shop.example/p/2" }, { url: "https://shop.example/p/3" }],
+    },
+    {
+      name: "Get All Text from Link",
+      kind: "data",
+      runs: 3,
+      note: "Include input fields: on",
+      items: [
+        { url: "https://shop.example/p/1", text: "Trail shoe, 280 g…" },
+        { url: "https://shop.example/p/2", text: "Rain jacket, taped seams…" },
+        { url: "https://shop.example/p/3", text: "Head torch, 400 lumen…" },
+      ],
+    },
+    {
+      name: "Summarization",
+      kind: "ai",
+      runs: 3,
+      note: "outputs summary only",
+      items: [{ summary: "A light trail running shoe." }, { summary: "A waterproof jacket." }, { summary: "A bright head torch." }],
+    },
+  ]}
+  caption="Illustration of a run. The ways to keep url are below."
+/>
 
-  style A1 fill:#e8f5e9,stroke:#2e7d32
-  style A2 fill:#e8f5e9,stroke:#2e7d32
-  style C1 fill:#e1f5fe,stroke:#0277bd
-  style C2 fill:#e1f5fe,stroke:#0277bd
-```
+## Which item does a reference return?
 
-When you map data from a previous node, AWFlow uses that relationship to choose the matching item instead of grabbing a random row.
+| You write… | While the step works on item 2, you get… |
+| --- | --- |
+| `{{ $input.url }}` | `url` of item 2, the item this run received. |
+| `{{ $('Get All Text from Link').url }}` in a step **directly connected** to it | `url` of the item from that step used in this run. |
+| `{{ $('Split Out').url }}` in a step **further down** | Empty: that step's whole output is a list, and a list has no `url` field. |
+| `{{ $('Split Out').1.url }}` | `url` of the second item of that list (counting starts at 0), whatever item is being processed. |
 
-## Why it matters
+In a step's settings, the input panel shows the same split: steps under **Direct inputs** give you the matching item, steps under **Relatives** give you their whole output.
 
-Use item linking when you need to:
+## Three ways to keep values together
 
-- Keep a page title with the URL it came from.
-- Attach an AI summary to the original source record.
-- Write one row per item into Google Sheets or Airtable.
-- Combine extracted data with metadata from an earlier branch.
+<CompareCards
+  label="Ways to keep related values together"
+  cards={[
+    {
+      title: "Carry it forward",
+      icon: "items",
+      when: "Copy the field onto the item before a step that would drop it, or turn on a node's option to keep incoming fields.",
+      example: "Include Other Fields on Split Out, Include input fields on Get All Text from Link.",
+      meta: "simplest, when the nodes allow it",
+    },
+    {
+      title: "Join on a key",
+      icon: "merge",
+      href: "/nodes/builtin/flow/merge/",
+      when: "Two branches produce lists you need to line up again.",
+      example: "Merge products and prices where url equals url.",
+      meta: "Merge · Inner / Left Join",
+    },
+    {
+      title: "One item at a time",
+      icon: "loop",
+      href: "/concepts/flow/lambdaworkflows/",
+      when: "A chain of steps drops your fields and has no key to join on.",
+      example: "A lambda workflow takes url, summarises the page and returns url + summary.",
+      meta: "Lambda Workflow",
+    },
+  ]}
+/>
 
-## Common mapping mistake
+The third option works because a lambda workflow runs once per item: inside it, every earlier step holds a single item, so `{{ $('Lambda Input').url }}` reads the right value anywhere.
 
-The most common mistake is treating a list like a single object.
+Add a stable field such as `id` or `url` before a workflow splits into branches. It gives Merge something reliable to match on later.
 
-```json
-[
-  { "url": "https://example.com/a", "title": "A" },
-  { "url": "https://example.com/b", "title": "B" }
-]
-```
+## You'll notice this when…
 
-If the next node runs per item, map the current item field, such as `url`, not the whole list. If you really need the whole list at once, combine or reshape the data before the next step.
+<details>
+<summary>Every row shows the same title</summary>
 
-## Branches and related values
+The title comes from a step that isn't directly connected, or from a step that output a single item, so every run reads the same value. Carry the title forward on each item and read it with `$input`.
 
-When two branches meet, decide whether values should be paired by position, merged by key, or kept separate.
+</details>
 
-```mermaid
-flowchart TB
-  A["Product links"] --> B["Fetch product pages"]
-  A --> C["Keep original URL"]
-  B --> D["Merge by linked item"]
-  C --> D
-  D --> E["Write rows"]
-```
+<details>
+<summary>A reference to an earlier step comes out empty</summary>
 
-If the relationship is not obvious, add a stable field such as `id`, `url`, or `sourceName` before splitting the workflow.
+That step is not directly connected, so the reference reads its whole output. If the output is a list, use an index (`.0.title`) or carry the field forward instead. Also check the name: `$('…')` must match the node label exactly, including capitals and spaces.
 
-## Good habits
+</details>
 
-- Add stable IDs before branching.
-- Rename fields to clear names before a merge.
-- Preview output after any node that changes item count.
-- Use [Edit Fields](/nodes/builtin/datatransformation/editfields/) to create clean downstream contracts.
-- Use [Merge](/nodes/builtin/flow/merge/) when branches need explicit pairing.
+<details>
+<summary>After a Merge, fields are called left-title and right-title</summary>
 
-## Related topics
+Both inputs had a `title` field with different values, so [Merge](/nodes/builtin/flow/merge/) kept both and renamed them. Rename one side before the Merge, or use the prefixed names.
 
-- [Data structure](/concepts/data/data-structure/)
-- [Data mapping UI](/concepts/data/data-mapping/data-mapping-ui/)
-- [Expressions](/concepts/data/data-mapping/data-mapping-expressions/)
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Code" description="Reshape items with Python when a mapping isn't enough." href="/concepts/data/code/" />
+  <LinkCard title="Practise it" description="Recipes that read several pages and keep each result with its source." href="/recipes/" />
+</CardGrid>

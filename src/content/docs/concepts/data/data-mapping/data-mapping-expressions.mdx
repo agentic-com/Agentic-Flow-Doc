@@ -1,0 +1,184 @@
+---
+title: Mapping with expressions
+description: "Read values from earlier steps with {{ }} expressions, and add fallbacks, comparisons, maths and helper functions."
+section: concepts
+kind: concept
+sidebar:
+  order: 2
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { CompareCards, ItemsPlayground } from "@components/awflow";
+
+:::note[In 20 seconds]
+An expression is text between double curly braces, like `{{ $input.title }}`, that AWFlow replaces with a value while the node runs. It runs once for every item, so the same setting can produce a different value for each one. Use `$input` for the incoming item, `$('Step name')` for another step, and `$run` for a variable set earlier in the run.
+:::
+
+## See it happen
+
+Edit Fields receives two orders and builds two fields from expressions. Each expression is worked out once per item.
+
+<ItemsPlayground
+  client:visible
+  steps={[
+    {
+      name: "Orders",
+      kind: "data",
+      items: [
+        { first: "ada", last: "Lovelace", total: 140 },
+        { first: " grace ", last: "Hopper", total: 60 },
+      ],
+    },
+    {
+      name: "Edit Fields",
+      kind: "data",
+      runs: 2,
+      note: "name, size from expressions",
+      items: [
+        { name: "ADA Lovelace", size: "big order" },
+        { name: "GRACE Hopper", size: "small order" },
+      ],
+    },
+  ]}
+  caption={'name = {{ upper(trim($input.first)) + " " + $input.last }} · size = {{ $input.total > 100 ? "big order" : "small order" }}'}
+/>
+
+## The three things you can read
+
+| Write | Reads | Example |
+| --- | --- | --- |
+| `$input` | The item this node is working on | `{{ $input.title }}`, `{{ $input.metadata.description }}`, `{{ $input.0.name }}` |
+| `$('Step name')` | The output of another step, by its label | `{{ $('Get Page Metadata').title }}` |
+| `$run` | A variable stored earlier in this run by [Set Variable](/nodes/builtin/flow/setvariable/) | `{{ $run.cursor }}`, `{{ $run.page.next }}` |
+
+- **Paths** use dots, including for list positions: `$input.items.0.name` is the `name` of the first entry (counting starts at 0).
+- **Step names** must match the node label exactly, spaces and capitals included. Renaming the step breaks the reference.
+- **`$('…')` and items:** a step directly connected to this one gives the matching item; a step further back gives its whole output. See [Item linking](/concepts/data/item-linking/).
+- **Missing values** in `$input` and `$('…')` become empty text, so a typo doesn't stop the run. Check **Preview from last run** under the field.
+- **`$run` is strict:** reading a variable that hasn't been set yet **fails the step** with an error that names it and lists the variables set so far. Read a variable only in steps that run after the Set Variable node. When a read might come first, the canvas warns you; see [reading a variable before it is set](/concepts/flow/execution-order/#reading-a-run-variable-before-it-is-set).
+
+You rarely type `$input` yourself: drag a field from the **Input** panel and the expression is written for you. See [Mapping in the UI](/concepts/data/data-mapping/data-mapping-ui/).
+
+## Text around values
+
+Mix your own words with expressions in any text setting:
+
+```txt title="Prompt"
+Summarize the page at {{ $input.url }}.
+Title: {{ $input.title }}
+```
+
+## Operators
+
+**Fallbacks:** `||` returns the first value that isn't empty.
+
+```txt title="Expression"
+{{ $input.title || "Untitled page" }}
+```
+
+**Maths:** `+ - * / %`, with the usual precedence and parentheses.
+
+```txt title="Expression"
+{{ 5 + 3 * 2 }}        → 11
+{{ (5 + 3) * 2 }}      → 16
+{{ $input.price * 1.2 }}
+```
+
+**Joining text:** `+` joins text when either side is text.
+
+```txt title="Expression"
+{{ $input.first + " " + $input.last }}
+```
+
+**Comparisons and choices:** `== != < <= > >=`, logic with `&& || !`, and `condition ? ifYes : ifNo`.
+
+```txt title="Expression"
+{{ $input.total > 100 ? "big order" : "small order" }}
+{{ $input.status == "open" && $input.priority == "high" }}
+```
+
+## Helper functions
+
+| Text | Numbers | Lists and general |
+| --- | --- | --- |
+| `upper(s)` `lower(s)` `trim(s)` | `round(n)` `floor(n)` `ceil(n)` `abs(n)` | `length(x)` |
+| `replace(s, find, with)` | `min(a, b, …)` `max(a, b, …)` | `includes(list, value)` |
+| `split(s, sep)` `slice(s, start, end)` | `number(x)` | `join(list, sep)` `slice(list, start, end)` |
+| `str(x)` | | `default(value, fallback)` |
+
+```txt title="Expression"
+{{ upper(trim($input.name)) }}
+{{ join($input.tags, ", ") }}
+{{ default($input.title, "Untitled") }}
+{{ length($input.items) > 0 ? "has items" : "empty" }}
+```
+
+Expressions are **sandboxed**: only these functions exist. There are no variables of your own, no method calls like `.toUpperCase()`, and no access to anything outside the values you reference.
+
+## Expression, Edit Fields or Code?
+
+<CompareCards
+  label="Where to put the logic"
+  cards={[
+    {
+      title: "Expression",
+      icon: "chain",
+      when: "One setting needs a small change: a fallback, a join, a choice.",
+      example: "{{ $input.title || \"Untitled\" }}",
+      meta: "inside the setting",
+    },
+    {
+      title: "Edit Fields",
+      icon: "items",
+      href: "/nodes/builtin/datatransformation/editfields/",
+      when: "Several later steps need the same cleaned-up fields.",
+      example: "Build name and size once, then read $input.name everywhere.",
+      meta: "one node, no code",
+    },
+    {
+      title: "Code",
+      icon: "code",
+      href: "/concepts/data/code/",
+      when: "The logic needs loops, grouping or parsing.",
+      example: "Count orders per customer.",
+      meta: "Python",
+    },
+  ]}
+/>
+
+## You'll notice this when…
+
+<details>
+<summary>The result shows expression text, like $('Get Metadata').title, instead of a value</summary>
+
+AWFlow couldn't work the expression out, so it left the text as it was rather than failing the step. The usual cause is a `$('…')` name that differs from the node label. Copy the label from the canvas, or drag the field from the **Input** panel instead.
+
+</details>
+
+<details>
+<summary>The value is empty</summary>
+
+The path doesn't exist on this item. Open the previous step's **Output** tab and compare: maybe the value is nested (`$input.data.title`), or the step output one item holding a list (`$input.links.0`).
+
+</details>
+
+<details>
+<summary>The step fails with "Variable … has not been set at this point in the run"</summary>
+
+A `$run` variable is read before the [Set Variable](/nodes/builtin/flow/setvariable/) step that writes it, for example from a parallel branch. Connect the reading step after the Set Variable step.
+
+</details>
+
+<details>
+<summary>An expression with .toUpperCase() comes out as plain text</summary>
+
+Methods and outside functions aren't available, so the expression can't be worked out and its text is kept as is. Use the helper functions above, such as `upper(…)`, or move the logic to the [Code](/nodes/builtin/core/code/) node.
+
+</details>
+
+## Next
+
+<CardGrid>
+  <LinkCard title="Next concept: Item linking" description="Which item a reference to an earlier step returns." href="/concepts/data/item-linking/" />
+  <LinkCard title="Practise it" description="Recipes that build prompts and messages from page data." href="/recipes/" />
+</CardGrid>

@@ -2,6 +2,8 @@
 title: Prompting and structured outputs
 description: "Design prompts and output shapes that downstream workflow nodes can use reliably."
 section: concepts
+sidebar:
+  order: 2
 ---
 
 Prompting is not just writing instructions for a model. In a workflow, a prompt is also an interface between unstructured language and structured automation.
@@ -9,15 +11,6 @@ Prompting is not just writing instructions for a model. In a workflow, a prompt 
 If the next node expects a field, list, label, or JSON object, design the prompt and output parser together.
 
 ## Prompt anatomy
-
-```mermaid
-flowchart TD
-  Role["Role or perspective"] --> Task["Task"]
-  Task --> Context["Input context"]
-  Context --> Rules["Rules and constraints"]
-  Rules --> Output["Output format"]
-  Output --> Examples["Optional examples"]
-```
 
 A good workflow prompt usually includes:
 
@@ -46,7 +39,7 @@ flowchart LR
   Model --> Parser["Structured Output Parser"]
   Parser --> Next["Filter / integration / file"]
 
-  style Parser fill:#e8f5e9,stroke:#2e7d32
+  class Parser awf-data
 ```
 
 Plain prose is fine for humans. JSON-like output is better for workflows.
