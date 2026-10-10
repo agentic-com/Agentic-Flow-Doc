@@ -63,7 +63,7 @@ Coming soon
 
 ## Creating loops
 
-`Agentic WorkFlow` typically handles the iteration for all incoming items. However, there are certain scenarios where you will have to create a loop to iterate through all items. Refer to [Node exceptions](#node-exceptions) for a list of nodes that don't automatically iterate over all incoming items.
+AWFlow typically handles the iteration for all incoming items. When you need to repeat steps until a condition holds, or work through a long list a few items at a time, build the loop yourself with the [Loop](/nodes/builtin/flow/loop/) or [Split In Batches](/nodes/builtin/flow/splitinbatches/) node.
 
 ### Loop until a condition is met
 

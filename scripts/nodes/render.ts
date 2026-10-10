@@ -163,15 +163,20 @@ export function renderOutputs(n: NodeDoc): string {
 		if (n.outputs.dynamic) out.push('', 'More ports appear as you add them in the settings (one per rule).');
 	}
 
-	if (n.outputFields?.length) {
+	// `routed` is the engine's envelope for multi-port nodes, not something you read.
+	const fields = (n.outputFields ?? []).filter((f) => !(n.outputFields!.length === 1 && f.name === 'routed'));
+	const lead = n.outputShape === 'list' ? 'Each run returns a list of items with' : 'Each output item has';
+	if (fields.some((f) => f.description)) {
 		out.push(
 			'',
-			n.outputShape === 'list' ? 'Each run returns a list of items with these fields:' : 'Each output item has these fields:',
+			`${lead} these fields:`,
 			'',
 			'| Field | Type | Description |',
 			'| --- | --- | --- |',
-			...n.outputFields.map((f) => `| ${code(f.name)} | ${mdx(f.type)} | ${f.description ? mdx(f.description) : ''} |`)
+			...fields.map((f) => `| ${code(f.name)} | ${mdx(f.type)} | ${f.description ? mdx(f.description) : ''} |`)
 		);
+	} else if (fields.length) {
+		out.push('', `${lead} the fields ${fields.map((f) => `${code(f.name)} (${mdx(f.type.toLowerCase())})`).join(', ')}.`);
 	}
 	return out.join('\n').trim();
 }

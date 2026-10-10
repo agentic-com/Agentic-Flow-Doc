@@ -45,12 +45,7 @@ Capture a voice note, a spoken command, or dictation as part of a workflow — t
 {/* AUTO:outputs:start */}
 One output port.
 
-Each output item has these fields:
-
-| Field | Type | Description |
-| --- | --- | --- |
-| `recordedAt` | Text |  |
-| `$binary` | Key-value pairs |  |
+Each output item has the fields `recordedAt` (text), `$binary` (key-value pairs).
 {/* AUTO:outputs:end */}
 
 Resumes with the recording as a **`$binary`** value (an audio blob, e.g. `audio/webm`) plus a `recordedAt` timestamp. Feed the `$binary` straight into [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) or any node that accepts binary media.
@@ -70,4 +65,4 @@ None. This node needs no credential and has no slots for other nodes.
 ## Related nodes
 
 - [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/)
-- [In-Page Form](/nodes/builtin/flow/) — the other interactive pause pattern.
+- [In-Page Form](/nodes/builtin/flow/in-page-form/) — the other interactive pause pattern.

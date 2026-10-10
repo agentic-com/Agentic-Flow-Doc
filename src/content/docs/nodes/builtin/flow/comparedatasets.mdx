@@ -1,0 +1,92 @@
+---
+title: "Compare Datasets"
+description: "Sort two collections into new, gone, unchanged and changed items."
+sidebar:
+  label: "Compare Datasets"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/comparedatasets
+  family: flow
+---
+
+Sort two collections into new, gone, unchanged and changed items.
+
+## What it does
+
+Compare Datasets takes an older list on input **A** and a newer list on input **B**. It pairs up items that share the same **Fields To Match On** value (an id, a SKU, a URL), then sends each item out of one of four ports:
+
+- **In A only**: the item is in A but not in B (it is gone).
+- **Same**: the item is in both and the compared fields are equal. The B version is sent.
+- **Different**: the item is in both but the compared fields differ.
+- **In B only**: the item is in B but not in A (it is new).
+
+Matching and comparing are separate on purpose. *Fields To Match On* says which items are the same thing; *Fields To Compare* says whether that thing changed. That is how you can say "the same product, at a new price".
+
+Equality ignores the order of keys inside an object, but the order of items inside a list counts.
+
+## When to use it
+
+- Turn any repeated scrape into a change feed: keep yesterday's results in a [Data Store](/nodes/builtin/core/datastore/), compare them with today's, and act only on what changed.
+- Reconcile a list from a web page against your own records, where new, missing and edited rows each need a different response.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Fields To Match On** | Tags |  | No | The fields that identify an item, so it can be found on both sides. |
+| **Fields To Compare** | Choice | All fields | No | Which part of two matched items decides whether they are the same. Options: All fields, Selected fields, All fields except. |
+| **Fields** | Tags |  | No | Field names to compare on, or to ignore. Dots address nested fields. |
+{/* AUTO:settings:end */}
+
+Wire the older dataset to the first input (A) and the newer one to the second input (B). The node waits for both inputs and compares the whole lists at once.
+
+On **Fields To Compare**, *All fields* compares every field, *Selected fields* compares only the names you list in **Fields**, and *All fields except* compares everything but those names. Use dots for nested fields, for example `price.amount`.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+4 output ports: **In A only**, **Same**, **Different**, **In B only**.
+{/* AUTO:outputs:end */}
+
+Items on **Different** are pairs:
+
+| Field | Description |
+| --- | --- |
+| `a` | The item as it was in A. |
+| `b` | The item as it is in B. |
+| `changedFields` | The names of the fields that differ. |
+
+The other three ports send the original items.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every morning.
+2. [Get HTML From Link](/nodes/builtin/core/gethtmlfromlink/) and [HTML Extract](/nodes/builtin/datatransformation/html-extract/) read the product list from a shop page.
+3. A [Data Store](/nodes/builtin/core/datastore/) node reads yesterday's list.
+4. Compare Datasets gets yesterday's list on A and today's on B, matching on `sku` and comparing *Selected fields* `price`.
+5. **Different** goes to a [Browser Notification](/nodes/extension/browsernotification/) that names the product and its new price. **In B only** goes to a Slack message about new products.
+6. A second Data Store node saves today's list for tomorrow.
+
+## Troubleshooting
+
+- **"Compare Datasets needs at least one field to match on."** Fill in **Fields To Match On**.
+- **"Compare mode … needs at least one field."** You chose *Selected fields* or *All fields except*. Add names to **Fields**, or switch to *All fields*.
+- **"Input A has more than one item with … ="** The match field must identify a single item, and two items on that side share a value. Put [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/) before this node, or match on more fields.
+- **"An item in input B has none of the fields to match on"** One item lacks every match field. Check the field name and its spelling on both inputs.
+- **Everything comes out of Different.** A field that changes on every run, such as a timestamp, is being compared. Use *All fields except* and list it in **Fields**.
+
+## Related nodes
+
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): uses the same idea of "identical".
+- [Merge](/nodes/builtin/flow/merge/): join two datasets instead of comparing them.
+- [Data Store](/nodes/builtin/core/datastore/): keep the previous run's list.
+- [Switch](/nodes/builtin/flow/switch/): route items by your own rules.
