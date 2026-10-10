@@ -11,6 +11,9 @@ node:
   family: core
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Generate sample data, add a short pause, or force an error while you build and test a workflow.
 
 ## What it does
@@ -35,15 +38,7 @@ For waits longer than a few seconds, or that must survive closing the tab, use [
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Mode** | Choice | Generate | No | What this node does when it runs. Options: Generate, Delay, Throw. |
-| **Shape** | Choice | Indexed items | No | Used by Generate: which sample data shape to emit. Options: Indexed items, Long string, Nested object, Random JSON. |
-| **Count** | Number | 5 | No | Used by Generate → Indexed items: how many items to emit. |
-| **Length** | Number | 1000 | No | Used by Generate → Long string: the exact length of the string. |
-| **Depth** | Number | 3 | No | Used by Generate → Nested object: how many levels deep to nest. |
-| **Delay (ms)** | Number | 1000 | No | Used by Delay: how long to wait, in milliseconds. |
-| **Error message** | Long text | `Debug node threw on demand` | No | Used by Throw: the error message to raise. |
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","default":"Generate","description":"What this node does when it runs. Options: Generate, Delay, Throw."},{"name":"Shape","type":"Choice","default":"Indexed items","description":"Used by Generate: which sample data shape to emit. Options: Indexed items, Long string, Nested object, Random JSON."},{"name":"Count","type":"Number","default":"5","description":"Used by Generate → Indexed items: how many items to emit."},{"name":"Length","type":"Number","default":"1000","description":"Used by Generate → Long string: the exact length of the string."},{"name":"Depth","type":"Number","default":"3","description":"Used by Generate → Nested object: how many levels deep to nest."},{"name":"Delay (ms)","type":"Number","default":"1000","description":"Used by Delay: how long to wait, in milliseconds."},{"name":"Error message","type":"Long text","default":"Debug node threw on demand","description":"Used by Throw: the error message to raise."}]} />
 {/* AUTO:settings:end */}
 
 Each **Generate** setting applies to one shape only: **Count** to *Indexed items* (default 5), **Length** to *Long string* (default 1000), **Depth** to *Nested object* (default 3). The others are ignored. **Error message** defaults to "Debug node threw on demand".
@@ -51,7 +46,7 @@ Each **Generate** setting applies to one shape only: **Count** to *Indexed items
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Generate**, by shape:
@@ -65,7 +60,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -79,7 +74,7 @@ Test an error branch before connecting the real step:
 
 Once the catch branch works, replace Debug with the real step.
 
-## Troubleshooting
+## Common issues
 
 - **The run stops with "Debug node threw on demand".** That is Throw mode doing its job. Switch **Mode** back, or handle the error with [Try / Catch](/nodes/builtin/flow/try/) or **Continue On Fail** in the node's settings.
 - **Count, Length or Depth seems ignored.** Each only applies to its own **Shape**.

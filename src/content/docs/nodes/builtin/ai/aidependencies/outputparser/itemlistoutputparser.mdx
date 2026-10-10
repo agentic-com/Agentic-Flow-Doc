@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Make an AI node answer with a list of items instead of a paragraph.
 
 ## What it does
@@ -30,9 +33,7 @@ When you need named fields or numbers, use [Structured Output Parser](/nodes/bui
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Format note (informational)** | Text |  | No | The model is instructed to return a comma-separated list, e.g. "foo, bar, baz". This field is not sent to the parser, it is only shown as a reminder in the editor. |
+<AwfParamTable rows={[{"name":"Format note (informational)","type":"Text","description":"The model is instructed to return a comma-separated list, e.g. \"foo, bar, baz\". This field is not sent to the parser, it is only shown as a reminder in the editor."}]} />
 {/* AUTO:settings:end */}
 
 There is nothing to set. Use the **Prompt** of the AI node to say how many items you want and what they should be.
@@ -42,10 +43,8 @@ There is nothing to set. Use the **Prompt** of the AI node to say how many items
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Output Parser | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) |
-| Base Parser | [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
+- **Output Parser** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/)
+- **Base Parser** slot of [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
 {/* AUTO:outputs:end */}
 
 On the node it is plugged into, `response` becomes a list of text, for example `["pricing", "onboarding", "support"]`.
@@ -53,7 +52,7 @@ On the node it is plugged into, `response` becomes a list of text, for example `
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -63,7 +62,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Item List Output Parser connected to the **Output Parser** slot of Basic LLM Chain.
 4. [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** `response` turns the list into one item per keyword.
 
-## Troubleshooting
+## Common issues
 
 - **You get one long item instead of several.** The model answered with line breaks or bullets instead of commas. Ask for "a comma-separated list" in the prompt, or use a stronger model.
 - **An item contains a comma.** Commas always split items. Use [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) with a list example such as `{ "items": ["a"] }` instead.

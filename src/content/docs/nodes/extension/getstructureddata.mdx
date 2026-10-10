@@ -11,7 +11,16 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn the tables and bullet lists on the active tab into rows of data you can filter, sort and save.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/table-to-csv.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -38,13 +47,7 @@ Cells and entries are read as plain text, with extra spaces removed. Tables or l
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
-| **Options** | Group |  | No | Structured extraction options. |
-| Options › **Mode** | Choice | Auto | No | Choose what to extract. Options: Auto, Table, List. |
-| Options › **List Format** | Choice | Text | No | How list items are represented. Options: Text, Key/Value. |
-| Options › **Table first row is header** | Toggle | On | No | Use first table row as headers when no thead is present. |
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group","description":"Structured extraction options."},{"name":"Options › Mode","type":"Choice","default":"Auto","description":"Choose what to extract. Options: Auto, Table, List."},{"name":"Options › List Format","type":"Choice","default":"Text","description":"How list items are represented. Options: Text, Key/Value."},{"name":"Options › Table first row is header","type":"Toggle","default":"On","description":"Use first table row as headers when no thead is present."}]} />
 {/* AUTO:settings:end */}
 
 **DOM Selector**: click the crosshair button in the field and click any cell of the table (or any entry of the list); you do not need to hit the table's edge. To read everything in an area, pick the container instead, or type a selector such as `main` or `table`.
@@ -52,15 +55,21 @@ Cells and entries are read as plain text, with extra spaces removed. Tables or l
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each run returns a list of items with these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `sourceType` | Choice |  |
-| `selector` | Text |  |
-| `items` | List of entries | One item per row or list entry |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"sourceType","type":"Choice"},{"name":"selector","type":"Text"},{"name":"items","type":"List of entries","description":"One item per row or list entry"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "sourceType": "…",
+    "selector": "…",
+    "items": []
+  }
+]
+```
 {/* AUTO:outputs:end */}
 
 `sourceType` is `table` or `list`. The rows are inside `items`. To get one workflow item per row, follow with [Split Out](/nodes/builtin/datatransformation/splitout/) on `items`.
@@ -68,7 +77,7 @@ Each run returns a list of items with these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -78,7 +87,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** = `items`, so each row becomes an item.
 4. Add [CSV](/nodes/builtin/datatransformation/csv/) with **Operation** = **Build from items**, then [Save as File](/nodes/builtin/datatransformation/saveasfile/) with **File type** = `csv`.
 
-## Troubleshooting
+## Common issues
 
 - **"No structured data found".** No table or list with content was found at **DOM Selector**, or **Mode** excludes it (a list in **Table** mode, for example). Check the selector with **Ping**, try **Auto**, or select a larger container.
 - **The first data row is used as headers.** The table has no header row and **Table first row is header** is on. Turn it off; columns are then named `col_1`, `col_2`…

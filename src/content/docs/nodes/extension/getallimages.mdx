@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Collect the addresses of every image on the active tab, or inside one part of it.
 
 ## What it does
@@ -33,13 +36,7 @@ The output holds only the new field. Turn on **Include input fields** to keep th
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
-| **Max images** | Number |  | No | The maximum number of images to return. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."},{"name":"Max images","type":"Number","description":"The maximum number of images to return."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - **Output field name**: for example `images`.
@@ -49,7 +46,7 @@ The output holds only the new field. Turn on **Include input fields** to keep th
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 One item with your field holding a list of URLs, for example `{ "images": ["https://example.com/a.jpg", "https://example.com/b.png"] }`. To handle each image separately, follow with [Split Out](/nodes/builtin/datatransformation/splitout/) on that field.
@@ -57,7 +54,7 @@ One item with your field holding a list of URLs, for example `{ "images": ["http
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -67,7 +64,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** = `images`, so each URL becomes its own item.
 4. Add [Caption Image](/nodes/builtin/ai/localai/caption-image/) with **Image** = `{{ $input.images }}` to describe each picture on your device.
 
-## Troubleshooting
+## Common issues
 
 - **The list is empty.** **DOM Selector** matched nothing, or the area has no images yet. Many pages load images only when you scroll to them: scroll first, or wait with [Wait For Element](/nodes/extension/ui/wait-for-element/).
 - **Icons, logos or tracking pixels are in the list.** The node returns every image it finds. Narrow it with **DOM Selector**, or drop unwanted URLs with [Filter](/nodes/builtin/flow/filter/) after Split Out.

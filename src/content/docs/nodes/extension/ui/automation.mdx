@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Click, type, select, scroll and check things on the active tab, step by step, from a list of actions you build or record.
 
 ## What it does
@@ -57,9 +60,7 @@ Value changes (Type, Clear, Check, Uncheck, Select) tell the page the field was 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Actions** | Recorded page actions |  | Yes | List of UI automation actions to perform. |
+<AwfParamTable rows={[{"name":"Actions","type":"Recorded page actions","required":true,"description":"List of UI automation actions to perform."}]} />
 {/* AUTO:settings:end */}
 
 Build the list by hand (add an action, choose **Action**, then pick the **Target Element** with the crosshair button), or record it.
@@ -81,7 +82,7 @@ Known limits:
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The incoming item, unchanged. To read the result of your actions, add [Get Element Data](/nodes/extension/getelementdata/) or [Get All Text](/nodes/extension/getalltext/) after this node.
@@ -89,7 +90,7 @@ The incoming item, unchanged. To read the result of your actions, add [Get Eleme
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -98,7 +99,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. **UI Automation** with three actions: **Type** `wireless headphones` into the search box, **Click** the search button, then **Wait For Element** on `.results` with **Wait timeout** = `8000`.
 3. [Get Structured Data](/nodes/extension/getstructureddata/) reads the results list.
 
-## Troubleshooting
+## Common issues
 
 - **An action does nothing.** Its **Target Element** was not found within **Wait timeout**, so it was skipped. Check the selector with **Ping** on the page, or raise **Wait timeout** for slow pages.
 - **Actions after a page change do not run.** The actions run inside the page, so when an action opens a new page the rest of the list stops. End the list at that click, then continue in a second UI Automation node after [Wait For Element](/nodes/extension/ui/wait-for-element/) or [Tab Control](/nodes/extension/tabcontrol/) with **Wait For Load**.

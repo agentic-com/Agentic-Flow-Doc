@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Create, read, update and delete Google Calendar events, list your calendars, and check when you are free or busy.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Google Calendar connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with an OAuth2.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -35,87 +44,11 @@ When you fill **Source URL**, it is added at the end of the description as `Sour
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| Event | Create, Update, Delete, Get, List |
-| Calendar | List |
-| Free/busy | Query |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Credential to use to make request."}]} groups={[{"label":"Event","options":[{"label":"Create","rows":[{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Title","type":"Text","required":true,"description":"The event title (summary)."},{"name":"Description","type":"Text","description":"The event description."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the event description when present."},{"name":"Location","type":"Text","description":"The event location."},{"name":"Start (date-time)","type":"Text","description":"Timed-event start as an RFC3339 date-time, e.g. 2026-09-10T09:00:00."},{"name":"End (date-time)","type":"Text","description":"Timed-event end as an RFC3339 date-time."},{"name":"Start (all-day date)","type":"Text","description":"All-day start as YYYY-MM-DD (use instead of the date-time fields)."},{"name":"End (all-day date)","type":"Text","description":"All-day end as YYYY-MM-DD (exclusive)."},{"name":"Time Zone","type":"Text","description":"IANA time zone for the start/end, e.g. America/New_York (timed events)."},{"name":"Attendees","type":"List","description":"Email addresses to invite."},{"name":"Recurrence","type":"List","description":"RRULE strings, e.g. RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8."}]},{"label":"Update","rows":[{"name":"Event ID","type":"Text","required":true,"description":"The event to act on."},{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Title","type":"Text","description":"The event title (summary)."},{"name":"Description","type":"Text","description":"The event description."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the event description when present."},{"name":"Location","type":"Text","description":"The event location."},{"name":"Start (date-time)","type":"Text","description":"Timed-event start as an RFC3339 date-time, e.g. 2026-09-10T09:00:00."},{"name":"End (date-time)","type":"Text","description":"Timed-event end as an RFC3339 date-time."},{"name":"Start (all-day date)","type":"Text","description":"All-day start as YYYY-MM-DD (use instead of the date-time fields)."},{"name":"End (all-day date)","type":"Text","description":"All-day end as YYYY-MM-DD (exclusive)."},{"name":"Time Zone","type":"Text","description":"IANA time zone for the start/end, e.g. America/New_York (timed events)."},{"name":"Attendees","type":"List","description":"Email addresses to invite."},{"name":"Recurrence","type":"List","description":"RRULE strings, e.g. RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8."}]},{"label":"Delete","rows":[{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Event ID","type":"Text","required":true,"description":"The event to act on."}]},{"label":"Get","rows":[{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Event ID","type":"Text","required":true,"description":"The event to act on."}]},{"label":"List","rows":[{"name":"Calendar ID","type":"Text","description":"The calendar to use — \"primary\" (default) or an ID from Calendar → List."},{"name":"Time min","type":"Text","description":"Lower bound (RFC3339 date-time) for the query."},{"name":"Time max","type":"Text","description":"Upper bound (RFC3339 date-time) for the query."},{"name":"Max results","type":"Number","default":"50","description":"Maximum number of events to return (1-2500)."}]}]},{"label":"Calendar","options":[{"label":"List","rows":[]}]},{"label":"Free/busy","options":[{"label":"Query","rows":[{"name":"Time min","type":"Text","required":true,"description":"Lower bound (RFC3339 date-time) for the query."},{"name":"Time max","type":"Text","required":true,"description":"Upper bound (RFC3339 date-time) for the query."},{"name":"Calendar IDs","type":"List","description":"Calendars to check for free/busy (defaults to primary)."}]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | The Credential to use to make request. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**Event → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
-| **Title** | Text |  | Yes | The event title (summary). |
-| **Description** | Text |  | No | The event description. |
-| **Source URL** | Text |  | No | The page URL to attach — appended to the event description when present. |
-| **Location** | Text |  | No | The event location. |
-| **Start (date-time)** | Text |  | No | Timed-event start as an RFC3339 date-time, e.g. 2026-09-10T09:00:00. |
-| **End (date-time)** | Text |  | No | Timed-event end as an RFC3339 date-time. |
-| **Start (all-day date)** | Text |  | No | All-day start as YYYY-MM-DD (use instead of the date-time fields). |
-| **End (all-day date)** | Text |  | No | All-day end as YYYY-MM-DD (exclusive). |
-| **Time Zone** | Text |  | No | IANA time zone for the start/end, e.g. America/New\_York (timed events). |
-| **Attendees** | List |  | No | Email addresses to invite. |
-| **Recurrence** | List |  | No | RRULE strings, e.g. RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8. |
-
-**Event → Update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Event ID** | Text |  | Yes | The event to act on. |
-| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
-| **Title** | Text |  | No | The event title (summary). |
-| **Description** | Text |  | No | The event description. |
-| **Source URL** | Text |  | No | The page URL to attach — appended to the event description when present. |
-| **Location** | Text |  | No | The event location. |
-| **Start (date-time)** | Text |  | No | Timed-event start as an RFC3339 date-time, e.g. 2026-09-10T09:00:00. |
-| **End (date-time)** | Text |  | No | Timed-event end as an RFC3339 date-time. |
-| **Start (all-day date)** | Text |  | No | All-day start as YYYY-MM-DD (use instead of the date-time fields). |
-| **End (all-day date)** | Text |  | No | All-day end as YYYY-MM-DD (exclusive). |
-| **Time Zone** | Text |  | No | IANA time zone for the start/end, e.g. America/New\_York (timed events). |
-| **Attendees** | List |  | No | Email addresses to invite. |
-| **Recurrence** | List |  | No | RRULE strings, e.g. RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8. |
-
-**Event → Delete**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
-| **Event ID** | Text |  | Yes | The event to act on. |
-
-**Event → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
-| **Event ID** | Text |  | Yes | The event to act on. |
-
-**Event → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Calendar ID** | Text |  | No | The calendar to use — "primary" (default) or an ID from Calendar → List. |
-| **Time min** | Text |  | No | Lower bound (RFC3339 date-time) for the query. |
-| **Time max** | Text |  | No | Upper bound (RFC3339 date-time) for the query. |
-| **Max results** | Number | 50 | No | Maximum number of events to return (1-2500). |
-
-**Calendar → List**
-
-No further settings.
-
-**Free/busy → Query**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Time min** | Text |  | Yes | Lower bound (RFC3339 date-time) for the query. |
-| **Time max** | Text |  | Yes | Upper bound (RFC3339 date-time) for the query. |
-| **Calendar IDs** | List |  | No | Calendars to check for free/busy (defaults to primary). |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Google Calendar API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - For a timed event, fill **Start (date-time)** and **End (date-time)**, for example `2026-09-10T09:00:00`, and set **Time Zone** (for example `Europe/Paris`) so the time is not misread.
@@ -126,7 +59,7 @@ No further settings.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Create**, **Update** and **Get** return the event, including its `id` (reuse it in **Event ID**) and `htmlLink` (a link that opens it in Google Calendar).
@@ -138,7 +71,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Google Calendar connects by signing in to your Google account (OAuth). You first create your own Google OAuth client once, with the Google Calendar API enabled: follow [Create your OAuth client](/app/connections/oauth-client/#google). Then create a Google Calendar credential, paste the **Client ID** and **Client Secret**, click **Check connection** and approve the Google window. AWFlow asks to read and edit your events and to read your calendars. The sign-in is kept and refreshed for you. See also [Create a credential](/app/connections/create/).
@@ -150,7 +83,7 @@ Google Calendar connects by signing in to your Google account (OAuth). You first
 3. [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) pulls out `title`, `start` and `end` as date-times.
 4. Google Calendar, **Event → Create**, **Title** `{{ $input.title }}`, **Start (date-time)** `{{ $input.start }}`, **End (date-time)** `{{ $input.end }}`, **Time Zone** `Europe/Paris`, **Source URL** `{{ $('Context Menu').pageUrl }}`.
 
-## Troubleshooting
+## Common issues
 
 - **The event is at the wrong time.** The start and end have no time zone. Set **Time Zone**, or write the offset in the date-time, such as `2026-09-10T09:00:00+02:00`.
 - **"Google Calendar Error: … Not Found".** The **Event ID** does not exist in this **Calendar ID**. Check both; an event from another calendar needs that calendar's id.

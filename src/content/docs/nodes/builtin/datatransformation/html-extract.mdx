@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Pull values out of HTML with CSS selectors, from one value to a whole list of rows.
 
 ## What it does
@@ -31,19 +34,7 @@ Text is trimmed of surrounding spaces. Returned HTML is cleaned of scripts and o
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **HTML** | Long text |  | No | The HTML to extract from, usually bound from a previous node. |
-| **Mode** | Choice | Single value | No | Read one value, or one item per matched container. Options: Single value, Repeating list. |
-| **Selector** | Text |  | No | CSS selector for the element to read (single value mode). |
-| **Return** | Choice | Text | No | Text, inner HTML, or an attribute of the matched element. Options: Text, HTML, Attribute. |
-| **Attribute** | Text |  | No | Attribute to read when Return is set to Attribute. |
-| **Container Selector** | Text |  | No | CSS selector matching each repeating container (list mode). |
-| **Fields** | List of entries |  | No | One mapping per column: name, selector, what to return (list mode). |
-| Fields (each entry) › **Field name** | Text |  | Yes |  |
-| Fields (each entry) › **Selector** | Text |  | Yes |  |
-| Fields (each entry) › **Return** | Choice | Text | No | Options: Text, HTML, Attribute. |
-| Fields (each entry) › **Attribute** | Text |  | No |  |
+<AwfParamTable rows={[{"name":"HTML","type":"Long text","description":"The HTML to extract from, usually bound from a previous node."},{"name":"Mode","type":"Choice","default":"Single value","description":"Read one value, or one item per matched container. Options: Single value, Repeating list."},{"name":"Selector","type":"Text","description":"CSS selector for the element to read (single value mode)."},{"name":"Return","type":"Choice","default":"Text","description":"Text, inner HTML, or an attribute of the matched element. Options: Text, HTML, Attribute."},{"name":"Attribute","type":"Text","description":"Attribute to read when Return is set to Attribute."},{"name":"Container Selector","type":"Text","description":"CSS selector matching each repeating container (list mode)."},{"name":"Fields","type":"List of entries","description":"One mapping per column: name, selector, what to return (list mode)."},{"name":"Fields (each entry) › Field name","type":"Text","required":true},{"name":"Fields (each entry) › Selector","type":"Text","required":true},{"name":"Fields (each entry) › Return","type":"Choice","default":"Text","description":"Options: Text, HTML, Attribute."},{"name":"Fields (each entry) › Attribute","type":"Text"}]} />
 {/* AUTO:settings:end */}
 
 - **HTML**: bind it with an expression. After an [Http Request](/nodes/builtin/core/http-request/), the page is in `{{ $input.data }}`.
@@ -54,7 +45,7 @@ Text is trimmed of surrounding spaces. Returned HTML is cleaned of scripts and o
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Single value** returns one item, `{ "value": ... }`. `value` is empty (undefined) when nothing matched or the element lacks the attribute.
@@ -63,7 +54,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -73,7 +64,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Under **Fields**, add `title` (Selector `a.title`, Return *Text*) and `link` (Selector `a.title`, Return *Attribute*, Attribute `href`).
 4. [Limit](/nodes/builtin/datatransformation/limit/) keeps the first 10 rows for the next steps.
 
-## Troubleshooting
+## Common issues
 
 - **"No selector given. Fill in the Selector field."** or **"No container selector given. Fill in the Container Selector field."** Fill in the selector for the mode you chose.
 - **"Invalid CSS selector: "..."."** The selector has a typo. Test it in your browser's developer tools first.

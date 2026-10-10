@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Run any on-device model for the task you choose, including tasks and custom models the dedicated Local AI nodes do not cover.
 
 ## What it does
@@ -30,11 +33,7 @@ For common tasks the dedicated nodes are easier, for example [Classify Image](/n
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Task** | Choice | Classify image | No | Options: Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio, Moderate text, Answer question, Generate text, Embeddings, Custom model (raw output). |
-| **Model** | Model picker |  | No | Any installed model for the chosen task, across engines. |
-| **Input** | Text |  | No | Text; an image/audio URL / data URL / $binary; or for Answer question, JSON \{ "question": "…", "context": "…" \}. |
+<AwfParamTable rows={[{"name":"Task","type":"Choice","default":"Classify image","description":"Options: Classify image, Detect objects, Caption image, Segment image, Depth map, Transcribe audio, Moderate text, Answer question, Generate text, Embeddings, Custom model (raw output)."},{"name":"Model","type":"Model picker","description":"Any installed model for the chosen task, across engines."},{"name":"Input","type":"Text","description":"Text; an image/audio URL / data URL / $binary; or for Answer question, JSON { \"question\": \"…\", \"context\": \"…\" }."}]} />
 {/* AUTO:settings:end */}
 
 Choose **Task** first: the **Model** picker only lists models for that task. What **Input** needs depends on the task:
@@ -46,7 +45,7 @@ Choose **Task** first: the **Model** picker only lists models for that task. Wha
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The output depends on **Task**:
@@ -64,7 +63,7 @@ The output depends on **Task**:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 The **Model** picker lists your installed models first, then models that download on first use. Install models, or add a custom model, on the [Local AI](/app/local-models/#add-a-custom-model) page.
@@ -77,7 +76,7 @@ List the kinds of regions in the visible page:
 2. Run Local Model with **Task** **Segment image**, **Model** *SegFormer B0 (ADE20k)* and **Input** `{{ $input.dataUrl }}`.
 3. [Show Notification](/nodes/extension/shownotification/) with **Title** `Regions` and **Message** `{{ $input.labels }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Choose a model to run."** **Model** is empty. Pick **Task** first, then a model.
 - **"Answer question needs JSON input: …"** or **"Answer question needs both "question" and "context" …"** **Input** is not valid JSON, or one of the two fields is missing or empty.

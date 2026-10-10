@@ -11,7 +11,16 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Give an AI node access to open models (such as Llama) running on Groq's very fast servers, using your own Groq API key.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Groq connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Authentication** field, or create one from there.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -30,14 +39,7 @@ Chat Groq is a model you plug into the **Model** slot of an AI node, such as the
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Text |  | Yes | The Groq model to use, e.g. llama-3.3-70b-versatile. |
-| **Authentication** | Credential |  | Yes | Use your Groq API key as a Bearer token. |
-| **Options** | Group |  | No | The options to use with the model. |
-| Options › **Temperature** | Number |  | No | The temperature to use for the model. |
-| Options › **Max Retries** | Number | 2 | No | The maximum number of retries to use for the model. |
-| Options › **Max Tokens** | Number | 4096 | No | The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window. |
+<AwfParamTable rows={[{"name":"Model","type":"Text","required":true,"description":"The Groq model to use, e.g. llama-3.3-70b-versatile."},{"name":"Authentication","type":"Credential","required":true,"description":"Use your Groq API key as a Bearer token."},{"name":"Options","type":"Group","description":"The options to use with the model."},{"name":"Options › Temperature","type":"Number","description":"The temperature to use for the model."},{"name":"Options › Max Retries","type":"Number","default":"2","description":"The maximum number of retries to use for the model."},{"name":"Options › Max Tokens","type":"Number","default":"4096","description":"The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window."}]} />
 {/* AUTO:settings:end */}
 
 Type the **Model** id as Groq lists it, for example `llama-3.3-70b-versatile`. Groq adds and retires models often, so check its model list if a model stops working.
@@ -47,9 +49,7 @@ Type the **Model** id as Groq lists it, for example `llama-3.3-70b-versatile`. G
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Model | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
+- **Model** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
 {/* AUTO:outputs:end */}
 
 The AI node you connect it to produces the output. Chat Groq only decides which model answers.
@@ -57,7 +57,7 @@ The AI node you connect it to produces the output. Chat Groq only decides which 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Authentication** (credential): required. Pick a saved connection or create one from this field.
+- **Authentication** (connection): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 In **Authentication**, use a Bearer Token credential that holds your Groq API key. Create the key on the API Keys page of the Groq console. See [Create a credential](/app/connections/create/).
@@ -69,7 +69,7 @@ In **Authentication**, use a Bearer Token credential that holds your Groq API ke
 3. Chat Groq in its **Model** slot, **Model** `llama-3.3-70b-versatile`.
 4. [Browser Notification](/nodes/extension/browsernotification/) with **Message** `{{ $input.category }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Model parameter is required and cannot be empty".** Fill in **Model**.
 - **A "model decommissioned" or "model not found" error.** Groq retired the model. Pick a current one from its model list.

@@ -11,7 +11,16 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn a list inside one item into separate items, so the next nodes handle each entry on its own.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/save-links-to-sheet.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -33,11 +42,7 @@ If the field holds a single value instead of a list, you get one item. An empty 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Field To Split Out** | Text |  | Yes | The path to the array field to split out (without the node name or id). |
-| **Output field name** | Text |  | No | The name of the field each element is placed under. Defaults to the field being split out. |
-| **Include Other Fields** | Toggle | Off | No | Whether to carry the remaining input fields onto each output item. |
+<AwfParamTable rows={[{"name":"Field To Split Out","type":"Text","required":true,"description":"The path to the array field to split out (without the node name or id)."},{"name":"Output field name","type":"Text","description":"The name of the field each element is placed under. Defaults to the field being split out."},{"name":"Include Other Fields","type":"Toggle","default":"Off","description":"Whether to carry the remaining input fields onto each output item."}]} />
 {/* AUTO:settings:end */}
 
 Write **Field To Split Out** as field names joined by dots, starting from the incoming data: `results` or `data.results`, not `$input.results`.
@@ -47,7 +52,7 @@ Write **Field To Split Out** as field names joined by dots, starting from the in
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 One item per list entry. Read an entry downstream with `{{ $input.tag }}` (using your output field name), or `{{ $input.result.title }}` when the entries are objects.
@@ -55,7 +60,7 @@ One item per list entry. Read an entry downstream with `{{ $input.tag }}` (using
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -64,7 +69,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. Split Out with **Field To Split Out** `lines`, **Output field name** `line` and **Include Other Fields** on. You get two items, each with `orderId` and `line`.
 3. A [Google Sheets](/nodes/builtin/integration/google-sheets/) node (*Data*, *Append Values into Worksheet*) adds the lines to your sheet, reading `{{ $input.orderId }}`, `{{ $input.line.sku }}` and `{{ $input.line.qty }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Field "…" does not exist in the input object".** The path does not match the incoming data. The message shows the data the node received: check the spelling and upper and lower case.
 - **Only one item comes out.** The field holds a single value, not a list. Point the path at the list itself.

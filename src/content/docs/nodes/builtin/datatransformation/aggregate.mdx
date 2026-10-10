@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Fold many items into a single item, so the next step runs once for the whole list.
 
 ## What it does
@@ -34,14 +37,7 @@ Only a field that is truly absent counts as missing. A field that is present but
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Mode** | Choice | Individual fields | No | Collect chosen fields into arrays, or wrap every item into one field. Options: Individual fields, All item data. |
-| **Fields To Aggregate** | List of entries |  | No | Fields to collect into arrays. |
-| Fields To Aggregate (each entry) › **Field** | Text |  | Yes | Field to collect. Use dots for nested fields, e.g. user.profile.name. |
-| Fields To Aggregate (each entry) › **Output field name** | Text |  | No | Name for the resulting array. Defaults to the field being collected. |
-| **Put Output In Field** | Text | `data` | No | Name of the field holding every input item. |
-| **Keep Missing Values** | Toggle | Off | No | Include an empty entry for items that lack the field. |
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","default":"Individual fields","description":"Collect chosen fields into arrays, or wrap every item into one field. Options: Individual fields, All item data."},{"name":"Fields To Aggregate","type":"List of entries","description":"Fields to collect into arrays."},{"name":"Fields To Aggregate (each entry) › Field","type":"Text","required":true,"description":"Field to collect. Use dots for nested fields, e.g. user.profile.name."},{"name":"Fields To Aggregate (each entry) › Output field name","type":"Text","description":"Name for the resulting array. Defaults to the field being collected."},{"name":"Put Output In Field","type":"Text","default":"data","description":"Name of the field holding every input item."},{"name":"Keep Missing Values","type":"Toggle","default":"Off","description":"Include an empty entry for items that lack the field."}]} />
 {/* AUTO:settings:end */}
 
 - **Fields To Aggregate** and **Keep Missing Values** apply to *Individual fields*. **Put Output In Field** applies to *All item data*.
@@ -51,7 +47,7 @@ Only a field that is truly absent counts as missing. A field that is present but
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 Always one item. In *Individual fields* mode it has one list per collected field, for example `{ titles: [...], urls: [...] }`. In *All item data* mode it has one field holding the list of every input item. Read a list downstream with an expression such as `{{ $input.titles }}`.
@@ -59,7 +55,7 @@ Always one item. In *Individual fields* mode it has one list per collected field
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -68,7 +64,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. Aggregate, in **Individual fields** mode, collects `title` (output name `titles`) and `url` (output name `urls`).
 3. A [Text Formatter](/nodes/builtin/datatransformation/text-formatter/) or a [Slack](/nodes/builtin/integration/slack/) node uses `{{ $input.titles }}` to post all headlines in a single message.
 
-## Troubleshooting
+## Common issues
 
 - **"No fields to aggregate. Add at least one field, or use "All item data"."** *Individual fields* mode has no field filled in. Add a field, or switch **Mode**.
 - **"No source node is connected to this node."** Connect a node that produces items to the input.

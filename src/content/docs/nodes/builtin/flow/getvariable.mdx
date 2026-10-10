@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn a value stored earlier in the run with Set Variable back into items for the next node.
 
 ## What it does
@@ -36,13 +39,7 @@ To use a variable inside a field, write `{{ $run.name }}` there instead.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Name** | Text |  | No | Name of the variable to read. |
-| **Path** | Text |  | No | Optional dot path inside the value, for example page.next. |
-| **Use A Fallback** | Toggle | Off | No | Emit a fallback value instead of failing when the variable is not set. |
-| **Fallback** | Value |  | No | Value emitted when the variable is not set. |
-| **Put Value In Field** | Text | `value` | No | Field holding the value, when the value is not itself an object. |
+<AwfParamTable rows={[{"name":"Name","type":"Text","description":"Name of the variable to read."},{"name":"Path","type":"Text","description":"Optional dot path inside the value, for example page.next."},{"name":"Use A Fallback","type":"Toggle","default":"Off","description":"Emit a fallback value instead of failing when the variable is not set."},{"name":"Fallback","type":"Value","description":"Value emitted when the variable is not set."},{"name":"Put Value In Field","type":"Text","default":"value","description":"Field holding the value, when the value is not itself an object."}]} />
 {/* AUTO:settings:end */}
 
 - **Name** is required in practice: the node fails without it. Type the name only, `results`, not `$run.results`.
@@ -51,7 +48,7 @@ To use a variable inside a field, write `{{ $run.name }}` there instead.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The output is the stored value, shaped as described above. Text and numbers sit under the **Put Value In Field** name, so the next node reads them as `{{ $input.value }}`.
@@ -59,7 +56,7 @@ The output is the stored value, shaped as described above. Text and numbers sit 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -70,7 +67,7 @@ Collect page titles in a loop, then save them all at once:
 2. From the Loop's **Done** port, Get Variable with **Name** `titles` and **Put Value In Field** `title`. It sends one item per collected title.
 3. [Google Sheets](/nodes/builtin/integration/google-sheets/) appends one row per item, with `{{ $input.title }}` in a column.
 
-## Troubleshooting
+## Common issues
 
 - **"Variable "x" has not been set at this point in the run."** The Set Variable node did not run before this one, often because it sits on a separate branch. Connect it upstream of Get Variable, or turn on **Use A Fallback**.
 - **"Path "x" does not exist inside variable "y"."** The stored value has no such part. Check the spelling, or clear **Path** to see the whole value first.

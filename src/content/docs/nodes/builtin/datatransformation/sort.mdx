@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Put your items in order by one or more fields, such as cheapest first or newest first, or shuffle them.
 
 ## What it does
@@ -32,13 +35,7 @@ Items that tie keep their original order. Items where the field is missing, `nul
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Mode** | Choice | By fields | No | Sort by field values, or shuffle into a random order. Options: By fields, Random (shuffle). |
-| **Sort By** | List of entries |  | No | Fields to sort by, applied in order. |
-| Sort By (each entry) › **Field** | Text |  | Yes | Field to sort by. Use dots for nested fields, e.g. user.profile.name. |
-| Sort By (each entry) › **Direction** | Choice | Ascending | No | Options: Ascending, Descending. |
-| Sort By (each entry) › **Compare As** | Choice | Automatic | No | How values in this field are compared. Options: Automatic, Number, Text, Text (natural), Date. |
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","default":"By fields","description":"Sort by field values, or shuffle into a random order. Options: By fields, Random (shuffle)."},{"name":"Sort By","type":"List of entries","description":"Fields to sort by, applied in order."},{"name":"Sort By (each entry) › Field","type":"Text","required":true,"description":"Field to sort by. Use dots for nested fields, e.g. user.profile.name."},{"name":"Sort By (each entry) › Direction","type":"Choice","default":"Ascending","description":"Options: Ascending, Descending."},{"name":"Sort By (each entry) › Compare As","type":"Choice","default":"Automatic","description":"How values in this field are compared. Options: Automatic, Number, Text, Text (natural), Date."}]} />
 {/* AUTO:settings:end */}
 
 **Compare As** decides how two values are compared:
@@ -53,7 +50,7 @@ Use dots for nested fields, for example `price.amount`. A key with an empty **Fi
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The same items in their new order.
@@ -61,7 +58,7 @@ The same items in their new order.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -71,7 +68,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [Limit](/nodes/builtin/datatransformation/limit/) with **Max Items** `5` keeps the five cheapest.
 4. A [Slack](/nodes/builtin/integration/slack/) node posts them.
 
-## Troubleshooting
+## Common issues
 
 - **The order does not change.** Sort needs a list. If the previous node sends one item that holds a list in a field, split it first with [Split Out](/nodes/builtin/datatransformation/splitout/). Also check that at least one key has a **Field**.
 - **`10` comes before `2`.** The values are compared as text. Set **Compare As** to *Number*, or *Text (natural)* for text with numbers inside.

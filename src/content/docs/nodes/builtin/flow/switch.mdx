@@ -11,7 +11,16 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Send each item down one of several named branches, with a fallback branch for the rest.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/classify-and-route.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -35,16 +44,7 @@ For two branches, [IF](/nodes/builtin/flow/if/) is simpler. To drop non-matching
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Mode** | Choice | Rules | No | Decide the branch by conditions, or by matching a value to a name. Options: Rules, Expression. |
-| **Rules** | List of entries |  | No | One per branch, tried from top to bottom. |
-| Rules (each entry) › **Output Name** | Text |  | Yes | Name of the branch items matching this rule are sent to. |
-| Rules (each entry) › **Conditions** | Conditions |  | No | When these hold, the item takes this branch. |
-| **Value To Match** | Value |  | No | Compared against each output name, in Expression mode. |
-| **On Multiple Matches** | Choice | First match only | No | Whether an item takes only the first matching branch, or every one. Options: First match only, Every match. |
-| **Add A Fallback Branch** | Toggle | On | No | Send items matching no rule to an output of their own. |
-| **Fallback Name** | Text | `Anything else` | No | Name of the branch for items matching no rule. |
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","default":"Rules","description":"Decide the branch by conditions, or by matching a value to a name. Options: Rules, Expression."},{"name":"Rules","type":"List of entries","description":"One per branch, tried from top to bottom."},{"name":"Rules (each entry) › Output Name","type":"Text","required":true,"description":"Name of the branch items matching this rule are sent to."},{"name":"Rules (each entry) › Conditions","type":"Conditions","description":"When these hold, the item takes this branch."},{"name":"Value To Match","type":"Value","description":"Compared against each output name, in Expression mode."},{"name":"On Multiple Matches","type":"Choice","default":"First match only","description":"Whether an item takes only the first matching branch, or every one. Options: First match only, Every match."},{"name":"Add A Fallback Branch","type":"Toggle","default":"On","description":"Send items matching no rule to an output of their own."},{"name":"Fallback Name","type":"Text","default":"Anything else","description":"Name of the branch for items matching no rule."}]} />
 {/* AUTO:settings:end */}
 
 - In **Expression** mode, rules only need an **Output Name**; their conditions are ignored. Set **Value To Match** to the field to compare, for example `{{ $input.status }}`, and name the rules after the possible values (`open`, `closed`). Matching is case-sensitive.
@@ -53,7 +53,7 @@ For two branches, [IF](/nodes/builtin/flow/if/) is simpler. To drop non-matching
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port: **Anything else**.
+<AwfOutputPorts ports={[{"name":"Anything else"}]} />
 
 More ports appear as you add them in the settings (one per rule).
 {/* AUTO:outputs:end */}
@@ -63,7 +63,7 @@ Items leave unchanged through the branch they took. Connections are tied to the 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -75,7 +75,7 @@ Handle support tickets by status:
 3. Switch with **Mode** **Expression**, **Value To Match** `{{ $input.ticket.status }}`, and two rules named `urgent` and `open`. Keep the fallback named `Anything else`.
 4. From **urgent**: [Slack](/nodes/builtin/integration/slack/) posts `{{ $input.ticket.title }}` to your support channel. From **open**: [Todoist](/nodes/builtin/integration/todoist/) creates a task. Leave **Anything else** unconnected to ignore the rest.
 
-## Troubleshooting
+## Common issues
 
 - **"Switch needs at least one rule. Add one, and name the branch it routes to."** Add a rule under **Rules**.
 - **"No source node is connected to this node."** Connect a node to the Switch input.

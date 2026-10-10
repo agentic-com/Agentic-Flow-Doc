@@ -11,7 +11,16 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Convert HTML to Markdown, or Markdown to HTML.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/article-to-markdown.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -31,16 +40,7 @@ The node runs once per incoming item and adds the converted text to it. Content 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | HTML to Markdown | No | Which way to convert. Options: HTML to Markdown, Markdown to HTML. |
-| **Content** | Value |  | No | The HTML or Markdown to convert. |
-| **Source Field** | Text |  | No | Field holding the content, when the field above is left empty. |
-| **Keep Links** | Toggle | On | No | Keep links as \[text\](url); when off, only the link text is kept. |
-| **Keep Images** | Toggle | On | No | Keep images as !\[alt\](src); when off, images are dropped. |
-| **Keep Tables** | Toggle | On | No | Render tables as Markdown tables; when off, cells become plain lines. |
-| **Include Input Fields** | Toggle | On | No | Keep the incoming item’s fields alongside the result. |
-| **Put Result In Field** | Text | `result` | No | Field holding the converted text. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"HTML to Markdown","description":"Which way to convert. Options: HTML to Markdown, Markdown to HTML."},{"name":"Content","type":"Value","description":"The HTML or Markdown to convert."},{"name":"Source Field","type":"Text","description":"Field holding the content, when the field above is left empty."},{"name":"Keep Links","type":"Toggle","default":"On","description":"Keep links as [text](url); when off, only the link text is kept."},{"name":"Keep Images","type":"Toggle","default":"On","description":"Keep images as ![alt](src); when off, images are dropped."},{"name":"Keep Tables","type":"Toggle","default":"On","description":"Render tables as Markdown tables; when off, cells become plain lines."},{"name":"Include Input Fields","type":"Toggle","default":"On","description":"Keep the incoming item’s fields alongside the result."},{"name":"Put Result In Field","type":"Text","default":"result","description":"Field holding the converted text."}]} />
 {/* AUTO:settings:end */}
 
 Give the content one of two ways: an expression in **Content**, such as `{{ $input.data }}`, or a field name in **Source Field**, such as `data`. **Content** wins when both are filled. **Source Field** accepts dots for nested fields.
@@ -50,7 +50,7 @@ Give the content one of two ways: an expression in **Content**, such as `{{ $inp
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 Each item comes out with the converted text in **Put Result In Field** (`result` by default). With **Include Input Fields** off, the item holds only that field. Read it downstream with `{{ $input.result }}`.
@@ -58,7 +58,7 @@ Each item comes out with the converted text in **Put Result In Field** (`result`
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -67,7 +67,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. **Markdown** with **Operation** *HTML to Markdown*, **Source Field** set to the field that holds the HTML, and **Keep Images** off.
 3. [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) with **Text** `{{ $input.result }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"No content to convert. Fill in the Content field, or name the field holding it."** Both **Content** and **Source Field** are empty. Fill in one of them.
 - **"Field "..." does not exist on the incoming item."** **Source Field** names a field the item does not have. Check the spelling against the previous node's output.

@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Label the tone of a text as positive, negative or neutral (or your own categories), with a chat model or on-device.
 
 ## What it does
@@ -33,12 +36,7 @@ To sort text by topic rather than tone, use [Text Classifier](/nodes/builtin/ai/
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Long text |  | Yes | The text to analyze the sentiment of. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Custom categories** | Long text |  | No | Comma-separated list of custom sentiment categories to use instead of positive/negative/neutral. |
-| Options › **System message** | Long text |  | No | The system message to use. |
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to analyze the sentiment of."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Custom categories","type":"Long text","description":"Comma-separated list of custom sentiment categories to use instead of positive/negative/neutral."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Text** with an expression such as `{{ $input.text }}`. Write **Custom categories** as a comma-separated list, for example `angry, satisfied, confused`. Keep them short and clearly different from each other.
@@ -46,16 +44,20 @@ Fill **Text** with an expression such as `{{ $input.text }}`. Write **Custom cat
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `sentiment` | Any | The sentiment label |
-| `score` | Number |  |
-| `scores` | Key-value pairs |  |
-| `predictions` | Any |  |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"sentiment","type":"Any","description":"The sentiment label"},{"name":"score","type":"Number"},{"name":"scores","type":"Key-value pairs"},{"name":"predictions","type":"Any"}]} />
+
+```json title="Shape of an output item"
+{
+  "sentiment": null,
+  "score": 0,
+  "scores": {},
+  "predictions": null
+}
+```
 {/* AUTO:outputs:end */}
 
 - With a **chat model**, you get only `sentiment`: the category the model answered.
@@ -67,9 +69,7 @@ Branch on the label with an [IF](/nodes/builtin/flow/if/) or [Switch](/nodes/bui
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Model** | chat model, local classifier | Yes | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local classifier","description":"One node.","required":true}]} />
 {/* AUTO:deps:end */}
 
 Connect a chat model, which holds its own API key, or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to run on-device. The Local Classifier needs an installed model: install one from its picker or the [Local AI](/app/local-models/) page.
@@ -81,7 +81,7 @@ Connect a chat model, which holds its own API key, or a [Local Classifier](/node
 3. [IF](/nodes/builtin/flow/if/) checks that `{{ $input.sentiment }}` (**String**) is equal to `negative`.
 4. **True** goes to a [Slack](/nodes/builtin/integration/slack/) node that alerts your support channel.
 
-## Troubleshooting
+## Common issues
 
 - **"Connect a chat model or a Local Classifier to the Model port."** Nothing is connected to **Model**.
 - **"Model not found".** The connected chat model node is not set up: open it and choose a model and its credential.

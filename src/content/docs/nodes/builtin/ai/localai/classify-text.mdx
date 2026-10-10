@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Sort text into labels you make up, such as `billing, bug report, other`, with a model that runs in your browser. No training needed.
 
 ## What it does
@@ -30,13 +33,7 @@ For fixed sentiment or toxicity labels, [Analyze Text](/nodes/builtin/ai/localai
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Long text |  | No | The text to classify. |
-| **Labels** | Text |  | No | Any words you like, no training needed — e.g. billing, bug report, other. |
-| **Model** | Model picker |  | No | Only zero-shot (NLI) models are listed here. |
-| **Allow several labels** | Toggle | Off | No | Score each label independently (several can be high) instead of making them compete for one answer. |
-| **Confidence threshold** | Number | 0.3 | No | Below this, label is null. |
+<AwfParamTable rows={[{"name":"Text","type":"Long text","description":"The text to classify."},{"name":"Labels","type":"Text","description":"Any words you like, no training needed — e.g. billing, bug report, other."},{"name":"Model","type":"Model picker","description":"Only zero-shot (NLI) models are listed here."},{"name":"Allow several labels","type":"Toggle","default":"Off","description":"Score each label independently (several can be high) instead of making them compete for one answer."},{"name":"Confidence threshold","type":"Number","default":"0.3","description":"Below this, label is null."}]} />
 {/* AUTO:settings:end */}
 
 - **Labels**: separate labels with commas or new lines. Duplicates are ignored, whatever their case. An expression can also return a list, for example `{{ $input.categories }}`.
@@ -45,15 +42,19 @@ For fixed sentiment or toxicity labels, [Analyze Text](/nodes/builtin/ai/localai
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `label` | Text | The best label, or null below the threshold |
-| `score` | Number |  |
-| `labels` | List of entries |  |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"label","type":"Text","description":"The best label, or null below the threshold"},{"name":"score","type":"Number"},{"name":"labels","type":"List of entries"}]} />
+
+```json title="Shape of an output item"
+{
+  "label": "…",
+  "score": 0,
+  "labels": []
+}
+```
 {/* AUTO:outputs:end */}
 
 `score` is the best label's score, reported even when `label` is `null`. `labels` lists every label as `{ label, score }`, best first, which is useful with **Allow several labels**.
@@ -61,7 +62,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 The **Model** picker lists your installed zero-shot models first, then ones that download on first use. Manage them on the [Local AI](/app/local-models/) page.
@@ -74,7 +75,7 @@ Sort the text you select into a category:
 2. Classify Text with **Text** `{{ $input.selectionText }}`, **Labels** `invoice, meeting request, newsletter, other` and **Model** *DeBERTa zero-shot*.
 3. [Switch](/nodes/builtin/flow/switch/) with one rule per label on `{{ $input.label }}`. Items with a `null` label go to the **Anything else** fallback branch for manual review.
 
-## Troubleshooting
+## Common issues
 
 - **"Choose a zero-shot model to classify with."** **Model** is empty. Pick one.
 - **"Provide some text to classify."** **Text** is empty after expressions run.

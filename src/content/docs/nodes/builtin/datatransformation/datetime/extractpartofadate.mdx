@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Pull one number out of a date, such as its year, day of the month or hour.
 
 ## What it does
@@ -37,13 +40,7 @@ To turn a date into readable text, use [Format Date](/nodes/builtin/datatransfor
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Date to extract part from** | Date and time |  | Yes | The date to extract part from. |
-| **Part of date to extract** | Choice |  | Yes | The part of the date to extract. Options: year, month, week, day, hour, minute, second. |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Date to extract part from","type":"Date and time","required":true,"description":"The date to extract part from."},{"name":"Part of date to extract","type":"Choice","required":true,"description":"The part of the date to extract. Options: year, month, week, day, hour, minute, second."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 **Date to extract part from** accepts a picked date or an expression such as `{{ $input.publishedAt }}`. ISO dates (`2026-03-01T09:30:00Z`) work best.
@@ -51,7 +48,7 @@ To turn a date into readable text, use [Format Date](/nodes/builtin/datatransfor
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The item holds one number under **Output field name**, for example `{ hour: 14 }`. Turn on **Include input fields** to keep the incoming fields too.
@@ -59,7 +56,7 @@ The item holds one number under **Output field name**, for example `{ hour: 14 }
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -71,7 +68,7 @@ Only send a notification during working hours:
 3. [IF](/nodes/builtin/flow/if/): `{{ $input.hour }}` is greater than or equal to `9` and less than `18`.
 4. On the true branch, a [Browser Notification](/nodes/extension/browsernotification/).
 
-## Troubleshooting
+## Common issues
 
 - **The month is one lower than expected.** Months start at 0. Add 1 with [Math](/nodes/builtin/datatransformation/math/), or use [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) if you need it as text.
 - **"week" returns a decimal.** It is the day of the month divided by 7, not the week of the year.

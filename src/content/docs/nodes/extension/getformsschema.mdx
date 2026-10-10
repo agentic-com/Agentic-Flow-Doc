@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Describe the forms on the active tab: every field, its label, type, current value, rules and choices.
 
 ## What it does
@@ -35,9 +38,7 @@ The node only reads: it does not change or submit anything.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."}]} />
 {/* AUTO:settings:end */}
 
 To read one form, click the crosshair button in **DOM Selector** and click any field of that form. Leave it empty to read all forms.
@@ -45,9 +46,29 @@ To read one form, click the crosshair button in **DOM Selector** and click any f
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each run returns a list of items with the fields `id` (text), `name` (text), `selector` (text), `action` (text), `method` (text), `enctype` (text), `target` (text), `autocomplete` (text), `noValidate` (true/false), `fieldCount` (number), `fields` (list of entries).
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"id","type":"Text"},{"name":"name","type":"Text"},{"name":"selector","type":"Text"},{"name":"action","type":"Text"},{"name":"method","type":"Text"},{"name":"enctype","type":"Text"},{"name":"target","type":"Text"},{"name":"autocomplete","type":"Text"},{"name":"noValidate","type":"True/false"},{"name":"fieldCount","type":"Number"},{"name":"fields","type":"List of entries"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "id": "…",
+    "name": "…",
+    "selector": "…",
+    "action": "…",
+    "method": "…",
+    "enctype": "…",
+    "target": "…",
+    "autocomplete": "…",
+    "noValidate": true,
+    "fieldCount": 0,
+    "fields": []
+  }
+]
+```
 {/* AUTO:outputs:end */}
 
 - `action` and `method`: where and how the form sends its data (for example `https://example.com/signup`, `post`).
@@ -57,7 +78,7 @@ Each run returns a list of items with the fields `id` (text), `name` (text), `se
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -67,7 +88,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Run it once and look at the output: note the `name` or `id` of each field, for example `email` and `full_name`.
 4. Add [Form Fill](/nodes/extension/ui/form-fill/) in **Manual** mode with two **Values** entries: **Field ID** `email` / **Value** `jane@example.com`, and **Field ID** `full_name` / **Value** `Jane Doe`.
 
-## Troubleshooting
+## Common issues
 
 - **"No forms found".** The page has no form element, or none matches **DOM Selector**. Some sites build forms from plain boxes without a real form; for those, use [Get Accessibility Tree](/nodes/extension/getaccessibilitytree/) to find the fields.
 - **A field has an empty `label`.** The page does not label it. Use its `name`, `placeholder` or `id` to recognize it.

@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Send a form on the active tab, as if you had pressed its submit button.
 
 ## What it does
@@ -31,9 +34,7 @@ The node does not fail when it cannot submit: it passes the item on with a `resu
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."}]} />
 {/* AUTO:settings:end */}
 
 Click the crosshair button in **DOM Selector** and click the form's submit button or any of its fields, or type a CSS selector such as `form#signup`. The **Ping** button flashes what it matches.
@@ -41,9 +42,17 @@ Click the crosshair button in **DOM Selector** and click the form's submit butto
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `result` (object).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"result","type":"Object"}]} />
+
+```json title="Shape of an output item"
+{
+  "result": {}
+}
+```
 {/* AUTO:outputs:end */}
 
 The incoming item passes through with a `result` field added:
@@ -56,7 +65,7 @@ The incoming item passes through with a `result` field added:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +75,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. **Submit Form** with **DOM Selector** set to the form's **Send** button.
 4. [Wait For Element](/nodes/extension/ui/wait-for-element/) with **Condition** = **Contains Text** and **Text** = `Thank you` to confirm it went through.
 
-## Troubleshooting
+## Common issues
 
 - **`found` is `false`.** **DOM Selector** matched nothing. Check it with **Ping** on the page.
 - **`error` is "No form found for selector".** The element you picked is not inside a form. Pick the submit button itself, or use [UI Automation](/nodes/extension/ui/automation/) to click it.

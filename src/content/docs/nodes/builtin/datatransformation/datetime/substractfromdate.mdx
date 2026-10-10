@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Move a date back by a number of years, months, days, hours or other units.
 
 ## What it does
@@ -30,14 +33,7 @@ Subtract From A Date takes **Date to subtract from**, removes **Duration** of th
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Date to subtract from** | Date and time |  | Yes | The date to subtract days from. |
-| **Time unit to subtract** | Choice |  | Yes | The time unit to subtract from the date. Options: year, quarter, month, week, day, hour, minute, second. |
-| **Duration** | Number |  | Yes | The duration to subtract from the date. |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Date to subtract from","type":"Date and time","required":true,"description":"The date to subtract days from."},{"name":"Time unit to subtract","type":"Choice","required":true,"description":"The time unit to subtract from the date. Options: year, quarter, month, week, day, hour, minute, second."},{"name":"Duration","type":"Number","required":true,"description":"The duration to subtract from the date."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 **Date to subtract from** accepts a picked date or an expression such as `{{ $input.deadline }}`. ISO dates (`2026-03-01`, `2026-03-01T09:30:00Z`) are the safest format.
@@ -45,7 +41,7 @@ Subtract From A Date takes **Date to subtract from**, removes **Duration** of th
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The item holds the new date under **Output field name**. Turn on **Include input fields** to keep the incoming fields next to it.
@@ -53,7 +49,7 @@ The item holds the new date under **Output field name**. Turn on **Include input
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +62,7 @@ Keep only feed items from the last 24 hours:
 4. Subtract From A Date, **Date to subtract from** `{{ $input.now }}`, **Time unit to subtract** `day`, **Duration** `1`, **Output field name** `since`, **Include input fields** on.
 5. [Filter](/nodes/builtin/flow/filter/): `{{ $input.article.isoDate }}` is after `{{ $input.since }}`, type **Date-Time**.
 
-## Troubleshooting
+## Common issues
 
 - **The output is "Invalid Date" or empty.** The incoming value is not a date the browser understands. Use an ISO date such as `2026-03-01`.
 - **The month result lands in the wrong month.** Subtracting months from the 29th to the 31st can roll forward into the next month. Round the date down to `month` first with [Round a Date](/nodes/builtin/datatransformation/datetime/roundadate/) when you only care about the month.

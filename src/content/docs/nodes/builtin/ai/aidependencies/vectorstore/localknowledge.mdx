@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Connect one of your on-device knowledge bases to an AI agent or the Indexer.
 
 ## What it does
@@ -31,9 +34,7 @@ Everything is stored and searched in your browser. If the chosen knowledge base 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Knowledge base** | Knowledge base picker |  | Yes | The knowledge base the connected agent searches. |
+<AwfParamTable rows={[{"name":"Knowledge base","type":"Knowledge base picker","required":true,"description":"The knowledge base the connected agent searches."}]} />
 {/* AUTO:settings:end */}
 
 The picker shows, for each knowledge base:
@@ -51,9 +52,7 @@ How the agent searches (number of passages, most similar or diverse, keywords an
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Knowledge | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/) |
+- **Knowledge** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/)
 {/* AUTO:outputs:end */}
 
 The passages found show up on the agent's output, for example in `sources` on the Q&A Agent.
@@ -61,9 +60,7 @@ The passages found show up on the agent's output, for example in `sources` on th
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Embeddings** | embeddings | No | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Embeddings","type":"embeddings","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 **Embeddings** is optional. A knowledge base that already has content is always searched with its own model, so you only need it to choose the model of a new, empty knowledge base. See below.
@@ -91,7 +88,7 @@ If a knowledge base was built with a cloud embeddings node (for example [OpenAI]
 
 To fill the same knowledge base from a workflow, connect another Local Knowledge node to the **Knowledge** slot of an [Indexer](/nodes/builtin/ai/aiagents/indexernode/).
 
-## Troubleshooting
+## Common issues
 
 - **"Knowledge parameter is required".** No knowledge base is picked. Choose one in **Knowledge base**.
 - **"Knowledge base "…" doesn't exist on this device…".** The knowledge base was deleted, or the workflow comes from another device or browser. Pick a knowledge base in this node, or [import the knowledge base file (.awkb)](/app/knowledge-bases/export-import-backup/#import-a-file) first. When you import a workflow, AWFlow offers to [map its knowledge bases](/app/knowledge-bases/export-import-backup/#importing-a-workflow-that-uses-knowledge-bases).

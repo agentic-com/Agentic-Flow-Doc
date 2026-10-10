@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn text into vectors with an embedding model running in Ollama on your computer: free, private, no API key.
 
 ## What it does
@@ -29,9 +32,7 @@ With nothing to install, [Local Embeddings](/nodes/builtin/ai/aidependencies/emb
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Model picker |  | Yes | The model to use. |
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","required":true,"description":"The model to use."}]} />
 {/* AUTO:settings:end */}
 
 The **Model** list shows the models installed in your Ollama; use the refresh button after you pull a new one. Pick an embedding model (for example after `ollama pull nomic-embed-text`), not a chat model.
@@ -48,9 +49,7 @@ When you publish or share the workflow, **Model** is cleared, so whoever install
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Embeddings | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
+- **Embeddings** slot of [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
 {/* AUTO:outputs:end */}
 
 The vectors go to the knowledge base, not to the next node.
@@ -58,7 +57,7 @@ The vectors go to the knowledge base, not to the next node.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -68,7 +67,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.pageText }}`, a [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) in its **Text Splitter** slot, and a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) pointing to a new knowledge base in its **Knowledge** slot.
 4. Ollama Embeddings in the Local Knowledge's **Embeddings** slot, **Model** `nomic-embed-text:latest`.
 
-## Troubleshooting
+## Common issues
 
 - **"Could not reach Ollama at localhost:11434. Make sure it is running and allows this extension (OLLAMA_ORIGINS)."** Start Ollama, and restart it with `OLLAMA_ORIGINS` set as shown above.
 - **The list says "No models available".** Pull an embedding model, then press the refresh button.

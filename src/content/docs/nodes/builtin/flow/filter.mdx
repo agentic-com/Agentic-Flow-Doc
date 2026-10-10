@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Keep only the items that match your conditions and drop the rest.
 
 ## What it does
@@ -30,9 +33,7 @@ To send the non-matching items somewhere else instead of dropping them, use [IF]
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Conditions** | Conditions |  | Yes | The conditions to evaluate. |
+<AwfParamTable rows={[{"name":"Conditions","type":"Conditions","required":true,"description":"The conditions to evaluate."}]} />
 {/* AUTO:settings:end */}
 
 Write the value to test as an expression on the current item, for example `{{ $input.status }}` **Is Equal To** `active`.
@@ -40,14 +41,18 @@ Write the value to test as an expression on the current item, for example `{{ $i
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port, **Kept**.
+<AwfOutputPorts ports={[{"name":"Kept"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `result` | True/false | Whether the conditions held |
-| `inData` | Any | The incoming data, unchanged |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"result","type":"True/false","description":"Whether the conditions held"},{"name":"inData","type":"Any","description":"The incoming data, unchanged"}]} />
+
+```json title="Shape of an output item"
+{
+  "result": true,
+  "inData": null
+}
+```
 {/* AUTO:outputs:end */}
 
 The next node receives the kept items themselves, exactly as they arrived, so you keep using the same expressions (`{{ $input.price }}`) after the Filter. If no item matches, nothing leaves the node.
@@ -55,7 +60,7 @@ The next node receives the kept items themselves, exactly as they arrived, so yo
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -67,7 +72,7 @@ Keep only the PDF links of a page:
 3. Filter with the condition `{{ $input.links }}` (**String**) **Ends With** `.pdf`.
 4. [Slack](/nodes/builtin/integration/slack/) posts `{{ $input.links }}` for every kept link.
 
-## Troubleshooting
+## Common issues
 
 - **Nothing runs after the Filter.** No item matched. Open the run and check the values the condition compared: a price read from a page is often text such as `"49.90 €"`, which a **Number** comparison can't match. Clean it first with [Edit Fields](/nodes/builtin/datatransformation/editfields/) or [Regex](/nodes/builtin/datatransformation/regex/).
 - **Items you expected to drop still pass.** Check the **AND** / **OR** links. Because conditions are read top to bottom without grouping, one **OR** near the end can let everything through.

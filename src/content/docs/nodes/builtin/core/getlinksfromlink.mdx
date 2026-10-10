@@ -11,6 +11,9 @@ node:
   family: core
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Download a web page by its address and list the links on it, optionally only those to certain sites.
 
 ## What it does
@@ -35,16 +38,7 @@ To read the links of the page open in your tab, use [Get All Link](/nodes/extens
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **URL** | Text |  | Yes | The URL to get the Links from. |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Timeout** | Number | 10000 | No | The timeout for the request. |
-| **Filter domains** | Tags |  | No | The domains to filter. |
-| **Exclude domains** | Tags |  | No | The domains to exclude. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Headers** | Key-value pairs |  | No | The headers to send with the request. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"URL","type":"Text","required":true,"description":"The URL to get the Links from."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Timeout","type":"Number","default":"10000","description":"The timeout for the request."},{"name":"Filter domains","type":"Tags","description":"The domains to filter."},{"name":"Exclude domains","type":"Tags","description":"The domains to exclude."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Headers","type":"Key-value pairs","description":"The headers to send with the request."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - Enter domains without `https://` or paths, one per tag: `github.com`, not `https://github.com/`.
@@ -54,7 +48,7 @@ To read the links of the page open in your tab, use [Get All Link](/nodes/extens
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 One item with the list under **Output field name**, for example `{ links: ["https://example.com/a", "https://other.org/b"] }`. Follow with [Split Out](/nodes/builtin/datatransformation/splitout/) to handle each link as its own item.
@@ -62,7 +56,7 @@ One item with the list under **Output field name**, for example `{ links: ["http
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -75,7 +69,7 @@ Read the first five articles linked from a blog's index:
 4. [Limit](/nodes/builtin/datatransformation/limit/), **Max Items** `5`.
 5. [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/), **URL** `{{ $input.link }}`.
 
-## Troubleshooting
+## Common issues
 
 - **The list is empty or short.** The site builds its links with JavaScript, or your domain filters remove them. Check **Filter domains** and **Exclude domains**, or open the page and use [Get All Link](/nodes/extension/getalllinks/).
 - **Links to a subdomain are missing.** A filter on `blog.example.com` does not match `www.example.com`. Use the parent domain, `example.com`.

@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Show the data that reaches this node as an expandable tree in a panel on the active tab.
 
 ## What it does
@@ -31,9 +34,7 @@ Display Object takes the incoming item, exactly as it arrives, and shows it in a
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Title** | Text |  | No | The title of the displayed object. |
+<AwfParamTable rows={[{"name":"Title","type":"Text","description":"The title of the displayed object."}]} />
 {/* AUTO:settings:end */}
 
 **Title** can use expressions, for example `Links found on {{ $('Get Page Metadata').title }}`.
@@ -47,7 +48,7 @@ This node has no output port: nothing runs after it on this branch.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -56,7 +57,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. Add [Get Page Metadata](/nodes/extension/getpagemetadata/).
 3. Add **Display Object** with **Title** = `Page info` to see the title, description, language and sharing tags of the page in one panel.
 
-## Troubleshooting
+## Common issues
 
 - **Only the last item is shown.** The node runs once per incoming item, and each run replaces the panel. Combine the items first with [Aggregate](/nodes/builtin/datatransformation/aggregate/) to show them all in one panel.
 - **No panel appears.** The panel is drawn on the active tab. Make sure the page you want is the active tab when the node runs; browser settings pages and the extension store cannot show it.

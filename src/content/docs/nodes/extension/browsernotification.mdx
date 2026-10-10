@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Show a system notification through your computer's notification center, visible even when no browser tab is in view.
 
 ## What it does
@@ -30,14 +33,7 @@ Browser Notification shows a native notification with a **Title**, a **Message**
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Title** | Text |  | Yes |  |
-| **Message** | Long text |  | Yes |  |
-| **Icon URL** | Text |  | No |  |
-| **Priority** | Choice | Normal | No | Options: Low, Normal, High. |
-| **Buttons** | List of entries |  | No | Up to two action buttons, per the Chrome notifications API limit. Chrome only: Firefox shows the notification without buttons. |
-| Buttons (each entry) › **Button Title** | Text |  | Yes |  |
+<AwfParamTable rows={[{"name":"Title","type":"Text","required":true},{"name":"Message","type":"Long text","required":true},{"name":"Icon URL","type":"Text"},{"name":"Priority","type":"Choice","default":"Normal","description":"Options: Low, Normal, High."},{"name":"Buttons","type":"List of entries","description":"Up to two action buttons, per the Chrome notifications API limit. Chrome only: Firefox shows the notification without buttons."},{"name":"Buttons (each entry) › Button Title","type":"Text","required":true}]} />
 {/* AUTO:settings:end */}
 
 **Title** and **Message** accept expressions, for example **Message** = `{{ $input.count }} new items found`.
@@ -45,9 +41,18 @@ Browser Notification shows a native notification with a **Title**, a **Message**
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `notificationId` (text), `shown` (always true).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"notificationId","type":"Text"},{"name":"shown","type":"Always true"}]} />
+
+```json title="Shape of an output item"
+{
+  "notificationId": "…",
+  "shown": true
+}
+```
 {/* AUTO:outputs:end */}
 
 - `notificationId`: the id of the notification that was created.
@@ -56,7 +61,7 @@ Each output item has the fields `notificationId` (text), `shown` (always true).
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 No credential and no extra permission is needed. Notifications must be allowed for your browser in your operating system's settings.
@@ -68,7 +73,7 @@ No credential and no extra permission is needed. Notifications must be allowed f
 3. [Aggregate](/nodes/builtin/datatransformation/aggregate/) combines them into one item.
 4. **Browser Notification** with **Title** = `Your morning digest` and **Message** = `5 new posts are waiting`.
 
-## Troubleshooting
+## Common issues
 
 - **Nothing appears.** Notifications for your browser are turned off in the operating system's settings, or a focus / do-not-disturb mode is on. Allow them and run the node again.
 - **"Notification title and message are required".** **Title** or **Message** is empty, often because an expression resolved to nothing. Check the previous node's output.

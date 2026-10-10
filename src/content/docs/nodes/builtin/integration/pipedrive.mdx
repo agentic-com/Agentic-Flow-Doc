@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn the profile or company page you are viewing into a Pipedrive contact, and log the page as a note on it.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Pipedrive connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -39,56 +48,11 @@ For HubSpot or Attio, use [HubSpot](/nodes/builtin/integration/hubspot/) or [Att
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| Person | Create or update, Search |
-| Organization | Create or update, Search |
-| Note | Create |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"A Pipedrive API token (Settings → Personal preferences → API). It is account-wide — it acts with your full user access. Keep it secret."}]} groups={[{"label":"Person","options":[{"label":"Create or update","rows":[{"name":"Email","type":"Text","required":true,"description":"The person’s email — the unique key used to find an existing person."},{"name":"Name","type":"Text"},{"name":"Phone","type":"Text"}]},{"label":"Search","rows":[{"name":"Query","type":"Text","required":true,"description":"Search term matched across the record’s fields."},{"name":"Limit","type":"Number","description":"Maximum number of results."}]}]},{"label":"Organization","options":[{"label":"Create or update","rows":[{"name":"Name","type":"Text","required":true,"description":"The organization name — the unique key used to find an existing organization."},{"name":"Address","type":"Text"}]},{"label":"Search","rows":[{"name":"Query","type":"Text","required":true,"description":"Search term matched across the record’s fields."},{"name":"Limit","type":"Number","description":"Maximum number of results."}]}]},{"label":"Note","options":[{"label":"Create","rows":[{"name":"Note","type":"Text","required":true,"description":"The note text."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the note when present."},{"name":"Selection","type":"Text","description":"Selected text to quote in the note (optional)."},{"name":"Person ID","type":"Number","description":"Attach the note to this person (optional)."},{"name":"Organization ID","type":"Number","description":"Attach the note to this organization (optional)."}]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | A Pipedrive API token (Settings → Personal preferences → API). It is account-wide — it acts with your full user access. Keep it secret. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**Person → Create or update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Email** | Text |  | Yes | The person’s email — the unique key used to find an existing person. |
-| **Name** | Text |  | No |  |
-| **Phone** | Text |  | No |  |
-
-**Person → Search**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Query** | Text |  | Yes | Search term matched across the record’s fields. |
-| **Limit** | Number |  | No | Maximum number of results. |
-
-**Organization → Create or update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Name** | Text |  | Yes | The organization name — the unique key used to find an existing organization. |
-| **Address** | Text |  | No |  |
-
-**Organization → Search**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Query** | Text |  | Yes | Search term matched across the record’s fields. |
-| **Limit** | Number |  | No | Maximum number of results. |
-
-**Note → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Note** | Text |  | Yes | The note text. |
-| **Source URL** | Text |  | No | The page URL to attach — appended to the note when present. |
-| **Selection** | Text |  | No | Selected text to quote in the note (optional). |
-| **Person ID** | Number |  | No | Attach the note to this person (optional). |
-| **Organization ID** | Number |  | No | Attach the note to this organization (optional). |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Pipedrive API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - When a person is new, fill **Name** as well: Pipedrive needs a name to create a person.
@@ -99,7 +63,7 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Create or update** returns the person or organization as Pipedrive stores it, including its `id` and `name`, plus `created` (`true` for a new record, `false` for an update).
@@ -109,7 +73,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, Bearer Token): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Use your Pipedrive API token, saved as a Bearer Token credential. In Pipedrive, open **Settings → Personal preferences → API** and copy the token. See [Create a credential](/app/connections/create/).
@@ -123,7 +87,7 @@ The token is account-wide: it can do anything your Pipedrive user can, and it ha
 3. Pipedrive, **Person → Create or update**, **Email** `{{ $input.extracted.email }}`, **Name** `{{ $input.extracted.name }}`, **Phone** `{{ $input.extracted.phone }}`.
 4. Pipedrive, **Note → Create**, **Note** `Found while browsing`, **Person ID** `{{ $input.id }}`, **Source URL** `{{ $('Context Menu').pageUrl }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Pipedrive API Error: 401 … the API token is missing or invalid".** Copy the token again from **Settings → Personal preferences → API** and update the credential. A regenerated token makes the old one stop working.
 - **"Pipedrive API Error: …" when creating a person.** Often the **Name** is empty for a new person. Fill it.

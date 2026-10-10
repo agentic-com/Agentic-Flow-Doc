@@ -11,6 +11,9 @@ node:
   family: core
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Download a web page by its address and get its readable text, without opening it in a tab.
 
 ## What it does
@@ -30,14 +33,7 @@ To read the page you are looking at (including content loaded by scripts), use [
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **URL** | Text |  | Yes | The URL to get the HTML from. |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Timeout** | Number | 10000 | No | The timeout for the request. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Headers** | Key-value pairs |  | No | The headers to send with the request. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"URL","type":"Text","required":true,"description":"The URL to get the HTML from."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Timeout","type":"Number","default":"10000","description":"The timeout for the request."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Headers","type":"Key-value pairs","description":"The headers to send with the request."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - **URL** must be a full address starting with `https://` or `http://`. It can be an expression, such as `{{ $input.linkUrl }}`.
@@ -47,7 +43,7 @@ To read the page you are looking at (including content loaded by scripts), use [
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The item holds the page text under **Output field name**, for example `{ text: "Page title\n\nFirst paragraph..." }`. Turn on **Include input fields** to keep the incoming fields next to it.
@@ -55,7 +51,7 @@ The item holds the page text under **Output field name**, for example `{ text: "
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -67,7 +63,7 @@ Summarise any link you right-click:
 3. [Summarize](/nodes/builtin/ai/localai/summarize/), **Text** `{{ $input.text }}`, **Length** Short.
 4. [Display Markdown](/nodes/extension/displaymarkdown/) to show the summary.
 
-## Troubleshooting
+## Common issues
 
 - **"Invalid URL: …".** The address is malformed, or the request could not be sent at all. Check the address. If it is correct and the node runs in the web app, the site likely refuses requests from other websites; run the workflow from the extension.
 - **"HTTP error! status: 403".** The site blocks automated requests or needs you to be signed in. Try adding headers, or use [Get All Text](/nodes/extension/getalltext/) on the page open in your browser.

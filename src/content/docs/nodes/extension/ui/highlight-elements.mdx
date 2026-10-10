@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Draw a colored frame around elements on the active tab for a few seconds, with an optional label, to point something out.
 
 ## What it does
@@ -30,11 +33,7 @@ Nothing on the page is changed apart from the temporary highlight.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Elements** | List |  | Yes |  |
-| **Label** | Text | `highlight` | No | Label shown on the highlight indicator. |
-| **Duration** | Number | 3000 | No | How long to keep the highlight visible in milliseconds. |
+<AwfParamTable rows={[{"name":"Elements","type":"List","required":true},{"name":"Label","type":"Text","default":"highlight","description":"Label shown on the highlight indicator."},{"name":"Duration","type":"Number","default":"3000","description":"How long to keep the highlight visible in milliseconds."}]} />
 {/* AUTO:settings:end */}
 
 - **Elements**: one entry per thing to highlight. In each **Target Element**, click the crosshair button and click the element on the page, or type a CSS selector.
@@ -44,7 +43,7 @@ Nothing on the page is changed apart from the temporary highlight.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The incoming item, unchanged.
@@ -52,7 +51,7 @@ The incoming item, unchanged.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -61,7 +60,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. **Highlight Elements** with **Elements** = `.plan--recommended`, **Label** = `Our pick` and **Duration** = `5000`.
 3. [Screenshot Page](/nodes/extension/screenshotpage/) with **Mode** = **Viewport** captures the page with the highlight visible.
 
-## Troubleshooting
+## Common issues
 
 - **Nothing is highlighted.** The selector matched nothing. Check it with **Ping**, or wait for the element first with [Wait For Element](/nodes/extension/ui/wait-for-element/).
 - **The highlight disappears too fast.** Raise **Duration**. A value of `0` removes it after about 2 seconds.

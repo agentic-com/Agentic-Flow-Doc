@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Save text from a workflow into a knowledge base, so agents can search it later.
 
 ## What it does
@@ -31,12 +34,7 @@ To add files, pages or text by hand, use **Add sources** on the knowledge bases 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Input** | Text |  | Yes | The input to index. |
-| **Source ID** | Text |  | No | A stable id for this document. Indexing again with the same id updates it instead of adding a copy. Defaults to the source link or name, else to the text itself. |
-| **Source name** | Text |  | No | Shown in citations and in the knowledge base source list. Indexing again with the same source name (or link) updates that source in place instead of adding a copy. |
-| **Source link** | Text |  | No | Where the text comes from, linked from citations. |
+<AwfParamTable rows={[{"name":"Input","type":"Text","required":true,"description":"The input to index."},{"name":"Source ID","type":"Text","description":"A stable id for this document. Indexing again with the same id updates it instead of adding a copy. Defaults to the source link or name, else to the text itself."},{"name":"Source name","type":"Text","description":"Shown in citations and in the knowledge base source list. Indexing again with the same source name (or link) updates that source in place instead of adding a copy."},{"name":"Source link","type":"Text","description":"Where the text comes from, linked from citations."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Input** with an expression such as `{{ $input.text }}`.
@@ -48,7 +46,21 @@ A source is identified by its **Source ID**, else its **Source link**, else its 
 {/* AUTO:outputs:start */}
 This node has no output port: nothing runs after it on this branch.
 
-Each output item has the fields `success` (true/false), `chunks` (number), `added` (number), `updated` (number), `failed` (number), `removed` (number), `sourceId` (text).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"success","type":"True/false"},{"name":"chunks","type":"Number"},{"name":"added","type":"Number"},{"name":"updated","type":"Number"},{"name":"failed","type":"Number"},{"name":"removed","type":"Number"},{"name":"sourceId","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "success": true,
+  "chunks": 0,
+  "added": 0,
+  "updated": 0,
+  "failed": 0,
+  "removed": 0,
+  "sourceId": "…"
+}
+```
 {/* AUTO:outputs:end */}
 
 The result is visible in the run data:
@@ -64,11 +76,7 @@ After a run, the node on the canvas shows a badge such as **24 added · 3 update
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Model** | chat model | No | One |
-| **Knowledge** | vector store | Yes | One |
-| **Text Splitter** | text splitter | Yes | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node."},{"name":"Knowledge","type":"vector store","description":"One node.","required":true},{"name":"Text Splitter","type":"text splitter","description":"One node.","required":true}]} />
 {/* AUTO:deps:end */}
 
 - **Knowledge**: a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node pointing at the knowledge base to fill.
@@ -83,7 +91,7 @@ After a run, the node on the canvas shows a badge such as **24 added · 3 update
 
 Each day the same source is updated in place, and chat citations link back to the page.
 
-## Troubleshooting
+## Common issues
 
 - **"None of the N chunks could be saved to the knowledge base."** Nothing was written. Check that the knowledge base exists and that its embedding model is installed in [Local models](/app/local-models/).
 - **"N of M chunks could not be saved to the knowledge base."** (a warning in the run log) Part of the text was saved; `success` is `false` and `failed` counts the rest. Run again to retry.

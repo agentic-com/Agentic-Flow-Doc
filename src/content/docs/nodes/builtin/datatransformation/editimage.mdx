@@ -12,6 +12,9 @@ node:
   since: "0.7.0"
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Resize, crop, rotate, convert, compress or annotate an image, right in the browser.
 
 ## What it does
@@ -36,25 +39,7 @@ When converting, the file keeps its name but gets the new extension (`shot.png` 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | Resize | No | The single edit to apply. Options: Resize, Crop, Rotate, Convert format / compress, Annotate (text or box). |
-| **Binary Field** | Text | `data` | No | The $binary slot the input image is read from and the result is written to. |
-| **Width (px)** | Number |  | No | Resize: target width. Leave empty to derive it from the height. |
-| **Height (px)** | Number |  | No | Resize: target height. Leave empty to derive it from the width. |
-| **Keep aspect ratio** | Toggle | On | No | Resize: fit inside the given box without distorting the image. |
-| **X** | Number |  | No | Crop/annotate: left offset in px. |
-| **Y** | Number |  | No | Crop/annotate: top offset in px. |
-| **Width** | Number |  | No | Crop/annotate box: width in px. |
-| **Height** | Number |  | No | Crop/annotate box: height in px. |
-| **Degrees** | Number | 90 | No | Rotate: clockwise angle (90/180/270 for right-angle turns). |
-| **Format** | Choice | PNG | No | Convert: output image format. Options: PNG, JPEG, WebP. |
-| **Quality (0-1)** | Number |  | No | Convert/compress: 0..1, applies to JPEG and WebP only. Lower = smaller file. |
-| **Annotation** | Choice | Text | No | Annotate: draw text or a rectangle. Options: Text, Box. |
-| **Text** | Text |  | No | Annotate (text): the text to draw. |
-| **Color** | Text | `#ff0000` | No | Annotate: stroke/fill color (CSS color). |
-| **Font** | Text | `16px sans-serif` | No | Annotate (text): CSS font shorthand. |
-| **Line width** | Number | 2 | No | Annotate (box): stroke width in px. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Resize","description":"The single edit to apply. Options: Resize, Crop, Rotate, Convert format / compress, Annotate (text or box)."},{"name":"Binary Field","type":"Text","default":"data","description":"The $binary slot the input image is read from and the result is written to."},{"name":"Width (px)","type":"Number","description":"Resize: target width. Leave empty to derive it from the height."},{"name":"Height (px)","type":"Number","description":"Resize: target height. Leave empty to derive it from the width."},{"name":"Keep aspect ratio","type":"Toggle","default":"On","description":"Resize: fit inside the given box without distorting the image."},{"name":"X","type":"Number","description":"Crop/annotate: left offset in px."},{"name":"Y","type":"Number","description":"Crop/annotate: top offset in px."},{"name":"Width","type":"Number","description":"Crop/annotate box: width in px."},{"name":"Height","type":"Number","description":"Crop/annotate box: height in px."},{"name":"Degrees","type":"Number","default":"90","description":"Rotate: clockwise angle (90/180/270 for right-angle turns)."},{"name":"Format","type":"Choice","default":"PNG","description":"Convert: output image format. Options: PNG, JPEG, WebP."},{"name":"Quality (0-1)","type":"Number","description":"Convert/compress: 0..1, applies to JPEG and WebP only. Lower = smaller file."},{"name":"Annotation","type":"Choice","default":"Text","description":"Annotate: draw text or a rectangle. Options: Text, Box."},{"name":"Text","type":"Text","description":"Annotate (text): the text to draw."},{"name":"Color","type":"Text","default":"#ff0000","description":"Annotate: stroke/fill color (CSS color)."},{"name":"Font","type":"Text","default":"16px sans-serif","description":"Annotate (text): CSS font shorthand."},{"name":"Line width","type":"Number","default":"2","description":"Annotate (box): stroke width in px."}]} />
 {/* AUTO:settings:end */}
 
 - Only the settings for the chosen **Operation** matter; the others are ignored.
@@ -64,9 +49,17 @@ When converting, the file keeps its name but gets the new extension (`shot.png` 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `$binary` (key-value pairs).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"$binary","type":"Key-value pairs"}]} />
+
+```json title="Shape of an output item"
+{
+  "$binary": {}
+}
+```
 {/* AUTO:outputs:end */}
 
 The item comes out with all its other fields unchanged and the edited image under the same **Binary Field**. Nodes that take a file, such as a Slack or Google Drive upload, pick it up through their **Binary source** setting (`data` by default).
@@ -74,7 +67,7 @@ The item comes out with all its other fields unchanged and the edited image unde
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -84,7 +77,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. A second Edit Image with **Operation** *Convert format / compress*, **Format** *JPEG* and **Quality (0-1)** `0.7` makes the file smaller.
 4. [Slack](/nodes/builtin/integration/slack/) with **File → Upload** posts the image to a channel.
 
-## Troubleshooting
+## Common issues
 
 - **"No image found on $binary["data"]."** The incoming item has no image under **Binary Field**. Connect a node that produces one, such as Screenshot Page, an [Http Request](/nodes/builtin/core/http-request/) that downloads an image, or [Convert to File](/nodes/builtin/datatransformation/converttofile/).
 - **"Crop rectangle is out of bounds: … does not fit inside the … image."** The rectangle runs past the edge. Reduce **X**, **Y**, **Width** or **Height**. The message shows the image's real size.

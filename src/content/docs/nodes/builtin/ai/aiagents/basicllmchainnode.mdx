@@ -11,7 +11,16 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Send a prompt to a chat model and get its answer. The simplest way to use AI in a workflow.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/explain-eli5.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -30,11 +39,7 @@ When the model must call tools or take actions, use [Tools Agent](/nodes/builtin
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Prompt** | Text |  | Yes |  |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **System message** | Long text |  | No | The system message to use. |
+<AwfParamTable rows={[{"name":"Prompt","type":"Text","required":true},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Use expressions in **Prompt** to include data, for example `Write a one-line summary of: {{ $input.text }}`. Add a **System message** under **Options** to set tone or rules ("Answer in French", "Reply in under 50 words").
@@ -42,13 +47,17 @@ Use expressions in **Prompt** to include data, for example `Write a one-line sum
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `response` | Any | The model reply; the parsed result when an output parser is connected |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"response","type":"Any","description":"The model reply; the parsed result when an output parser is connected"}]} />
+
+```json title="Shape of an output item"
+{
+  "response": null
+}
+```
 {/* AUTO:outputs:end */}
 
 `response` is the model's reply: text, or the structured data your output parser produced.
@@ -56,10 +65,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Model** | chat model | Yes | One |
-| **Output Parser** | output parser | No | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 The node has no credential of its own. The connected model holds the API key or connection.
@@ -70,7 +76,7 @@ The node has no credential of its own. The connected model holds the API key or 
 2. Basic LLM Chain with **Prompt** `Explain this in plain words: {{ $input.text }}`, and an [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model connected to **Model**.
 3. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Dependency model is required".** Connect a chat model to the **Model** slot.
 - **"Model not found".** The connected model node is not set up: open it and choose a model and its credential.

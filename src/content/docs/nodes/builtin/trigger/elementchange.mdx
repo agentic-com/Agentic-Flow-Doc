@@ -11,7 +11,16 @@ node:
   family: trigger
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Run a workflow when an element on an open page changes, appears, disappears, or shows a given text.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/price-on-page-watch.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -35,13 +44,7 @@ To run when a page opens rather than when it changes, use [Page Load](/nodes/bui
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **CSS Selectors** | List |  | Yes | One or more elements to watch. The flow fires when any of them meets the condition. Use the crosshair to pick an element on the page. |
-| **Fire when** | Choice | Content changes | No | Options: Content changes, Element appears, Element disappears, Text matches. |
-| **Match text** | Text |  | No | Text to match when condition is "Text matches". |
-| **Debounce (ms)** | Number | 500 | No | SPAs mutate constantly; debounce coalesces bursts into one fire. |
-| **URL Patterns** | Tags | `["<all_urls>"]` | No |  |
+<AwfParamTable rows={[{"name":"CSS Selectors","type":"List","required":true,"description":"One or more elements to watch. The flow fires when any of them meets the condition. Use the crosshair to pick an element on the page."},{"name":"Fire when","type":"Choice","default":"Content changes","description":"Options: Content changes, Element appears, Element disappears, Text matches."},{"name":"Match text","type":"Text","description":"Text to match when condition is \"Text matches\"."},{"name":"Debounce (ms)","type":"Number","default":"500","description":"SPAs mutate constantly; debounce coalesces bursts into one fire."},{"name":"URL Patterns","type":"Tags","default":"[\"<all_urls>\"]"}]} />
 {/* AUTO:settings:end */}
 
 - **CSS Selectors**: click the crosshair on a row and then click the element on the page, so you do not have to write the selector yourself. If a selector matches several elements, only the first one on the page is watched. Empty rows are ignored.
@@ -52,9 +55,23 @@ To run when a page opens rather than when it changes, use [Page Load](/nodes/bui
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `triggerType` (always "elementChange"), `triggeredAt` (text), `selector` (text), `condition` (text), `url` (text), `tabId` (number), `matchedText` (text).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"elementChange\""},{"name":"triggeredAt","type":"Text"},{"name":"selector","type":"Text"},{"name":"condition","type":"Text"},{"name":"url","type":"Text"},{"name":"tabId","type":"Number"},{"name":"matchedText","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "triggerType": "elementChange",
+  "triggeredAt": "…",
+  "selector": "…",
+  "condition": "…",
+  "url": "…",
+  "tabId": 0,
+  "matchedText": "…"
+}
+```
 {/* AUTO:outputs:end */}
 
 - `selector`: the one selector that fired, not the whole list.
@@ -65,7 +82,7 @@ Each output item has the fields `triggerType` (always "elementChange"), `trigger
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -78,7 +95,7 @@ Get a notification when a product is back in stock:
 4. Add [Browser Notification](/nodes/extension/browsernotification/) with **Title** `Back in stock` and **Message** `{{ $input.url }}`.
 5. Activate the workflow, then reload the product page and leave it open.
 
-## Troubleshooting
+## Common issues
 
 - **Nothing fires after I activated the workflow.** Watching starts when a matching page finishes loading. Reload pages that were already open.
 - **Nothing fires at all.** Check that the page address matches a **URL Patterns** entry and that the selector finds the element. Pick it again with the crosshair: sites often rename their classes.

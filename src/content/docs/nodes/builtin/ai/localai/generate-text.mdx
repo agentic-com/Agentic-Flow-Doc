@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn one piece of text into another (a summary, a translation, a rewrite) with a small model that runs in your browser.
 
 ## What it does
@@ -33,12 +36,7 @@ For everyday summaries and translations, prefer [Summarize](/nodes/builtin/ai/lo
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Model picker |  | No | Any installed text-generation model, across engines. |
-| **Text** | Text |  | No |  |
-| **Source language** | Text |  | No | For translation models (e.g. eng\_Latn). |
-| **Target language** | Text |  | No | For translation models (e.g. fra\_Latn). |
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"Any installed text-generation model, across engines."},{"name":"Text","type":"Text"},{"name":"Source language","type":"Text","description":"For translation models (e.g. eng_Latn)."},{"name":"Target language","type":"Text","description":"For translation models (e.g. fra_Latn)."}]} />
 {/* AUTO:settings:end */}
 
 **Source language** and **Target language** are sent to the model only when both are filled in. Use the codes the model expects: for NLLB-200 that is the `xxx_Yyyy` form, such as `eng_Latn`, `fra_Latn`, `deu_Latn` or `spa_Latn`. Other models ignore them.
@@ -46,9 +44,17 @@ For everyday summaries and translations, prefer [Summarize](/nodes/builtin/ai/lo
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `text` (text).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"text","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "text": "…"
+}
+```
 {/* AUTO:outputs:end */}
 
 `text` is what the model wrote. Use it as `{{ $input.text }}` in the next node.
@@ -56,7 +62,7 @@ Each output item has the fields `text` (text).
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 The **Model** picker lists your installed models first, then models that download on first use. Manage them, or add a custom model, on the [Local AI](/app/local-models/) page.
@@ -69,7 +75,7 @@ Translate selected text to German with T5:
 2. Generate Text with **Model** *T5-small* and **Text** `translate English to German: {{ $input.selectionText }}`.
 3. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.text }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Choose a text-generation model."** **Model** is empty. Pick one.
 - **"Provide some text."** **Text** is empty after expressions run.

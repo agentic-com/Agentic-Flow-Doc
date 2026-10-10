@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Describe an image in a short sentence with a model that runs in your browser, so the image never leaves your device.
 
 ## What it does
@@ -29,10 +32,7 @@ To get labels with scores, use [Classify Image](/nodes/builtin/ai/localai/classi
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Model picker |  | No | Any installed image-captioning model. |
-| **Image** | Media |  | No | Image URL, data URL, or $binary from a previous node. |
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"Any installed image-captioning model."},{"name":"Image","type":"Media","description":"Image URL, data URL, or $binary from a previous node."}]} />
 {/* AUTO:settings:end */}
 
 **Image** has four tabs. **From input** takes an expression that points to an image from an earlier node, such as `{{ $input.dataUrl }}` after [Screenshot Page](/nodes/extension/screenshotpage/) or `{{ $binary }}` for an attached file. **URL** takes a web address. **Upload** and **Base64** store a fixed image with the node, handy for trying a model.
@@ -40,9 +40,17 @@ To get labels with scores, use [Classify Image](/nodes/builtin/ai/localai/classi
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `text` (text).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"text","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "text": "…"
+}
+```
 {/* AUTO:outputs:end */}
 
 `text` is the caption. Use it as `{{ $input.text }}` in the next node.
@@ -50,7 +58,7 @@ Each output item has the fields `text` (text).
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 The **Model** picker lists your installed models first, then models that download on first use. Manage them on the [Local AI](/app/local-models/) page.
@@ -63,7 +71,7 @@ Copy alt text for any image you right-click:
 2. Caption Image with **Model** *ViT-GPT2 captioning* and **Image** (From input) `{{ $input.srcUrl }}`.
 3. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.text }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Choose a captioning model."** **Model** is empty. Pick one.
 - **"No image provided. Pass an image URL, a data URL, or a $binary image from a previous node."** **Image** is empty, or its expression returned nothing. Check that the field you point to exists on the incoming item.

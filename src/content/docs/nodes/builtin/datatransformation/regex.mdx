@@ -11,7 +11,16 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Pull a price, an id or any other fragment out of text, rewrite text, or check whether it contains a pattern.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/price-on-page-watch.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -36,17 +45,7 @@ Matching runs with a 2-second time limit. A pattern that would take too long is 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | Match | No | What to do with the pattern. Options: Match, Match all, Replace, Test. |
-| **Pattern** | Text |  | No | The regular expression, without surrounding slashes. |
-| **Flags** | Multiple choice |  | No | How the pattern matches. Options: Ignore case (i), All matches (g), Multiline anchors (m), Dot matches newlines (s), Unicode (u). |
-| **Text** | Value |  | No | The text to match against. |
-| **Source Field** | Text |  | No | Field holding the text, when the field above is left empty. |
-| **Replacement** | Text |  | No | Text put in place of each match. Use $1 or $&lt;name&gt; for groups. |
-| **Maximum Matches** | Number | 1000 | No | Most matches collected before stopping. |
-| **Include Input Fields** | Toggle | On | No | Keep the incoming item’s fields alongside the result. |
-| **Put Result In Field** | Text | `match` | No | Field holding the match, the replaced text, or the test result. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Match","description":"What to do with the pattern. Options: Match, Match all, Replace, Test."},{"name":"Pattern","type":"Text","description":"The regular expression, without surrounding slashes."},{"name":"Flags","type":"Multiple choice","description":"How the pattern matches. Options: Ignore case (i), All matches (g), Multiline anchors (m), Dot matches newlines (s), Unicode (u)."},{"name":"Text","type":"Value","description":"The text to match against."},{"name":"Source Field","type":"Text","description":"Field holding the text, when the field above is left empty."},{"name":"Replacement","type":"Text","description":"Text put in place of each match. Use $1 or $<name> for groups."},{"name":"Maximum Matches","type":"Number","default":"1000","description":"Most matches collected before stopping."},{"name":"Include Input Fields","type":"Toggle","default":"On","description":"Keep the incoming item’s fields alongside the result."},{"name":"Put Result In Field","type":"Text","default":"match","description":"Field holding the match, the replaced text, or the test result."}]} />
 {/* AUTO:settings:end */}
 
 - **Where the text comes from.** **Text** wins if it is filled, for example with `{{ $input.description }}`. Otherwise the node reads the field named in **Source Field** (dots reach nested fields, such as `product.title`).
@@ -57,7 +56,7 @@ Matching runs with a 2-second time limit. A pattern that would take too long is 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The result goes in **Put Result In Field** (`match` by default). With **Include Input Fields** on, the incoming fields stay on the item too.
@@ -70,7 +69,7 @@ The result goes in **Put Result In Field** (`match` by default). With **Include 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -80,7 +79,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. An [IF](/nodes/builtin/flow/if/) checks whether `{{ $input.amount }}` is below your budget, as a number.
 4. On the true branch, a [Browser Notification](/nodes/extension/browsernotification/) shows `Now {{ $input.currency }}{{ $input.amount }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"This is not a valid regular expression: …".** The pattern has a syntax error, often an unclosed bracket or group. Write it without surrounding slashes: `\d+`, not `/\d+/`.
 - **"This pattern took longer than 2000ms against this text and was stopped."** Nested repeats such as `(a+)+` can take forever on some text. Make the pattern more specific, or match against less text.

@@ -12,6 +12,9 @@ node:
   since: "0.7.0"
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn your items into a file (CSV, JSON, text, base64 or binary) that later nodes can upload, attach or save.
 
 ## What it does
@@ -30,12 +33,7 @@ The file name and type default to sensible values per format (`data.csv` and `te
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Format** | Choice | CSV | No | The kind of file to produce. Options: CSV, JSON, Text, Base64, Binary. |
-| **File name** | Text |  | No | Name of the produced file. Left empty, a sensible default per format is used. |
-| **MIME type** | Text |  | No | Content type recorded on the file. Left empty, a sensible default per format is used. Required to be set explicitly for Base64. |
-| **Source Field** | Text |  | No | Field to read from the item. For Text: the text per item. For Base64: the field holding the base64 string. For Binary: the binary slot (defaults to "data") or a field holding the bytes. |
+<AwfParamTable rows={[{"name":"Format","type":"Choice","default":"CSV","description":"The kind of file to produce. Options: CSV, JSON, Text, Base64, Binary."},{"name":"File name","type":"Text","description":"Name of the produced file. Left empty, a sensible default per format is used."},{"name":"MIME type","type":"Text","description":"Content type recorded on the file. Left empty, a sensible default per format is used. Required to be set explicitly for Base64."},{"name":"Source Field","type":"Text","description":"Field to read from the item. For Text: the text per item. For Base64: the field holding the base64 string. For Binary: the binary slot (defaults to \"data\") or a field holding the bytes."}]} />
 {/* AUTO:settings:end */}
 
 How each **Format** builds the file:
@@ -49,17 +47,21 @@ How each **Format** builds the file:
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `fileName` | Text |  |
-| `mimeType` | Text |  |
-| `format` | Text | The format the content was converted from |
-| `size` | Number |  |
-| `$binary` | Key-value pairs |  |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"fileName","type":"Text"},{"name":"mimeType","type":"Text"},{"name":"format","type":"Text","description":"The format the content was converted from"},{"name":"size","type":"Number"},{"name":"$binary","type":"Key-value pairs"}]} />
+
+```json title="Shape of an output item"
+{
+  "fileName": "…",
+  "mimeType": "…",
+  "format": "…",
+  "size": 0,
+  "$binary": {}
+}
+```
 {/* AUTO:outputs:end */}
 
 One item that carries the file under `data`, plus its name, type and size in bytes. In the next node, choose this file as the binary or attachment source.
@@ -67,7 +69,7 @@ One item that carries the file under `data`, plus its name, type and size in byt
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -76,7 +78,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. Convert to File with **Format** *CSV* and **File name** `products.csv`.
 3. [Google Drive](/nodes/builtin/integration/google-drive/) uploads the file using this node's file as the source.
 
-## Troubleshooting
+## Common issues
 
 - **"No items to convert. Connect a node that produces items."** Nothing reached the node. Check that the previous node returns data.
 - **"Base64 needs a base64 string."** Name the field holding the base64 text in **Source Field**, or put it in a `data` field, and make sure it is text.

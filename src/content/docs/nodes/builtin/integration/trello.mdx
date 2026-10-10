@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn the page you are on into a Trello card with the link attached, and update or move cards across your boards.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Trello connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Basic Auth.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -35,60 +44,11 @@ For personal to-dos, use [Todoist](/nodes/builtin/integration/todoist/). For sof
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| Card | Create, Update, Move, Attach URL |
-| Board | List |
-| List | List |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"A Trello API key + token, stored as a Basic Auth credential: put the API key in Username and the token in Password. Get both from https://trello.com/app-key (the token is generated from that page). Keep them secret."}]} groups={[{"label":"Card","options":[{"label":"Create","rows":[{"name":"Card title","type":"Text","required":true,"description":"The card name."},{"name":"List ID","type":"Text","required":true,"description":"The list (column) to add the card to (use List → List to find its ID)."},{"name":"Description","type":"Text","description":"Card description (Markdown supported)."},{"name":"Source URL","type":"Text","description":"The page URL — attached to the card and appended to the description."},{"name":"Position","type":"Choice","description":"Where in the list to place the card. Options: Top, Bottom."}]},{"label":"Update","rows":[{"name":"Card ID","type":"Text","required":true,"description":"The Trello card ID."},{"name":"Card title","type":"Text","description":"The card name."},{"name":"Description","type":"Text","description":"Card description (Markdown supported)."}]},{"label":"Move","rows":[{"name":"Card ID","type":"Text","required":true,"description":"The Trello card ID."},{"name":"Target list ID","type":"Text","required":true,"description":"The list (column) to move the card to."}]},{"label":"Attach URL","rows":[{"name":"Card ID","type":"Text","required":true,"description":"The Trello card ID."},{"name":"URL","type":"Text","required":true,"description":"The URL to attach to the card."},{"name":"Attachment name","type":"Text","description":"A label for the attachment (optional)."}]}]},{"label":"Board","options":[{"label":"List","rows":[]}]},{"label":"List","options":[{"label":"List","rows":[]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | A Trello API key + token, stored as a Basic Auth credential: put the API key in Username and the token in Password. Get both from https://trello.com/app-key (the token is generated from that page). Keep them secret. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**Card → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Card title** | Text |  | Yes | The card name. |
-| **List ID** | Text |  | Yes | The list (column) to add the card to (use List → List to find its ID). |
-| **Description** | Text |  | No | Card description (Markdown supported). |
-| **Source URL** | Text |  | No | The page URL — attached to the card and appended to the description. |
-| **Position** | Choice |  | No | Where in the list to place the card. Options: Top, Bottom. |
-
-**Card → Update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Card ID** | Text |  | Yes | The Trello card ID. |
-| **Card title** | Text |  | No | The card name. |
-| **Description** | Text |  | No | Card description (Markdown supported). |
-
-**Card → Move**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Card ID** | Text |  | Yes | The Trello card ID. |
-| **Target list ID** | Text |  | Yes | The list (column) to move the card to. |
-
-**Card → Attach URL**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Card ID** | Text |  | Yes | The Trello card ID. |
-| **URL** | Text |  | Yes | The URL to attach to the card. |
-| **Attachment name** | Text |  | No | A label for the attachment (optional). |
-
-**Board → List**
-
-No further settings.
-
-**List → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Board ID** | Text |  | Yes | The board whose lists to fetch (use Board → List to find its ID). |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Trello API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - **List ID** and **Target list ID** are the id of a list (a column), not of a board. Run **Board → List**, then **List → List** with your **Board ID**, and copy the `id` of the list.
@@ -99,7 +59,7 @@ No further settings.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Card → Create**, **Update** and **Move** return the card, including its `id`, `name`, `desc`, `idList` and `url` (the link to open it in Trello).
@@ -109,7 +69,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, Basic Auth): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, Basic Auth): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Trello uses an API key and a token, saved together as a Basic Auth credential:
@@ -128,7 +88,7 @@ The token can act on all your boards, so keep it private.
 3. Trello, **Card → Create**, **List ID** of your "Ideas" list, **Card title** `{{ $input.title }}`, **Source URL** `{{ $input.url }}`, **Position** `Top`.
 4. [Browser Notification](/nodes/extension/browsernotification/) shows `Card added`, with the card's `{{ $input.url }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Trello needs a Basic Auth credential with the API key in Username and the token in Password."** The credential is missing a value or is not Basic Auth. Fill both fields.
 - **"Trello API Error: 401 … the API key or token is invalid or expired".** The key and token do not belong together, are swapped, or the token was revoked. Generate a new token next to your key and update the credential.

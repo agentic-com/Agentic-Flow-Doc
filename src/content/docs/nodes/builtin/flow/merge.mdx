@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Join two lists of items into one, pairing items that match.
 
 ## What it does
@@ -41,22 +44,19 @@ Merge does not wait for "whichever branch finishes first". For that, use [Funnel
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Mode** | Choice | Inner Join | Yes | The mode to use for merging the inputs. Options: Inner Join, Left Join, Right Join, Left Outer Join, Right Outer Join. |
-| **Match Keys** | Key mapping |  | Yes | The keys to use for matching the inputs. |
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","required":true,"default":"Inner Join","description":"The mode to use for merging the inputs. Options: Inner Join, Left Join, Right Join, Left Outer Join, Right Outer Join."},{"name":"Match Keys","type":"Key mapping","required":true,"description":"The keys to use for matching the inputs."}]} />
 {/* AUTO:settings:end */}
 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +66,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Merge in **Left Join** mode, with the match key A `email` **Is Equal To** B `customerEmail`.
 4. Every customer comes out once per matching order, or once on their own when they have no order.
 
-## Troubleshooting
+## Common issues
 
 - **Nothing comes out.** In Inner Join mode no pair matched. Check that both fields hold the same kind of value (for example both lower-case emails) and that the field names are spelled as they appear in the data.
 - **Many more items than expected.** One A item matched several B items, and each pair becomes an item. Remove duplicates on B first, or add another match key.

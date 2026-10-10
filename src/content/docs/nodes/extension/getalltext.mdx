@@ -11,7 +11,16 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Read the text of the page open in the active tab, or of one part of it, into a field.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/summarize-this-page.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -32,13 +41,7 @@ It reads the main page only: text inside embedded frames is not included.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
-| Options › **Visible text only** | Toggle | Off | No | Only return text from visible elements. |
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."},{"name":"Options › Visible text only","type":"Toggle","default":"Off","description":"Only return text from visible elements."}]} />
 {/* AUTO:settings:end */}
 
 - **Output field name**: any name you like, for example `pageText`. Later nodes read it with `{{ $input.pageText }}`.
@@ -47,7 +50,7 @@ It reads the main page only: text inside embedded frames is not included.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 One item with your field, for example `{ "pageText": "Welcome to …" }`. The value is plain text, not HTML.
@@ -55,7 +58,7 @@ One item with your field, for example `{ "pageText": "Welcome to …" }`. The va
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -65,7 +68,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add a [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) node with **Text** = `{{ $input.pageText }}`, and connect a chat model to it.
 4. End with [Display Markdown](/nodes/extension/displaymarkdown/) to show the summary on the page.
 
-## Troubleshooting
+## Common issues
 
 - **"No content found".** The page or the selected element had no text, or **DOM Selector** matched nothing. Use **Ping** to check the selector, and make sure the page has finished loading. Add [Wait For Element](/nodes/extension/ui/wait-for-element/) before this node on pages that load content late.
 - **The text is missing a part you can see.** That part is probably inside an embedded frame, which this node does not read. Open the frame's address in its own tab with [Tab Control](/nodes/extension/tabcontrol/) and read it there.

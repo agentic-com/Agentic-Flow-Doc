@@ -11,6 +11,9 @@ node:
   family: lambda
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Lambda Output is the end point of a lambda workflow: it sets the values the workflow hands back to whoever called it.
 
 ## What it does
@@ -27,9 +30,7 @@ Lambda Output is a dead end on the canvas: nothing connects after it. In the cal
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Outputs** | Field list |  | Yes | The outputs for the lambda workflow. |
+<AwfParamTable rows={[{"name":"Outputs","type":"Field list","required":true,"description":"The outputs for the lambda workflow."}]} />
 {/* AUTO:settings:end */}
 
 Fill each value with an expression, for example `{{ $input.text }}` for the incoming data, or `{{ $('Http Request').body }}` for a named earlier step. Pick the type that matches what callers expect: a number output turns `"42"` into `42`, and an object or array output reads JSON text into real data.
@@ -37,7 +38,7 @@ Fill each value with an expression, for example `{{ $input.text }}` for the inco
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The result is one item with the output names you declared, for example `{ "summary": "...", "wordCount": 120 }`. This is exactly what the calling Lambda Workflow node outputs, and what an AI agent gets back when it uses the workflow through [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/).
@@ -45,7 +46,7 @@ The result is one item with the output names you declared, for example `{ "summa
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -57,7 +58,7 @@ A lambda workflow that counts the words in a text:
 3. **Lambda Output** with two outputs: `text` = `{{ $('Lambda Input').text }}` (string) and `wordCount` = `{{ $input.count }}` (number).
 4. A calling workflow adds this lambda from **My Lambda Workflows** and reads `{{ $input.wordCount }}` in its next step.
 
-## Troubleshooting
+## Common issues
 
 - **The caller fails with "Workflow ... produced no output. Check that it has an Output node and that the branch reaching it ran."** The run ended without reaching Lambda Output, for example because an [IF](/nodes/builtin/flow/if/) sent the data down a branch that does not lead here. Make every branch end in Lambda Output, or use a [Merge](/nodes/builtin/flow/merge/) before it.
 - **A number output comes back as `0`.** The value is not a number (for example `"12 items"`), so it falls back to `0`. Make the expression return only the number.

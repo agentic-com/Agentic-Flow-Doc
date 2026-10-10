@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Send email, read and search your Gmail messages, and manage drafts from a workflow.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Gmail connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with an OAuth2.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -34,88 +43,11 @@ Temporary Google errors (too many requests, server errors) are retried automatic
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| Message | Send, Get, Delete, Search |
-| Draft | Create, Get, Update, Delete, List |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Credential to use to make request."}]} groups={[{"label":"Message","options":[{"label":"Send","rows":[{"name":"To","type":"List","required":true,"description":"Email addresses to send to."},{"name":"Subject","type":"Text","required":true,"description":"Email subject."},{"name":"Body","type":"Long text","required":true,"description":"Email body (plain text)."},{"name":"HTML Body","type":"Text","description":"Email body (HTML)."},{"name":"CC","type":"List","description":"Carbon copy recipients."},{"name":"BCC","type":"List","description":"Blind carbon copy recipients."},{"name":"Attachments","type":"List","description":"Logical $binary keys on the incoming item to attach as email files. Each selected key is read from the item and added to the message; leave empty to send with no attachments."}]},{"label":"Get","rows":[{"name":"Message ID","type":"Choice (loaded from your account)","required":true,"description":"The Gmail message ID to work with."}]},{"label":"Delete","rows":[{"name":"Message ID","type":"Choice (loaded from your account)","required":true,"description":"The Gmail message ID to work with."}]},{"label":"Search","rows":[{"name":"Search Query","type":"Text","description":"Gmail search query."},{"name":"Page Size","type":"Number","default":"100","description":"Number of results per page (1-100)."}]}]},{"label":"Draft","options":[{"label":"Create","rows":[{"name":"To","type":"List","required":true,"description":"Email addresses to send to."},{"name":"Subject","type":"Text","required":true,"description":"Email subject."},{"name":"Body","type":"Long text","description":"Email body (plain text)."},{"name":"HTML Body","type":"Text","description":"Email body (HTML)."},{"name":"CC","type":"List","description":"Carbon copy recipients."},{"name":"BCC","type":"List","description":"Blind carbon copy recipients."}]},{"label":"Get","rows":[{"name":"Draft ID","type":"Choice (loaded from your account)","required":true,"description":"The Gmail draft ID to work with."}]},{"label":"Update","rows":[{"name":"Draft ID","type":"Choice (loaded from your account)","required":true,"description":"The Gmail draft ID to work with."},{"name":"To","type":"List","required":true,"description":"Email addresses to send to."},{"name":"Subject","type":"Text","required":true,"description":"Email subject."},{"name":"Body","type":"Long text","description":"Email body (plain text)."},{"name":"HTML Body","type":"Text","description":"Email body (HTML)."},{"name":"CC","type":"List","description":"Carbon copy recipients."},{"name":"BCC","type":"List","description":"Blind carbon copy recipients."}]},{"label":"Delete","rows":[{"name":"Draft ID","type":"Choice (loaded from your account)","required":true,"description":"The Gmail draft ID to work with."}]},{"label":"List","rows":[{"name":"Page Size","type":"Number","default":"100","description":"Number of results per page (1-100)."}]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | The Credential to use to make request. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**Message → Send**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **To** | List |  | Yes | Email addresses to send to. |
-| **Subject** | Text |  | Yes | Email subject. |
-| **Body** | Long text |  | Yes | Email body (plain text). |
-| **HTML Body** | Text |  | No | Email body (HTML). |
-| **CC** | List |  | No | Carbon copy recipients. |
-| **BCC** | List |  | No | Blind carbon copy recipients. |
-| **Attachments** | List |  | No | Logical `$binary` keys on the incoming item to attach as email files. Each selected key is read from the item and added to the message; leave empty to send with no attachments. |
-
-**Message → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Message ID** | Choice (loaded from your account) |  | Yes | The Gmail message ID to work with. |
-
-**Message → Delete**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Message ID** | Choice (loaded from your account) |  | Yes | The Gmail message ID to work with. |
-
-**Message → Search**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Search Query** | Text |  | No | Gmail search query. |
-| **Page Size** | Number | 100 | No | Number of results per page (1-100). |
-
-**Draft → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **To** | List |  | Yes | Email addresses to send to. |
-| **Subject** | Text |  | Yes | Email subject. |
-| **Body** | Long text |  | No | Email body (plain text). |
-| **HTML Body** | Text |  | No | Email body (HTML). |
-| **CC** | List |  | No | Carbon copy recipients. |
-| **BCC** | List |  | No | Blind carbon copy recipients. |
-
-**Draft → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Draft ID** | Choice (loaded from your account) |  | Yes | The Gmail draft ID to work with. |
-
-**Draft → Update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Draft ID** | Choice (loaded from your account) |  | Yes | The Gmail draft ID to work with. |
-| **To** | List |  | Yes | Email addresses to send to. |
-| **Subject** | Text |  | Yes | Email subject. |
-| **Body** | Long text |  | No | Email body (plain text). |
-| **HTML Body** | Text |  | No | Email body (HTML). |
-| **CC** | List |  | No | Carbon copy recipients. |
-| **BCC** | List |  | No | Blind carbon copy recipients. |
-
-**Draft → Delete**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Draft ID** | Choice (loaded from your account) |  | Yes | The Gmail draft ID to work with. |
-
-**Draft → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Page Size** | Number | 100 | No | Number of results per page (1-100). |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Gmail API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - **To**, **CC** and **BCC** take one address per entry, for example `{{ $input.email }}`. Every address is checked before sending.
@@ -126,7 +58,7 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Message → Send** returns the new message's `id` and `threadId`.
@@ -138,7 +70,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Gmail connects by signing in to your Google account (OAuth). You first create your own Google OAuth client once, with the Gmail API enabled: follow [Create your OAuth client](/app/connections/oauth-client/#google). Then create a Gmail credential, paste the **Client ID** and **Client Secret**, click **Check connection** and approve the Google window. AWFlow asks for permission to read, compose and send email, and to move messages to the Trash. The sign-in is kept and refreshed for you. See also [Create a credential](/app/connections/create/).
@@ -150,7 +82,7 @@ Gmail connects by signing in to your Google account (OAuth). You first create yo
 3. [CSV](/nodes/builtin/datatransformation/csv/) and [Convert to File](/nodes/builtin/datatransformation/converttofile/) turn it into a file under the key `data`.
 4. Gmail, **Message → Send**, **To** `you@example.com`, **Subject** `Weekly prices`, **Body** `Attached.`, **Attachments** `data`.
 
-## Troubleshooting
+## Common issues
 
 - **"Invalid email address: …".** One of **To**, **CC** or **BCC** is not a valid address. Check the value, or the expression that builds it.
 - **"No $binary found on the incoming item for attachment key "data"".** The previous node did not produce a file under that key. Check the key name, or add a node that creates the file.

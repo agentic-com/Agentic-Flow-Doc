@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Search the web from a workflow and get the first page of results as a list of titles, links and snippets.
 
 ## What it does
@@ -31,11 +34,7 @@ No API key is needed: the search runs in your own browser, like a search you wou
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Query** | Text |  | Yes | The text to search for. |
-| **Engine** | Choice | DuckDuckGo | No | Which search engine to query. Options: DuckDuckGo, Bing, Brave. |
-| **Max Results** | Number |  | No | Maximum number of results to return. Leave empty or 0 to return all first-page results. |
+<AwfParamTable rows={[{"name":"Query","type":"Text","required":true,"description":"The text to search for."},{"name":"Engine","type":"Choice","default":"DuckDuckGo","description":"Which search engine to query. Options: DuckDuckGo, Bing, Brave."},{"name":"Max Results","type":"Number","description":"Maximum number of results to return. Leave empty or 0 to return all first-page results."}]} />
 {/* AUTO:settings:end */}
 
 **Query** accepts expressions, for example `{{ $input.company }} pricing`. The usual search operators of the engine (quotes, `site:`) work as you would type them.
@@ -43,9 +42,21 @@ No API key is needed: the search runs in your own browser, like a search you wou
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each run returns a list of items with the fields `title` (text), `url` (text), `snippet` (text).
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"title","type":"Text"},{"name":"url","type":"Text"},{"name":"snippet","type":"Text"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "title": "…",
+    "url": "…",
+    "snippet": "…"
+  }
+]
+```
 {/* AUTO:outputs:end */}
 
 For example:
@@ -61,7 +72,7 @@ Each result is its own item, so the next node runs once per result. Use [Aggrega
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -71,7 +82,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/) with **Also Compare Against Previous Runs** on, so only new links continue.
 4. [Aggregate](/nodes/builtin/datatransformation/aggregate/), then [Slack](/nodes/builtin/integration/slack/), **Message → Send**, posts the new results to `#mentions`.
 
-## Troubleshooting
+## Common issues
 
 - **The output is empty.** The engine showed no results, asked to confirm you are human, or changed its page layout. Open the same search in a tab to check, then try another **Engine**. DuckDuckGo is the most stable; Brave is the most likely to change.
 - **Fewer results than expected.** Only the first page is read, and rows without a title or link are skipped.

@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Send a notification to your phone through ntfy or Pushover, so you hear about a change even when you are away from the browser.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use a Push Notification connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Credential** field when the service needs one.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -33,33 +42,11 @@ For a desktop notification without an account, use [Browser Notification](/nodes
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | No | Optional. ntfy public topics need none. For a protected ntfy server use a Bearer Token; for Pushover use a Basic Auth credential with the application token in Username and your user key in Password. |
+<AwfOperationTabs client:visible pick={"Provider"} common={[{"name":"Credential","type":"Credential","description":"Optional. ntfy public topics need none. For a protected ntfy server use a Bearer Token; for Pushover use a Basic Auth credential with the application token in Username and your user key in Password."}]} groups={[{"options":[{"label":"ntfy","rows":[{"name":"Topic","type":"Text","required":true,"description":"The ntfy topic to publish to (anyone who knows it can read it — pick something unguessable)."},{"name":"Message","type":"Text","required":true,"description":"The notification body."},{"name":"Title","type":"Text","description":"The notification title."},{"name":"Priority","type":"Choice","description":"ntfy priority. Options: Min, Low, Default, High, Max."},{"name":"Tags","type":"List","description":"ntfy tags — emoji shortcodes (e.g. warning, tada) show as icons."},{"name":"Click URL","type":"Text","description":"Open this URL when the notification is tapped — e.g. the page it is about."},{"name":"Server","type":"Text","description":"ntfy server (defaults to https://ntfy.sh; use your self-hosted URL for a private instance)."}]},{"label":"Pushover","rows":[{"name":"Message","type":"Text","required":true,"description":"The notification body."},{"name":"Title","type":"Text","description":"The notification title."},{"name":"Priority","type":"Choice","description":"Pushover priority. Options: Lowest (no alert), Low, Normal, High."},{"name":"Click URL","type":"Text","description":"Open this URL when the notification is tapped — e.g. the page it is about."},{"name":"Click URL title","type":"Text","description":"A label for the click URL (Pushover)."}]}]}]} />
 
-Pick **Provider** first; the fields below change with your choice.
-
-**ntfy**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Topic** | Text |  | Yes | The ntfy topic to publish to (anyone who knows it can read it — pick something unguessable). |
-| **Message** | Text |  | Yes | The notification body. |
-| **Title** | Text |  | No | The notification title. |
-| **Priority** | Choice |  | No | ntfy priority. Options: Min, Low, Default, High, Max. |
-| **Tags** | List |  | No | ntfy tags — emoji shortcodes (e.g. warning, tada) show as icons. |
-| **Click URL** | Text |  | No | Open this URL when the notification is tapped — e.g. the page it is about. |
-| **Server** | Text |  | No | ntfy server (defaults to https://ntfy.sh; use your self-hosted URL for a private instance). |
-
-**Pushover**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Message** | Text |  | Yes | The notification body. |
-| **Title** | Text |  | No | The notification title. |
-| **Priority** | Choice |  | No | Pushover priority. Options: Lowest (no alert), Low, Normal, High. |
-| **Click URL** | Text |  | No | Open this URL when the notification is tapped — e.g. the page it is about. |
-| **Click URL title** | Text |  | No | A label for the click URL (Pushover). |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Push Notification API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - **Topic** works like a password on the public ntfy server: anyone who knows it can read your notifications. Pick something long and random, like `my-alerts-7f3k9q`.
@@ -69,7 +56,7 @@ Pick **Provider** first; the fields below change with your choice.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The output is the provider's reply. ntfy returns the published message, including its `id`, `time` and `topic`. Pushover returns `status: 1` and a `request` id. Most workflows end here, or continue without using these fields.
@@ -77,7 +64,7 @@ The output is the provider's reply. ntfy returns the published message, includin
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential): optional. Pick a saved connection or create one from this field.
+- **Credential** (connection): optional. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 - **ntfy on ntfy.sh, public topic**: leave **Credential** empty.
@@ -92,7 +79,7 @@ See [Create a credential](/app/connections/create/).
 2. Push Notification, **Provider** `ntfy`, **Topic** `my-alerts-7f3k9q`, **Title** `Price changed`, **Message** `Now {{ $input.matchedText }}`, **Priority** `High`, **Tags** `moneybag`, **Click URL** `{{ $input.url }}`.
 3. On your phone, subscribe to `my-alerts-7f3k9q` in the ntfy app.
 
-## Troubleshooting
+## Common issues
 
 - **The ntfy notification never arrives.** The phone is subscribed to a different topic or server. Check the exact **Topic** spelling and that the app uses the same **Server** (`https://ntfy.sh` by default).
 - **"Pushover needs a Basic Auth credential with the application token in Username and your user key in Password."** No credential is selected, or it is not a Basic Auth credential with both fields filled.

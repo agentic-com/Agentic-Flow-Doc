@@ -11,7 +11,16 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Send each item down a **True** or a **False** branch, depending on conditions you set.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/price-on-page-watch.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -30,22 +39,24 @@ For more than two paths, use [Switch](/nodes/builtin/flow/switch/). To drop item
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Conditions** | Conditions |  | Yes | The conditions to evaluate. |
+<AwfParamTable rows={[{"name":"Conditions","type":"Conditions","required":true,"description":"The conditions to evaluate."}]} />
 {/* AUTO:settings:end */}
 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-2 output ports: **True**, **False**.
+<AwfOutputPorts ports={[{"name":"True"},{"name":"False"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `result` | True/false | Whether the conditions held |
-| `inData` | Any | The incoming data, unchanged |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"result","type":"True/false","description":"Whether the conditions held"},{"name":"inData","type":"Any","description":"The incoming data, unchanged"}]} />
+
+```json title="Shape of an output item"
+{
+  "result": true,
+  "inData": null
+}
+```
 {/* AUTO:outputs:end */}
 
 Port **True** is the top one and **False** the bottom one. Connect either or both.
@@ -53,7 +64,7 @@ Port **True** is the top one and **False** the bottom one. Connect either or bot
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -62,7 +73,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. IF checks that `{{ $input.title }}` (**String**) **Contains** `release`.
 3. **True** goes to a [Slack](/nodes/builtin/integration/slack/) node that posts the link. **False** is left unconnected.
 
-## Troubleshooting
+## Common issues
 
 - **"IF needs at least one condition."** Add a condition, or remove the node.
 - **Every item goes to False.** Check the operator type. A number stored as text compares as text, so pick the type that matches the data (**Number** for prices), or convert it first with [Edit Fields](/nodes/builtin/datatransformation/editfields/).

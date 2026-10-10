@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Rename fields on your items, one by one or all at once with a pattern, without touching their values.
 
 ## What it does
@@ -32,17 +35,7 @@ Values never change, only names and positions. A field that an item does not hav
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Mode** | Choice | Named keys | No | Rename keys you name, or every key matching a pattern. Options: Named keys, Pattern. |
-| **Renames** | List of entries |  | No | Keys to rename, and what to rename them to. |
-| Renames (each entry) › **From** | Text |  | Yes | Current key. Dots address nested keys. |
-| Renames (each entry) › **To** | Text |  | Yes | New key. Dots move the value to a different place. |
-| **Pattern** | Text |  | No | Regular expression matched against each key name. |
-| **Replacement** | Text |  | No | What the matched part becomes. Use $1 for groups. Empty removes it. |
-| **Ignore Case** | Toggle | Off | No | Match the pattern regardless of case. |
-| **Apply To Nested Keys** | Toggle | Off | No | Rewrite keys inside nested objects too. |
-| **On Collision** | Choice | Fail | No | What to do when the new name is already taken. Options: Fail, Overwrite, Keep the existing key. |
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","default":"Named keys","description":"Rename keys you name, or every key matching a pattern. Options: Named keys, Pattern."},{"name":"Renames","type":"List of entries","description":"Keys to rename, and what to rename them to."},{"name":"Renames (each entry) › From","type":"Text","required":true,"description":"Current key. Dots address nested keys."},{"name":"Renames (each entry) › To","type":"Text","required":true,"description":"New key. Dots move the value to a different place."},{"name":"Pattern","type":"Text","description":"Regular expression matched against each key name."},{"name":"Replacement","type":"Text","description":"What the matched part becomes. Use $1 for groups. Empty removes it."},{"name":"Ignore Case","type":"Toggle","default":"Off","description":"Match the pattern regardless of case."},{"name":"Apply To Nested Keys","type":"Toggle","default":"Off","description":"Rewrite keys inside nested objects too."},{"name":"On Collision","type":"Choice","default":"Fail","description":"What to do when the new name is already taken. Options: Fail, Overwrite, Keep the existing key."}]} />
 {/* AUTO:settings:end */}
 
 - **Pattern** replaces every match inside a name, not just the first. If the result would be an empty name, the field keeps its old name.
@@ -52,7 +45,7 @@ Values never change, only names and positions. A field that an item does not hav
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The same items with the new field names. A single incoming item comes out as a single item; a list comes out as a list of the same length.
@@ -60,7 +53,7 @@ The same items with the new field names. A single incoming item comes out as a s
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -70,7 +63,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. A second Rename Keys with **Mode** *Named keys* and one rename, **From** `url` **To** `link`, to match your sheet's column.
 4. A [Google Sheets](/nodes/builtin/integration/google-sheets/) node (*Data*, *Append Values into Worksheet*) adds the items to your sheet.
 
-## Troubleshooting
+## Common issues
 
 - **"Renaming "…" to "…" would overwrite a value that is already there."** The new name is already used on the item. Pick another name, or set **On Collision** to *Overwrite* or *Keep the existing key*.
 - **"Renaming "…" to "…" would overwrite a key of that name produced by another rename."** In Pattern mode, two names become the same, for example `data_id` and `id` after stripping `data_`. Make the pattern more specific, or change **On Collision**.

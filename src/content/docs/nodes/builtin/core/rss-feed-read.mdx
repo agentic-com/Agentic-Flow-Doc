@@ -11,7 +11,16 @@ node:
   family: core
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Read an RSS or Atom feed, such as a blog, news site or podcast, and get its articles as data.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use a RSS Feed Read connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Authentication** field when the service needs one.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -30,16 +39,7 @@ For a page without a feed, use [Get Links from Link](/nodes/builtin/core/getlink
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **URL** | Text |  | Yes | Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters. |
-| **Authentication** | Credential |  | No | The authentication to use to make the request. |
-| **Headers** | Key-value pairs |  | No | The headers to send with the request. |
-| **Options** | Group |  | No | The options to send with the request. |
-| Options › **Redirects** | Group |  | No | The options to send with the request. |
-| Options › Redirects › **Max redirects** | Number | 10 | No | The maximum number of redirects to follow. |
-| Options › **Timeout (ms)** | Number | 10000 | No | Time in ms to wait for the server to send response headers (and start the response body) before aborting the request. |
-| Options › **Reject unauthorized** | Toggle | Off | No | Whether to reject unauthorized requests. |
+<AwfParamTable rows={[{"name":"URL","type":"Text","required":true,"description":"Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters."},{"name":"Authentication","type":"Credential","description":"The authentication to use to make the request."},{"name":"Headers","type":"Key-value pairs","description":"The headers to send with the request."},{"name":"Options","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects › Max redirects","type":"Number","default":"10","description":"The maximum number of redirects to follow."},{"name":"Options › Timeout (ms)","type":"Number","default":"10000","description":"Time in ms to wait for the server to send response headers (and start the response body) before aborting the request."},{"name":"Options › Reject unauthorized","type":"Toggle","default":"Off","description":"Whether to reject unauthorized requests."}]} />
 {/* AUTO:settings:end */}
 
 - **URL** is the address of the feed itself (often ending in `/feed`, `/rss` or `.xml`), not of the website's home page.
@@ -48,9 +48,19 @@ For a page without a feed, use [Get Links from Link](/nodes/builtin/core/getlink
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `title` (text), `link` (text), `items` (list of entries).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"title","type":"Text"},{"name":"link","type":"Text"},{"name":"items","type":"List of entries"}]} />
+
+```json title="Shape of an output item"
+{
+  "title": "…",
+  "link": "…",
+  "items": []
+}
+```
 {/* AUTO:outputs:end */}
 
 The whole feed is a single item. To handle each article on its own, follow with [Split Out](/nodes/builtin/datatransformation/splitout/) on `items`.
@@ -58,7 +68,7 @@ The whole feed is a single item. To handle each article on its own, follow with 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Authentication** (credential): optional. Pick a saved connection or create one from this field.
+- **Authentication** (connection): optional. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Most public feeds need no credential. For a private feed, create a credential of the type the feed expects, such as basic auth or a bearer token. See [Create a credential](/app/connections/create/).
@@ -73,7 +83,7 @@ Get notified of new articles every hour:
 4. [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/), **Compare** Selected fields, **Fields** `article.link`, **Also Compare Against Previous Runs** on, so only new articles go on.
 5. [Browser Notification](/nodes/extension/browsernotification/), **Title** `{{ $input.article.title }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"HTTP error! status: 404"** (or another number). The address is not a feed or no longer exists. Open it in your browser: a feed shows XML, not a web page.
 - **"Failed to parse RSS/Atom feed from …".** The address returned something that is not a valid feed, often the website's HTML page. Look for the feed link on the site (an RSS icon or `/feed`).

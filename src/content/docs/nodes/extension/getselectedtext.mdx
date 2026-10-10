@@ -11,7 +11,16 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Read the text you have highlighted on the active tab into a field.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/explain-eli5.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -30,11 +39,7 @@ The node fails when nothing is selected, so the rest of the workflow does not ru
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 **Output field name**: for example `selection`. Later nodes read it with `{{ $input.selection }}`.
@@ -42,7 +47,7 @@ The node fails when nothing is selected, so the rest of the workflow does not ru
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 One item with your field, for example `{ "selection": "the text you highlighted" }`.
@@ -50,7 +55,7 @@ One item with your field, for example `{ "selection": "the text you highlighted"
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -60,7 +65,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add [Translate](/nodes/builtin/ai/localai/translate/) with **Text** = `{{ $input.selection }}`, **From** = English and **To** = French. It runs on your device.
 4. Show the result with [Display Markdown](/nodes/extension/displaymarkdown/).
 
-## Troubleshooting
+## Common issues
 
 - **"No content found".** Nothing was selected on the active tab when the node ran. Select the text first, and keep that tab active while the workflow runs.
 - **Selected text inside a box on the page is not picked up.** Text selected inside an embedded frame (some editors and comment widgets) is not read; only the main page is.

@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn a date into text in a fixed format, or into a Unix timestamp.
 
 ## What it does
@@ -40,13 +43,7 @@ Dates are formatted in your computer's local time zone. Month names are in Engli
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Date to format** | Date and time |  | Yes | The date to format. |
-| **Format** | Choice |  | Yes | The format to use for the date. Options: MM/DD/YYYY, YYYY/MM/DD, MMMM DD YYYY, MM-DD-YYYY, YYYY-MM-DD, DD/MM/YYYY, DD-MM-YYYY, Unix Timestamp, Unix MS Timestamp. |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Date to format","type":"Date and time","required":true,"description":"The date to format."},{"name":"Format","type":"Choice","required":true,"description":"The format to use for the date. Options: MM/DD/YYYY, YYYY/MM/DD, MMMM DD YYYY, MM-DD-YYYY, YYYY-MM-DD, DD/MM/YYYY, DD-MM-YYYY, Unix Timestamp, Unix MS Timestamp."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 **Date to format** accepts a picked date or an expression such as `{{ $input.createdAt }}`. Only the listed formats are available; there is no free-form pattern or time-of-day format.
@@ -54,7 +51,7 @@ Dates are formatted in your computer's local time zone. Month names are in Engli
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The item holds the formatted text under **Output field name**, for example `{ day: "2026-03-05" }`. Turn on **Include input fields** to keep the incoming fields too.
@@ -62,7 +59,7 @@ The item holds the formatted text under **Output field name**, for example `{ da
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -74,7 +71,7 @@ Save selected text into a dated file:
 3. Format Date, **Date to format** `{{ $input.now }}`, **Format** `YYYY-MM-DD`, **Output field name** `day`, **Include input fields** on.
 4. [Save as File](/nodes/builtin/datatransformation/saveasfile/), **Content** `{{ $input.selectionText }}`, **File name** `notes-{{ $input.day }}`, **File type** `txt`.
 
-## Troubleshooting
+## Common issues
 
 - **The output says "Invalid Date".** The incoming value is not a date the browser can read. Use an ISO date such as `2026-03-05` or `2026-03-05T09:30:00Z`.
 - **The date is one day off.** A UTC time near midnight moved to the previous or next day in your local time zone. Include the time and time zone in the input.

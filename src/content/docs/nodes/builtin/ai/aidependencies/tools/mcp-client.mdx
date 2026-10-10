@@ -12,7 +12,16 @@ node:
   agentTool: true
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Give an AI agent the tools of a remote [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server, with your approval before every call.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use a MCP Client connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Authentication** field when the service needs one.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -34,11 +43,7 @@ Only remote servers reached over the web work. Servers that run as a local progr
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Server URL** | Text |  | Yes | The remote MCP server URL (Streamable HTTP/SSE endpoint) to connect to. |
-| **Authentication** | Credential |  | No | The credential to send as the Authorization header on every request. |
-| **Allowed Tools** | List |  | No | If set, only remote tools with these names are exposed to the model. Leave empty to expose every tool the server advertises. |
+<AwfParamTable rows={[{"name":"Server URL","type":"Text","required":true,"description":"The remote MCP server URL (Streamable HTTP/SSE endpoint) to connect to."},{"name":"Authentication","type":"Credential","description":"The credential to send as the Authorization header on every request."},{"name":"Allowed Tools","type":"List","description":"If set, only remote tools with these names are exposed to the model. Leave empty to expose every tool the server advertises."}]} />
 {/* AUTO:settings:end */}
 
 - **Server URL** is the full endpoint the server's provider gives you, for example `https://mcp.example.com/mcp`.
@@ -49,9 +54,7 @@ Only remote servers reached over the web work. Servers that run as a local progr
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Tools | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) |
+- **Tools** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
 {/* AUTO:outputs:end */}
 
 Each tool's result goes back to the model, not to the next node. The agent's `steps` output lists the calls it made, and its `response` holds the final answer.
@@ -59,7 +62,7 @@ Each tool's result goes back to the model, not to the next node. The agent's `st
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Authentication** (credential): optional. Pick a saved connection or create one from this field.
+- **Authentication** (connection): optional. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 If the server needs a key, the provider gives you an API key or access token; save it as a Bearer token credential and pick it in **Authentication**. It is sent as the `Authorization` header on every request. See [Create a credential](/app/connections/create/).
@@ -71,7 +74,7 @@ If the server needs a key, the provider gives you an API key or access token; sa
 3. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Search our docs and answer: {{ $input.text }}`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and the MCP Client Tool connected to **Tools**.
 4. Run it and approve "call MCP tool search on mcp.example.com" in the **Executions** pane. [Display Markdown](/nodes/extension/displaymarkdown/) then shows `{{ $input.response }}`.
 
-## Troubleshooting
+## Common issues
 
 - **The agent doesn't have the server's tools.** The connection or tool listing failed, so the node added none. Open the run's logs for the "MCP Client Tool: failed to connect" message, then check **Server URL** and **Authentication**.
 - **Only some tools appear.** **Allowed Tools** is filtering them, or a name there doesn't match the server's spelling exactly.

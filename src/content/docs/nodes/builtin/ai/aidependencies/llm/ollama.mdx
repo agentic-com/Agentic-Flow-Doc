@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Give an AI node a model that runs on your own computer through Ollama: free, private, and no API key.
 
 ## What it does
@@ -32,13 +35,7 @@ If you can't install Ollama, use [Web LLM](/nodes/builtin/ai/aidependencies/llm/
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Model picker |  | Yes | The model to use. |
-| **Options** | Group |  | No | The options to use with the model. |
-| Options › **Temperature** | Number |  | No | The temperature to use for the model. |
-| Options › **Max Retries** | Number | 2 | No | The maximum number of retries to use for the model. |
-| Options › **Max Tokens** | Number | 4096 | No | The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window. |
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","required":true,"description":"The model to use."},{"name":"Options","type":"Group","description":"The options to use with the model."},{"name":"Options › Temperature","type":"Number","description":"The temperature to use for the model."},{"name":"Options › Max Retries","type":"Number","default":"2","description":"The maximum number of retries to use for the model."},{"name":"Options › Max Tokens","type":"Number","default":"4096","description":"The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window."}]} />
 {/* AUTO:settings:end */}
 
 Before the list can fill:
@@ -55,9 +52,7 @@ When you publish or share the workflow, **Model** is cleared, so whoever install
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Model | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
+- **Model** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
 {/* AUTO:outputs:end */}
 
 The AI node you connect it to produces the output. Ollama only decides which model answers.
@@ -65,7 +60,7 @@ The AI node you connect it to produces the output. Ollama only decides which mod
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -75,7 +70,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Ollama in its **Model** slot, with **Model** `llama3.2:latest` picked from the list.
 4. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.summary }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Could not reach Ollama at localhost:11434. Make sure it is running and allows this extension (OLLAMA_ORIGINS)."** Start Ollama, and restart it with `OLLAMA_ORIGINS` set as shown above.
 - **The list says "No models available".** Ollama runs but has no models. Pull one (`ollama pull llama3.2`), then press the refresh button.

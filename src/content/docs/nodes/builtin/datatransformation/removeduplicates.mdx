@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Drop repeated items from a list, and optionally skip items you already handled on an earlier run.
 
 ## What it does
@@ -31,13 +34,7 @@ With **Also Compare Against Previous Runs** on, the node also remembers what it 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Compare** | Choice | All fields | No | Which part of each item decides whether two items are the same. Options: All fields, Selected fields, All fields except. |
-| **Fields** | Tags |  | No | Field names to compare on, or to ignore. Dots address nested fields. |
-| **Also Compare Against Previous Runs** | Toggle | Off | No | Skip items this node has already emitted on an earlier run. |
-| **Remember** | Choice | Last N items | No | How far back the history reaches. Options: Last N items, Time window. |
-| **History Size** | Number | 1000 | No | How many items to remember, or how many days to look back. |
+<AwfParamTable rows={[{"name":"Compare","type":"Choice","default":"All fields","description":"Which part of each item decides whether two items are the same. Options: All fields, Selected fields, All fields except."},{"name":"Fields","type":"Tags","description":"Field names to compare on, or to ignore. Dots address nested fields."},{"name":"Also Compare Against Previous Runs","type":"Toggle","default":"Off","description":"Skip items this node has already emitted on an earlier run."},{"name":"Remember","type":"Choice","default":"Last N items","description":"How far back the history reaches. Options: Last N items, Time window."},{"name":"History Size","type":"Number","default":"1000","description":"How many items to remember, or how many days to look back."}]} />
 {/* AUTO:settings:end */}
 
 - **Compare**: *All fields* compares the whole item. *Selected fields* compares only the names in **Fields**, and dots reach nested fields (`seller.id`). *All fields except* compares everything but the names in **Fields**; it can only leave out top-level fields, so `seller.id` would not work there.
@@ -47,7 +44,7 @@ With **Also Compare Against Previous Runs** on, the node also remembers what it 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The same list with the copies removed, in the original order. Items are not changed. If every item was a duplicate, the output is an empty list.
@@ -55,7 +52,7 @@ The same list with the copies removed, in the original order. Items are not chan
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -67,7 +64,7 @@ None. This node needs no credential and has no slots for other nodes.
 
 The first run lets every listing through. After that, you only hear about listings you have not seen before.
 
-## Troubleshooting
+## Common issues
 
 - **"Compare mode "…" needs at least one field. Add a field, or switch to "All fields"."** You chose *Selected fields* or *All fields except* without filling **Fields**.
 - **"Cannot compare these items: one of them contains a circular reference or a value that cannot be serialized."** An item holds something that cannot be written as plain data. Use *Selected fields* and compare on simple fields such as `id` or `url`.

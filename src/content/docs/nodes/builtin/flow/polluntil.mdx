@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Call a URL again and again until the response says it is ready, or give up after a deadline.
 
 ## What it does
@@ -43,17 +46,7 @@ How it waits between polls depends on the interval:
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **URL** | Text |  | Yes | The endpoint to poll. |
-| **Method** | Choice | GET | No | HTTP method. Options: GET, POST, PUT, PATCH, DELETE. |
-| **Headers** | Text |  | No | One "Key: Value" per line (e.g. an Authorization header). |
-| **Body** | Text |  | No | Request body, for non-GET methods. |
-| **Done when** | Conditions |  | Yes | Stop polling once these conditions on the response hold. Left side is a path into the response (e.g. body.status, or status for the HTTP code). |
-| **Poll every** | Number | 5 | No | How long to wait between polls. |
-| **Poll unit** | Choice | Minutes | No | Options: Milliseconds, Seconds, Minutes, Hours. |
-| **Give up after** | Number | 1 | No | Stop and route to Timeout after this long. |
-| **Give up unit** | Choice | Hours | No | Options: Milliseconds, Seconds, Minutes, Hours. |
+<AwfParamTable rows={[{"name":"URL","type":"Text","required":true,"description":"The endpoint to poll."},{"name":"Method","type":"Choice","default":"GET","description":"HTTP method. Options: GET, POST, PUT, PATCH, DELETE."},{"name":"Headers","type":"Text","description":"One \"Key: Value\" per line (e.g. an Authorization header)."},{"name":"Body","type":"Text","description":"Request body, for non-GET methods."},{"name":"Done when","type":"Conditions","required":true,"description":"Stop polling once these conditions on the response hold. Left side is a path into the response (e.g. body.status, or status for the HTTP code)."},{"name":"Poll every","type":"Number","default":"5","description":"How long to wait between polls."},{"name":"Poll unit","type":"Choice","default":"Minutes","description":"Options: Milliseconds, Seconds, Minutes, Hours."},{"name":"Give up after","type":"Number","default":"1","description":"Stop and route to Timeout after this long."},{"name":"Give up unit","type":"Choice","default":"Hours","description":"Options: Milliseconds, Seconds, Minutes, Hours."}]} />
 {/* AUTO:settings:end */}
 
 Put one header per line in **Headers**, as `Key: Value`, for example `Authorization: Bearer …`. **Body** is only sent for methods other than GET.
@@ -61,7 +54,7 @@ Put one header per line in **Headers**, as `Key: Value`, for example `Authorizat
 ## Outputs
 
 {/* AUTO:outputs:start */}
-2 output ports: **Done**, **Timeout**.
+<AwfOutputPorts ports={[{"name":"Done"},{"name":"Timeout"}]} />
 {/* AUTO:outputs:end */}
 
 Both ports send the response as `{ status, ok, body }` (plus `error` when the last request failed). Read the result downstream with `{{ $input.body }}`.
@@ -69,7 +62,7 @@ Both ports send the response as `{ status, ok, body }` (plus `error` when the la
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 Authentication goes in **Headers**.
@@ -81,7 +74,7 @@ Authentication goes in **Headers**.
 3. **Done** goes to an HTTP Request that downloads `{{ $input.body.downloadUrl }}`.
 4. **Timeout** goes to a [Browser Notification](/nodes/extension/browsernotification/): "The export is stuck."
 
-## Troubleshooting
+## Common issues
 
 - **It always ends on Timeout.** Check the path on the left of the condition. It starts with `body.` for anything in the response content (`body.status`, not `status`, unless you mean the HTTP code).
 - **It keeps polling after the job finished.** The value may differ from what you compare against, for example `Finished` versus `finished`, or a number compared as **String**.

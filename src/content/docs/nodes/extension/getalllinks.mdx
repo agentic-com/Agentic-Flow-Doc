@@ -11,7 +11,16 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Collect the web addresses of all the links on the active tab, or inside one part of it.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/save-links-to-sheet.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -33,13 +42,7 @@ The output holds only the new field. Turn on **Include input fields** to keep th
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
-| **Max links** | Number |  | No | The maximum number of links to return. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."},{"name":"Max links","type":"Number","description":"The maximum number of links to return."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - **Output field name**: for example `links`.
@@ -49,7 +52,7 @@ The output holds only the new field. Turn on **Include input fields** to keep th
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 One item with your field holding a list of URLs, for example `{ "links": ["https://example.com/post-1", "https://example.com/post-2"] }`. Use [Split Out](/nodes/builtin/datatransformation/splitout/) to turn it into one item per link.
@@ -57,7 +60,7 @@ One item with your field holding a list of URLs, for example `{ "links": ["https
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -67,7 +70,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** = `links`.
 4. Add [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) to read each post, then a [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) node.
 
-## Troubleshooting
+## Common issues
 
 - **The list is empty.** **DOM Selector** matched nothing, or the links had not loaded yet. Check the selector with **Ping**, and wait for the list with [Wait For Element](/nodes/extension/ui/wait-for-element/).
 - **The list is full of menu and footer links.** Set **DOM Selector** to the part of the page you care about.

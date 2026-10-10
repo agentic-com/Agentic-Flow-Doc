@@ -12,6 +12,9 @@ node:
   agentTool: true
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Let an AI agent search the web for current information while it works.
 
 ## What it does
@@ -32,10 +35,7 @@ To run one fixed search as a step in the flow, use the [Web Search](/nodes/exten
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Engine** | Choice | duckduckgo | No | Which search engine to query. Options: duckduckgo, bing, brave. |
-| **Max Results** | Number |  | No | Maximum number of results to return. Leave empty or 0 to return all first-page results. |
+<AwfParamTable rows={[{"name":"Engine","type":"Choice","default":"duckduckgo","description":"Which search engine to query. Options: duckduckgo, bing, brave."},{"name":"Max Results","type":"Number","description":"Maximum number of results to return. Leave empty or 0 to return all first-page results."}]} />
 {/* AUTO:settings:end */}
 
 A small **Max Results**, such as 5, keeps the model's input short and the run cheaper. The model writes the query itself on each call.
@@ -45,9 +45,7 @@ A small **Max Results**, such as 5, keeps the model's input short and the run ch
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Tools | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) |
+- **Tools** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
 {/* AUTO:outputs:end */}
 
 The results go back to the model, not to the next node. The agent's `steps` output lists each search it ran, and its `response` holds the final answer.
@@ -55,7 +53,7 @@ The results go back to the model, not to the next node. The agent's `steps` outp
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 The search runs in the AWFlow browser extension, so the workflow must run from the extension.
@@ -66,7 +64,7 @@ The search runs in the AWFlow browser extension, so the workflow must run from t
 2. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Find the latest price and release date of {{ $input.text }}. Cite your sources.`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and Web Search connected to **Tools** with **Engine** `brave` and **Max Results** `5`.
 3. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`.
 
-## Troubleshooting
+## Common issues
 
 - **The search fails right away.** This node runs in the browser extension; install it or run the workflow from the extension.
 - **The model gets no results.** The engine may have shown a captcha or changed its page layout. Switch **Engine** and try again.

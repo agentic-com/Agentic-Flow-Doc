@@ -11,7 +11,16 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Put a text into one of the categories you list, with a chat model or on-device.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/classify-and-route.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -33,12 +42,7 @@ To label tone only, use [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimen
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Long text |  | Yes | The text to classify. |
-| **Categories** | Long text |  | Yes | Comma-separated category names to classify the text into. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **System message** | Long text |  | No | The system message to use. |
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to classify."},{"name":"Categories","type":"Long text","required":true,"description":"Comma-separated category names to classify the text into."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Text** with an expression such as `{{ $input.text }}`. Write **Categories** as a comma-separated list, for example `billing, technical, sales`. Short, clearly different names give the most reliable results. Use **System message** to describe a category when its name alone is ambiguous, such as `"sales" means questions about buying or pricing.`
@@ -46,14 +50,18 @@ Fill **Text** with an expression such as `{{ $input.text }}`. Write **Categories
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `category` | Any | The chosen category |
-| `scores` | Key-value pairs | Every label's score, on-device |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"category","type":"Any","description":"The chosen category"},{"name":"scores","type":"Key-value pairs","description":"Every label's score, on-device"}]} />
+
+```json title="Shape of an output item"
+{
+  "category": null,
+  "scores": {}
+}
+```
 {/* AUTO:outputs:end */}
 
 `category` is one of your category names, or `unknown` when none fits (or when the on-device model returns no label). `scores` is only there with a Local Classifier.
@@ -61,9 +69,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Model** | chat model, local classifier | Yes | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local classifier","description":"One node.","required":true}]} />
 {/* AUTO:deps:end */}
 
 Connect a chat model, which holds its own API key, or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) with a zero-shot model to classify on-device with your own categories.
@@ -75,7 +81,7 @@ Connect a chat model, which holds its own API key, or a [Local Classifier](/node
 3. [Switch](/nodes/builtin/flow/switch/) in **Rules** mode with one rule per category, each checking that `{{ $input.category }}` equals the category name, and **Add A Fallback Branch** on for `unknown`.
 4. Each branch posts to a different [Slack](/nodes/builtin/integration/slack/) channel.
 
-## Troubleshooting
+## Common issues
 
 - **`category` is often `unknown`.** Your categories do not cover the texts you receive, or the names are vague. Add a category, or explain them in **System message**.
 - **The category does not match your Switch rules.** A chat model may change the capitalisation or add words. Add `Answer with the category name exactly as written.` in **System message**.

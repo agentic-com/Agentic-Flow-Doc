@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Read everything about one element on the active tab: its text, value, link, attributes, position and whether it is visible.
 
 ## What it does
@@ -36,10 +39,7 @@ When the element is not on the page, the node does not fail: it returns `found: 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
-| **Output field name** | Text |  | No | Wrap the element data under this field name. Leave empty to return the object directly. |
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Output field name","type":"Text","description":"Wrap the element data under this field name. Leave empty to return the object directly."}]} />
 {/* AUTO:settings:end */}
 
 - **DOM Selector**: click the crosshair button in the field, then click the element on the page, or type a CSS selector such as `#price`. The **Ping** button flashes what it matches.
@@ -48,7 +48,7 @@ When the element is not on the page, the node does not fail: it returns `found: 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 With **Output field name** empty, read the fields directly, for example `{{ $input.text }}` or `{{ $input.attributes['data-sku'] }}`. With it set to `price`, use `{{ $input.price.text }}`.
@@ -56,7 +56,7 @@ With **Output field name** empty, read the fields directly, for example `{{ $inp
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +66,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. **Get Element Data** with **DOM Selector** = the price element and **Output field name** = `price`.
 4. [IF](/nodes/builtin/flow/if/) checks that `{{ $input.price.found }}` is true. On the true branch, a [Browser Notification](/nodes/extension/browsernotification/) shows `{{ $input.price.text }}`.
 
-## Troubleshooting
+## Common issues
 
 - **`found` is `false`.** The selector matched nothing at the moment the node ran. Check it with **Ping**, and add [Wait For Element](/nodes/extension/ui/wait-for-element/) before this node if the element appears late. A selector picked on one page may not exist on another.
 - **`text` is empty but you can see text.** The text may be drawn inside an embedded frame, or in a child element; try selecting the inner element.

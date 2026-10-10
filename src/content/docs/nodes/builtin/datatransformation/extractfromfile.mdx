@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn a downloaded or picked file (CSV, JSON, XML, text or PDF) into workflow items.
 
 ## What it does
@@ -37,10 +40,7 @@ With **Format** on *Auto-detect*, the node looks at the file's type first (for e
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Format** | Choice | Auto-detect | No | The file format to decode, or auto-detect it. Options: Auto-detect, CSV, JSON, XML, Text, PDF. |
-| **Binary Field** | Text | `data` | No | Which $binary key on the incoming item holds the file. |
+<AwfParamTable rows={[{"name":"Format","type":"Choice","default":"Auto-detect","description":"The file format to decode, or auto-detect it. Options: Auto-detect, CSV, JSON, XML, Text, PDF."},{"name":"Binary Field","type":"Text","default":"data","description":"Which $binary key on the incoming item holds the file."}]} />
 {/* AUTO:settings:end */}
 
 **Binary Field** only matters for files from Http Request, which stores a download under `data` by default. Items without a binary are read from their `content` or `text` field instead.
@@ -50,7 +50,7 @@ From Local File Read, set **Read as** to *Text* for CSV, JSON, XML and text file
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The output is always a list. CSV, JSON arrays and text files usually give many items, so the next node runs once per row or line. XML, PDF and single-object JSON give one item.
@@ -58,7 +58,7 @@ The output is always a list. CSV, JSON arrays and text files usually give many i
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -68,7 +68,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [Filter](/nodes/builtin/flow/filter/) keeps rows where `{{ $input.stock }}` is `0`.
 4. [Slack](/nodes/builtin/integration/slack/) posts the out-of-stock products.
 
-## Troubleshooting
+## Common issues
 
 - **"Could not detect the file format. Set the Format field manually (CSV, JSON, XML, Text or PDF)."** The file had no useful type, extension or recognisable start. Choose the format in **Format**.
 - **"No file to extract. Attach a binary under $binary, or provide a file from Local File Read."** The incoming item has no file under **Binary Field** and no `content` or `text` field. Check the key name, or connect the node that produced the file.

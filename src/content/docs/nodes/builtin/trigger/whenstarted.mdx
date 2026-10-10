@@ -11,7 +11,16 @@ node:
   family: trigger
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Start a workflow by hand, whenever you choose to run it.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/article-to-markdown.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -38,9 +47,17 @@ This node has no settings.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `started` (always true).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"started","type":"Always true"}]} />
+
+```json title="Shape of an output item"
+{
+  "started": true
+}
+```
 {/* AUTO:outputs:end */}
 
 The output carries no data of its own. The first real step after it usually fetches or reads something, for example the current page or an API.
@@ -48,7 +65,7 @@ The output carries no data of its own. The first real step after it usually fetc
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -60,7 +77,7 @@ Save the text of the current page:
 3. Add [Data Store](/nodes/builtin/core/datastore/) with **Operation** set to **Set**, **Key** `last-page-text` and **Value** `{{ $input.text }}`.
 4. Open the page you want, then click **Test Workflow**.
 
-## Troubleshooting
+## Common issues
 
 - **The workflow does not run on its own.** That is expected: When Started only runs when you start it. Add an automatic trigger such as [Schedule](/nodes/builtin/trigger/schedule/) or [Page Load](/nodes/builtin/trigger/pageload/) and activate the workflow.
 - **A "Choose a trigger to run" dialog opens.** The workflow has more than one trigger. Pick When Started to run the branch that follows it.

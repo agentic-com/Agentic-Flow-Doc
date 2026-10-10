@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Download the file behind a link (an image, a PDF, a document) to your computer.
 
 ## What it does
@@ -28,13 +31,7 @@ The saved file is named **File name** plus the extension of **File type**, for e
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **FieldPath** | Text |  | Yes | The path to the field to pick from the input object (without the node's name or id) that contains the url to download. |
-| **File type** | Choice | json | No | The type to use for the file to download in case the type can't be determined from the input data. 17 options. |
-| **File name** | Text | `file` | No | The name of the file to download. If not provided, a random file name will be generated based on the input data. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Return input fields** | Toggle | Off | No | Whether to return the input fields in the output. |
+<AwfParamTable rows={[{"name":"FieldPath","type":"Text","required":true,"description":"The path to the field to pick from the input object (without the node's name or id) that contains the url to download."},{"name":"File type","type":"Choice","default":"json","description":"The type to use for the file to download in case the type can't be determined from the input data. 17 options."},{"name":"File name","type":"Text","default":"file","description":"The name of the file to download. If not provided, a random file name will be generated based on the input data."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Return input fields","type":"Toggle","default":"Off","description":"Whether to return the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - **FieldPath** is the field name only, without `{{ }}`: `imageUrl`, or `image.src` for a nested field.
@@ -44,7 +41,7 @@ The saved file is named **File name** plus the extension of **File type**, for e
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 By default the node outputs an empty item, so the next step simply runs after the download starts. Turn on **Return input fields** to pass the incoming item on unchanged.
@@ -52,7 +49,7 @@ By default the node outputs an empty item, so the next step simply runs after th
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -62,7 +59,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [Limit](/nodes/builtin/datatransformation/limit/) keeps the first 5.
 4. Download as file with **FieldPath** `images`, **File type** *jpg* and **File name** `product` saves each image.
 
-## Troubleshooting
+## Common issues
 
 - **"Field "…" does not exist in the input object"** The name in **FieldPath** does not match the incoming data. Open the previous node's output and copy the exact field name.
 - **"Field "…" is not a string in the input object"** The field holds a list or an object, not a single link. Point **FieldPath** at the link itself, or use [Split Out](/nodes/builtin/datatransformation/splitout/) first to get one link per item.

@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Get the date and time at the moment the node runs.
 
 ## What it does
@@ -26,17 +29,13 @@ Get Current Date writes the current date and time into a field named by **Output
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The item holds the current date under **Output field name**, for example `{ now: "2026-03-05T09:30:12.418Z" }`. Pass it to [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) for a readable version.
@@ -44,7 +43,7 @@ The item holds the current date under **Output field name**, for example `{ now:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -56,7 +55,7 @@ Log each run to a sheet with a timestamp:
 3. [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/), **Date to format** `{{ $input.checkedAt }}`, **Format** `YYYY-MM-DD`, **Output field name** `day`, **Include input fields** on.
 4. [Google Sheets](/nodes/builtin/integration/google-sheets/), append a row with `{{ $input.day }}` and `{{ $input.checkedAt }}`.
 
-## Troubleshooting
+## Common issues
 
 - **The incoming data is gone after this node.** By default only the date is output. Turn on **Include input fields** under **Options**.
 - **The time looks a few hours off.** The date is stored in UTC (the `Z` at the end). [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) shows it in your local time zone.

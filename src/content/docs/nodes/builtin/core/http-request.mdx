@@ -11,7 +11,16 @@ node:
   family: core
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Call any web address or API and use the response in the next steps.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use a Http Request connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Authentication** field when the service needs one.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -36,30 +45,13 @@ For apps that have their own node, such as [Slack](/nodes/builtin/integration/sl
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Method** | Choice | GET | No | The request method to use. Options: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD. |
-| **URL** | URL |  | Yes | Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters. |
-| **Authentication** | Credential |  | No | The authentication to use to make the request. |
-| **Headers** | Key-value pairs |  | No | The headers to send with the request. |
-| **Query Params** | Key-value pairs |  | No | The query params to send with the request. |
-| **Body** | Group |  | No | The body to send with the request. |
-| Body › **Body Content Type** | Choice | application/json | No | Content-Type to use to send body parameters. Options: application/json, application/x-www-form-urlencoded, multipart/form-data. |
-| Body › **Body** | Key-value pairs |  | No | The body to send with the request. |
-| **Options** | Group |  | No | The options to send with the request. |
-| Options › **Redirects** | Group |  | No | The options to send with the request. |
-| Options › Redirects › **Follow redirects** | Toggle | On | No | Follow redirects. |
-| Options › Redirects › **Max redirects** | Number | 10 | No | The maximum number of redirects to follow. |
-| Options › **Response** | Group |  | No | The options for the response. |
-| Options › Response › **Include response header and status** | Toggle | Off | No | Whether to return the full response (headers and response status code) data instead of only the body. |
-| Options › Response › **Response format** | Choice | autodetect | No | The format in which the data gets returned from the URL. Options: autodetect, json, text, file. |
-| Options › **Timeout (ms)** | Number | 10000 | No | Time in ms to wait for the server to send response headers (and start the response body) before aborting the request. |
+<AwfParamTable rows={[{"name":"Method","type":"Choice","default":"GET","description":"The request method to use. Options: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD."},{"name":"URL","type":"URL","required":true,"description":"Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters."},{"name":"Authentication","type":"Credential","description":"The authentication to use to make the request."},{"name":"Headers","type":"Key-value pairs","description":"The headers to send with the request."},{"name":"Query Params","type":"Key-value pairs","description":"The query params to send with the request."},{"name":"Body","type":"Group","description":"The body to send with the request."},{"name":"Body › Body Content Type","type":"Choice","default":"application/json","description":"Content-Type to use to send body parameters. Options: application/json, application/x-www-form-urlencoded, multipart/form-data."},{"name":"Body › Body","type":"Key-value pairs","description":"The body to send with the request."},{"name":"Options","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects › Follow redirects","type":"Toggle","default":"On","description":"Follow redirects."},{"name":"Options › Redirects › Max redirects","type":"Number","default":"10","description":"The maximum number of redirects to follow."},{"name":"Options › Response","type":"Group","description":"The options for the response."},{"name":"Options › Response › Include response header and status","type":"Toggle","default":"Off","description":"Whether to return the full response (headers and response status code) data instead of only the body."},{"name":"Options › Response › Response format","type":"Choice","default":"autodetect","description":"The format in which the data gets returned from the URL. Options: autodetect, json, text, file."},{"name":"Options › Timeout (ms)","type":"Number","default":"10000","description":"Time in ms to wait for the server to send response headers (and start the response body) before aborting the request."}]} />
 {/* AUTO:settings:end */}
 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 By default the item is `{ data }`, the response body. Turn on **Include response header and status** to also get `status`, `statusText`, `headers` and the final `url` after redirects.
@@ -67,7 +59,7 @@ By default the item is `{ data }`, the response body. Turn on **Include response
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Authentication** (credential): optional. Pick a saved connection or create one from this field.
+- **Authentication** (connection): optional. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Choose a credential of the type your API expects, for example a bearer token or basic auth. See [Create a credential](/app/connections/create/).
@@ -78,7 +70,7 @@ Choose a credential of the type your API expects, for example a bearer token or 
 2. Http Request, **POST** to your webhook URL, **Body Content Type** `application/json`, with a body field `url` = `{{ $input.linkUrl }}`.
 3. [Browser Notification](/nodes/extension/browsernotification/): "Sent".
 
-## Troubleshooting
+## Common issues
 
 - **"Response status: 401" or "403".** The credential is missing, wrong or lacks permission. Check the **Authentication** field and the key's rights.
 - **"Response status: 404".** Check the URL and the query parameters.

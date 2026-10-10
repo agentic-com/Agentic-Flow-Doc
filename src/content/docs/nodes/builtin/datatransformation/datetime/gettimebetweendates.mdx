@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Compare the parts of two dates, such as their years or their days of the month.
 
 ## What it does
@@ -38,14 +41,7 @@ To get the total elapsed time (for example "how many days until the deadline"), 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Start date** | Date and time |  | Yes | The start date. |
-| **End date** | Date and time |  | Yes | The end date. |
-| **Units** | Multiple choice |  | Yes | The units to subtract from the date. Options: year, month, week, day, hour, minute, second, millisecond. |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Start date","type":"Date and time","required":true,"description":"The start date."},{"name":"End date","type":"Date and time","required":true,"description":"The end date."},{"name":"Units","type":"Multiple choice","required":true,"description":"The units to subtract from the date. Options: year, month, week, day, hour, minute, second, millisecond."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 Both dates accept a picked date or an expression such as `{{ $input.dueDate }}`. Tick at least one unit.
@@ -53,7 +49,7 @@ Both dates accept a picked date or an expression such as `{{ $input.dueDate }}`.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The item holds an object under **Output field name**, for example `{ diff: { year: 1, month: -2 } }`. Read one value downstream with `{{ $input.diff.year }}`. A negative number means the end's part is smaller than the start's.
@@ -61,7 +57,7 @@ The item holds an object under **Output field name**, for example `{ diff: { yea
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -75,7 +71,7 @@ Count the whole days until a deadline (total elapsed time):
 
 Use Get Time Between Dates itself for same-period checks: **Units** `year` and `month`, then an [IF](/nodes/builtin/flow/if/) that both are `0` to know two dates are in the same month.
 
-## Troubleshooting
+## Common issues
 
 - **"day" is negative although the end date is later.** The node subtracts days of the month, not total days. From the 31st to the 2nd of a later month gives a negative number. Use the recipe above for elapsed time.
 - **"week" shows the same number as "day".** Both compare the day of the month. It is not a count of weeks.

@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Read, add, change and delete rows (records) in an Airtable table, and list your bases and their tables.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs an AirTable connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -34,69 +43,11 @@ Once the credential is set, **Base** and **Table** are lists loaded from your ac
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| Base | Get many, Get schema |
-| Record | Create a record in a table, Update data in a table, Delete data from a table, Get data from a table, Search data in a table |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Credential to use to make the request."}]} groups={[{"label":"Base","options":[{"label":"Get many","rows":[{"name":"Limits","type":"Number","description":"The maximum number of records to return."}]},{"label":"Get schema","rows":[{"name":"Base","type":"Choice (loaded from your account)","required":true,"description":"The ID of the AirTable base."}]}]},{"label":"Record","options":[{"label":"Create a record in a table","rows":[{"name":"Base","type":"Choice (loaded from your account)","required":true,"description":"The ID of the AirTable base."},{"name":"Table","type":"Choice (loaded from your account)","required":true,"description":"The name of the AirTable table."},{"name":"Fields","type":"Field list","required":true,"description":"The fields to update."}]},{"label":"Update data in a table","rows":[{"name":"Base","type":"Choice (loaded from your account)","required":true,"description":"The ID of the AirTable base."},{"name":"Table","type":"Choice (loaded from your account)","required":true,"description":"The name of the AirTable table."},{"name":"Record","type":"Text","required":true,"description":"The ID of the record to update."},{"name":"Fields","type":"Field list","required":true,"description":"The fields to update."}]},{"label":"Delete data from a table","rows":[{"name":"Base","type":"Choice (loaded from your account)","required":true,"description":"The ID of the AirTable base."},{"name":"Table","type":"Choice (loaded from your account)","required":true,"description":"The name of the AirTable table."},{"name":"Record","type":"Text","required":true,"description":"The ID of the record to update."}]},{"label":"Get data from a table","rows":[{"name":"Base","type":"Choice (loaded from your account)","required":true,"description":"The ID of the AirTable base."},{"name":"Table","type":"Choice (loaded from your account)","required":true,"description":"The name of the AirTable table."},{"name":"Record","type":"Text","required":true,"description":"The ID of the record to update."}]},{"label":"Search data in a table","rows":[{"name":"Base","type":"Choice (loaded from your account)","required":true,"description":"The ID of the AirTable base."},{"name":"Table","type":"Choice (loaded from your account)","required":true,"description":"The name of the AirTable table."},{"name":"Filter By Formula","type":"Text","description":"The formula will be evaluated for each record, and if the result is not 0, false, \"\", NaN, [], or #Error! the record will be included in the response. More info."}]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | The Credential to use to make the request. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**Record → update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
-| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
-| **Record** | Text |  | Yes | The ID of the record to update. |
-| **Fields** | Field list |  | Yes | The fields to update. |
-
-**Record → create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
-| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
-| **Fields** | Field list |  | Yes | The fields to update. |
-
-**Record → delete**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
-| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
-| **Record** | Text |  | Yes | The ID of the record to update. |
-
-**Record → get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
-| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
-| **Record** | Text |  | Yes | The ID of the record to update. |
-
-**Record → search**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
-| **Table** | Choice (loaded from your account) |  | Yes | The name of the AirTable table. |
-| **Filter By Formula** | Text |  | No | The formula will be evaluated for each record, and if the result is not 0, false, "", NaN, \[\], or #Error! the record will be included in the response. More info. |
-
-**Base → Get schema**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Base** | Choice (loaded from your account) |  | Yes | The ID of the AirTable base. |
-
-**Base → Get many**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Limits** | Number |  | No | The maximum number of records to return. |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the AirTable API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - **Record** is the record id, which starts with `rec` (for example `recA1b2C3d4E5f6G7`). Map it from a previous step, such as `{{ $input.id }}` after a **Search**.
@@ -106,7 +57,7 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Record** operations return the record as `id`, `createdTime` and `fields` (an object keyed by column name), for example `{{ $input.fields.Email }}`.
@@ -116,7 +67,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, Bearer Token): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Use an Airtable **personal access token**. Create it at airtable.com under **Builder hub → Personal access tokens**, give it the scopes `data.records:read`, `data.records:write` and `schema.bases:read`, and add the bases it may access. Save it as a Bearer Token credential: see [Create a credential](/app/connections/create/).
@@ -128,7 +79,7 @@ Use an Airtable **personal access token**. Create it at airtable.com under **Bui
 3. Airtable, **Record → Create a record in a table**, base `Shopping`, table `Wishlist`, with **Fields** `Name` = `{{ $input.title }}` and `Link` = `{{ $input.url }}`.
 4. [Browser Notification](/nodes/extension/browsernotification/) confirms the row was added.
 
-## Troubleshooting
+## Common issues
 
 - **"Airtable API Error: Invalid permissions, or the requested model was not found".** The token has no access to this base, or lacks a scope. Edit the token on Airtable, add the base and scopes, and run again.
 - **"Missing base ID" or "Missing table ID" when a list loads.** Pick **Base** first, then **Table**; each list depends on the one above it.

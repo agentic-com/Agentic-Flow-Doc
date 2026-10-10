@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn an XML document (a feed, an API answer, a sitemap) into fields you can use, or build XML from your data.
 
 ## What it does
@@ -40,12 +43,7 @@ For safety, XML that declares its own entities (`<!ENTITY …>`) or points to an
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Direction** | Choice | XML to JSON | No | Which way to convert. Options: XML to JSON, JSON to XML. |
-| **Input** | Value |  | No | The XML text (for XML to JSON) or JSON data (for JSON to XML) to convert. |
-| **Source Field** | Text |  | No | Field on the incoming item to read, when the input above is left empty. |
-| **Put Result In Field** | Text | `data` | No | Name of the field holding the answer. |
+<AwfParamTable rows={[{"name":"Direction","type":"Choice","default":"XML to JSON","description":"Which way to convert. Options: XML to JSON, JSON to XML."},{"name":"Input","type":"Value","description":"The XML text (for XML to JSON) or JSON data (for JSON to XML) to convert."},{"name":"Source Field","type":"Text","description":"Field on the incoming item to read, when the input above is left empty."},{"name":"Put Result In Field","type":"Text","default":"data","description":"Name of the field holding the answer."}]} />
 {/* AUTO:settings:end */}
 
 - **Where the input comes from.** **Input** wins if it is filled, for example `{{ $input.data }}`. Otherwise the node reads **Source Field** (dots reach nested fields). If both are empty, it uses the incoming item itself. Only the first incoming item is read.
@@ -55,7 +53,7 @@ For safety, XML that declares its own entities (`<!ENTITY …>`) or points to an
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **XML to JSON**: one item keyed by the root element. Read nested values with dots, for example `{{ $input.rss.channel.title }}`. Repeated elements are lists, so split them with [Split Out](/nodes/builtin/datatransformation/splitout/) on a path such as `rss.channel.item`.
@@ -66,7 +64,7 @@ Values read from XML are always text. For example, set **Compare As** to *Number
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -76,7 +74,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** `rss.channel.item` and **Output field name** `post` gives one item per article.
 4. [Limit](/nodes/builtin/datatransformation/limit/) with **Max Items** `3` keeps the first three, and a [Slack](/nodes/builtin/integration/slack/) node posts `{{ $input.post.title }}` and `{{ $input.post.link }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"This is not valid XML: …".** The text is not well-formed XML, often because it is an HTML page or an error message. Look at what the previous node returned.
 - **"XML to JSON needs XML text. This input is already parsed data."** The node got an object instead of text. Set **Source Field** to the field that holds the XML, such as `data`.

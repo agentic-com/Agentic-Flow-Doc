@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Pause the workflow until something appears, becomes visible, disappears or shows a given text on the active tab.
 
 ## What it does
@@ -36,13 +39,7 @@ When time runs out, the node does **not** fail: it passes the item on with `time
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
-| **Condition** | Choice | exists | Yes | Choose what condition to wait for. Options: exists, visible, hidden, containsText. |
-| **Text** | Text |  | No | Text required for the Contains Text condition. |
-| **Timeout** | Number | 5000 | No | Maximum time to wait in milliseconds. |
-| **Polling interval** | Number | 100 | No | How often to check in milliseconds. |
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Condition","type":"Choice","required":true,"default":"exists","description":"Choose what condition to wait for. Options: exists, visible, hidden, containsText."},{"name":"Text","type":"Text","description":"Text required for the Contains Text condition."},{"name":"Timeout","type":"Number","default":"5000","description":"Maximum time to wait in milliseconds."},{"name":"Polling interval","type":"Number","default":"100","description":"How often to check in milliseconds."}]} />
 {/* AUTO:settings:end */}
 
 - **DOM Selector**: click the crosshair button in the field and click the element on the page, or type a CSS selector. For an element that is not there yet, type its selector (for example `.results-list`).
@@ -51,9 +48,17 @@ When time runs out, the node does **not** fail: it passes the item on with `time
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `waitResult` (object).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"waitResult","type":"Object"}]} />
+
+```json title="Shape of an output item"
+{
+  "waitResult": {}
+}
+```
 {/* AUTO:outputs:end */}
 
 The incoming item passes through unchanged, with a `waitResult` field added:
@@ -66,7 +71,7 @@ The incoming item passes through unchanged, with a `waitResult` field added:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -76,7 +81,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [IF](/nodes/builtin/flow/if/) checks that `{{ $input.waitResult.satisfied }}` is true.
 4. On the true branch, [Get Structured Data](/nodes/extension/getstructureddata/) reads the results.
 
-## Troubleshooting
+## Common issues
 
 - **`timedOut` is `true` every time.** The selector never matches, or the condition is never met in time. Check the selector with **Ping** once the element is on screen, and raise **Timeout** for slow pages.
 - **The next node runs although the element never appeared.** That is expected: a timeout does not stop the workflow. Branch on `{{ $input.waitResult.satisfied }}` with [IF](/nodes/builtin/flow/if/), or stop with [Stop and Error](/nodes/builtin/flow/stopanderror/).

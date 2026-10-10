@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Take a PNG screenshot of the active tab: what is on screen, the whole page, or one element.
 
 ## What it does
@@ -35,10 +38,7 @@ The image is returned both as a data URL and as a file attached to the item, so 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Mode** | Choice | viewport | Yes | Choose what to capture. Options: viewport, fullPage, element. |
-| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","required":true,"default":"viewport","description":"Choose what to capture. Options: viewport, fullPage, element."},{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."}]} />
 {/* AUTO:settings:end */}
 
 **DOM Selector** is used only in **Element** mode. Click the crosshair button in the field and click the element on the page, or type a CSS selector such as `#chart`.
@@ -46,18 +46,22 @@ The image is returned both as a data URL and as a file attached to the item, so 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `mode` | Choice |  |
-| `selector` | Text |  |
-| `dataUrl` | Text | The image as a data: URL |
-| `found` | True/false |  |
-| `boundingBox` | Object |  |
-| `$binary` | Key-value pairs |  |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"mode","type":"Choice"},{"name":"selector","type":"Text"},{"name":"dataUrl","type":"Text","description":"The image as a data: URL"},{"name":"found","type":"True/false"},{"name":"boundingBox","type":"Object"},{"name":"$binary","type":"Key-value pairs"}]} />
+
+```json title="Shape of an output item"
+{
+  "mode": "…",
+  "selector": "…",
+  "dataUrl": "…",
+  "found": true,
+  "boundingBox": {},
+  "$binary": {}
+}
+```
 {/* AUTO:outputs:end */}
 
 - `dataUrl`: the image as `data:image/png;base64,…`. The same image is attached as a file in `$binary.data`.
@@ -68,7 +72,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 No credential is needed. The first time a screenshot runs, AWFlow asks for your permission to capture images of the web pages you open. Choose **Allow**. The browser usually does not ask again, because this is covered by the site access you accepted when you installed the extension. Once allowed, screenshots work in every workflow, including scheduled and triggered runs.
@@ -80,7 +84,7 @@ No credential is needed. The first time a screenshot runs, AWFlow asks for your 
 3. **Screenshot Page** with **Mode** = **Element** and **DOM Selector** set to the chart.
 4. [Slack](/nodes/builtin/integration/slack/), **File → Upload**, posts the image to `#daily-metrics`.
 
-## Troubleshooting
+## Common issues
 
 - **"Screenshot Page needs permission to capture web pages…"** You have not allowed screenshots yet. You can only allow it while the AWFlow app is open, so run the workflow once from the app or the side panel and choose **Allow**. A run started by a trigger while the app is closed fails with this message until you do.
 - **"Screenshot … is too large (maximum 64 tiles or 100000000 pixels). Use Element mode to capture a smaller target."** Very long pages exceed the limit. Capture a specific element instead.

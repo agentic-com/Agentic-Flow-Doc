@@ -12,6 +12,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn a PDF, HTML or text file into plain text, ready to index into a knowledge base.
 
 ## What it does
@@ -33,14 +36,7 @@ It first looks for a file attachment under **Binary key / field**. If there is n
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Binary key / field** | Text | `data` | No | The binary attachment key on the input item (its $binary map), or a field holding a base64 / data-URL string. |
-| **Output field name** | Text | `text` | No | The name of the output field that will hold the loaded text. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **MIME type** | Text |  | No | Override / hint for the MIME type. Required when loading a raw base64 string with no data-URL prefix. |
-| Options › **File name** | Text |  | No | File name hint — its extension is used to dispatch when no MIME type is known. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the original input fields in the output. |
+<AwfParamTable rows={[{"name":"Binary key / field","type":"Text","default":"data","description":"The binary attachment key on the input item (its $binary map), or a field holding a base64 / data-URL string."},{"name":"Output field name","type":"Text","default":"text","description":"The name of the output field that will hold the loaded text."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › MIME type","type":"Text","description":"Override / hint for the MIME type. Required when loading a raw base64 string with no data-URL prefix."},{"name":"Options › File name","type":"Text","description":"File name hint — its extension is used to dispatch when no MIME type is known."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the original input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - **Binary key / field** is the name only, not an expression: for example `content`, not `{{ $input.content }}`.
@@ -49,7 +45,7 @@ It first looks for a file attachment under **Binary key / field**. If there is n
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 Each item has the file's text in the field you named (default `text`). With **Include input fields** on, the incoming fields are kept next to it, which is handy to reuse the file name as **Source name** on the Indexer.
@@ -57,7 +53,7 @@ Each item has the file's text in the field you named (default `text`). With **In
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +62,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. File Document Loader with **Binary key / field** `content`, **Output field name** `text` and **Include input fields** on.
 3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.text }}` and **Source name** `{{ $input.name }}`. Connect [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to **Knowledge** and [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) to **Text Splitter**.
 
-## Troubleshooting
+## Common issues
 
 - **"No source node is connected to this node."** The loader needs an incoming item that carries the file. Connect the node that provides it.
 - **"No binary attachment or field "…" found on the input item…".** Nothing is stored under **Binary key / field**. Check the field name in the previous node's output and type it exactly.

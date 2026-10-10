@@ -11,7 +11,16 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn text into vectors with an embedding model hosted on Hugging Face, so a knowledge base can find passages by meaning.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Hugging Face connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Authentication** field, or create one from there.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -29,10 +38,7 @@ Your passages and questions are sent to Hugging Face. To run a similar model on 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Text |  | Yes | The embeddings model to use. |
-| **Authentication** | Credential |  | Yes | Use your Hugging Face API key. |
+<AwfParamTable rows={[{"name":"Model","type":"Text","required":true,"description":"The embeddings model to use."},{"name":"Authentication","type":"Credential","required":true,"description":"Use your Hugging Face API key."}]} />
 {/* AUTO:settings:end */}
 
 **Model** is the model's name on the Hugging Face Hub, in the form `owner/model`, for example `sentence-transformers/all-MiniLM-L6-v2`. Don't change it on a knowledge base that already has content.
@@ -42,9 +48,7 @@ Your passages and questions are sent to Hugging Face. To run a similar model on 
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Embeddings | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
+- **Embeddings** slot of [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
 {/* AUTO:outputs:end */}
 
 The vectors go to the knowledge base, not to the next node.
@@ -52,7 +56,7 @@ The vectors go to the knowledge base, not to the next node.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Authentication** (credential): required. Pick a saved connection or create one from this field.
+- **Authentication** (connection): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 In **Authentication**, save a Hugging Face access token. Create one in your Hugging Face settings, under Access Tokens ([huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)), with permission to call inference. See [Create a credential](/app/connections/create/).
@@ -64,7 +68,7 @@ In **Authentication**, save a Hugging Face access token. Create one in your Hugg
 3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.pageText }}`, a [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) in its **Text Splitter** slot, and a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) pointing to a new knowledge base in its **Knowledge** slot.
 4. Hugging Face Embeddings in the Local Knowledge's **Embeddings** slot, **Model** `sentence-transformers/all-MiniLM-L6-v2`.
 
-## Troubleshooting
+## Common issues
 
 - **"Model parameter is required and cannot be empty".** Fill in **Model**.
 - **"… was built with … embeddings. Connect that embeddings node to use it."** The knowledge base was built with this model. Connect Hugging Face Embeddings with the same **Model** to its Local Knowledge.

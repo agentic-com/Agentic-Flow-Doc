@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Let the person running the workflow pick a file from their computer and read it in.
 
 ## What it does
@@ -28,11 +31,7 @@ You always choose the file yourself. A workflow can never name or open a file on
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Read as** | Choice | Text | No | How to read the content of the selected file(s). Options: Text, Data URL, Base64. |
-| **Allow multiple files** | Toggle | Off | No | Allow selecting more than one file in the picker. |
-| **Accepted file types** | Text |  | No | Comma-separated list of extensions and/or MIME types to filter the picker, e.g. ".csv,.txt". |
+<AwfParamTable rows={[{"name":"Read as","type":"Choice","default":"Text","description":"How to read the content of the selected file(s). Options: Text, Data URL, Base64."},{"name":"Allow multiple files","type":"Toggle","default":"Off","description":"Allow selecting more than one file in the picker."},{"name":"Accepted file types","type":"Text","description":"Comma-separated list of extensions and/or MIME types to filter the picker, e.g. \".csv,.txt\"."}]} />
 {/* AUTO:settings:end */}
 
 - **Read as**: pick *Text* for CSV, JSON, XML and plain text. Pick *Data URL* for images and PDFs, so later nodes keep the file type. *Base64* gives the raw bytes as base64 with no type prefix.
@@ -41,7 +40,7 @@ You always choose the file yourself. A workflow can never name or open a file on
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 With one file, the output is a single object:
@@ -58,7 +57,7 @@ With **Allow multiple files** on, the output is a list of these objects, so the 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -68,7 +67,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [Extract From File](/nodes/builtin/datatransformation/extractfromfile/) on *Auto-detect* turns the CSV into one item per row.
 4. [Limit](/nodes/builtin/datatransformation/limit/) with **Max Items** `20` keeps the first 20 rows for the next steps.
 
-## Troubleshooting
+## Common issues
 
 - **"Local File Read needs an interactive run in a Chromium-based browser (File System Access API unavailable)."** The file picker only exists in Chromium-based browsers such as Chrome or Edge. Run the workflow there.
 - **"File selection cancelled."** The picker was closed without choosing a file. Run again and pick one.

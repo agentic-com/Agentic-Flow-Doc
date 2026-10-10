@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Drive browser tabs from a workflow: open, close, focus, reload, navigate and group them, with an optional wait for the page to finish loading.
 
 ## What it does
@@ -35,20 +38,13 @@ Turn on **Wait For Load** with Open, Navigate or Reload to continue only once th
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice |  | Yes | Options: Open, Close, Focus, Reload, Navigate, Group. |
-| **URL** | Text |  | No | Used by the Open and Navigate operations. |
-| **Tab ID** | Number |  | No | Used by Close, Focus, Reload, and Navigate. Defaults to the active tab when omitted. |
-| **Wait For Load** | Toggle |  | No | Used by Open, Navigate, and Reload. Wait until the tab finishes loading. |
-| **Open Focused** | Toggle | On | No | Used by Open. Whether the newly opened tab becomes the active tab. |
-| **Tab IDs** | List |  | No | Used by Group. The tabs to group together. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","required":true,"description":"Options: Open, Close, Focus, Reload, Navigate, Group."},{"name":"URL","type":"Text","description":"Used by the Open and Navigate operations."},{"name":"Tab ID","type":"Number","description":"Used by Close, Focus, Reload, and Navigate. Defaults to the active tab when omitted."},{"name":"Wait For Load","type":"Toggle","description":"Used by Open, Navigate, and Reload. Wait until the tab finishes loading."},{"name":"Open Focused","type":"Toggle","default":"On","description":"Used by Open. Whether the newly opened tab becomes the active tab."},{"name":"Tab IDs","type":"List","description":"Used by Group. The tabs to group together."}]} />
 {/* AUTO:settings:end */}
 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Open**, **Navigate**, **Reload**, **Focus**: the tab, as `{ tabId, url, title, windowId, status }`.
@@ -60,7 +56,7 @@ Pass `{{ $input.tabId }}` to later nodes that take a tab id.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -70,7 +66,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. An AI node such as [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) summarises it.
 4. Tab Control: **Close**, with **Tab ID** `{{ $('Tab Control').tabId }}`, or leave it empty to close the active tab.
 
-## Troubleshooting
+## Common issues
 
 - **"A URL is required for the "open" operation".** Fill in **URL** for Open and Navigate.
 - **"At least one tab id is required for the "group" operation".** Add tab ids to **Tab IDs**.

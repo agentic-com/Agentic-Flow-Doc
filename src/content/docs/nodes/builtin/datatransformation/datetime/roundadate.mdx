@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Snap a date to the start or the end of a year, month, week, day, hour or minute.
 
 ## What it does
@@ -31,14 +34,7 @@ Boundaries follow your computer's local time zone. Weeks start on Sunday.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Date to round** | Date and time |  | Yes | The date to round. |
-| **Unit** | Choice |  | Yes | The unit to round the date to. Options: year, month, week, day, hour, minute. |
-| **Direction** | Choice |  | Yes | Round down (start of the unit) or up (end of the unit). Options: down, up. |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Date to round","type":"Date and time","required":true,"description":"The date to round."},{"name":"Unit","type":"Choice","required":true,"description":"The unit to round the date to. Options: year, month, week, day, hour, minute."},{"name":"Direction","type":"Choice","required":true,"description":"Round down (start of the unit) or up (end of the unit). Options: down, up."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 **Date to round** accepts a picked date or an expression such as `{{ $input.createdAt }}`.
@@ -46,7 +42,7 @@ Boundaries follow your computer's local time zone. Weeks start on Sunday.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The item holds the rounded date under **Output field name**. Turn on **Include input fields** to keep the incoming fields next to it.
@@ -54,7 +50,7 @@ The item holds the rounded date under **Output field name**. Turn on **Include i
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +62,7 @@ Build a "this month" date range for an API call:
 3. Round a Date, **Date to round** `{{ $input.now }}`, **Unit** `month`, **Direction** `up`, **Output field name** `to`, **Include input fields** on.
 4. [Http Request](/nodes/builtin/core/http-request/) with query params `from` = `{{ $input.from }}` and `to` = `{{ $input.to }}`.
 
-## Troubleshooting
+## Common issues
 
 - **The week starts on the wrong day.** Weeks start on Sunday. To start on Monday, round down to `week` and then [Add To A Date](/nodes/builtin/datatransformation/datetime/addtoadate/) 1 day (careful on Sundays).
 - **The result is a few hours off.** The rounding happens in your local time zone, and the date is shown in UTC. Format it with [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) to see local time.

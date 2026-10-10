@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Translate text between languages with a model that runs in your browser, so the text never leaves your device.
 
 ## What it does
@@ -32,12 +35,7 @@ To translate with a chat model and your own instructions, use [Basic LLM Chain](
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Long text |  | No | The text to translate. |
-| **From** | Choice | English | No | Source language. Ignored by fixed-pair opus-mt models. 59 options. |
-| **To** | Choice | French | No | Target language. Ignored by fixed-pair opus-mt models. 59 options. |
-| **Model** | Model picker |  | No | Only translation models are listed here. |
+<AwfParamTable rows={[{"name":"Text","type":"Long text","description":"The text to translate."},{"name":"From","type":"Choice","default":"English","description":"Source language. Ignored by fixed-pair opus-mt models. 59 options."},{"name":"To","type":"Choice","default":"French","description":"Target language. Ignored by fixed-pair opus-mt models. 59 options."},{"name":"Model","type":"Model picker","description":"Only translation models are listed here."}]} />
 {/* AUTO:settings:end */}
 
 **From** and **To** list 59 common languages by name. With an expression you can also pass an English language name (`Spanish`), a two-letter code (`es`) or any NLLB-200 code (`spa_Latn`), which reaches all 200 languages. For example, set **To** to `{{ $input.language }}`.
@@ -45,15 +43,19 @@ To translate with a chat model and your own instructions, use [Basic LLM Chain](
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `text` | Text | The translated text |
-| `from` | Text |  |
-| `to` | Text |  |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"text","type":"Text","description":"The translated text"},{"name":"from","type":"Text"},{"name":"to","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "text": "…",
+  "from": "…",
+  "to": "…"
+}
+```
 {/* AUTO:outputs:end */}
 
 `from` and `to` are the language codes actually used: NLLB codes such as `eng_Latn` and `fra_Latn`, or the model's own pair (such as `en` and `de`) for an opus-mt model.
@@ -61,7 +63,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 The **Model** picker lists your installed translation models first, then ones that download on first use. *NLLB-200 distilled (translate)* is a large download (about 460 MB). To use an opus-mt model, add it on the [Local AI](/app/local-models/#add-a-custom-model) page.
@@ -74,7 +76,7 @@ Translate the text you select into English:
 2. Translate with **Text** `{{ $input.selectionText }}`, **From** **French**, **To** **English** and **Model** *NLLB-200 distilled (translate)*.
 3. [Show Notification](/nodes/extension/shownotification/) with **Title** `Translation` and **Message** `{{ $input.text }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Choose a translation model."** **Model** is empty. Pick one.
 - **"Provide some text to translate."** **Text** is empty after expressions run.

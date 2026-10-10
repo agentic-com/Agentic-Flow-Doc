@@ -11,7 +11,16 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Show a native notification from a workflow, with options to replace an earlier one, keep it on screen or make it silent.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/price-on-page-watch.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -34,16 +43,7 @@ The workflow does not wait for you to click the notification; it continues strai
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Title** | Text |  | Yes |  |
-| **Message** | Long text |  | Yes |  |
-| **Options** | Group |  | No |  |
-| Options › **Icon URL** | Text |  | No |  |
-| Options › **Notification ID** | Text |  | No | Optional stable ID used to replace an existing notification. |
-| Options › **Priority** | Choice | Normal | No | Options: Low, Normal, High. |
-| Options › **Require Interaction** | Toggle | Off | No | Keep the notification on screen until it is dismissed. Chrome only: Firefox closes notifications on its own. |
-| Options › **Silent** | Toggle | Off | No | Show the notification without a sound. Chrome only: Firefox ignores this option. |
+<AwfParamTable rows={[{"name":"Title","type":"Text","required":true},{"name":"Message","type":"Long text","required":true},{"name":"Options","type":"Group"},{"name":"Options › Icon URL","type":"Text"},{"name":"Options › Notification ID","type":"Text","description":"Optional stable ID used to replace an existing notification."},{"name":"Options › Priority","type":"Choice","default":"Normal","description":"Options: Low, Normal, High."},{"name":"Options › Require Interaction","type":"Toggle","default":"Off","description":"Keep the notification on screen until it is dismissed. Chrome only: Firefox closes notifications on its own."},{"name":"Options › Silent","type":"Toggle","default":"Off","description":"Show the notification without a sound. Chrome only: Firefox ignores this option."}]} />
 {/* AUTO:settings:end */}
 
 **Title** and **Message** accept expressions, for example **Message** = `Saved {{ $input.title }}`. **Notification ID** can be any text you choose, such as `price-watch`.
@@ -51,9 +51,20 @@ The workflow does not wait for you to click the notification; it continues strai
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `notificationId` (text), `title` (text), `message` (text), `created` (always true).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"notificationId","type":"Text"},{"name":"title","type":"Text"},{"name":"message","type":"Text"},{"name":"created","type":"Always true"}]} />
+
+```json title="Shape of an output item"
+{
+  "notificationId": "…",
+  "title": "…",
+  "message": "…",
+  "created": true
+}
+```
 {/* AUTO:outputs:end */}
 
 `notificationId` is your **Notification ID**, or a generated id when you left it empty. `title` and `message` are the text that was shown.
@@ -61,7 +72,7 @@ Each output item has the fields `notificationId` (text), `title` (text), `messag
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 No credential is needed. Notifications must be allowed for your browser in your operating system's settings.
@@ -73,7 +84,7 @@ No credential is needed. Notifications must be allowed for your browser in your 
 3. [IF](/nodes/builtin/flow/if/) checks whether `{{ $input.status }}` is not `ok`.
 4. **Show Notification** on the true branch, with **Title** = `Service problem`, **Notification ID** = `status-check` and **Require Interaction** on, so the alert stays until you see it and each new alert replaces the previous one instead of stacking up.
 
-## Troubleshooting
+## Common issues
 
 - **Nothing appears.** Notifications for your browser are turned off in the operating system's settings, or a focus / do-not-disturb mode is on. Allow them and try again.
 - **"Notification title and message are required".** **Title** or **Message** is empty, often because an expression resolved to nothing.

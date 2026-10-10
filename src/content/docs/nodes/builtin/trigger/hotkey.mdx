@@ -11,6 +11,9 @@ node:
   family: trigger
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Run a workflow from a keyboard shortcut, wherever you are in the browser.
 
 ## What it does
@@ -30,9 +33,7 @@ To start from a right-click instead, use [Context Menu](/nodes/builtin/trigger/c
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Hotkey Slot** | Choice | Hotkey slot 1 | No | Which keyboard-shortcut slot fires this trigger. Assign the actual key combo at chrome://extensions/shortcuts. Options: Hotkey slot 1, Hotkey slot 2, Hotkey slot 3, Hotkey slot 4. |
+<AwfParamTable rows={[{"name":"Hotkey Slot","type":"Choice","default":"Hotkey slot 1","description":"Which keyboard-shortcut slot fires this trigger. Assign the actual key combo at chrome://extensions/shortcuts. Options: Hotkey slot 1, Hotkey slot 2, Hotkey slot 3, Hotkey slot 4."}]} />
 {/* AUTO:settings:end */}
 
 To choose the keys for a slot:
@@ -45,9 +46,19 @@ Find **Agentic Workflow**, then the line **Run workflow bound to Hotkey slot 2**
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `triggerType` (always "hotkey"), `triggeredAt` (text), `command` (text).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"hotkey\""},{"name":"triggeredAt","type":"Text"},{"name":"command","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "triggerType": "hotkey",
+  "triggeredAt": "…",
+  "command": "…"
+}
+```
 {/* AUTO:outputs:end */}
 
 `command` names the slot that fired, from `run-workflow-1` to `run-workflow-4`. The output does not include the page you were on; add a node such as [Get Selected Text](/nodes/extension/getselectedtext/) to read from it.
@@ -55,7 +66,7 @@ Each output item has the fields `triggerType` (always "hotkey"), `triggeredAt` (
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -67,7 +78,7 @@ Copy the selected text with one shortcut:
 3. Add [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.selection }}`.
 4. Activate the workflow, then set the keys for **Run workflow bound to Hotkey slot 2**, for example **Alt+Shift+C**.
 
-## Troubleshooting
+## Common issues
 
 - **Pressing the keys does nothing.** The slot has no keys yet (only slot 1 has a suggested shortcut), or the workflow is not activated. Set the keys in the browser's shortcut page, and check the slot chosen in the node is the one you set.
 - **Slot 1's suggested shortcut does nothing.** Another extension or the browser already uses **Ctrl+Shift+1**, so it was not assigned. Pick other keys for slot 1 in the shortcut page.

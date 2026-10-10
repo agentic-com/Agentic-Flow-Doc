@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Add rows to Notion databases, read and update pages, and append text, files or images to a page.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Notion connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -44,94 +53,11 @@ To keep notes in local Markdown files instead, use [Obsidian](/nodes/builtin/int
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| Database | Get many, Get schema |
-| Page | Create, Get, Update, Delete, Search |
-| Block | Create, Get, Update, Delete |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Credential to use to make the request."}]} groups={[{"label":"Database","options":[{"label":"Get many","rows":[{"name":"Search Query","type":"Text","description":"Search query to filter databases."}]},{"label":"Get schema","rows":[{"name":"Database","type":"Choice (loaded from your account)","required":true,"description":"The Notion database to work with."}]}]},{"label":"Page","options":[{"label":"Create","rows":[{"name":"Database","type":"Choice (loaded from your account)","required":true,"description":"The Notion database to work with."},{"name":"Properties","type":"Field list","required":true,"description":"The properties to set for the page."}]},{"label":"Get","rows":[{"name":"Page","type":"Choice (loaded from your account)","required":true,"description":"The Notion page to work with."}]},{"label":"Update","rows":[{"name":"Page","type":"Choice (loaded from your account)","required":true,"description":"The Notion page to work with."},{"name":"Properties","type":"Field list","required":true,"description":"The properties to update for the page."}]},{"label":"Delete","rows":[{"name":"Page","type":"Choice (loaded from your account)","required":true,"description":"The Notion page to work with."}]},{"label":"Search","rows":[{"name":"Search Query","type":"Text","required":true,"description":"Search query for pages."},{"name":"Filter","type":"Key-value pairs","description":"Filter criteria for database query."},{"name":"Sort","type":"List","description":"Sort criteria for database query."},{"name":"Page Size","type":"Number","default":"100","description":"Number of results to return (1-100)."}]}]},{"label":"Block","options":[{"label":"Create","rows":[{"name":"Block","type":"Text","required":true,"description":"The ID of the block to work with."},{"name":"Block Type","type":"Choice","default":"Paragraph","description":"The type of block to create. File / Image upload the file attached to the incoming item ($binary). Options: Paragraph, Heading 1, Heading 2, Heading 3, Bulleted List, Numbered List, To-Do Item, File (from binary), Image (from binary)."},{"name":"Content","type":"Text","description":"The content for the block."},{"name":"Binary Field","type":"Text","default":"data","description":"Which $binary key on the incoming item holds the file. Used only for the File / Image block types. HTTP Request / Local File Read store under \"data\" by default."},{"name":"Caption","type":"Text","description":"Optional caption shown under the File / Image block."}]},{"label":"Get","rows":[{"name":"Block","type":"Text","required":true,"description":"The ID of the block to work with."}]},{"label":"Update","rows":[{"name":"Block","type":"Text","required":true,"description":"The ID of the block to work with."},{"name":"Block Type","type":"Choice","required":true,"description":"The type of block to create. Options: Paragraph, Heading 1, Heading 2, Heading 3, Bulleted List, Numbered List, To-Do Item."},{"name":"Content","type":"Text","required":true,"description":"The content for the block."}]},{"label":"Delete","rows":[{"name":"Block","type":"Text","required":true,"description":"The ID of the block to work with."}]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | The Credential to use to make the request. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**Database → Get many**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Search Query** | Text |  | No | Search query to filter databases. |
-
-**Database → Get schema**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Database** | Choice (loaded from your account) |  | Yes | The Notion database to work with. |
-
-**Page → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Database** | Choice (loaded from your account) |  | Yes | The Notion database to work with. |
-| **Properties** | Field list |  | Yes | The properties to set for the page. |
-
-**Page → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Page** | Choice (loaded from your account) |  | Yes | The Notion page to work with. |
-
-**Page → Update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Page** | Choice (loaded from your account) |  | Yes | The Notion page to work with. |
-| **Properties** | Field list |  | Yes | The properties to update for the page. |
-
-**Page → Delete**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Page** | Choice (loaded from your account) |  | Yes | The Notion page to work with. |
-
-**Page → Search**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Search Query** | Text |  | Yes | Search query for pages. |
-| **Filter** | Key-value pairs |  | No | Filter criteria for database query. |
-| **Sort** | List |  | No | Sort criteria for database query. |
-| **Page Size** | Number | 100 | No | Number of results to return (1-100). |
-
-**Block → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Block** | Text |  | Yes | The ID of the block to work with. |
-| **Block Type** | Choice | Paragraph | No | The type of block to create. File / Image upload the file attached to the incoming item ($binary). Options: Paragraph, Heading 1, Heading 2, Heading 3, Bulleted List, Numbered List, To-Do Item, File (from binary), Image (from binary). |
-| **Content** | Text |  | No | The content for the block. |
-| **Binary Field** | Text | `data` | No | Which $binary key on the incoming item holds the file. Used only for the File / Image block types. HTTP Request / Local File Read store under "data" by default. |
-| **Caption** | Text |  | No | Optional caption shown under the File / Image block. |
-
-**Block → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Block** | Text |  | Yes | The ID of the block to work with. |
-
-**Block → Update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Block** | Text |  | Yes | The ID of the block to work with. |
-| **Block Type** | Choice |  | Yes | The type of block to create. Options: Paragraph, Heading 1, Heading 2, Heading 3, Bulleted List, Numbered List, To-Do Item. |
-| **Content** | Text |  | Yes | The content for the block. |
-
-**Block → Delete**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Block** | Text |  | Yes | The ID of the block to work with. |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Notion API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - **Database** and **Page** lists load from Notion once the credential is set. You can also type an id or use an expression. The id is the 32-character code in the page's or database's link, for example `https://www.notion.so/My-Tasks-1a2b3c...` ends with the id.
@@ -142,7 +68,7 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Page → Create**, **Get**, **Update** and **Delete** return the page: its `id`, `url`, `properties`, `parent` and timestamps. Property values are in Notion's own format, for example a title under `properties.Name.title[0].plain_text`.
@@ -152,7 +78,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, Bearer Token): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 The credential is a Notion internal integration token, saved as a Bearer Token credential:
@@ -170,7 +96,7 @@ The node only sees what you shared. A database missing from the **Database** lis
 3. Notion, **Page → Create**, **Database** `Reading list`, with **Properties** `Name` = `{{ $input.title }}`, `URL` = `{{ $input.url }}` and `Status` = `To read`.
 4. Notion, **Block → Create**, **Block** `{{ $input.id }}` (the new page), **Block Type** `Paragraph`, **Content** `Saved from the browser`.
 
-## Troubleshooting
+## Common issues
 
 - **"Notion API Error: Could not find database with ID… (object_not_found)".** The database or page is not shared with your integration, or the id is wrong. Connect the integration to it in Notion (**⋯ → Connections**).
 - **"Notion API Error: API token is invalid. (unauthorized)".** The token is wrong or the integration was deleted. Copy the secret again and update the credential.
