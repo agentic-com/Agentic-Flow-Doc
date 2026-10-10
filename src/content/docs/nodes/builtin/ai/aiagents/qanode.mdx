@@ -89,7 +89,7 @@ Each entry in `sources` has `title`, `url` (when there is one), `knowledgeId`, `
 
 ## Example workflow
 
-1. Add your product manual to a knowledge base on the [knowledge bases page](/usage/using-the-app/knowledge-bases/overview/), or with the [Indexer](/nodes/builtin/ai/aiagents/indexernode/).
+1. Add your product manual to a knowledge base on the [knowledge bases page](/app/knowledge-bases/overview/), or with the [Indexer](/nodes/builtin/ai/aiagents/indexernode/).
 2. [Get Selected Text](/nodes/extension/getselectedtext/) reads a customer question you highlighted, with **Output field name** `question`.
 3. Q&A Agent with **Prompt** `{{ $input.question }}`, a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node on **Knowledge** and a [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/) on **Model**.
 4. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.answer }}` and `{{ $input.source }}`.

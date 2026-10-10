@@ -575,9 +575,10 @@ export default defineConfig({
         noPagination: ["/nodes/builtin/", "/nodes/extension/"],
       }),
       starlightLinksValidator({
-        // Checks internal links and anchors (awflow/Agentic-Flow#1311). Warn-only until the content
-        // fixes land (4 broken links + 14 relative links today); then flip to `failOnError: true`.
-        failOnError: false,
+        // Checks internal links and anchors (awflow/Agentic-Flow#1311); a broken link fails the build.
+        // Local links are allowed: self-hosted app pages (Obsidian, Baserow) document localhost URLs.
+        failOnError: true,
+        errorOnLocalLinks: false,
         exclude: ["/og/**", "#ask-aria"],
       }),
       starlightLlmsTxt({

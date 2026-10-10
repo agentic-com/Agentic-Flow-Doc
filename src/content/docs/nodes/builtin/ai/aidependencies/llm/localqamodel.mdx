@@ -38,7 +38,7 @@ For open questions that need a written, combined answer, connect a chat model su
 | **Model** | Model picker |  | No | An on-device extractive Q&A model (e.g. DistilBERT SQuAD). Install one from Local AI, or download it from the picker. |
 {/* AUTO:settings:end */}
 
-The **Model** picker lists on-device question-answering models (for example DistilBERT SQuAD). Install one from the [Local Models](/usage/using-the-app/local-models/) page, or download it from the picker. When you publish or share the workflow, **Model** is cleared, so whoever installs it picks their own.
+The **Model** picker lists on-device question-answering models (for example DistilBERT SQuAD). Install one from the [Local Models](/app/local-models/) page, or download it from the picker. When you publish or share the workflow, **Model** is cleared, so whoever installs it picks their own.
 
 ## Outputs
 
@@ -60,7 +60,7 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-1. Fill a knowledge base with your product manuals on the [knowledge bases page](/usage/using-the-app/knowledge-bases/overview/).
+1. Fill a knowledge base with your product manuals on the [knowledge bases page](/app/knowledge-bases/overview/).
 2. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on selected text (the question).
 3. [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) with **Prompt** `{{ $input.selectionText }}`, with Local Q&A Model in its **Model** slot and [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) (your manuals) in its **Knowledge** slot.
 4. [Browser Notification](/nodes/extension/browsernotification/) with **Message** `{{ $input.answer }} ({{ $input.source }})`.
@@ -69,7 +69,7 @@ None. This node needs no credential and has no slots for other nodes.
 
 - **"The Local Q&A Model answers by quoting a passage, so it needs a context: connect a Knowledge to the Q&A Agent."** Connect a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to the agent.
 - **"Choose an on-device Q&A model in the Local Q&A Model node."** **Model** is empty. Pick a model.
-- **"Model "…" isn't available. Install it from Local AI."** Install it from [Local Models](/usage/using-the-app/local-models/), or download it from the picker.
+- **"Model "…" isn't available. Install it from Local AI."** Install it from [Local Models](/app/local-models/), or download it from the picker.
 - **The answer is empty.** None of the passages found contained an answer (the run log shows a warning). Raise **Knowledge documents (k)**, rephrase the question, or check that the knowledge base holds the information.
 
 ## Related nodes

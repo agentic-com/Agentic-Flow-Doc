@@ -23,7 +23,7 @@ Indexer is an end point: it has no output port, so nothing runs after it on its 
 
 ## When to use it
 
-- Fill a [knowledge base](/usage/using-the-app/knowledge-bases/overview/) from a workflow: pages you scrape, files you load, results of an API call.
+- Fill a [knowledge base](/app/knowledge-bases/overview/) from a workflow: pages you scrape, files you load, results of an API call.
 - Keep a knowledge base up to date on a schedule, by re-indexing the same pages.
 
 To add files, pages or text by hand, use **Add sources** on the knowledge bases page instead. To ask questions about indexed content, use [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) or [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/).
@@ -85,7 +85,7 @@ Each day the same source is updated in place, and chat citations link back to th
 
 ## Troubleshooting
 
-- **"None of the N chunks could be saved to the knowledge base."** Nothing was written. Check that the knowledge base exists and that its embedding model is installed in [Local models](/usage/using-the-app/local-models/).
+- **"None of the N chunks could be saved to the knowledge base."** Nothing was written. Check that the knowledge base exists and that its embedding model is installed in [Local models](/app/local-models/).
 - **"N of M chunks could not be saved to the knowledge base."** (a warning in the run log) Part of the text was saved; `success` is `false` and `failed` counts the rest. Run again to retry.
 - **Duplicates appear after each run.** No stable identity is set. Fill **Source ID**, **Source link** or **Source name**.
 - **Citations read "Workflow input".** Set **Source name**.
