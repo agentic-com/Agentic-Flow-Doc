@@ -12,7 +12,9 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
-import { StepCard, LessonProgress, LessonDone } from "@components/awflow";
+import { StepCard, LessonProgress, LessonDone, Screenshot } from "@components/awflow";
+import ariaBuildLight from '@assets/screenshots/aria-build.light.webp';
+import ariaBuildDark from '@assets/screenshots/aria-build.dark.webp';
 
 <LessonProgress
   client:visible
@@ -51,7 +53,12 @@ import { StepCard, LessonProgress, LessonDone } from "@components/awflow";
   Aria works through *Understand your request*, *Look for similar workflows*, *Choose an approach*, *Write the workflow* and *Check it's valid*.
 </StepCard>
 
-{/* SCREENSHOT: aria-build-preview — assistant in Build mode with the Building your workflow card and the Workflow preview */}
+<Screenshot
+  src={ariaBuildLight}
+  srcDark={ariaBuildDark}
+  alt="The Assistant page with the composer switched to Build: the message box holds “When I press a keyboard shortcut, take the text I selected on the page, translate it into French with an on-device model, and show the translation.”, with the Chat | Build switch, the context meter and the model picker under it, and suggestion cards below. The left rail lists recent chats."
+  hotspots={[{ x: 67.8, y: 46.3, label: 'Describe the workflow' }, { x: 56.8, y: 52.2, label: 'Chat | Build switch, set to Build' }, { x: 86.4, y: 52.2, label: 'Model picker' }]}
+/>
 
 <StepCard n={3} title="Review what it built" check="you can name each node in the preview and say what it does.">
   Read the **Workflow preview** from left to right. You should recognise the pieces from earlier lessons: a **Hotkey** trigger, **Get Selected Text**, a chain with a model in its **Model** slot, and a display step. If a card says **settings to check before it runs**, click each row to see what Aria needs from you, such as a model to pick.

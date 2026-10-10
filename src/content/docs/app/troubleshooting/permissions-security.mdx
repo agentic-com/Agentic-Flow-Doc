@@ -4,6 +4,10 @@ description: Fix permission and security issues that prevent workflows from acce
 section: app
 ---
 
+import { Screenshot } from '@components/awflow';
+import settingsAccessLight from '@assets/screenshots/settings-access.light.webp';
+import settingsAccessDark from '@assets/screenshots/settings-access.dark.webp';
+
 
 Sometimes a workflow cannot run because the browser blocks access to a website or part of a page.  
 This is usually caused by **browser security rules**, not by a broken workflow.
@@ -238,7 +242,12 @@ it shows **Under review by AWFlow** and keeps running.
 
 ## Visual Guide (Optional)
 
-{/* SCREENSHOT: site-access */}
+<Screenshot
+  src={settingsAccessLight}
+  srcDark={settingsAccessDark}
+  alt="Settings, Site access, in a new local workspace: the Site & app access page explains that access is granted when a workflow first needs a host or an app, notes that enforcement is off for your own workflows (Trusted mode) with a link to Security, and says no site or app access has been granted yet."
+  hotspots={[{ x: 68.1, y: 25.8, label: 'Enforcement for your own workflows: see Security' }, { x: 67.2, y: 39.1, label: 'Granted hosts and apps appear here' }]}
+/>
 
 ---
 

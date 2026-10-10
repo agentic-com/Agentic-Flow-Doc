@@ -4,6 +4,10 @@ description: Fix issues where workflow nodes are not connected correctly or data
 section: app
 ---
 
+import { Screenshot } from '@components/awflow';
+import canvasLight from '@assets/screenshots/canvas.light.webp';
+import canvasDark from '@assets/screenshots/canvas.dark.webp';
+
 
 When a workflow does not behave as expected, the problem is often **how nodes are connected**, not the nodes themselves.
 
@@ -144,7 +148,12 @@ See:
 
 ## Visual Guide to Connections
 
-{/* SCREENSHOT: canvas */}
+<Screenshot
+  src={canvasLight}
+  srcDark={canvasDark}
+  alt="The workflow editor with the Hash Text example: a sticky note explaining it, then five connected steps (Run now, Your text, SHA-256, SHA-512, Show the hashes). The toolbar with Editor, Logs and Executions tabs is at the top, the Test Workflow button at the top right, and zoom controls at the bottom left."
+  hotspots={[{ x: 19.8, y: 9.6, label: 'Add a step (node)' }, { x: 58.9, y: 9.4, label: 'Editor, Logs and Executions tabs' }, { x: 86.9, y: 9.8, label: 'Test Workflow: run it now' }, { x: 61.6, y: 64.9, label: 'A step (node); drag from its handle to connect' }]}
+/>
 
 ---
 

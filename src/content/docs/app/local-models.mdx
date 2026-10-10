@@ -8,7 +8,9 @@ sidebar:
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
-import { Badge, Callout } from "@components/awflow";
+import { Badge, Callout, Screenshot } from "@components/awflow";
+import localModelsLight from '@assets/screenshots/local-models.light.webp';
+import localModelsDark from '@assets/screenshots/local-models.dark.webp';
 
 <Badge variant="no-setup" text="Free · no usage cost" /> <Badge variant="on-device" text="Runs and stays on this device" /> <Badge variant="new" text="New in 0.8.0" />
 
@@ -20,7 +22,12 @@ import { Badge, Callout } from "@components/awflow";
 - **TensorFlow.js**: vision, text and embedding models (MobileNet, COCO-SSD, toxicity, the Universal Sentence Encoder), WebGPU with a WebGL/WASM fallback.
 - **transformers.js**: the widest range of tasks (image classification, object detection, segmentation, depth, captioning, sentiment and zero-shot classification, question answering, summarization, translation, embeddings and Whisper speech-to-text) through ONNX on WASM.
 
-{/* SCREENSHOT: local-models */}
+<Screenshot
+  src={localModelsLight}
+  srcDark={localModelsDark}
+  alt="The Local AI page: storage used by on-device models split by engine (WebLLM, TF.js, Transformers), a task list on the left (Chat, Embeddings, vision and audio tasks) and model cards on the right, such as Llama 3.2 1B Instruct with its size, variants and install state."
+  hotspots={[{ x: 30.1, y: 25.6, label: 'Storage header: space used, by engine' }, { x: 30.4, y: 37.6, label: 'Tasks' }, { x: 30.4, y: 32.6, label: 'Search and engine filter' }, { x: 52.3, y: 46, label: 'A model card: size, device fit and install state' }]}
+/>
 
 1. **Storage header.** How much browser storage your models use, out of what's available, and **Keep models installed**.
 2. **Tasks.** Chat, Image classification, Object detection, Speech-to-text, Embeddings… each with **Show all**.

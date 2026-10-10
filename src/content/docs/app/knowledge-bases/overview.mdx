@@ -8,7 +8,9 @@ sidebar:
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
-import { Badge, Callout } from "@components/awflow";
+import { Badge, Callout, Screenshot } from "@components/awflow";
+import knowledgeBasesLight from '@assets/screenshots/knowledge-bases.light.webp';
+import knowledgeBasesDark from '@assets/screenshots/knowledge-bases.dark.webp';
 
 <Badge variant="no-setup" text="Free · no plan limit" /> <Badge variant="on-device" text="Stays in this browser" /> <Badge variant="new" text="New in 0.8.1" />
 
@@ -16,12 +18,19 @@ import { Badge, Callout } from "@components/awflow";
 
 A **knowledge base** is a set of documents your assistant can search: product manuals, policies, notes, saved web pages. When Aria, an agent or a workflow needs an answer from your documents, it searches the knowledge base and gets back the most relevant **passages** (short pieces of text) to answer from. A **source** is one thing you added: a file, a web page, an open tab, pasted text, or text indexed by a workflow.
 
-{/* SCREENSHOT: knowledge-bases */}
+<Screenshot
+  src={knowledgeBasesLight}
+  srcDark={knowledgeBasesDark}
+  alt="A new knowledge base called Product handbook: its source, chunk and size counters, the on-device MiniLM search engine and Cloud OK badges, the Sources, Test search, Used by and Settings tabs, and side cards for Used by, Privacy and Search engine. It has no sources yet."
+  hotspots={[{ x: 89.9, y: 13.7, label: 'Add sources: files, web pages or text' }, { x: 29.5, y: 25, label: 'Test search' }, { x: 87.8, y: 45.9, label: 'Privacy: Cloud OK or Device only' }, { x: 87.8, y: 59.7, label: 'Search engine, on this device' }]}
+/>
 
-1. **Your knowledge bases.** One card each, with sources · chunks · size, the search engine it was built with, its privacy badge and **Used by**. Empty, indexing and cloud-built bases stand out.
-2. **New knowledge base.** Name it, add sources and choose who may read it.
-3. **Add sources.** Files, web pages, open tabs (extension) or pasted text, indexed on this device.
-4. **Test search.** See the passages an agent would get, with their scores, before you rely on them.
+1. **Add sources.** Files, web pages, open tabs (extension) or pasted text, indexed on this device.
+2. **Test search.** See the passages an agent would get, with their scores, before you rely on them.
+3. **Privacy.** **Cloud OK** or **Device only**: whether its passages may reach a cloud model.
+4. **Search engine.** The embedding model the base was built with, running on this device.
+
+The **Knowledge bases** list shows one card per base, with sources · chunks · size, the search engine it was built with, its privacy badge and **Used by**. Empty, indexing and cloud-built bases stand out. **New knowledge base** asks for a name, then you add sources and choose who may read it.
 
 ## What you can do
 

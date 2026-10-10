@@ -8,7 +8,9 @@ sidebar:
 ---
 
 import { LinkCard, CardGrid } from "@astrojs/starlight/components";
-import { Badge, Callout } from "@components/awflow";
+import { Badge, Callout, Screenshot } from "@components/awflow";
+import agentsLight from '@assets/screenshots/agents.light.webp';
+import agentsDark from '@assets/screenshots/agents.dark.webp';
 
 <Badge variant="no-setup" text="Free · you pay only your cloud model, if any" /> <Badge variant="on-device" text="Stays in this browser" /> <Badge variant="new" text="New in 0.8.0" />
 
@@ -16,12 +18,18 @@ import { Badge, Callout } from "@components/awflow";
 
 An **agent** is an assistant with a job: its own instructions, model, skills, knowledge and rules. Aria is your built-in agent; you can edit it, but not delete it. A *persona* is simply an agent without skills. Agents live in your browser, use your logins when they browse, and are stored **only on this device**.
 
-{/* SCREENSHOT: agents */}
+<Screenshot
+  src={agentsLight}
+  srcDark={agentsDark}
+  alt="The Agents tab of Agents & teams: a Describe an agent box with a Create agent button, the card for Aria (Your assistant, On-device AI) with a Chat button, and four templates to start from: Chief of staff, Inbox triager, Price watcher and Study buddy. Import and Blank agent buttons are at the top right."
+  hotspots={[{ x: 36.4, y: 38.9, label: 'Agent cards, with Chat' }, { x: 56.4, y: 29.3, label: 'Describe an agent' }, { x: 54, y: 54.2, label: 'Templates' }]}
+/>
 
 1. **Agent cards.** One per agent, with **Chat** to talk to it.
 2. **Describe an agent.** One sentence, and Aria drafts it for you.
 3. **Templates.** Chief of staff, Inbox triager, Price watcher, Study buddy…
-4. **Builder tabs.** Identity, Instructions, Model, Skills, Knowledge, Memory, Rules and Routines, with **Try it** on the right.
+
+Open an agent to reach its **builder tabs**: Identity, Instructions, Model, Skills, Knowledge, Memory, Rules and Routines, with **Try it** on the right.
 
 ## What you can do
 

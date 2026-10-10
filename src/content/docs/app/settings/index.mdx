@@ -8,10 +8,18 @@ sidebar:
 ---
 
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import settingsIndexLight from '@assets/screenshots/settings-index.light.webp';
+import settingsIndexDark from '@assets/screenshots/settings-index.dark.webp';
 
 Open **Settings** from the bottom of the sidebar. On a wide window the sections are listed on the left; on a narrow one (such as the side panel) you get a list first, and each row shows a one-line status, for example *Safe mode · Off (Trusted)* or *2 providers*.
 
-{/* SCREENSHOT: Settings index at #/app/settings in the side panel width, showing the three groups with their status lines */}
+<Screenshot
+  src={settingsIndexLight}
+  srcDark={settingsIndexDark}
+  alt="Settings at side-panel width (400 px), in a local workspace: three groups of rows, each with a one-line status. Account: General (Local workspace · Sign in). App: Preferences, Assistant Notch (Off), Providers (None configured), Local models (0 installed), Storage. Safety & privacy: Security (Safe mode · Off (Trusted)), Privacy and Site access (No hosts granted yet)."
+  hotspots={[{ x: 50, y: 14.5, label: 'Account' }, { x: 50, y: 26.2, label: 'App' }, { x: 50, y: 64.4, label: 'Safety & privacy' }]}
+/>
 
 ## Account
 

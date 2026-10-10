@@ -8,6 +8,9 @@ sidebar:
 ---
 
 import { Steps, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import credentialsEditLight from '@assets/screenshots/credentials-edit.light.webp';
+import credentialsEditDark from '@assets/screenshots/credentials-edit.dark.webp';
 
 Edit a credential when a token expires or is replaced, a password changes, or you want a clearer name. Every node and workflow that uses it picks up the change: you don't re-select it anywhere.
 
@@ -23,7 +26,12 @@ Edit a credential when a token expires or is replaced, a password changes, or yo
 
 </Steps>
 
-{/* SCREENSHOT: credentials-new */}
+<Screenshot
+  src={credentialsEditLight}
+  srcDark={credentialsEditDark}
+  alt="The Edit Credential dialog for a GitHub credential named GitHub (team): the Integration App / Service set to GitHub, the Name and Description fields, the Bearer Token field (a placeholder value), and Cancel and Update Credential buttons."
+  hotspots={[{ x: 50, y: 45.3, label: 'Name and description' }, { x: 50, y: 66.7, label: 'Secret fields: here, the token' }, { x: 63.1, y: 75.7, label: 'Update Credential' }]}
+/>
 
 ## Move it between this browser and your account
 

@@ -8,10 +8,20 @@ sidebar:
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
+import { Screenshot } from '@components/awflow';
+import workflowsListLight from '@assets/screenshots/workflows-list.light.webp';
+import workflowsListDark from '@assets/screenshots/workflows-list.dark.webp';
+import workflowsBulkLight from '@assets/screenshots/workflows-bulk.light.webp';
+import workflowsBulkDark from '@assets/screenshots/workflows-bulk.dark.webp';
 
 **Workflows** in the sidebar lists every workflow you have. Use it to find a workflow, turn it on or off, move it between this device and the cloud, and clean up many workflows at once.
 
-{/* SCREENSHOT: Workflows list at #/app/workflows, "My Workflows" tab, a few rows with tags, Local and Cloud storage badges */}
+<Screenshot
+  src={workflowsListLight}
+  srcDark={workflowsListDark}
+  alt="The Workflows page, My Workflows tab: four workflows (JSON Prettify & Repair, Hash Text, Color Converter, JWT Decoder) with their tags, active status, Local storage badge, Not published state and dates, above the Status, Storage, Published, Needs setup and Tags filters."
+  hotspots={[{ x: 94.9, y: 9.9, label: 'Add Workflow: create, import or describe one' }, { x: 32.2, y: 15.9, label: 'Filters' }, { x: 20.6, y: 26.5, label: 'Row menu: open, run, duplicate, export, delete' }]}
+/>
 
 ## The two tabs
 
@@ -114,7 +124,12 @@ Run history is stored in the same place as the workflow. See [Run history](/app/
 
 </Steps>
 
-{/* SCREENSHOT: Workflows list with three rows selected and the bulk-action toolbar visible at the bottom */}
+<Screenshot
+  src={workflowsBulkLight}
+  srcDark={workflowsBulkDark}
+  alt="The Workflows page, My Workflows tab, with three of the listed workflows selected: their row checkboxes are ticked, the footer says how many rows are selected, and a toolbar at the bottom shows 3 selected with Export, Activate, Deactivate, Tags, Delete and Clear."
+  hotspots={[{ x: 23.4, y: 29.8, label: 'Select rows' }, { x: 34, y: 95.4, label: 'Bulk-action toolbar' }]}
+/>
 
 Bulk actions on **My Workflows**:
 
