@@ -236,6 +236,7 @@ bun run docs:capture --theme dark            # one theme only: light, dark or bo
 - The browser starts as a fresh anonymous local workspace with first-run tours dismissed, in light or dark mode (the app's `mode-watcher-mode` key). Calls to a local Ollama are blocked so the machine's own models never show up.
 - Data is created through the app's own UI: example workflows from `scripts/capture/fixtures/*.awf` are imported with the Add Workflow wizard, runs are started from the workflow list, and the Memory and chat shots import a generated `.awmem` file (`scripts/capture/lib/awmem.ts`) with Memory › Import. No model runs during capture.
 - `local-models` and `marketplace-browse` need the network (Hugging Face list, `api.awflow.io`). The API does not allow a `127.0.0.1` origin, so the script adds CORS headers to those responses; the data is the live API's. Offline, these two are recorded as `skipped` and their old images are removed.
+- Shots with `signedIn: true` (the publish wizard) run in a separate browser context as a fictional signed-in user, Alex Doe. The UI is still the real app; only its backend is replaced by `scripts/capture/lib/fakeApi.ts`, which answers the account, workflow, marketplace-draft and upload calls with fixture data (one example cloud workflow from `fixtures/`) and never reaches the real API. Calls it doesn't answer get a 404 and are listed at the end of the run.
 - A shot that fails keeps its previous images and manifest entry, the run exits with code 1, and a screenshot plus an accessibility snapshot of the failing page are saved in your temp folder (`awflow-docs-capture-debug/`).
 - Afterwards, open the changed images and check there is no toast, dialog or half-loaded state, then commit the images and `manifest.json` together.
 
@@ -244,7 +245,7 @@ bun run docs:capture --theme dark            # one theme only: light, dark or bo
 1. Add an entry to `SHOTS` in `scripts/capture/shots.ts` (the array order is the manifest order): `name`, `page`, `route`, `alt`, 2–4 `hotspots` and a `prepare(session)` that brings the app to the state to capture.
 2. Use visible roles and text for locators (`p.getByRole('button', { name: 'Add Workflow' })`) and wait for what you capture. Reuse the `Session` helpers (`workflow`, `editor`, `testRun`, `savedRuns`, `importMemory`, `knowledgeBase`, `assistant`) instead of seeding storage.
 3. Set `needsNetwork: true` only when the shot cannot work offline, and `viewport` for a non-desktop size (the `side-panel` shot uses 400×860).
-4. Write `alt` as what the image really shows. If a state can't be produced reliably (it needs an account or a model), leave the shot out or let it be `skipped`; never fake it.
+4. Write `alt` as what the image really shows. If a state can't be produced reliably (it needs a model, or an account feature the fake API doesn't answer yet), leave the shot out or let it be `skipped`; never fake it.
 5. Run `bun run docs:capture --only <name>`, open both images, then commit.
 
 ### Use a shot in a page

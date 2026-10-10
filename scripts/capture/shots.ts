@@ -142,6 +142,60 @@ export class Session {
 		await page.waitForURL(/#\/app\/knowledges\/[^/?]+/, { timeout: T });
 		this.kb = true;
 	}
+	/**
+	 * Signed-in (fake API) only: opens Publish on the "Summarise this page" cloud workflow from the workflows
+	 * list and walks the wizard to `step` (1 Basics, 2 Media, 5 Review & publish).
+	 */
+	async publishWizard(step: 1 | 2 | 5) {
+		const page = this.page;
+		// A fresh page load: a wizard left open by the previous shot is gone.
+		await page.goto('about:blank');
+		await this.go('#/app/workflows');
+		const row = page.getByRole('row').filter({ hasText: 'Summarise this page' }).first();
+		await row.getByRole('button', { name: 'Open menu' }).click({ timeout: T });
+		await page.getByRole('menuitem', { name: 'Publish' }).first().click({ timeout: T });
+		const dialog = page.getByRole('dialog');
+		await dialog.getByText('Publish to the marketplace').first().waitFor({ timeout: T });
+		await dialog.getByRole('textbox').first().waitFor({ timeout: T });
+		await page.waitForTimeout(800);
+		if (step === 1) return;
+		const next = () => dialog.getByRole('button', { name: 'Next' }).click({ timeout: T });
+		await next();
+		// 2 Media: an emoji icon and a generated preview image.
+		await dialog.getByRole('button', { name: 'Emoji', exact: true }).click({ timeout: T });
+		await dialog.getByRole('button', { name: 'Choose emoji' }).click({ timeout: T });
+		await page.getByRole('region', { name: 'Emoji picker' }).getByRole('combobox', { name: 'Search' }).fill('memo');
+		await page.waitForTimeout(800);
+		await page.keyboard.press('ArrowDown');
+		await page.keyboard.press('Enter');
+		await dialog.getByRole('button', { name: 'Choose emoji' }).filter({ hasText: '📝' }).waitFor({ timeout: T });
+		await dialog.getByRole('button', { name: /Generate preview/ }).click({ timeout: T });
+		await dialog.getByRole('img', { name: /\.png$/ }).first().waitFor({ timeout: T });
+		await page.waitForTimeout(1000);
+		if (step === 2) return;
+		await next();
+		// 3 Details: a category and two tags.
+		await dialog.getByRole('combobox').filter({ hasText: 'Select categories' }).click({ timeout: T });
+		await page.getByRole('option', { name: 'Research' }).click({ timeout: T });
+		const tags = dialog.getByPlaceholder('Enter tags');
+		for (const tag of ['summary', 'ai']) {
+			await tags.fill(tag);
+			await tags.press('Enter');
+		}
+		await next();
+		// 4 Explain the steps: lengthen the example's notes that are under 8 words.
+		const notes = dialog.getByPlaceholder(/What this step does/);
+		await notes.first().waitFor({ timeout: T });
+		for (let i = 0; i < (await notes.count()); i++) {
+			const note = notes.nth(i);
+			const value = await note.inputValue();
+			if (value.trim().split(/\s+/).length < 8) await note.fill(`${value.replace(/\.$/, '')}, so you can check the result yourself.`);
+		}
+		await next();
+		// 5 Review & publish: wait for the secret check and the permissions summary.
+		await dialog.getByText('Review & publish').first().waitFor({ timeout: T });
+		await page.waitForTimeout(2500);
+	}
 }
 
 export type ShotDef = {
@@ -153,6 +207,8 @@ export type ShotDef = {
 	alt: string;
 	note?: string;
 	viewport?: { width: number; height: number };
+	/** Runs as the fictional signed-in user "Alex Doe": the app's backend is the fake API in lib/fakeApi.ts. */
+	signedIn?: boolean;
 	/** Set when the shot depends on the network: a failure is then recorded as skipped. */
 	needsNetwork?: boolean;
 	/** Extra capture-only CSS (never product changes): hides headless-only artefacts. */
@@ -707,6 +763,61 @@ export const SHOTS: ShotDef[] = [
 			// Bring the card's header to the top of the view.
 			await page.getByText('Local secret protection').first().evaluate((el) => el.scrollIntoView({ block: 'start' }));
 			await page.waitForTimeout(600);
+		}
+	},
+	// Signed-in shots: they run in their own browser context against the fake API (lib/fakeApi.ts).
+	{
+		name: 'publish-basics',
+		page: 'app/workflows/publishing',
+		route: '#/app/workflows (row menu › Publish)',
+		signedIn: true,
+		alt: 'Step 1 of 5, Basics, of the Publish to the marketplace dialog for an example workflow: a five-step progress bar, the Name field filled with the workflow name (Summarise this page in 3 bullets), a Description editor with Write and Preview tabs and a formatting toolbar, prefilled with a starter description, the note Autofilled from your workflow, and Back and Next buttons.',
+		note: 'Signed in as a fictional account (Alex Doe): the app is the real production build, but its backend is the fake API in scripts/capture/lib/fakeApi.ts, which serves one example cloud workflow (fixtures/summarize-page-llm-chain.awf) and keeps the draft listing in memory. Nothing is published.',
+		hotspots: [
+			{ label: 'Five steps: Basics, Media, Details, Explain the steps, Review & publish', locate: (p) => p.getByRole('dialog').getByText('Basics', { exact: true }) },
+			{ label: 'Listing name', locate: (p) => p.getByRole('dialog').getByRole('textbox').first() },
+			{ label: 'Description, autofilled from your workflow', locate: (p) => p.getByRole('dialog').getByText(/Autofilled from your workflow/) },
+			{ label: 'Next saves this step to your draft', locate: (p) => p.getByRole('dialog').getByRole('button', { name: 'Next' }) }
+		],
+		prepare: async (s) => {
+			await s.publishWizard(1);
+		}
+	},
+	{
+		name: 'publish-preview',
+		page: 'app/workflows/publishing',
+		route: '#/app/workflows (row menu › Publish, step 2)',
+		signedIn: true,
+		alt: 'Step 2 of 5, Media, of the Publish to the marketplace dialog for an example workflow, with Generate selected under Screenshots & video: a bento-style preview image of the workflow (its trigger, the Get All Text, Basic LLM Chain, Web LLM and Display Markdown nodes, the title, an AWFlow mark and a 5 nodes, Runs in your browser card), then the Layout choices (Spotlight Halo selected, Cinematic Split, Filmstrip, Mosaic), five Accent colours, Image theme Light or Dark, a Show title checkbox and the Generate preview button for a 1600×900 PNG.',
+		note: 'Signed in as a fictional account (Alex Doe): the app is the real production build, but its backend is the fake API in scripts/capture/lib/fakeApi.ts, which serves one example cloud workflow (fixtures/summarize-page-llm-chain.awf) and keeps the draft listing in memory. Nothing is published.',
+		hotspots: [
+			{ label: 'Generate a preview image, or Upload your own', locate: (p) => p.getByRole('dialog').getByRole('button', { name: 'Generate', exact: true }) },
+			{ label: 'Layout', locate: (p) => p.getByRole('dialog').getByRole('button', { name: /Spotlight Halo/ }) },
+			{ label: 'Accent colour, image theme and title', locate: (p) => p.getByRole('dialog').getByRole('button', { name: 'Dark', exact: true }) },
+			{ label: 'Generate preview adds the image to your previews', locate: (p) => p.getByRole('dialog').getByRole('button', { name: /Generate preview/ }) }
+		],
+		prepare: async (s) => {
+			await s.publishWizard(2);
+		}
+	},
+	{
+		name: 'publish-review',
+		page: 'app/workflows/publishing',
+		route: '#/app/workflows (row menu › Publish, step 5)',
+		signedIn: true,
+		alt: "Step 5 of 5, Review & publish, of the Publish to the marketplace dialog for an example workflow that summarises the page you're on, scrolled to Permissions & Safety: What it can access lists Reads the active tab (reads content, never writes), Where it connects says the workflow makes no network requests, How you're protected lists the runtime-enforced sandbox, capabilities disclosed up front and reviews from real installs only. Below, a Narrated badge (every step has a plain-language note), a What happens next note about the quick review, and the Publish button.",
+		note: 'Signed in as a fictional account (Alex Doe): the app is the real production build, but its backend is the fake API in scripts/capture/lib/fakeApi.ts, which serves one example cloud workflow (fixtures/summarize-page-llm-chain.awf) and keeps the draft listing in memory. Nothing is published.',
+		hotspots: [
+			{ label: 'What it can access, derived from the steps', locate: (p) => p.getByRole('dialog').getByText('What it can access') },
+			{ label: 'Where it connects', locate: (p) => p.getByRole('dialog').getByText('Where it connects') },
+			{ label: 'Narrated: every step has a note', locate: (p) => p.getByRole('dialog').getByText('Every step has a plain-language note.') },
+			{ label: 'Publish sends it to review', locate: (p) => p.getByRole('dialog').getByRole('button', { name: 'Publish' }) }
+		],
+		prepare: async (s) => {
+			await s.publishWizard(5);
+			const heading = s.page.getByRole('dialog').getByText('Permissions & Safety').first();
+			await heading.evaluate((el) => el.scrollIntoView({ block: 'start' }));
+			await s.page.waitForTimeout(500);
 		}
 	}
 ];
