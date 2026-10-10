@@ -8,7 +8,9 @@ sidebar:
 ---
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
-import { CompareCards, ItemsPlayground } from "@components/awflow";
+import { CompareCards, ItemsPlayground, Screenshot } from "@components/awflow";
+import mappingLight from "@assets/screenshots/data-mapping.light.webp";
+import mappingDark from "@assets/screenshots/data-mapping.dark.webp";
 
 :::note[In 20 seconds]
 Mapping means "use a value from an earlier step here". Open a node's settings, find the value in the **Input** panel, and drag it into a field. AWFlow writes the expression for you, such as `{{ $input.title }}`. Mapping doesn't change any data: it only fills the setting, once for every item the node runs on.
@@ -43,6 +45,9 @@ Get Page Metadata returns one item with the page's `url`, `title`, `canonicalUrl
 />
 
 ## Drag a value into a field
+
+<Screenshot src={mappingLight} srcDark={mappingDark} alt="Mapping data in the SHA-512 step: the Input panel on the left is expanded to show the fields of $input and of the earlier SHA-256 step, ready to drag into a field; the Text field on the right already holds the expression $input.text, with the value from the last run previewed under it." hotspots={[{ x: 17.4, y: 18.8, label: "Fields from the previous step: drag one into a field" }, { x: 17.4, y: 32.7, label: "An earlier step and its fields" }, { x: 37.5, y: 61.7, label: "The expression the drag creates" }, { x: 90.3, y: 64.4, label: "Fixed value or Expression" }]} />
+
 
 1. Run the workflow, or the steps before this one, so they have data to show.
 2. Double-click the node to open its settings. On a narrow window, open the **Input** / **Output** pane from the dialog's footer.
