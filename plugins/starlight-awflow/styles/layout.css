@@ -303,7 +303,8 @@ header.header {
 	position: fixed;
 	inset-inline-end: 1.25rem;
 	inset-block-end: 1.25rem;
-	z-index: var(--sl-z-index-navbar);
+	/* Above the fixed TOC and the navbar; below Starlight's mobile menu and our search dialog. */
+	z-index: calc(var(--sl-z-index-navbar) + 1);
 	display: inline-flex;
 	align-items: center;
 	gap: 0.75rem;

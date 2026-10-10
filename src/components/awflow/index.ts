@@ -15,3 +15,5 @@ export { default as Screenshot } from './Screenshot.svelte';
 export { default as PageActions } from './PageActions.svelte';
 export { default as RecipeCard } from './RecipeCard.svelte';
 export { default as Kbd } from './Kbd.svelte';
+export { default as FlowPreview } from './FlowPreview.svelte';
+export { default as SearchDialog } from './SearchDialog.svelte';

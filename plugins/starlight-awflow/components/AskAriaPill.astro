@@ -29,3 +29,9 @@ const label = aria ? (node ? `${aria.label} about ${title}` : aria.label) : '';
 		</a>
 	)
 }
+
+<script>
+	// The footer sits inside Starlight's content column, whose stacking context puts the fixed right
+	// sidebar (TOC) above the pill on wide screens, blocking clicks. Re-parent the pill to <body>.
+	for (const pill of document.querySelectorAll('.awf-aria-pill')) document.body.append(pill);
+</script>
