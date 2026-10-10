@@ -5,7 +5,7 @@ sidebar:
     order: 4
 ---
 
-Workflow tags let you label your workflows so you can organise and find them quickly. Tags are **per workflow** — each workflow keeps its own list of tag labels; there is no shared, instance-wide tag registry.
+Workflow tags let you label your workflows so you can organise and find them quickly. Tags are **per workflow** — each workflow keeps its own list of tag labels; there is no shared list of tags across workflows.
 
 ## Add or edit tags on a workflow
 

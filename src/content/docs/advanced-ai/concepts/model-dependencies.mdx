@@ -3,7 +3,7 @@ title: Models and dependencies
 description: "Understand how AI dependency nodes connect models, memory, tools, parsers, embeddings, vector stores, and text splitters."
 ---
 
-AI workflows in Agentic WorkFlow are built by connecting agent nodes to dependency nodes. Dependency nodes do not usually perform the final task alone. They provide capabilities that an agent or chain uses.
+AI workflows in AWFlow are built by connecting agent nodes to dependency nodes. Dependency nodes do not usually perform the final task alone. They provide capabilities that an agent or chain uses.
 
 ## Dependency map
 
@@ -26,13 +26,15 @@ flowchart TD
 
 | Dependency | What it provides | Example nodes |
 | --- | --- | --- |
-| Chat LLM | Text reasoning and generation | Chat OpenAI, Chat Anthropic, Chat Google, Ollama, Web LLM, Chrome AI |
-| Embeddings | Converts text to vectors | OpenAI Embeddings, Ollama Embeddings |
-| Vector store | Stores and searches embedded content | Local Knowledge |
-| Text splitter | Breaks large text into chunks | Character Text Splitter, Recursive Character Text Splitter |
-| Chat memory | Keeps conversation state | Chat Memory |
-| Output parser | Makes model output structured | Structured Output Parser |
-| Tool | Gives an agent an action it can call | Wikipedia Query |
+| Chat model | Text reasoning and generation | Cloud: [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/), [Chat Google](/nodes/builtin/ai/aidependencies/llm/google/), [Chat Mistral](/nodes/builtin/ai/aidependencies/llm/mistral/), [Chat Groq](/nodes/builtin/ai/aidependencies/llm/groq/), [Chat DeepSeek](/nodes/builtin/ai/aidependencies/llm/deepseek/), [Chat xAI](/nodes/builtin/ai/aidependencies/llm/xai/), [Chat OpenRouter](/nodes/builtin/ai/aidependencies/llm/openrouter/), [Chat Azure OpenAI](/nodes/builtin/ai/aidependencies/llm/azure-openai/). On your computer: [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/). In your browser: [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/), [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/), [Chrome AI](/nodes/builtin/ai/aidependencies/llm/chrome-ai/) |
+| Embeddings | Converts text to vectors | [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/), [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/), [Ollama Embeddings](/nodes/builtin/ai/aidependencies/embeddings/ollamaembeddings/) and [others](/advanced-ai/concepts/embeddings-vectors/#embedding-models) |
+| Knowledge (vector store) | Stores and searches your documents | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
+| Text splitter | Breaks large text into chunks | [Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/charactertextsplitter/), [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) |
+| Memory | Keeps the conversation | [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) |
+| Output parser | Makes model output structured | [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/), [Item List Output Parser](/nodes/builtin/ai/aidependencies/outputparser/itemlistoutputparser/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
+| Tool | Gives an agent an action it can call | [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/), [Wikipedia](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/), [Browser](/nodes/builtin/ai/aidependencies/tools/browser/) and [others](/advanced-ai/concepts/tool-selection/#available-tools) |
+
+The on-device chat models run in your browser through [Local AI](/usage/using-the-app/local-models/): free and private, but smaller and slower than cloud models. Cloud models use your own API key, added in **Settings › Providers**.
 
 ## Choosing a model
 
@@ -41,8 +43,8 @@ Choose the model based on the job, not only on raw capability.
 | Need | Prefer |
 | --- | --- |
 | Fast local experimentation | Web LLM, Chrome AI, Ollama |
-| Strong general reasoning | Chat OpenAI, Chat Anthropic, Chat Google |
-| Private local workflows | Ollama or browser-local models |
+| Strong general reasoning and tool use | Chat OpenAI, Chat Anthropic, Chat Google |
+| Private workflows, nothing leaves your device | Ollama or the in-browser models |
 | Source-grounded search | Embeddings + vector store + RAG |
 | Reliable downstream automation | Chat model + structured output parser |
 

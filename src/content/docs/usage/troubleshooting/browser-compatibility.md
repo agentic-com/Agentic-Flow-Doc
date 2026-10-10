@@ -1,9 +1,9 @@
 ---
 title: Browser Compatibility
-description: Understand which browsers work with Agentic WorkFlow Studio and how to fix common compatibility issues.
+description: Understand which browsers work with AWFlow and how to fix common compatibility issues.
 ---
 
-Agentic WorkFlow Studio runs **entirely inside your browser**.  
+AWFlow runs **entirely inside your browser**.  
 Because of this, browser choice and settings directly affect how workflows behave.
 
 This page explains:
@@ -15,7 +15,7 @@ This page explains:
 
 ## Supported Browsers
 
-Agentic WorkFlow Studio relies on modern browser APIs for automation, DOM access, and local AI execution.
+AWFlow relies on modern browser APIs for automation, DOM access, and local AI execution.
 
 | Browser | Support Level | Notes |
 |-------|---------------|------|
@@ -54,11 +54,11 @@ These browsers provide full support for:
 
 ### If the Extension Does Not Appear
 
-If you do not see Agentic WorkFlow Studio in your toolbar or right-click menu:
+If you do not see AWFlow in your toolbar or right-click menu:
 
 1. Open the extension manager  
    `chrome://extensions/`, `edge://extensions/`, or `about:addons` in Firefox
-2. Make sure **Agentic WorkFlow Studio** is enabled
+2. Make sure **AWFlow** is enabled
 3. Refresh the webpage you are working on
 
 If the issue persists:
@@ -69,13 +69,13 @@ If the issue persists:
 
 ## Firefox
 
-Agentic WorkFlow runs in **Firefox 140 or later** (desktop). Workflows, triggers, page steps, integrations and the web app work as in Chrome. The differences are below.
+AWFlow runs in **Firefox 140 or later** (desktop). Workflows, triggers, page steps, integrations and the web app work as in Chrome. The differences are below.
 
 ### First run
 
-- **Website access.** Page steps (reading pages, clicking, filling forms) need access to the websites you visit. Firefox lets you turn this off at any time: keep **Access your data for all websites** on in `about:addons` → Agentic WorkFlow → **Permissions**. If it's off, the app shows an **Allow access** card, and a page step that fails explains how to turn it back on.
+- **Website access.** Page steps (reading pages, clicking, filling forms) need access to the websites you visit. Firefox lets you turn this off at any time: keep **Access your data for all websites** on in `about:addons` → AWFlow → **Permissions**. If it's off, the app shows an **Allow access** card, and a page step that fails explains how to turn it back on.
 - **Usage statistics.** Firefox's install prompt has an optional **technical and interaction data** setting. Anonymous usage statistics and error reports are only sent when it's on, *and* when they're on in **Settings → Privacy**. Settings → Privacy shows Firefox's setting and has an **Allow in Firefox** button.
-- **Signing in.** When you sign in to an awflow account, Firefox asks your permission to share account data (your email and sign-in details, and the workflows and logs you sync). If you decline, you can keep using the app in local mode, without an account.
+- **Signing in.** When you sign in to an AWFlow account, Firefox asks your permission to share account data (your email and sign-in details, and the workflows and logs you sync). If you decline, you can keep using the app in local mode, without an account.
 
 ### Differences from Chrome
 
@@ -96,7 +96,7 @@ If a workflow behaves differently in Firefox than in Chrome, please report it on
 
 ## Safari (Not Supported)
 
-Safari does not currently support the extension APIs required to run Agentic WorkFlow Studio.
+Safari does not currently support the extension APIs required to run AWFlow.
 
 ### What You Can Do Instead
 
@@ -180,7 +180,7 @@ Before reporting an issue, check:
 - Whether the page loads content dynamically
 
 Useful links:
-- [Full Troubleshooting Flowchart](/usage/troubleshooting/troubleshooting-decision-guide/)
+- [Troubleshooting guide](/usage/troubleshooting/)
 - <a href="https://community.awflow.io" target="_blank">Community Forum</a>
 
 ---

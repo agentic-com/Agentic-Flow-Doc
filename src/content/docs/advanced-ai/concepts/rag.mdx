@@ -87,15 +87,21 @@ flowchart LR
 | Correct source is missing | Index is stale or incomplete | Re-index source content |
 | Answer ignores source | Prompt is too broad | Put source-grounding rules near the task |
 
-## Agentic WorkFlow pattern
+## AWFlow pattern
 
-For a browser-based RAG workflow:
+RAG in AWFlow has two parts: filling a knowledge base, and answering from it.
 
-1. Extract content with [Get All Text](/nodes/extension/getalltext/) or URL content nodes.
-2. Split text with a text splitter dependency.
-3. Create embeddings with an embeddings dependency.
-4. Store content in [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/).
-5. Ask with [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) or a Tools Agent connected to retrieval.
+**Fill the knowledge base.** The quickest way is without a workflow: open a [knowledge base](/usage/using-the-app/knowledge-bases/overview/) and click **Add sources** (files, web pages, open tabs or pasted text). To keep it up to date automatically, build an indexing workflow:
+
+1. Load the content with a loader, such as [URL Document Loader](/nodes/builtin/ai/loaders/urldocumentloader/), [File Document Loader](/nodes/builtin/ai/loaders/filedocumentloader/) or [Current Page Document Loader](/nodes/builtin/ai/loaders/currentpagedocumentloader/), or extract it with [Get All Text](/nodes/extension/getalltext/).
+2. Send it to the [Indexer](/nodes/builtin/ai/aiagents/indexernode/), with a [text splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) and a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node connected. Set **Source link** so a later run updates the same source.
+3. Run it on a [Schedule](/nodes/builtin/trigger/schedule/) if the source changes.
+
+The knowledge base embeds the chunks with its own model. See [Embeddings and vectors](/advanced-ai/concepts/embeddings-vectors/).
+
+**Answer from it.** Connect the same Local Knowledge node to a [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). The agent returns the passages it used in its `sources` output, so you can show or check them.
+
+Before you build the answering step, use **Test search** on the knowledge base page to check that a typical question finds the right passages.
 
 <Aside type="tip" title="Design the fallback first">
   Decide what the workflow should say when it cannot find enough source material. A clear fallback is one of the simplest ways to reduce hallucinations.
@@ -106,4 +112,5 @@ For a browser-based RAG workflow:
 - [Embeddings and vectors](/advanced-ai/concepts/embeddings-vectors/)
 - [Prompting and structured outputs](/advanced-ai/concepts/prompting-and-outputs/)
 - [Memory and context](/advanced-ai/concepts/memory-context/)
-- [Evaluation and testing](/advanced-ai/concepts/evaluation-testing/)
+- [Testing AI workflows](/advanced-ai/concepts/evaluation-testing/)
+- [Knowledge bases](/usage/using-the-app/knowledge-bases/overview/)

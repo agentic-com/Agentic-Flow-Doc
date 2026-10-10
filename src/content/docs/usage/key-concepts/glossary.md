@@ -1,6 +1,6 @@
 ---
 title: Glossary
-description: "Essential terminology and concepts for <Agentic WorkFlow> browser extension and AI-powered web automation workflows."
+description: "Essential terminology and concepts for AWFlow browser extension and AI-powered web automation workflows."
 ---
 
 #### AI agent
@@ -9,7 +9,7 @@ AI agents are artificial intelligence systems capable of responding to requests,
 
 #### AI chain
 
-AI chains allow you to interact with large language models (LLMs) and other resources in sequences of calls to components. AI chains in `Agentic WorkFlow` don't use persistent memory, so you can't use them to reference previous context (use AI agents for this).
+AI chains allow you to interact with large language models (LLMs) and other resources in sequences of calls to components. AI chains in AWFlow don't use persistent memory, so you can't use them to reference previous context (use AI agents for this).
 
 #### AI completion
 
@@ -33,7 +33,7 @@ Reranking is a technique that refines the order of a list of candidate documents
 
 #### AI memory
 
-In an AI context, memory allows AI tools to persist message context across interactions. This allows you to have a continuing conversations with AI agents, for example, without submitting ongoing context with each message. In `Agentic WorkFlow`, AI agent nodes can use memory, but AI chains can't.
+In an AI context, memory allows AI tools to persist message context across interactions. This allows you to have a continuing conversations with AI agents, for example, without submitting ongoing context with each message. In AWFlow, AI agent nodes can use memory, but AI chains can't.
 
 #### AI retrieval-augmented generation (RAG)
 
@@ -61,15 +61,15 @@ Specialized workflow components that can interact with browser context, such as 
 
 #### Canvas
 
-The main interface for building workflows in `Agentic WorkFlow`'s browser-based editor. You use the canvas to add and connect nodes to compose browser automation workflows.
+The main interface for building workflows in AWFlow's browser-based editor. You use the canvas to add and connect nodes to compose browser automation workflows.
 
-#### cluster node (`Agentic WorkFlow`)
+#### cluster node (AWFlow)
 
-In `Agentic WorkFlow`, cluster nodes are groups of nodes that work together to provide functionality in a workflow. They consist of a root node and one or more sub nodes that extend the node's functionality.
+In AWFlow, cluster nodes are groups of nodes that work together to provide functionality in a workflow. They consist of a root node and one or more sub nodes that extend the node's functionality.
 
 #### Credential
 
-In `Agentic WorkFlow`, credentials store authentication information to connect with external apps and services from within the browser environment. Browser security limitations may restrict certain types of authentication methods.
+In AWFlow, credentials store authentication information to connect with external apps and services from within the browser environment. Browser security limitations may restrict certain types of authentication methods.
 
 #### Data Pinning
 
@@ -77,25 +77,21 @@ Data pinning allows you to temporarily freeze the output data of a node during w
 
 #### Editor
 
-The `Agentic WorkFlow` editor runs directly in your browser and allows you to create and manage browser-based workflows. The main area is the canvas, where you can compose workflows by adding, configuring, and connecting nodes. The interface provides access to browser extension nodes, credentials, templates, and execution history.
+The AWFlow editor runs directly in your browser and allows you to create and manage browser-based workflows. The main area is the canvas, where you can compose workflows by adding, configuring, and connecting nodes. The interface provides access to browser extension nodes, credentials, templates, and execution history.
 
-#### Entitlement (`Agentic WorkFlow`)
+#### Entitlement (AWFlow)
 
-In `Agentic WorkFlow`, entitlements grant browser extension instances access to plan-restricted features for a specific period of time.
+In AWFlow, entitlements grant browser extension instances access to plan-restricted features for a specific period of time.
 
-Floating entitlements are a pool of entitlements that you can distribute among various `Agentic WorkFlow` instances. You can re-assign a floating entitlement to transfer its access to a different `Agentic WorkFlow` instance.
+Floating entitlements are a pool of entitlements that you can distribute among various AWFlow instances. You can re-assign a floating entitlement to transfer its access to a different AWFlow instance.
 
-#### Evaluation (`Agentic WorkFlow`)
+#### Evaluation (AWFlow)
 
-In `Agentic WorkFlow`, evaluation allows you to tag and organize execution history and compare it against new executions. You can use this to understand how your workflow performs over time as you make changes. This is particularly useful while developing AI-centered workflows in the browser environment.
+Checking that a workflow, especially one with AI steps, gives good results on realistic inputs before you rely on it. See [Testing AI workflows](/advanced-ai/concepts/evaluation-testing/).
 
 #### Expression
 
-In `Agentic WorkFlow`, expressions allow you to populate node parameters dynamically by executing JavaScript code within the browser environment. You can use expressions to process browser context data, manipulate extracted text, or create dynamic values based on web page content.
-
-#### LangChain
-
-LangChain is an AI-development framework used to work with large language models (LLMs). LangChain provides a standardized system for working with a wide variety of models and other resources and linking different components together to build complex applications.
+In AWFlow, expressions allow you to populate node parameters dynamically by executing JavaScript code within the browser environment. You can use expressions to process browser context data, manipulate extracted text, or create dynamic values based on web page content.
 
 #### Large language model (LLM)
 
@@ -105,21 +101,21 @@ Large language models, or LLMs, are AI machine learning models designed to excel
 
 A node is a single step in your workflow. It performs a specific action, like "Get Text", "Summarize with AI", or "Click Button". You connect nodes together to build your automation.
 
-#### Project (`Agentic WorkFlow`)
+#### Project (AWFlow)
 
-`Agentic WorkFlow` projects allow you to separate workflows, variables, and credentials into separate groups for easier management. Projects make it easier for teams to collaborate by sharing and compartmentalizing related resources.
+AWFlow projects allow you to separate workflows, variables, and credentials into separate groups for easier management. Projects make it easier for teams to collaborate by sharing and compartmentalizing related resources.
 
-#### Root node (`Agentic WorkFlow`)
+#### Root node (AWFlow)
 
-Each `Agentic WorkFlow` cluster node contains a single root node that defines the main functionality of the cluster. One or more sub nodes attach to the root node to extend its functionality.
+Each AWFlow cluster node contains a single root node that defines the main functionality of the cluster. One or more sub nodes attach to the root node to extend its functionality.
 
-#### Sub node (`Agentic WorkFlow`)
+#### Sub node (AWFlow)
 
-`Agentic WorkFlow` cluster nodes consist of one or more sub nodes connected to a root node. Sub nodes extend the functionality of the root node, providing access to specific services or resources or offering specific types of dedicated processing, like calculator functionality, for example.
+AWFlow cluster nodes consist of one or more sub nodes connected to a root node. Sub nodes extend the functionality of the root node, providing access to specific services or resources or offering specific types of dedicated processing, like calculator functionality, for example.
 
 #### Template
 
-`Agentic WorkFlow` templates are pre-built browser automation workflows designed by the community. These templates demonstrate common browser context manipulation patterns and can be imported and customized for your specific web automation needs.
+AWFlow templates are pre-built browser automation workflows designed by the community. These templates demonstrate common browser context manipulation patterns and can be imported and customized for your specific web automation needs.
 
 #### Trigger Node
 
@@ -135,7 +131,7 @@ The current state and content of a web page that can be accessed by browser exte
 
 #### Content Security Policy (CSP)
 
-Browser security restrictions that may limit certain workflow operations. `Agentic WorkFlow` respects CSP limitations and provides guidance on working within browser security constraints.
+Browser security restrictions that may limit certain workflow operations. AWFlow respects CSP limitations and provides guidance on working within browser security constraints.
 
 #### DOM Manipulation
 

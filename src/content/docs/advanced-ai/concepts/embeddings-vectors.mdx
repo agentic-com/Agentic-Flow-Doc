@@ -1,163 +1,73 @@
 ---
-title: Embeddings & Vectors
-description: "Transform text into searchable numbers that capture meaning - the foundation of smart document search and AI understanding."
+title: Embeddings and vectors
+description: "How AWFlow knowledge bases find passages by meaning: embedding models, on-device or cloud, and what to watch for."
 ---
 
-import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
-import { Image } from "astro:assets";
-import Social from "@images/social.webp";
+import { Aside } from "@astrojs/starlight/components";
 
-Embeddings are like creating a "fingerprint" for text that captures its meaning in numbers. Instead of searching for exact word matches, you can find content that means the same thing, even if it uses completely different words.
+An **embedding** is a list of numbers (a **vector**) that captures what a piece of text means. Texts with similar meanings get similar vectors, even when they use different words. "How do I cancel my plan?" and "stop my subscription" end up close together.
 
-This is the secret behind smart search systems that understand what you're really looking for.
+This is how a [knowledge base](/usage/using-the-app/knowledge-bases/overview/) finds the right passages for a question: it turns the question into a vector and returns the passages whose vectors are closest.
 
-<Image src={Social} alt="Text being transformed into numerical vectors that represent meaning" />
-
-## What are embeddings?
-
-Imagine you could represent the meaning of any text as a point in space. Similar meanings would be close together, while different meanings would be far apart. That's exactly what embeddings do - they convert text into lists of numbers (vectors) that capture semantic meaning.
+## Where embeddings are used in AWFlow
 
 ```mermaid
-graph LR
-    Text1["'The weather is sunny'"] --> Vector1["[0.2, 0.8, 0.1, ...]"]
-    Text2["'It's a bright day'"] --> Vector2["[0.3, 0.7, 0.2, ...]"]
-    Text3["'I love pizza'"] --> Vector3["[0.9, 0.1, 0.8, ...]"]
-    
-    Vector1 -.->|Similar| Vector2
-    Vector1 -.->|Different| Vector3
-    
-    style Vector1 fill:#e1f5fe
-    style Vector2 fill:#e1f5fe  
-    style Vector3 fill:#ffebee
+flowchart LR
+  Source["Page, file or text"] --> Indexer["Indexer"]
+  Splitter["Text splitter"] --> Indexer
+  Indexer --> KB["Local Knowledge (knowledge base)"]
+  Question["Question"] --> Agent["RAG / Q&A / Tools Agent"]
+  KB --> Agent
+  Agent --> Answer["Answer with sources"]
+
+  style KB fill:#e8f5e9,stroke:#2e7d32
 ```
 
-## Why embeddings matter
+1. The [Indexer](/nodes/builtin/ai/aiagents/indexernode/) splits text into chunks (with a [text splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/)) and saves each chunk with its vector in a knowledge base.
+2. [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) connects that knowledge base to an agent.
+3. The [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) searches it before answering.
 
-Traditional search looks for exact word matches. Embedding-based search understands meaning:
-
-<Tabs>
-  <TabItem label="Traditional Search">
-    **Search:** "How to fix a broken website"
-    
-    **Finds:** Documents containing exactly "fix", "broken", "website"
-    
-    **Misses:** 
-    - "Troubleshooting site issues"
-    - "Repairing web application problems"  
-    - "Website debugging guide"
-  </TabItem>
-  
-  <TabItem label="Embedding Search">
-    **Search:** "How to fix a broken website"
-    
-    **Finds:** All documents about website problems, including:
-    - "Troubleshooting site issues"
-    - "Repairing web application problems"
-    - "Website debugging guide"
-    - "Solving webpage errors"
-    
-    **Why:** Understands these all relate to the same concept
-  </TabItem>
-</Tabs>
-
-## How embeddings work
-
-<Steps>
-
-1. **Text Input**: You provide any text - a sentence, paragraph, or document
-
-2. **AI Processing**: An embedding model (like those in Ollama) analyzes the text
-
-3. **Vector Creation**: The model outputs a list of numbers representing the meaning
-
-4. **Storage**: These vectors can be stored and compared with other vectors
-
-5. **Similarity Search**: Find content with similar vector patterns
-
-</Steps>
-
-## Vector similarity
-
-Vectors that are "close" in mathematical space represent similar meanings:
-
-```mermaid
-graph TD
-    subgraph "Vector Space"
-        A["'Dog'<br/>[0.8, 0.2, 0.1]"]
-        B["'Puppy'<br/>[0.7, 0.3, 0.2]"]
-        C["'Cat'<br/>[0.6, 0.4, 0.1]"]
-        D["'Car'<br/>[0.1, 0.1, 0.9]"]
-    end
-    
-    A -.->|Very Similar| B
-    A -.->|Somewhat Similar| C
-    A -.->|Very Different| D
-    
-    style A fill:#e8f5e8
-    style B fill:#e8f5e8
-    style C fill:#fff3e0
-    style D fill:#ffebee
-```
-
-## Practical applications
-
-### Smart document search
-Instead of keyword matching, find documents by meaning:
-- Search "customer complaints" → finds "user feedback", "service issues", "client concerns"
-- Search "pricing information" → finds "cost details", "fee structure", "payment plans"
-
-### Content recommendation
-Find related articles or products:
-- User reads about "solar panels" → recommend "renewable energy", "green technology", "sustainable power"
-
-### Question answering
-Match questions to relevant answers:
-- Question: "How do I reset my password?" 
-- Matches: "Password recovery", "Account access issues", "Login troubleshooting"
-
-### Duplicate detection
-Find similar content even with different wording:
-- "The product is excellent" ≈ "This item is outstanding" ≈ "Great quality product"
+You can also fill a knowledge base without a workflow: on its page, click **Add sources** to add files, web pages, open tabs or pasted text, or [save from anywhere](/usage/using-the-app/knowledge-bases/save-from-anywhere/).
 
 ## Embedding models
 
-Different models create different types of vectors:
+The embedding model turns text into vectors. Every knowledge base **remembers the model it was built with** and always uses it, because vectors from different models can't be compared.
 
-| Model Type | Best For | Example |
-|------------|----------|---------|
-| **General Purpose** | Most text content | nomic-embed-text |
-| **Multilingual** | Multiple languages | multilingual-e5 |
-| **Code-Specific** | Programming content | code-embeddings |
-| **Domain-Specific** | Specialized fields | biomedical-embeddings |
+| Model | Where it runs | Node |
+| --- | --- | --- |
+| all-MiniLM-L6-v2 (default) | In your browser, free, private | [Local Embeddings](/nodes/builtin/ai/aidependencies/embeddings/localembeddings/) |
+| Ollama models | On your computer | [Ollama Embeddings](/nodes/builtin/ai/aidependencies/embeddings/ollamaembeddings/) |
+| OpenAI | Cloud, needs your API key | [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/) |
+| Google (Gemini) | Cloud, needs your API key | [Google Embeddings](/nodes/builtin/ai/aidependencies/embeddings/google/) |
+| Cohere | Cloud, needs your API key | [Cohere Embeddings](/nodes/builtin/ai/aidependencies/embeddings/cohere/) |
+| Voyage AI | Cloud, needs your API key | [Voyage Embeddings](/nodes/builtin/ai/aidependencies/embeddings/voyage/) |
+| Hugging Face | Cloud, needs your API key | [Hugging Face Embeddings](/nodes/builtin/ai/aidependencies/embeddings/huggingface/) |
 
-<Aside type="tip" title="Start with general purpose">
-  For most use cases, general-purpose models like nomic-embed-text work excellently. Only use specialized models if you have specific domain requirements.
+A new knowledge base uses the on-device model unless you connect another embeddings node on its first run. To move a knowledge base to another model later, use **Re-embed with…** (see [Change the search engine](/usage/using-the-app/knowledge-bases/overview/#change-the-search-engine-re-embed)).
+
+<Aside type="caution" title="Cloud embeddings send your text">
+A cloud embedding model receives the text of every chunk you index, and every question you search with. For private documents, use the on-device model.
 </Aside>
 
-## Building with embeddings
+## Meaning and keywords
 
-### Creating a knowledge base
-1. Convert all your documents into embeddings
-2. Store embeddings with original text
-3. When users search, convert their query to embeddings
-4. Find documents with similar embeddings
-5. Return the most relevant original text
+Pure vector search is good at meaning but can miss exact words, names and codes, such as an invoice number. The agents' **Match by** option controls this:
 
-### Improving search results
-- **Similarity threshold**: Only return results above a certain similarity score
-- **Result ranking**: Order results by how similar they are to the query
-- **Metadata filtering**: Combine embedding search with traditional filters
+- **Keywords and meaning** (default) also finds exact words.
+- **Meaning only** uses vector similarity alone.
 
-## Common challenges
+Other search options (**Search type**, **Minimum relevance**, **Metadata filter**) are described in [Knowledge base options](/nodes/builtin/ai/aiagents/ragnode/#knowledge-base-options).
 
-### Storage vs. Detail
-- **Detail**: More complex vectors capture more meaning but take up more space.
-- **Speed**: Simpler vectors are faster to search but might miss subtle nuances.
-- **Balance**: Most standard models find a good middle ground for both.
+## Getting good results
 
-### Search quality
-- Quality depends on the embedding model used
-- Some models better for specific types of content
-- May need fine-tuning for specialized domains
+- **Chunk size matters.** Small chunks find precise facts; large chunks keep more context. Start with the splitter's defaults and adjust if answers miss details or lack context.
+- **Index clean text.** Navigation menus, cookie banners and footers add noise. Extract the main content first, for example with [Get All Text](/nodes/extension/getalltext/) on the right part of the page.
+- **Name your sources.** Set **Source name** and **Source link** on the Indexer so answers can cite them, and so re-indexing replaces the old version instead of adding a copy.
+- **Retrieve a few passages, not many.** The agents use 4 by default. More passages give the model more to read, but also more to get confused by.
 
-Embeddings transform how we search and understand text, making it possible to build truly intelligent document systems that understand meaning, not just words.
+## Related
+
+- [RAG](/advanced-ai/concepts/rag/)
+- [Knowledge bases](/usage/using-the-app/knowledge-bases/overview/)
+- [Models and dependencies](/advanced-ai/concepts/model-dependencies/)
+- [Local AI](/usage/using-the-app/local-models/)

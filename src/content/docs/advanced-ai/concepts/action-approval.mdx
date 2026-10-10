@@ -5,7 +5,7 @@ description: "Why model-driven actions cross a user approval gate, and how the g
 
 import { Steps, Aside } from "@astrojs/starlight/components";
 
-An agent in Agentic WorkFlow can read the live page. That is the whole point — but it is also the risk. **Page content is untrusted input.** A page can contain text written specifically to steer whatever model reads it. When that model's output then drives a real action — a click, a form fill, an HTTP call — a hostile page gains an *action primitive*: a way to make the agent do something on its behalf.
+An agent in AWFlow can read the live page. That is the whole point — but it is also the risk. **Page content is untrusted input.** A page can contain text written specifically to steer whatever model reads it. When that model's output then drives a real action — a click, a form fill, an HTTP call — a hostile page gains an *action primitive*: a way to make the agent do something on its behalf.
 
 Action approval is the safeguard. **Any time a model's decision would cause a side effect, the run pauses and shows you the concrete action before it happens.** You approve or reject it. Nothing acts without your say-so.
 
@@ -45,7 +45,7 @@ flowchart TB
 
 ## Two kinds of gate
 
-Agentic WorkFlow has two complementary "wait for a human" mechanisms. They solve different problems:
+AWFlow has two complementary "wait for a human" mechanisms. They solve different problems:
 
 | | Live action gate (this page) | [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) node |
 | --- | --- | --- |

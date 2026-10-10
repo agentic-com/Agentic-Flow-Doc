@@ -1,109 +1,88 @@
 ---
-title: Troubleshooting Guide
-description: Quick solutions for common extension and workflow issues in Agentic WorkFlow Studio.
+title: Troubleshooting guide
+description: "Find out why a workflow doesn't start, returns nothing, or fails, and fix it: quick checks, a decision guide by symptom, and common error messages."
 ---
 
-If your workflow isn’t behaving as expected, this guide helps you diagnose and fix common problems quickly.
+When a workflow doesn't behave as expected, start with the quick checks, then follow the path for what you see. Each path ends with a link to a page that goes deeper.
 
----
+## Quick checks
 
-## Start with These Basic Checks
+These fix most problems:
 
-Before diving into detailed troubleshooting, confirm:
+- The **browser extension is installed and enabled**, and you are signed in to the same workspace.
+- The **page has finished loading** before the workflow runs.
+- AWFlow is **allowed on this site** (see [Permissions & security](/usage/troubleshooting/permissions-security/)).
+- **Ready to run?** in the canvas toolbar shows nothing left to fix: no missing connection or required field.
+- You **reloaded the page** after installing or updating the extension.
 
-- The browser page has fully loaded before running a workflow.
-- The extension has the required permissions for the site.
-- You’ve refreshed the page and restarted the browser.
-- Your workflow is valid and all required inputs are provided.
+## What do you see?
 
-These simple steps fix many issues without further steps.
+```mermaid
+flowchart TD
+  A["Something is wrong"] --> B{"Does the run start?"}
+  B -->|No| C{"Manual or automatic?"}
+  C -->|Manual| C1["Check Ready to run?<br/>and the Last run tab"]
+  C -->|Automatic| C2["Is the workflow Active?<br/>Does the trigger match the page?"]
+  B -->|Yes| D{"Does it finish?"}
+  D -->|"No, it fails"| E["Read the Last run tab:<br/>what happened, why, what to try"]
+  D -->|"No, it's slow or stuck"| F["Performance"]
+  D -->|Yes| G{"Is the output right?"}
+  G -->|"Empty or missing data"| H["Data extraction"]
+  G -->|"Data doesn't reach the next step"| I["Workflow connections"]
+  G -->|"Works in Chrome, not elsewhere"| J["Browser compatibility"]
+```
 
----
+| Symptom | Likely cause | Where to look |
+| --- | --- | --- |
+| Clicking run does nothing, or the button is disabled | Another run is in progress, or something still needs setup | Hover the button for the reason; open **Ready to run?** |
+| An automatic workflow never runs | The workflow isn't **Active**, or the trigger's settings don't match | [Automatic runs with triggers](/usage/using-the-app/workflows/create/#automatic-runs-with-triggers) |
+| A step fails | Missing connection, refused API key, rate limit, network problem | The **Last run** tab, then [Error handling](/usage/key-concepts/flow-logic/error-handling/) |
+| A click or fill step does nothing | The element isn't there yet, or the site blocks the extension | [Permissions & security](/usage/troubleshooting/permissions-security/), [Wait For Element](/nodes/extension/ui/wait-for-element/) |
+| Extraction returns empty or partial data | The page wasn't loaded, the content is in a frame, or the selector is wrong | [Data extraction](/usage/troubleshooting/data-extraction/) |
+| Data doesn't reach the next step | A missing connection or a wrong field name in a mapping | [Workflow connections](/usage/troubleshooting/workflow-connections/) |
+| The workflow is slow or times out | Too much data, or a slow page | [Performance](/usage/troubleshooting/performance-optimization/) |
+| A node only works in the extension | It needs the extension to make its requests | [Extension-only integrations in the web app](/usage/troubleshooting/extension-only-integrations-in-the-web-app/) |
+| It works in Chrome but not in Firefox | Browser differences | [Browser compatibility](/usage/troubleshooting/browser-compatibility/) |
 
-## Common Problems & How to Fix Them
+## Read the Last run tab first
 
-### Browser Compatibility Issues
+When a run fails, the **Last run** tab of the panel on the right explains it in plain words:
 
-Your workflow may not run properly if:
+- **What happened**: which step failed.
+- **Why it probably happened**: for example a network problem, a refused key, or a rate limit.
+- **Try this**: what to do next, with a button to open the step's settings, reconnect it, or run again.
+- **Show technical details**: the error the step reported, with **Copy details** for a bug report.
 
-- The browser blocks certain scripting or permissions.
-- The site uses strict security headers.
+Then click any node on the canvas to see what it received and what it returned. The first node whose output looks wrong is where the problem starts.
 
-**Tips for resolution:**
+## Narrow it down
 
-- Try a different browser (Chrome, Firefox).
-- Ensure you enabled the extension for the current site.
-- Re-load page elements before your automation steps.
+1. **Test one step at a time.** Click a node and choose **Test step**. AWFlow runs only what that step needs. See [Run from the canvas](/usage/using-the-app/workflows/executions/run-from-the-canvas/).
+2. **Check each step's output.** Follow the data from the first step to the one that fails.
+3. **Reduce the data.** Add a [Limit](/nodes/builtin/datatransformation/limit/) node to test with a few items, then remove it.
+4. **Simplify.** Disable the steps you don't need while testing.
+5. **Change one thing at a time**, and test again after each change.
 
-See a more detailed overview on the [Browser Compatibility reference page](/usage/troubleshooting/browser-compatibility/).
+## Common error messages
 
----
+| Message | What it means | What to do |
+| --- | --- | --- |
+| *Extension context invalidated* | The extension was updated or reloaded while the page was open. | Reload the page and run again. |
+| *Cannot access contents of the page* | The page is a browser page (such as `chrome://`), the extension gallery, or a site where AWFlow isn't allowed. | Use a regular website, and allow AWFlow on it. See [Special pages that do not work](/usage/troubleshooting/permissions-security/#special-pages-that-do-not-work). |
+| *Selection not found* | The workflow expects selected text, but nothing is selected. | Select text on the page before you run it. |
+| A timeout | A step waited too long for the page or a service. | Make sure the page has loaded, then see [Performance](/usage/troubleshooting/performance-optimization/). |
+| A refused key (401 or 403) | The service refused your credential. | Reconnect or update the credential. See [Editing credentials](/usage/using-the-app/credentials/edit/). |
+| Too many requests (429) | You sent too many requests to a service. | Wait and try again, or slow the workflow down with [Split in Batches](/nodes/builtin/flow/splitinbatches/) and a [Wait](/nodes/builtin/flow/wait/) node. |
 
-### Permissions & Security Blocks
+## Prevent problems
 
-If actions like clicking or extracting content fail:
+- Wait for the page or element before acting on it.
+- Extract only the part of the page you need.
+- Turn on **Retry** for steps that call online services, and **Continue On Fail** for steps that may fail without harm. See [Error handling](/usage/key-concepts/flow-logic/error-handling/).
+- Test with a few different pages and inputs before you activate a workflow.
 
-- Confirm the extension has access to run on the site.
-- Some sites block scripts on sensitive pages (e.g., banking sites).
+## Still stuck?
 
-**Fixes:**
+Ask on the <a href="https://community.awflow.io" target="_blank" rel="noopener noreferrer">community forum</a>. Describe what you expected and what happened, and include the steps you took, a screenshot, the **Copy details** text from the Last run tab, and, if you can, an export of the workflow with personal data removed.
 
-- Enable full extension permissions for that domain.
-- If a workflow fails due to popups or dialogs, add a “Wait for Element” step before actions.
-
-For specific permission problems, see our [Permissions & Security guide](/usage/troubleshooting/permissions-security/).
-
----
-
-### Slow or Unresponsive Workflows
-
-Performance issues can cause steps to time out.
-
-- Increase wait times for actions on slow pages.
-- Break workflows into smaller chunks.
-- Reduce heavy extraction tasks into separate workflows.
-
-More tips can be found on the [Performance Optimization page](/usage/troubleshooting/performance-optimization/).
-
----
-
-### Data Extraction Problems
-
-If workflows return empty text or missing values:
-
-- Ensure the selectors are specific and correct.
-- Use “Wait for Element” before extraction steps.
-- Try filtering or verifying the extraction pattern.
-
-See our detailed troubleshooting examples on the [Data Extraction page](/usage/troubleshooting/data-extraction/).
-
----
-
-### Node Connection Issues
-
-If data doesn’t flow between steps:
-
-- Check that each node is connected correctly.
-- Ensure key inputs are provided for the next node.
-- Verify that you are using the right node type for your goal.
-
-For help with workflow structure, see [Workflow Connections reference](/usage/troubleshooting/workflow-connections/).
-
----
-
-## Systematic Troubleshooting
-
-If the issue is unclear, use our decision guide to isolate where the problem occurs. The [Full Troubleshooting Flowchart](/usage/troubleshooting/troubleshooting-decision-guide/) walks you through checking each part of your workflow.
-
----
-
-## Still Stuck?
-
-If you cannot find a solution:
-
-- Search or post in the <a href="https://community.agenticflow.com" target="_blank" rel="noopener noreferrer">community forum</a> describing what you see.
-- Include step details, screenshots, and (if possible) exported workflow JSON.
-
-Providing clear context helps others diagnose issues faster.
-
-See also [Where to Get Help](/usage/help-and-community/help/) for more ways to reach support resources.
+See [Help & community](/usage/help-and-community/help/) for other ways to get help, including bug reports.
