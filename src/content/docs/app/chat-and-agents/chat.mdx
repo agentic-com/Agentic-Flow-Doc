@@ -6,7 +6,7 @@ sidebar:
 section: app
 ---
 
-import { Screenshot } from '@components/awflow';
+import { GuidedShot, Screenshot } from '@components/awflow';
 import ariaChatLight from '@assets/screenshots/aria-chat.light.webp';
 import ariaChatDark from '@assets/screenshots/aria-chat.dark.webp';
 
@@ -19,6 +19,24 @@ When you want something done again and again, say so ("every Monday…", "when t
   srcDark={ariaChatDark}
   alt="The Assistant page with a saved chat open: the user asks what a webhook is and whether AWFlow can start a workflow from one, and Aria answers in two short replies. The left rail lists recent chats."
   hotspots={[{ x: 25.5, y: 40.9, label: 'Recent chats' }, { x: 42, y: 9.3, label: 'Switch agent' }, { x: 67.8, y: 86.6, label: 'Reply box, with Chat and Build modes' }, { x: 73.7, y: 96.1, label: 'Context meter and model picker' }]}
+/>
+
+## Send a message
+
+Click **New chat** (or start from the home screen). Everything happens in the composer:
+
+<GuidedShot
+  shot="aria-composer"
+  steps={[
+    { spot: 'message', title: 'Type your message', body: 'Ask anything. Type **@** to bring in an agent, a team or a workflow.' },
+    { spot: 'add-context', title: 'Add context', body: '**+** adds this tab, other open tabs, a selection, files or a screenshot (tabs and screenshots need the extension).' },
+    { spot: 'attach', title: 'Attach files', body: 'PDFs, text files and images. Long files are condensed on-device.' },
+    { spot: 'dictate', title: 'Or dictate', body: 'Transcribed by an on-device Whisper model.' },
+    { spot: 'chat-build', title: 'Chat or Build', body: 'Stay in **Chat** for answers; switch to **Build** to make a workflow.' },
+    { spot: 'context-meter', title: 'Check the context meter', body: 'How much of the model\'s window your next message uses. Click it for the breakdown.' },
+    { spot: 'model-picker', title: 'Pick the model', body: 'On-device, Ollama or a cloud provider. See **Models and privacy** below.' },
+    { spot: 'send', title: 'Send', check: 'Aria answers as it types, and the reply shows which model answered.' },
+  ]}
 />
 
 ## The side panel

@@ -7,17 +7,21 @@ sidebar:
   label: "Test search"
 ---
 
-import { Steps } from "@astrojs/starlight/components";
+import { GuidedShot } from "@components/awflow";
 
 **Test search** shows exactly what an agent would get before you rely on it. It runs on this device and saves nothing.
 
-<Steps>
+Open a knowledge base and click **Test search** (or the **Test search** tab).
 
-1. Open a knowledge base and click **Test search** (or the **Test search** tab).
-2. Type a question your documents should answer.
-3. Read the ranked passages. Adjust **Search as** to test as a given reader.
-
-</Steps>
+<GuidedShot
+  shot="kb-test-search"
+  steps={[
+    { spot: 'question', title: 'Type a question', body: 'Ask something your documents should answer, the way an agent would.' },
+    { spot: 'search', title: 'Click Search', body: 'The ranked passages appear in place of the hint, with their scores.' },
+    { spot: 'whos-asking', title: 'Test as a given reader', body: "Under **Search as**, change **Who's asking** to search the way that reader would." },
+    { spot: 'search-mode', title: 'Compare the search modes', body: '**Hybrid** (keywords and meaning) or **Vector** (meaning only).', check: 'the passages you expect are above the cut-off line.' },
+  ]}
+/>
 
 ## Reading the results
 

@@ -7,6 +7,8 @@ sidebar:
   label: "Export & import"
 ---
 
+import { GuidedShot } from "@components/awflow";
+
 ## Export
 
 Memory is exported as an **`.awmem`** file:
@@ -15,9 +17,26 @@ Memory is exported as an **`.awmem`** file:
 - **Export** on a conversation, a selection or an owner's facts saves just those.
 - Tick **Protect with a passphrase** to encrypt the file. Use at least the minimum length shown. You need the passphrase to import it, and it can't be recovered if you forget it.
 
+<GuidedShot
+  shot="memory-export"
+  steps={[
+    { spot: 'export-all', title: 'Click Export all', body: 'At the top of the Memory page.' },
+    { spot: 'passphrase', title: 'Protect it (optional)', body: 'Tick **Protect with a passphrase** and enter one.' },
+    { spot: 'export', title: 'Click Export', check: 'an `.awmem` file is downloaded.' },
+  ]}
+/>
+
 ## Import
 
 **Import** opens an `.awmem` file. If it's protected, enter its passphrase. A preview shows how many conversations, messages and facts it holds and when it was exported; untick what you don't want.
+
+<GuidedShot
+  shot="memory-import"
+  steps={[
+    { spot: 'preview', title: 'Check what the file holds', body: 'Untick **conversations** or **facts** to leave them out.' },
+    { spot: 'import', title: 'Click Import', check: 'the conversations appear in **Memory › Conversations** and the facts under **Facts**.' },
+  ]}
+/>
 
 Import **never overwrites anything**: every conversation is added as a copy, and facts you already have are skipped. Use it to move memory to another browser or device, or to keep a copy before clearing.
 

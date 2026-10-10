@@ -7,6 +7,8 @@ sidebar:
   label: "Facts"
 ---
 
+import { GuidedShot } from "@components/awflow";
+
 Open **Memory › Facts**: every fact on this device, grouped by who remembers it. **Remembered by**, on the left, lists each owner and how many facts it has:
 
 - **Aria**, your assistant;
@@ -16,6 +18,17 @@ Open **Memory › Facts**: every fact on this device, grouped by who remembers i
 For each fact you see where it came from ("Learned in *Trip to Lisbon*" or *You added this*), when, when it was **last used**, and **Shared with *team*** when an agent shared it with a team.
 
 ## Add, edit or forget a fact
+
+<GuidedShot
+  shot="memory-facts"
+  steps={[
+    { spot: 'owner', title: 'Pick who remembers it', body: 'Under **Remembered by**, select Aria, an agent, a team or a project.' },
+    { spot: 'add-fact', title: 'Add a fact', body: 'Type one short sentence, up to 500 characters.' },
+    { spot: 'edit', title: 'Edit a fact', body: 'Click the pencil and change its wording.' },
+    { spot: 'forget', title: 'Forget a fact', body: 'It is removed at once, with **Undo**.' },
+    { spot: 'export', title: 'Export the facts', body: "Saves this owner's facts as an `.awmem` file." },
+  ]}
+/>
 
 - **Add a fact** to the selected owner, **edit** a fact, or **forget** it (with **Undo**).
 - A fact can be up to **500 characters**, so it can be found and fits in the model's context. A hint counts the characters as you type.

@@ -39,4 +39,19 @@ export const shots: ShotDef[] = [
 			await s.page.waitForLoadState('networkidle').catch(() => {});
 		}
 	},
+	{
+		name: 'notch-enable',
+		page: 'app/assistant-notch',
+		route: '#/app/settings/notch',
+		alt: 'Settings › Assistant Notch: the settings sections on the left with Assistant Notch selected, and the Show the assistant bubble on web pages switch, which is off.',
+		spots: [
+			{ id: 'notch-section', label: 'Assistant Notch', locator: (p) => p.getByRole('navigation', { name: 'Settings sections' }).getByRole('link', { name: 'Assistant Notch' }) },
+			{ id: 'show-bubble', label: 'Show the assistant bubble on web pages', locator: (p) => p.getByRole('switch', { name: 'Show the assistant bubble on web pages' }) }
+		],
+		prepare: async (s) => {
+			await s.go('#/app/settings/notch');
+			await s.page.getByRole('switch', { name: 'Show the assistant bubble on web pages' }).waitFor({ timeout: 15_000 });
+			await s.page.waitForTimeout(500);
+		}
+	},
 ];

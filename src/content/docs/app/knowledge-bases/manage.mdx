@@ -7,26 +7,30 @@ sidebar:
   label: "Re-embed or delete"
 ---
 
-import { Steps } from "@astrojs/starlight/components";
-import { Callout } from "@components/awflow";
+import { Callout, GuidedShot } from "@components/awflow";
 
 ## Change the search engine (re-embed)
 
 A knowledge base always searches with the **embedding model it was built with**, because vectors from different models can't be compared. To move it to another model, for example from a cloud model to an on-device one:
 
-<Steps>
+Open the knowledge base and go to its **Settings** tab.
 
-1. Open the knowledge base and go to **Settings › Search engine**.
-2. Click **Re-embed with…** and pick a model. The list shows the on-device embedding models installed in [Local AI](/app/local-models/) and the default model.
-3. Wait for the progress to finish. You can leave the page; the job continues.
+<GuidedShot
+  shot="kb-settings"
+  steps={[
+    { spot: 'settings-tab', title: 'Open Settings', body: '**Search engine** shows the model it was built with.' },
+    { spot: 're-embed', title: 'Click Re-embed with… and pick a model', body: 'The list shows the on-device embedding models installed in Local AI and the default model.' },
+    { spot: 'export', title: 'Keep a copy first (optional)', body: '**Export** saves an `.awkb` file, in case you want the old version back.' },
+  ]}
+/>
 
-</Steps>
+Wait for the progress to finish. You can leave the page; the job continues.
 
 While it runs, searches keep using the old model. The knowledge base switches only when every passage has been embedded again. If you stop it or it fails, it stays on its old model and the partial copy is removed.
 
 ## Delete a knowledge base
 
-Choose **Delete** in the knowledge base's menu. The dialog shows the impact before anything happens:
+Choose **Delete** in the knowledge base's menu, or **Delete…** at the bottom of its **Settings** tab (shown above). The dialog shows the impact before anything happens:
 
 - how many sources and chunks are removed, and how much space is freed on this device;
 - who stops finding its passages (Aria, agents, projects, teams, chats);
