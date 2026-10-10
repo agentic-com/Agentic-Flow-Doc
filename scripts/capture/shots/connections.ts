@@ -1,6 +1,107 @@
 /** Shots for the connections docs. Each agent/author edits only its area's file; see CONTRIBUTING.md (Screenshots). */
-import { type ShotDef, btn } from './define.ts';
-import { T } from '../lib/session.ts';
+import { type ShotDef, type SpotDef, btn } from './define.ts';
+import { T, type Session } from '../lib/session.ts';
+import type { Page } from '../lib/util.ts';
+
+// ---------------------------------------------------------------------------------------------
+// Helpers for the per-service New Credential shots.
+
+const dialog = (p: Page) => p.getByRole('dialog');
+
+async function openNewCredential(s: Session) {
+	await s.go('#/app/credentials');
+	await s.page.getByRole('button', { name: 'Add Credential' }).first().click({ timeout: T });
+	await dialog(s.page).getByText('New Credential').first().waitFor({ timeout: T });
+}
+
+async function pickApp(s: Session, app: string) {
+	const page = s.page;
+	await dialog(page).getByRole('combobox').first().click({ timeout: T });
+	// The list filters on the integration's id (e.g. microsoftGraph), so type the label's first word.
+	await page.keyboard.type(app.split(' ')[0]);
+	await page.waitForTimeout(300);
+	await page.getByRole('option').filter({ hasText: app }).first().click({ timeout: T });
+	await dialog(page).getByRole('combobox').first().filter({ hasText: app }).waitFor({ timeout: T });
+	await page.waitForTimeout(300);
+}
+
+const nameSpot: SpotDef = { id: 'name', label: 'Name', locator: (p) => dialog(p).getByRole('textbox', { name: 'Name', exact: true }) };
+const storageSpot: SpotDef = { id: 'storage', label: 'Where the secret is stored (here, locally in this browser)', locator: (p) => dialog(p).getByText('Saved locally in this browser') };
+const createSpot: SpotDef = { id: 'create', label: 'Create Credential', locator: (p) => dialog(p).getByRole('button', { name: 'Create Credential' }) };
+const field = (id: string, name: string, label = name): SpotDef => ({ id, label, locator: (p) => dialog(p).getByRole('textbox', { name, exact: true }) });
+
+function appShot(page: string, app: string, kind: 'bearer' | 'basic' | 'oauth'): ShotDef {
+	const slug = page;
+	const isGoogle = app === 'Gmail';
+	const vendor = isGoogle ? 'Google' : 'Microsoft';
+	const fieldsAlt =
+		kind === 'bearer'
+			? 'a Bearer Token field (no Auth Type menu: the app sets it)'
+			: kind === 'basic'
+				? 'Username and Password fields (no Auth Type menu: the app sets Basic Auth)'
+				: `a collapsed Create your ${vendor} OAuth client guide, a Client ID field${isGoogle ? ', a Client Secret (optional) field' : ' (no Client Secret: Microsoft 365 is a public client)'} and a Check connection button, disabled until a Client ID is filled`;
+	const spots: SpotDef[] = [
+		{ id: 'app', label: `Integration App / Service: ${app}`, locator: (p) => dialog(p).getByRole('combobox').first() },
+		nameSpot
+	];
+	if (kind === 'bearer') spots.push(field('token', 'Bearer Token'));
+	if (kind === 'basic') spots.push(field('username', 'Username'), field('password', 'Password'));
+	if (kind === 'oauth') {
+		spots.push({ id: 'oauth-guide', label: `Create your ${vendor} OAuth client guide`, locator: btn(new RegExp(`Create your ${vendor} OAuth client`)) });
+		spots.push(field('client-id', 'Client ID'));
+		if (isGoogle) spots.push(field('client-secret', 'Client Secret (optional)'));
+		spots.push({ id: 'check-connection', label: 'Check connection (sign in)', locator: (p) => dialog(p).getByRole('button', { name: 'Check connection' }) });
+	}
+	spots.push(storageSpot, createSpot);
+	return {
+		name: `credentials-${slug}`,
+		page: `app/connections/${page}`,
+		route: '#/app/credentials (Add Credential)',
+		alt: `The New Credential dialog with ${app} picked under Integration App / Service: Name and Description fields, ${fieldsAlt}, a note that the secret is saved locally and encrypted in this browser, and the Cancel and Create Credential buttons.`,
+		spots,
+		prepare: async (s) => {
+			await openNewCredential(s);
+			await pickApp(s, app);
+			if (kind === 'oauth') {
+				const guide = s.page.getByRole('button', { name: new RegExp(`Create your ${vendor} OAuth client`) });
+				await guide.waitFor({ timeout: T });
+				await s.page.waitForTimeout(800);
+				if ((await guide.getAttribute('aria-expanded')) === 'true') await guide.click();
+				await s.page.waitForTimeout(500);
+			}
+		}
+	};
+}
+
+function simpleShot(kind: 'jwt' | 'bearer' | 'basic', authLabel: string, page: string): ShotDef {
+	const spots: SpotDef[] = [
+		{ id: 'app', label: 'Integration App / Service: none (Simple Credential)', locator: (p) => dialog(p).getByRole('combobox').first() },
+		nameSpot,
+		{ id: 'auth-type', label: `Auth Type: ${authLabel}`, locator: (p) => dialog(p).getByRole('button', { name: 'Auth Type' }) }
+	];
+	if (kind === 'jwt') spots.push(field('token', 'JWT'));
+	if (kind === 'bearer') spots.push(field('token', 'Bearer Token'));
+	if (kind === 'basic') spots.push(field('username', 'Username'), field('password', 'Password'));
+	spots.push(storageSpot, createSpot);
+	const fields = kind === 'jwt' ? 'a JWT field' : kind === 'bearer' ? 'a Bearer Token field' : 'Username and Password fields';
+	return {
+		name: `credentials-simple-${kind}`,
+		page: `app/connections/${page}`,
+		route: '#/app/credentials (Add Credential)',
+		alt: `The New Credential dialog for a simple credential (no app picked, so Integration App / Service reads Select an integration...): Name and Description fields, the Auth Type menu set to ${authLabel}, ${fields}, a note that the secret is saved locally and encrypted in this browser, and the Cancel and Create Credential buttons.`,
+		spots,
+		prepare: async (s) => {
+			await openNewCredential(s);
+			const page = s.page;
+			if (kind !== 'basic' || !(await dialog(page).getByRole('textbox', { name: 'Username' }).count())) {
+				await dialog(page).getByRole('button', { name: 'Auth Type' }).click({ timeout: T });
+				await page.getByRole('option', { name: authLabel, exact: true }).click({ timeout: T });
+			}
+			await dialog(page).getByRole('button', { name: 'Auth Type' }).filter({ hasText: authLabel }).waitFor({ timeout: T });
+			await page.waitForTimeout(400);
+		}
+	};
+}
 
 export const shots: ShotDef[] = [
 	{
@@ -84,4 +185,30 @@ export const shots: ShotDef[] = [
 			await page.waitForTimeout(600);
 		}
 	},
+
+	// Per-service New Credential forms (one per "Connect <service>" page): the app picked, so its real fields show.
+	...[
+		['airtable', 'AirTable'],
+		['attio', 'Attio'],
+		['baserow-nocodb', 'Baserow / NocoDB'],
+		['discord', 'Discord'],
+		['github', 'GitHub'],
+		['hubspot', 'HubSpot'],
+		['linear', 'Linear'],
+		['notion', 'Notion'],
+		['obsidian', 'Obsidian'],
+		['pipedrive', 'Pipedrive'],
+		['raindrop', 'Raindrop'],
+		['readwise', 'Readwise / Reader'],
+		['slack', 'Slack'],
+		['supabase', 'Supabase'],
+		['telegram', 'Telegram'],
+		['todoist', 'Todoist']
+	].map(([page, app]): ShotDef => appShot(page, app, 'bearer')),
+	appShot('trello', 'Trello', 'basic'),
+	appShot('google', 'Gmail', 'oauth'),
+	appShot('microsoft-365', 'Microsoft 365', 'oauth'),
+	simpleShot('jwt', 'JWT', 'openai'),
+	simpleShot('bearer', 'Bearer Token', 'http-and-apis'),
+	simpleShot('basic', 'Basic Auth', 'http-and-apis')
 ];
