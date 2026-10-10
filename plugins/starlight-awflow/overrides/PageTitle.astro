@@ -1,0 +1,27 @@
+---
+/**
+ * PageTitle override.
+ * - `kind: node` → node header (icon, family, Works-in, agent tool, page actions).
+ * - a resolvable section → coloured section banner with a dashed wireframe.
+ * - otherwise → Starlight's default title.
+ * Every variant keeps `<h1 id="_top">` so the skip link and "Overview" TOC entry keep working.
+ */
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import { getAwflowRoute } from '../route-data';
+import NodeHeader from '../components/NodeHeader.astro';
+import SectionBanner from '../components/SectionBanner.astro';
+
+const { showBanner, node, section } = getAwflowRoute(Astro.locals);
+---
+
+{
+	node ? (
+		<NodeHeader />
+	) : showBanner && section ? (
+		<SectionBanner />
+	) : (
+		<Default {...Astro.props}>
+			<slot />
+		</Default>
+	)
+}

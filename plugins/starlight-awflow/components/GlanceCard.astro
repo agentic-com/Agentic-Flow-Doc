@@ -1,0 +1,44 @@
+---
+/** "At a glance" card for node pages. Shows only the rows we actually know. */
+import { getAwflowRoute } from '../route-data';
+import { SECTION_PALETTE } from '../palette';
+
+const { node, section } = getAwflowRoute(Astro.locals);
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const rows = node
+	? ([
+			['Family', node.familyLabel],
+			['Needs', node.needs],
+			['Operations', node.operations !== undefined ? String(node.operations) : undefined],
+			['Outputs', node.outputs !== undefined ? plural(node.outputs, 'port') : undefined],
+			[
+				'Works in',
+				node.worksIn?.length
+					? node.worksIn.map((e) => (e === 'web' ? 'Web app' : 'Extension')).join(' · ')
+					: undefined,
+			],
+			['Agent tool', node.agentTool === undefined ? undefined : node.agentTool ? 'Yes' : 'No'],
+			['Since', node.since],
+		].filter(([, v]) => v) as [string, string][])
+	: [];
+const color = section?.color ?? SECTION_PALETTE.nodes.color;
+const tint = section?.tint ?? SECTION_PALETTE.nodes.tint;
+---
+
+{
+	rows.length > 0 && (
+		<section class="awf-glance" aria-labelledby="awf-glance-title" style={`--awf-c: ${color}; --awf-t: ${tint}`}>
+			<h2 id="awf-glance-title" class="awf-glance__title">
+				At a glance
+			</h2>
+			<dl>
+				{rows.map(([k, v]) => (
+					<div>
+						<dt>{k}</dt>
+						<dd>{v}</dd>
+					</div>
+				))}
+			</dl>
+		</section>
+	)
+}

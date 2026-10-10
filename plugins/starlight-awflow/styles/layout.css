@@ -1,0 +1,404 @@
+/*
+ * Layout: header + section tabs, blueprint frame, sidebar accents, Ask Aria pill.
+ * Unlayered; selectors stay narrow (awf-* classes or Starlight's documented structure).
+ */
+
+:root {
+	/* Section colour of the current page (Header.astro sets it per page). */
+	--awf-sc: var(--awf-amber);
+	--awf-st: #fef3e2;
+	/* Readable text tone of the section colour on the page background. */
+	--awf-sc-text: color-mix(in srgb, var(--awf-sc) 82%, black);
+	--awf-tabs-height: 2.75rem;
+}
+:root:not([data-theme='light']) {
+	--awf-sc-text: color-mix(in srgb, var(--awf-sc) 42%, white);
+}
+
+body {
+	font-feature-settings: 'ss01', 'cv11';
+	-webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Header ---------- */
+
+@media (min-width: 50rem) {
+	:root {
+		--sl-nav-height: calc(4rem + var(--awf-tabs-height));
+	}
+	header.header {
+		padding-block-end: 0;
+	}
+}
+header.header {
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+	border-bottom-color: var(--sl-color-hairline-light);
+}
+
+.awf-header {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+.awf-header__row {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	flex: 1;
+	min-height: 0;
+}
+.awf-brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.625rem;
+	color: var(--sl-color-white);
+	text-decoration: none;
+	min-width: 0;
+	border-radius: var(--awf-radius-sm);
+}
+.awf-brand .awf-mark {
+	flex: none;
+}
+.awf-brand__name {
+	font-size: 1rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.awf-brand__tag {
+	font-family: var(--__sl-font-mono);
+	font-size: 0.6875rem;
+	padding: 2px 7px;
+	border-radius: 6px;
+	background: var(--awf-ink);
+	color: var(--awf-cream);
+}
+:root:not([data-theme='light']) .awf-brand__tag {
+	background: var(--awf-cream);
+	color: var(--awf-ink);
+}
+.awf-header__search {
+	flex: 1 1 auto;
+	display: flex;
+	justify-content: flex-end;
+	min-width: 0;
+}
+.awf-header__end {
+	display: none;
+	align-items: center;
+	gap: 0.75rem;
+}
+.awf-header__prefs {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+@media (min-width: 50rem) {
+	.awf-header__search {
+		justify-content: flex-start;
+		max-width: 26rem;
+		margin-inline-start: 1rem;
+	}
+	.awf-header__search > * {
+		width: 100%;
+	}
+	.awf-header__end {
+		display: flex;
+		margin-inline-start: auto;
+	}
+}
+@media (max-width: 49.99rem) {
+	.awf-brand__name {
+		font-size: 0.9375rem;
+	}
+}
+.awf-version {
+	font-family: var(--__sl-font-mono);
+	font-size: 0.75rem;
+	color: var(--awf-muted);
+	padding: 6px 10px;
+	border: 1px solid var(--awf-line);
+	border-radius: var(--awf-radius-sm);
+	background: var(--awf-surface);
+	text-decoration: none;
+	white-space: nowrap;
+}
+.awf-version:hover {
+	color: var(--sl-color-white);
+	border-color: var(--sl-color-gray-4);
+}
+.awf-install {
+	font-size: 0.875rem;
+	font-weight: 600;
+	text-decoration: none;
+	color: #fff;
+	background: var(--awf-amber);
+	padding: 0.5rem 0.875rem;
+	border-radius: 10px;
+	white-space: nowrap;
+	min-height: 2.25rem;
+	display: inline-flex;
+	align-items: center;
+}
+.awf-install:hover {
+	color: #fff;
+	background: var(--awf-amber-dark);
+}
+@media (max-width: 64rem) {
+	.awf-version {
+		display: none;
+	}
+}
+
+/* Search button: warm, roomy, mock-style. Starlight renders `site-search > button`. */
+@media (min-width: 50rem) {
+	.awf-header__search site-search > button[data-open-modal] {
+		width: 100%;
+		max-width: none;
+		border-radius: 12px;
+		border-color: var(--awf-line);
+		background: var(--awf-surface);
+		padding-inline: 0.75rem;
+	}
+	.awf-header__search site-search > button[data-open-modal]:hover {
+		border-color: var(--sl-color-gray-4);
+	}
+}
+
+/* Section tabs */
+.awf-tabs {
+	display: none;
+}
+@media (min-width: 50rem) {
+	.awf-tabs {
+		display: block;
+		height: var(--awf-tabs-height);
+		margin-inline: -0.625rem;
+	}
+}
+.awf-tabs ul {
+	display: flex;
+	gap: 2px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+.awf-tab {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	height: 100%;
+	padding: 0 0.625rem;
+	font-size: 0.875rem;
+	color: var(--sl-color-gray-2);
+	text-decoration: none;
+	white-space: nowrap;
+	border-radius: 8px 8px 0 0;
+	transition: color var(--awf-base), background var(--awf-base);
+}
+.awf-tab__dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 999px;
+	background: var(--awf-c);
+	opacity: 0.55;
+	transition: opacity var(--awf-base), transform var(--awf-base) var(--awf-ease);
+}
+.awf-tab::after {
+	content: '';
+	position: absolute;
+	left: 10px;
+	right: 10px;
+	bottom: -1px;
+	height: 2px;
+	border-radius: 2px;
+	background: var(--awf-c);
+	transform: scaleX(0);
+	transition: transform var(--awf-base) var(--awf-ease);
+}
+.awf-tab:hover {
+	color: var(--sl-color-white);
+	background: color-mix(in srgb, var(--awf-c) 7%, transparent);
+}
+.awf-tab:hover::after,
+.awf-tab[aria-current]::after {
+	transform: scaleX(1);
+}
+.awf-tab:hover .awf-tab__dot,
+.awf-tab[aria-current] .awf-tab__dot {
+	opacity: 1;
+	transform: scale(1.15);
+}
+.awf-tab[aria-current] {
+	font-weight: 600;
+	color: color-mix(in srgb, var(--awf-c) 82%, black);
+}
+:root:not([data-theme='light']) .awf-tab[aria-current] {
+	color: color-mix(in srgb, var(--awf-c) 42%, white);
+}
+
+/* The sidebar-topics list duplicates the header tabs on desktop; keep it for the mobile menu. */
+@media (min-width: 50rem) {
+	.sidebar-content > .starlight-sidebar-topics,
+	.sidebar-content > ul.starlight-sidebar-topics {
+		display: none;
+	}
+}
+
+/* ---------- Sidebar accents ---------- */
+
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover,
+.sidebar-content a[aria-current='page']:focus {
+	color: var(--awf-sc-text);
+	background: color-mix(in srgb, var(--awf-sc) 10%, transparent);
+	font-weight: 600;
+	box-shadow: inset 3px 0 0 var(--awf-sc);
+}
+
+/* ---------- Blueprint frame (Main.dc.html · 06) ---------- */
+/* A faint 64px grid shows in the margins; hairline columns frame the reading column. */
+
+@media (min-width: 50rem) {
+	[data-has-sidebar] .main-frame {
+		background-color: var(--sl-color-black);
+		background-image:
+			linear-gradient(var(--awf-grid) 1px, transparent 1px),
+			linear-gradient(90deg, var(--awf-grid) 1px, transparent 1px);
+		background-size: 64px 64px;
+		background-attachment: fixed;
+	}
+}
+@media (min-width: 50rem) {
+	[data-has-sidebar] .main-pane .content-panel > .sl-container {
+		position: relative;
+		isolation: isolate;
+	}
+	[data-has-sidebar] .main-pane .content-panel > .sl-container::before {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		inset-block: -3.5rem;
+		inset-inline: -1.75rem;
+		background: var(--sl-color-black);
+		border-inline: 1px solid var(--sl-color-hairline);
+		pointer-events: none;
+	}
+	[data-has-sidebar] .main-pane .content-panel {
+		border-top-color: transparent;
+	}
+	.right-sidebar {
+		background: var(--sl-color-black);
+	}
+}
+
+/* ---------- Right rail: at-a-glance card ---------- */
+
+.awf-page-sidebar-extra {
+	padding: 1rem var(--sl-sidebar-pad-x) 0;
+}
+.awf-page-sidebar-extra > * {
+	/* Same width rule as Starlight's TOC container. */
+	width: calc(var(--sl-sidebar-width) - 2 * var(--sl-sidebar-pad-x));
+	max-width: 100%;
+}
+
+/* ---------- Ask Aria pill (Main.dc.html · 04) ---------- */
+
+.awf-aria-pill {
+	position: fixed;
+	inset-inline-end: 1.25rem;
+	inset-block-end: 1.25rem;
+	z-index: var(--sl-z-index-navbar);
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+	min-height: 2.75rem;
+	padding: 0.5rem 0.75rem 0.5rem 1rem;
+	border-radius: 999px;
+	background: var(--awf-ink);
+	color: var(--awf-cream);
+	text-decoration: none;
+	font-size: 0.875rem;
+	font-weight: 600;
+	box-shadow: 0 18px 40px -16px rgba(28, 25, 23, 0.6);
+}
+:root:not([data-theme='light']) .awf-aria-pill {
+	background: var(--awf-cream);
+	color: var(--awf-ink);
+	box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.9);
+}
+.awf-aria-pill:hover {
+	color: var(--awf-cream);
+}
+:root:not([data-theme='light']) .awf-aria-pill:hover {
+	color: var(--awf-ink);
+}
+.awf-aria-pill__spark {
+	color: var(--awf-gold);
+	flex: none;
+}
+:root:not([data-theme='light']) .awf-aria-pill__spark {
+	color: var(--awf-amber);
+}
+.awf-aria-pill .awf-wave {
+	color: var(--awf-ember);
+}
+.awf-aria-pill__kbd {
+	font-family: var(--__sl-font-mono);
+	font-size: 0.6875rem;
+	padding: 3px 7px;
+	border-radius: 999px;
+	background: #3a332e;
+	color: #d6d3d1;
+	border: 0;
+}
+:root:not([data-theme='light']) .awf-aria-pill__kbd {
+	background: #eadfcf;
+	color: #44403c;
+}
+@media (max-width: 49.99rem) {
+	/* Icon-only on phones so it never covers content; the label stays for screen readers. */
+	.awf-aria-pill {
+		padding: 0;
+		width: 3rem;
+		height: 3rem;
+		justify-content: center;
+		inset-block-end: 1rem;
+		inset-inline-end: 1rem;
+	}
+	.awf-aria-pill__label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+	}
+	.awf-aria-pill .awf-wave,
+	.awf-aria-pill__kbd {
+		display: none;
+	}
+}
+/* Leave room under the last content for the pill. */
+.main-frame footer {
+	padding-block-end: 3.5rem;
+}
+
+/* ---------- Focus ---------- */
+
+:where(.awf-header, .awf-tabs, .awf-aria-pill, .awf-banner, .awf-node-header, .sl-markdown-content)
+	:is(a, button):focus-visible,
+.awf-aria-pill:focus-visible,
+.awf-tab:focus-visible {
+	outline: 2px solid var(--awf-ember);
+	outline-offset: 2px;
+	border-radius: 8px;
+}

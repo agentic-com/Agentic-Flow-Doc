@@ -1,0 +1,32 @@
+---
+/**
+ * Section tabs. The list comes from the plugin's `sections` option (so it can grow to six tabs);
+ * which one is current comes from the route middleware (frontmatter → sidebar topic → path).
+ */
+import { getAwflowRoute } from '../route-data';
+
+const { tabs } = getAwflowRoute(Astro.locals);
+---
+
+{
+	tabs.length > 0 && (
+		<nav class="awf-tabs print:hidden" aria-label="Docs sections">
+			<ul>
+				{tabs.map((tab) => (
+					<li>
+						<a
+							href={tab.link}
+							class="awf-tab"
+							style={`--awf-c: ${tab.color}; --awf-t: ${tab.tint}`}
+							aria-current={tab.isCurrent ? 'true' : undefined}
+							data-section={tab.id}
+						>
+							<span class="awf-tab__dot" aria-hidden="true" />
+							{tab.label}
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}

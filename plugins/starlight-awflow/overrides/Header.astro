@@ -1,0 +1,62 @@
+---
+/**
+ * Header override: brand mark + "docs" tag, search, version pill, install button, theme/language
+ * pickers, and a row of section tabs (one colour per section).
+ *
+ * Search, ThemeSelect and LanguageSelect come from Starlight's virtual component modules, so other
+ * overrides of those components (starlight-kbd, a later Search override) keep working.
+ */
+import config from 'virtual:starlight/user-config';
+import awflow from 'virtual:starlight-awflow/config';
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import BrandMark from '../components/BrandMark.astro';
+import SectionTabs from '../components/SectionTabs.astro';
+import { getAwflowRoute } from '../route-data';
+
+const { siteTitleHref } = Astro.locals.starlightRoute;
+const shouldRenderSearch =
+	config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+// Page-wide section colour (sidebar current item, links in banners…). Values come from our own config.
+const { section } = getAwflowRoute(Astro.locals);
+const sectionVars = section
+	? `:root{--awf-sc:${section.color};--awf-st:${section.tint}}`
+	: '';
+---
+
+{sectionVars && <Fragment set:html={`<style>${sectionVars}</style>`} />}
+<div class="awf-header">
+	<div class="awf-header__row">
+		<a href={siteTitleHref} class="awf-brand">
+			<BrandMark size={30} />
+			<span class="awf-brand__name" translate="no">Agentic Workflow</span>
+			<span class="awf-brand__tag">docs</span>
+		</a>
+		<div class="awf-header__search print:hidden">
+			{shouldRenderSearch && <Search />}
+		</div>
+		<div class="awf-header__end print:hidden">
+			{
+				awflow.version && (
+					<a class="awf-version" href={awflow.version.href ?? '#'} title="Release notes">
+						{awflow.version.label}
+					</a>
+				)
+			}
+			{
+				awflow.install && (
+					<a class="awf-install awf-press" href={awflow.install.href} rel="noopener">
+						{awflow.install.label}
+					</a>
+				)
+			}
+			<div class="awf-header__prefs">
+				<ThemeSelect />
+				<LanguageSelect />
+			</div>
+		</div>
+	</div>
+	<SectionTabs />
+</div>

@@ -1,0 +1,20 @@
+---
+/**
+ * PageSidebar override: the node "at a glance" card above Starlight's default table of contents.
+ * Pages that are not `kind: node` render exactly the default.
+ */
+import Default from '@astrojs/starlight/components/PageSidebar.astro';
+import { getAwflowRoute } from '../route-data';
+import GlanceCard from '../components/GlanceCard.astro';
+
+const { node } = getAwflowRoute(Astro.locals);
+---
+
+{
+	node && (
+		<div class="awf-page-sidebar-extra sl-hidden lg:sl-block">
+			<GlanceCard />
+		</div>
+	)
+}
+<Default {...Astro.props}><slot /></Default>
