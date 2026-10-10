@@ -1,0 +1,139 @@
+---
+title: "Connect Slack"
+description: "Create a small Slack app from a manifest, install it, and paste its token: every Slack step can then use it."
+kind: connection
+section: app
+sidebar:
+  label: "Slack"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- A Slack workspace where you may install apps (or an admin who approves it).
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Slack](/nodes/builtin/integration/slack/)
+
+## Pick a method
+
+| Method | Use it when |
+| --- | --- |
+| **Bot token** <Badge variant="new" text="Recommended" /> | Posts as your app. Covers every operation except **Message › Search**. |
+| **User token** | Acts as you. Needed for **Message › Search**; it also sees every channel you are in. |
+
+## Set it up
+
+<Tabs syncKey="connect-slack">
+<TabItem label="Bot token (recommended)">
+
+<Steps>
+
+1. **Create the app from a manifest.** Open [api.slack.com/apps](https://api.slack.com/apps), click **Create New App › From a manifest**, pick your workspace and paste:
+
+   ```yaml title="awflow-slack-manifest.yaml"
+   display_information:
+     name: AWFlow
+   features:
+     bot_user:
+       display_name: AWFlow
+       always_online: false
+   oauth_config:
+     scopes:
+       bot:
+         - channels:read
+         - groups:read
+         - channels:history
+         - groups:history
+         - chat:write
+         - users:read
+         - files:read
+         - files:write
+       user:
+         - search:read
+   settings:
+     org_deploy_enabled: false
+     socket_mode_enabled: false
+     token_rotation_enabled: false
+   ```
+
+   Drop the scopes you won't use. The `user` scope is only for **Message › Search**.
+2. **Install it and copy the token.** Click **Install to Workspace** and allow. In **OAuth & Permissions**, copy the **Bot User OAuth Token** (it starts with `xoxb-`).
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Slack** and click **Continue**. Name it, for example *Slack – AWFlow bot*: **Auth Type** is already set to **Bearer Token**. Then paste the `xoxb-` token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+4. **Invite the bot** to each channel it should post in or read: type `/invite @AWFlow` in the channel.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+In a **Slack** node, pick the credential: the **Channel** list fills with your channels. Then run **Channel › Get many** with **Test step**.
+
+</Callout>
+
+</TabItem>
+<TabItem label="User token">
+
+<Steps>
+
+1. **Use the same app** (the manifest above already asks for `search:read` as a user scope), or add **User Token Scopes** under **OAuth & Permissions**.
+2. **Reinstall the app** to the workspace, then copy the **User OAuth Token** (it starts with `xoxp-`).
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Slack** and click **Continue**. Name it, for example *Slack – me (search)*: **Auth Type** is already set to **Bearer Token**. Then paste the `xoxp-` token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Message › Search** with a word you know is in a channel: matching messages come back.
+
+</Callout>
+
+</TabItem>
+</Tabs>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `slack.com` and `files.slack.com`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Permissions each operation needs
+
+| Operation | Token | Scope |
+| --- | --- | --- |
+| Channel · Get many, Get info | Bot or user | `channels:read` (`groups:read` for private channels) |
+| Message · Send, Update, Delete | Bot or user | `chat:write` |
+| Message · Get | Bot or user | `channels:history` (`groups:history` for private channels) |
+| Message · Search | User only | `search:read` |
+| User · Get many, Get info | Bot or user | `users:read` |
+| File · Upload | Bot or user | `files:write` |
+| File · Get | Bot or user | `files:read` |
+
+## Common issues
+
+- **"missing_scope" or "not_allowed_token_type".** The token lacks the scope for this operation, or **Search** got a bot token. Add the scope in your Slack app, reinstall it, and copy the new token.
+- **"not_in_channel".** Invite the bot to the channel with `/invite @AWFlow`.
+- **"invalid_auth".** The token was revoked or the app was reinstalled. Copy the current token from **OAuth & Permissions**.
+- **The Channel list stays empty.** Pick the credential first; the list loads from Slack with it.
+- **The run is blocked in the web app.** Slack runs through the browser extension. Install the extension and allow Slack for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Slack node" href="/nodes/builtin/integration/slack/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

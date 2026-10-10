@@ -1,38 +1,69 @@
 ---
-title: Data store management
-description: "Review, and clear the values your workflows remember between runs, from Settings → Preferences."
+title: "Data store"
+description: "See, copy and clear the values your workflows remember between runs: per workflow on the canvas, or all of them in Settings › Preferences."
+kind: guide
+section: app
 sidebar:
   order: 7
-section: app
 ---
 
-The [Data Store](/nodes/builtin/core/datastore/) node lets a workflow remember values between runs — a last-seen timestamp, a page cursor, a call count. Those values are kept in this browser profile. **Settings → Preferences** has a **Data store** section that shows everything currently stored, so you can inspect it and clear what you no longer need.
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+import { Badge, Callout } from "@components/awflow";
 
-This page covers the management surface. For writing and reading values inside a workflow, see the [Data Store node](/nodes/builtin/core/datastore/).
+<Badge variant="no-setup" text="Free" /> <Badge variant="on-device" text="Stays in this browser profile" />
 
-## Where it is
+**In the app:** canvas › **Stored data** (one workflow), or **Settings › Preferences › Data store** (all workflows)
 
-1. Open **Settings → Preferences**.
-2. Scroll to the **Data store** section.
+The [Data Store](/nodes/builtin/core/datastore/) node lets a workflow remember values between runs: a last-seen timestamp, a page cursor, a call count. This page is about seeing and clearing those values. To write and read them in a workflow, see the [Data Store node](/nodes/builtin/core/datastore/).
 
-At the top you'll see a summary — how many values are stored, across how many scopes, and the total size — followed by the storage limits (each scope holds at most a fixed number of keys and total size).
+{/* SCREENSHOT: data-store */}
 
-## Values grouped by scope
+1. **Stored data** button on the canvas, shown when the workflow has a Data Store node.
+2. **This workflow's values.** Each key with a preview of its value, **Copy** and **Delete**.
+3. **Shared values.** A note when the workflow also uses values shared with all workflows.
+4. **Clear all.** Make the next run behave like the workflow's first run.
 
-Stored values are grouped by **scope**:
+## What you can do
 
-- **Shared with all workflows** — the shared keyspace any of your workflows can read and overwrite. It is listed first.
-- **This workflow** — one group per workflow that has written values, named after the workflow.
+<CardGrid>
+  <LinkCard title="See one workflow's values" href="#on-the-canvas" description="The Stored data panel next to the canvas." />
+  <LinkCard title="Review everything stored" href="#in-settings" description="All scopes, sizes and limits in Settings." />
+  <LinkCard title="Delete or reset values" href="#delete-values" description="One key, or a whole scope." />
+  <LinkCard title="Write and read values" href="/nodes/builtin/core/datastore/" description="The Data Store node." />
+</CardGrid>
 
-Each group shows its key count and size. Inside a group, every key is listed with a short preview of its value and that value's size.
+## Use it everywhere
 
-### Values from deleted workflows
+| Where | How |
+| --- | --- |
+| **A workflow** | The [Data Store](/nodes/builtin/core/datastore/) node sets, reads and increments values, scoped to **this workflow** or **shared with all workflows**. |
+| **The canvas** | **Stored data** shows what this workflow kept; a Data Store node's settings link to it with **View stored values**. |
+| **Settings** | **Settings › Preferences › Data store** lists every scope, with sizes and limits. |
 
-A workflow can be deleted while values it wrote are still stored. Rather than hiding that data, the list keeps it visible under the label **`Deleted workflow (<id>)`**, so orphaned values stay findable and clearable instead of silently taking up space.
+<Callout type="info" title="Your data">
 
-## Deleting values
+Values are kept **in this browser profile** only. The same workflow on another device keeps its own separate store, and clearing the extension's data removes them for good.
 
-- **Delete one value** — use the delete (trash) control on that key's row.
-- **Clear a scope** — use **Clear all** on a group's header to remove every value in that scope at once.
+</Callout>
 
-Deletions take effect immediately and cannot be undone. Because this data lives only in the current browser profile, clearing it here — or clearing the extension's data — removes it for good; the same workflow on another device keeps its own separate store.
+## On the canvas
+
+Open a workflow that has a Data Store node and click **Stored data** in the canvas controls (or **View stored values** in the node's settings). The panel lists what this workflow's Data Store nodes remembered between runs, with **Copy** and **Delete** on each value and **Refresh** at the top. Before the first run it says *Nothing stored yet. Values appear here after a Data Store Set or Increment step runs.*
+
+When the workflow also uses values **shared with all workflows**, a note says so; manage those in Settings.
+
+## In Settings
+
+Open **Settings › Preferences** and scroll to **Data store**. A summary shows how many values are stored, across how many scopes, and the total size, followed by the limits (each scope holds a fixed number of keys and total size). Values are grouped by **scope**:
+
+- **Shared with all workflows**: the shared keyspace any of your workflows can read and overwrite. Listed first.
+- **This workflow**: one group per workflow that has written values, named after it.
+
+Each group shows its key count and size; inside, every key has a short preview of its value and its size. Values from a workflow you deleted stay visible under **`Deleted workflow (<id>)`**, so they can be found and cleared.
+
+## Delete values
+
+- **One value**: the delete (trash) control on its row.
+- **A whole scope**: **Clear all** on the group's header (or in the canvas panel). The next run behaves like the workflow's first run.
+
+Deletions take effect immediately and can't be undone.

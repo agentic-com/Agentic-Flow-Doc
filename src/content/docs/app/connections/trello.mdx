@@ -1,0 +1,68 @@
+---
+title: "Connect Trello"
+description: "Get a Trello API key and token, and save them together as a Basic Auth credential."
+kind: connection
+section: app
+sidebar:
+  label: "Trello"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Basic Auth" />
+
+## Before you start
+
+- A Trello account. Trello may ask you to create a Power-Up to get an API key.
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Trello](/nodes/builtin/integration/trello/)
+
+## Set it up
+
+This is the only method. The token can act on all your boards.
+
+<Steps>
+
+1. **Get the API key.** Open [trello.com/app-key](https://trello.com/app-key) while signed in. If Trello asks for a Power-Up, create one in its admin page; its **API key** tab shows the key. Copy it.
+2. **Get the token.** Next to the key, follow the **Token** link, click **Allow** and copy the token.
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Trello** and click **Continue**. Name it, for example *Trello – boards*: **Auth Type** is already set to **Basic Auth**. Then put the **API key** in **Username** and the **token** in **Password**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Board › List** in a **Trello** node: your boards come back with their IDs.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `api.trello.com`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **"Trello needs a Basic Auth credential with the API key in Username and the token in Password".** A field is empty, or the credential isn't Basic Auth.
+- **"401 … the API key or token is invalid or expired".** The key and token don't belong together, are swapped, or the token was revoked. Generate a new token next to your key.
+- **The run is blocked in the web app.** Trello runs through the browser extension. Install the extension and allow Trello for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Trello node" href="/nodes/builtin/integration/trello/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

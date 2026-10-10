@@ -1,0 +1,65 @@
+---
+title: "Connect Readwise and Reader"
+description: "Copy your Readwise access token: the same token saves highlights to Readwise and documents to Reader."
+kind: connection
+section: app
+sidebar:
+  label: "Readwise / Reader"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 1 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- A Readwise account (Reader is included).
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Readwise / Reader](/nodes/builtin/integration/readwise/)
+
+## Set it up
+
+<Steps>
+
+1. **Copy the token** at [readwise.io/access_token](https://readwise.io/access_token).
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Readwise / Reader** and click **Continue**. Name it, for example *Readwise – me*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Reader (Articles) › Save document** with a web address: it appears in your Reader inbox.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `readwise.io`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **"401 … the access token was rejected".** Copy the token again from readwise.io/access_token.
+- **"429 … rate limited".** Too many requests at once. Wait a minute, or add a [Wait](/nodes/builtin/flow/wait/) between runs.
+- **The run is blocked in the web app.** Readwise runs through the browser extension. Install the extension and allow Readwise for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Readwise / Reader node" href="/nodes/builtin/integration/readwise/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

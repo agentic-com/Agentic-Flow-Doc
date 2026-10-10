@@ -1,0 +1,101 @@
+---
+title: "Connect Google (Gmail, Drive, Sheets, Calendar)"
+description: "Sign in to Gmail, Google Drive, Google Sheets and Google Calendar with your own Google OAuth client. Tokens go straight from Google to your browser."
+kind: connection
+section: app
+sidebar:
+  label: "Google"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 6 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="OAuth2" />
+
+Each Google app has its **own credential**, because each one asks Google for different permissions. They can all share **one OAuth client**: create it once, then reuse its Client ID and Secret.
+
+<Callout type="info">
+
+Looking for Gemini models? That is an API key, not a sign-in: see [Connect Google Gemini](/app/connections/google-gemini/).
+
+</Callout>
+
+## Before you start
+
+- A Google account (personal or Google Workspace).
+- Access to the [Google Cloud Console](https://console.cloud.google.com/) to create a free OAuth client (once, about 5 minutes).
+
+## Used by
+
+- [Gmail](/nodes/builtin/integration/gmail/)
+- [Google Drive](/nodes/builtin/integration/google-drive/)
+- [Google Sheets](/nodes/builtin/integration/google-sheets/)
+- [Google Calendar](/nodes/builtin/integration/google-calendar/)
+
+## Set it up
+
+This is the only method: Google signs you in and gives the token to your browser, never to AWFlow's servers.
+
+<Steps>
+
+1. **Create your OAuth client** in the Google Cloud Console: a project, the API you need enabled (Gmail API, Google Drive API, Google Calendar API, or **both** Google Sheets API and Google Drive API for Sheets), the consent screen with your account as a test user, and an OAuth client ID of type **Web application** with AWFlow's redirect URI. [Full steps with links](/app/connections/oauth-client/#google).
+2. **Start the credential.** In AWFlow, open **Credentials** and click **Add Credential**. Under **Integration App / Service** pick the app (**Gmail**, **Google Drive**, **Google Sheets** or **Google Calendar**) and click **Continue**. **Auth Type** is already set to **OAuth2**.
+3. **Copy the redirect URI.** The form shows **Create your Google OAuth client** with your install's redirect URI and a **Copy** button. Add it under **Authorized redirect URIs** in your OAuth client if you haven't yet.
+4. **Paste the client.** Fill **Client ID** and **Client Secret (optional)** (a **Web application** client needs the secret; a **Desktop app** client has none).
+5. **Click Check connection** and approve the Google window. Google may warn *Google hasn't verified this app* while your consent screen is in **Testing**: click **Continue**.
+6. Choose the **Storage location** and click **Create Credential**. Repeat from step 2 for each Google app you use, with the same Client ID and Secret.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+After **Check connection**, AWFlow shows **Connection successful** and the link icon on the button turns connected. In a Google node, the file, spreadsheet or calendar lists now load from your account.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The **Client ID and Secret** are saved in the credential. The **access and refresh tokens** Google returns are kept in this browser's storage and never synced to your account, so each browser signs in once.
+
+The credential itself is stored where you choose:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to accounts.google.com and oauth2.googleapis.com (sign-in) and gmail.googleapis.com, sheets.googleapis.com and www.googleapis.com (the APIs). AWFlow's servers never relay the call.
+
+</Callout>
+
+## Permissions each operation needs
+
+| App | Permission (scope) | What it allows |
+| --- | --- | --- |
+| Gmail | `gmail.readonly` | Read messages and drafts (Message · Get, Search; Draft · Get, List) |
+| Gmail | `gmail.compose` | Create drafts and send (Message · Send; Draft · Create, Update, Delete) |
+| Gmail | `gmail.modify` | Move a message to the Trash (Message · Delete trashes, it does not erase) |
+| Google Calendar | `calendar.events` | Create, update and delete events |
+| Google Calendar | `calendar.readonly` | List calendars, read events and free/busy |
+| Google Drive | `drive` | List, read, create, copy and delete your files and folders |
+| Google Sheets | `spreadsheets` | Read and write values, create and clear spreadsheets and worksheets |
+| Google Sheets | `drive.metadata.readonly` | List your existing spreadsheets in the picker |
+
+AWFlow asks for exactly these scopes, per app. All start with `https://www.googleapis.com/auth/`.
+
+## Common issues
+
+- **`redirect_uri_mismatch`.** The redirect URI in your OAuth client doesn't match this install. Copy it again from the credential form. Using AWFlow in Chrome **and** Firefox? Add both browsers' URIs to the same client.
+- **`access_denied` or "This app is blocked".** Your account isn't a test user on the consent screen. Add it under **OAuth consent screen › Test users**.
+- **A node fails with "insufficient scope" or 403.** The API for that app isn't enabled in your Cloud project (Sheets needs the Drive API too). Enable it, then click **Check connection** again so Google grants the new permissions.
+- **It worked for a week, then stopped.** Google expires sign-ins for consent screens in **Testing** after 7 days. Click **Check connection** again, or publish the consent screen to **In production**.
+- **"No Client Secret set" warning.** A **Web application** client needs its secret. Paste it, or leave it empty only for a **Desktop app** client.
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Gmail node" href="/nodes/builtin/integration/gmail/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

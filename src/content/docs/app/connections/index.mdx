@@ -1,0 +1,97 @@
+---
+title: "Connections"
+description: "Connect AWFlow to your apps and AI providers: one page per service, with the method to pick, the steps, and where your token lives."
+kind: hub
+section: app
+sidebar:
+  label: "All connections"
+---
+
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+A **connection** (a *credential* in the app) is a saved key, token or sign-in that lets a node or an agent act in another service. You create it once in **Credentials**, then pick it in any node that needs it. Each page below takes you from zero to a working connection.
+
+{/* SCREENSHOT: credentials-new */}
+
+## AI models
+
+API keys for cloud AI providers: for Aria and agents, and for the model nodes in your workflows.
+
+| Service | Used by | Method | Time |
+| --- | --- | --- | --- |
+| [OpenAI](/app/connections/openai/) | [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [OpenAI Embeddings](/nodes/builtin/ai/aidependencies/embeddings/openai/), [Aria and agents (Settings › Providers)](/app/settings/providers/) | JWT | ≈ 3 min |
+| [Anthropic](/app/connections/anthropic/) | [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/), [Aria and agents (Settings › Providers)](/app/settings/providers/) | JWT | ≈ 3 min |
+| [Google Gemini](/app/connections/google-gemini/) | [Chat Google](/nodes/builtin/ai/aidependencies/llm/google/), [Google Embeddings](/nodes/builtin/ai/aidependencies/embeddings/google/), [Aria and agents (Settings › Providers)](/app/settings/providers/) | JWT | ≈ 2 min |
+| [Azure OpenAI](/app/connections/azure-openai/) | [Chat Azure OpenAI](/nodes/builtin/ai/aidependencies/llm/azure-openai/), [Aria and agents (Settings › Providers)](/app/settings/providers/) | JWT | ≈ 5 min |
+| [Mistral](/app/connections/mistral/) | [Chat Mistral](/nodes/builtin/ai/aidependencies/llm/mistral/) | JWT | ≈ 2 min |
+| [Groq](/app/connections/groq/) | [Chat Groq](/nodes/builtin/ai/aidependencies/llm/groq/), [Aria and agents (Settings › Providers)](/app/settings/providers/) | JWT | ≈ 2 min |
+| [DeepSeek](/app/connections/deepseek/) | [Chat DeepSeek](/nodes/builtin/ai/aidependencies/llm/deepseek/), [Aria and agents (Settings › Providers)](/app/settings/providers/) | JWT | ≈ 2 min |
+| [xAI](/app/connections/xai/) | [Chat xAI (Grok)](/nodes/builtin/ai/aidependencies/llm/xai/), [Aria and agents (Settings › Providers)](/app/settings/providers/) | JWT | ≈ 2 min |
+| [OpenRouter](/app/connections/openrouter/) | [Chat OpenRouter](/nodes/builtin/ai/aidependencies/llm/openrouter/), [Aria and agents (Settings › Providers)](/app/settings/providers/) | JWT | ≈ 2 min |
+| [Cohere](/app/connections/cohere/) | [Cohere Embeddings](/nodes/builtin/ai/aidependencies/embeddings/cohere/) | JWT | ≈ 2 min |
+| [Voyage AI](/app/connections/voyage/) | [Voyage Embeddings](/nodes/builtin/ai/aidependencies/embeddings/voyage/) | JWT | ≈ 2 min |
+| [Hugging Face](/app/connections/hugging-face/) | [Hugging Face Embeddings](/nodes/builtin/ai/aidependencies/embeddings/huggingface/) | JWT | ≈ 3 min |
+
+## Google & Microsoft
+
+Sign in with your own OAuth client. Tokens go straight from Google or Microsoft to your browser.
+
+| Service | Used by | Method | Time |
+| --- | --- | --- | --- |
+| [Google](/app/connections/google/) | [Gmail](/nodes/builtin/integration/gmail/), [Google Drive](/nodes/builtin/integration/google-drive/), [Google Sheets](/nodes/builtin/integration/google-sheets/), [Google Calendar](/nodes/builtin/integration/google-calendar/) | OAuth2 | ≈ 6 min |
+| [Microsoft 365](/app/connections/microsoft-365/) | [Microsoft 365](/nodes/builtin/integration/microsoft-graph/) | OAuth2 | ≈ 6 min |
+
+## Apps
+
+A token or key from the app, pasted once into a credential.
+
+| Service | Used by | Method | Time |
+| --- | --- | --- | --- |
+| [Airtable](/app/connections/airtable/) | [Airtable](/nodes/builtin/integration/airtable/) | Bearer Token | ≈ 3 min |
+| [Attio](/app/connections/attio/) | [Attio](/nodes/builtin/integration/attio/) | Bearer Token | ≈ 2 min |
+| [Baserow / NocoDB](/app/connections/baserow-nocodb/) | [Baserow / NocoDB](/nodes/builtin/integration/baserow-nocodb/) | Bearer Token | ≈ 2 min |
+| [Discord](/app/connections/discord/) | [Discord](/nodes/builtin/integration/discord/) | Bearer Token | ≈ 4 min |
+| [GitHub](/app/connections/github/) | [GitHub](/nodes/builtin/integration/github/) | Bearer Token | ≈ 3 min |
+| [HubSpot](/app/connections/hubspot/) | [HubSpot](/nodes/builtin/integration/hubspot/) | Bearer Token | ≈ 4 min |
+| [Linear](/app/connections/linear/) | [Linear](/nodes/builtin/integration/linear/) | Bearer Token | ≈ 2 min |
+| [Notion](/app/connections/notion/) | [Notion](/nodes/builtin/integration/notion/) | Bearer Token | ≈ 3 min |
+| [ntfy / Pushover](/app/connections/push-notifications/) | [Push Notification](/nodes/builtin/integration/push-notification/) | Bearer Token, Basic Auth | ≈ 3 min |
+| [Obsidian](/app/connections/obsidian/) | [Obsidian](/nodes/builtin/integration/obsidian/) | Bearer Token | ≈ 3 min |
+| [Pipedrive](/app/connections/pipedrive/) | [Pipedrive](/nodes/builtin/integration/pipedrive/) | Bearer Token | ≈ 1 min |
+| [Raindrop](/app/connections/raindrop/) | [Raindrop](/nodes/builtin/integration/raindrop/) | Bearer Token | ≈ 2 min |
+| [Readwise / Reader](/app/connections/readwise/) | [Readwise / Reader](/nodes/builtin/integration/readwise/) | Bearer Token | ≈ 1 min |
+| [Slack](/app/connections/slack/) | [Slack](/nodes/builtin/integration/slack/) | Bearer Token | ≈ 3 min |
+| [Supabase](/app/connections/supabase/) | [Supabase](/nodes/builtin/integration/supabase/) | Bearer Token | ≈ 3 min |
+| [Telegram](/app/connections/telegram/) | [Telegram](/nodes/builtin/integration/telegram/) | Bearer Token | ≈ 2 min |
+| [Todoist](/app/connections/todoist/) | [Todoist](/nodes/builtin/integration/todoist/) | Bearer Token | ≈ 1 min |
+| [Trello](/app/connections/trello/) | [Trello](/nodes/builtin/integration/trello/) | Basic Auth | ≈ 3 min |
+
+## Any other API
+
+For APIs without a dedicated node.
+
+| Service | Used by | Method | Time |
+| --- | --- | --- | --- |
+| [Any API (HTTP, MCP)](/app/connections/http-and-apis/) | [Http Request](/nodes/builtin/core/http-request/), [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/), [Custom API](/nodes/builtin/integration/custom-api/), [RSS Feed Read](/nodes/builtin/core/rss-feed-read/) and more | Bearer Token, Basic Auth, JWT | ≈ 2 min |
+
+## No connection needed
+
+- **On-device AI**: models from [Local AI](/app/local-models/), Chrome's built-in AI and the Local AI nodes run in your browser with no key.
+- **Ollama** on your computer: Aria and agents find running models by themselves, and the [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/) node only needs its address.
+- **Browser steps** (read a page, click, fill a form, take a screenshot) use the tabs you are already signed in to.
+
+<Callout type="credential" title="Where your tokens live" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+Each credential is stored **locally** (encrypted in this browser, optionally behind your [secret vault](/app/account/secret-vault/) passphrase) or **in the cloud** (encrypted on your AWFlow account). Calls go from your browser straight to the service. Workflow exports and shared workflows never include your secrets.
+
+</Callout>
+
+## Manage your credentials
+
+<CardGrid>
+  <LinkCard title="Create a credential" href="/app/connections/create/" description="From the Credentials page or from a node." />
+  <LinkCard title="Edit a credential" href="/app/connections/edit/" description="Rotate a token, rename, re-check a sign-in." />
+  <LinkCard title="Create your OAuth client" href="/app/connections/oauth-client/" description="Once, for Google and Microsoft 365." />
+  <LinkCard title="Find a credential" href="/app/connections/filters/" description="Search, filter and sort the list." />
+</CardGrid>

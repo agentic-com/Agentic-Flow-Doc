@@ -1,0 +1,108 @@
+---
+title: "Connect GitHub"
+description: "Create a fine-grained GitHub token limited to the repositories and permissions your workflow needs."
+kind: connection
+section: app
+sidebar:
+  label: "GitHub"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- A GitHub account with access to the repositories.
+
+## Used by
+
+- [GitHub](/nodes/builtin/integration/github/)
+
+## Pick a method
+
+| Method | Use it when |
+| --- | --- |
+| **Fine-grained token** <Badge variant="new" text="Recommended" /> | Limited to chosen repositories and permissions. The safest choice. |
+| **Classic token** | Older tokens that open your whole account. Use only if fine-grained tokens are blocked in your organization. |
+
+## Set it up
+
+<Tabs syncKey="connect-github">
+<TabItem label="Fine-grained token (recommended)">
+
+<Steps>
+
+1. **Create the token.** On GitHub, open **Settings › Developer settings › Personal access tokens › Fine-grained tokens** and click **Generate new token**.
+2. **Limit it.** Pick the **Resource owner**, choose **Only select repositories**, set an expiration, and grant the permissions in the table below. Click **Generate token** and copy it (it starts with `github_pat_`).
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **GitHub** and click **Continue**. Name it, for example *GitHub – my repos*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Repository › List** in a **GitHub** node: the repositories the token can see come back.
+
+</Callout>
+
+</TabItem>
+<TabItem label="Classic token">
+
+<Steps>
+
+1. **Create the token** under **Personal access tokens › Tokens (classic)**, with the `repo` scope (or `public_repo` for public repositories only). Copy it (it starts with `ghp_`).
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **GitHub** and click **Continue**. Name it, for example *GitHub – classic*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Repository › List**: your repositories come back.
+
+</Callout>
+
+</TabItem>
+</Tabs>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `api.github.com`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Permissions each operation needs
+
+| Operation | Fine-grained permission |
+| --- | --- |
+| Issue · Get, List | Issues: Read |
+| Issue · Create, Update, Comment, Close | Issues: Read and write |
+| Pull request · Get, List, List files | Pull requests: Read |
+| Pull request · Review | Pull requests: Read and write |
+| Pull request · Comment | Pull requests: Read and write (or Issues: Read and write) |
+| Release · Get latest, List | Contents: Read |
+| Repository · Get, List | Metadata: Read (always included) |
+| Repository · Search | None: searches public repositories |
+
+## Common issues
+
+- **"Bad credentials".** The token is wrong, expired or revoked. Generate a new one and update the credential.
+- **"Not Found" on a repository you can see.** The token doesn't include that repository, or lacks the permission. Edit the token on GitHub.
+- **"Resource not accessible by personal access token".** The organization requires approval for fine-grained tokens, or the permission is missing.
+- **"API rate limit exceeded".** Too many requests in the last hour. Wait, or run the workflow less often.
+
+## Related
+
+<CardGrid>
+  <LinkCard title="GitHub node" href="/nodes/builtin/integration/github/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

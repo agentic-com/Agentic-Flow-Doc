@@ -1,0 +1,67 @@
+---
+title: "Connect Telegram"
+description: "Create a bot with @BotFather and paste its token to send messages, photos and documents."
+kind: connection
+section: app
+sidebar:
+  label: "Telegram"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 2 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- The Telegram app (phone or desktop).
+
+## Used by
+
+- [Telegram](/nodes/builtin/integration/telegram/)
+
+## Set it up
+
+<Steps>
+
+1. **Create the bot.** In Telegram, open a chat with **@BotFather** and send `/newbot`. Choose a name and a username ending in `bot`.
+2. **Copy the token** BotFather replies with, like `123456789:ABCdefGhIJKlmNoPQRstuVWxyz`.
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Telegram** and click **Continue**. Name it, for example *Telegram – alerts bot*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+4. **Start the bot.** Open a chat with your bot and press **Start**, or add it to the group or channel it should post in. A bot can't message someone who never started it.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Message › Send message** with your **Chat ID** and the text *Hello*: the message arrives in Telegram.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `api.telegram.org`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **"Unauthorized".** The token is wrong or was revoked. Get the current one from @BotFather (`/token`) and update the credential.
+- **"Bad Request: chat not found".** The **Chat ID** is wrong, or the bot was never started in that chat or added to the group.
+- **"Forbidden: bot was blocked by the user".** The person blocked the bot. They need to unblock it and press **Start**.
+- **The token leaked.** Send `/revoke` to @BotFather and update the credential with the new token.
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Telegram node" href="/nodes/builtin/integration/telegram/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

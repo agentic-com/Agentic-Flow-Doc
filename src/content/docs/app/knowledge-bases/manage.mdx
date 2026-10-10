@@ -1,0 +1,45 @@
+---
+title: "Re-embed or delete a knowledge base"
+description: "Move a knowledge base to another embedding model, see exactly what a delete removes, and how project files use the same engine."
+kind: guide
+section: app
+sidebar:
+  label: "Re-embed or delete"
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import { Callout } from "@components/awflow";
+
+## Change the search engine (re-embed)
+
+A knowledge base always searches with the **embedding model it was built with**, because vectors from different models can't be compared. To move it to another model, for example from a cloud model to an on-device one:
+
+<Steps>
+
+1. Open the knowledge base and go to **Settings › Search engine**.
+2. Click **Re-embed with…** and pick a model. The list shows the on-device embedding models installed in [Local AI](/app/local-models/) and the default model.
+3. Wait for the progress to finish. You can leave the page; the job continues.
+
+</Steps>
+
+While it runs, searches keep using the old model. The knowledge base switches only when every passage has been embedded again. If you stop it or it fails, it stays on its old model and the partial copy is removed.
+
+## Delete a knowledge base
+
+Choose **Delete** in the knowledge base's menu. The dialog shows the impact before anything happens:
+
+- how many sources and chunks are removed, and how much space is freed on this device;
+- who stops finding its passages (Aria, agents, projects, teams, chats);
+- which **workflows will fail** until you pick another knowledge base in their Local Knowledge node.
+
+Type the name to confirm. **Export first** downloads an `.awkb` copy before deleting. Deleting removes all its passages from this device and unpins it from every agent, project, team and chat.
+
+<Callout type="careful">
+
+A delete can't be undone. Keep an [export](/app/knowledge-bases/export-import-backup/) if you may need it again.
+
+</Callout>
+
+## Project files use the same engine
+
+Files you add to a [project](/app/chat-and-agents/projects/) are indexed by the same engine, in a hidden knowledge base that belongs to the project. It doesn't appear on the knowledge bases page and is deleted with the project. Files indexed before this change are moved over the first time you open the project.

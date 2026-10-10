@@ -1,0 +1,73 @@
+---
+title: "Connect Airtable"
+description: "Create an Airtable personal access token with the right scopes and bases, and paste it once."
+kind: connection
+section: app
+sidebar:
+  label: "Airtable"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- An Airtable account with access to the bases you want to use.
+
+## Used by
+
+- [Airtable](/nodes/builtin/integration/airtable/)
+
+## Set it up
+
+<Steps>
+
+1. **Create the token.** On Airtable, open **Builder hub › Personal access tokens** ([airtable.com/create/tokens](https://airtable.com/create/tokens)) and click **Create token**.
+2. **Add scopes and bases.** Add the scopes `data.records:read`, `data.records:write` and `schema.bases:read`, then under **Access** add the bases (or the workspace) it may use. Click **Create token** and copy it.
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **AirTable** and click **Continue**. Name it, for example *Airtable – CRM base*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+In an **Airtable** node, open the **Base** list: your bases appear. Pick one and the **Table** list fills too.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to `api.airtable.com`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Permissions each operation needs
+
+| Operation | Scope |
+| --- | --- |
+| Base · Get many, Get schema | `schema.bases:read` |
+| Record · Get, Search | `data.records:read` |
+| Record · Create, Update, Delete | `data.records:write` |
+
+## Common issues
+
+- **"Invalid permissions, or the requested model was not found".** The token has no access to this base, or lacks a scope. Edit the token on Airtable and add the base or scope.
+- **The Base list is empty.** No base was added under **Access** when the token was created.
+- **"Missing base ID" or "Missing table ID".** Pick **Base** first, then **Table**.
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Airtable node" href="/nodes/builtin/integration/airtable/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

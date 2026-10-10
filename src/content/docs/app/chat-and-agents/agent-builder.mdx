@@ -1,0 +1,55 @@
+---
+title: "Build and try an agent"
+description: "Every tab of the agent builder, how Try it runs the real agent, and how an agent's look and eyes show what it is doing."
+kind: guide
+section: app
+sidebar:
+  label: "Agent builder"
+---
+
+Open an agent from **Agents** to edit it. Changes save automatically.
+
+## The builder tabs
+
+| Tab | What you set |
+| --- | --- |
+| **Identity** | Its look, name, @handle, role, greeting and conversation starters. The preview shows how it looks in chat. |
+| **Instructions** | How it works and what it avoids. Use variables like `{today}`, `{my name}`, `{current tab}` and `{memory}`. **Improve** and **Generate** ask your model for help; earlier versions are kept. |
+| **Model** | *Same as Aria* or a specific on-device, Ollama (detected automatically when it is running) or cloud model, its creativity, max steps per answer, and whether to fall back to on-device when you're offline. |
+| **Skills** | What it can do: **Browser control**, **Web search**, **Workflows**, **On-device AI**, **Teammates**, **MCP** servers. See [Give it skills](/app/chat-and-agents/agent-skills/). |
+| **Knowledge** | The knowledge bases it uses in every chat, routine and team it joins, when to look things up, whether it shows sources or may search on its own, and **Try it**. See [Knowledge for an agent](/app/chat-and-agents/knowledge/#knowledge-for-an-agent). |
+| **Memory** | Whether it learns from chats, whether it also reads Aria's memory, its suggested facts, and its memories: edit, forget, or share one with a team. See [Assistant memory](/app/chat-and-agents/memory/#the-agents-memory-tab). |
+| **Rules** | What it does alone, what it asks about, and what it never does. See [Browser control & safety](/app/chat-and-agents/browser-control/). |
+| **Routines** | Run it on a schedule, when a page opens or changes, or record the steps once (*Show it once*). See [Routines](/app/chat-and-agents/agents/#routines). |
+
+A cloud model needs a key in **Settings › Providers**: see [All connections](/app/connections/) for your provider.
+
+## Try it
+
+The right panel lets you **Try it**: chat with the agent as you edit, and on the Rules tab, **Test a rule** with a sentence like "click Reserve on booking.example".
+
+**Try it** runs the **real agent**: its model, skills, rules, approvals and max steps, exactly what a chat with it would use. A row of chips shows what is in effect (the model and where it runs, each skill, marked *off* when it can't be used, the rules preset and the step limit). Edits apply on your next message.
+
+:::caution[Actions are real]
+Emails send and sheets change. Approvals appear in the panel, the same as in a chat.
+:::
+
+You see the same [work timeline, step limit card and approval receipts](/app/chat-and-agents/seeing-the-work/) as in a chat, and a banner when a skill is off. **Reset** starts over with a fresh chat, tools and browser session.
+
+## Looks and living eyes
+
+Every agent is a character. On the **Identity** tab, pick its **shape**, **color**, **texture**, **eyes** and an **accessory**, or press **Shuffle**. The preview shows it at every size, and its eyes follow your pointer. New agents get a look that suits their job; press **Try another look** before creating one.
+
+The eyes show what an agent is doing, wherever it appears:
+
+| Eyes | Meaning |
+| --- | --- |
+| Blink and glance around | Idle |
+| Drift upward | Thinking |
+| Scan side to side | Working: browsing or using a tool |
+| Look at you and bounce | Needs your ok |
+| Happy squint and a hop | Done |
+| Worried brows | Can't: a step failed or a skill is unavailable |
+| Closed | Offline: its model isn't ready |
+
+Aria's look (orange, with sun rays) is fixed so you always recognize her. To calm the motion, go to **Settings › Preferences › Agent animations**: *Lively*, *Calm* (blinks and states only) or *Off*. Faces stay still when your system asks to reduce motion.

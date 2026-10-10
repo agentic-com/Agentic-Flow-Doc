@@ -31,6 +31,9 @@ flowchart TD
   G -->|"Empty or missing data"| H["Data extraction"]
   G -->|"Data doesn't reach the next step"| I["Workflow connections"]
   G -->|"Works in Chrome, not elsewhere"| J["Browser compatibility"]
+  class A awf-err
+  class C1,C2,E awf-warn
+  class F,H,I,J awf-ok
 ```
 
 | Symptom | Likely cause | Where to look |
