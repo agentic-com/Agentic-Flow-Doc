@@ -1,0 +1,177 @@
+{
+  "name": "Classify and Route",
+  "description": "Sort an incoming message into billing, technical, sales or other and route it to the right response — on-device.",
+  "tags": ["ai", "tier-1", "on-device", "no-setup"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": { "x": 20, "y": 20 },
+      "data": {
+        "color": "#fff266",
+        "content": "🔀 Classify a message, then route it.\n\nPaste a support message, press Run, and a local model tags it as billing / technical / sales / other. A Switch then sends it down the matching branch. Everything runs in your browser. Pick a model the first time."
+      },
+      "width": 360,
+      "height": 210
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": { "x": 100, "y": 320 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": { "notes": "Starts the workflow when you press Run." }
+      }
+    },
+    {
+      "id": "sample-text",
+      "type": "basic",
+      "position": { "x": 420, "y": 320 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:editFields" },
+        "label": "Message to sort",
+        "inputs": {
+          "fields": {
+            "text": {
+              "type": "string",
+              "value": "Hi, I was charged twice for my subscription this month and need a refund."
+            }
+          }
+        },
+        "parameters": { "notes": "Paste the message you want to classify. Replace the sample with your own." }
+      }
+    },
+    {
+      "id": "classify",
+      "type": "agent",
+      "position": { "x": 740, "y": 320 },
+      "data": {
+        "instance": { "id": "af-base-node:agent:text-classifier" },
+        "label": "Classify the message",
+        "inputs": {
+          "text": "{{ $input.text }}",
+          "categories": "billing, technical, sales, other"
+        },
+        "parameters": { "notes": "Tags the message with one of the four categories." }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": { "x": 740, "y": 540 },
+      "data": {
+        "instance": { "id": "af-base-node:dependency:webLLM" },
+        "label": "Local AI model",
+        "inputs": { "model": "", "options": { "temperature": 0.2 } },
+        "parameters": { "notes": "Runs the classification locally in your browser. Pick a model the first time — it downloads once, then works offline." }
+      }
+    },
+    {
+      "id": "route",
+      "type": "basic",
+      "position": { "x": 1060, "y": 320 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:switch" },
+        "label": "Route by category",
+        "inputs": {
+          "mode": "rules",
+          "matchMode": "firstMatch",
+          "includeFallback": true,
+          "fallbackName": "Other",
+          "rules": [
+            {
+              "outputName": "Billing",
+              "conditions": [
+                { "leftSide": "{{ $input.category }}", "rightSide": "billing", "operator": { "operationType": "string", "operatorValue": "equals" } }
+              ]
+            },
+            {
+              "outputName": "Technical",
+              "conditions": [
+                { "leftSide": "{{ $input.category }}", "rightSide": "technical", "operator": { "operationType": "string", "operatorValue": "equals" } }
+              ]
+            },
+            {
+              "outputName": "Sales",
+              "conditions": [
+                { "leftSide": "{{ $input.category }}", "rightSide": "sales", "operator": { "operationType": "string", "operatorValue": "equals" } }
+              ]
+            }
+          ]
+        },
+        "parameters": { "notes": "Sends the message down the branch that matches its category. Anything that isn't billing, technical or sales falls through to Other." }
+      }
+    },
+    {
+      "id": "show-billing",
+      "type": "basic",
+      "position": { "x": 1400, "y": 120 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:displayMarkdownNode" },
+        "label": "Billing branch",
+        "inputs": { "title": "Billing", "content": "💳 **Billing request** — route to the billing team and pull up the customer's invoices." },
+        "parameters": { "notes": "What happens when the message is about billing." }
+      }
+    },
+    {
+      "id": "show-technical",
+      "type": "basic",
+      "position": { "x": 1400, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:displayMarkdownNode" },
+        "label": "Technical branch",
+        "inputs": { "title": "Technical", "content": "🛠️ **Technical issue** — route to support engineering and ask for steps to reproduce." },
+        "parameters": { "notes": "What happens when the message is a technical issue." }
+      }
+    },
+    {
+      "id": "show-sales",
+      "type": "basic",
+      "position": { "x": 1400, "y": 480 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:displayMarkdownNode" },
+        "label": "Sales branch",
+        "inputs": { "title": "Sales", "content": "📈 **Sales enquiry** — route to the sales team and share pricing details." },
+        "parameters": { "notes": "What happens when the message is a sales enquiry." }
+      }
+    },
+    {
+      "id": "show-other",
+      "type": "basic",
+      "position": { "x": 1400, "y": 660 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:displayMarkdownNode" },
+        "label": "Other branch",
+        "inputs": { "title": "Other", "content": "📥 **Uncategorised** — send to the general inbox for a human to triage." },
+        "parameters": { "notes": "The Switch fallback — anything that didn't match a category." }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": { "x": 740, "y": 700 },
+      "data": {
+        "color": "#c9f0d1",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline. Edit each branch to trigger your own follow-up actions."
+      },
+      "width": 320,
+      "height": 130
+    }
+  ],
+  "edges": [
+    { "id": "e-run-sample", "source": "trigger-run", "target": "sample-text", "type": "flowEdge" },
+    { "id": "e-sample-classify", "source": "sample-text", "target": "classify", "type": "flowEdge" },
+    { "id": "e-classify-model", "source": "classify", "target": "local-model", "type": "flowEdge", "sourceHandle": "dependency-0" },
+    { "id": "e-classify-route", "source": "classify", "target": "route", "type": "flowEdge" },
+    { "id": "e-route-billing", "source": "route", "target": "show-billing", "type": "flowEdge", "sourceHandle": "output-Billing" },
+    { "id": "e-route-technical", "source": "route", "target": "show-technical", "type": "flowEdge", "sourceHandle": "output-Technical" },
+    { "id": "e-route-sales", "source": "route", "target": "show-sales", "type": "flowEdge", "sourceHandle": "output-Sales" },
+    { "id": "e-route-other", "source": "route", "target": "show-other", "type": "flowEdge", "sourceHandle": "output-__fallback__" }
+  ],
+  "requiredInputs": [
+    { "nodeId": "local-model", "field": "model" }
+  ]
+}

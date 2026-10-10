@@ -1,0 +1,31 @@
+---
+/**
+ * Build-time wrapper for <FlowPreview> (awflow/Agentic-Flow#1336): reads the .awf from public/
+ * while the site builds, so the graph is in the HTML (no loading state, works without JS), then
+ * hydrates the Svelte island when it scrolls into view for the buttons.
+ *
+ *   import FlowPreview from '@components/awflow/FlowPreview.astro';
+ *   <FlowPreview src="/examples/summarize-this-page.awf" caption="…" />
+ */
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import FlowPreviewIsland from './FlowPreview.svelte';
+
+interface Props {
+	/** Site path of a file in public/, e.g. "/examples/summarize-this-page.awf". */
+	src: string;
+	caption?: string;
+}
+
+const { src, caption } = Astro.props;
+let raw: string | undefined;
+if (src.startsWith('/') && !src.startsWith('//')) {
+	try {
+		raw = await readFile(join(process.cwd(), 'public', decodeURIComponent(src)), 'utf8');
+	} catch {
+		throw new Error(`<FlowPreview>: ${src} was not found in public/.`);
+	}
+}
+---
+
+<FlowPreviewIsland client:visible src={src} caption={caption} raw={raw} />
