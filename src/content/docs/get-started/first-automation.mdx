@@ -12,9 +12,7 @@ sidebar:
 ---
 
 import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
-import { StepCard, LessonProgress, LessonDone, Screenshot } from "@components/awflow";
-import runHistoryLight from '@assets/screenshots/run-history.light.webp';
-import runHistoryDark from '@assets/screenshots/run-history.dark.webp';
+import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awflow";
 
 <LessonProgress
   client:visible
@@ -41,15 +39,19 @@ So far you started workflows with **Test Workflow**. An automation starts by its
 
 <StepCard n={1} title="Add a Hotkey trigger" check="a Hotkey node is on the canvas, linked to Get All Text.">
   Open **Summarise this page**. Click **Add a step** (the **+** in the canvas toolbar), search for **Hotkey** and add it. Then drag from the dot on the right of **Hotkey** onto the left edge of **Get All Text**, so both triggers lead to the same steps.
+
+  <StepShot shot="gs-hotkey-search" spot="hotkey" n={1} />
 </StepCard>
 
 <StepCard n={2} title="Pick a shortcut slot" check="the browser's shortcut page lists “Run workflow bound to Hotkey slot 1” with a key combination.">
-  In **Hotkey**, keep **Hotkey Slot** on **Hotkey slot 1**. Slot 1 comes with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> (<kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> on Mac). Browsers don't let extensions add a shortcut per workflow, so you choose the keys for each slot in the browser:
+  Double-click **Hotkey** to open its settings and keep **Hotkey Slot** on the first slot, `run-workflow-1` (**Hotkey slot 1**). Slot 1 comes with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> (<kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> on Mac). Browsers don't let extensions add a shortcut per workflow, so you choose the keys for each slot in the browser:
 
   - Chrome, Edge, Brave: open `chrome://extensions/shortcuts`.
   - Firefox: open `about:addons`, click the gear menu, then **Manage Extension Shortcuts**.
 
   Find **Agentic Workflow**. If slot 1 shows no keys (another extension already uses them), type your own combination.
+
+  <StepShot shot="gs-hotkey-slot" spot="hotkey-slot" n={2} />
 </StepCard>
 
 </TabItem>
@@ -57,10 +59,14 @@ So far you started workflows with **Test Workflow**. An automation starts by its
 
 <StepCard n={1} title="Add a Schedule trigger" check="a Schedule node is on the canvas, linked to the first step.">
   Open the workflow you want to run on a timer. Click **Add a step** (the **+** in the canvas toolbar), search for **Schedule** and add it, then drag from its right dot onto your first step.
+
+  <StepShot shot="gs-schedule-search" spot="schedule" n={1} />
 </StepCard>
 
 <StepCard n={2} title="Set how often" check="the Schedule node shows your interval.">
-  Set **Trigger Interval** to *hours* and **Hours Between Triggers** to `1`, or to *days* with a **Trigger at Hour**. A schedule works best for workflows that don't depend on the tab you're looking at, such as checking a page with an HTTP request. The browser has to be open for it to fire. See [Schedule](/nodes/builtin/trigger/schedule/).
+  Double-click **Schedule** to open its settings. Under **Rules**, click **Add**, then set **Trigger Interval** to *hours* and **Hours Between Triggers** to `1`, or to *days* with a **Trigger at Hour**. A schedule works best for workflows that don't depend on the tab you're looking at, such as checking a page with an HTTP request. The browser has to be open for it to fire. See [Schedule](/nodes/builtin/trigger/schedule/).
+
+  <StepShot shot="gs-schedule-rule" spot="trigger-interval" n={2} />
 </StepCard>
 
 </TabItem>
@@ -69,7 +75,9 @@ So far you started workflows with **Test Workflow**. An automation starts by its
 ## Activate and run it
 
 <StepCard n={3} title="Save and activate" check="the switch in the canvas header reads active.">
-  Click **Save**. Then turn on the switch next to the workflow's name in the canvas header (it says **inactive** until you do). You can also choose **Activate** in the workflow's **⋯** menu in the Workflows list.
+  Click **Save**. Then check the switch next to the workflow's name in the canvas header: it must read **active**. If it says **inactive**, turn it on. You can also choose **Activate** in the workflow's **⋯** menu in the Workflows list.
+
+  <StepShot shot="gs-activate" spot="active-switch" n={3} zoom={40} />
 </StepCard>
 
 <StepCard n={4} title="Fire it" check="the Page summary with three bullets appears, without touching the canvas.">
@@ -78,14 +86,9 @@ So far you started workflows with **Test Workflow**. An automation starts by its
 
 <StepCard n={5} title="Check its runs" check="the newest row says Success, started a few seconds ago.">
   Open the workflow and click the **Executions** tab at the top (it reads **Runs** in a narrow panel). Every run is listed with its status, start time and duration. Click a run to see what each step produced. See [Run history](/app/workflows/run-history/).
-</StepCard>
 
-<Screenshot
-  src={runHistoryLight}
-  srcDark={runHistoryDark}
-  alt="The Executions tab of the Hash Text workflow: a table of saved runs, each with a Success status, when it started, its duration, where it ran (Local) and its metadata, with a filter bar above."
-  hotspots={[{ x: 62, y: 9.4, label: 'Executions tab' }, { x: 58.9, y: 14.3, label: 'Filter runs' }, { x: 21.9, y: 29.2, label: 'A saved run and its status' }]}
-/>
+  <StepShot shot="run-history" spot="executions-tab" n={5} />
+</StepCard>
 
 <Aside type="caution" title="Nothing happens?">
 Check three things: the workflow is **active**, the slot in the node matches the line you set in the browser's shortcut page, and you're in the browser extension, not the web app. More in [Hotkey troubleshooting](/nodes/builtin/trigger/hotkey/#common-issues).

@@ -8,7 +8,7 @@ kind: concept
 ---
 
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
-import { CompareCards, ItemsPlayground } from "@components/awflow";
+import { CompareCards, GuidedShot, ItemsPlayground } from "@components/awflow";
 
 :::note[In 20 seconds]
 By default, a failing step ends the run. You can change that per step in its **Settings** tab: **Retry** tries again, **Continue On Fail** lets the run carry on with an empty item. For a group of steps, **Try / Catch** sends a failure down a separate branch. An **Error Trigger** starts another workflow when a run fails.
@@ -76,19 +76,31 @@ Try / Catch guards a page read. The page has changed and the step fails, so the 
 
 ## Retry a flaky step
 
-Open the step's settings, go to the **Settings** tab and turn on **Allow Retry**:
+Double-click the step to open its settings, then:
 
-- **Max. Tries**: how many attempts, up to 10 (3 by default).
-- **Wait Between Tries (ms)**: the pause between attempts (1,000 ms by default).
-- **Backoff**: *Fixed* waits the same each time. *Exponential (with jitter)* waits longer after each attempt, which suits rate-limited services.
-- **Retry condition**: *Any error* (the default), *Transient errors only* (429, 5xx, network errors and timeouts; fails at once on errors like 401 or 404), or *When message matches* the text or `/regex/` in **Retry if message matches**.
+<GuidedShot
+  shot="node-settings-retry"
+  steps={[
+    { spot: 'settings-tab', title: 'Open the Settings tab' },
+    { spot: 'allow-retry', title: 'Turn on Allow Retry', body: 'The retry options appear under it.' },
+    { spot: 'max-tries', title: 'Max. Tries', body: 'How many attempts, up to 10 (3 by default).' },
+    { spot: 'wait-between-tries', title: 'Wait Between Tries (ms)', body: 'The pause between attempts (1,000 ms by default).' },
+    { spot: 'backoff', title: 'Backoff', body: '*Fixed* waits the same each time. *Exponential (with jitter)* waits longer after each attempt, which suits rate-limited services.' },
+    { spot: 'retry-condition', title: 'Retry condition', body: '*Any error* (the default), *Transient errors only* (429, 5xx, network errors and timeouts; fails at once on errors like 401 or 404), or *When message matches* the text or `/regex/` in **Retry if message matches**.' },
+  ]}
+/>
 
 ## Carry on after a failure
 
 Two more switches sit in the same **Settings** tab:
 
-- **Continue On Fail**: if the step still fails after any retries, the error is logged and the step outputs one empty item. The steps after it keep running.
-- **Always Output Data**: the step outputs one empty item when it would otherwise output nothing, so the run doesn't end at this step.
+<GuidedShot
+  shot="node-settings-retry"
+  steps={[
+    { spot: 'continue-on-fail', title: 'Continue On Fail', body: 'If the step still fails after any retries, the error is logged and the step outputs one empty item. The steps after it keep running.' },
+    { spot: 'always-output-data', title: 'Always Output Data', body: "The step outputs one empty item when it would otherwise output nothing, so the run doesn't end at this step." },
+  ]}
+/>
 
 Retry runs first. When it's used up, Continue On Fail decides whether the run stops or goes on.
 

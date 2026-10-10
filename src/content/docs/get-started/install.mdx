@@ -12,10 +12,8 @@ sidebar:
 ---
 
 import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
-import { StepCard, LessonProgress, LessonDone, Screenshot } from "@components/awflow";
+import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awflow";
 import { PUBLIC_CHROME_EXTENSION_URL, PUBLIC_FIREFOX_EXTENSION_URL } from "astro:env/client";
-import welcomeLight from '@assets/screenshots/welcome.light.webp';
-import welcomeDark from '@assets/screenshots/welcome.dark.webp';
 
 <LessonProgress
   client:visible
@@ -61,21 +59,18 @@ AWFlow is a browser extension. It runs in your browser, next to the page you're 
 </TabItem>
 </Tabs>
 
-<Screenshot
-  src={welcomeLight}
-  srcDark={welcomeDark}
-  alt="The welcome page in a local workspace: a Local · no account needed badge, the headline Press Run. Watch a workflow do its thing., the Run “Start here” button (about 5 seconds), and three other ways in: Start from a template, Describe it to the AI and the 2-minute tutorial, with Skip to the app below."
-  hotspots={[{ x: 70.2, y: 8.9, label: 'Local workspace: no account needed' }, { x: 30.2, y: 37.3, label: 'Run “Start here”' }, { x: 32.7, y: 57.4, label: 'Other ways in: template, describe it, tutorial' }, { x: 50, y: 69.8, label: 'Skip to the app' }]}
-/>
-
 <StepCard n={3} title="Run “Start here”" check="the three steps light up one after the other and a quote appears, in about five seconds.">
   On the **welcome page**, click **Run “Start here”**. A ready-made three-step workflow runs on your device. Nothing leaves your browser.
 
   The same page also offers **Start from a template**, **Describe it to the AI** and the **2-minute tutorial**. You'll do all of these in the next lessons, so you can leave them for now. See [The welcome page](/app/account/welcome/).
+
+  <StepShot shot="welcome" spot="run-start-here" n={3} />
 </StepCard>
 
 <StepCard n={4} title="Open the side panel" check="the AWFlow app opens beside the page you're on, and the page stays visible.">
-  Go to any website, then click the **AWFlow** icon in the toolbar. The app opens in Chrome's **side panel** (in Firefox, the **sidebar**), next to the page. Drag its left edge to make it wider; the canvas is easier to use above about 670px. See [Using the side panel](/app/side-panel/).
+  Go to any website, then click the **AWFlow** icon in the toolbar. The app opens in Chrome's **side panel** (in Firefox, the **sidebar**), next to the page. In a narrow panel, the sidebar button at the top left opens **Workflows**, **Assistant** and the rest. Drag the panel's left edge to make it wider; the canvas is easier to use above about 670px. See [Using the side panel](/app/side-panel/).
+
+  <StepShot shot="gs-side-panel-home" spot="sidebar-button" n={4} zoom={100} height={360} />
 </StepCard>
 
 ## Local workspace or account?
