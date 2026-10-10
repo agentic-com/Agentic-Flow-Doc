@@ -161,6 +161,8 @@ export default defineConfig({
                       label: "Filter the list",
                       link: "usage/using-the-app/workflows/filters",
                     },
+                    { label: "Manage the list", link: "usage/using-the-app/workflows/manage-list" },
+                    { label: "Run history", link: "usage/using-the-app/workflows/run-history" },
                     {
                       label: "Components",
                       items: [{ autogenerate: {
@@ -210,6 +212,19 @@ export default defineConfig({
                 {
                   label: "Local AI",
                   link: "usage/using-the-app/local-models",
+                },
+                { label: "Compare models", link: "usage/using-the-app/local-models-compare" },
+                { label: "Activity", link: "usage/using-the-app/activity" },
+                { label: "Notifications", link: "usage/using-the-app/notifications" },
+                {
+                  label: "Settings",
+                  collapsed: true,
+                  items: [{ autogenerate: { directory: "usage/using-the-app/settings", collapsed: true } }],
+                },
+                {
+                  label: "Account",
+                  collapsed: true,
+                  items: [{ autogenerate: { directory: "usage/using-the-app/account", collapsed: true } }],
                 },
                 {
                   label: "Newsletter",
@@ -264,6 +279,13 @@ export default defineConfig({
                   link: "usage/key-concepts/glossary",
                 },
               ],
+            },
+            { label: "Privacy & your data", link: "usage/privacy-and-data" },
+            { label: "FAQ", link: "usage/faq" },
+            {
+              label: "Admin",
+              collapsed: true,
+              items: [{ autogenerate: { directory: "usage/admin", collapsed: true } }],
             },
             {
               label: "Releases",
