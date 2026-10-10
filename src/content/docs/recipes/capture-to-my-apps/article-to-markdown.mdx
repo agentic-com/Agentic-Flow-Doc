@@ -17,7 +17,7 @@ recipe:
 
 import { Steps } from '@astrojs/starlight/components';
 import FlowPreview from '@components/awflow/FlowPreview.astro';
-import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+import { RecipeMeta, RecipeUse, RecipeSteps, StepShot } from '@components/awflow';
 
 <RecipeMeta slug="article-to-markdown" />
 
@@ -55,13 +55,25 @@ import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
 			tweak: 'save a file instead with [Save as File](/nodes/builtin/datatransformation/saveasfile/).',
 		},
 	]}
-/>
+>
+	<StepShot slot="shot-1" shot="recipe-markdown-canvas" spot="trigger-when-started" n={1} zoom={36} />
+	<StepShot slot="shot-2" shot="recipe-markdown-get-html" spot="dom-selector" n={2} />
+	<StepShot slot="shot-3" shot="recipe-markdown-to-markdown" spot="keep-images" n={3} />
+	<StepShot slot="shot-4" shot="recipe-markdown-canvas" spot="copy-clipboard" n={4} zoom={36} />
+</RecipeSteps>
 
 ## Test it
 
 <Steps>
 
-1. Install the recipe and save it. No setup is needed.
+1. Install the recipe and save it. No setup is needed. To import the file yourself, use **Add Workflow** › **Import**, choose the `.awf` and click **Create & open**. Then click **Make it mine** at the bottom of the canvas, tick the box and confirm, so you can edit it.
+
+   <StepShot shot="recipe-markdown-import" spot="create-open" n={1} />
+
+   <StepShot shot="recipe-markdown-consent" spot="make-it-mine" n={1} />
+
+   <StepShot shot="recipe-markdown-canvas" spot="save" n={1} />
+
 2. Open an article, right-click it and choose **Agentic Workflow** › **Personal Workflows** › **Capture Article as Markdown**.
 3. Paste into a note: you get headings, paragraphs and links as Markdown.
 

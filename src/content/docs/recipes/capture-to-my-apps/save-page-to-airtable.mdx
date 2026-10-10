@@ -18,7 +18,7 @@ recipe:
 
 import { Steps } from '@astrojs/starlight/components';
 import FlowPreview from '@components/awflow/FlowPreview.astro';
-import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+import { RecipeMeta, RecipeUse, RecipeSteps, StepShot } from '@components/awflow';
 
 <RecipeMeta slug="save-page-to-airtable" />
 
@@ -50,15 +50,29 @@ import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
 			tweak: 'pick your base and table, rename the field keys to match your column names, and add more, such as `Saved on`.',
 		},
 	]}
-/>
+>
+	<StepShot slot="shot-1" shot="recipe-airtable-trigger-context-menu" spot="menu-contexts" n={1} />
+	<StepShot slot="shot-2" shot="recipe-airtable-canvas" spot="get-metadata" n={2} zoom={36} />
+	<StepShot slot="shot-3" shot="recipe-airtable-save-airtable" spot="base" n={3} />
+</RecipeSteps>
 
 ## Test it
 
 <Steps>
 
-1. Install the recipe. Open **Add a record to Airtable**, choose or create an Airtable connection, then pick the **Base** and **Table**. See [AirTable](/nodes/builtin/integration/airtable/).
+1. Install the recipe. Open **Add a record to Airtable**, choose or create an Airtable connection, then pick the **Base** and **Table**. See [AirTable](/nodes/builtin/integration/airtable/). To import the file yourself, use **Add Workflow** › **Import**, choose the `.awf` and click **Create & open**. Then click **Make it mine** at the bottom of the canvas, tick the box and confirm, so you can edit it. To add the connection itself, see [Create a connection](/app/connections/create/).
+
+   <StepShot shot="recipe-airtable-import" spot="create-open" n={1} />
+
+   <StepShot shot="recipe-airtable-consent" spot="make-it-mine" n={1} />
+
+   <StepShot shot="recipe-airtable-save-airtable" spot="credential" n={1} />
+
 2. Make sure the table has a **Name** and a **URL** column (or rename the keys in the node to your columns).
 3. Save and activate the workflow.
+
+   <StepShot shot="recipe-airtable-canvas" spot="active" n={3} />
+
 4. Right-click any page and choose **Agentic Workflow** › **Personal Workflows** › **Save Page to Airtable Reading List**.
 5. Open the table in Airtable: a new row shows the page title and link.
 

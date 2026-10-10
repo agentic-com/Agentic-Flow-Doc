@@ -17,7 +17,7 @@ recipe:
 
 import { Steps } from '@astrojs/starlight/components';
 import FlowPreview from '@components/awflow/FlowPreview.astro';
-import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+import { RecipeMeta, RecipeUse, RecipeSteps, StepShot } from '@components/awflow';
 
 <RecipeMeta slug="scrape-a-list" />
 
@@ -55,14 +55,27 @@ import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
 			tweak: 'save them with [Google Sheets](/nodes/builtin/integration/google-sheets/) or download them with [Save as File](/nodes/builtin/datatransformation/saveasfile/).',
 		},
 	]}
-/>
+>
+	<StepShot slot="shot-1" shot="recipe-scrape-canvas" spot="trigger-run" n={1} zoom={36} />
+	<StepShot slot="shot-2" shot="recipe-scrape-fetch-html" spot="url" n={2} />
+	<StepShot slot="shot-3" shot="recipe-scrape-extract" spot="container-selector" n={3} />
+	<StepShot slot="shot-4" shot="recipe-scrape-canvas" spot="show-result" n={4} zoom={36} />
+</RecipeSteps>
 
 ## Test it
 
 <Steps>
 
-1. Install the recipe and open it on the canvas.
+1. Install the recipe and open it on the canvas. To import the file yourself, use **Add Workflow** › **Import**, choose the `.awf` and click **Create & open**. Then click **Make it mine** at the bottom of the canvas, tick the box and confirm, so you can edit it.
+
+   <StepShot shot="recipe-scrape-import" spot="create-open" n={1} />
+
+   <StepShot shot="recipe-scrape-consent" spot="make-it-mine" n={1} />
+
 2. Click **Test Workflow**.
+
+   <StepShot shot="recipe-scrape-canvas" spot="test-workflow" n={2} />
+
 3. Open **Show the data** in the run results: you see about 30 items, each with a `title` and a `link` from the Hacker News front page.
 
 </Steps>

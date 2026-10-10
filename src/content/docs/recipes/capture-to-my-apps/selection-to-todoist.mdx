@@ -16,7 +16,7 @@ recipe:
 
 import { Steps } from '@astrojs/starlight/components';
 import FlowPreview from '@components/awflow/FlowPreview.astro';
-import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+import { RecipeMeta, RecipeUse, RecipeSteps, StepShot } from '@components/awflow';
 
 <RecipeMeta slug="selection-to-todoist" />
 
@@ -54,14 +54,31 @@ import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
 			tweak: 'set a project, a label or a due string such as `tomorrow` in the Todoist step.',
 		},
 	]}
-/>
+>
+	<StepShot slot="shot-1" shot="recipe-todoist-trigger-context-menu" spot="document-url-patterns" n={1} />
+	<StepShot slot="shot-2" shot="recipe-todoist-canvas" spot="get-selection" n={2} zoom={36} />
+	<StepShot slot="shot-3" shot="recipe-todoist-extract" spot="what-to-extract" n={3} />
+	<StepShot slot="shot-4" shot="recipe-todoist-create-task" spot="due" n={4} />
+</RecipeSteps>
 
 ## Test it
 
 <Steps>
 
-1. Install the recipe. Pick a model in **Local AI model** and choose or create a Todoist connection in **Create the Todoist task**. See [Todoist](/nodes/builtin/integration/todoist/).
+1. Install the recipe. Pick a model in **Local AI model** and choose or create a Todoist connection in **Create the Todoist task**. See [Todoist](/nodes/builtin/integration/todoist/). To import the file yourself, use **Add Workflow** › **Import**, choose the `.awf` and click **Create & open**. Then click **Make it mine** at the bottom of the canvas, tick the box and confirm, so you can edit it. To add the connection itself, see [Create a connection](/app/connections/create/).
+
+   <StepShot shot="recipe-todoist-import" spot="create-open" n={1} />
+
+   <StepShot shot="recipe-todoist-consent" spot="make-it-mine" n={1} />
+
+   <StepShot shot="recipe-todoist-local-model" spot="model" n={1} />
+
+   <StepShot shot="recipe-todoist-create-task" spot="credential" n={1} />
+
 2. Save and activate the workflow.
+
+   <StepShot shot="recipe-todoist-canvas" spot="active" n={2} />
+
 3. Highlight a sentence such as "Can you send me the signed contract by Friday?", right-click and choose **Agentic Workflow** › **Personal Workflows** › **Selection to Todoist Task**.
 4. A task like "Send the signed contract" appears in your Todoist Inbox.
 
