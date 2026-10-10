@@ -180,7 +180,7 @@ Before reporting an issue, check:
 - Whether the page loads content dynamically
 
 Useful links:
-- [Full Troubleshooting Flowchart](/usage/troubleshooting/troubleshooting-decision-guide/)
+- [Troubleshooting guide](/usage/troubleshooting/)
 - <a href="https://community.awflow.io" target="_blank">Community Forum</a>
 
 ---

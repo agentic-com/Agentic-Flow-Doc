@@ -1,10 +1,9 @@
 ---
-title: Full and Partial Executions Inside the Designer  
-description: "How to manually run workflows or subsets (partial executions) in AWFlow’s drag‑and‑drop designer."  
+title: Run from the canvas
+description: "Test a whole workflow or a single step on the canvas while you build it, follow the run, stop it, and read what went wrong."
 sidebar:
   order: 1
 ---
-import { Card, CardGrid } from "@astrojs/starlight/components";
 
 When you’re building a workflow, you usually want to test it as you go.
 
@@ -15,8 +14,8 @@ AWFlow gives you two ways to do that:
 
 ```mermaid
 flowchart LR
-  Page["Target page"] --> Full["Execute Workflow"]
-  Page --> Step["Execute Step"]
+  Page["Target page"] --> Full["Test Workflow"]
+  Page --> Step["Test step"]
   Full --> All["Run every connected node"]
   Step --> Needed["Run only required upstream nodes"]
   All --> Logs["Inspect outputs and logs"]
@@ -30,7 +29,7 @@ flowchart LR
 Use this when you want to see the complete result from start to finish.
 
 1. Open the page you want the workflow to work on.
-2. In the designer, click **Test Workflow**.
+2. On the canvas, click **Test Workflow**.
 3. The workflow runs node by node. The button turns into **Running… 2 of 4 | Stop** so you can see how far it got.
 4. When it finishes, the **Last run** tab of the panel on the right says what happened. Click a node to see its output.
 
@@ -71,34 +70,15 @@ If you don’t want parts of the workflow to run while testing, temporarily disa
 
 ---
 
-## Common issues
+## Manual and automatic runs
 
----
+- A **manual run** is one you start yourself: from the canvas, the [workflow list](/usage/using-the-app/workflows/executions/run-from-the-workflow-list/) or the [right-click menu](/usage/using-the-app/workflows/executions/run-from-the-right-click-menu/).
+- An **automatic run** starts from a trigger, such as a schedule or a page load. The workflow must be **Active**. See [Automatic runs with triggers](/usage/using-the-app/workflows/create/#automatic-runs-with-triggers).
+- A run that reaches a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) node pauses until someone approves, rejects or cancels it in the **Executions** panel.
 
-> **"The destination node is not connected to any trigger."** 
-
-- Partial execution requires that the workflow has a trigger node. If none is connected, you’ll see this error.  
-- To fix: add a trigger (for development, a manual trigger is common).
-
-
-> **"Please execute the whole workflow … existing execution data is too large."** 
-
-- This occurs when your workflow is very complex or has many branches. Partial execution sends internal workflow structure for testing, which might exceed size constraints.  
-- A workaround is to insert a **Limit** node to reduce output size during testing, then disable it for full runs.
-
----
-
-## Execution Modes (Manual vs Production)
-
-- **Manual execution** is initiated from the designer; it's meant for development.  
-- **Production execution** runs automatically in response to a trigger (schedule, event, etc.).  
-  - For this, workflows must include a non-manual trigger node and be activated.
-  - Production runs do *not* respect pinned data — they always execute everything fully.
-  - A run that reaches a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) node pauses and waits for a human decision — it can be approved, rejected, or cancelled from the Executions pane rather than finishing immediately.
-
-## Related Concepts
+## Related
 
 - [Workflow lifecycle](/usage/key-concepts/flow-logic/workflow-lifecycle/)
 - [Execution order](/usage/key-concepts/flow-logic/execution-order/)
-- [Workflow connections](/usage/troubleshooting/workflow-connections/)
+- [Troubleshooting guide](/usage/troubleshooting/)
 - [Wait For Approval](/nodes/builtin/flow/wait-for-approval/)
