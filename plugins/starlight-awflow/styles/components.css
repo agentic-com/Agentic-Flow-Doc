@@ -1,0 +1,734 @@
+/*
+ * Styles for the plugin's page chrome (banner, node header, glance card) and the
+ * src/components/awflow library. One stylesheet so Astro and Svelte markup look identical.
+ */
+
+.awf-mono {
+	font-family: var(--__sl-font-mono);
+	font-size: 0.75rem;
+}
+.awf-eyebrow {
+	margin: 0;
+	font-family: var(--__sl-font-mono);
+	font-size: 0.75rem;
+	letter-spacing: 0;
+}
+
+/* ---------- Section banner (PageTitle) ---------- */
+
+.awf-banner {
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 1.25rem;
+	margin-top: 1rem;
+	padding: 1.75rem;
+	border-radius: 24px;
+	background: var(--awf-c);
+	color: #fff;
+}
+.awf-banner__text {
+	flex: 1 1 22rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.625rem;
+	min-width: 0;
+}
+.awf-banner .awf-eyebrow {
+	color: color-mix(in srgb, #fff 80%, var(--awf-c));
+}
+.awf-banner h1 {
+	margin: 0;
+	font-size: clamp(2rem, 4vw, 2.75rem);
+	line-height: 1.05;
+	letter-spacing: -0.035em;
+	font-weight: 700;
+	color: #fff;
+}
+.awf-banner__lede {
+	margin: 0;
+	font-size: 1.0625rem;
+	line-height: 1.5;
+	color: color-mix(in srgb, #fff 90%, var(--awf-c));
+	max-width: 40rem;
+}
+.awf-banner__wire {
+	position: relative;
+	flex: 0 1 15rem;
+	height: 7.5rem;
+}
+.awf-banner__box {
+	position: absolute;
+	left: 0.5rem;
+	top: 0.75rem;
+	width: 7rem;
+	height: 4.75rem;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.14);
+	border: 1.5px dashed rgba(255, 255, 255, 0.65);
+}
+.awf-banner__box--solid {
+	left: 6rem;
+	top: 2.5rem;
+	width: 8rem;
+	height: 4.5rem;
+	background: rgba(255, 255, 255, 0.92);
+	border: 0;
+	box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.5);
+}
+.awf-banner__link {
+	position: absolute;
+	left: 7.5rem;
+	top: 2.25rem;
+	width: 2.5rem;
+	border-top: 1.5px dashed rgba(255, 255, 255, 0.75);
+}
+@media (max-width: 40rem) {
+	.awf-banner {
+		padding: 1.25rem;
+		border-radius: 18px;
+	}
+	.awf-banner__wire {
+		display: none;
+	}
+}
+
+/* ---------- Node header (PageTitle, kind: node) ---------- */
+
+.awf-node-header {
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-top: 1rem;
+	padding: 1.5rem 1.75rem;
+	border-radius: var(--awf-radius-xl);
+	background: var(--awf-t);
+	border: 1px solid color-mix(in srgb, var(--awf-c) 25%, var(--awf-t));
+	color: var(--sl-color-white);
+}
+:root:not([data-theme='light']) .awf-node-header {
+	background: color-mix(in srgb, var(--awf-c) 16%, var(--sl-color-black));
+	border-color: color-mix(in srgb, var(--awf-c) 40%, var(--sl-color-black));
+}
+.awf-node-header .awf-eyebrow {
+	color: color-mix(in srgb, var(--awf-c) 85%, black);
+}
+:root:not([data-theme='light']) .awf-node-header .awf-eyebrow {
+	color: color-mix(in srgb, var(--awf-c) 40%, white);
+}
+.awf-node-header__wire {
+	position: absolute;
+	right: 1.375rem;
+	top: 1.375rem;
+	width: 7.5rem;
+	height: 4rem;
+	border: 1.5px dashed color-mix(in srgb, var(--awf-c) 45%, transparent);
+	border-radius: 14px;
+	pointer-events: none;
+}
+.awf-node-header__wire::before {
+	content: '';
+	position: absolute;
+	right: calc(100% + 0.5rem);
+	top: 2rem;
+	width: 3.5rem;
+	border-top: 1.5px dashed color-mix(in srgb, var(--awf-c) 45%, transparent);
+}
+.awf-node-header__main {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	align-items: center;
+}
+.awf-node-header__icon {
+	flex: none;
+	width: 58px;
+	height: 58px;
+	border-radius: 16px;
+	background: var(--awf-surface);
+	border: 1px solid color-mix(in srgb, var(--awf-c) 30%, transparent);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--awf-c);
+	box-shadow: 0 12px 24px -16px color-mix(in srgb, var(--awf-c) 70%, transparent);
+}
+:root:not([data-theme='light']) .awf-node-header__icon {
+	color: color-mix(in srgb, var(--awf-c) 45%, white);
+}
+.awf-node-header__icon :is(svg, img) {
+	width: 28px;
+	height: 28px;
+}
+.awf-node-header__titles {
+	flex: 1;
+	min-width: 14rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+.awf-node-header h1 {
+	margin: 0;
+	font-size: clamp(2rem, 4vw, 2.625rem);
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+	font-weight: 700;
+	color: var(--sl-color-white);
+}
+.awf-node-header__lede {
+	margin: 0;
+	font-size: 1.0625rem;
+	line-height: 1.5;
+	color: var(--sl-color-gray-2);
+}
+.awf-node-header__meta {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	align-items: center;
+	justify-content: space-between;
+}
+.awf-node-header__badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+/* ---------- At a glance (PageSidebar) ---------- */
+
+.awf-glance {
+	border-radius: 16px;
+	background: var(--awf-surface);
+	border: 1px solid var(--awf-line);
+	overflow: hidden;
+	margin-bottom: 0.5rem;
+}
+.awf-glance__title {
+	margin: 0;
+	padding: 0.625rem 0.875rem;
+	background: var(--awf-t);
+	font-family: var(--__sl-font-mono);
+	font-size: 0.6875rem;
+	font-weight: 500;
+	color: color-mix(in srgb, var(--awf-c) 85%, black);
+}
+:root:not([data-theme='light']) .awf-glance__title {
+	background: color-mix(in srgb, var(--awf-c) 18%, var(--sl-color-black));
+	color: color-mix(in srgb, var(--awf-c) 40%, white);
+}
+.awf-glance dl {
+	margin: 0;
+	padding: 0.75rem 0.875rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	font-size: 0.8125rem;
+}
+.awf-glance dl > div {
+	display: flex;
+	justify-content: space-between;
+	gap: 0.75rem;
+}
+.awf-glance dt {
+	color: var(--awf-muted);
+}
+.awf-glance dd {
+	margin: 0;
+	font-weight: 600;
+	text-align: end;
+	color: var(--sl-color-white);
+}
+
+/* ---------- Badge / WorksIn ---------- */
+
+.awf-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.75rem;
+	line-height: 1.4;
+	font-weight: 600;
+	padding: 3px 10px;
+	border-radius: 999px;
+	border: 1px solid transparent;
+	background: var(--awf-surface);
+	border-color: var(--awf-line);
+	color: var(--sl-color-gray-1);
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.awf-badge__dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 999px;
+	background: #16a34a;
+}
+.awf-badge--new {
+	background: var(--awf-amber);
+	border-color: var(--awf-amber);
+	color: #fff;
+}
+.awf-badge--deprecated {
+	background: #fee2e2;
+	border-color: #fecaca;
+	color: #991b1b;
+}
+.awf-badge--admin {
+	background: var(--awf-ink);
+	border-color: var(--awf-ink);
+	color: #fff;
+}
+.awf-badge--agent-tool,
+.awf-badge--beta {
+	background: #ede9fe;
+	border-color: #ddd6fe;
+	color: #5b21b6;
+}
+.awf-badge--no-setup {
+	background: #dcfce7;
+	border-color: #bbf7d0;
+	color: #166534;
+}
+.awf-badge--connections {
+	background: #dbeafe;
+	border-color: #bfdbfe;
+	color: #1e40af;
+}
+.awf-badge--on-device .awf-badge__dot {
+	background: #0f766e;
+}
+.awf-badge--extension,
+.awf-badge--web,
+.awf-badge--on-device {
+	font-weight: 500;
+}
+.awf-badge--missing {
+	font-weight: 500;
+	border-style: dashed;
+	background: transparent;
+	color: var(--awf-muted);
+}
+.awf-badge--family {
+	background: color-mix(in srgb, var(--awf-c, #4338ca) 12%, var(--awf-surface));
+	border-color: color-mix(in srgb, var(--awf-c, #4338ca) 30%, transparent);
+	color: color-mix(in srgb, var(--awf-c, #4338ca) 85%, black);
+}
+:root:not([data-theme='light']) .awf-badge--deprecated {
+	background: #3b1212;
+	border-color: #6b1d1d;
+	color: #fecaca;
+}
+:root:not([data-theme='light']) :is(.awf-badge--agent-tool, .awf-badge--beta) {
+	background: #2a1f4a;
+	border-color: #4c3a8a;
+	color: #ddd6fe;
+}
+:root:not([data-theme='light']) .awf-badge--no-setup {
+	background: #0f2a1a;
+	border-color: #1f5133;
+	color: #bbf7d0;
+}
+:root:not([data-theme='light']) .awf-badge--connections {
+	background: #13213f;
+	border-color: #1e3a8a;
+	color: #bfdbfe;
+}
+:root:not([data-theme='light']) .awf-badge--admin {
+	background: var(--awf-cream);
+	border-color: var(--awf-cream);
+	color: var(--awf-ink);
+}
+:root:not([data-theme='light']) .awf-badge--family {
+	background: color-mix(in srgb, var(--awf-c, #4338ca) 22%, var(--sl-color-black));
+	color: color-mix(in srgb, var(--awf-c, #4338ca) 35%, white);
+}
+.awf-worksin {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+}
+.awf-worksin__label {
+	font-size: 0.75rem;
+	color: var(--awf-muted);
+}
+
+/* ---------- Callout (shares the aside tokens in content.css) ---------- */
+
+.awf-callout {
+	display: flex;
+	gap: 0.75rem;
+	margin-block: 1rem;
+	font-size: 0.9375rem;
+	line-height: 1.55;
+}
+.awf-callout__icon {
+	flex: none;
+	margin-top: 2px;
+	color: var(--awf-aside-accent);
+}
+.awf-callout__body {
+	min-width: 0;
+}
+.awf-callout__body > p:first-of-type,
+.awf-callout__body > p:only-of-type {
+	display: inline;
+	margin: 0;
+}
+.awf-callout__link {
+	margin-inline-start: 0.375rem;
+	color: var(--awf-aside-accent);
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+/* ---------- ParamTable ---------- */
+
+.awf-params {
+	overflow-x: auto;
+	margin-block: 1rem;
+	border: 1px solid var(--awf-line);
+	border-radius: var(--awf-radius);
+	background: var(--awf-surface);
+}
+.sl-markdown-content .awf-params table {
+	display: table;
+	width: 100%;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	font-size: 0.875rem;
+}
+.awf-params caption {
+	text-align: start;
+	padding: 0.625rem 0.875rem;
+	font-size: 0.8125rem;
+	color: var(--awf-muted);
+	border-bottom: 1px solid var(--awf-line-soft);
+}
+.awf-params tbody th {
+	font-weight: 600;
+	color: var(--sl-color-white);
+	white-space: nowrap;
+	text-align: start;
+}
+.awf-params td code {
+	font-size: 0.75rem;
+	background: transparent;
+	border: 0;
+	padding: 0;
+	color: var(--sl-color-gray-2);
+}
+.awf-req {
+	margin-inline-start: 0.375rem;
+	font-size: 0.625rem;
+	font-weight: 700;
+	padding: 1px 6px;
+	border-radius: 999px;
+	background: #fee2e2;
+	color: #991b1b;
+	vertical-align: middle;
+}
+:root:not([data-theme='light']) .awf-req {
+	background: #3b1212;
+	color: #fecaca;
+}
+.awf-params__default {
+	display: block;
+	margin-top: 0.25rem;
+	font-size: 0.8125rem;
+	color: var(--awf-muted);
+}
+
+/* ---------- OutputPorts ---------- */
+
+.sl-markdown-content .awf-ports {
+	list-style: none;
+	padding: 0;
+	margin-block: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+.sl-markdown-content .awf-port {
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.375rem 0.625rem;
+	padding: 0.625rem 0.875rem;
+	border: 1px solid var(--awf-line);
+	border-radius: 12px;
+	background: var(--awf-surface);
+}
+.awf-port__handle {
+	align-self: center;
+	width: 10px;
+	height: 10px;
+	border-radius: 999px;
+	border: 2px solid var(--awf-sc);
+	background: var(--sl-color-black);
+}
+.awf-port__type {
+	font-family: var(--__sl-font-mono);
+	font-size: 0.75rem;
+	color: var(--awf-muted);
+}
+.awf-port__desc {
+	flex-basis: 100%;
+	padding-inline-start: 1.25rem;
+	font-size: 0.875rem;
+	color: var(--sl-color-gray-2);
+}
+
+/* ---------- StepCard (Tutorial.dc.html) ---------- */
+
+.awf-step {
+	display: flex;
+	gap: 1.125rem;
+	padding: 1.25rem;
+	margin-block: 1rem;
+	border-radius: var(--awf-radius-lg);
+	background: var(--awf-surface);
+	border: 1px solid var(--awf-line);
+}
+.awf-step__n {
+	flex: none;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: 999px;
+	background: var(--awf-sc);
+	color: #fff;
+	font-weight: 700;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+.awf-step__body {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.625rem;
+}
+.sl-markdown-content .awf-step__title {
+	margin: 0;
+	font-size: 1.1875rem;
+	font-weight: 650;
+}
+.awf-step__content > :first-child {
+	margin-top: 0;
+}
+.sl-markdown-content .awf-step__check {
+	margin: 0;
+	font-size: 0.875rem;
+	color: #14532d;
+	background: #f0fdf4;
+	border-radius: 10px;
+	padding: 0.5625rem 0.75rem;
+}
+:root:not([data-theme='light']) .awf-step__check {
+	color: #bbf7d0;
+	background: #0f2a1a;
+}
+
+/* ---------- Screenshot + hotspots ---------- */
+
+.awf-shot {
+	margin-block: 1.25rem;
+}
+.awf-shot__frame {
+	position: relative;
+	border-radius: var(--awf-radius);
+	border: 1px solid var(--awf-line);
+	overflow: hidden;
+	background: var(--awf-surface-2);
+	line-height: 0;
+}
+.awf-shot__img {
+	width: 100%;
+	height: auto;
+}
+:root[data-theme='light'] .awf-shot__img--dark,
+:root:not([data-theme='light']) .awf-shot__img--light {
+	display: none;
+}
+.awf-hotspot {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	width: 24px;
+	height: 24px;
+	border-radius: 999px;
+	background: var(--awf-amber);
+	color: #fff;
+	font-size: 0.75rem;
+	line-height: 24px;
+	font-weight: 700;
+	text-align: center;
+	box-shadow: 0 0 0 5px rgba(180, 83, 9, 0.25);
+}
+.awf-shot figcaption {
+	margin-top: 0.625rem;
+	font-size: 0.875rem;
+	color: var(--awf-muted);
+}
+.sl-markdown-content .awf-shot__legend {
+	list-style: none;
+	padding: 0;
+	margin: 0.5rem 0 0;
+	display: grid;
+	gap: 0.375rem;
+}
+.sl-markdown-content .awf-shot__legend li {
+	margin: 0;
+	display: flex;
+	gap: 0.5rem;
+	align-items: baseline;
+	color: var(--sl-color-gray-2);
+}
+.awf-shot__num {
+	flex: none;
+	width: 20px;
+	height: 20px;
+	border-radius: 999px;
+	background: var(--awf-amber);
+	color: #fff;
+	font-size: 0.6875rem;
+	line-height: 20px;
+	font-weight: 700;
+	text-align: center;
+}
+
+/* ---------- PageActions ---------- */
+
+.awf-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.375rem;
+}
+.awf-action {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.375rem;
+	min-height: 2.25rem;
+	font: inherit;
+	font-size: 0.8125rem;
+	padding: 0.4375rem 0.6875rem;
+	border-radius: 10px;
+	border: 1px solid var(--awf-line);
+	background: var(--awf-surface);
+	color: var(--sl-color-white);
+	text-decoration: none;
+	cursor: pointer;
+}
+.awf-node-header .awf-action {
+	border-color: color-mix(in srgb, var(--awf-c) 30%, transparent);
+}
+.awf-action:hover {
+	color: var(--sl-color-white);
+	border-color: var(--sl-color-gray-4);
+}
+.awf-actions--compact .awf-action {
+	min-height: 2rem;
+	padding: 0.3125rem 0.625rem;
+}
+
+/* ---------- RecipeCard ---------- */
+
+.awf-recipe {
+	--awf-tint: #f0fdf4;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1rem;
+	border-radius: 16px;
+	background: var(--awf-surface);
+	border: 1px solid var(--awf-line);
+	color: inherit;
+	text-decoration: none;
+}
+.awf-recipe:hover {
+	color: inherit;
+}
+.awf-recipe__bar {
+	width: 28px;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--awf-section-recipes);
+}
+.awf-recipe__title {
+	font-weight: 600;
+	line-height: 1.4;
+	color: var(--sl-color-white);
+}
+.awf-recipe__goal {
+	font-size: 0.875rem;
+	color: var(--sl-color-gray-2);
+}
+.awf-recipe__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.375rem;
+	align-items: center;
+	color: var(--awf-muted);
+}
+.awf-chip {
+	font-size: 0.75rem;
+	padding: 2px 8px;
+	border-radius: 999px;
+	border: 1px solid var(--awf-line);
+	color: var(--sl-color-gray-2);
+}
+.sl-markdown-content .awf-recipe + .awf-recipe {
+	margin-top: 0;
+}
+
+/* ---------- Kbd ---------- */
+
+.awf-kbd {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	font-family: var(--__sl-font-mono);
+	font-size: 0.8em;
+	vertical-align: baseline;
+}
+.awf-kbd > kbd {
+	font: inherit;
+	min-width: 1.6em;
+	text-align: center;
+	padding: 0.05em 0.4em;
+	border: 1px solid var(--awf-line);
+	border-bottom-width: 2px;
+	border-radius: 6px;
+	background: var(--awf-surface);
+	color: var(--sl-color-white);
+}
+.awf-kbd__plus {
+	color: var(--awf-muted);
+	font-size: 0.85em;
+}
+
+/* Starlight adds 1rem between markdown siblings; our cards manage their own spacing. */
+.sl-markdown-content :is(.awf-step__body, .awf-recipe, .awf-callout__body, .awf-port) > * {
+	margin-top: 0;
+}
+.sl-markdown-content .awf-step__content > * + * {
+	margin-top: 0.75rem;
+}
+
+@media (max-width: 40rem) {
+	.awf-node-header {
+		padding: 1.25rem;
+	}
+	.awf-node-header__wire {
+		display: none;
+	}
+}

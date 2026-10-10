@@ -1,0 +1,240 @@
+/*
+ * Restyle of Starlight's built-in content components with the brand tokens:
+ * asides (tinted boxes, no left-border bar), badges, steps, cards, tables, code, pagination.
+ */
+
+/* ---------- Typography ---------- */
+
+.sl-markdown-content :is(h1, h2, h3, h4) {
+	letter-spacing: -0.015em;
+	font-weight: 650;
+}
+.sl-markdown-content h2 {
+	letter-spacing: -0.02em;
+}
+/* Plain prose links only: classed links belong to components (hero buttons, cards, actions). */
+.sl-markdown-content a:not([class]):not(:where(.not-content *)) {
+	color: var(--sl-color-text-accent);
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+}
+.sl-markdown-content a:not([class]):not(:where(.not-content *)):hover {
+	color: var(--sl-color-white);
+}
+.sl-markdown-content :not(pre) > code {
+	border: 1px solid var(--awf-line-soft);
+	border-radius: 6px;
+	padding: 0.1em 0.35em;
+	font-size: 0.875em;
+}
+
+/* ---------- Asides / callouts (Main.dc.html · 07) ---------- */
+
+.starlight-aside,
+.awf-callout {
+	--awf-aside-bg: #eff6ff;
+	--awf-aside-line: #dbeafe;
+	--awf-aside-ink: #172554;
+	--awf-aside-accent: #1e40af;
+	border: 1px solid var(--awf-aside-line);
+	border-radius: var(--awf-radius);
+	background: var(--awf-aside-bg);
+	color: var(--awf-aside-ink);
+	padding: 0.875rem 1rem;
+}
+.starlight-aside {
+	border-inline-start: 1px solid var(--awf-aside-line);
+	--sl-color-asides-text-accent: var(--awf-aside-accent);
+	--sl-color-asides-border: var(--awf-aside-line);
+}
+.starlight-aside--tip,
+.awf-callout--tip,
+.awf-callout--new {
+	--awf-aside-bg: #fef3e2;
+	--awf-aside-line: #fde7c7;
+	--awf-aside-ink: #451a03;
+	--awf-aside-accent: #92400e;
+}
+.starlight-aside--caution,
+.awf-callout--careful {
+	--awf-aside-bg: #fffbeb;
+	--awf-aside-line: #fde68a;
+	--awf-aside-ink: #451a03;
+	--awf-aside-accent: #854d0e;
+}
+.starlight-aside--danger,
+.awf-callout--danger {
+	--awf-aside-bg: #fef2f2;
+	--awf-aside-line: #fecaca;
+	--awf-aside-ink: #450a0a;
+	--awf-aside-accent: #991b1b;
+}
+:root:not([data-theme='light']) :is(.starlight-aside, .awf-callout) {
+	--awf-aside-bg: #13213f;
+	--awf-aside-line: #1e3a8a;
+	--awf-aside-ink: #dbeafe;
+	--awf-aside-accent: #93c5fd;
+}
+:root:not([data-theme='light']) :is(.starlight-aside--tip, .awf-callout--tip, .awf-callout--new) {
+	--awf-aside-bg: #2a1a09;
+	--awf-aside-line: #5c3410;
+	--awf-aside-ink: #fef3e2;
+	--awf-aside-accent: #fbbf24;
+}
+:root:not([data-theme='light']) :is(.starlight-aside--caution, .awf-callout--careful) {
+	--awf-aside-bg: #2a2208;
+	--awf-aside-line: #5c4a10;
+	--awf-aside-ink: #fef9c3;
+	--awf-aside-accent: #fde047;
+}
+:root:not([data-theme='light']) :is(.starlight-aside--danger, .awf-callout--danger) {
+	--awf-aside-bg: #2c0f0f;
+	--awf-aside-line: #6b1d1d;
+	--awf-aside-ink: #fee2e2;
+	--awf-aside-accent: #fca5a5;
+}
+.starlight-aside {
+	color: var(--awf-aside-ink);
+}
+.starlight-aside__title {
+	font-size: var(--sl-text-base);
+}
+.starlight-aside__content a {
+	color: var(--awf-aside-accent);
+}
+
+/* ---------- Badges (Starlight + ours) ---------- */
+
+.sl-badge {
+	border-radius: 999px;
+	padding-inline: 0.5rem;
+	font-weight: 600;
+	font-family: var(--__sl-font);
+}
+
+/* ---------- Steps ---------- */
+
+.sl-steps > li::before {
+	background-color: var(--awf-surface);
+	border: 1px solid var(--awf-line);
+	color: var(--sl-color-white);
+	font-weight: 700;
+	box-shadow: none;
+}
+.sl-steps > li::after {
+	background: repeating-linear-gradient(180deg, var(--sl-color-gray-5) 0 6px, transparent 6px 12px);
+	width: 2px;
+}
+
+/* ---------- Cards & link cards ---------- */
+
+.card,
+.sl-link-card {
+	border-radius: var(--awf-radius-lg);
+	border-color: var(--awf-line);
+	background: var(--awf-surface);
+	box-shadow: none;
+	transition:
+		transform var(--awf-base) var(--awf-ease),
+		box-shadow var(--awf-base),
+		border-color var(--awf-base);
+}
+.sl-link-card:hover {
+	transform: translateY(-3px);
+	box-shadow: var(--awf-shadow);
+	border-color: #e9c9a0;
+	background: var(--awf-surface);
+}
+:root:not([data-theme='light']) .sl-link-card:hover {
+	border-color: var(--sl-color-gray-4);
+}
+.card .icon {
+	border-radius: 10px;
+}
+
+/* ---------- Tabs ---------- */
+
+starlight-tabs [role='tab'][aria-selected='true'] {
+	border-color: var(--awf-sc, var(--sl-color-accent));
+	color: var(--sl-color-white);
+}
+
+/* ---------- Tables ---------- */
+
+.sl-markdown-content table:not(:where(.not-content *)) {
+	border-collapse: separate;
+	border-spacing: 0;
+	border: 1px solid var(--awf-line);
+	border-radius: var(--awf-radius);
+	overflow: hidden;
+	background: var(--awf-surface);
+}
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+	border-bottom: 1px solid var(--awf-line-soft);
+	border-inline: 0;
+	padding: 0.625rem 0.875rem;
+}
+.sl-markdown-content tr:last-child > :is(th, td):not(:where(.not-content *)) {
+	border-bottom: 0;
+}
+.sl-markdown-content thead th:not(:where(.not-content *)) {
+	background: var(--awf-surface-2);
+	font-family: var(--__sl-font-mono);
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: var(--awf-muted);
+	border-bottom: 1px solid var(--awf-line);
+}
+
+/* ---------- Code blocks (Expressive Code frame) ---------- */
+
+.expressive-code .frame {
+	border-radius: var(--awf-radius);
+}
+
+/* ---------- Pagination ---------- */
+
+.pagination-links a {
+	border-radius: var(--awf-radius);
+	border-color: var(--awf-line);
+	background: var(--awf-surface);
+	box-shadow: none;
+	transition:
+		transform var(--awf-base) var(--awf-ease),
+		border-color var(--awf-base),
+		box-shadow var(--awf-base);
+}
+.pagination-links a:hover {
+	transform: translateY(-2px);
+	border-color: var(--awf-sc);
+	box-shadow: var(--awf-shadow);
+}
+.pagination-links .link-title {
+	font-size: var(--sl-text-xl);
+	font-weight: 600;
+	letter-spacing: -0.01em;
+}
+
+/* ---------- Native <kbd> ---------- */
+
+.sl-markdown-content kbd:not(:where(.awf-kbd, .awf-kbd *)) {
+	font-family: var(--__sl-font-mono);
+	font-size: 0.8em;
+	padding: 0.1em 0.45em;
+	border: 1px solid var(--awf-line);
+	border-bottom-width: 2px;
+	border-radius: 6px;
+	background: var(--awf-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.card,
+	.sl-link-card,
+	.pagination-links a {
+		transition: none;
+	}
+	.sl-link-card:hover,
+	.pagination-links a:hover {
+		transform: none;
+	}
+}

@@ -1,0 +1,304 @@
+/*
+ * Motion (Main.dc.html · 02–03). One idea everywhere: data flowing along a wire.
+ * Slow, small, purposeful — and fully off under prefers-reduced-motion.
+ *
+ * Utilities:
+ *   .awf-rise (+ .awf-d1…d6)  enter: fade + 14px rise
+ *   .awf-lift                hover: lift, tint (--awf-tint), shadow; moves an inner .awf-arr
+ *   .awf-press               hover: small lift for buttons
+ *   .awf-wire > i            dashed wire with a travelling ember pulse (.awf-wire--v vertical)
+ *   .awf-run (+ .awf-r2…r4)  node glow, replayed every 4.8s (a run)
+ *   .awf-ping                pulsing ring (hotspots, "live", new)
+ *   .awf-float (+ .awf-f2/f3) gentle 6s bob
+ *   .awf-wave > i×4          audio-style bars (Ask Aria)
+ *   .awf-skel                skeleton sweep
+ *   .awf-check path          checkmark draws in
+ */
+
+@keyframes awf-rise {
+	from {
+		opacity: 0;
+		transform: translateY(14px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@keyframes awf-dash {
+	to {
+		background-position: 24px 0;
+	}
+}
+@keyframes awf-dashv {
+	to {
+		background-position: 0 24px;
+	}
+}
+@keyframes awf-travel {
+	0% {
+		left: -4px;
+		opacity: 0;
+	}
+	15%,
+	85% {
+		opacity: 1;
+	}
+	100% {
+		left: calc(100% - 4px);
+		opacity: 0;
+	}
+}
+@keyframes awf-travelv {
+	0% {
+		top: -4px;
+		opacity: 0;
+	}
+	15%,
+	85% {
+		opacity: 1;
+	}
+	100% {
+		top: calc(100% - 4px);
+		opacity: 0;
+	}
+}
+@keyframes awf-glow {
+	0%,
+	100% {
+		box-shadow: 0 1px 2px rgba(28, 25, 23, 0.06);
+	}
+	6%,
+	24% {
+		box-shadow:
+			0 0 0 3px rgba(245, 158, 11, 0.6),
+			0 14px 30px -12px rgba(180, 83, 9, 0.55);
+	}
+}
+@keyframes awf-ping {
+	0% {
+		box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.5);
+	}
+	100% {
+		box-shadow: 0 0 0 14px rgba(217, 119, 6, 0);
+	}
+}
+@keyframes awf-float {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-7px);
+	}
+}
+@keyframes awf-wave {
+	0%,
+	100% {
+		transform: scaleY(0.35);
+	}
+	50% {
+		transform: scaleY(1);
+	}
+}
+@keyframes awf-sweep {
+	to {
+		background-position: -200% 0;
+	}
+}
+@keyframes awf-draw {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+.awf-rise {
+	animation: awf-rise var(--awf-enter) var(--awf-ease) both;
+}
+.awf-d1 {
+	animation-delay: 0.08s;
+}
+.awf-d2 {
+	animation-delay: 0.16s;
+}
+.awf-d3 {
+	animation-delay: 0.24s;
+}
+.awf-d4 {
+	animation-delay: 0.32s;
+}
+.awf-d5 {
+	animation-delay: 0.4s;
+}
+.awf-d6 {
+	animation-delay: 0.48s;
+}
+
+.awf-lift {
+	transition:
+		transform var(--awf-base) var(--awf-ease),
+		box-shadow var(--awf-base),
+		border-color var(--awf-base),
+		background var(--awf-base);
+}
+.awf-lift:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--awf-shadow);
+	border-color: #e9c9a0;
+	background: var(--awf-tint, var(--awf-surface));
+}
+:root:not([data-theme='light']) .awf-lift:hover {
+	border-color: var(--sl-color-gray-4);
+	background: var(--awf-surface-2);
+}
+.awf-arr {
+	display: inline-block;
+	transition: transform var(--awf-base);
+}
+.awf-lift:hover .awf-arr,
+a:hover .awf-arr {
+	transform: translateX(4px);
+}
+
+.awf-press {
+	transition:
+		transform var(--awf-fast),
+		box-shadow var(--awf-base);
+}
+.awf-press:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 10px 22px -10px rgba(180, 83, 9, 0.7);
+}
+
+.awf-wire {
+	position: relative;
+	display: inline-block;
+	flex: none;
+	width: 52px;
+	height: 2px;
+	background: repeating-linear-gradient(90deg, #c9a27a 0 6px, transparent 6px 12px);
+	background-size: 24px 2px;
+	animation: awf-dash 0.9s linear infinite;
+}
+.awf-wire--v {
+	display: block;
+	width: 2px;
+	height: 28px;
+	background: repeating-linear-gradient(180deg, #c9a27a 0 6px, transparent 6px 12px);
+	background-size: 2px 24px;
+	animation-name: awf-dashv;
+}
+.awf-wire > i {
+	position: absolute;
+	top: -3px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--awf-ember);
+	box-shadow:
+		0 0 0 3px rgba(245, 158, 11, 0.2),
+		0 0 12px var(--awf-ember);
+	animation: awf-travel 1.8s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+}
+.awf-wire--v > i {
+	top: auto;
+	left: -3px;
+	animation-name: awf-travelv;
+}
+
+.awf-run {
+	animation: awf-glow 4.8s ease-in-out infinite;
+}
+.awf-r2 {
+	animation-delay: 1.2s;
+}
+.awf-r3 {
+	animation-delay: 2.4s;
+}
+.awf-r4 {
+	animation-delay: 3.6s;
+}
+
+.awf-ping {
+	animation: awf-ping 2s ease-out infinite;
+}
+
+.awf-float {
+	animation: awf-float 6s ease-in-out infinite;
+}
+.awf-f2 {
+	animation-delay: -2s;
+}
+.awf-f3 {
+	animation-delay: -4s;
+}
+
+.awf-wave {
+	display: inline-flex;
+	align-items: center;
+	height: 16px;
+}
+.awf-wave > i {
+	display: inline-block;
+	width: 3px;
+	height: 14px;
+	border-radius: 2px;
+	background: currentColor;
+	margin: 0 1px;
+	animation: awf-wave 1s ease-in-out infinite;
+}
+.awf-wave > i:nth-child(2) {
+	animation-delay: 0.15s;
+}
+.awf-wave > i:nth-child(3) {
+	animation-delay: 0.3s;
+}
+.awf-wave > i:nth-child(4) {
+	animation-delay: 0.45s;
+}
+
+.awf-skel {
+	background: linear-gradient(90deg, #f0e9df 25%, #faf6f0 50%, #f0e9df 75%);
+	background-size: 200% 100%;
+	animation: awf-sweep 1.6s linear infinite;
+}
+:root:not([data-theme='light']) .awf-skel {
+	background-image: linear-gradient(90deg, #292420 25%, #342e29 50%, #292420 75%);
+}
+
+.awf-check path {
+	stroke-dasharray: 30;
+	stroke-dashoffset: 30;
+	animation: awf-draw 0.6s 0.5s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.awf-rise,
+	.awf-wire,
+	.awf-wire > i,
+	.awf-run,
+	.awf-ping,
+	.awf-float,
+	.awf-wave > i,
+	.awf-skel,
+	.awf-check path,
+	.awf-lift,
+	.awf-press,
+	.awf-arr,
+	.awf-tab,
+	.awf-tab::after,
+	.awf-tab__dot {
+		animation: none !important;
+		transition: none !important;
+	}
+	.awf-lift:hover,
+	.awf-press:hover {
+		transform: none;
+	}
+	.awf-wire > i {
+		display: none;
+	}
+	.awf-check path {
+		stroke-dashoffset: 0;
+	}
+}
