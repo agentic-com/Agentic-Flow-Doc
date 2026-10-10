@@ -1,30 +1,23 @@
 ---
-title: Version 0.6.0
-description: Release notes for AWFlow v0.6.0.
+title: "Aria drafts your workflows, a Marketplace to share them, and 14 new integrations"
+description: "Describe an outcome and the assistant drafts the workflow; publish and install community workflows with a trust layer that shows what they touch; connect GitHub, Discord, Telegram and more."
 sidebar:
+  label: v0.6.0
   order: 4
 section: releases
+kind: release
 ---
 
-Published: **September 8, 2026**
+import { ReleaseChanges } from '@components/awflow';
+import { getRelease } from '../../../data/releases';
 
-## Highlights
+## What changed
 
-Version 0.6.0 is the largest release so far. It turns AWFlow from a
-workflow builder into a full automation platform: an AI assistant that drafts
-workflows for you, a community marketplace with templates and safe sharing, a
-large expansion of app integrations built on modern OAuth, browser-native nodes
-that run without extra permissions, and a trust layer that shows what a workflow
-touches and asks for consent before it runs. Alongside these, a redesigned
-first-run experience helps new users reach a real result faster, workflows can
-now explain themselves step by step, and the cloud data layer moved to a new
-backend.
+<ReleaseChanges release={getRelease('0.6.0')} level={3} meta />
 
-The sections below group the change by theme. Most features are self-service and
-need no configuration; where a feature affects how you build or run workflows,
-the relevant docs are linked.
+## In detail
 
-## AI Workflow Assistant
+### AI Workflow Assistant
 
 The AI assistant is the headline feature of this release. Describe the outcome
 you want in plain language and the assistant drafts a workflow on the canvas —
@@ -45,7 +38,7 @@ Relevant docs:
 - [WebLLM (free, in-browser)](/nodes/builtin/ai/aidependencies/llm/wbellm/)
 - [AI agents](/concepts/ai/ai-agents/)
 
-## UI Automation & Action Recorder
+### UI Automation & Action Recorder
 
 UI Automation gained a recorder: perform a sequence of clicks, inputs, and
 submissions on a page and turn it into a reusable automation instead of wiring
@@ -59,7 +52,7 @@ Relevant docs:
 - [Submit Form](/nodes/extension/ui/submit-form/)
 - [Browser context](/concepts/flow/browser-context/)
 
-## Browser-Native Nodes
+### Browser-Native Nodes
 
 A set of nodes and triggers now runs directly in the browser without requesting
 extra host permissions, so common automations work with a smaller footprint and
@@ -72,7 +65,7 @@ Relevant docs:
 - [In Page Action nodes](/nodes/extension/)
 - [Trigger nodes](/nodes/builtin/trigger/whenstarted/)
 
-## Workflow Marketplace
+### Workflow Marketplace
 
 Workflows are no longer private-only. This release ships a full publishing and
 sharing experience:
@@ -96,7 +89,7 @@ Relevant docs:
 - [Import and export](/app/workflows/export-import/)
 - [Tags](/app/workflows/tags/)
 
-## Trust, Consent & Safety
+### Trust, Consent & Safety
 
 A new trust layer makes it clear what a workflow can do before it does it:
 
@@ -117,7 +110,7 @@ Relevant docs:
 - [Action approval](/concepts/ai/action-approval/)
 - [Browser tool access](/nodes/builtin/ai/aidependencies/tools/browser/)
 
-## Self-Explaining Workflows
+### Self-Explaining Workflows
 
 Published workflows can now explain themselves. Narration adds per-node notes,
 callouts, and a story panel that walks through each step when a workflow is
@@ -132,7 +125,7 @@ Relevant docs:
 - [Narrated workflows](/app/workflows/narration/)
 - [Narration style guide](/app/workflows/narration-style/)
 
-## Guided First Success
+### Guided First Success
 
 The first-run experience was redesigned so a new user reaches a real result
 quickly:
@@ -151,7 +144,7 @@ Relevant docs:
 - [Learning path](/get-started/learning-path/)
 - [Creating a workflow](/app/workflows/create/)
 
-## Better Node Discovery & Wiring
+### Better Node Discovery & Wiring
 
 Finding and connecting nodes is easier:
 
@@ -170,7 +163,7 @@ Relevant docs:
 - [Data structure](/concepts/data/data-structure/)
 - [Data mapping expressions](/concepts/data/data-mapping/data-mapping-expressions/)
 
-## Community Requests
+### Community Requests
 
 A requests board lets people ask for the workflows they want and see what others
 are asking for. Requests can be submitted from several entry points, similar
@@ -183,7 +176,7 @@ Relevant docs:
 - [Help and support](/app/help/help/)
 - [Contributing](/app/help/contributing/)
 
-## App Integrations
+### App Integrations
 
 This release greatly expands the set of services a workflow can connect to.
 New integration nodes:
@@ -211,7 +204,7 @@ Relevant docs:
 - [Custom API node](/nodes/builtin/integration/custom-api/)
 - [HTTP Request](/nodes/builtin/core/http-request/)
 
-## OAuth & Credentials
+### OAuth & Credentials
 
 Account connections moved to a provider-agnostic auth-code flow with PKCE, and
 the unused client-secret requirement was dropped. The same flow powers both
@@ -224,7 +217,7 @@ Relevant docs:
 - [Creating credentials](/app/connections/create/)
 - [Editing credentials](/app/connections/edit/)
 
-## Cloud Data Layer Migration
+### Cloud Data Layer Migration
 
 Account data in the cloud now goes through a new AWFlow cloud service. You don't
 need to do anything. This service powers the marketplace, sharing, the request
@@ -236,7 +229,7 @@ Relevant docs:
 - [Quick intro (local and cloud mode)](/get-started/quick-intro/)
 - [Data Store](/app/data-store/)
 
-## Admin & Operations
+### Admin & Operations
 
 Several changes support the people who run the platform:
 
@@ -250,7 +243,7 @@ Several changes support the people who run the platform:
 - An opt-in **newsletter** adds a subscribe card, a settings toggle, and an
   admin compose-and-send flow.
 
-## Fixes, Quality & Localization
+### Fixes, Quality & Localization
 
 - A pre-release audit remediated 21 findings across extension subsystems.
 - Publishing is more robust: aborted-publish drafts no longer show as

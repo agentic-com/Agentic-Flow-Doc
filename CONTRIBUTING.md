@@ -185,6 +185,36 @@ The plugin replaces Starlight's search box with its own dialog (awflow/Agentic-F
   - **Build this with Aria** uses the same path, in Build mode.
 - **For AI tools:** every page has a Markdown twin at `<url>.md` (starlight-md-txt), and the whole site is listed in `/llms.txt` (starlight-llms-txt). The dialog footer links both.
 
+## 🚀 Releases
+
+Release notes are **data first** (awflow/Agentic-Flow#1345). One file, `src/data/releases.ts`, holds every version (newest first) and feeds:
+
+- `/releases/`: the timeline (`<ReleaseTimeline client:load releases={RELEASES} />`). The current release is open, older ones collapse, and area chips filter the changes.
+- each version page, `src/content/docs/releases/v{major}-{minor}-{patch}.mdx`, through `<ReleaseChanges release={getRelease('x.y.z')} level={3} meta />` (New / Improved / Fixed groups, plus a version · date · browsers row). **Keep that URL shape:** the extension opens `/releases/v0-8-2/` after an update.
+- the RSS feed at `/releases/rss.xml` (`src/pages/releases/rss.xml.ts`).
+- `/releases/breaking-changes/`: written by hand, one `## vX.Y.Z` section per release. Write **None.** when there is nothing to act on.
+
+An entry has `version`, `date` (ISO), `browsers`, `headline`, `summary`, an optional `teaser` (the collapsed line on the timeline), `breaking`, and `changes: { kind: 'new' | 'improved' | 'fixed', area, text, link?, label? }[]`.
+
+**Writing rules**
+
+- **Headline = what the release means for the reader**, not "Version 0.9.0": "Marketplace templates you can trust — plus 14 fixes". The page `title` is the headline, and `sidebar.label` is `vX.Y.Z`.
+- **Every `new` item links to the page that explains it** (`link` + a short `label`, usually the page title). Improved and fixed items link when a page helps. Write the docs page first if it doesn't exist yet.
+- One sentence per change, user-facing ("Wait survives closing the tab"), never a commit subject.
+- `area` is one of `AREAS` in `src/data/releases.ts`. The chips are built from the areas the data uses.
+
+**Shipping a release**
+
+1. Draft from the app's git log (conventional commits: `feat` → new, `fix` → fixed, `perf`/`refactor`/`ux` → improved; everything else is listed as skipped):
+   ```sh
+   bun scripts/releases/draft.ts --repo ../agentic-flow --from v0.8.2 --to v0.9.0 --version 0.9.0
+   ```
+   It prints an entry with `TODO` headline, summary and links. Commit refs are kept as comments, and a `!` or `BREAKING CHANGE:` footer flags the entry as breaking.
+2. Edit it by hand: merge duplicates, drop internal work, rewrite each line for users, add links, then paste it at the top of `RELEASES`.
+3. Copy the newest version page to `v0-9-0.mdx`, change `getRelease(...)`, title, description and sidebar order, and add an optional `## In detail` section.
+4. Add the version to the **All versions** list in `releases/index.mdx` and to `breaking-changes.mdx`, and bump `version` in the `starlightAwflow` options in `astro.config.mjs`.
+5. Run `bun scripts/releases/check.ts`. The build runs the same check: a `new` change without a link, or a link to a page that doesn't exist, fails `bun run build`. The links validator can't see links passed to components as props, so this check covers them.
+
 ## 🌍 Languages
 
 The docs are **English only** for now. This was decided in awflow/Agentic-Flow#1332, while the docs are being restructured (epic #1308): translating pages that are still moving and being rewritten would waste the effort and leave stale copies behind.

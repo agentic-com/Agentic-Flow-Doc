@@ -1,22 +1,23 @@
 ---
-title: Version 0.8.1
-description: Release notes for AWFlow v0.8.1.
+title: "Knowledge bases on your device — and an AI harness you can watch"
+description: "Collections of your own files, pages and notes that Aria, your agents and your workflows can search in the browser, plus a rebuilt engine that shows each step of a reply and stops cleanly."
 sidebar:
+  label: v0.8.1
   order: 2
 section: releases
+kind: release
 ---
 
-Published: **October 7, 2026**
+import { ReleaseChanges } from '@components/awflow';
+import { getRelease } from '../../../data/releases';
 
-## Highlights
+## What changed
 
-Version 0.8.1 adds **knowledge bases**: collections of your own documents,
-pages and notes that Aria, your agents and your workflows can search, all on
-your device. It also rebuilds the AI harness that runs every assistant reply,
-so you can see what Aria is doing, stop it cleanly, and trust what it builds.
-A batch of fixes makes agents and teams more dependable.
+<ReleaseChanges release={getRelease('0.8.1')} level={3} meta />
 
-## Knowledge bases
+## In detail
+
+### Knowledge bases
 
 A knowledge base holds sources you add (files, web pages, notes) and makes them
 searchable by meaning and by keyword. Everything is stored and searched in the
@@ -48,7 +49,7 @@ Relevant docs:
 - [Save from anywhere](/app/knowledge-bases/save-from-anywhere/)
 - [Export & import](/app/knowledge-bases/export-import-backup/)
 
-### Knowledge in chats, agents and workflows
+#### Knowledge in chats, agents and workflows
 
 - A **knowledge picker** in chat lets you choose which bases Aria can search.
   Answers show **citations you can open**, and the search steps explain
@@ -67,7 +68,7 @@ Relevant docs:
 - [Local Knowledge vector store](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
 - [RAG concepts](/concepts/ai/rag/)
 
-## The AI harness
+### The AI harness
 
 The engine behind every assistant reply was reworked end to end, covering how
 it runs, the context it sends, model providers, observability, and the chat UI:
@@ -93,7 +94,7 @@ Relevant docs:
 - [Building workflows in chat](/app/chat-and-agents/building-workflows-in-chat/)
 - [Chrome AI](/nodes/builtin/ai/aidependencies/llm/chrome-ai/)
 
-## Agents and teams fixes
+### Agents and teams fixes
 
 - Workflow and MCP tools are locked by **what they do**, not by their name.
 - Agent approvals are **queued**, so approving one never declines another.
@@ -111,7 +112,7 @@ Relevant docs:
 - [Teams](/app/chat-and-agents/teams/)
 - [Action approval](/concepts/ai/action-approval/)
 
-## Fixes and localization
+### Fixes and localization
 
 - All local database connections share one lock, which fixes hangs when
   several features open the database at once.

@@ -1,18 +1,23 @@
 ---
-title: Version 0.3.0
-description: Release notes for AWFlow v0.3.0.
+title: "Retries and error handling you can rely on"
+description: "Node parameters, retry logic and error handling make runs easier to reason about when a node fails."
 sidebar:
+  label: v0.3.0
   order: 6
 section: releases
+kind: release
 ---
 
-Published: **April 23, 2026**
+import { ReleaseChanges } from '@components/awflow';
+import { getRelease } from '../../../data/releases';
 
-## Highlights
+## What changed
 
-Version 0.3.0 improves node execution behavior with parameter handling, retry logic, and error handling. These changes make workflow runs easier to reason about and more resilient when a node fails or receives unexpected input.
+<ReleaseChanges release={getRelease('0.3.0')} level={3} meta />
 
-## Node Parameters
+## Notes
+
+### Node Parameters
 
 Improved parameter handling makes node configuration more predictable during execution. This matters when settings use mapped values from previous nodes or expressions that depend on the current item.
 
@@ -22,7 +27,7 @@ Relevant docs:
 - [Data structure](/concepts/data/data-structure/)
 - [Edit Fields](/nodes/builtin/datatransformation/editfields/)
 
-## Retry Logic
+### Retry Logic
 
 Retry logic helps workflows recover from temporary failures, especially browser timing issues, slow pages, or services that briefly reject a request. Retries should be paired with clear waits and small input data so failures remain diagnosable.
 
@@ -32,7 +37,7 @@ Relevant docs:
 - [Wait For Element](/nodes/extension/ui/wait-for-element/)
 - [Execution order](/concepts/flow/execution-order/)
 
-## Error Handling
+### Error Handling
 
 Error handling improvements make it easier to decide whether a workflow should stop, continue, or pass error information downstream. Use this when a missing field, empty extraction, or service failure should lead to a controlled fallback instead of a silent wrong result.
 

@@ -1,30 +1,23 @@
 ---
-title: Version 0.8.0
-description: Release notes for AWFlow v0.8.0.
+title: "Chat-first Aria with agents, teams and projects — plus flow control that survives a closed tab"
+description: "Talk to Aria from anywhere in the browser, build agents with skills and memory, group them into teams, run AI on your device, and let long workflows pause and resume safely."
 sidebar:
+  label: v0.8.0
   order: 3
 section: releases
+kind: release
 ---
 
-Published: **October 5, 2026**
+import { ReleaseChanges } from '@components/awflow';
+import { getRelease } from '../../../data/releases';
 
-## Highlights
+## What changed
 
-Version 0.8.0 makes Aria chat-first. You can now talk to Aria from anywhere in
-the browser, build your own agents with skills, rules and memory, group them
-into teams, and organise work into projects. Around that, the release brings
-on-device AI through TensorFlow.js and transformers.js, durable flow control
-that survives a closed tab, a wave of new nodes, binary file handling, a
-redesigned Executions view, a side panel where every screen works at narrow
-widths, and the groundwork for Firefox support.
+<ReleaseChanges release={getRelease('0.8.0')} level={3} meta />
 
-It also includes the fixes from a full product audit: the execution engine,
-scheduler, extension security and performance all got targeted work.
+## In detail
 
-The sections below group the changes by theme. Where a change affects how you
-build or run workflows, the relevant docs are linked.
-
-## Chat-first Aria, agents and teams
+### Chat-first Aria, agents and teams
 
 Aria moved from a workflow-drafting assistant to a chat you can open from
 anywhere:
@@ -55,7 +48,7 @@ Relevant docs:
 - [Browser control & safety](/app/chat-and-agents/browser-control/)
 - [Agent & team templates](/app/chat-and-agents/templates/)
 
-## Building workflows with the assistant
+### Building workflows with the assistant
 
 The workflow builder inside the assistant is easier to follow and to trust:
 
@@ -77,7 +70,7 @@ Relevant docs:
 - [Following Aria's work](/app/chat-and-agents/seeing-the-work/)
 - [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/)
 
-## Local AI and local models
+### Local AI and local models
 
 On-device AI now covers far more than chat:
 
@@ -100,7 +93,7 @@ Relevant docs:
 - [Transformers Chat](/nodes/builtin/ai/aidependencies/llm/transformerschat/)
 - [Run Local Model](/nodes/builtin/ai/localai/run-local-model/)
 
-## Durable flow control
+### Durable flow control
 
 Long-running workflows can now pause and resume safely:
 
@@ -126,7 +119,7 @@ Relevant docs:
 - [In-Page Form](/nodes/builtin/flow/in-page-form/)
 - [Waiting](/concepts/flow/waiting/)
 
-## Building and running workflows
+### Building and running workflows
 
 - A richer **`{{ }}` expression language**, and `$('label')` references now
   work for node labels that contain spaces.
@@ -153,7 +146,7 @@ Relevant docs:
 - [Error handling](/concepts/flow/error-handling/)
 - [Element Change](/nodes/builtin/trigger/elementchange/)
 
-## New nodes
+### New nodes
 
 - [Save as File](/nodes/builtin/datatransformation/saveasfile/)
 - [Convert to File](/nodes/builtin/datatransformation/converttofile/)
@@ -170,7 +163,7 @@ Relevant docs:
 - Document loaders for the Indexer: [URL](/nodes/builtin/ai/loaders/urldocumentloader/), [File](/nodes/builtin/ai/loaders/filedocumentloader/) and [Current page](/nodes/builtin/ai/loaders/currentpagedocumentloader/)
 - [Screenshot Page](/nodes/extension/screenshotpage/) now uses native capture for the viewport, the full page, or one element
 
-## Integrations and AI providers
+### Integrations and AI providers
 
 - New integrations: [Readwise / Reader](/nodes/builtin/integration/readwise/),
   [Attio](/nodes/builtin/integration/attio/) and
@@ -190,14 +183,14 @@ Relevant docs:
 - [Create your OAuth client](/app/connections/oauth-client/)
 - [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/)
 
-## Files and binary data
+### Files and binary data
 
 Workflows can now carry files. A `$binary` model with sources, sinks and an
 output panel preview moves files between nodes; large files are stored locally
 or in the cloud and expire automatically. Gmail can send attachments and Notion
 can upload file and image blocks.
 
-## Executions
+### Executions
 
 The Executions view was redesigned with an **attention band** for runs that
 need you, a sortable table, and a resizable docked detail panel. Opening a past
@@ -207,7 +200,7 @@ Relevant docs:
 
 - [Executions](/app/workflows/executions/run-from-the-workflow-list/)
 
-## Marketplace and publishing
+### Marketplace and publishing
 
 - **Browse without an account** — you sign in only when you act.
 - **Install** opens the canvas with a Ready-to-run checklist.
@@ -229,7 +222,7 @@ Relevant docs:
 - [Request board](/app/request-board/)
 - [Import and export](/app/workflows/export-import/)
 
-## Side panel and first run
+### Side panel and first run
 
 - **Every screen works in the side panel** at 320–450 px.
 - An **outcome-first first run**: a welcome tab, a Start here page, and a
@@ -242,7 +235,7 @@ Relevant docs:
 - [Side panel](/app/side-panel/)
 - [Quick intro](/get-started/quick-intro/)
 
-## Firefox groundwork
+### Firefox groundwork
 
 This release lays the groundwork for a Firefox version of the extension: a
 Firefox build, a sidebar in place of Chrome's side panel, sign-in and
@@ -254,7 +247,7 @@ Relevant docs:
 
 - [Browser compatibility](/app/troubleshooting/browser-compatibility/)
 
-## Privacy and security
+### Privacy and security
 
 - **Anonymous usage telemetry** (funnel events and error reports) with a new
   **Privacy** settings section where you can turn it off.
@@ -269,7 +262,7 @@ Relevant docs:
 
 - [Permissions and security](/app/troubleshooting/permissions-security/)
 
-## Reliability and performance
+### Reliability and performance
 
 - **Engine fixes**: no more double runs or re-runs on resume, resumed runs no
   longer disappear, sub-workflow failures and cancels reach the parent,
