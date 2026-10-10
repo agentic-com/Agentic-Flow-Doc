@@ -22,13 +22,22 @@
 		dark: Img;
 		items: Item[];
 		caption?: string;
+		/** Window of the image to show, in % of the image (GuidedShot.astro focuses on the spots). */
+		crop?: Box;
 	}
 
-	let { uid, alt, light, dark, items, caption }: Props = $props();
+	let { uid, alt, light, dark, items, caption, crop = { x: 0, y: 0, w: 100, h: 100 } }: Props = $props();
+	// The image is drawn larger than the frame and shifted so only the crop window shows.
+	const imgStyle = $derived(
+		crop.w >= 100 && crop.h >= 100
+			? ''
+			: `position: absolute; max-width: none; width: ${(100 / crop.w) * 100}%; left: ${(-crop.x / crop.w) * 100}%; top: ${(-crop.y / crop.h) * 100}%`
+	);
 	let active = $state(0);
 	let stepEls: HTMLButtonElement[] = $state([]);
 
-	const sizes = '(max-width: 50rem) 100vw, 46rem';
+	const zoom = $derived(100 / Math.min(crop.w, 100));
+	const sizes = $derived(`(max-width: 50rem) ${Math.round(100 * zoom)}vw, ${Math.round(46 * zoom)}rem`);
 	const pct = (v: number) => `${Math.round(v * 100) / 100}%`;
 	const summary = $derived(items.map((it) => `${it.n}. ${it.label}`).join('; '));
 
@@ -53,9 +62,10 @@
 
 <figure class="awf-guided not-content">
 	<div class="awf-guided__layout">
-		<div class="awf-guided__frame" style="aspect-ratio: {light.width} / {light.height}">
+		<div class="awf-guided__frame" style="aspect-ratio: {light.width * crop.w} / {light.height * crop.h}; overflow: hidden">
 			<img
 				class="awf-guided__img awf-shot__img--light"
+				style={imgStyle}
 				src={light.src}
 				srcset={light.srcset}
 				{sizes}
@@ -68,6 +78,7 @@
 			/>
 			<img
 				class="awf-guided__img awf-shot__img--dark"
+				style={imgStyle}
 				src={dark.src}
 				srcset={dark.srcset}
 				{sizes}
@@ -92,7 +103,7 @@
 					class="awf-guided__marker"
 					class:is-active={active === i}
 					class:awf-ping={active === i}
-					style="--x: {pct(it.box.x)}; --y: {pct(it.box.y + it.box.h / 2)}"
+					style="--x: calc({pct(it.box.x)} - 12px); --y: {pct(it.box.y + it.box.h / 2)}"
 					aria-label="Step {it.n}: {it.title}"
 					aria-controls="{uid}-step-{it.n}"
 					onclick={() => fromMarker(i)}>{it.n}</button
