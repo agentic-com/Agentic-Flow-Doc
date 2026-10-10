@@ -3,63 +3,81 @@ title: "Aggregate"
 description: "Fold many items into a single item"
 sidebar:
   label: "Aggregate"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/aggregate
+  family: data
 ---
 
-Fold many items into a single item.
+Fold many items into a single item, so the next step runs once for the whole list.
 
 ## What it does
 
-Takes the whole collection of incoming items and combines it into **one** item. It is the exact inverse of [Split Out](/nodes/builtin/datatransformation/splitout/): splitting a field out and aggregating it back returns the original array.
+Aggregate waits for the whole list of incoming items and returns **one** item. It is the opposite of [Split Out](/nodes/builtin/datatransformation/splitout/): splitting a field out and aggregating it back gives you the original list.
 
-There are two modes:
+It has two modes:
 
-- **Individual fields** collects one or more chosen fields, across every item, into arrays. Items `[{ price: 3 }, { price: 5 }]` aggregated on `price` produce the single item `{ price: [3, 5] }`.
-- **All item data** wraps every incoming item, whole, under a single named field.
+- **Individual fields** collects one or more fields from every item into lists. Items `[{ price: 3 }, { price: 5 }]` aggregated on `price` give the single item `{ price: [3, 5] }`.
+- **All item data** puts every incoming item, whole, into one list under a field you name (`data` by default).
+
+Only a field that is truly absent counts as missing. A field that is present but `null` is collected as a real value.
 
 ## When to use it
 
-Use this node to act once on a whole list rather than once per row: to send one summary message about a scraped list instead of one per row, to hand a full result set to a model in a single prompt, or to turn "many rows with one value" back into "one row with many values".
-
-To join two separate branches together on matching keys, use Merge instead — that combines different data about the same things across **two** inputs, whereas Aggregate folds one input down.
+- Send one summary message about a scraped list instead of one message per row.
+- Give a full set of results to an AI model in a single prompt.
+- Turn "many rows with one value" back into "one row with many values" after a [Split Out](/nodes/builtin/datatransformation/splitout/) or a [Loop](/nodes/builtin/flow/loop/).
+- To join two separate branches on matching keys, use [Merge](/nodes/builtin/flow/merge/) instead. Aggregate folds a single input down.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | `Individual fields` collects chosen fields into arrays, `All item data` wraps every item into one field. Defaults to `Individual fields`. |
-| Fields To Aggregate | (Individual fields mode) The list of fields to collect. Each entry has a **Field** (dot path, e.g. `user.profile.name`) and an optional **Output field name** for the resulting array — this defaults to the last segment of the path, mirroring how Split Out names the field it emits. Empty by default. |
-| Put Output In Field | (All item data mode) The name of the field that holds every input item. Defaults to `data`. |
-| Keep Missing Values | Off by default. **Off**: items that lack the collected field are skipped, so the array is shorter. **On**: they contribute `null`, so positions stay aligned across several aggregated fields. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | Individual fields | No | Collect chosen fields into arrays, or wrap every item into one field. Options: Individual fields, All item data. |
+| **Fields To Aggregate** | List of entries |  | No | Fields to collect into arrays. |
+| Fields To Aggregate (each entry) › **Field** | Text |  | Yes | Field to collect. Use dots for nested fields, e.g. user.profile.name. |
+| Fields To Aggregate (each entry) › **Output field name** | Text |  | No | Name for the resulting array. Defaults to the field being collected. |
+| **Put Output In Field** | Text | `data` | No | Name of the field holding every input item. |
+| **Keep Missing Values** | Toggle | Off | No | Include an empty entry for items that lack the field. |
+{/* AUTO:settings:end */}
 
-### What counts as missing
-
-Only an **absent key** — a field path that cannot be reached — is treated as missing. A field that is present but `null` is collected as a real value. This deliberately differs from [Sort](/nodes/builtin/datatransformation/sort/), where `null` and empty strings carry no ordering and sort last.
+- **Fields To Aggregate** and **Keep Missing Values** apply to *Individual fields*. **Put Output In Field** applies to *All item data*.
+- When you leave **Output field name** empty for a nested field, the list is named after the last part of the path: `user.profile.name` becomes `name`.
+- With **Keep Missing Values** off, items without the field are skipped, so that list is shorter. Turn it on to add `null` for them, which keeps the lists of several fields lined up position by position.
 
 ## Outputs
 
-Returns a single item.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
-- In **Individual fields** mode, one field per collected entry, each holding an array of the gathered values.
-- In **All item data** mode, one field (named by **Put Output In Field**) holding the array of every input item.
+Always one item. In *Individual fields* mode it has one list per collected field, for example `{ titles: [...], urls: [...] }`. In *All item data* mode it has one field holding the list of every input item. Read a list downstream with an expression such as `{{ $input.titles }}`.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-A node returns a list of scraped listings. Connect it into Aggregate in **Individual fields** mode, add a field `title` (output name `titles`) and a field `url` (output name `urls`), and the node emits a single item `{ titles: [...], urls: [...] }` that you can drop into one notification message. To round-trip, a [Split Out](/nodes/builtin/datatransformation/splitout/) on `titles` would fan it back into individual items.
+1. [HTML Extract](/nodes/builtin/datatransformation/html-extract/) returns one item per article on a news page, each with `title` and `url`.
+2. Aggregate, in **Individual fields** mode, collects `title` (output name `titles`) and `url` (output name `urls`).
+3. A [Text Formatter](/nodes/builtin/datatransformation/text-formatter/) or a [Slack](/nodes/builtin/integration/slack/) node uses `{{ $input.titles }}` to post all headlines in a single message.
 
 ## Troubleshooting
 
-- Aggregate operates on the whole collection at once. If it seems to have no effect, make sure the upstream node emits multiple items rather than a single object.
-- In **Individual fields** mode the node reports an error if no field is set — add at least one field, or switch to **All item data**.
-- If an aggregated array is shorter than you expect, some items are missing that field. Turn on **Keep Missing Values** to contribute `null` and keep the arrays aligned.
-- Remember that `null` is collected as a real value; only a genuinely absent key is skipped.
+- **"No fields to aggregate. Add at least one field, or use "All item data"."** *Individual fields* mode has no field filled in. Add a field, or switch **Mode**.
+- **"No source node is connected to this node."** Connect a node that produces items to the input.
+- **One list is shorter than the others.** Some items lack that field and were skipped. Turn on **Keep Missing Values**.
+- **The output looks like the input, wrapped once.** The previous node sent a single object, not a list. Aggregate has nothing to fold; check that the earlier node returns several items.
 
 ## Related nodes
 
-- [Split Out](/nodes/builtin/datatransformation/splitout/)
-- [Sort](/nodes/builtin/datatransformation/sort/)
-- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Split Out](/nodes/builtin/datatransformation/splitout/): the opposite, one item per list entry.
+- [Merge](/nodes/builtin/flow/merge/): join two branches on matching keys.
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): clean the list before folding it.
+- [Sort](/nodes/builtin/datatransformation/sort/): order items before you collect them.

@@ -3,46 +3,69 @@ title: "Get HTML of Selected Text"
 description: "Get the selected text from the page of the actual openend tab"
 sidebar:
   label: "Get HTML of Selected Text"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/gethtmlofselectedtext
+  family: inpage
 ---
 
-Get the selected text from the page of the actual openend tab
+Read the HTML behind the part of the page you have highlighted, with its links and formatting.
 
 ## What it does
 
-Captures the HTML markup of text that the user has currently selected on the page.
+Get HTML of Selected Text takes the current selection on the active tab and returns its markup, not just its words: links, bold text, list items and images inside the selection are kept as HTML. The result is stored as text in the field you name in **Output field name**.
+
+The output holds only the new field. Turn on **Include input fields** to keep the incoming item's fields next to it.
 
 ## When to use it
 
-Use this node to extract formatted content with its structure, such as copying rich text or styled elements.
+- Save a highlighted passage with its links intact, for example as a note or a knowledge entry.
+- Convert a selection to Markdown with the [Markdown](/nodes/builtin/datatransformation/markdown/) node before sending it somewhere.
+- If you only need the words, use [Get Selected Text](/nodes/extension/getselectedtext/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Output field name | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
+
+**Output field name**: for example `selectionHtml`. Later nodes read it with `{{ $input.selectionHtml }}`.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+One item with your field, for example `{ "selectionHtml": "Read <a href=\"https://example.com\">this guide</a>" }`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Get HTML of Selected Text after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Add a [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger.
+2. Add **Get HTML of Selected Text** with **Output field name** = `selectionHtml`.
+3. Add [Markdown](/nodes/builtin/datatransformation/markdown/) with **Operation** = **HTML to Markdown** and **Content** = `{{ $input.selectionHtml }}`.
+4. Copy the result with [Clipboard Write](/nodes/extension/clipboardwrite/), ready to paste into your notes app.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The node fails with an error about the selection, or "No content found".** Nothing was selected on the active tab. Select the text first and keep that tab active while the workflow runs.
+- **The HTML is cut in the middle of an element.** The node returns exactly the selected range. Select a little more, or read a whole element with [Get All HTML](/nodes/extension/getallhtml/) and a **DOM Selector**.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Get Selected Text](/nodes/extension/getselectedtext/): the same selection as plain text.
+- [Get All HTML](/nodes/extension/getallhtml/): the HTML of a whole page or element.
+- [Markdown](/nodes/builtin/datatransformation/markdown/): convert between HTML and Markdown.

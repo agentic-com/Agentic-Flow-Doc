@@ -3,59 +3,79 @@ title: "Hotkey"
 description: "Run the flow from a keyboard shortcut."
 sidebar:
   label: "Hotkey"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/trigger/hotkey
+  family: trigger
 ---
 
-Run the flow from a keyboard shortcut.
+Run a workflow from a keyboard shortcut, wherever you are in the browser.
 
 ## What it does
 
-Triggers workflow execution when you press a keyboard shortcut, so a workflow can run from anywhere in the browser without opening a menu.
+The AWFlow extension offers four shortcut slots, **Hotkey slot 1** to **Hotkey slot 4**. In the node you pick a slot; in your browser's shortcut settings you choose which keys press that slot. When you press the keys, every activated workflow whose Hotkey trigger uses that slot runs from this trigger.
+
+Browsers do not let an extension create a new shortcut for each workflow, which is why there are fixed slots. Slot 1 comes with a suggested shortcut, **Ctrl+Shift+1** (**Command+Shift+1** on Mac). Slots 2 to 4 have no keys until you set them.
 
 ## When to use it
 
-Use this trigger for workflows you run often and want instant, keyboard-driven access to.
+- Workflows you run many times a day, such as saving the current page or copying a formatted link.
+- Actions on the page you are reading, without opening a menu.
+- A fast manual start next to an automatic trigger.
+
+To start from a right-click instead, use [Context Menu](/nodes/builtin/trigger/contextmenu/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Hotkey Slot | The keyboard-shortcut slot this trigger listens on (`run-workflow-1` … `run-workflow-4`). Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Hotkey Slot** | Choice | Hotkey slot 1 | No | Which keyboard-shortcut slot fires this trigger. Assign the actual key combo at chrome://extensions/shortcuts. Options: Hotkey slot 1, Hotkey slot 2, Hotkey slot 3, Hotkey slot 4. |
+{/* AUTO:settings:end */}
 
-## Choosing a slot and assigning the key
+To choose the keys for a slot:
 
-Browsers only let an extension declare a **fixed set** of keyboard commands in its manifest — you cannot register an arbitrary shortcut per workflow at runtime. The extension therefore ships four generic slots (Hotkey slot 1–4). In the node, pick which slot should fire this workflow.
-
-Then assign the actual key combination:
-
-- **Chrome:** open `chrome://extensions/shortcuts`.
+- **Chrome and other Chromium browsers:** open `chrome://extensions/shortcuts`.
 - **Firefox:** open `about:addons`, click the gear menu, then **Manage Extension Shortcuts**.
 
-Find "Agentic Workflow", locate the slot you chose (for example "Run workflow bound to Hotkey slot 2"), and set your key combo there.
-
-### The Chrome shortcut cap
-
-Chrome limits how many shortcuts an extension may **suggest** by default (currently four, of which we suggest a default for slot 1 only — `Ctrl+Shift+1` / `Command+Shift+1`). The remaining slots start unbound: they will not fire until you assign a key combination to them at `chrome://extensions/shortcuts` (Firefox: **Manage Extension Shortcuts**). If a hotkey does nothing, this is almost always the reason.
+Find **Agentic Workflow**, then the line **Run workflow bound to Hotkey slot 2** (or the slot you picked), and type your key combination.
 
 ## Outputs
 
-Starts the workflow and passes the fired command name (`triggerType: "hotkey"`, `command`, `triggeredAt`) to downstream nodes.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has the fields `triggerType` (always "hotkey"), `triggeredAt` (text), `command` (text).
+{/* AUTO:outputs:end */}
+
+`command` names the slot that fired, from `run-workflow-1` to `run-workflow-4`. The output does not include the page you were on; add a node such as [Get Selected Text](/nodes/extension/getselectedtext/) to read from it.
 
 ## Dependencies and credentials
 
-- Requires the extension's `commands` permission (declared in the manifest).
-- No external credential is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Create a workflow with Hotkey as the first node, choose a slot, assign its key combo (see above for Chrome and Firefox), then connect it to the action nodes that should run after the shortcut fires.
+Copy the selected text with one shortcut:
+
+1. Add **Hotkey** with **Hotkey Slot** set to **Hotkey slot 2**.
+2. Add [Get Selected Text](/nodes/extension/getselectedtext/) with **Output field name** `selection`.
+3. Add [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.selection }}`.
+4. Activate the workflow, then set the keys for **Run workflow bound to Hotkey slot 2**, for example **Alt+Shift+C**.
 
 ## Troubleshooting
 
-- If nothing happens, confirm the slot you selected in the node has a key combo assigned (`chrome://extensions/shortcuts`, or in Firefox **about:addons → gear menu → Manage Extension Shortcuts**).
-- Make sure no other extension or the browser itself already claims the same key combination.
-- Two workflows may listen on the same slot; both will run when that slot's shortcut fires.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **Pressing the keys does nothing.** The slot has no keys yet (only slot 1 has a suggested shortcut), or the workflow is not activated. Set the keys in the browser's shortcut page, and check the slot chosen in the node is the one you set.
+- **Slot 1's suggested shortcut does nothing.** Another extension or the browser already uses **Ctrl+Shift+1**, so it was not assigned. Pick other keys for slot 1 in the shortcut page.
+- **Two workflows run at once.** Both use the same slot. Give each workflow its own slot.
+- **It does not work in the web app.** This node runs in the browser extension; install it and activate the workflow there.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Context Menu](/nodes/builtin/trigger/contextmenu/): run from the right-click menu.
+- [When Started](/nodes/builtin/trigger/whenstarted/): run from the designer or the workflow list.
+- [Funnel](/nodes/builtin/flow/funnel/): share the same steps between a Hotkey and other triggers.

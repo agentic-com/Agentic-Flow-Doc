@@ -3,91 +3,118 @@ title: "RAG Agent"
 description: "Retrieve and generate an action plan and execute it. Can use external tools."
 sidebar:
   label: "RAG Agent"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/ragnode
+  family: ai
 ---
 
-Retrieve and generate an action plan and execute it. Can use external tools.
+Answer questions with a chat model that looks up your knowledge base first, and can remember the conversation.
 
 ## What it does
 
-Retrieves relevant information from a knowledge base and generates answers using an LLM with optional tool usage.
+RAG Agent takes the question in **Prompt**, searches the knowledge base connected to **Knowledge** for the most relevant passages, adds them to the prompt and asks the chat model on **Model** to answer from them. It returns the answer and the sources it used.
+
+Retrieved passages are added inside a block marked as reference data, not instructions. A document that says "ignore your instructions" is treated as text to quote, not as a command.
+
+With a chat memory connected to **Memory**, the agent has a conversation:
+
+1. Before calling the model, it loads the earlier messages and adds them as chat history.
+2. It saves the incoming prompt as a `user` message.
+3. After the model answers, it saves the reply as an `assistant` message (a structured reply from an output parser is saved as JSON text).
+
+This is how a [Chat Trigger](/nodes/builtin/trigger/chat/) gets its replies: connect the **same** memory to the trigger and to this agent.
 
 ## When to use it
 
-Use this agent when you need to answer questions using information from indexed documents or knowledge bases.
+- A chatbot that answers from your documents, built with a [Chat Trigger](/nodes/builtin/trigger/chat/).
+- Answer one question from a knowledge base in the middle of a workflow, with the sources it used.
+- Ground a model's answer in pages you indexed with the [Indexer](/nodes/builtin/ai/aiagents/indexernode/).
+
+To answer fully on-device by quoting your documents, use [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) with a Local Q&A Model. When the model must also call tools, use [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), which accepts the same knowledge base.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| System message | Extra instructions for the model. |
-| Options → Knowledge documents (k) | How many passages to retrieve from the connected knowledge base (default `4`). |
-| Options → Max knowledge context length | Maximum characters of retrieved passages added to the prompt (default `4000`). |
-| Options → Fail on knowledge error | Fail when the knowledge base can't be searched, instead of answering without it (default off). |
-| Options → Search type, Match by, Minimum relevance, Metadata filter, Device-only knowledge with a cloud model | See [Knowledge base options](#knowledge-base-options). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Prompt** | Text |  | Yes |  |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **System message** | Long text |  | No | The system message to use. |
+| Options › **Knowledge documents (k)** | Number | 4 | No | How many documents to retrieve from the connected knowledge base. |
+| Options › **Max knowledge context length** | Number | 4000 | No | Maximum characters of retrieved knowledge to inject into the prompt. |
+| Options › **Fail on knowledge error** | Toggle | Off | No | If enabled, the node fails when knowledge retrieval errors instead of answering without context. |
+| Options › **Search type** | Choice | Most similar | No | How passages are picked from the connected knowledge base. Options: Most similar, Diverse (MMR). |
+| Options › **Match by** | Choice | Keywords and meaning | No | How a knowledge base is searched with "Most similar". Diverse (MMR) and other vector stores always match by meaning. Options: Keywords and meaning, Meaning only. |
+| Options › **Minimum relevance** | Number | 0 | No | Drop passages less similar to the question than this (0 to 1). 0 keeps every passage. |
+| Options › **Metadata filter** | Key-value pairs |  | No | Only search passages whose metadata matches every key = value (e.g. sourceType = web). Keys use letters, numbers and \_; numbers and true/false are matched as such. |
+| Options › **Device-only knowledge with a cloud model** | Choice | Stop with an error | No | A knowledge base marked "Device only" is never sent to a cloud model. Choose what the node does when its model is a cloud model. Options: Stop with an error, Answer without it. |
+{/* AUTO:settings:end */}
 
-## Knowledge base options
+**Prompt** is the question. Behind a Chat Trigger, use `{{ $input.chatInput }}`.
 
-These options are the same on the RAG Agent, the [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) and the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). They apply to the [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) connected to the Knowledge port.
+### Knowledge base options
 
-| Option | Notes |
-| --- | --- |
-| **Search type** | **Most similar** (default) — the passages closest to the question. **Diverse (MMR)** — close to the question but different from each other, so fewer repeats. |
-| **Match by** | Used with *Most similar*. **Keywords and meaning** (default) also finds exact words, names and codes. **Meaning only** uses vector similarity alone. *Diverse (MMR)* and other vector stores always match by meaning. |
-| **Minimum relevance** | From `0` to `1`. Passages less similar to the question than this are dropped. `0` (default) keeps every passage. |
-| **Metadata filter** | Only search passages whose metadata matches every `key = value`, for example `sourceType: web`. Keys use letters, numbers and `_`; numbers and `true`/`false` are matched as such. |
-| **Device-only knowledge with a cloud model** | What to do when the knowledge base is *Device only* and the connected model is a cloud model. **Stop with an error** (default) — the node fails and says why. **Answer without it** — the node runs without the knowledge base and logs a warning. |
+The knowledge base options are the same on the RAG Agent, the [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) and the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/):
 
-Useful metadata keys for the filter: `sourceType` (`file`, `web`, `tab`, `text`, `workflow`, `chat`), `sourceId`, `title`, `url`, `fileName`, `page`.
-
-### Device-only knowledge bases
-
-A knowledge base marked **Device only** (see [Privacy](/usage/using-the-app/knowledge-bases/overview/#privacy-cloud-ok-or-device-only)) is never sent to a cloud model. Models that count as on-device: Web LLM, Transformers Chat, Ollama, Chrome AI, Local Q&A Model and Local Classifier. With any other model, the node either stops with "*"Legal templates" is on this device only, but … is a cloud model. Use an on-device model or change the knowledge base's privacy.*" or answers without it, depending on the option above.
-
-### Passages are reference data
-
-Retrieved passages are added to the prompt inside a fenced block marked as reference data, not instructions. A document that contains text like "ignore your instructions" is treated as content to quote, not as a command.
+- **Search type**: **Most similar** picks the passages closest to the question. **Diverse (MMR)** picks passages close to the question but different from each other, so you get fewer repeats.
+- **Match by**: with **Keywords and meaning**, exact words, names and codes are found too. **Meaning only** uses similarity alone.
+- **Minimum relevance**: raise it (for example `0.5`) to drop weak passages.
+- **Metadata filter**: useful keys are `sourceType` (`file`, `web`, `tab`, `text`, `workflow`, `chat`), `sourceId`, `title`, `url`, `fileName` and `page`. For example `sourceType` = `web` searches only saved web pages.
+- **Device-only knowledge with a cloud model**: a knowledge base marked **Device only** (see [Privacy](/usage/using-the-app/knowledge-bases/overview/#privacy-cloud-ok-or-device-only)) is never sent to a cloud model. Models that count as on-device are Web LLM, Transformers Chat, Ollama, Chrome AI, Local Q&A Model and Local Classifier. With any other model, the node stops with an error, or with **Answer without it** runs without the knowledge base and logs a warning.
 
 ## Outputs
 
-| Field | Description |
-| --- | --- |
-| `response` | The answer. |
-| `sources` | Present when a knowledge base is connected (may be empty): the sources of the passages used, each with `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`. |
+{/* AUTO:outputs:start */}
+One output port.
 
-After a run, the node shows a badge such as **3 sources cited**.
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `response` | Any | The model reply; the parsed result when an output parser is connected |
+| `sources` | List of entries | The knowledge base sources used for the answer |
+{/* AUTO:outputs:end */}
+
+`sources` is present when a knowledge base is connected (it may be empty). Each entry has `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`. After a run, the node shows a badge such as **3 sources cited**.
 
 ## Dependencies and credentials
 
-- **Model** (required) — a chat model.
-- **Knowledge** (optional) — a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node.
-- **Memory** and **Output Parser** (optional).
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model | Yes | One |
+| **Memory** | chat memory | No | One |
+| **Knowledge** | vector store | No | One |
+| **Output Parser** | output parser | No | One |
+{/* AUTO:deps:end */}
 
-## Memory
-
-Connect a chat memory to the agent's memory input to give it a conversation:
-
-1. Before calling the model, the agent loads the conversation's earlier messages and adds them to the prompt as chat history.
-2. It saves the incoming prompt as a `user` message.
-3. After the model answers, it saves the reply as an `assistant` message (structured replies from an output parser are saved as JSON text).
-
-Use a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/): with **Conversation** or **Key** storage the conversation is kept across runs; with **This run only** it lasts for one run. It sends as much history as fits the connected model (or the last N messages), and summarises what no longer fits.
-
-This is also how a [Chat Trigger](/nodes/builtin/trigger/chat/) gets its replies: connect the **same** memory to the trigger and to this agent, and set the prompt to `{{ $json.chatInput }}`. The chat window shows the messages this agent saves.
+- **Model**: a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/). Cloud models hold their own API key.
+- **Knowledge**: a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node.
+- **Memory**: a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/), to remember the conversation.
+- **Output Parser**: shapes the answer, for example a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/).
 
 ## Example workflow
 
-Connect a chat model to the Model port and a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to the Knowledge port, then send questions to the agent. The answer comes back in `response` and the documents it used in `sources`.
+1. [Chat Trigger](/nodes/builtin/trigger/chat/) opens a chat window.
+2. RAG Agent with **Prompt** `{{ $input.chatInput }}` and **System message** `Answer only from the documents. If the answer is not there, say so.`
+3. Connect an [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model to **Model**, a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node that points at your "Help center" knowledge base to **Knowledge**, and one [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) to both **Memory** and the Chat Trigger.
+
+Every message you send runs the workflow; the agent's replies appear in the chat window.
 
 ## Troubleshooting
 
-- **"… is on this device only, but … is a cloud model."** — see [Device-only knowledge bases](#device-only-knowledge-bases).
-- **"Knowledge base "…" doesn't exist on this device…"** — pick a knowledge base in the Local Knowledge node, or import its `.awkb` file.
-- **No or few passages** — lower **Minimum relevance**, check the **Metadata filter**, or try the question in the knowledge base's **Test search** tab.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"… is on this device only, but … is a cloud model."** The knowledge base is marked **Device only**. Use an on-device model, change the knowledge base's privacy, or set **Device-only knowledge with a cloud model** to *Answer without it*.
+- **"Knowledge base "…" doesn't exist on this device."** The workflow comes from another device or the knowledge base was deleted. Pick a knowledge base in the Local Knowledge node, or import its `.awkb` file.
+- **The answer ignores your documents.** No passages were found. Lower **Minimum relevance**, check the **Metadata filter**, or try the question in the knowledge base's **Test search** tab.
+- **The chat window stays empty.** The Chat Trigger and the agent use different memories. Connect the same Chat Memory to both.
+- **"Model not found".** The connected model node is not set up: open it and choose a model and its credential.
 
 ## Related nodes
 
-- [Chat Trigger](/nodes/builtin/trigger/chat/)
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Chat Trigger](/nodes/builtin/trigger/chat/): turn the workflow into a chatbot.
+- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/): one-shot answers, also fully on-device.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): knowledge plus tools.
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/): fill the knowledge base from a workflow.

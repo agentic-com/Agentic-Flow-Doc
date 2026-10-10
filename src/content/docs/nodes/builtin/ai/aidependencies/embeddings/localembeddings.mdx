@@ -3,48 +3,77 @@ title: "Local Embeddings"
 description: "Turn text into vectors on this device — free and private"
 sidebar:
   label: "Local Embeddings"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/embeddings/localembeddings
+  family: ai
 ---
 
-Turn text into vectors **on this device** with an in-browser embeddings model. Connect it to [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to index and search documents without an API key or any data leaving your browser.
+Turn text into vectors on your own device, so a knowledge base can find passages by meaning without an API key or sending anything out.
 
 ## What it does
 
-Exposes an on-device embeddings model as an Embeddings dependency. Inference runs in the shared background worker, so the editor stays responsive. The default is **all-MiniLM-L6-v2**; you can also pick the legacy **Universal Sentence Encoder** or any installed embeddings model.
+Local Embeddings plugs into the **Embeddings** slot of a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) node. It does not run on its own and has no output. When the knowledge base is filled or searched, an in-browser model turns the text into vectors (lists of numbers that capture meaning). It runs in the background, so the editor stays responsive.
 
-The embeddings carry their model's identity, so a knowledge store knows which model it was built with and never mixes vectors from different models.
+- The default model is **all-MiniLM-L6-v2**. You can also pick the older **Universal Sentence Encoder** (to keep older knowledge bases readable) or any embeddings model you installed.
+- A knowledge base remembers the model it was built with and always uses it. A new knowledge base uses the model connected on its first fill, or all-MiniLM-L6-v2 when nothing is connected. Connecting another model later does not re-embed it: the knowledge base keeps its own model and the run log shows a warning.
+- The model loads on first use (downloading it if needed), then stays ready for the session.
 
 ## When to use it
 
-- Build a private, offline knowledge base for the [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/) or [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/).
-- Avoid per-token embedding costs when indexing many documents.
+- A private, offline knowledge base for the [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) or [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/).
+- Indexing many documents without paying per token.
+- You want to pick a specific on-device embeddings model instead of the default.
+
+Since a new knowledge base already uses all-MiniLM-L6-v2 when nothing is connected, you only need this node to choose another on-device model.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | An on-device embeddings model (default **all-MiniLM-L6-v2**, recommended). **Universal Sentence Encoder** keeps older knowledge stores readable. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker | `Xenova/all-MiniLM-L6-v2` | No | An on-device embeddings model. all-MiniLM-L6-v2 is the recommended default; Universal Sentence Encoder keeps older stores readable. |
+{/* AUTO:settings:end */}
+
+Pick the **Model** before the knowledge base's first fill. To switch an existing knowledge base to another model, re-embed it from its settings on the [knowledge bases page](/usage/using-the-app/knowledge-bases/overview/). Install more models from the [Local Models](/usage/using-the-app/local-models/) page, or download them from the picker.
 
 ## Outputs
 
-Returns an embeddings dependency for Local Knowledge and other nodes that accept embeddings.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-## Choosing a model for a knowledge store
+| Slot | Accepted by |
+| --- | --- |
+| Embeddings | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
+{/* AUTO:outputs:end */}
 
-A knowledge store is built with **one** embeddings model and remembers it. Pick the model **before** you first fill a new store:
+The vectors go to the knowledge base, not to the next node.
 
-- A new store uses whatever embeddings are connected the first time it runs (or all-MiniLM-L6-v2 if none).
-- Connecting a different model to an existing store later doesn't re-embed it — the store keeps using its own model, with a warning in the run log.
+## Dependencies and credentials
 
-See [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/#embedding-models) for details.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on the page.
+2. [Get All Text](/nodes/extension/getalltext/) with **Output field name** `pageText`.
+3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.pageText }}`, a [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) in its **Text Splitter** slot, and a [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) pointing to a new knowledge base in its **Knowledge** slot.
+4. Local Embeddings in the Local Knowledge's **Embeddings** slot, with the model you want (for example `Xenova/all-MiniLM-L6-v2`).
+
+Later, a [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) with the same Local Knowledge answers questions about the pages you saved.
 
 ## Troubleshooting
 
-- **"Embeddings model … isn't available. Install it from Local AI."** — install it from the [Local AI](/usage/using-the-app/local-models/) page, or download it from the picker.
-- **"Model mismatch" warning** — the store was built with a different model; its own model was used. To switch models, create a new store.
-- **First run is slow** — the model loads (and downloads if needed) on first use, then stays warm for the session.
+- **"Embeddings model "…" isn't available. Install it from Local AI."** The model is not installed in this browser. Install it from [Local Models](/usage/using-the-app/local-models/), or download it from the picker.
+- **A "Model mismatch" warning in the run log.** The knowledge base was built with another model, so that model was used. Disconnect this node, or re-embed the knowledge base with this model.
+- **The first run is slow.** The model is downloading and loading. Later runs in the same session are faster.
 
 ## Related nodes
 
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
-- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
-- [Local AI](/usage/using-the-app/local-models/) — install and manage on-device models.
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): the knowledge base it plugs into.
+- [Indexer](/nodes/builtin/ai/aiagents/indexernode/): fill a knowledge base from a workflow.
+- [Ollama Embeddings](/nodes/builtin/ai/aidependencies/embeddings/ollamaembeddings/): on-device embeddings through the Ollama app.

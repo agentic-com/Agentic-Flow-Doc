@@ -3,66 +3,91 @@ title: "Custom API"
 description: "Call any REST API from its OpenAPI (Swagger) spec — pick an operation and its fields are generated for you."
 sidebar:
   label: "Custom API"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/custom-api
+  family: integration
 ---
 
-One node for any REST API that publishes an OpenAPI (Swagger) description. Point it at the spec URL, pick an operation, and the node builds the request fields for you — no per-service node required.
+Call any web API that publishes an OpenAPI (Swagger) description: paste the spec URL, pick an operation, and fill the fields the node builds for you.
 
 ## What it does
 
-Fetches a public OpenAPI 3 document, lists its operations, and generates a form for whichever one you select: path, query, header, and JSON body fields all come straight from the spec. At run time the node assembles the HTTP request, applies the operation's security scheme from a stored credential, and returns the parsed response.
+The node downloads the OpenAPI document at **OpenAPI spec URL** and lists its operations in **Operation**, shown as `METHOD /path — summary`. Once you pick one, **Parameters** shows a field for each path, query and header parameter, and a single `body` field for a JSON request body. Required fields are marked.
 
-## How it works
+When it runs, it builds the request, sends it to the API's address (the first server listed in the spec, or the spec's own site if none is listed), adds your credential the way the spec asks, and returns the response.
 
-1. **Spec URL** — paste the URL of a public OpenAPI **JSON** document and grant access to its host (see below). The node fetches and parses it.
-2. **Operation** — choose from the operations found in the spec (shown as `METHOD /path — summary`).
-3. **Parameters** — the fields for that operation appear automatically. Required fields are marked; a JSON request body is edited as a single `body` field.
-4. **Credential** *(optional)* — attach a credential matching the API's security scheme.
+Limits:
+
+- JSON specs only. A YAML spec is refused with a clear message.
+- Request bodies are JSON only: form-encoded and file-upload bodies are not generated.
+- API key, Basic and Bearer security are supported; OAuth2 sign-in is not.
+- References inside the same document are followed; references to other files, and `allOf`/`oneOf` combinations, are not.
+
+## When to use it
+
+- Use a service that has no dedicated node but publishes an OpenAPI spec.
+- Get ready-made fields for each endpoint instead of writing URLs and headers by hand.
+- Use [Http Request](/nodes/builtin/core/http-request/) instead when the API has no spec, needs a non-JSON body, or you want full control over the request.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| OpenAPI spec URL | URL of a public OpenAPI (Swagger) **JSON** document. Requires a host access grant. |
-| Operation | The operation to call, loaded from the spec. |
-| Parameters | Generated from the selected operation — path, query, header, and JSON body fields. |
-| Credential | Optional. Matches the API's security scheme (see below). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | No | Optional. A credential matching the API’s security scheme: Bearer Token for bearer / API-key schemes, Basic Auth for basic. |
+| **OpenAPI spec URL** | URL |  | Yes | URL of a public OpenAPI (Swagger) JSON document. Grant access, then pick an operation. |
+| **Operation** | Choice (loaded from your account) |  | Yes | Choose an operation from the spec. |
+| **Parameters** | Field list |  | No | Fields generated from the selected operation (path, query, header and body). |
+{/* AUTO:settings:end */}
 
-## Authentication
+- **OpenAPI spec URL** must point at the JSON document itself (often ending in `openapi.json` or `swagger.json`), not at the human-readable documentation page. Click **Grant access** next to the field: it allows both loading the spec and calling the API on that site. You can review it later in **Settings → Site access**; see [Permissions and security](/usage/troubleshooting/permissions-security/).
+- Fill **Parameters** with fixed values or expressions, for example `status` = `{{ $input.status }}`.
 
-The node reads the operation's `securitySchemes` from the spec and applies your credential accordingly. Secrets always come from the credential vault, never from node fields.
+## Outputs
 
-| Spec security scheme | Credential to use | How it is sent |
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The output is the API's response: parsed JSON when the API returns JSON, otherwise the raw text. An empty success response (204) returns `success: true`. Any error status stops the node with an error.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Credential** (credential): optional. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
+
+Leave **Credential** empty for public APIs. Otherwise, pick the credential type that matches the API's security, as described in the spec:
+
+| Security in the spec | Credential type | How it is sent |
 | --- | --- | --- |
-| `apiKey` (in header) | Bearer Token | The token as the named header (e.g. `X-API-Key: <token>`). |
-| `apiKey` (in query) | Bearer Token | The token as the named query parameter (e.g. `?api_key=<token>`). |
-| `http` / `bearer` | Bearer Token | `Authorization: Bearer <token>`. |
-| `http` / `basic` | Basic Auth | `Authorization: Basic <base64>`. |
+| API key in a header | Bearer Token | The key in the named header, for example `X-API-Key`. |
+| API key in the query | Bearer Token | The key as the named query parameter, for example `?api_key=…`. |
+| HTTP bearer | Bearer Token | `Authorization: Bearer …` |
+| HTTP basic | Basic Auth | `Authorization: Basic …` |
 
-If the operation (or the spec's global default) declares no security, the credential is optional and can be left empty.
+See [Create a credential](/usage/using-the-app/credentials/create/).
 
-## Host access
+## Example workflow
 
-The spec URL is a permissioned field: use **Grant access** next to it to allow requests to that host. The grant covers both fetching the spec and calling the API on the same host, and you can review or revoke it under **Settings → Site access**. See [Permissions &amp; Security](/usage/troubleshooting/permissions-security/) for how host access and Safe mode work.
-
-## Web and extension builds
-
-This node is **extension-only**. Arbitrary API hosts aren't assumed to send CORS headers, so run it in the awflow browser extension.
-
-## Limitations
-
-- **JSON specs only** for now — YAML specs are reported with a clear message rather than mis-parsed.
-- **JSON request bodies** — non-JSON request bodies (form-encoded, multipart) aren't generated yet.
-- **API-key, Basic, and Bearer** security schemes are supported; per-operation **OAuth2** flows are not (use a dedicated integration node, or a Bearer token, instead).
-- Local `$ref`s inside the same document are resolved; remote `$ref`s and `allOf`/`oneOf` composition are not.
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every morning.
+2. Custom API, **OpenAPI spec URL** `https://petstore3.swagger.io/api/v3/openapi.json` (click **Grant access**), **Operation** `GET /pet/findByStatus`, **Parameters** `status` = `available`.
+3. [Limit](/nodes/builtin/datatransformation/limit/) keeps the first 5 results.
+4. [Browser Notification](/nodes/extension/browsernotification/) shows how many were found.
 
 ## Troubleshooting
 
-- **"could not be read as JSON"** — the spec is likely YAML. Use a JSON spec URL (many services publish both).
-- **No operations listed** — confirm the URL returns the OpenAPI document itself (not the Swagger UI page) and that access to the host is granted.
-- **`401` / `403`** — check the credential type matches the spec's security scheme (Bearer Token for api-key/bearer schemes, Basic Auth for basic).
-- **Request blocked at run time** — grant access to the host on the spec URL field, or check **Settings → Site access**.
+- **"The OpenAPI spec could not be read as JSON. Only JSON specs are supported for now."** The URL serves YAML or a web page. Find the JSON version of the spec.
+- **"Failed to fetch the OpenAPI spec: 404 Not Found".** The spec URL is wrong, or access to the site was not granted.
+- **"Operation "…" was not found in the spec".** The spec changed since you picked the operation. Pick it again.
+- **"Custom API Error: 401 Unauthorized" or "403 Forbidden".** The credential is missing, or its type does not match the spec's security (Bearer Token for API key and bearer, Basic Auth for basic).
+- **The run is blocked in the web app.** This node runs in the browser extension. Install it, or run the workflow from the extension.
 
 ## Related nodes
 
-- [HTTP Request](/nodes/builtin/core/http-request/)
-- [Slack](/nodes/builtin/integration/slack/)
+- [Http Request](/nodes/builtin/core/http-request/): any request, with or without a spec.
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/): let an AI agent call an API.
+- [JSON](/nodes/builtin/datatransformation/json/): reshape the response.

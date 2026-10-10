@@ -3,46 +3,88 @@ title: "Loop"
 description: "Execute a set of actions repeatedly based on conditions"
 sidebar:
   label: "Loop"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/loop
+  family: flow
 ---
 
-Execute a set of actions repeatedly based on conditions
+Repeat a group of steps while your conditions hold, up to a safety limit.
 
 ## What it does
 
-Executes a set of actions repeatedly based on iteration count or conditional logic.
+Loop has two inputs and two outputs:
+
+- **Input** (top): where the data first comes in.
+- **Loop Back** (bottom input): connect the last step of the repeated part here.
+- **Loop** (output): the steps to repeat start here.
+- **Done** (output): the workflow continues here once the loop ends.
+
+Each time data reaches the node, it checks the **Conditions**. While they hold, it sends the data out of **Loop**; your steps run and come back through **Loop Back**, and the check runs again. As soon as the conditions fail, or the pass count reaches **Max Iterations**, the data leaves through **Done**.
+
+Every pass sends `{ done, currentIndex, inData }`, where `currentIndex` counts the passes from 1 and `inData` is the data that arrived. Use `{{ $input.currentIndex }}` in the repeated steps, for example as a page number.
 
 ## When to use it
 
-Use this node to process arrays, repeat actions multiple times, or iterate until a condition is met.
+- Page through an API until it returns no more results.
+- Retry a step until it reports success.
+- Repeat an action a set number of times.
+
+To work through a long list a few items at a time, [Split in Batches](/nodes/builtin/flow/splitinbatches/) is simpler. Most nodes already run once per item, so you rarely need Loop just to handle every item of a list.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Max Iterations | Safety limit on how many times the loop runs. Default 100, up to 1000. The condition can still stop it earlier. |
-| Conditions | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Max Iterations** | Number | 100 | No | Maximum number of loop iterations. |
+| **Conditions** | Conditions |  | Yes | The conditions to evaluate. |
+{/* AUTO:settings:end */}
+
+**Max Iterations** accepts 1 to 1,000. The limit stops a loop whose conditions never fail from freezing the tab.
 
 ## Outputs
 
-Returns the original input, filtered input, branched output, merged items, loop state, or an intentional error depending on the node.
+{/* AUTO:outputs:start */}
+2 output ports: **Done**, **Loop**.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `done` | True/false | True when the loop exits through Done |
+| `currentIndex` | Number |  |
+| `inData` | Any | The incoming data, unchanged |
+{/* AUTO:outputs:end */}
+
+When the loop exits through **Done**, its pass counter resets, so a loop nested inside another loop starts again from 1 on the next outer pass.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Place Loop between data-producing nodes and downstream actions to control which data continues through the workflow.
+Fetch every page of a paginated API:
+
+1. A [Set Variable](/nodes/builtin/flow/setvariable/) node sets `hasMore` to `true`.
+2. Loop with the condition `{{ $run.hasMore }}` (**Boolean**) is true, **Max Iterations** 50.
+3. From **Loop**: [Http Request](/nodes/builtin/core/http-request/) to `https://api.example.com/items?page={{ $input.currentIndex }}`, then Set Variable stores the response's `hasMore` flag. Connect it back to **Loop Back**.
+4. From **Done**: continue with the collected data.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The loop stops after one pass.** The conditions were false on the second check. Make sure the repeated steps update the value the condition reads, and that the last step is connected to **Loop Back**, not to the top input.
+- **The loop always runs exactly Max Iterations times.** The conditions never become false. Check the field and operator, or raise the limit if the work really needs more passes.
+- **Nothing runs after the loop.** Connect the next steps to **Done**, not to **Loop**.
 
 ## Related nodes
 
-- [Filter](/nodes/builtin/flow/filter/)
-- [Merge](/nodes/builtin/flow/merge/)
-- [Wait](/nodes/builtin/flow/wait/)
+- [Split in Batches](/nodes/builtin/flow/splitinbatches/): work through a list a batch at a time.
+- [IF](/nodes/builtin/flow/if/): the same kind of conditions, without repeating.
+- [Poll Until](/nodes/builtin/flow/polluntil/): call a URL repeatedly until the response says it is done.
+- [Wait](/nodes/builtin/flow/wait/): pause between passes.

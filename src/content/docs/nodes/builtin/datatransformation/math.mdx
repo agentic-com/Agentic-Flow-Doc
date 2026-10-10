@@ -3,63 +3,94 @@ title: "Math"
 description: "Calculate with numbers and format them for people"
 sidebar:
   label: "Math"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/math
+  family: data
 ---
 
 Calculate with numbers and format them for people.
 
 ## What it does
 
-Performs one calculation on the numbers you point it at and places the answer on the outgoing item. The available operations cover arithmetic (Add, Subtract, Multiply, Divide, Remainder, Power), four kinds of rounding, list reductions (Minimum, Maximum, Sum, Average), percentages, a random number, and locale-aware formatting.
+Math does one calculation and puts the answer in a field (`result` by default). The operations are:
 
-Input is read strictly. Unlike JavaScript's `Number()`, this node refuses anything that is not clearly a number rather than turning it into `0`: an empty or whitespace-only string, `null`, a list, or a boolean fails with a message that names the field. Numeric strings such as `'42'` are still accepted, because a scraped page has no other way of expressing a number. This keeps a missing field from silently becoming a zero and corrupting a total.
+- **Two numbers**: Add, Subtract, Multiply, Divide, Remainder, Power, Percentage of, Percentage change.
+- **One number**: Round, Round down, Round up, Drop decimals, Absolute value, Negate, Square root.
+- **A list**: Minimum, Maximum, Sum, Average.
+- **Other**: Random number, and Format, which writes a number with separators, a currency or a percent sign.
+
+Math is strict about input. Numbers and number-like text such as `"42"` are accepted. Empty text, a missing field, `null`, a list or `true`/`false` stop the run with a message, so a missing price never silently counts as zero. Dividing by zero also stops the run instead of returning infinity.
+
+Round avoids the usual decimal trap: rounding `1.005` to 2 decimals gives `1.01`.
 
 ## When to use it
 
-Use this node to turn a scraped price string into a real number and round it sensibly, to total or average a column pulled off a page, or to present a figure the way a person expects to read it (with thousands separators, a currency symbol, or a percent sign).
+- Turn a scraped price like `"19.99"` into a number and do sums with it.
+- Total or average a column of values, for example after [Aggregate](/nodes/builtin/datatransformation/aggregate/).
+- Work out a discount or a price change as a percentage.
+- Present a number for people: `1234.5` as `1,234.50 €` or `1 234,5`.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | The calculation to perform. One of: `Add`, `Subtract`, `Multiply`, `Divide`, `Remainder`, `Power`, `Round`, `Round down`, `Round up`, `Drop decimals`, `Absolute value`, `Negate`, `Square root`, `Minimum`, `Maximum`, `Sum`, `Average`, `Percentage of`, `Percentage change`, `Random number`, `Format`. Defaults to `Add`. |
-| Value | The number to work on. Accepts an expression such as `{{ $json.price }}`. When left empty, the value is read from the incoming item (the item itself if it is a number, otherwise its `value` field). |
-| Second Value | The second number, used by Add, Subtract, Multiply, Divide, Remainder, Power, Percentage of and Percentage change. |
-| Values | The list of numbers for Minimum, Maximum, Sum and Average. Point it at an array such as `{{ $json.prices }}`. If left empty, the numbers are taken from the Value field of every incoming item instead. |
-| Decimal Places | How many decimal places `Round` keeps. Integer, defaults to `0`. |
-| Format As | How `Format` presents the number: `Plain number`, `Currency` or `Percentage`. Defaults to `Plain number`. |
-| Locale | Language tag deciding separators, such as `en-US` or `fr-FR`. Leave empty to follow the browser. An unusable tag falls back to the default rather than failing the run. |
-| Currency | Three-letter currency code used when Format As is `Currency`. Defaults to `USD`. |
-| Minimum Decimals | Fewest decimal places `Format` shows. Defaults to `0`. |
-| Maximum Decimals | Most decimal places `Format` shows. Defaults to `2`. |
-| Whole Number | Whether `Random number` returns a whole number. Defaults to `on`. |
-| Put Result In Field | Name of the field holding the answer. Defaults to `result`. |
-| Include Input Fields | On: the answer is added to the incoming item. Off: the item is replaced by the answer alone. Defaults to `on`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Add | No | The calculation to perform. 21 options. |
+| **Value** | Value |  | No | The number to work on. |
+| **Second Value** | Value |  | No | The second number, for Add, Subtract, Percentage and the rest. |
+| **Values** | Value |  | No | The list of numbers, for Minimum, Maximum, Sum and Average. |
+| **Decimal Places** | Number | 0 | No | How many decimal places Round keeps. |
+| **Format As** | Choice | Plain number | No | How Format presents the number. Options: Plain number, Currency, Percentage. |
+| **Locale** | Text |  | No | Language tag deciding separators, such as en-US or fr-FR. |
+| **Currency** | Text | `USD` | No | Three-letter currency code, used when formatting as currency. |
+| **Minimum Decimals** | Number | 0 | No | Fewest decimal places Format shows. |
+| **Maximum Decimals** | Number | 2 | No | Most decimal places Format shows. |
+| **Whole Number** | Toggle | On | No | Whether Random returns a whole number. |
+| **Put Result In Field** | Text | `result` | No | Name of the field holding the answer. |
+| **Include Input Fields** | Toggle | On | No | Keep the incoming item’s fields alongside the answer. |
+{/* AUTO:settings:end */}
+
+- **Value**: usually an expression such as `{{ $input.price }}`. Left empty, Math uses the item's `value` field.
+- **Percentage of** gives what share **Value** is of **Second Value** (`25` of `200` is `12.5`). **Percentage change** goes from **Value** to **Second Value** (`80` to `100` is `25`).
+- **Values**: point it at a list, such as `{{ $input.price }}` after Aggregate.
+- **Random number** picks between **Value** (default `0`) and **Second Value** (default `1`), both included.
+- **Format As** *Percentage* multiplies by 100: `0.25` becomes `25%`. Leave **Locale** empty to follow the browser's language. An unknown locale or currency falls back to plain formatting.
 
 ## Outputs
 
-Per-item operations answer once per incoming item, placing the result in **Put Result In Field**. List operations (Minimum, Maximum, Sum, Average) fold the whole collection into a single answer. `Random number` needs no input and can run without a connected item, taking its range from **Value** (low, default `0`) and **Second Value** (high, default `1`).
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
-Formatting uses `Intl` under the hood, so separators, currency and percent follow the chosen locale.
+The answer is in **Put Result In Field**, for example `{{ $input.result }}`. Format returns text; every other operation returns a number. With **Include Input Fields** on, the answer is added to the incoming item; off, the item holds only the answer. Minimum, Maximum, Sum and Average always return only the answer.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect a node that emits product prices, set **Operation** to `Sum` and leave **Values** empty so it totals the `value` of every incoming item. Or, on a single scraped price, set **Operation** to `Round` and **Decimal Places** to `2`, then a second Math node with **Operation** `Format`, **Format As** `Currency` and **Currency** `EUR` to present it.
+1. [HTML Extract](/nodes/builtin/datatransformation/html-extract/) reads one item per product, each with a `price` field.
+2. [Aggregate](/nodes/builtin/datatransformation/aggregate/) with **Mode** *Individual fields* collects every `price` into one list.
+3. **Math** with **Operation** *Sum* and **Values** `{{ $input.price }}`.
+4. A second **Math** with **Operation** *Format*, **Value** `{{ $input.result }}`, **Format As** *Currency*, **Currency** `EUR` and **Locale** `fr-FR` gives text such as `1 234,50 €`.
 
 ## Troubleshooting
 
-- Non-numeric input fails with a message that names the field rather than becoming `0`. Empty and whitespace strings, `null`, lists and booleans are all rejected; numeric strings like `'42'` are accepted.
-- Dividing by zero fails rather than returning `Infinity`. Taking a remainder of zero, a percentage of zero, and a percentage change from zero fail for the same reason: a value that travels downstream looking like a result is worse than a stopped run.
-- `Square root` of a negative number, and an overflow such as `10` to the power of `1000`, both fail rather than returning `NaN` or `Infinity`.
-- Rounding keeps the digits you typed: `Round` of `1.005` to `2` decimal places gives `1.01`, avoiding the usual floating-point trap. Half-values round toward positive infinity, matching JavaScript, so `Round` of `-2.5` gives `-2`.
-- `Drop decimals` and `Round down` differ on negatives: `Drop decimals` of `-2.5` is `-2`, while `Round down` is `-3`.
+- **"The value is missing, not a number."** or **"The value is empty, so there is nothing to calculate with."** The field you pointed at does not exist or is blank on this item. Check the expression in **Value**, or remove the item first with [Filter](/nodes/builtin/flow/filter/).
+- **"The value "19,99 €" is not a number."** Text with a currency sign or a decimal comma is not a number. Clean it first with [Regex](/nodes/builtin/datatransformation/regex/) or [Text / Formatter](/nodes/builtin/datatransformation/text-formatter/).
+- **"Cannot divide by zero."** (also for Remainder, Percentage of and Percentage change from zero). The second number, or the starting number for a change, is `0`. Filter out those items first.
+- **Sum or Average gives each item its own value instead of a total.** The numbers arrive as separate items. Collect them into one list with Aggregate and point **Values** at it.
+- **Round down gives `-3` for `-2.5`.** Round down always goes lower. Use *Drop decimals* to get `-2`.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Pick Field](/nodes/builtin/datatransformation/pickfield/)
-- [Code](/nodes/builtin/core/code/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Aggregate](/nodes/builtin/datatransformation/aggregate/): collect values into one list before Sum or Average.
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): set fields with simple expressions.
+- [Sort](/nodes/builtin/datatransformation/sort/): find the top or bottom items, not just the value.
+- [Code](/nodes/builtin/core/code/): for calculations no operation covers.

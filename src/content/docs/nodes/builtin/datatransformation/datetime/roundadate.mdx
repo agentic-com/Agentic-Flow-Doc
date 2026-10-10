@@ -3,47 +3,77 @@ title: "Round a Date"
 description: "Round a date up or down to a chosen unit of time"
 sidebar:
   label: "Round a Date"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/datetime/roundadate
+  family: data
 ---
 
-Round a date up or down to a chosen unit of time.
+Snap a date to the start or the end of a year, month, week, day, hour or minute.
 
 ## What it does
 
-Takes a date and snaps it to the boundary of a time unit — for example the start of the day, the end of the month, or the start of the hour. Rounding **down** returns the start of the unit; rounding **up** returns the end of the unit.
+Round a Date reads **Date to round** and moves it to a boundary of the chosen **Unit**:
+
+- **Direction** `down` gives the start of the unit. `2026-03-05 14:37` rounded down to `day` is `2026-03-05 00:00:00`.
+- **Direction** `up` gives the very end of the unit. Rounded up to `day` it is `2026-03-05 23:59:59.999`; up to `month` it is the last millisecond of 31 March.
+
+Boundaries follow your computer's local time zone. Weeks start on Sunday.
 
 ## When to use it
 
-Use this node to normalise timestamps (e.g. bucket events by day or month), to compute the start or end of a billing/reporting period, or to align dates before grouping or comparison.
+- Get "start of today" or "start of this month" to filter recent items.
+- Compute the end of a billing or reporting period.
+- Group events by day or hour so timestamps in the same period match.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Date to round | The date to round. Accepts the same date input as the other Date & Time nodes. |
-| Unit | The unit to round to: `year`, `month`, `week`, `day`, `hour`, or `minute`. |
-| Direction | `down` for the start of the unit (floor), `up` for the end of the unit (ceil). |
-| Output field name | Name of the field the rounded date is written to. |
-| Include input fields | Optionally keep the incoming fields alongside the result. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Date to round** | Date and time |  | Yes | The date to round. |
+| **Unit** | Choice |  | Yes | The unit to round the date to. Options: year, month, week, day, hour, minute. |
+| **Direction** | Choice |  | Yes | Round down (start of the unit) or up (end of the unit). Options: down, up. |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
+
+**Date to round** accepts a picked date or an expression such as `{{ $input.createdAt }}`.
 
 ## Outputs
 
-Returns the rounded value as a date in the field named by **Output field name**. When **Include input fields** is enabled, the incoming fields are spread in alongside it.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The item holds the rounded date under **Output field name**. Turn on **Include input fields** to keep the incoming fields next to it.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Feed a timestamp into Round a Date, set **Unit** to `day` and **Direction** to `down`, and the output is midnight at the start of that day — handy for grouping records by date.
+Build a "this month" date range for an API call:
+
+1. [Get Current Date](/nodes/builtin/datatransformation/datetime/getcurrentdate/), **Output field name** `now`.
+2. Round a Date, **Date to round** `{{ $input.now }}`, **Unit** `month`, **Direction** `down`, **Output field name** `from`, **Include input fields** on.
+3. Round a Date, **Date to round** `{{ $input.now }}`, **Unit** `month`, **Direction** `up`, **Output field name** `to`, **Include input fields** on.
+4. [Http Request](/nodes/builtin/core/http-request/) with query params `from` = `{{ $input.from }}` and `to` = `{{ $input.to }}`.
 
 ## Troubleshooting
 
-- `week` uses the default locale, where the week starts on Sunday.
-- Make sure the input value is a valid date; an unparseable value will fail the node.
+- **The week starts on the wrong day.** Weeks start on Sunday. To start on Monday, round down to `week` and then [Add To A Date](/nodes/builtin/datatransformation/datetime/addtoadate/) 1 day (careful on Sundays).
+- **The result is a few hours off.** The rounding happens in your local time zone, and the date is shown in UTC. Format it with [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/) to see local time.
+- **The output is empty or "Invalid Date".** The input is not a readable date. Use an ISO date such as `2026-03-05T14:37:00`.
 
 ## Related nodes
 
-- [Add to a Date](/nodes/builtin/datatransformation/datetime/addtoadate/)
-- [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/)
-- [Extract Part of a Date](/nodes/builtin/datatransformation/datetime/extractpartofadate/)
+- [Add To A Date](/nodes/builtin/datatransformation/datetime/addtoadate/): shift the rounded date.
+- [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/): turn it into text.
+- [Extract Part Of A Date](/nodes/builtin/datatransformation/datetime/extractpartofadate/): read a single part of a date.

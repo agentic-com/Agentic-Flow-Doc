@@ -1,37 +1,43 @@
 ---
 title: Workflow Nodes & Integrations
-description: Source-aligned reference for every Agentic WorkFlow node.
+description: Reference for every AWFlow node, from triggers to AI and app integrations.
+kind: hub
+section: nodes
 ---
 
-This section mirrors the current node registry from `src/lib/Nodes-Blocks`. Use it as the source-aligned reference for triggers, browser page actions, flow control, data transformation, core utilities, AI nodes, and integrations.
+Every node you can add to an AWFlow workflow has a page here: what it does, its settings exactly as the settings panel shows them, what it sends to the next node, and how to fix common problems.
 
-## How To Read Node Pages
+## How to read a node page
 
-Each reference page is written around the same questions:
+Each page follows the same order:
 
-- What the node does.
-- When to use it.
-- Which inputs, settings, dependencies, and credentials it expects.
-- What output it returns to downstream nodes.
-- Which errors or edge cases to check first.
+- **What it does** and **When to use it**.
+- **Inputs and settings**: every field, with its type, default and whether it is required.
+- **Outputs**: the output ports and the fields the next node receives.
+- **Dependencies and credentials**: the connection (API key or account) the node needs, and the slots where other nodes plug in, such as a chat model for an AI agent.
+- **Example workflow**, **Troubleshooting** and **Related nodes**.
 
-Use the reference after you know the workflow concept you are applying. For example, read [Item Linking](/usage/key-concepts/data/item-linking/) before debugging a mapping issue, then open the exact node page to confirm output fields.
+Some nodes act on web pages or the browser itself and run only in the AWFlow browser extension. Their pages say so at the top.
 
-## Palette order
+Read the concept first when you are learning, then open the node page to check details. For example, read [Item Linking](/usage/key-concepts/data/item-linking/) before debugging a mapping problem.
 
-1. [Trigger](/nodes/builtin/trigger/whenstarted/)
-2. [Lambda](/nodes/builtin/lambda/lambdainput/)
-3. [In Page Action](/nodes/extension/getselectedtext/)
-4. [Flow](/nodes/builtin/flow/if/)
-5. [Data Transformation](/nodes/builtin/datatransformation/editfields/)
-6. [Core](/nodes/builtin/core/http-request/)
-7. [AI](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-8. [Integrations](/nodes/builtin/integration/google-sheets/)
+## Node groups
 
-## Common Starting Points
+The groups follow the order of the node panel in the editor:
 
-- Use [When Started](/nodes/builtin/trigger/whenstarted/) for a simple manual workflow.
-- Use [Get Selected Text](/nodes/extension/getselectedtext/) or [Get All Text](/nodes/extension/getalltext/) to start with page content.
-- Use [Edit Fields](/nodes/builtin/datatransformation/editfields/) to shape data for later nodes.
-- Use [If](/nodes/builtin/flow/if/), [Loop](/nodes/builtin/flow/loop/), and [Merge](/nodes/builtin/flow/merge/) when the workflow path depends on data.
-- Use [AI](/nodes/builtin/ai/) only after the input data shape is stable.
+1. [Trigger](/nodes/builtin/trigger/whenstarted/): start a workflow.
+2. [Lambda](/nodes/builtin/lambda/lambdainput/): reusable sub-workflows.
+3. [In Page Action](/nodes/extension/): read and act on the open web page.
+4. [Flow](/nodes/builtin/flow/if/): branch, merge, loop, wait.
+5. [Data Transformation](/nodes/builtin/datatransformation/editfields/): reshape data.
+6. [Core](/nodes/builtin/core/http-request/): code, web requests, feeds, storage.
+7. [AI](/nodes/builtin/ai/): agents, chat models, on-device AI.
+8. [Integrations](/nodes/builtin/integration/google-sheets/): connect apps such as Slack, Gmail or Notion.
+
+## Common starting points
+
+- [When Started](/nodes/builtin/trigger/whenstarted/) for a workflow you run by hand.
+- [Get Selected Text](/nodes/extension/getselectedtext/) or [Get All Text](/nodes/extension/getalltext/) to start from page content.
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/) to shape data for later nodes.
+- [IF](/nodes/builtin/flow/if/), [Loop](/nodes/builtin/flow/loop/) and [Merge](/nodes/builtin/flow/merge/) when the path depends on the data.
+- [AI nodes](/nodes/builtin/ai/) once the input data looks the way you want.

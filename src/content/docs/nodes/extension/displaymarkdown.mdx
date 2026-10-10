@@ -3,45 +3,76 @@ title: "Display Markdown"
 description: "Display markdown content in the UI"
 sidebar:
   label: "Display Markdown"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/displaymarkdown
+  family: inpage
 ---
 
-Display markdown content in the UI
+Show formatted text (headings, lists, links, tables) in a panel on the page you are looking at.
 
 ## What it does
 
-Renders markdown content in a modal or overlay on the current browser page.
+Display Markdown renders the Markdown in **Content** and shows it in a panel in the bottom-right corner of the active tab. The panel has buttons to maximize, minimize and close it, and a copy button that copies the original Markdown.
+
+- **Title** appears in the panel's header. When you leave it empty, a default title is shown.
+- Only one panel is shown at a time: running the node again replaces it.
+- The panel belongs to the page: it disappears when the page reloads or you navigate away.
+- This is an end node: it has no output, so nothing runs after it on this branch.
 
 ## When to use it
 
-Use this node to display formatted AI-generated content, documentation, or reports to users.
+- Show the result of an AI node (a summary, a translation, an answer) right next to the page it is about.
+- Display a short report at the end of a workflow you run by hand.
+- To show raw data as a tree instead of formatted text, use [Display Object](/nodes/extension/displayobject/). To alert someone who is not looking at the page, use [Browser Notification](/nodes/extension/browsernotification/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Title | Source-backed field from the node schema. |
-| Content | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Title** | Text |  | No | The title of the markdown content. |
+| **Content** | Markdown |  | Yes | The markdown content to display. |
+{/* AUTO:settings:end */}
+
+**Content** usually comes from an earlier node, for example `{{ $input.summary }}` after a Summarization node. You can mix fixed text and expressions:
+
+```md
+**Summary of {{ $('Get Page Metadata').title }}**
+
+{{ $input.summary }}
+```
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+This node has no output port: nothing runs after it on this branch.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Display Markdown after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Add a [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger.
+2. Add [Get All Text](/nodes/extension/getalltext/) with **Output field name** = `pageText`.
+3. Add a [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) node with **Text** = `{{ $input.pageText }}`, and connect a chat model to it.
+4. Add **Display Markdown** with **Title** = `Summary` and **Content** = `{{ $input.summary }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **No panel appears.** The panel is drawn on the active tab. Make sure the page you want is the active tab when the node runs; browser settings pages and the extension store cannot show it.
+- **The panel is empty.** **Content** resolved to nothing. Open the previous node's output and point the expression at the field that holds the text.
+- **The panel disappeared.** It is removed when the page reloads or navigates. Run the workflow again, or keep the result with [Data Store](/nodes/builtin/core/datastore/).
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Display Object](/nodes/extension/displayobject/): show the incoming data as a tree.
+- [Markdown](/nodes/builtin/datatransformation/markdown/): convert HTML to Markdown first.
+- [Browser Notification](/nodes/extension/browsernotification/): alert the user outside the page.

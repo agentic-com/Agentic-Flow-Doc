@@ -3,46 +3,76 @@ title: "Wikipedia Query"
 description: "Query Wikipedia for information on a given topic."
 sidebar:
   label: "Wikipedia Query"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/tools/wikipedia-query
+  family: ai
+  agentTool: true
 ---
 
-Query Wikipedia for information on a given topic.
+Let an AI agent look up a topic on Wikipedia and read the article summaries.
 
 ## What it does
 
-Provides Wikipedia search and retrieval capabilities as a tool for AI agents.
+Wikipedia Query is a tool for an agent, not a step in the flow. It has no output port: you connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/).
+
+When the agent calls it with a search term, the tool searches English Wikipedia, takes the top matching articles and returns each one as `Page: <title>` followed by its summary. By default it returns 3 articles and cuts the whole text at 4,000 characters. If nothing matches, the model gets "No good Wikipedia Search Result was found".
+
+It only reads public Wikipedia, so no approval or credential is needed.
 
 ## When to use it
 
-Connect this to Tools Agent nodes to give them the ability to search Wikipedia for factual information.
+- The agent needs background facts: who someone is, what a term means, when something happened.
+- You want well-known, stable facts rather than the latest news.
+
+For current information, use [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/). To answer from your own documents, connect a knowledge base to the Tools Agent's **Knowledge** slot instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Top K Results | Source-backed field from the node schema. |
-| Max Document Content Length | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Top K Results** | Number |  | No | The number of top results to return. |
+| **Max Document Content Length** | Number |  | No | The maximum length of the document content. |
+{/* AUTO:settings:end */}
+
+- **Top K Results**: how many articles to read per search. Empty means 3.
+- **Max Document Content Length**: the maximum number of characters returned in total, across all articles. Empty means 4,000. Raise it for more detail, lower it to keep runs cheaper.
 
 ## Outputs
 
-Returns a tool dependency that agent nodes can call.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Tools | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) |
+{/* AUTO:outputs:end */}
+
+The summaries go back to the model, not to the next node. The agent's `steps` output lists each lookup, and its `response` holds the final answer.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect Wikipedia Query to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads a name you highlighted in an article, with **Output field name** `text`.
+2. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Who or what is {{ $input.text }}? Answer in three sentences.`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and Wikipedia Query connected to **Tools** with **Top K Results** `2`.
+3. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **"No good Wikipedia Search Result was found".** The search term matched no article. Ask the agent to use shorter, more general terms, or check the spelling.
+- **The answer stops mid-way or misses details.** The text was cut at **Max Document Content Length**. Raise it, or lower **Top K Results** so each article gets more room.
+- **Results are in English for a non-English topic.** The tool always searches English Wikipedia. Ask the agent to translate its answer.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): the agent this tool plugs into.
+- [Web Search](/nodes/builtin/ai/aidependencies/tools/web-search/): current information from the web.
+- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/): answers from your own documents.

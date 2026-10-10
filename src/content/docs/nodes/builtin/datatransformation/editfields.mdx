@@ -3,43 +3,77 @@ title: "Edit Fields"
 description: "Modify, add or remove item fields"
 sidebar:
   label: "Edit Fields"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/editfields
+  family: data
 ---
 
-Modify, add or remove item fields
+Build a new item with exactly the fields you list, each with a name, a type and a value.
 
 ## What it does
 
-Transforms workflow data by adding, modifying, or removing fields from items.
+Edit Fields outputs an item made of the fields you define in **Fields**, and nothing else. Each field has a name, a type (*String*, *Number*, *Boolean*, *Date-Time*, *Array* or *Object*) and a value. Values can be fixed text or expressions that read the incoming data.
+
+Fields from the incoming item are **not** kept automatically. To keep one, add it with an expression such as `{{ $input.title }}`. To remove a field, simply leave it out. To rename one, add it under its new name.
+
+The node runs once per incoming item, so ten items in give ten edited items out.
 
 ## When to use it
 
-Use this node to reshape data structure between workflow steps, such as renaming fields, adding calculated values, or removing unnecessary data.
+- Shape the data for the next step: keep only `title` and `url`, and add a fixed `source` field.
+- Combine values, for example a `fullName` field set to `{{ $input.first }} {{ $input.last }}`.
+- Turn text into a real number, list or object so later nodes such as [Math](/nodes/builtin/datatransformation/math/) or [Sort](/nodes/builtin/datatransformation/sort/) treat it correctly.
+- To rename keys while keeping all other fields, use [Rename Keys](/nodes/builtin/datatransformation/renamekeys/). To pull out a single field, use [Pick Field](/nodes/builtin/datatransformation/pickfield/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| fields | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Fields** | Key-value pairs |  | Yes |  |
+{/* AUTO:settings:end */}
+
+How each type treats the value:
+
+- **Number**: text that is not a number becomes `0`.
+- **Array**: type a JSON list such as `["a", "b"]`. Text that is not a valid list becomes an empty list.
+- **Object**: type a JSON object such as `{"plan": "pro"}`. Invalid JSON stops the run with an error.
+- **Date-Time**: pick a date and time; it is passed on as a date.
+- **String**: the value is passed on as typed, after expressions are filled in.
 
 ## Outputs
 
-Returns transformed data for downstream nodes.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+Each output item holds only the fields you defined, with the types you chose. Read them downstream with `{{ $input.fieldName }}`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect data into Edit Fields, configure the settings above, and use the output in the next workflow step.
+1. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the current page.
+2. Edit Fields defines `title` (*String*, `{{ $input.title }}`), `savedFrom` (*String*, `AWFlow`) and `priority` (*Number*, `2`).
+3. [Data Store](/nodes/builtin/core/datastore/) saves the tidy item.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **A field from the previous node is missing.** Edit Fields only outputs what you list. Add the field with an expression such as `{{ $input.url }}`.
+- **"Failed to parse object …"** A field of type *Object* does not contain valid JSON. Check quotes and braces, or change the type to *String*.
+- **A number field shows `0`.** The value was not a number, often because an expression returned text with a currency sign or a comma. Clean it first, for example with [Regex](/nodes/builtin/datatransformation/regex/).
+- **An array field is empty.** The value was not a valid JSON list. Use double quotes inside it: `["a", "b"]`.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Rename Keys](/nodes/builtin/datatransformation/renamekeys/): rename fields and keep the rest.
+- [Pick Field](/nodes/builtin/datatransformation/pickfield/): take out one field.
+- [Text / Formatter](/nodes/builtin/datatransformation/text-formatter/): change the text inside a field.
+- [Code](/nodes/builtin/core/code/): for reshaping that needs logic.

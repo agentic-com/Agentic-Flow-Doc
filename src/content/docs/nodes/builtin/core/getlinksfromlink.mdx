@@ -3,52 +3,88 @@ title: "Get Links from Link"
 description: "Get the Links content of a page from a given URL"
 sidebar:
   label: "Get Links from Link"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/getlinksfromlink
+  family: core
 ---
 
-Get the Links content of a page from a given URL
+Download a web page by its address and list the links on it, optionally only those to certain sites.
 
 ## What it does
 
-Extracts all hyperlinks from a web page at the specified URL with optional domain filtering.
+Get Links from Link downloads the page at **URL**, reads every link (`href` of each `<a>` tag) and returns the addresses as a list in the field named by **Output field name**.
+
+- Relative links are turned into full addresses.
+- Links to a spot on the same page (`#section`), `mailto:`, `tel:` and `javascript:` links are skipped.
+- Duplicates are removed; the order of the page is kept.
+- **Filter domains** keeps only links to the listed sites; **Exclude domains** drops links to them. A domain also matches its subdomains: `example.com` covers `blog.example.com`.
+
+Scripts on the page do not run, so links a site adds with JavaScript are not found.
 
 ## When to use it
 
-Use this node for web crawling, sitemap generation, or discovering related pages.
+- Collect article links from a blog or news index to read each one.
+- List the external sites a page links to, with your own domain in **Exclude domains**.
+- Find all links to a specific site, such as every GitHub link on a page.
+
+To read the links of the page open in your tab, use [Get All Link](/nodes/extension/getalllinks/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL | Source-backed field from the node schema. |
-| Output field name | Source-backed field from the node schema. |
-| Timeout | Source-backed field from the node schema. |
-| Filter domains | Source-backed field from the node schema. |
-| Exclude domains | Source-backed field from the node schema. |
-| Headers | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL** | Text |  | Yes | The URL to get the Links from. |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Timeout** | Number | 10000 | No | The timeout for the request. |
+| **Filter domains** | Tags |  | No | The domains to filter. |
+| **Exclude domains** | Tags |  | No | The domains to exclude. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Headers** | Key-value pairs |  | No | The headers to send with the request. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
+
+- Enter domains without `https://` or paths, one per tag: `github.com`, not `https://github.com/`.
+- Leave **Filter domains** empty to keep links to all sites.
+- **Timeout** is in milliseconds.
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+One item with the list under **Output field name**, for example `{ links: ["https://example.com/a", "https://other.org/b"] }`. Follow with [Split Out](/nodes/builtin/datatransformation/splitout/) to handle each link as its own item.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect data into Get Links from Link, configure the settings above, and use the output in the next workflow step.
+Read the first five articles linked from a blog's index:
+
+1. [When Started](/nodes/builtin/trigger/whenstarted/) trigger.
+2. Get Links from Link, **URL** `https://blog.example.com`, **Output field name** `links`, **Filter domains** `blog.example.com`.
+3. [Split Out](/nodes/builtin/datatransformation/splitout/), **Field To Split Out** `links`, **Output field name** `link`.
+4. [Limit](/nodes/builtin/datatransformation/limit/), **Max Items** `5`.
+5. [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/), **URL** `{{ $input.link }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The list is empty or short.** The site builds its links with JavaScript, or your domain filters remove them. Check **Filter domains** and **Exclude domains**, or open the page and use [Get All Link](/nodes/extension/getalllinks/).
+- **Links to a subdomain are missing.** A filter on `blog.example.com` does not match `www.example.com`. Use the parent domain, `example.com`.
+- **"Invalid URL: …".** The address is malformed, or the request could not be sent. If the address is correct and the node runs in the web app, the site likely refuses requests from other websites; run the workflow from the extension.
+- **"HTTP error! status: 403"** or **"Request timeout".** The site refused or answered too slowly. Some sites block automated requests; raise **Timeout** for slow ones.
 
 ## Related nodes
 
-- [Code](/nodes/builtin/core/code/)
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Get All Link](/nodes/extension/getalllinks/): links from the page open in your tab.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): one item per link.
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): only process links you have not seen before.
+- [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/): read each linked page.

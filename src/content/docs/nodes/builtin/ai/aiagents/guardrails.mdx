@@ -3,52 +3,85 @@ title: "Guardrails"
 description: "Validate text against policies using a model, and route to pass or fail"
 sidebar:
   label: "Guardrails"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/guardrails
+  family: ai
 ---
 
-Validate text against policies using a model, and route to pass or fail
+Ask a chat model whether a piece of text follows your rules, then send the data down a **Pass** or a **Fail** path.
 
 ## What it does
 
-Sends the input text to a language model along with a policy description you define (e.g. no PII, no profanity, must stay on-topic). The model returns a strict JSON verdict, and the node routes the data down one of two output ports depending on whether the text complies. If the model's response cannot be parsed as valid JSON with a boolean `passed` field, the node fails closed — it treats the text as non-compliant rather than silently letting it through.
+Guardrails sends **Text** to the chat model connected to its **Model** slot, together with your **Policy**. The model must answer with a short verdict: passed or not, and a reason.
+
+The node then routes the data:
+
+- When the text complies, the data goes out of **Pass**.
+- When it does not comply, it goes out of **Fail**.
+- When the model's answer cannot be read as a verdict (extra commentary, broken JSON), the node **fails closed**: the data goes out of **Fail**. A guardrail never lets text through by accident.
 
 ## When to use it
 
-Use this node to enforce content policies on model output or user input before it reaches the next step in a workflow — for example, blocking disallowed topics, filtering PII, or catching off-policy responses from an upstream AI agent.
+- Check an AI-written reply before you post or send it (no personal data, no promises, stays on topic).
+- Screen text a user typed or selected before it reaches another AI step.
+- Stop a workflow when scraped content is off topic or unsafe.
+
+To sort text into more than two groups, use [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/). For a plain rule that needs no AI (a word is present, a number is above a limit), use [IF](/nodes/builtin/flow/if/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to check. Supports binding upstream data with `{{ }}`. Rendered as a text area. |
-| Policy | Describes what is allowed / disallowed (e.g. no PII, no profanity, must be on-topic about X). Rendered as a text area. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | Yes | The text to check (bind upstream data with \{\{ \}\}). |
+| **Policy** | Long text |  | Yes | Describe what is allowed / disallowed (e.g. no PII, no profanity, must be on-topic about X). |
+{/* AUTO:settings:end */}
+
+Fill **Text** with an expression, for example `{{ $input.response }}` to check the reply of an earlier AI node.
+
+Write **Policy** as clear, checkable rules, for example: `No email addresses or phone numbers. No profanity. The text must be about our product's shipping times.` Vague policies give inconsistent verdicts.
 
 ## Outputs
 
-Two output ports:
+{/* AUTO:outputs:start */}
+2 output ports: **Pass**, **Fail**.
+{/* AUTO:outputs:end */}
 
-- **Pass** — the item is routed here when the model's verdict says the text complies with the policy.
-- **Fail** — the item is routed here when the model's verdict says the text does not comply, or when the model's response could not be parsed as a valid verdict (fail-closed behavior).
+What comes out depends on whether something is connected to the node's input:
 
-If no implicit input is provided, the routed item is `{ text, passed, reason }`; otherwise the original implicit input item(s) are passed through to the matching port.
+- **With an incoming connection**, the incoming items are passed on unchanged to **Pass** or **Fail**. The verdict's reason is not added to them.
+- **With nothing connected** to the input, the node sends one item `{ text, passed, reason }`, so you can read why the text failed.
 
 ## Dependencies and credentials
 
-- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI). The node uses it to evaluate the text against the policy and produce the JSON verdict.
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model | Yes | One |
+{/* AUTO:deps:end */}
+
+Connect a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/). Guardrails has no credential of its own: the model node holds the API key.
 
 ## Example workflow
 
-Connect a Chat OpenAI (or other model) node into the Guardrails node's Model dependency input, wire upstream text into the Text field, describe your policy, then branch the Pass and Fail output ports to different downstream paths (e.g. continue the workflow on Pass, alert or stop on Fail).
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads the customer message you highlighted.
+2. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) drafts a reply with **Prompt** `Write a short, friendly reply to: {{ $input.text }}`.
+3. Guardrails with **Text** `{{ $input.response }}` and **Policy** `No refunds or discounts may be promised. No personal data.`, with an [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model on **Model**.
+4. From **Pass**, [Clipboard Write](/nodes/extension/clipboardwrite/) copies the reply. From **Fail**, [Show Notification](/nodes/extension/shownotification/) tells you to write it by hand.
 
 ## Troubleshooting
 
-- If everything routes to Fail unexpectedly, check that the connected model reliably returns strict JSON — some models may add extra commentary that breaks parsing, which this node treats as a fail-closed non-compliant result.
-- Make the Policy field specific and unambiguous; vague policies produce inconsistent verdicts.
-- Verify the Model dependency is connected — the node throws if no model is found.
+- **Everything goes out of Fail.** The model probably adds text around its verdict, which counts as a failure. Use a stronger model, or make the policy shorter and more precise. Run the node with nothing connected to its input to see the `reason`.
+- **"Dependency model is required".** Connect a chat model to the **Model** slot.
+- **"Model not found".** The connected model node is not set up: open it and choose a model and its credential.
+- **Verdicts change from run to run.** The policy is open to interpretation. List concrete rules instead of general goals.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
-- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
-- [AI Agents](/advanced-ai/concepts/ai-agents/)
+- [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/): sort text into several categories.
+- [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/): route by tone.
+- [IF](/nodes/builtin/flow/if/): branch on a simple rule, no AI needed.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): generate the text you want to check.

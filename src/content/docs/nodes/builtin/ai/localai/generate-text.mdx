@@ -3,40 +3,83 @@ title: "Generate Text"
 description: "Summarize, translate or transform text on-device"
 sidebar:
   label: "Generate Text"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/generate-text
+  family: ai
 ---
 
-Summarize, translate, or transform text locally in your browser with a sequence-to-sequence model (DistilBART for summarization, NLLB for translation, T5 for general transforms, on transformers.js). Private, offline, no cost.
+Turn one piece of text into another (a summary, a translation, a rewrite) with a small model that runs in your browser.
 
 ## What it does
 
-Runs the input text through the selected on-device text-generation model. What it *does* depends on the model you pick — a summarizer condenses, a translation model translates, a T5 model follows a task prefix.
+Generate Text sends the **Text** to the text-generation model you pick and returns what the model writes. What happens depends on the model:
+
+- *DistilBART CNN (summarize)* condenses the text.
+- *NLLB-200 distilled (translate)* translates it, using **Source language** and **Target language**.
+- *T5-small* follows an instruction at the start of the text, such as `summarize: ` or `translate English to German: `.
+
+The whole text goes through the model in one pass, so long input can be cut short. There is no cost per run and no API key.
 
 ## When to use it
 
-Add offline summarization or translation to a workflow, or run a small text transform without an LLM API key or per-token cost.
+- Run a custom model, or *T5-small* with your own instruction, that the dedicated nodes do not cover.
+- Add a quick offline text transform to a workflow without an API key.
+
+For everyday summaries and translations, prefer [Summarize](/nodes/builtin/ai/localai/summarize/) and [Translate](/nodes/builtin/ai/localai/translate/): they split long text into pieces and offer length and language pickers. For free-form writing, use a chat model with [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** text-generation model, across engines. |
-| Text | The input text. |
-| Source language | *(translation models only)* e.g. `eng_Latn`. |
-| Target language | *(translation models only)* e.g. `fra_Latn`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker |  | No | Any installed text-generation model, across engines. |
+| **Text** | Text |  | No |  |
+| **Source language** | Text |  | No | For translation models (e.g. eng\_Latn). |
+| **Target language** | Text |  | No | For translation models (e.g. fra\_Latn). |
+{/* AUTO:settings:end */}
 
-Source/target language are passed through to translation models (such as NLLB); other models ignore them.
+**Source language** and **Target language** are sent to the model only when both are filled in. Use the codes the model expects: for NLLB-200 that is the `xxx_Yyyy` form, such as `eng_Latn`, `fra_Latn`, `deu_Latn` or `spa_Latn`. Other models ignore them.
 
 ## Outputs
 
-Returns `{ text }` — the generated / summarized / translated text.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has the fields `text` (text).
+{/* AUTO:outputs:end */}
+
+`text` is what the model wrote. Use it as `{{ $input.text }}` in the next node.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The **Model** picker lists your installed models first, then models that download on first use. Manage them, or add a custom model, on the [Local AI](/usage/using-the-app/local-models/) page.
+
+## Example workflow
+
+Translate selected text to German with T5:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) with **Menu Contexts** set to **Selection**.
+2. Generate Text with **Model** *T5-small* and **Text** `translate English to German: {{ $input.selectionText }}`.
+3. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.text }}`.
 
 ## Troubleshooting
 
-- **Translation ignored** — set both Source and Target language in the codes the model expects (e.g. NLLB's `xxx_Yyyy` form).
-- **Truncated output** — small on-device models have short context/output limits; split long inputs upstream.
+- **"Choose a text-generation model."** **Model** is empty. Pick one.
+- **"Provide some text."** **Text** is empty after expressions run.
+- **An NLLB translation comes out wrong or in the wrong language.** Fill in both **Source language** and **Target language** with NLLB codes, or use [Translate](/nodes/builtin/ai/localai/translate/), which picks the codes for you.
+- **The output stops early or skips the end of the text.** These small models read and write a limited amount of text. Use [Summarize](/nodes/builtin/ai/localai/summarize/) or [Translate](/nodes/builtin/ai/localai/translate/), which split long text, or split it upstream.
+- **"Model "…" isn't available. Install it from Local AI."** The saved model is no longer in your list, for example a removed custom model. Pick another model.
 
 ## Related nodes
 
-- [Answer Question](/nodes/builtin/ai/localai/answer-question/)
-- [Caption Image](/nodes/builtin/ai/localai/caption-image/)
-- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/)
+- [Summarize](/nodes/builtin/ai/localai/summarize/): summaries with length presets and long-text support.
+- [Translate](/nodes/builtin/ai/localai/translate/): translation with language pickers.
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): free-form prompts with a chat model.
+- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/): run any installed model for any task.

@@ -3,49 +3,82 @@ title: "Set Element Attribute Style"
 description: "Set attributes and styles on selected elements in the opened page"
 sidebar:
   label: "Set Element Attribute Style"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/ui/set-element-attribute-style
+  family: inpage
 ---
 
-Set attributes and styles on selected elements in the opened page
+Change attributes and CSS styles of elements on the active tab: hide, recolor, resize, enable, set a value.
 
 ## What it does
 
-Modifies HTML attributes and CSS styles of selected elements on the page.
+Set Element Attribute Style applies your changes to **every** element that matches **DOM Selector** on the active tab.
+
+- **Attributes**: each entry sets **Name** to **Value**, or deletes the attribute when **Remove** is on. An empty **Value** sets the attribute with no value, which is how on/off attributes such as `disabled` or `hidden` work.
+- Setting `value` also changes what a form field contains, and setting `checked` to `true` ticks a checkbox (any other value unticks it). The page is told the field changed, as if you had edited it.
+- **Styles**: each entry sets a **CSS property** (such as `display`, `background-color`, `font-size`) to a **Value** (such as `none`, `#fff3cd`, `18px`).
+
+Changes are only on your screen: reloading the page undoes them.
 
 ## When to use it
 
-Use this node to customize page appearance, modify element behavior, or apply dynamic styling.
+- Hide distractions without deleting them: `display` = `none`.
+- Mark items a workflow found, for example a yellow background on matching rows.
+- Re-enable a disabled button, or open a collapsed section, by removing an attribute.
+- For a temporary highlight that fades, use [Highlight Elements](/nodes/extension/ui/highlight-elements/). To fill forms, [Form Fill](/nodes/extension/ui/form-fill/) is simpler.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Name | Source-backed field from the node schema. |
-| Value | Source-backed field from the node schema. |
-| Remove | Source-backed field from the node schema. |
-| Attributes | Source-backed field from the node schema. |
-| CSS property | Source-backed field from the node schema. |
-| Styles | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
+| **Attributes** | List of entries |  | No |  |
+| Attributes (each entry) › **Name** | Text |  | Yes |  |
+| Attributes (each entry) › **Value** | Text |  | No |  |
+| Attributes (each entry) › **Remove** | Toggle | Off | No |  |
+| **Styles** | List of entries |  | No |  |
+| Styles (each entry) › **CSS property** | Text |  | Yes |  |
+| Styles (each entry) › **Value** | Text |  | Yes |  |
+{/* AUTO:settings:end */}
+
+- **DOM Selector**: click the crosshair button and click an element, or type a CSS selector. A selector such as `.sponsored` changes all matching elements.
+- **CSS property** uses the CSS name with dashes: `background-color`, not `backgroundColor`.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has the fields `result` (object).
+{/* AUTO:outputs:end */}
+
+The incoming item passes through with a `result` field added: `matched` (how many elements the selector found), `updated` (how many were changed) and, for an invalid selector, `error`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Set Element Attribute Style after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. A [Page Load](/nodes/builtin/trigger/pageload/) trigger with **URL Patterns** = `https://shop.example.com/*`.
+2. **Set Element Attribute Style** with **DOM Selector** = `.sponsored`, and one **Styles** entry: **CSS property** `display`, **Value** `none`.
+3. A second **Set Element Attribute Style** with **DOM Selector** = `.price` and **Styles**: `font-weight` = `bold`, `background-color` = `#fff3cd`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **`matched` is 0.** The selector found nothing when the node ran. Check it with **Ping**, or add [Wait For Element](/nodes/extension/ui/wait-for-element/) first.
+- **`error` says the selector is not valid.** **DOM Selector** has a typo or uses an unsupported form. Pick the element again with the crosshair.
+- **The style does not change anything.** Check that the value is valid CSS for that property: an invalid value is ignored, and so is a value ending in `!important`. If the site still overrides it, hide or remove the element with [Delete UI Elements](/nodes/extension/ui/delete-elements/).
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Delete UI Elements](/nodes/extension/ui/delete-elements/): remove elements entirely.
+- [Highlight Elements](/nodes/extension/ui/highlight-elements/): a temporary highlight.
+- [Get Element Data](/nodes/extension/getelementdata/): read an element's attributes before changing them.

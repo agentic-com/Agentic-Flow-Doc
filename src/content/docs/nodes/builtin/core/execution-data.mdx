@@ -3,72 +3,89 @@ title: "Execution Data"
 description: "Read this run's id, trigger and timing, or attach searchable metadata to it"
 sidebar:
   label: "Execution Data"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/execution-data
+  family: core
 ---
 
-Read the current run's context, or attach searchable metadata to it.
+Read details about the current run, or tag the run with a value you can search for later in run history.
 
 ## What it does
 
-Every run is otherwise anonymous: run history can only show a timestamp and a status, and a node has no way to know which run it is part of. This node closes both gaps, in two halves that are useful on their own:
+Execution Data has two operations, chosen with **Operation**:
 
-- **Read run context** — outputs this run's id, the trigger type that started it, and its timing, so a later node can branch on how the run began or how long it has been going, and so a log line can name the run.
-- **Attach metadata** — writes a searchable key/value pair onto the run's record, turning "the run at 14:03" into "the run that processed order 4471". The pair is saved with the run and is searchable in run history.
+- **Read run context** outputs this run's id, the workflow id, how the run was started (the trigger type), when it started and how long it has been running.
+- **Attach metadata** saves a **Key** and **Value** pair on the run. Run history shows the pair on the run's row and in its detail panel, and the history search box finds runs by either half of a pair, by run id or by status. Tag a run with `order` = `4471` and searching "4471" brings it back.
+
+Values are always stored as text, so numbers and true/false stay searchable. You can attach several pairs by using the node more than once.
 
 ## When to use it
 
-- Make run history **findable by something meaningful** — an order number, a customer id, a batch name — instead of only by time and status. Attach the value with **Attach metadata**, then search for it in the run list.
-- **Branch on how a run started.** Read the trigger type and route a scheduled run differently from a manual one, or a chat-started run differently from a page-load one.
-- **Annotate logs** with the run id so a support conversation can point at one exact run.
+- Make runs findable by something meaningful, such as an order number, a customer or a page, instead of only by time.
+- Branch on how a run started, for example handle a scheduled run differently from a manual one.
+- Put the run id or elapsed time in a log line or a message.
+
+To remember values from one run to the next, use [Data Store](/nodes/builtin/core/datastore/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | `Read run context` (output the run's id, trigger type and timing) or `Attach metadata` (save a key/value pair on the run). Defaults to `Read run context`. |
-| Key | The name of the metadata field to attach — for example `orderId`. Required for **Attach metadata**. |
-| Value | The value to store under the key — for example `4471`. Non-text values are stored as text so they stay searchable. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Read run context | No | Read run context, or attach metadata to the run. Options: Read run context, Attach metadata. |
+| **Key** | Text |  | No | Name of the metadata field to attach (Attach metadata only). |
+| **Value** | Text |  | No | Value to store under the key (Attach metadata only). |
+{/* AUTO:settings:end */}
 
-The trigger type is read from the trigger node upstream of this one, the same information that flows down every branch of a run. If nothing upstream identifies the trigger, the trigger type reads as `unknown`.
+**Value** is usually an expression, such as `{{ $input.orderId }}`. **Key** is required for **Attach metadata**.
 
 ## Outputs
 
-**Read run context** outputs an object:
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+**Read run context** outputs:
 
 | Field | Meaning |
 | --- | --- |
-| `runId` | Stable id for this run, or `null` outside a workflow run. |
+| `runId` | The id of this run, or `null` outside a workflow run. |
 | `workflowId` | The workflow this run belongs to, or `null`. |
-| `triggerType` | How the run started — `schedule`, `manual`, `elementChange`, `chat`, and so on — or `unknown`. |
+| `triggerType` | How the run started, such as `schedule`, `manual`, `contextmenu` or `chat`, or `unknown`. |
 | `startedAt` | When the run started, as an ISO timestamp, or `null`. |
 | `elapsedMs` | Milliseconds since the run started, or `null`. |
 
-**Attach metadata** outputs the pair it wrote plus the run's full metadata map so far:
-
-| Field | Meaning |
-| --- | --- |
-| `key` / `value` | The pair that was written (value coerced to text). |
-| `metadata` | Every key/value attached to this run so far. |
-| `persisted` | `true` when the pair was attached to a real run; `false` when the node ran on its own (a single-node test), where there is no run to annotate. |
-
-## Where metadata shows up
-
-Attached metadata appears in **run history**: each run's row shows its metadata, the detail panel lists every pair and the run id, and the history search box matches a run by its metadata (either half of a pair), its run id, or its status. Search "4471" and the run that processed order 4471 comes back.
+**Attach metadata** outputs `key` and `value` (the pair just written), `metadata` (every pair on this run so far) and `persisted`, which is `false` when the node ran on its own and there was no run to tag.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser and works without an account.
-- Metadata is saved with runs recorded in **this browser profile** (local mode). Run context — id, trigger type, timing — is available in every mode.
-- Metadata is attached to *this* run, and runs already belong to a single workflow, so there is no shared store an imported workflow could read another workflow's metadata out of. The epic's per-workflow scoping holds automatically.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+Tag each run with the page it processed, then find it in run history:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger, **Menu Contexts** `Page`.
+2. Execution Data, **Operation** Attach metadata, **Key** `page`, **Value** `{{ $input.tabTitle }}`.
+3. The rest of your steps, for example [Get All Text](/nodes/extension/getalltext/) and a summary.
+4. Later, open run history and type part of the page title in the search box to find that run.
 
 ## Troubleshooting
 
-- **`persisted: false` on a set** means the node ran outside a workflow run (a single-node test). Run the whole workflow and the pair is attached to that run.
-- **`triggerType` is `unknown`** when no upstream trigger labels itself. Put the Execution Data node on a branch downstream of the trigger so the trigger type reaches it.
-- **Metadata is text.** A number or boolean flowing into **Value** is stored as its text form so it stays searchable; read it back as a string.
-- **A resumed run is a new run.** A run that paused and resumed is recorded as its own execution with its own id; metadata attached before it paused is not carried across the pause.
+- **"Attaching metadata needs a key."** **Key** is empty. Fill it in.
+- **`persisted` is `false`.** You tested the node on its own. Run the whole workflow and the pair is saved on that run.
+- **`triggerType` is `unknown`.** The trigger's `triggerType` field did not reach this node, usually because a node in between replaced the data. Place Execution Data right after the trigger, or turn on an "include input fields" option in the nodes between.
+- **The metadata does not show in run history.** Metadata is saved with runs recorded in this browser profile (local mode). Run context works in every mode.
+- **A paused run lost its metadata after resuming.** A resumed run is recorded as a new run with its own id. Attach the metadata again after the pause.
 
 ## Related nodes
 
-- [Data Store](/nodes/builtin/core/datastore/) — remembers values *between* runs; Execution Data annotates *this* run
-- [Digest](/nodes/builtin/core/digest/) — accumulate items across runs and release them together
-- [Node types overview](/nodes/builtin/node-types/)
+- [Data Store](/nodes/builtin/core/datastore/): remember values between runs.
+- [Switch](/nodes/builtin/flow/switch/): route by `triggerType`.
+- [Error Trigger](/nodes/builtin/trigger/errortrigger/): react when a run fails.
+- [Digest](/nodes/builtin/core/digest/): collect items across runs and release them together.

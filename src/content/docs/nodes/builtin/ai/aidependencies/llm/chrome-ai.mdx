@@ -3,52 +3,76 @@ title: "Chrome AI"
 description: "Leverage Chrome AI to use LLM directly on your device"
 sidebar:
   label: "Chrome AI"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/llm/chrome-ai
+  family: ai
 ---
 
-Leverage Chrome AI to use LLM directly on your device
+Send a prompt to the AI model built into Google Chrome (Gemini Nano) and get its reply, all on your device.
 
 ## What it does
 
-Provides access to Chrome's built-in AI models running locally in the browser.
+Chrome AI is a standalone node, not a model you plug into an agent. It sends **Prompt** to Chrome's built-in model and returns the answer as `{ result }`. Nothing leaves your computer, there is no API key and no cost.
+
+**Chrome only.** The node uses the AI built into Google Chrome, which Google is still rolling out (see [Chrome's built-in AI](https://developer.chrome.com/docs/ai/built-in)). It does not work in Firefox; there, use an on-device model from [Local models](/usage/using-the-app/local-models/) or a cloud AI provider.
 
 ## When to use it
 
-Connect this to AI agents for fast, privacy-focused AI that runs entirely in Chrome without external API calls.
+- Short, private text jobs: rewrite a sentence, pull a name out of a paragraph, draft a one-line reply.
+- Workflows that must work offline or must not send text to a cloud service.
 
-**Chrome only.** This node uses the AI built into Google Chrome. It doesn't work in Firefox: there, use an on-device model (WebLLM or Transformers.js, see [Local models](/usage/using-the-app/local-models/)) or a cloud AI provider instead.
+For longer or harder tasks, a cloud model behind [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) gives better answers. For other on-device models, see the [Local AI](/nodes/builtin/ai/localai/) nodes.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Prompt | Source-backed field from the node schema. |
-| Temperature | Source-backed field from the node schema. |
-| Max Retries | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Prompt** | Text |  | No | The prompt to use with the model. |
+| **Options** | Group |  | No | The options to use with the model. |
+| Options › **Temperature** | Number |  | No | The temperature to use for the model. |
+| Options › **Top K** | Number | 40 | No | Sample each next token from only the K most likely candidates. Lower values are more focused; higher values are more varied (default 40). |
+{/* AUTO:settings:end */}
+
+Without options, **Temperature** is 0.5 and **Top K** is 40. Lower values give more focused, repeatable answers; higher values give more varied ones. Use expressions in **Prompt** to include data from earlier nodes, for example `Summarise in one sentence: {{ $input.text }}`.
 
 ## Outputs
 
-Returns a chat model dependency that can be connected to AI agent nodes.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `result` | Any | The model reply; the parsed result when an output parser is connected |
+{/* AUTO:outputs:end */}
+
+`result` holds the model's reply as text.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect Chrome AI to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on selected text.
+2. Chrome AI with **Prompt** `Rewrite this politely: {{ $input.selectionText }}`.
+3. [Clipboard Write](/nodes/extension/clipboardwrite/) copies `{{ $input.result }}`.
 
 ## Troubleshooting
 
-- **Stopping a run.** **Stop** interrupts the node while Gemini Nano is still answering; the reply is cancelled.
-- **In Firefox it fails with "only works in Chrome".** That's expected: Firefox doesn't include Chrome's built-in AI. Switch to an on-device or cloud model.
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **It fails with "only works in Chrome".** You are in Firefox, which has no built-in AI. Switch to an on-device or cloud model.
+- **The model is not available.** Chrome's built-in AI is not enabled or not downloaded yet on this computer. Follow Google's setup steps for Chrome's built-in AI, then try again.
+- **The run was stopped and there is no reply.** **Stop** cancels the answer while the model is still writing.
 
 ## Related nodes
 
-- [AI Agents](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/): prompt a cloud or local chat model.
+- [Generate Text](/nodes/builtin/ai/localai/generate-text/): on-device text generation in any browser.
+- [Summarize](/nodes/builtin/ai/localai/summarize/): on-device summaries.

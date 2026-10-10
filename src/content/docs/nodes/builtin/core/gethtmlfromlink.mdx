@@ -3,50 +3,80 @@ title: "Get HTML from Link"
 description: "Get the HTML content from a given URL"
 sidebar:
   label: "Get HTML from Link"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/gethtmlfromlink
+  family: core
 ---
 
-Get the HTML content from a given URL
+Download the HTML source of a web page by its address, without opening it in a tab.
 
 ## What it does
 
-Fetches the raw HTML source code from a web page at the specified URL.
+Get HTML from Link downloads the page at **URL** and returns its HTML exactly as the server sent it, as text, in the field named by **Output field name**.
+
+Scripts on the page do not run, so anything a site adds afterwards with JavaScript is not in the result. Use it on pages whose content is in the HTML itself, such as articles, listings and simple shops.
 
 ## When to use it
 
-Use this node to retrieve HTML for parsing, analysis, or when you need the complete page structure.
+- Pull specific values (a price, a title, a table) out of a page with [HTML Extract](/nodes/builtin/datatransformation/html-extract/).
+- Save a copy of a page's source.
+- Check a page for a meta tag or a script without opening it.
+
+For just the readable text, use [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/). To read the HTML of the page open in your tab, use [Get All HTML](/nodes/extension/getallhtml/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL | Source-backed field from the node schema. |
-| Output field name | Source-backed field from the node schema. |
-| Timeout | Source-backed field from the node schema. |
-| Headers | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL** | Text |  | Yes | The URL to get the HTML from. |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Timeout** | Number | 10000 | No | The timeout for the request. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Headers** | Key-value pairs |  | No | The headers to send with the request. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
+
+- **URL** must be a full address starting with `https://` or `http://`, typed or as an expression such as `{{ $input.url }}`.
+- **Timeout** is in milliseconds (10000 = 10 seconds).
+- **Headers** add extra request headers, such as `Accept-Language: en`.
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The item holds the whole HTML as one text value under **Output field name**, for example `{ html: "<!doctype html><html>..." }`. Turn on **Include input fields** to keep the incoming fields too.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect data into Get HTML from Link, configure the settings above, and use the output in the next workflow step.
+Check a product's price every morning:
+
+1. [Schedule](/nodes/builtin/trigger/schedule/) trigger, every day at 8:00.
+2. Get HTML from Link, **URL** `https://shop.example.com/product/123`, **Output field name** `html`.
+3. [HTML Extract](/nodes/builtin/datatransformation/html-extract/), **HTML** `{{ $input.html }}`, **Mode** Single value, **Selector** `.price`, **Return** Text.
+4. [Browser Notification](/nodes/extension/browsernotification/) with the extracted price.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"Invalid URL: …".** The address is malformed, or the request could not be sent. Check the address. If it is correct and the node runs in the web app, the site likely refuses requests from other websites; run the workflow from the extension.
+- **"HTTP error! status: 404"** (or another number). The server answered with an error. Check the address; 403 often means the site blocks automated requests.
+- **"Request timeout".** The site took longer than **Timeout**. Raise it.
+- **The value you want is not in the HTML.** The site builds it with JavaScript. Open the page and use [Get All HTML](/nodes/extension/getallhtml/) or [Get Element Data](/nodes/extension/getelementdata/) instead.
 
 ## Related nodes
 
-- [Code](/nodes/builtin/core/code/)
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/): pick values out of the HTML with CSS selectors.
+- [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/): get readable text instead of HTML.
+- [Get Links from Link](/nodes/builtin/core/getlinksfromlink/): list the links on the page.
+- [Http Request](/nodes/builtin/core/http-request/): send a custom request with authentication.

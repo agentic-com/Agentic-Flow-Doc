@@ -1,51 +1,76 @@
 ---
 title: "Wait For Approval"
-description: "Pause a run until a person approves or rejects it"
+description: "Pause the run until a person approves or rejects it"
 sidebar:
   label: "Wait For Approval"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/wait-for-approval
+  family: flow
 ---
 
-Pause a run and wait for a human decision before continuing.
+Pause a run until a person approves or rejects it, then continue down the matching branch.
 
 ## What it does
 
-Pauses the run until a person approves or rejects it. The node produces no output on its own — the run parks and waits for a decision. When a decision arrives, the items that were waiting flow out of the port the decision chose: **Approved** or **Rejected**. Use this as a checkpoint before any consequential action that warrants a human sign-off.
+Wait For Approval stops the run at this step and asks a question, the **Prompt**. When someone answers, the items that were waiting leave through **Approved** or **Rejected**, unchanged.
+
+- The question appears on the paused run in the **Executions** pane. In the browser extension, an Approve / Reject card is also dropped onto the page you are looking at, when that page allows it.
+- You are told a run is waiting: a "waiting for you" count in the top bar, a sound (a chime when the app is open, the desktop notification's own sound otherwise) and, in the extension when the app is not in front, a desktop notification you can click to jump to the run.
+- The run waits until someone answers. It does not time out, and it is kept if you close the browser. Cancelling the paused run stops it without sending items to either port.
+- Fed several items, the node pauses **once** and one answer routes all of them together. For one decision per item, put the node inside a [Loop](/nodes/builtin/flow/loop/) or [Split in Batches](/nodes/builtin/flow/splitinbatches/).
 
 ## When to use it
 
-- Any human-in-the-loop checkpoint before a consequential step: sending an email, making a purchase, publishing content, or triggering an external action.
-- The work after **Approved** runs only on approval; **Rejected** is an ordinary branch for handling a no or fallback behavior.
-- When waiting indefinitely is acceptable — the run survives browser restarts and remains in the Executions pane until approved, rejected, or manually cancelled.
+- Check a draft before an email, message or post goes out.
+- Confirm before a step that spends money, deletes data or changes a live system.
+- Review what an AI step produced before it is saved.
+
+To ask for values rather than a yes or no, use [In-Page Form](/nodes/builtin/flow/in-page-form/). This node is different from the automatic approval that AI tools ask for before each action they take; see [Action Approval](/advanced-ai/concepts/action-approval/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Prompt | The question or text shown to the person making the decision. Appears on the paused run in the Executions pane. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Prompt** | Text |  | No | What the person is being asked to approve. |
+{/* AUTO:settings:end */}
+
+Write the **Prompt** as a question and include the details the person needs, for example `Send this reply to {{ $input.to }}?`. Left empty, it shows `Approve this step?`.
 
 ## Outputs
 
-The node draws two output handles:
+{/* AUTO:outputs:start */}
+2 output ports: **Approved**, **Rejected**.
+{/* AUTO:outputs:end */}
 
-- **Approved** — Items flow here when the person approves the run.
-- **Rejected** — Items flow here when the person rejects the run.
+The items that reached the node come out unchanged, so the next nodes read the same fields as before. Leave **Rejected** unconnected if a "no" should simply end that path.
 
-## One approval for a batch
+## Dependencies and credentials
 
-Fed a list of items, this node pauses **once** for the whole batch — a single decision that then routes all the items to **Approved** or **Rejected** together. If you need a separate decision **per item**, put the node inside a [Loop](/nodes/builtin/flow/loop/) or [Split in Batches](/nodes/builtin/flow/splitinbatches/) body, which runs it once per item (and stays durable across restarts).
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
-## Paused run visibility and control
+## Example workflow
 
-A paused run appears in the **Executions** pane, where a person with access can approve, reject, or cancel it. The run waits indefinitely — it does not time out or resume on its own — and persists even if the browser restarts or the window closes. Cancelling a paused run stops it without flowing items to either output.
+Review an AI-written summary before posting it:
 
-You're told when a run needs you: a **“waiting for you” count** in the top bar, a **sound** (a chime when the app is open, or the desktop notification's own sound when it isn't), and — when the app isn't in front of you — a **desktop notification** you can click to jump straight to the waiting run. The same applies to any pausing step that needs a response, including an [In-Page Form](/nodes/builtin/flow/) and a pause inside a [sub-workflow](/nodes/builtin/lambda/lambdaworkflow/).
+1. [Get All Text](/nodes/extension/getalltext/) reads the open article.
+2. [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) writes a short summary.
+3. Wait For Approval with **Prompt** `Post this summary to Slack?`.
+4. From **Approved**: [Slack](/nodes/builtin/integration/slack/) posts the summary. From **Rejected**: [Show Notification](/nodes/extension/shownotification/) with the message `Summary discarded`.
 
-## Wait For Approval vs. action approval
+## Troubleshooting
 
-This node is a **durable checkpoint you design into a flow**: it pauses a whole step, waits indefinitely, and survives browser restarts. It is different from the **live action approval** that gates the model-driven action tools ([Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/), [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/), [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/)) — that gate is automatic, fires on each action the model decides to take, and auto-rejects after a timeout. Use this node for deliberate human sign-off on a step; the action gate is always-on and requires no node. See [Action Approval](/advanced-ai/concepts/action-approval/).
+- **The run stays "waiting".** Nobody has answered yet. Open the **Executions** pane and approve, reject or cancel it.
+- **No card appears on the page.** The card only appears on normal web pages (`http` or `https`), and only in the extension. Browser settings pages, the extension store and the AWFlow app tab can't show it; answer from the **Executions** pane or the desktop notification.
+- **One answer approved every item.** That is expected: the node pauses once per run. Put it inside a [Loop](/nodes/builtin/flow/loop/) for one decision per item.
 
 ## Related nodes
 
-- [IF](/nodes/builtin/flow/if/)
-- [Switch](/nodes/builtin/flow/switch/)
-- [Merge](/nodes/builtin/flow/merge/)
+- [In-Page Form](/nodes/builtin/flow/in-page-form/): ask for values instead of a yes or no.
+- [IF](/nodes/builtin/flow/if/): branch automatically, without asking anyone.
+- [Wait](/nodes/builtin/flow/wait/): pause for a set time instead of a person.

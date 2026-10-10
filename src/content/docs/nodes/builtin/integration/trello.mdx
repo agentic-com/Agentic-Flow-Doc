@@ -3,57 +3,141 @@ title: "Trello"
 description: "Create, update, and move Trello cards from the current page, and attach the page URL."
 sidebar:
   label: "Trello"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/trello
+  family: integration
 ---
 
-Turn the page you're on into a Trello card. The same capture-from-page pattern as Linear and Todoist, aimed at a non-developer audience — pick a board and list, and the page URL is attached to the card.
+Turn the page you are on into a Trello card with the link attached, and update or move cards across your boards.
 
 ## What it does
 
-Creates, updates, and moves cards, lists your boards and their lists, and attaches URLs. On **Card → Create**, the page URL is added both to the description and as a real card attachment — the one call that makes a captured card actually useful.
+The Trello node works on three kinds of things (**Resource**):
 
-## Resources and operations
+- **Card**: create a card in a list, change its title or description, move it to another list, or attach a link to it.
+- **Board**: list your boards, to find a **Board ID**.
+- **List**: list the lists (columns) of a board, to find a **List ID**.
 
+When you fill **Source URL** on **Card → Create**, the node does two things: it adds a `Source:` line with the link to the end of the description, and it attaches the link to the card, so it shows in the card's attachments with a preview.
+
+## When to use it
+
+- Capture a page as a card in a "To read" or "Ideas" list.
+- Add a card to a team board when a form is filled or a page changes.
+- Move a card to "Done" when a workflow finishes the task.
+- Attach a generated report or a related page to an existing card.
+
+For personal to-dos, use [Todoist](/nodes/builtin/integration/todoist/). For software issues, use [Linear](/nodes/builtin/integration/linear/) or [GitHub](/nodes/builtin/integration/github/).
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
 | Resource | Operations |
 | --- | --- |
 | Card | Create, Update, Move, Attach URL |
 | Board | List |
 | List | List |
 
-## Inputs and settings
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | A Trello API key + token, stored as a Basic Auth credential: put the API key in Username and the token in Password. Get both from https://trello.com/app-key (the token is generated from that page). Keep them secret. |
 
-| Setting | Notes |
-| --- | --- |
-| Credential | A Trello API key + token (see below). |
-| Resource / Operation | What to act on and how. |
-| Card title / Description | The card (Card → Create/Update). |
-| List ID | The list (column) to add the card to — use **List → List** to find it. |
-| Source URL | The page URL — attached to the card and appended to the description. |
-| Position | Place the new card at the top or bottom of the list. |
-| Card ID | The card to update/move/attach to. |
-| Target list ID | The list to move the card to (Card → Move). |
-| URL / Attachment name | Attach a URL to an existing card (Card → Attach URL). |
-| Board ID | The board whose lists to fetch (List → List). |
+Pick **Resource** and **Operation** first; the fields below change with your choice.
+
+**Card → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Card title** | Text |  | Yes | The card name. |
+| **List ID** | Text |  | Yes | The list (column) to add the card to (use List → List to find its ID). |
+| **Description** | Text |  | No | Card description (Markdown supported). |
+| **Source URL** | Text |  | No | The page URL — attached to the card and appended to the description. |
+| **Position** | Choice |  | No | Where in the list to place the card. Options: Top, Bottom. |
+
+**Card → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Card ID** | Text |  | Yes | The Trello card ID. |
+| **Card title** | Text |  | No | The card name. |
+| **Description** | Text |  | No | Card description (Markdown supported). |
+
+**Card → Move**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Card ID** | Text |  | Yes | The Trello card ID. |
+| **Target list ID** | Text |  | Yes | The list (column) to move the card to. |
+
+**Card → Attach URL**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Card ID** | Text |  | Yes | The Trello card ID. |
+| **URL** | Text |  | Yes | The URL to attach to the card. |
+| **Attachment name** | Text |  | No | A label for the attachment (optional). |
+
+**Board → List**
+
+No further settings.
+
+**List → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Board ID** | Text |  | Yes | The board whose lists to fetch (use Board → List to find its ID). |
+{/* AUTO:settings:end */}
+
+- **List ID** and **Target list ID** are the id of a list (a column), not of a board. Run **Board → List**, then **List → List** with your **Board ID**, and copy the `id` of the list.
+- **Board ID** can also be the short code in a board's address: `https://trello.com/b/AbC123xY/my-board` gives `AbC123xY`.
+- **Card ID** comes from the `id` of a **Card → Create** result, for example `{{ $('Trello').id }}`, or from the short code in a card's address (`https://trello.com/c/<code>/…`).
+- **Position** puts the new card at the `Top` or `Bottom` of the list.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+- **Card → Create**, **Update** and **Move** return the card, including its `id`, `name`, `desc`, `idList` and `url` (the link to open it in Trello).
+- **Card → Attach URL** returns the new attachment, with its `id`, `name` and `url`.
+- **Board → List** returns one item per board with `id`, `name` and `url`; **List → List** returns one item per list with `id` and `name`.
 
 ## Dependencies and credentials
 
-- **Auth:** Trello's own **API key + user token** — *not* the Atlassian OAuth (3LO) platform, so it ships immediately with no OAuth dance.
-- Store both as a **Basic Auth** credential:
-  - **Username** → your Trello **API key**
-  - **Password** → your Trello **token**
-- Get both from [trello.com/app-key](https://trello.com/app-key) (generate the token from that page). They're sent in Trello's `Authorization: OAuth …` header — never in the URL — and stored in your credential vault, never through awflow's backend.
+{/* AUTO:deps:start */}
+- **Credential** (credential, Basic Auth): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
 
-## Web and extension builds
+Trello uses an API key and a token, saved together as a Basic Auth credential:
 
-This node is **extension-only**. The Trello API isn't confirmed to send browser-CORS headers, so run it in the awflow browser extension.
+1. Open [trello.com/app-key](https://trello.com/app-key) while signed in to Trello. If Trello asks you to create a Power-Up first, create one in its admin page; its **API key** tab gives you the key.
+2. Copy the **API key**.
+3. Next to the key, follow the **Token** link, allow access, and copy the token.
+4. Create a Basic Auth credential with the API key as **Username** and the token as **Password**. See [Create a credential](/usage/using-the-app/credentials/create/).
+
+The token can act on all your boards, so keep it private.
+
+## Example workflow
+
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger adds "Add to Trello" to the right-click menu.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the page's `title` and `url`.
+3. Trello, **Card → Create**, **List ID** of your "Ideas" list, **Card title** `{{ $input.title }}`, **Source URL** `{{ $input.url }}`, **Position** `Top`.
+4. [Browser Notification](/nodes/extension/browsernotification/) shows `Card added`, with the card's `{{ $input.url }}`.
 
 ## Troubleshooting
 
-- **`401` invalid token** — the key or token is wrong or expired. Regenerate the token at [trello.com/app-key](https://trello.com/app-key) and update the credential (key in Username, token in Password).
-- **Card created in the wrong place** — **List ID** is a *list* (column) ID, not a board ID. Use **List → List** with your **Board ID** to find the right list.
-- **Can't find IDs** — run **Board → List** for board IDs, then **List → List** for the lists on a board.
+- **"Trello needs a Basic Auth credential with the API key in Username and the token in Password."** The credential is missing a value or is not Basic Auth. Fill both fields.
+- **"Trello API Error: 401 … the API key or token is invalid or expired".** The key and token do not belong together, are swapped, or the token was revoked. Generate a new token next to your key and update the credential.
+- **"Trello API Error: 400 … invalid id".** A **List ID**, **Card ID** or **Board ID** is wrong. A board id was probably used where a list id is needed; use **List → List** to get list ids.
+- **The run is blocked in the web app.** Trello runs through the browser extension. Install the extension and allow Trello for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/usage/troubleshooting/extension-only-integrations-in-the-web-app/).
 
 ## Related nodes
 
-- [Get Page Metadata](/nodes/extension/getpagemetadata/)
-- [Todoist](/nodes/builtin/integration/todoist/)
-- [Linear](/nodes/builtin/integration/linear/)
+- [Todoist](/nodes/builtin/integration/todoist/): personal tasks with due dates.
+- [Linear](/nodes/builtin/integration/linear/): issues for software teams.
+- [Get Page Metadata](/nodes/extension/getpagemetadata/): the page's title and address for the card.
+- [Http Request](/nodes/builtin/core/http-request/): labels, checklists and other Trello features this node does not cover.

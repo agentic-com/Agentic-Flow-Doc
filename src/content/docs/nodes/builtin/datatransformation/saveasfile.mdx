@@ -1,46 +1,73 @@
 ---
-title: "Save as file"
+title: "Save as File"
 description: "Save text content as a downloadable file"
 sidebar:
-  label: "Save as file"
+  label: "Save as File"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/saveasfile
+  family: data
+  since: "0.7.0"
 ---
 
-Save generated text — CSV, Markdown, JSON, or plain text — as a downloadable file.
+Save text your workflow produced, such as a CSV table, a Markdown report or JSON, as a file in your downloads.
 
 ## What it does
 
-Takes text content produced earlier in the workflow and downloads it as a file. Unlike [Download as file](/nodes/builtin/datatransformation/downloadasfile/), which downloads an existing URL, this node writes content you generated (for example the output of [CSV](/nodes/builtin/datatransformation/csv/), [JSON](/nodes/builtin/datatransformation/json/), or [Code](/nodes/builtin/core/code/)).
+Save as File takes the text in **Content** and downloads it as a file named **File name** plus the extension of **File type**. The browser's usual download behaviour applies: the file lands in your downloads folder, or you are asked where to save it, depending on your browser settings.
+
+If **File name** already ends with the right extension (`report.csv` with type *csv*), the extension is not added twice. The file type also sets the file's format label, so a *csv* file opens in a spreadsheet app and an *html* file opens in the browser.
+
+The node needs AWFlow 0.7.0 or later. Workflows that use it do not install on older versions.
 
 ## When to use it
 
-Use it as the final step when you want the workflow's result saved to a file rather than sent to a service or shown on the page.
+- Keep the result of a run on your computer: a scraped table as CSV, a summary as Markdown, raw data as JSON.
+- Export data you built with [CSV](/nodes/builtin/datatransformation/csv/), [JSON](/nodes/builtin/datatransformation/json/), [Markdown](/nodes/builtin/datatransformation/markdown/) or [Code](/nodes/builtin/core/code/).
+- To download a file from a link (an image, a PDF), use [Download as file](/nodes/builtin/datatransformation/downloadasfile/) instead. To keep the file inside the workflow for another node, use [Convert to File](/nodes/builtin/datatransformation/converttofile/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Content | The text to save. Usually an expression such as `{{ $input.csv }}`. |
-| File name | Optional. Without the extension (added from File type). Defaults to `file`. |
-| File type | `txt`, `csv`, `json`, `md`, `html`, or `xml`. Sets the extension and content type. Defaults to `txt`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Content** | Text |  | Yes | The text to save to the file. |
+| **File name** | Text | `file` | No | Without the extension. |
+| **File type** | Choice | txt | No | Options: txt, csv, json, md, html, xml. |
+{/* AUTO:settings:end */}
+
+Fill **Content** with an expression that points at the text, for example `{{ $input.csv }}` after a CSV node. **File name** can use expressions too, such as `report-{{ $run.name }}`.
 
 ## Outputs
 
-Triggers the download as a side effect and passes control to the next node.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The output is an empty item. Its only job is to start the download; the next node, if any, simply runs after it.
 
 ## Dependencies and credentials
 
-- No credentials. Runs in the browser (it needs a page/window to trigger the download).
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Build a report → **CSV** (build) → **Save as file** (Content: `{{ $input.csv }}`, File type: `csv`, File name: `report`).
+1. [HTML Extract](/nodes/builtin/datatransformation/html-extract/) reads the rows of a table on the current page.
+2. [CSV](/nodes/builtin/datatransformation/csv/) with **Operation** *Build from items* turns them into CSV text in the `csv` field.
+3. Save as File with **Content** `{{ $input.csv }}`, **File name** `prices` and **File type** *csv*. You get `prices.csv` in your downloads.
 
-## Requirements
+## Troubleshooting
 
-Available from extension **v0.7.0**. Workflows that use it won't install on older extensions.
+- **"Save as File must run where a browser is available."** The node ran in a place that has no page to start a download from. Run the workflow from the AWFlow app or the extension's side panel.
+- **The node fails before saving, saying it expected text.** **Content** points at a list or an object. Turn the data into text first with [JSON](/nodes/builtin/datatransformation/json/) or [CSV](/nodes/builtin/datatransformation/csv/), and point **Content** at that result.
+- **The file is called `file.txt`.** **File name** and **File type** were left empty, so the defaults were used. Set both.
 
 ## Related nodes
 
-- [Download as file](/nodes/builtin/datatransformation/downloadasfile/)
-- [CSV](/nodes/builtin/datatransformation/csv/)
-- [Code](/nodes/builtin/core/code/)
+- [Download as file](/nodes/builtin/datatransformation/downloadasfile/): save a file from a link.
+- [CSV](/nodes/builtin/datatransformation/csv/): turn items into CSV text.
+- [Convert to File](/nodes/builtin/datatransformation/converttofile/): make a file other nodes can use.

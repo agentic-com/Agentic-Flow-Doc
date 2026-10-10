@@ -3,78 +3,241 @@ title: "Text / Formatter"
 description: "Transform text: case, trim, pad, replace, split, slugify, extract, count, encode and decode"
 sidebar:
   label: "Text / Formatter"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/text-formatter
+  family: data
 ---
 
-Transform text: case, trim, pad, replace, split, slugify, extract, count, encode and decode.
+Clean up, reshape, search or encode a piece of text, without writing code.
 
 ## What it does
 
-One node with an operation selector, rather than a dozen tiny nodes. It converts case (`Uppercase`, `Lowercase`, `Title Case`, `camelCase`, `snake_case`, `kebab-case`), trims, pads, replaces (plain or regex), splits and joins, slugifies, truncates with an ellipsis, and substitutes a default value when the text is empty. It also extracts every email, URL, number or phone number found in the text, counts words or characters, and encodes or decodes text with a chosen scheme (Base64, URL, URI component, HTML entities or hex). The selector both drives the transformation and decides which extra settings the UI shows.
+You pick an **Operation** and point **Text** at your value, for example `{{ $input.title }}`. The node then does one thing to that text:
 
-A single transformed value comes back in `result`. The extract operations return `matches`, always an array, so an empty result is still iterable. The count operations return `count`. Character counting is by code point, so an accented letter or emoji counts once rather than by its UTF-16 units.
+- **Change case**: *Uppercase*, *Lowercase*, *Title Case*, *camelCase*, *snake_case*, *kebab-case*. The last three understand spaces, punctuation and existing camelCase, so `Order ID number` becomes `order_id_number`.
+- **Shape**: *Trim* (remove spaces at both ends), *Pad*, *Replace*, *Split*, *Join*, *Slugify*, *Truncate*, *Default if empty*.
+- **Find**: *Extract emails*, *Extract URLs*, *Extract numbers*, *Extract phone numbers* return every match, not just the first.
+- **Count**: *Word count*, *Character count*. An emoji or accented letter counts as one character.
+- **Encode** or **Decode** with a **Scheme**: *Base64*, *URL (whole URL)*, *URI component*, *HTML entities* or *Hex*. Accented letters and emoji survive a round trip.
 
-### Encode and decode
-
-`Encode` and `Decode` convert text to or from a chosen **Scheme**, in both directions, returning the converted value in `result`:
-
-- **Base64** — standard Base64. Unicode-safe: the text is converted to its UTF-8 bytes before encoding and read back as UTF-8 on decode, so emoji and accented characters survive a round trip (plain `btoa`/`atob` cannot do this).
-- **URL (whole URL)** — `encodeURI`/`decodeURI`. Escapes spaces and unsafe characters but leaves reserved URL characters such as `:/?#&=` intact, so it is safe to run on a whole URL.
-- **URI component** — `encodeURIComponent`/`decodeURIComponent`. Escapes reserved characters too, for a single query-string value or path segment.
-- **HTML entities** — escapes `& < > " '` to entities on encode, and decodes named (`&amp;`), decimal (`&#72;`) and hexadecimal (`&#x1F30D;`) entities back to characters on decode.
-- **Hex** — the UTF-8 bytes of the text as lowercase hexadecimal, and back.
-
-Decoding malformed input throws a clear error (for example, non-hex characters, an odd-length hex string, invalid Base64, or a broken percent-escape).
+*Slugify* turns `Héllo, Wörld!` into `hello-world`, which is handy for file names and links.
 
 ## When to use it
 
-Use this node to tidy scraped or user-supplied text before it travels downstream: turning a heading into a slug, pulling every email address out of a page, or normalizing a key into snake_case — without dropping to a Code node.
+- Tidy scraped text before you save or send it: trim it, fix its case, or replace a placeholder.
+- Pull every email address or link out of a page's text.
+- Build a file name or link from a title with *Slugify*.
+- Encode a value for a link with *URI component*, or decode Base64 text from an API.
+- For patterns of your own and named fields, use [Regex](/nodes/builtin/datatransformation/regex/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+Pick **Operation** first; the fields below change with your choice.
+
+**Uppercase**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Lowercase**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Title Case**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**camelCase**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**snake\_case**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**kebab-case**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Trim**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Slugify**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Extract emails**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Extract URLs**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Extract numbers**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Extract phone numbers**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Word count**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Character count**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+
+**Pad**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+| **Target Length** | Number | 0 | No | Pad until the text reaches this many characters. |
+| **Pad With** | Text | ` ` | No | The characters repeated to fill the space. |
+| **Pad Side** | Choice | Start | No | Which end to pad. Options: Start, End. |
+
+**Replace**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+| **Find** | Text |  | No | The text or pattern to look for. |
+| **Replace With** | Text |  | No | The text put in place of each match. |
+| **Treat Find As Regex** | Toggle | Off | No | Read the Find field as a regular expression. |
+| **Regex Flags** | Text | `g` | No | Flags for the pattern, such as gi. |
+
+**Split**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+| **Separator** | Text | `,` | No | The string to split on. Empty splits into characters. |
+
+**Join**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+| **Separator** | Text | `,` | No | The string placed between joined items. |
+
+**Truncate**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+| **Maximum Length** | Number | 20 | No | Keep at most this many characters. |
+| **Ellipsis** | Text | `…` | No | Appended when the text is shortened. |
+
+**Default if empty**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+| **Default Value** | Text |  | No | Returned when the text is empty or only whitespace. |
+
+**Encode**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+| **Scheme** | Choice | Base64 | No | Which encoding to convert to or from. Options: Base64, URL (whole URL), URI component, HTML entities, Hex. |
+
+**Decode**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
+| **Scheme** | Choice | Base64 | No | Which encoding to convert to or from. Options: Base64, URL (whole URL), URI component, HTML entities, Hex. |
+{/* AUTO:settings:end */}
+
+Every operation has **Operation** (default *Uppercase*) and **Text**. Some show extra settings:
+
+| Operation | Extra settings |
 | --- | --- |
-| Operation | What to do with the text. One of `Uppercase`, `Lowercase`, `Title Case`, `camelCase`, `snake_case`, `kebab-case`, `Trim`, `Pad`, `Replace`, `Split`, `Join`, `Slugify`, `Truncate`, `Default if empty`, `Extract emails`, `Extract URLs`, `Extract numbers`, `Extract phone numbers`, `Word count`, `Character count`, `Encode` or `Decode`. Defaults to `Uppercase`. |
-| Text | The text to transform. Bind an upstream value with `{{ }}`, for example `{{ $json.description }}`. |
-| Target Length | For `Pad`: pad until the text reaches this many characters. Defaults to `0`. |
-| Pad With | For `Pad`: the characters repeated to fill the space. Defaults to a single space. |
-| Pad Side | For `Pad`: which end to pad, `Start` or `End`. Defaults to `Start`. |
-| Find | For `Replace`: the text or pattern to look for. |
-| Replace With | For `Replace`: the text put in place of each match. |
-| Treat Find As Regex | For `Replace`: read the Find field as a regular expression. Defaults to `off`. |
-| Regex Flags | For `Replace`: flags for the pattern, such as `gi`. Defaults to `g`. |
-| Separator | For `Split` and `Join`: the string to split on, or the string placed between joined items. Defaults to `,`. Splitting on an empty separator splits into individual characters. |
-| Maximum Length | For `Truncate`: keep at most this many characters. Defaults to `20`. |
-| Ellipsis | For `Truncate`: appended when the text is shortened. Defaults to `…`. |
-| Default Value | For `Default if empty`: returned when the text is empty or only whitespace. |
-| Scheme | For `Encode` and `Decode`: which encoding to convert to or from. One of `Base64`, `URL (whole URL)`, `URI component`, `HTML entities` or `Hex`. Defaults to `Base64`. |
+| *Pad* | **Target Length** (default 0), **Pad With** (default a space), **Pad Side** (*Start* or *End*) |
+| *Replace* | **Find**, **Replace With**, **Treat Find As Regex** (default off), **Regex Flags** (default `g`) |
+| *Split* | **Separator** (default `,`). Empty splits into single characters. |
+| *Join* | **Separator** (default `,`), placed between the joined entries |
+| *Truncate* | **Maximum Length** (default 20), **Ellipsis** (default `…`), added only when the text is cut |
+| *Default if empty* | **Default Value**, returned when the text is empty or only spaces |
+| *Encode*, *Decode* | **Scheme** (default *Base64*) |
+
+- *Replace* without regex replaces every occurrence of **Find**. With **Treat Find As Regex** on, the default `g` flag also replaces every match; add `i` (`gi`) to ignore case.
+- *Join* expects **Text** to be a list, such as `{{ $input.tags }}`. A single text value comes back unchanged.
+- *URL (whole URL)* leaves `:/?#&=` alone, so it is safe on a full address. *URI component* escapes them too; use it for one value inside a link.
 
 ## Outputs
 
-- Case conversions, `Trim`, `Pad`, `Replace`, `Split`, `Join`, `Slugify`, `Truncate` and `Default if empty` return the transformed value in `result`. `Split` returns an array; `Join` expects an array as input text and returns a joined string.
-- `Extract emails`, `Extract URLs`, `Extract numbers` and `Extract phone numbers` return every match found in `matches`, an array that is empty rather than absent when nothing matches.
-- `Word count` and `Character count` return the count in `count`. Character counting is by Unicode code point.
-- `Encode` and `Decode` return the converted value in `result`. Base64, hex and URI-component conversions are UTF-8 safe, so unicode text round-trips.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The field depends on the operation:
+
+- **`result`**: the new text for case, shaping, *Encode* and *Decode* operations. For *Split* it is a list.
+- **`matches`**: the list of everything found by an *Extract* operation. It is an empty list when nothing matched.
+- **`count`**: the number from *Word count* or *Character count*.
+
+The output holds only that field. To keep the original data next to it, read it from the earlier node with an expression such as `{{ $('HTML Extract').title }}`.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Place Text / Formatter after a node that scrapes a page, set **Operation** to `Extract emails`, and point **Text** at `{{ $json.html }}`. Every email address on the page comes back in `matches`. Chain a second Text / Formatter node with **Operation** set to `Slugify` on a page title to produce a URL-safe filename before saving.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) with **Output field name** `selection` reads the text you highlighted on a page.
+2. Text / Formatter with **Operation** *Extract emails* and **Text** `{{ $input.selection }}`. Every address comes back in `matches`.
+3. A second Text / Formatter with **Operation** *Join*, **Text** `{{ $input.matches }}` and **Separator** `, ` gives one line of addresses in `result`.
+4. A [Slack](/nodes/builtin/integration/slack/) node posts `{{ $input.result }}`.
 
 ## Troubleshooting
 
-- `Replace` with **Treat Find As Regex** on fails if **Find** is not a valid regular expression — check the pattern and **Regex Flags**.
-- `Split` with an empty **Separator** splits the text into individual characters rather than failing.
-- `Join` expects an array; if the incoming text is not an array, it is treated as a single-item list.
-- Extract operations never fail on no matches — they return an empty `matches` array instead.
-- `Decode` throws on malformed input: invalid Base64, a non-hex or odd-length hex string, or a broken percent-escape for URL/URI-component. Check the input matches the selected **Scheme**.
+- **"Invalid base64: could not decode the input as UTF-8 text."** The text is not Base64, or it is Base64 of a file rather than text. Check that you picked the right **Scheme**.
+- **"Invalid hex: expected an even number of hex digits."** or **"Invalid hex: contains non-hexadecimal characters."** The text is not a clean hex string. Remove spaces or prefixes such as `0x`.
+- **"Invalid URL encoding: malformed percent-escape sequence."** (or *Invalid URI component*). A `%` in the text is not followed by two hex digits. Check the text was really encoded.
+- **Replace fails with an invalid regular expression error.** **Treat Find As Regex** is on and **Find** has a syntax error, or **Regex Flags** holds a letter that is not a flag. Turn the option off to replace plain text.
+- **`matches` is empty.** Nothing in the text looks like an email, link, number or phone number. Phone numbers must be at least seven characters long and start and end with a digit; links must start with `http://` or `https://`.
 
 ## Related nodes
 
-- [Regex](/nodes/builtin/datatransformation/regex/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [JSON](/nodes/builtin/datatransformation/json/)
-- [Code](/nodes/builtin/core/code/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Regex](/nodes/builtin/datatransformation/regex/): your own patterns, with named groups as fields.
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): put the result back next to the other fields.
+- [Crypto](/nodes/builtin/datatransformation/crypto/): hashes and signatures rather than encodings.

@@ -1,0 +1,68 @@
+---
+title: "Funnel"
+description: "Continue as soon as any one of several incoming branches completes."
+sidebar:
+  label: "Funnel"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/funnel
+  family: flow
+---
+
+Continue as soon as any one of several incoming branches completes.
+
+## What it does
+
+Most nodes wait until every connected branch has finished before they run. Funnel does the opposite: it runs the moment **any one** of its incoming branches reaches it, and passes that branch's data straight through.
+
+If the branch that fired it carried no data, Funnel sends `{ "passed": true }` so the rest of the workflow still runs.
+
+Funnel does not combine data from several branches. To join two datasets, use [Merge](/nodes/builtin/flow/merge/).
+
+## When to use it
+
+- **Several triggers, one shared tail.** A workflow that starts from a [Hotkey](/nodes/builtin/trigger/hotkey/), a [Context Menu](/nodes/builtin/trigger/contextmenu/) and a [Schedule](/nodes/builtin/trigger/schedule/) can send all three into one Funnel, so the actual work is built once. Each run follows only the trigger that fired, and Funnel runs once per run.
+- **Parallel branches where any finish is enough.** For example, two branches that each try a different way to get the same data: whichever reaches Funnel first moves the workflow on.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
+
+Connect as many branches as you like to its single input.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The item that arrives is passed on unchanged. To read data from a specific earlier node instead, use an expression that names that node.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. Add a **Hotkey** trigger and a **Context Menu** trigger.
+2. Connect both to a **Funnel**.
+3. After the Funnel, add [Get Selected Text](/nodes/extension/getselectedtext/) and a [Slack](/nodes/builtin/integration/slack/) node that posts the text.
+
+Pressing the shortcut or using the right-click menu now runs the same two steps.
+
+## Troubleshooting
+
+- **The steps after Funnel run more than once in one run.** Two branches reached the Funnel in the same run, and each one fires it. If you need the steps to run only once after *all* branches finish, connect the branches to the next node directly (nodes wait for every input by default), or join them with [Merge](/nodes/builtin/flow/merge/).
+- **The next node gets `{ "passed": true }` instead of data.** The branch that fired Funnel produced no output. Read the data you need from the node that produced it with an expression.
+
+## Related nodes
+
+- [Merge](/nodes/builtin/flow/merge/): join two datasets into one.
+- [IF](/nodes/builtin/flow/if/) and [Switch](/nodes/builtin/flow/switch/): split one path into several.
+- [No Operation](/nodes/builtin/flow/nooperation/): a placeholder that passes data through.

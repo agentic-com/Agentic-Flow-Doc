@@ -3,59 +3,88 @@ title: "Text Classifier"
 description: "Classify text into one of a set of given categories using a LLM, or on-device with a Local Classifier"
 sidebar:
   label: "Text Classifier"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/textclassifiernode
+  family: ai
 ---
 
-Classify text into one of a set of given categories using a LLM, or on-device with a Local Classifier
+Put a text into one of the categories you list, with a chat model or on-device.
 
 ## What it does
 
-Sends the input text to a language model along with a list of categories you define, and asks it to classify the text into exactly one of them. If none of the categories fit, the model is instructed to respond with `"unknown"`.
+Text Classifier reads **Text** and returns the best matching category from **Categories** in `category`. What you connect to **Model** decides how; there is no setting to switch:
 
-## Run on-device
+- **A chat model** (for example [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/)) is told to answer with exactly one category name and nothing else, or `unknown` when none fits.
+- **A [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/)** runs in your browser: free, private and offline. With a zero-shot model, your **Categories** are scored and the best one wins. With a fixed-label model (sentiment, toxicity), the model's own labels are used and **Categories** is ignored. **System message** does not apply.
 
-What you connect to the **Model** port decides the engine — there is no setting to switch:
-
-- **A chat model** (e.g. Chat OpenAI, Web LLM) — the LLM path described above.
-- **A [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/)** — classifies in your browser: free, private, offline. With a **zero-shot** model, your **Categories** become the candidate labels and the best-scoring one wins. With a fixed-label model (sentiment, toxicity), the model's own labels are used and Categories are ignored. System message doesn't apply.
-
-For standalone zero-shot classification without an agent, see [Classify Text](/nodes/builtin/ai/localai/classify-text/).
+The node has one output. To send each category down its own path, follow it with a [Switch](/nodes/builtin/flow/switch/).
 
 ## When to use it
 
-Use this node to route or tag text by topic or intent — for example, sorting incoming support requests into categories like "billing", "technical", "sales", or triaging content for downstream branching logic.
+- Sort support requests into `billing, technical, sales` and route each to the right team.
+- Tag articles or emails by topic before you save them.
+- Detect the intent of a chat message (`question, complaint, order`).
+
+To label tone only, use [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/). To classify on-device without a model node, use [Classify Text](/nodes/builtin/ai/localai/classify-text/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to classify. Rendered as a text area. |
-| Categories | Comma-separated category names to classify the text into. Rendered as a text area. |
-| Options → System message | Optional additional system message appended to the classification instructions. Rendered as a text area. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | Yes | The text to classify. |
+| **Categories** | Long text |  | Yes | Comma-separated category names to classify the text into. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **System message** | Long text |  | No | The system message to use. |
+{/* AUTO:settings:end */}
+
+Fill **Text** with an expression such as `{{ $input.text }}`. Write **Categories** as a comma-separated list, for example `billing, technical, sales`. Short, clearly different names give the most reliable results. Use **System message** to describe a category when its name alone is ambiguous, such as `"sales" means questions about buying or pricing.`
 
 ## Outputs
 
-- **Chat model** — returns `{ category }`, a string with the trimmed category name returned by the model — one of the categories you supplied, or `"unknown"` if none fit.
-- **Local Classifier** — returns `{ category, scores }`: the top label (or `"unknown"` if the model returned none) and a `{ label: score }` map of every label's score.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `category` | Any | The chosen category |
+| `scores` | Key-value pairs | Every label's score, on-device |
+{/* AUTO:outputs:end */}
+
+`category` is one of your category names, or `unknown` when none fits (or when the on-device model returns no label). `scores` is only there with a Local Classifier.
 
 ## Dependencies and credentials
 
-- **Model** (required) — connect a language model dependency (e.g. Chat OpenAI), or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to classify on-device.
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model, local classifier | Yes | One |
+{/* AUTO:deps:end */}
+
+Connect a chat model, which holds its own API key, or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) with a zero-shot model to classify on-device with your own categories.
 
 ## Example workflow
 
-Connect a Chat OpenAI node to the Model dependency, feed text from an upstream node into Text, list your categories (e.g. "billing, technical, sales"), then branch downstream logic on the `category` output using a router or condition node.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads a support email you highlighted, with **Output field name** `text`.
+2. Text Classifier with **Text** `{{ $input.text }}` and **Categories** `billing, technical, sales`, with an [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model on **Model**.
+3. [Switch](/nodes/builtin/flow/switch/) in **Rules** mode with one rule per category, each checking that `{{ $input.category }}` equals the category name, and **Add A Fallback Branch** on for `unknown`.
+4. Each branch posts to a different [Slack](/nodes/builtin/integration/slack/) channel.
 
 ## Troubleshooting
 
-- If the model frequently returns "unknown", check that your Categories cover the expected range of input text, or make category names less ambiguous.
-- Verify the Model dependency is connected — the node throws if no model is found.
-- **"Add at least one category"** — a zero-shot Local Classifier needs at least one category to score against.
-- Keep category names distinct and non-overlapping to reduce misclassification.
+- **`category` is often `unknown`.** Your categories do not cover the texts you receive, or the names are vague. Add a category, or explain them in **System message**.
+- **The category does not match your Switch rules.** A chat model may change the capitalisation or add words. Add `Answer with the category name exactly as written.` in **System message**.
+- **"Add at least one category: the zero-shot classifier scores the text against them."** A zero-shot Local Classifier is connected and **Categories** is empty.
+- **"Model not found".** The connected chat model node is not set up: open it and choose a model and its credential.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/)
-- [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/)
-- [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/)
-- [AI Agents](/advanced-ai/concepts/ai-agents/)
+- [Switch](/nodes/builtin/flow/switch/): send each category down its own path.
+- [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/): label tone.
+- [Classify Text](/nodes/builtin/ai/localai/classify-text/): on-device classification without a model node.
+- [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/): the on-device model for this node.

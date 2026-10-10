@@ -3,47 +3,73 @@ title: "Highlight Elements"
 description: "Highlight selected elements in the opened page"
 sidebar:
   label: "Highlight Elements"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/ui/highlight-elements
+  family: inpage
 ---
 
-Highlight selected elements in the opened page
+Draw a colored frame around elements on the active tab for a few seconds, with an optional label, to point something out.
 
 ## What it does
 
-Visually highlights selected elements on the page with colored borders or overlays.
+For each selector in **Elements**, Highlight Elements marks **every** matching element with a purple frame and a tinted overlay, and shows **Label** above it. It scrolls each element into view, one after the other, so you can follow along. The highlight is removed after **Duration** milliseconds (3,000 by default).
+
+The incoming item is passed on unchanged. The node does not wait for the highlight to fade: the workflow continues right after the elements have been marked.
+
+Nothing on the page is changed apart from the temporary highlight.
 
 ## When to use it
 
-Use this node to draw attention to specific elements, guide users, or debug element selection.
+- Show the user which elements a workflow found, read or is about to change.
+- Check what a selector matches while you build a workflow, before deleting or clicking.
+- Point out a result on the page, such as the cheapest price in a list.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Target Element | Source-backed field from the node schema. |
-| Elements | Source-backed field from the node schema. |
-| Label | Source-backed field from the node schema. |
-| Duration | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Elements** | List |  | Yes |  |
+| **Label** | Text | `highlight` | No | Label shown on the highlight indicator. |
+| **Duration** | Number | 3000 | No | How long to keep the highlight visible in milliseconds. |
+{/* AUTO:settings:end */}
+
+- **Elements**: one entry per thing to highlight. In each **Target Element**, click the crosshair button and click the element on the page, or type a CSS selector.
+- **Label**: short text such as `Best price`. Clear it to show the frame without a label.
+- **Duration**: in milliseconds, for example `5000` for 5 seconds.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The incoming item, unchanged.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Highlight Elements after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Open a page with a pricing table and run the workflow from a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger.
+2. **Highlight Elements** with **Elements** = `.plan--recommended`, **Label** = `Our pick` and **Duration** = `5000`.
+3. [Screenshot Page](/nodes/extension/screenshotpage/) with **Mode** = **Viewport** captures the page with the highlight visible.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **Nothing is highlighted.** The selector matched nothing. Check it with **Ping**, or wait for the element first with [Wait For Element](/nodes/extension/ui/wait-for-element/).
+- **The highlight disappears too fast.** Raise **Duration**. A value of `0` removes it after about 2 seconds.
+- **Images and form fields get an outline but no label.** Elements that cannot hold other content (images, inputs) get an outline and glow instead of an overlay, without the label.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Delete UI Elements](/nodes/extension/ui/delete-elements/): remove what you highlighted.
+- [Set Element Attribute Style](/nodes/extension/ui/set-element-attribute-style/): change an element's look for good.
+- [Get Accessibility Tree](/nodes/extension/getaccessibilitytree/): find selectors for buttons and links.

@@ -3,44 +3,79 @@ title: "Get Forms Schema"
 description: "Get schemas for one form or all forms from the opened tab"
 sidebar:
   label: "Get Forms Schema"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getformsschema
+  family: inpage
 ---
 
-Get schemas for one form or all forms from the opened tab
+Describe the forms on the active tab: every field, its label, type, current value, rules and choices.
 
 ## What it does
 
-Extracts the structure and field definitions of forms on the current page.
+Get Forms Schema returns one item per form, each with the form's details and a `fields` list.
+
+Which forms it reads:
+
+- **DOM Selector** empty: every form on the page.
+- **DOM Selector** set: the selected element if it is a form, any forms inside it, and the form that contains it. So you can point at a single field and still get its whole form.
+
+For each field you get its `label` (from the field's label, or its accessibility label), `name`, `id`, `type` (`text`, `email`, `checkbox`, `select`, `textarea`…), a `selector` to target it, and whether it is `required`, `disabled` or read-only. You also get its current `value` and, when the page sets them, limits such as `min`, `max`, `maxLength` and `pattern`. Drop-down lists include their `options`, each with a label and a value.
+
+The node only reads: it does not change or submit anything.
 
 ## When to use it
 
-Use this node to analyze form structure before filling it or to understand required fields dynamically.
+- Before [Form Fill](/nodes/extension/ui/form-fill/): find the `id` or `name` of each field you need to fill.
+- Give an AI node the list of fields so it knows what a form asks for.
+- Check which fields are required, or which choices a drop-down offers.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| domSelector | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+{/* AUTO:settings:end */}
+
+To read one form, click the crosshair button in **DOM Selector** and click any field of that form. Leave it empty to read all forms.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each run returns a list of items with the fields `id` (text), `name` (text), `selector` (text), `action` (text), `method` (text), `enctype` (text), `target` (text), `autocomplete` (text), `noValidate` (true/false), `fieldCount` (number), `fields` (list of entries).
+{/* AUTO:outputs:end */}
+
+- `action` and `method`: where and how the form sends its data (for example `https://example.com/signup`, `post`).
+- `fieldCount`: how many fields the form has.
+- `fields`: the field list described above. Read one with an expression such as `{{ $input.fields[0].label }}`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Get Forms Schema after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Open a sign-up page and run the workflow from a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger.
+2. Add **Get Forms Schema** with **DOM Selector** set to the email field.
+3. Run it once and look at the output: note the `name` or `id` of each field, for example `email` and `full_name`.
+4. Add [Form Fill](/nodes/extension/ui/form-fill/) in **Manual** mode with two **Values** entries: **Field ID** `email` / **Value** `jane@example.com`, and **Field ID** `full_name` / **Value** `Jane Doe`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"No forms found".** The page has no form element, or none matches **DOM Selector**. Some sites build forms from plain boxes without a real form; for those, use [Get Accessibility Tree](/nodes/extension/getaccessibilitytree/) to find the fields.
+- **A field has an empty `label`.** The page does not label it. Use its `name`, `placeholder` or `id` to recognize it.
+- **The form loads after the page.** Add [Wait For Element](/nodes/extension/ui/wait-for-element/) for one of its fields first.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Form Fill](/nodes/extension/ui/form-fill/): fill the fields you found.
+- [Submit Form](/nodes/extension/ui/submit-form/): send the form.
+- [Get Accessibility Tree](/nodes/extension/getaccessibilitytree/): all controls, including ones outside forms.

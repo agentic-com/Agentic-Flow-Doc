@@ -3,45 +3,70 @@ title: "Clipboard Write"
 description: "Write text to the system clipboard from a workflow."
 sidebar:
   label: "Clipboard Write"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/clipboardwrite
+  family: inpage
 ---
 
-Write text to the system clipboard so it is ready to paste elsewhere.
+Copy text to your clipboard so it is ready to paste anywhere.
 
 ## What it does
 
-Copies a piece of text — a workflow result, a formatted value, an extracted snippet — onto the system clipboard. This node only ever **writes**; it never reads the clipboard. (Reading the clipboard exposes whatever the user last copied, which can include a password or a one-time code, so clipboard reading is a separate, permission-gated node.)
+Clipboard Write puts the text in **Text** on the system clipboard, replacing what was there. It only writes: it never reads what you copied before.
+
+The copy is made through the active tab, and the browser only allows it while that tab has focus. If the write is refused, the node fails with a clear error instead of pretending it worked. It copies text only, not images or files.
 
 ## When to use it
 
-- Put a generated value (a summary, a link, a token you just minted) on the clipboard so the user can paste it straight away.
-- Hand a result off to another application by way of the clipboard.
+- Put a generated value (a summary, a reply draft, a short link, a code) on the clipboard so you can paste it straight away.
+- Move a result into another app that has no integration: copy it, then paste.
+- To show the result instead, use [Display Markdown](/nodes/extension/displaymarkdown/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Text | The text to place on the clipboard. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Text** | Long text |  | Yes |  |
+{/* AUTO:settings:end */}
+
+**Text** usually comes from an earlier node, for example `{{ $input.text }}`. It cannot be empty.
 
 ## Outputs
 
-- `written` — `true` once the text has been written.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has the fields `written` (always true).
+{/* AUTO:outputs:end */}
+
+`written` is `true` when the text is on the clipboard. When the copy fails, the node fails instead, so later nodes only run after a successful copy.
 
 ## Dependencies and credentials
 
-- No credential is required.
-- Writing to the clipboard needs no special permission.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Extract a value from the page with [Get All Text](/nodes/extension/getalltext/) or shape one with [Edit Fields](/nodes/builtin/datatransformation/editfields/), then pass it to Clipboard Write so it is ready to paste.
+1. Add a [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger and select an email on the page.
+2. Add [Get Selected Text](/nodes/extension/getselectedtext/) with **Output field name** = `email`.
+3. Add a [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) with **Prompt** = `Write a short, polite reply to: {{ $input.email }}`, and connect a chat model.
+4. Add **Clipboard Write** with **Text** = `{{ $input.response }}`, then paste the reply in your mail app.
 
 ## Troubleshooting
 
-- Clipboard writes happen on the **active tab**. If the tab is not focused, the browser may block the write and the node reports a clear error — bring the tab into focus and rerun.
-- This node writes text only. Writing images is a planned follow-up.
+- **"Document is not focused" or "Clipboard write failed".** The browser only allows copying while the page has focus. Click into the page, keep it in front while the workflow runs, and try again.
+- **The node fails on a browser page.** Browser settings pages and the extension store cannot be used; run it with a normal web page as the active tab.
+- **The pasted text is not what you expected.** Check what **Text** resolves to in the node's input; an expression pointing at the wrong field gives the wrong text.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Get All Text](/nodes/extension/getalltext/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Tab Control](/nodes/extension/tabcontrol/)
+- [Get Selected Text](/nodes/extension/getselectedtext/): read the text you highlighted.
+- [Text / Formatter](/nodes/builtin/datatransformation/text-formatter/): shape the text before copying it.
+- [Display Markdown](/nodes/extension/displaymarkdown/): show the result on the page instead.

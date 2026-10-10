@@ -3,99 +3,112 @@ title: "UI Automation"
 description: "Automate UI interactions"
 sidebar:
   label: "UI Automation"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/ui/automation
+  family: inpage
 ---
 
-Automate UI interactions
+Click, type, select, scroll and check things on the active tab, step by step, from a list of actions you build or record.
 
 ## What it does
 
-Performs automated UI interactions like clicks, typing, scrolling, and element manipulation.
+UI Automation runs the actions in **Actions** one after the other on the active tab. For each action it:
 
-## When to use it
+1. waits for the **Target Element** to appear, up to **Wait timeout** (2,000 ms by default). If it never appears, that action is skipped and the next one runs;
+2. scrolls the element into view and shows a small label on it, so you can see what is happening;
+3. performs the action.
 
-Use this node to automate complex browser interactions, testing, or repetitive tasks on web pages.
-
-## Inputs and settings
-
-| Setting | Notes |
-| --- | --- |
-| Actions | Source-backed field from the node schema. The ordered list of interactions the node performs. Can be built by hand or captured with the [action recorder](#recording-actions). |
-| Target Element | Source-backed field from the node schema. Selector for the element the action applies to. Not used by Wait Delay. |
-| Action | Source-backed field from the node schema. Which interaction to perform — see the table below. |
-| Wait timeout | Source-backed field from the node schema. Maximum time to wait for the target element to be ready. |
-| Value | Source-backed field from the node schema. Text, option, or other value used by value-setting actions. |
-| Event Name | Source-backed field from the node schema. Custom DOM event to dispatch, when applicable. |
+Actions are paced at about two seconds apart, so pages have time to react. The incoming item is passed on unchanged when the list is done.
 
 ### Available actions
 
-| Action | Description | Key fields |
+| Action | What it does | Extra settings |
 | --- | --- | --- |
-| Click | Clicks the target element. | Target Element |
-| Type | Types a value into the target element. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element, Value |
-| Clear | Clears the target element's value. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element |
-| Check | Checks a checkbox/radio element. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element |
-| Uncheck | Unchecks a checkbox element. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element |
-| Select | Selects an option in a `<select>` element. Now fires proper `input`/`change` events, so it works with React/Vue-driven forms. | Target Element, Value |
-| Scroll | Scrolls the target element into view. | Target Element |
-| **Hover** *(new)* | Hovers the pointer over the target element, firing `pointerover`/`mouseover`. | Target Element |
-| **Focus** *(new)* | Focuses the target element. | Target Element |
-| **Blur** *(new)* | Removes focus from the target element. | Target Element |
-| **Key Press** *(new)* | Presses a key or keyboard shortcut on the target element. | Key (e.g. `Enter`, `Escape`, `Tab`, `a`), Ctrl/Shift/Alt/Meta modifiers |
-| **Wait For Element** *(new)* | Waits for the target element to reach a given state before continuing. | State (`visible` \| `attached` \| `detached`), Wait timeout |
-| **Wait Delay** *(new)* | Pauses execution for a fixed amount of time. No target element is used. | Delay (ms) |
-| **Assert Exists** *(new)* | Asserts that the target element exists. | On failure (`stop` \| `continue`) |
-| **Assert Text** *(new)* | Asserts that the target element's text matches an expected value. | Expected text, Match (`contains` \| `equals`), On failure (`stop` \| `continue`) |
-| **Drag & Drop** *(new)* | Drags a source element and drops it onto a target element. | Source element, Target element |
-| **Press & Hold** *(new)* | Presses and holds the pointer on the target element for a set duration. | Hold (ms) |
+| **Click**, **Double Click**, **Right Click** | Click the element. | |
+| **Type** | Put text in a field, replacing what is there, or adding to it when append is on. | Text, append |
+| **Clear** | Empty a text field. | |
+| **Check**, **Uncheck** | Tick or untick a checkbox or radio button. | |
+| **Select** | Choose an option in a drop-down list. | **Value** (suggests the list's options) |
+| **Hover** | Move the pointer over the element, for menus that open on hover. | |
+| **Focus**, **Blur** | Put the cursor in the element, or take it out. | |
+| **Key Press** | Press a key, with optional modifiers. | **Key** (`Enter`, `Escape`, `Tab`, `a`…), **Ctrl**, **Shift**, **Alt**, **Meta** |
+| **Scroll Into View** | Scroll until the element is visible. | |
+| **Scroll To** | Scroll the page to a position. | x, y |
+| **Trigger** | Send a page event to the element. | **Event Name** (with suggestions) |
+| **Drag & Drop** | Drag the element onto another one. | a second **Target Element**: where to drop |
+| **Press & Hold** | Press and hold on the element. | **Hold (ms)** |
+| **Wait For Element** | Wait until the element is visible, present (attached) or gone (detached), up to **Wait timeout**. | **State** |
+| **Wait Delay** | Pause; no element needed. | **Delay (ms)** |
+| **Assert Exists** | Check that the element is on the page. | **On failure**: stop or continue |
+| **Assert Text** | Check that the element's text contains or equals a value. | **Expected text**, **Match**, **On failure** |
 
-## Recording actions
+Value changes (Type, Clear, Check, Uncheck, Select) tell the page the field was edited, so sites built with modern frameworks see them.
 
-Instead of building the Actions list by hand, you can record it directly from the page:
+## When to use it
 
-1. Open the UI Automation node's settings and press **Record actions**.
-2. Interact with the page as you normally would — click, type, scroll, press keys, drag elements.
-3. Press **Stop recording** when you're done.
+- Repeat a routine on a website: open a menu, pick a filter, click "Load more", accept a dialog.
+- Fill fields that are not part of a real form, or custom drop-downs, by clicking and typing.
+- Check that a page shows what you expect (Assert Text) before the workflow goes on.
+- For standard forms, [Form Fill](/nodes/extension/ui/form-fill/) and [Submit Form](/nodes/extension/ui/submit-form/) are quicker to set up.
 
-While recording is active, each interaction is appended to the Actions list automatically, using robust selectors so the recorded steps keep working across similar runs. Recording also follows you across page navigations, so a single recording session can capture a multi-page flow end to end — you don't need to stop and restart the recorder after a link click or form submit changes the page.
+## Inputs and settings
 
-### Worked example: a blog flow
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Actions** | Recorded page actions |  | Yes | List of UI automation actions to perform. |
+{/* AUTO:settings:end */}
 
-A recording session that reads a blog post and likes it might capture the following, in order:
+Build the list by hand (add an action, choose **Action**, then pick the **Target Element** with the crosshair button), or record it.
 
-1. **Click** the Blog nav link (this navigates to the blog listing page).
-2. **Click** the first post (this navigates to the post page).
-3. **Scroll** the Like button into view.
-4. **Click** the Like button (this opens a confirmation modal).
-5. **Click** Validate inside the modal.
+### Recording actions
 
-The recorder produces this as five actions — click, click, scroll into view, click, click — even though two of the clicks trigger full page navigations in between.
+1. Open the page, then in the node's settings press **Record actions**.
+2. Use the page as you normally would: click, type, choose, press keys, drag.
+3. Press **Stop recording**.
 
-### Known limitations
+Each interaction is added to **Actions** with a selector chosen to keep working on later visits. While recording, the element under the pointer is outlined so you can see what will be targeted. Recording continues when a click opens another page, so you can record a flow across several pages in one go.
 
-- **File upload is not supported.** Browser security prevents scripts from setting a file input's `files` property, so file-picker interactions cannot be recorded or replayed.
-- **Cross-origin iframes are not recorded.** Interactions inside an iframe from a different origin are invisible to the recorder.
-- **Drag-and-drop replay is best-effort.** Recorded Drag & Drop actions replay using synthetic events, which not all pages interpret the same way as a real user drag.
+Known limits:
+
+- **File uploads** cannot be recorded or replayed: browsers do not let a script choose a file.
+- **Embedded frames** from another site are not recorded.
+- **Drag & Drop** replay is best effort: some pages do not react to a simulated drag the way they react to a real one.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The incoming item, unchanged. To read the result of your actions, add [Get Element Data](/nodes/extension/getelementdata/) or [Get All Text](/nodes/extension/getalltext/) after this node.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run UI Automation after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. [Tab Control](/nodes/extension/tabcontrol/), **Operation** = **Open**, opens a store's search page with **Wait For Load** on.
+2. **UI Automation** with three actions: **Type** `wireless headphones` into the search box, **Click** the search button, then **Wait For Element** on `.results` with **Wait timeout** = `8000`.
+3. [Get Structured Data](/nodes/extension/getstructureddata/) reads the results list.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **An action does nothing.** Its **Target Element** was not found within **Wait timeout**, so it was skipped. Check the selector with **Ping** on the page, or raise **Wait timeout** for slow pages.
+- **Actions after a page change do not run.** The actions run inside the page, so when an action opens a new page the rest of the list stops. End the list at that click, then continue in a second UI Automation node after [Wait For Element](/nodes/extension/ui/wait-for-element/) or [Tab Control](/nodes/extension/tabcontrol/) with **Wait For Load**.
+- **A failed assertion did not stop the workflow.** With **On failure** = stop, the remaining actions are skipped, but the node itself still finishes without an error. To stop the workflow, check the page afterwards with [Get Element Data](/nodes/extension/getelementdata/) and an [IF](/nodes/builtin/flow/if/) node.
+- **Key Press `Enter` does not submit the search.** Key Press sends a simulated key to the element; browsers do not submit forms for simulated keys. **Click** the search button instead, or use [Submit Form](/nodes/extension/ui/submit-form/).
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Form Fill](/nodes/extension/ui/form-fill/) and [Submit Form](/nodes/extension/ui/submit-form/): standard forms in one step each.
+- [Wait For Element](/nodes/extension/ui/wait-for-element/): wait for the page to react, with a result you can check.
+- [Get Accessibility Tree](/nodes/extension/getaccessibilitytree/): find the buttons and fields to target.
+- [Tab Control](/nodes/extension/tabcontrol/): open or switch to the right page first.

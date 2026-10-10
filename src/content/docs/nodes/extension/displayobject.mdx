@@ -3,44 +3,67 @@ title: "Display Object"
 description: "Display an object in the UI"
 sidebar:
   label: "Display Object"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/displayobject
+  family: inpage
 ---
 
-Display an object in the UI
+Show the data that reaches this node as an expandable tree in a panel on the active tab.
 
 ## What it does
 
-Displays a JSON object or data structure in a formatted modal or overlay on the page.
+Display Object takes the incoming item, exactly as it arrives, and shows it in a panel in the bottom-right corner of the active tab. The data is shown as a JSON tree you can expand and collapse. The panel has buttons to maximize, minimize and close it.
+
+- There is nothing to map: the node always shows its input. Only **Title** is set by you; when it is empty, a default title is shown.
+- Only one panel is shown at a time: running the node again replaces it.
+- The panel belongs to the page: it disappears when the page reloads or you navigate away.
+- This is an end node: it has no output, so nothing runs after it on this branch.
 
 ## When to use it
 
-Use this node to show workflow results, debug data, or present structured information to users.
+- Look at what a page node or an AI node returned while you build a workflow, right on the page.
+- Show a small structured result (a record you extracted, a list of links) to the person running the workflow.
+- For formatted text, use [Display Markdown](/nodes/extension/displaymarkdown/). To inspect runs without touching the page, open the node's output in the editor instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Title | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Title** | Text |  | No | The title of the displayed object. |
+{/* AUTO:settings:end */}
+
+**Title** can use expressions, for example `Links found on {{ $('Get Page Metadata').title }}`.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+This node has no output port: nothing runs after it on this branch.
+{/* AUTO:outputs:end */}
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Display Object after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Run the workflow from a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger on any article.
+2. Add [Get Page Metadata](/nodes/extension/getpagemetadata/).
+3. Add **Display Object** with **Title** = `Page info` to see the title, description, language and sharing tags of the page in one panel.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **Only the last item is shown.** The node runs once per incoming item, and each run replaces the panel. Combine the items first with [Aggregate](/nodes/builtin/datatransformation/aggregate/) to show them all in one panel.
+- **No panel appears.** The panel is drawn on the active tab. Make sure the page you want is the active tab when the node runs; browser settings pages and the extension store cannot show it.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Display Markdown](/nodes/extension/displaymarkdown/): show formatted text.
+- [Aggregate](/nodes/builtin/datatransformation/aggregate/): gather many items into one before showing them.
+- [Debug](/nodes/builtin/core/debug/): test data and errors while building a workflow.

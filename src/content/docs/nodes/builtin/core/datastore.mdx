@@ -3,70 +3,105 @@ title: "Data Store"
 description: "Remember values between workflow runs"
 sidebar:
   label: "Data Store"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/datastore
+  family: core
 ---
 
-Remember values between workflow runs.
+Remember values from one run of a workflow to the next.
 
 ## What it does
 
-Gives a workflow a small memory that persists across runs. Every other node starts each run knowing nothing; this one keeps what it wrote, so "only tell me what changed", "carry on from the page I stopped at" and "stop once I have made N calls" become expressible. It offers six operations over a set of named keys.
+Every other node starts each run knowing nothing. Data Store keeps named values (keys) that survive between runs, so "only tell me what changed", "carry on from the page I stopped at" and "stop after N calls" become possible. Pick one of six **Operation** choices:
+
+- **Get**: read a key.
+- **Set**: store **Value** under a key, replacing what was there.
+- **Delete**: remove a key.
+- **Increment**: add **Increment By** to a number. A key that does not exist yet starts at `0`, so a counter needs no setup step.
+- **List keys**: return every key in the current scope.
+- **Clear all**: remove every key in the current scope.
+
+**Scope** decides who sees the keys. *This workflow only* (the default) keeps them private to this workflow. *Shared with all workflows* lets every workflow you own read and overwrite them.
+
+Values are stored in this browser profile and work without an account. Nothing is sent anywhere: the same workflow on another device has its own separate store, and clearing the extension's data clears these entries too.
 
 ## When to use it
 
-Use this node to hold a last-seen timestamp or ID between runs, a page cursor for a paginated source, or a call counter that survives across runs. Anything a run needs to know about a *previous* run belongs here.
+- Keep the last-seen ID or timestamp so a watcher only reports new items.
+- Save a page cursor to resume a paginated source on the next run.
+- Count calls across runs, for example to stop after 100 requests a day.
+- Share one setting between several workflows with the shared scope.
+
+To remove duplicates across runs without building it yourself, [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/) already uses the Data Store. For values that only matter during one run, use [Set Variable](/nodes/builtin/flow/setvariable/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | What to do to the store: `Get`, `Set`, `Delete`, `Increment`, `List keys`, or `Clear all`. Defaults to `Get`. |
-| Scope | Which keys this node can see: `This workflow only` (the default — private to this workflow) or `Shared with all workflows` (every workflow you own can read and overwrite these keys). |
-| Key | Name of the value to read or store. Required by every operation except `List keys` and `Clear all`. |
-| Value | Used by **Set**: the value to store. Accepts any resolved type — an object or number arriving from an upstream connection is stored as-is. |
-| Value Format | Used by **Set**: how to read text *typed directly* into Value — `Text`, `Number`, `True / false`, or `JSON`. It applies only to typed text; a value resolved from an upstream connection is already a real value and is stored untouched. |
-| Increment By | Used by **Increment**: how much to add. Use a negative number to count down. Defaults to `1`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Get | No | What to do to the store. Options: Get, Set, Delete, Increment, List keys, Clear all. |
+| **Scope** | Choice | This workflow only | No | Which keys this node can see. Options: This workflow only, Shared with all workflows. |
+| **Key** | Text |  | No | Name of the value to store or read. |
+| **Value** | Value |  | No | The value to store. Used by Set. |
+| **Value Format** | Choice | Text | No | How to read text typed into Value. Options: Text, Number, True / false, JSON. |
+| **Increment By** | Number | 1 | No | How much to add. Use a negative number to count down. |
+{/* AUTO:settings:end */}
+
+- **Key** is needed by every operation except **List keys** and **Clear all**. Up to 512 characters.
+- **Value Format** only applies to text typed into **Value**. A value that comes from an expression, such as `{{ $input.id }}`, is stored as it already is (a number stays a number, an object stays an object).
+- Limits per scope: 500 keys, 128 KB per value, 5 MB in total. Nothing is ever removed to make room; the node fails with a message instead.
 
 ## Outputs
 
-Depends on the operation:
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
-- **Get** — `{ key, found, value }`. `found` is reported separately from `value` because a stored `null` and an absent key are different answers; check `found`, not `value`, to tell them apart.
-- **Set** — `{ key, value }` with the stored value.
-- **Delete** — `{ key, deleted }`, where `deleted` says whether there was a value to remove.
-- **Increment** — `{ key, value }` with the new total. An unset key starts at `0`, so a counter needs no initialization step.
-- **List keys** — one item per entry in the current scope, each `{ key, value, lastModified }`.
-- **Clear all** — `{ cleared }`, the number of entries removed from the current scope.
+The output depends on the operation:
+
+- **Get**: `{ key, found, value }`. `found` tells a missing key apart from a stored `null`; branch on `found`, not on `value`.
+- **Set**: `{ key, value }` with the stored value.
+- **Delete**: `{ key, deleted }`, where `deleted` says whether there was a value to remove.
+- **Increment**: `{ key, value }` with the new total.
+- **List keys**: one item per key, each `{ key, value, lastModified }`.
+- **Clear all**: `{ cleared }`, the number of keys removed.
+
+### Seeing stored values from the canvas
+
+Open the **Stored data** tab in the canvas side panel, with the database button in the canvas controls or **View stored values** in a Data Store node's settings. It lists every key this workflow stored, with its value, type and last change, and lets you **Delete** one key or **Clear all** (useful to make a watcher alert again). It refreshes after each run and has a refresh button for background runs. It appears once the workflow is saved and has a Data Store node, or still has stored keys.
+
+Keys in the shared scope are managed in **Settings → Preferences → Data store**, where you can also view and clear all stored values.
 
 ## Dependencies and credentials
 
-- No credential or node dependency is required. The node runs entirely in the browser, and works without an account.
-- Stored values live in this browser profile. Nothing is sent anywhere, the same workflow on another device keeps its own separate store, and clearing the extension's data clears these entries too.
-- You can view and clear stored values at any time from **Settings → Preferences → Data store**.
-
-## See stored values from the canvas
-
-With the workflow open, you don't need to leave the canvas to check what it remembered:
-
-- Open the **Stored data** tab in the canvas's side panel, with the database button in the canvas controls or **View stored values** in a Data Store node's settings.
-- Every key this workflow stored is listed with its value, its type and when it last changed. Click a key to see the full value; lists and objects are pretty-printed.
-- The tab re-reads the store after each run, and has a refresh button for runs that happen in the background (for example a scheduled run).
-- **Delete** removes one key. **Clear all** removes every key this workflow stored, so the next run behaves like its first run, which is useful to reset a watcher that should alert again.
-- The tab only lists keys private to this workflow. Keys **Shared with all workflows** are managed in **Settings → Preferences → Data store**.
-- The tab appears once the workflow is saved and has a Data Store node, or still has stored keys after the node was removed.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-To fetch only new items each run: at the start, use `Get` with key `last-seen-id` to read where you stopped, filter the incoming items down to those newer than it, and at the end use `Set` on the same key with the newest ID from this run. The next run resumes exactly where this one left off.
+Get notified only when an API returns a new latest item:
+
+1. [Schedule](/nodes/builtin/trigger/schedule/) trigger, every hour.
+2. [Http Request](/nodes/builtin/core/http-request/), **GET** `https://api.example.com/latest`.
+3. Data Store, **Operation** Get, **Key** `last-seen-id`.
+4. [IF](/nodes/builtin/flow/if/): `{{ $('Http Request').data.id }}` is not equal to `{{ $input.value }}`.
+5. On true: [Browser Notification](/nodes/extension/browsernotification/), then Data Store, **Operation** Set, **Key** `last-seen-id`, **Value** `{{ $('Http Request').data.id }}`.
 
 ## Troubleshooting
 
-- **A stored `null` is not the same as a missing key.** For `Get`, branch on the `found` field rather than on `value`.
-- **Scope is per workflow by default.** A workflow that switches to `Shared with all workflows` is the only way to read keys another workflow wrote. An imported workflow gets a fresh, local ID, so it cannot read keys it did not write itself.
-- **Value Format only affects typed text.** If you wire a value in from another node, the format selector is ignored and the value is stored as it already is.
-- Nothing is ever evicted to make room. If a scope's limits are reached, the node fails with a message rather than silently dropping a value.
+- **"The get operation needs a key."** (or set, delete, increment). **Key** is empty or only spaces. Fill it in.
+- **"This node is scoped to the current workflow but no workflow is running."** You tested the node on its own. Run the whole workflow, or switch **Scope** to *Shared with all workflows*.
+- **"Value "…" is not a number. Change the value, or the value format."** **Value Format** is *Number* (or *True / false*, or *JSON*) but the typed text does not match. Fix the text or pick *Text*.
+- **"This store already holds 500 keys, the maximum allowed."** or a byte-limit message. Delete keys you no longer need, from the **Stored data** tab or with **Delete**.
+- **An imported or copied workflow does not see the old keys.** Keys in *This workflow only* belong to the original workflow. Use the shared scope for values several workflows must read.
 
 ## Related nodes
 
-- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/) — uses the Data Store for cross-run deduplication
-- [Code](/nodes/builtin/core/code/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): skip items already seen in earlier runs.
+- [Set Variable](/nodes/builtin/flow/setvariable/): keep a value for the current run only.
+- [IF](/nodes/builtin/flow/if/): branch on what you read back.
+- [Execution Data](/nodes/builtin/core/execution-data/): read details about the current run.

@@ -3,59 +3,223 @@ title: "Google Sheets"
 description: "Integrate with Google Sheets to perform operations on spreadsheets and data."
 sidebar:
   label: "Google Sheets"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/integration/google-sheets
+  family: integration
 ---
 
-Integrate with Google Sheets to perform operations on spreadsheets and data.
+Read rows from a Google Sheet, add or update rows, and create, clear or delete spreadsheets and their tabs.
 
 ## What it does
 
-Reads, writes, and manages data in Google Sheets spreadsheets.
+The Google Sheets node works on three kinds of things (**Resource**):
+
+- **Spreadsheet**: list your spreadsheets, get one, create one (optionally with several tabs), delete one, or clear a range of cells.
+- **Worksheet** (a tab inside a spreadsheet): list, get, create, delete, or clear a range.
+- **Data**: get the values of a range, append a row, or update a row. Each comes in two versions: **…from Spreadsheet** / **…into Spreadsheet**, where **Range** names the tab (`Sheet1!A1:C10`), and **…from Worksheet** / **…into Worksheet**, where you pick the tab in **Worksheet** and **Range** is just the cells (`A1:C10`).
+
+For append and update, the node writes one row each time it runs and puts each value under the matching header in the first row of the tab, leaving the other cells empty. With the **Worksheet** versions, **Data** shows one field per column, named after those headers, so they are the easiest to fill.
+
+**Spreadsheet → List** returns up to 10 spreadsheets from your Drive.
+
+If Google returns an error, the node does not stop: it outputs `success: false` and the message in `error`. Add an [IF](/nodes/builtin/flow/if/) on `success` when a failed write must not go unnoticed.
 
 ## When to use it
 
-Use this node to automate spreadsheet operations, log data, or sync information with Google Sheets.
+- Log each scraped price, form entry or lead as a new row.
+- Read a list of URLs or keywords from a sheet to drive a workflow.
+- Update a status column once a row has been processed.
+- Use [Airtable](/nodes/builtin/integration/airtable/) or [Baserow / NocoDB](/nodes/builtin/integration/baserow-nocodb/) instead if your data lives there.
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Resource | Source-backed field from the node schema. |
-| Spreadsheet Operation | Source-backed field from the node schema. |
-| Worksheet Operation | Source-backed field from the node schema. |
-| Data Operation | Source-backed field from the node schema. |
-| Spreadsheet | Source-backed field from the node schema. |
-| Worksheet | Source-backed field from the node schema. |
-| Range | Source-backed field from the node schema. |
-| Title | Source-backed field from the node schema. |
-| Sheet Title | Source-backed field from the node schema. |
-| Index | Source-backed field from the node schema. |
-| Rows | Source-backed field from the node schema. |
-| Columns | Source-backed field from the node schema. |
-| Sheet Definition | Source-backed field from the node schema. |
-| Data | Source-backed field from the node schema. |
-| Value Input Option | Source-backed field from the node schema. |
-| Include Values In Response | Source-backed field from the node schema. |
+| Spreadsheet | List, Get, Create, Delete, Clear |
+| Worksheet | List, Get, Create, Delete, Clear |
+| Data | Get Values from Spreadsheet, Get Values from Worksheet, Append Values into Spreadsheet, Append Values into Worksheet, Update Values in Spreadsheet, Update Values in Worksheet |
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The Credential to use to make request. |
+
+Pick **Resource** and **Spreadsheet Operation** first; the fields below change with your choice.
+
+**Spreadsheet → List**
+
+No further settings.
+
+**Spreadsheet → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+
+**Spreadsheet → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Title** | Text |  | Yes | Title for the new spreadsheet or sheet. |
+| **Sheets** | List of entries |  | No |  |
+| Sheets (each entry) › **Sheet Title** | Text |  | Yes |  |
+| Sheets (each entry) › **Index** | Number |  | No |  |
+| Sheets (each entry) › **Rows** | Number |  | No |  |
+| Sheets (each entry) › **Columns** | Number |  | No |  |
+
+**Spreadsheet → Delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+
+**Spreadsheet → Clear**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Range** | Text |  | Yes | The cell range in A1 notation (e.g., Sheet1!A1:C10). |
+
+**Worksheet → List**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+
+**Worksheet → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Worksheet** | Choice (loaded from your account) |  | Yes | The worksheet to work with. |
+
+**Worksheet → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Title** | Text |  | Yes | Title for the new spreadsheet or sheet. |
+| **Index** | Number |  | No |  |
+| **Rows** | Number |  | No |  |
+| **Columns** | Number |  | No |  |
+
+**Worksheet → Delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Worksheet** | Choice (loaded from your account) |  | Yes | The worksheet to work with. |
+
+**Worksheet → Clear**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Worksheet** | Choice (loaded from your account) |  | Yes | The worksheet to work with. |
+| **Range** | Text |  | Yes | The cell range in A1 notation (e.g., Sheet1!A1:C10). |
+
+**Data → Get Values from Spreadsheet**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Range** | Text |  | Yes | The cell range in A1 notation (e.g., Sheet1!A1:C10). |
+
+**Data → Get Values from Worksheet**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Worksheet** | Choice (loaded from your account) |  | Yes | The worksheet to work with. |
+| **Range** | Text |  | Yes | The cell range in A1 notation (e.g., Sheet1!A1:C10). |
+
+**Data → Append Values into Spreadsheet**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Range** | Text |  | Yes | The cell range in A1 notation (e.g., Sheet1!A1:C10). |
+| **Data** | Field list |  | Yes | Key-value object mapping column headers to values. |
+| **Value Input Option** | Choice |  | Yes | How to interpret input values. Options: User Entered, Raw. |
+| **Include Values In Response** | Toggle |  | No |  |
+
+**Data → Append Values into Worksheet**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Worksheet** | Choice (loaded from your account) |  | Yes | The worksheet to work with. |
+| **Range** | Text |  | Yes | The cell range in A1 notation (e.g., Sheet1!A1:C10). |
+| **Data** | Field list |  | Yes | Key-value object mapping column headers to values. |
+| **Value Input Option** | Choice |  | Yes | How to interpret input values. Options: User Entered, Raw. |
+| **Include Values In Response** | Toggle |  | No |  |
+
+**Data → Update Values in Spreadsheet**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Range** | Text |  | Yes | The cell range in A1 notation (e.g., Sheet1!A1:C10). |
+| **Data** | Field list |  | Yes | Key-value object mapping column headers to values. |
+| **Value Input Option** | Choice |  | Yes | How to interpret input values. Options: User Entered, Raw. |
+| **IncludeValuesInResponse** | Toggle |  | No |  |
+
+**Data → Update Values in Worksheet**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Spreadsheet** | Choice (loaded from your account) |  | Yes | The spreadsheet to work with. |
+| **Worksheet** | Choice (loaded from your account) |  | Yes | The worksheet to work with. |
+| **Range** | Text |  | Yes | The cell range in A1 notation (e.g., Sheet1!A1:C10). |
+| **Data** | Field list |  | Yes | Key-value object mapping column headers to values. |
+| **Value Input Option** | Choice |  | Yes | How to interpret input values. Options: User Entered, Raw. |
+| **IncludeValuesInResponse** | Toggle |  | No |  |
+{/* AUTO:settings:end */}
+
+- **Range** uses A1 notation: `A1:D` (columns A to D, all rows), `2:2` (row 2), or `Sheet1!A1:C10` with the tab name. For append, a range covering your table, such as `A:D`, is enough: Google adds the row after the last filled one.
+- Put column names in row 1 before you append: they are the field names shown in **Data**.
+- **Value Input Option**: **User Entered** reads values as if you typed them (so `=SUM(A2:A9)` becomes a formula and `2026-09-10` a date). **Raw** stores them exactly as text.
+- Turn on **Include Values In Response** to get the written row back in the output.
 
 ## Outputs
 
-Returns the service response or a success object from the selected operation.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+- **Get Values** returns `range` and `values`, a list of rows, each row a list of cell values. The first row is usually your headers.
+- Append and update return what Google reports: the updated range and the number of cells changed (plus the values when **Include Values In Response** is on).
+- **Spreadsheet → Get** and **Create** return the spreadsheet with its `spreadsheetId`, `properties` and `sheets`.
+- **Delete** and **Clear** return `success: true`; any failure returns `success: false` and `error`.
 
 ## Dependencies and credentials
 
-- Credential type: OAuth2 — create your own Google OAuth client first: [Create your OAuth client](/usage/using-the-app/credentials/oauth-client/#google).
+{/* AUTO:deps:start */}
+- **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
+
+Google Sheets connects by signing in to your Google account (OAuth). You first create your own Google OAuth client once, with both the Google Sheets API and the Google Drive API enabled (the spreadsheet list is read through Drive): follow [Create your OAuth client](/usage/using-the-app/credentials/oauth-client/#google). Then create a Google Sheets credential, paste the **Client ID** and **Client Secret**, click **Check connection** and approve the Google window. AWFlow asks to read and edit your spreadsheets and to see the names of your Drive files. The sign-in is kept and refreshed for you. See also [Create a credential](/usage/using-the-app/credentials/create/).
 
 ## Example workflow
 
-Connect prepared data into Google Sheets, select the credential, choose the operation, then map previous node values into the operation fields.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger runs when you right-click a product page.
+2. [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) reads `name` and `price` from the page text.
+3. Google Sheets, **Data → Append Values into Worksheet**, spreadsheet `Price watch`, worksheet `Products`, **Range** `A:D`, **Data** `Name` = `{{ $input.name }}`, `Price` = `{{ $input.price }}`, `URL` = `{{ $('Context Menu').pageUrl }}`, **Value Input Option** **User Entered**.
+4. [IF](/nodes/builtin/flow/if/) checks `{{ $input.success }}` is not `false`, and a [Browser Notification](/nodes/extension/browsernotification/) confirms the row.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **The output has `success: false` and "Unable to parse range: …".** **Range** is not valid A1 notation, or names a tab that does not exist. Check the tab name, and quote it if it has spaces: `'My data'!A1:C`.
+- **Values land in the wrong columns.** Row 1 has no headers, or different ones from the **Data** fields, so values are written in field order. Add or fix the headers, then pick the worksheet again so **Data** shows the new columns.
+- **The spreadsheet list is empty or misses files.** The Google Drive API is not enabled for your OAuth client, or the file is not among the 10 returned. Enable the API, or pick the spreadsheet by mapping its id.
+- **"… insufficient authentication scopes" or a 403 error.** An API is not enabled, or the sign-in is older than the current permissions. Enable the Sheets and Drive APIs, then click **Check connection** again on the credential. To delete spreadsheet files, use [Google Drive](/nodes/builtin/integration/google-drive/), whose sign-in can manage files.
 
 ## Related nodes
 
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Google Drive](/nodes/builtin/integration/google-drive/): manage the spreadsheet files themselves.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): turn `values` rows into one item each.
+- [CSV](/nodes/builtin/datatransformation/csv/): work with a CSV export instead.
+- [Airtable](/nodes/builtin/integration/airtable/): a database-style alternative.

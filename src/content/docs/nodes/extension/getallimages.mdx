@@ -3,47 +3,80 @@ title: "Get All Images"
 description: "Get all the images from the page of the actual openend tab"
 sidebar:
   label: "Get All Images"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getallimages
+  family: inpage
 ---
 
-Get all the images from the page of the actual openend tab
+Collect the addresses of every image on the active tab, or inside one part of it.
 
 ## What it does
 
-Extracts all image URLs from the currently active browser tab.
+Get All Images looks through the active tab and returns a list of image URLs in the field you name in **Output field name**. It finds:
+
+- every `<img>` image, and
+- background images set by the page's styles (banners, hero images, tiles).
+
+Relative addresses are turned into full URLs, and each URL appears only once. With **DOM Selector** set, only images inside the first matching element are collected. **Max images** keeps the first N images found, in page order.
+
+The output holds only the new field. Turn on **Include input fields** to keep the incoming item's fields next to it.
 
 ## When to use it
 
-Use this node to collect images from web pages for downloading, cataloging, or analysis.
+- Collect product or gallery pictures to download, caption or classify.
+- Check which images a page uses, for example during a content review.
+- For a wider inventory (downloadable files, video, audio, scripts) with file names, use [Get Page Assets](/nodes/extension/getpageassets/). For a page that is not open, use [Get Images from Link](/nodes/builtin/core/getimagesfromlink/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Output field name | Source-backed field from the node schema. |
-| Max images | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+| **Max images** | Number |  | No | The maximum number of images to return. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
+
+- **Output field name**: for example `images`.
+- **DOM Selector**: click the crosshair button in the field and click the area on the page (a gallery, an article), or type a CSS selector. Leave it empty to scan the whole page.
+- **Max images**: leave empty to keep them all.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+One item with your field holding a list of URLs, for example `{ "images": ["https://example.com/a.jpg", "https://example.com/b.png"] }`. To handle each image separately, follow with [Split Out](/nodes/builtin/datatransformation/splitout/) on that field.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Get All Images after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Open a product page and run the workflow from a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger.
+2. Add **Get All Images** with **Output field name** = `images`, **DOM Selector** set to the product gallery and **Max images** = `5`.
+3. Add [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** = `images`, so each URL becomes its own item.
+4. Add [Caption Image](/nodes/builtin/ai/localai/caption-image/) with **Image** = `{{ $input.images }}` to describe each picture on your device.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The list is empty.** **DOM Selector** matched nothing, or the area has no images yet. Many pages load images only when you scroll to them: scroll first, or wait with [Wait For Element](/nodes/extension/ui/wait-for-element/).
+- **Icons, logos or tracking pixels are in the list.** The node returns every image it finds. Narrow it with **DOM Selector**, or drop unwanted URLs with [Filter](/nodes/builtin/flow/filter/) after Split Out.
+- **The node fails on a browser page.** Browser settings pages and the extension store are protected and cannot be read. Run it on a normal web page.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Get Page Assets](/nodes/extension/getpageassets/): images plus files, media and more, with file names.
+- [Screenshot Page](/nodes/extension/screenshotpage/): capture what the page looks like instead.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): one item per URL.
+- [Get Images from Link](/nodes/builtin/core/getimagesfromlink/): images from a URL without opening it.

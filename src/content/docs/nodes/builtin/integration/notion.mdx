@@ -3,86 +3,185 @@ title: "Notion"
 description: "Integrate with Notion to perform operations on databases, pages, and blocks."
 sidebar:
   label: "Notion"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: builtin/integration/notion
+  family: integration
 ---
 
-Integrate with Notion to perform operations on databases, pages, and blocks.
+Add rows to Notion databases, read and update pages, and append text, files or images to a page.
 
 ## What it does
 
-Manages Notion databases, pages, and blocks through the Notion API.
+The Notion node works on three kinds of things (**Resource**), each with its own **Operation**:
+
+- **Database**: find the databases your integration can see (**Get many**, up to 10 at a time), or read one database's columns and their types (**Get schema**).
+- **Page**: add a page to a database (**Create**), read a page, change its properties, or move it to the trash (**Delete**). In a database, each row is a page.
+- **Block**: add content to the end of a page (**Create**), or read the content of a page or block (**Get**, up to 100 blocks).
+
+When you pick a **Database**, the **Properties** list shows that database's columns, and the node turns each value into the right Notion type: text, number, checkbox, date, select (by option name), multi-select (a list of option names), URL, email or phone. Columns you leave empty, or names that do not match a column, are skipped.
+
+**Block → Create** can also upload a file from an earlier node and add it to the page as a **File** or **Image** block.
+
+Some operations do less than their name says:
+
+- **Page → Update** only works on pages that sit in a database.
+- **Block → Update** adds a new block with the new content at the end of the page or block; it does not change the existing one.
+- **Block → Delete** always stops with an error: Notion blocks cannot be deleted from this node.
+- **Page → Search** does not search your workspace at the moment and ends with a Notion error.
 
 ## When to use it
 
-Use this node to automate documentation, sync data to Notion, or build workflows around your Notion workspace.
+- Save web pages, leads or AI summaries as rows of a Notion database.
+- Mark a database row as done, or change its status, when something happens elsewhere.
+- Append a daily log line, a heading and a list to a journal page.
+- Attach a screenshot or a downloaded PDF to a Notion page.
+
+To keep notes in local Markdown files instead, use [Obsidian](/nodes/builtin/integration/obsidian/).
 
 ## Inputs and settings
 
-| Setting | Notes |
+{/* AUTO:settings:start */}
+| Resource | Operations |
 | --- | --- |
-| Credential | Source-backed field from the node schema. |
-| Resource | Source-backed field from the node schema. |
-| Operation | Source-backed field from the node schema. |
-| Database | Source-backed field from the node schema. |
-| Page | Source-backed field from the node schema. |
-| Block | Source-backed field from the node schema. |
-| Title | Source-backed field from the node schema. |
-| Content | Source-backed field from the node schema. |
-| Block Type | For **Block → Create**: `Paragraph`, headings, list items, to-do, plus `File (from binary)` and `Image (from binary)`. |
-| Binary Field | For File / Image block types: which `$binary` key on the incoming item holds the file (defaults to `data`). |
-| Caption | Optional caption shown under a File / Image block. |
-| Properties | Source-backed field from the node schema. |
-| Filter | Source-backed field from the node schema. |
-| Sort | Source-backed field from the node schema. |
-| Page Size | Source-backed field from the node schema. |
-| Search Query | Source-backed field from the node schema. |
+| Database | Get many, Get schema |
+| Page | Create, Get, Update, Delete, Search |
+| Block | Create, Get, Update, Delete |
 
-## Attaching files and images to a page
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Credential** | Credential |  | Yes | The Credential to use to make the request. |
 
-**Block → Create** can append a **File** or **Image** block whose content comes
-from a file attached to the incoming item (its `$binary` payload — as produced by
-**HTTP Request**, **Local File Read**, **Convert to File**, and similar nodes).
+Pick **Resource** and **Operation** first; the fields below change with your choice.
 
-1. Set **Block** to the ID of the page (or block) to append to.
-2. Set **Block Type** to `File (from binary)` or `Image (from binary)`.
-3. Set **Binary Field** to the `$binary` key holding the file (defaults to `data`).
-4. Optionally set a **Caption**.
+**Database → Get many**
 
-Under the hood the node uses Notion's file-upload API: it creates a file upload,
-sends the file's bytes, then appends a block that references the completed upload.
-The file's name and MIME type are taken from the binary attachment. If the incoming
-item has no file under the chosen Binary Field, the node fails with a clear error so
-you can fix the upstream step. These uploads run through the same delegated-fetch
-path as the rest of the node, so File / Image blocks work both in the extension and
-in the web app (with the extension installed and Notion's host consented).
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Search Query** | Text |  | No | Search query to filter databases. |
+
+**Database → Get schema**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Database** | Choice (loaded from your account) |  | Yes | The Notion database to work with. |
+
+**Page → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Database** | Choice (loaded from your account) |  | Yes | The Notion database to work with. |
+| **Properties** | Field list |  | Yes | The properties to set for the page. |
+
+**Page → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Page** | Choice (loaded from your account) |  | Yes | The Notion page to work with. |
+
+**Page → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Page** | Choice (loaded from your account) |  | Yes | The Notion page to work with. |
+| **Properties** | Field list |  | Yes | The properties to update for the page. |
+
+**Page → Delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Page** | Choice (loaded from your account) |  | Yes | The Notion page to work with. |
+
+**Page → Search**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Search Query** | Text |  | Yes | Search query for pages. |
+| **Filter** | Key-value pairs |  | No | Filter criteria for database query. |
+| **Sort** | List |  | No | Sort criteria for database query. |
+| **Page Size** | Number | 100 | No | Number of results to return (1-100). |
+
+**Block → Create**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Block** | Text |  | Yes | The ID of the block to work with. |
+| **Block Type** | Choice | Paragraph | No | The type of block to create. File / Image upload the file attached to the incoming item ($binary). Options: Paragraph, Heading 1, Heading 2, Heading 3, Bulleted List, Numbered List, To-Do Item, File (from binary), Image (from binary). |
+| **Content** | Text |  | No | The content for the block. |
+| **Binary Field** | Text | `data` | No | Which $binary key on the incoming item holds the file. Used only for the File / Image block types. HTTP Request / Local File Read store under "data" by default. |
+| **Caption** | Text |  | No | Optional caption shown under the File / Image block. |
+
+**Block → Get**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Block** | Text |  | Yes | The ID of the block to work with. |
+
+**Block → Update**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Block** | Text |  | Yes | The ID of the block to work with. |
+| **Block Type** | Choice |  | Yes | The type of block to create. Options: Paragraph, Heading 1, Heading 2, Heading 3, Bulleted List, Numbered List, To-Do Item. |
+| **Content** | Text |  | Yes | The content for the block. |
+
+**Block → Delete**
+
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Block** | Text |  | Yes | The ID of the block to work with. |
+{/* AUTO:settings:end */}
+
+- **Database** and **Page** lists load from Notion once the credential is set. You can also type an id or use an expression. The id is the 32-character code in the page's or database's link, for example `https://www.notion.so/My-Tasks-1a2b3c...` ends with the id.
+- **Properties** uses the column names exactly as they appear in Notion. Dates accept any date the browser understands, like `2026-09-10` or `2026-09-10T09:00:00`.
+- **Block** is the id of the page (or block) to add content to or read from. A page id works here.
+- For **File (from binary)** or **Image (from binary)**, the file comes from the incoming item's `$binary` data under **Binary Field** (`data` by default), as produced by [Http Request](/nodes/builtin/core/http-request/), [Screenshot Page](/nodes/extension/screenshotpage/) or [Local File Read](/nodes/builtin/datatransformation/localfileread/). The file keeps its name and type. **Content** is not used for these two types.
 
 ## Outputs
 
-Returns the service response or a success object from the selected operation.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+- **Page → Create**, **Get**, **Update** and **Delete** return the page: its `id`, `url`, `properties`, `parent` and timestamps. Property values are in Notion's own format, for example a title under `properties.Name.title[0].plain_text`.
+- **Database → Get many** returns one item per database; **Get schema** returns one database with its `properties` (each column's name and type).
+- **Block → Create**, **Update** and **Get** return `results`, the list of blocks, plus `has_more` when there are more than 100.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+{/* AUTO:deps:end */}
+
+The credential is a Notion internal integration token, saved as a Bearer Token credential:
+
+1. In Notion, open **Settings → Connections → Develop or manage integrations** (notion.so/my-integrations) and create a new internal integration for your workspace.
+2. Copy its **Internal Integration Secret** and paste it as the token in a new credential. See [Create a credential](/usage/using-the-app/credentials/create/).
+3. Share each page or database you want to use with the integration: open it in Notion, then **⋯ → Connections → Connect to** and pick your integration. Sharing a parent page also shares the pages inside it.
+
+The node only sees what you shared. A database missing from the **Database** list usually means it is not shared yet.
 
 ## Example workflow
 
-Connect prepared data into Notion, select the credential, choose the operation, then map previous node values into the operation fields.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger adds "Save to Notion" to the right-click menu.
+2. [Get Page Metadata](/nodes/extension/getpagemetadata/) reads the page's `title` and `url`.
+3. Notion, **Page → Create**, **Database** `Reading list`, with **Properties** `Name` = `{{ $input.title }}`, `URL` = `{{ $input.url }}` and `Status` = `To read`.
+4. Notion, **Block → Create**, **Block** `{{ $input.id }}` (the new page), **Block Type** `Paragraph`, **Content** `Saved from the browser`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
-
-## Running in the web app
-
-Notion's API cannot be called directly from a normal web page, so this node is
-**extension-only** by default. If you use the **web app** but also have the awflow
-**browser extension installed**, the web app can still run Notion by delegating its
-calls to the extension — provided Notion's host is consented for the workflow. See
-[Running Extension-Only Integrations in the Web App](/usage/troubleshooting/extension-only-integrations-in-the-web-app/).
+- **"Notion API Error: Could not find database with ID… (object_not_found)".** The database or page is not shared with your integration, or the id is wrong. Connect the integration to it in Notion (**⋯ → Connections**).
+- **"Notion API Error: API token is invalid. (unauthorized)".** The token is wrong or the integration was deleted. Copy the secret again and update the credential.
+- **"Cannot determine database for page property conversion".** **Page → Update** was used on a page that is not in a database. Only database rows can be updated.
+- **"Notion file block: no file found on the incoming item under $binary.data…".** The previous node did not produce a file under **Binary Field**. Check the key, or add a node that downloads or creates the file.
+- **"Block deletion requires updating the parent block without including this block".** **Block → Delete** is not supported. Delete the block in Notion, or move the whole page to the trash with **Page → Delete**.
+- **The run is blocked in the web app.** Notion runs through the browser extension. Install the extension and allow Notion for this workflow when asked, or run the workflow from the extension. See [Running extension-only integrations in the web app](/usage/troubleshooting/extension-only-integrations-in-the-web-app/).
 
 ## Related nodes
 
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Obsidian](/nodes/builtin/integration/obsidian/): notes in your local Obsidian vault.
+- [Airtable](/nodes/builtin/integration/airtable/): another table-style database.
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): prepare values before sending them as **Properties**.
+- [Http Request](/nodes/builtin/core/http-request/): call Notion's API for things this node does not cover, such as querying a database.

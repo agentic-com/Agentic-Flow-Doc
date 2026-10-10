@@ -3,47 +3,89 @@ title: "Wait For Element"
 description: "Wait for an element condition in the opened page"
 sidebar:
   label: "Wait For Element"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/ui/wait-for-element
+  family: inpage
 ---
 
-Wait for an element condition in the opened page
+Pause the workflow until something appears, becomes visible, disappears or shows a given text on the active tab.
 
 ## What it does
 
-Pauses workflow execution until a specified element appears, disappears, or meets a condition.
+Wait For Element checks the first element matching **DOM Selector** again and again (every **Polling interval**, 100 ms by default) until its **Condition** is met or **Timeout** runs out (5,000 ms by default).
+
+Conditions:
+
+- **Exists**: the element is on the page, even if hidden.
+- **Visible**: it is on the page and shown (not hidden, not transparent, not zero size).
+- **Hidden**: it is hidden or gone. Useful to wait for a loading spinner to disappear.
+- **Contains Text**: its text includes **Text** (case-sensitive).
+
+When time runs out, the node does **not** fail: it passes the item on with `timedOut: true`. Check that with an [IF](/nodes/builtin/flow/if/) node when the next steps depend on the element.
 
 ## When to use it
 
-Use this node to handle dynamic content, wait for page loads, or ensure elements are ready before interaction.
+- After a click, a form submit or opening a page, wait for the result before reading it.
+- Wait for a loading spinner to go away (**Hidden**) before taking a screenshot.
+- Wait until a status shows "Completed" (**Contains Text**).
+- When no element tells you the page is ready, a fixed pause with [Wait](/nodes/builtin/flow/wait/) is the fallback.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Condition | Source-backed field from the node schema. |
-| Text | Source-backed field from the node schema. |
-| Timeout | Source-backed field from the node schema. |
-| Polling interval | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
+| **Condition** | Choice | exists | Yes | Choose what condition to wait for. Options: exists, visible, hidden, containsText. |
+| **Text** | Text |  | No | Text required for the Contains Text condition. |
+| **Timeout** | Number | 5000 | No | Maximum time to wait in milliseconds. |
+| **Polling interval** | Number | 100 | No | How often to check in milliseconds. |
+{/* AUTO:settings:end */}
+
+- **DOM Selector**: click the crosshair button in the field and click the element on the page, or type a CSS selector. For an element that is not there yet, type its selector (for example `.results-list`).
+- **Timeout** and **Polling interval** are in milliseconds: `10000` is 10 seconds.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has the fields `waitResult` (object).
+{/* AUTO:outputs:end */}
+
+The incoming item passes through unchanged, with a `waitResult` field added:
+
+- `satisfied`: `true` when the condition was met. `timedOut`: `true` when time ran out first.
+- `found`: whether the element was on the page at the last check.
+- `elapsedMs`: how long the node waited.
+- `selector` and `condition`: what was checked.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Wait For Element after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. [UI Automation](/nodes/extension/ui/automation/) types a search term and clicks **Search** on a site.
+2. **Wait For Element** with **DOM Selector** = `.results-list`, **Condition** = **Visible** and **Timeout** = `10000`.
+3. [IF](/nodes/builtin/flow/if/) checks that `{{ $input.waitResult.satisfied }}` is true.
+4. On the true branch, [Get Structured Data](/nodes/extension/getstructureddata/) reads the results.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **`timedOut` is `true` every time.** The selector never matches, or the condition is never met in time. Check the selector with **Ping** once the element is on screen, and raise **Timeout** for slow pages.
+- **The next node runs although the element never appeared.** That is expected: a timeout does not stop the workflow. Branch on `{{ $input.waitResult.satisfied }}` with [IF](/nodes/builtin/flow/if/), or stop with [Stop and Error](/nodes/builtin/flow/stopanderror/).
+- **Contains Text never matches.** The check is case-sensitive and uses the element's full text. Pick the element that holds the text, and match the exact capitalization.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Wait](/nodes/builtin/flow/wait/): pause for a fixed time.
+- [Get Element Data](/nodes/extension/getelementdata/): read the element once it is there.
+- [UI Automation](/nodes/extension/ui/automation/): also has a Wait For Element step inside a list of actions.
+- [Tab Control](/nodes/extension/tabcontrol/): wait for a whole page to load.

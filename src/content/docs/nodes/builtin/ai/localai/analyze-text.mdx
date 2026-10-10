@@ -3,37 +3,88 @@ title: "Analyze Text"
 description: "On-device sentiment, toxicity and moderation of text"
 sidebar:
   label: "Analyze Text"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/analyze-text
+  family: ai
 ---
 
-Classify text — **sentiment, toxicity, or moderation** — locally in your browser (DistilBERT-SST2, toxic-bert on transformers.js). Private, offline, no cost.
+Score text for sentiment, toxicity or other moderation labels with a model that runs in your browser, so the text never leaves your device.
 
 ## What it does
 
-Runs the text through the selected on-device classifier and returns the matching labels with confidence scores, filtered by a threshold and capped to the top results.
+Analyze Text runs the **Text** through the text-moderation model you pick and returns every label the model knows, with a confidence score from 0 to 1. The labels come from the model: *DistilBERT SST-2 (sentiment)* gives positive and negative, while *toxic-bert* and the TensorFlow.js *Toxicity* model give toxicity categories.
+
+Labels scoring below **Confidence threshold** are dropped, the rest are sorted best first and cut to **Top-K labels**. There is no cost per run and no API key.
 
 ## When to use it
 
-Moderate user-generated content, gauge feedback tone, or gate a workflow branch on toxicity — without sending the text to a third-party API.
+- Flag toxic comments or messages before you post or forward them.
+- Gauge the tone of customer feedback and route negative replies to a person.
+- Gate a branch on a score, for example only continue when the text is not toxic.
+
+To sort text into labels you choose yourself (billing, bug report, other), use [Classify Text](/nodes/builtin/ai/localai/classify-text/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** text-moderation model, across engines. |
-| Text | The text to analyze. |
-| Confidence threshold | Drop labels below this score (default `0`). |
-| Top-K labels | Keep at most this many labels (default `5`). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker |  | No | Any installed text-moderation model, across engines. |
+| **Text** | Text |  | No | The text to analyze. |
+| **Confidence threshold** | Number | 0 | No |  |
+| **Top-K labels** | Number | 5 | No |  |
+{/* AUTO:settings:end */}
+
+- **Model**: pick *DistilBERT SST-2 (sentiment)* for positive/negative, or *toxic-bert* or *Toxicity* for moderation. The picker also lists the *DeBERTa zero-shot* model, which needs your own labels: use it with Classify Text, not here.
+- **Confidence threshold**: the default 0 keeps every label. Set it to 0.5 to keep only labels the model is fairly sure about.
+- **Text**: usually an expression, such as `{{ $input.selectionText }}`.
 
 ## Outputs
 
-Returns `{ predictions, top, score }`:
+{/* AUTO:outputs:start */}
+One output port.
 
-- `predictions` — array of `{ label, score }`, highest first.
-- `top` — the highest-scoring label (or `null`).
-- `score` — that label's score.
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `predictions` | List of entries | Labels above the threshold, best first |
+| `top` | Text | The best label, or null when none passed |
+| `score` | Number |  |
+{/* AUTO:outputs:end */}
+
+Each entry in `predictions` is `{ label, score }`. `score` is the score of `top`. Branch on `{{ $input.top }}` for a simple yes/no, or on `{{ $input.score }}` when you want your own cut-off.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The node needs a local model instead. The **Model** picker lists your installed models first, then models that download on first use. To download ahead of time, or to free space later, use the [Local AI](/usage/using-the-app/local-models/) page.
+
+## Example workflow
+
+Check the tone of text you select on a page:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) with **Menu Contexts** set to **Selection**.
+2. Analyze Text with **Model** *DistilBERT SST-2 (sentiment)* and **Text** `{{ $input.selectionText }}`.
+3. [Show Notification](/nodes/extension/shownotification/) with **Title** `Tone` and **Message** `{{ $input.top }} ({{ $input.score }})`.
+
+## Troubleshooting
+
+- **"Choose a model to analyze with."** **Model** is empty. Pick one; models under **Available** download on first use.
+- **"Provide some text to analyze."** **Text** is empty after expressions run. Check that the field you point to exists in the incoming data.
+- **"Zero-shot classification needs at least one candidate label."** You picked *DeBERTa zero-shot*. Use a sentiment or toxicity model here, or switch to Classify Text.
+- **`top` is null.** No label reached **Confidence threshold**. Lower it.
+- **The first run is slow.** The model downloads and loads on first use, then later runs are fast.
 
 ## Related nodes
 
-- [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) — LLM or on-device engine toggle.
-- [Answer Question](/nodes/builtin/ai/localai/answer-question/)
-- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/)
+- [Classify Text](/nodes/builtin/ai/localai/classify-text/): sort text into your own labels.
+- [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/): sentiment with a chat model.
+- [Switch](/nodes/builtin/flow/switch/): route items by the `top` label.
+- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/): run any installed model for any task.

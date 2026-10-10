@@ -3,55 +3,83 @@ title: "Transformers Chat"
 description: "Run a small chat model on-device with transformers.js"
 sidebar:
   label: "Transformers Chat"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/llm/transformerschat
+  family: ai
 ---
 
-Run a small instruct/chat model **entirely in your browser** with transformers.js (ONNX/WASM, WebGPU where available). The runtime-agnostic sibling of [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/): the same chat-model dependency, a different on-device engine — a good fit for tiny, **CPU-friendly** chat that runs without WebGPU or an API key.
+Give an AI node a small chat model that runs inside your browser, even on a computer without WebGPU.
 
 ## What it does
 
-Exposes an installed transformers.js chat model (e.g. *SmolLM2 360M Instruct*) as a chat-model dependency. Connect it to an AI agent node and it answers on-device — messages in, text out — with no cloud call.
+Transformers Chat is a model you plug into the **Model** slot of an AI node, such as the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) or [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/). It does not run on its own and has no output. When the AI node runs, a small instruct model (for example SmolLM2) answers on your device. It uses WebGPU when available and falls back to the processor otherwise. No API key, no cloud call.
+
+- **Temperature** is 0.5 and **Max new tokens** is 256 by default, so replies are short unless you raise it.
+- The model works with about 2,000 tokens of context, so a connected [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) sends only the latest part of the conversation.
+- It loads on first use (downloading it if needed), then stays ready for the session.
+
+### Using it with tools
+
+It works with the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). These models have no built-in tool feature, so the tools are described in the prompt and the model writes its tool calls in its reply. The common formats are all understood: `<tool_call>…</tool_call>`, `[TOOL_CALLS] […]`, `<function=name>…</function>`, a fenced JSON block, or a reply that is only the JSON call. The agent runs the tool, sends back the result, and the model answers or calls another tool. Hidden reasoning (`<think>…</think>`) is removed from the reply.
 
 ## When to use it
 
-- You want local chat but the device has **no WebGPU** (Web LLM needs it; transformers.js falls back to WASM).
-- You want the **smallest possible** local chat model for quick, low-stakes replies.
-- You're already using transformers.js models for vision/text tasks and want one engine.
+- You want local chat but your device has no WebGPU, so [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) can't run.
+- Quick, low-stakes replies with the smallest possible model.
+- You already use on-device models for other tasks and want the same engine.
 
-For larger, higher-quality local chat with WebGPU, prefer [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/).
-
-## Using it with tools
-
-Transformers Chat works with the [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). These models have no built-in tool API, so tool calling goes through the prompt, and works with any chat model:
-
-1. The connected tools are described in the system prompt, with a simple format for calling them.
-2. The model calls a tool by writing that call in its reply. Models often use the format they were trained on instead, so the common ones are all understood: `<tool_call>{…}</tool_call>`, `[TOOL_CALLS] […]`, `<function=name>{…}</function>`, a fenced ```` ```json ```` block, or a reply that is only the JSON call.
-3. The agent runs the tool and sends the result back as a `<tool_response>` message; the model then answers or calls another tool.
-
-How reliably a model calls tools depends on the model: instruct models trained for tool use do much better than very small general ones, which often just answer in text. Reasoning (`<think>…</think>`) is removed from the reply before it's read.
+For better answers on a device with WebGPU, use [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | An **installed** transformers.js chat model. The picker marks installed models and can download others; **Manage models** opens [Local AI](/usage/using-the-app/local-models/). |
-| Temperature | Sampling temperature (higher = more varied; `0` = deterministic). |
-| Max new tokens | Caps the reply length (default `256`). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker |  | No | An installed transformers.js chat model. Install one from Local AI, or download it from the picker. |
+| **Options** | Group |  | No |  |
+| Options › **Temperature** | Number | 0.5 | No | Higher is more creative; 0 is deterministic. |
+| Options › **Max new tokens** | Number | 256 | No | Cap on the reply length. |
+{/* AUTO:settings:end */}
+
+The **Model** picker lists only chat models for this engine. Install one from the [Local Models](/usage/using-the-app/local-models/) page, or download it from the picker. When you publish or share the workflow, **Model** is cleared, so whoever installs it picks their own.
 
 ## Outputs
 
-Returns a chat-model dependency you connect to AI agent nodes.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Model | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
+{/* AUTO:outputs:end */}
+
+The AI node you connect it to produces the output. Transformers Chat only decides which model answers.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on selected text.
+2. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) with **Prompt** `Give this text a short title: {{ $input.selectionText }}`.
+3. Transformers Chat in its **Model** slot, with an installed SmolLM2 instruct model and **Max new tokens** `40`.
+4. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.response }}`.
 
 ## Troubleshooting
 
-- **"isn't a transformers.js chat model"** — the picker only lists chat models; if you selected one from another engine, use [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) instead.
-- **Slow or short replies** — these models are tiny; lower expectations, or raise Max new tokens for longer output.
-- **The agent never calls a tool** — the model didn't write a valid `<tool_call>` block. Use an instruct model trained for tool use, give tools clear descriptions, and keep the system message short. A call to a tool that isn't connected, or with invalid JSON, is kept as plain text instead of being run.
-- **Tool calls get cut off** — raise **Max new tokens** so the whole `<tool_call>` block fits in the reply.
-- **First run is slow** — the model loads (and downloads if needed) on first use, then stays warm for the session.
+- **"Model parameter is required and cannot be empty".** Pick a model in **Model**.
+- **"… isn't a transformers.js chat model. Pick one from the picker, or use the Web LLM node."** The model belongs to another engine (often after importing a workflow). Pick one from this node's list, or use [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/).
+- **Replies are cut short.** Raise **Max new tokens**. This also fixes tool calls that get cut off.
+- **The agent never calls a tool.** The model answered in plain text. Use an instruct model trained for tool use, give tools clear descriptions, and keep the system message short. A call to a tool that isn't connected, or with broken JSON, stays as plain text.
 
-## Related pages
+## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) — agent that calls tools.
-- [Local AI](/usage/using-the-app/local-models/) — install and manage on-device models.
-- [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) — WebGPU-based local chat.
-- [Local AI nodes](/nodes/builtin/ai/localai/) — on-device vision/text/audio tasks.
+- [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/): larger in-browser models, needs WebGPU.
+- [Generate Text](/nodes/builtin/ai/localai/generate-text/): on-device text generation as a standalone node.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an agent that can use tools and memory.

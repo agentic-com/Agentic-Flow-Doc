@@ -3,46 +3,74 @@ title: "IF"
 description: "Route items to different branches based on conditions"
 sidebar:
   label: "IF"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/if
+  family: flow
 ---
 
-Route items to different branches based on conditions
+Send each item down a **True** or a **False** branch, depending on conditions you set.
 
 ## What it does
 
-Routes workflow items to different output branches based on conditional logic.
+IF checks its conditions for every item that arrives. When they hold, the item leaves through the **True** port; otherwise it leaves through **False**. The item itself is not changed.
+
+Each condition compares a value (usually an expression such as `{{ $input.price }}`) with another value, using an operator that fits the type you pick: **String**, **Number**, **Date-Time**, **Boolean**, **Array** or **Object** (for example **Contains**, **Is Equal To** or **Is Not Empty**). With several conditions, link them with **AND** (all must hold) or **OR** (any one is enough).
 
 ## When to use it
 
-Use this node to create conditional workflows where different actions occur based on data values or conditions.
+- Do something only for some items: "only send a message when the price dropped".
+- Take one of two paths: save new contacts, update existing ones.
+- Stop a branch early: leave the **False** port unconnected and those items simply go no further.
+
+For more than two paths, use [Switch](/nodes/builtin/flow/switch/). To drop items without branching, use [Filter](/nodes/builtin/flow/filter/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Conditions | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Conditions** | Conditions |  | Yes | The conditions to evaluate. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-Returns the original input, filtered input, branched output, merged items, loop state, or an intentional error depending on the node.
+{/* AUTO:outputs:start */}
+2 output ports: **True**, **False**.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `result` | True/false | Whether the conditions held |
+| `inData` | Any | The incoming data, unchanged |
+{/* AUTO:outputs:end */}
+
+Port **True** is the top one and **False** the bottom one. Connect either or both.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Place IF between data-producing nodes and downstream actions to control which data continues through the workflow.
+1. [RSS Feed Read](/nodes/builtin/core/rss-feed-read/) fetches new posts.
+2. IF checks that `{{ $input.title }}` (**String**) **Contains** `release`.
+3. **True** goes to a [Slack](/nodes/builtin/integration/slack/) node that posts the link. **False** is left unconnected.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"IF needs at least one condition."** Add a condition, or remove the node.
+- **Every item goes to False.** Check the operator type. A number stored as text compares as text, so pick the type that matches the data (**Number** for prices), or convert it first with [Edit Fields](/nodes/builtin/datatransformation/editfields/).
+- **The expression is empty.** Open the input panel and pick the field instead of typing it, so the path matches the data that actually arrives.
 
 ## Related nodes
 
-- [Filter](/nodes/builtin/flow/filter/)
-- [Merge](/nodes/builtin/flow/merge/)
-- [Wait](/nodes/builtin/flow/wait/)
-- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/)
+- [Switch](/nodes/builtin/flow/switch/): any number of named branches.
+- [Filter](/nodes/builtin/flow/filter/): keep only the items that match.
+- [Loop](/nodes/builtin/flow/loop/): repeat steps while a condition holds.
+- [Merge](/nodes/builtin/flow/merge/): bring two branches back together.

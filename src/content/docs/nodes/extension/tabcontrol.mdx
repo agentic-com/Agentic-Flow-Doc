@@ -1,58 +1,86 @@
 ---
 title: "Tab Control"
-description: "Open, close, focus, reload, navigate, and group browser tabs — and wait for a tab to finish loading."
+description: "Open, close, focus, reload, navigate or group browser tabs."
 sidebar:
   label: "Tab Control"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/tabcontrol
+  family: inpage
 ---
 
-Drive browser tabs from a workflow: open, close, focus, reload, navigate, and group them — with an optional wait for the page to finish loading.
+Drive browser tabs from a workflow: open, close, focus, reload, navigate and group them, with an optional wait for the page to finish loading.
 
 ## What it does
 
-Every In Page Action node operates on a tab that already exists and is already the right one. Tab Control is how a workflow *gets* to a page: "open this URL, wait for it to load, then scrape it" becomes expressible. It returns a reference to the tab it acted on, and it focuses newly opened tabs so the In Page Action nodes that follow act on the right page.
+The other page nodes act on a tab that is already open. Tab Control is how a workflow gets to the right page first: "open this URL, wait for it to load, then read it".
+
+Pick an **Operation**:
+
+- **Open**: open **URL** in a new tab. With **Open Focused** on (the default), the new tab becomes the active one, so the page nodes that follow act on it.
+- **Navigate**: load **URL** in an existing tab.
+- **Reload**, **Focus**, **Close**: act on the tab in **Tab ID**, or on the active tab when it is empty.
+- **Group**: put the tabs listed in **Tab IDs** into one tab group.
+
+Turn on **Wait For Load** with Open, Navigate or Reload to continue only once the page has loaded. The wait always ends after a safety timeout, so a stalled page cannot hang the run.
 
 ## When to use it
 
-- Open a URL and wait for it to load before scraping or interacting with it.
-- Navigate an existing tab somewhere new, reload it, or bring it to the front.
-- Close a tab when you are done with it, or group a set of tabs together.
+- Open a page and wait for it before reading or filling it in.
+- Move an existing tab to a new address, reload it, or bring it to the front.
+- Close tabs a workflow opened, or group them together.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | `Open`, `Close`, `Focus`, `Reload`, `Navigate`, or `Group`. |
-| URL | The address to open or navigate to (used by **Open** and **Navigate**). Validated before use. |
-| Tab ID | The tab to act on (used by **Close**, **Focus**, **Reload**, **Navigate**). Defaults to the active tab when left blank. |
-| Wait for load | For **Open**, **Navigate**, and **Reload** — wait until the tab reports it has finished loading before continuing. |
-| Active | For **Open** — open the tab focused (default) or in the background. |
-| Tab IDs | For **Group** — the tabs to place into one group. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice |  | Yes | Options: Open, Close, Focus, Reload, Navigate, Group. |
+| **URL** | Text |  | No | Used by the Open and Navigate operations. |
+| **Tab ID** | Number |  | No | Used by Close, Focus, Reload, and Navigate. Defaults to the active tab when omitted. |
+| **Wait For Load** | Toggle |  | No | Used by Open, Navigate, and Reload. Wait until the tab finishes loading. |
+| **Open Focused** | Toggle | On | No | Used by Open. Whether the newly opened tab becomes the active tab. |
+| **Tab IDs** | List |  | No | Used by Group. The tabs to group together. |
+{/* AUTO:settings:end */}
 
 ## Outputs
 
-- For **Open**, **Navigate**, **Reload**, **Focus**: a tab reference — `{ tabId, url, title, windowId, status }`.
-- For **Close**: `{ closed: true, tabId }`.
-- For **Group**: `{ groupId, tabIds }`.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
 
-Feed the `tabId` from a reference into subsequent In Page Action nodes so the whole group composes.
+- **Open**, **Navigate**, **Reload**, **Focus**: the tab, as `{ tabId, url, title, windowId, status }`.
+- **Close**: `{ closed: true, tabId }`.
+- **Group**: `{ groupId, tabIds }`.
+
+Pass `{{ $input.tabId }}` to later nodes that take a tab id.
 
 ## Dependencies and credentials
 
-- No credential is required.
-- Uses the already-held `tabs` permission — no extra permission is needed.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Tab Control (**Open** `https://example.com`, **Wait for load** on) → [Get All Text](/nodes/extension/getalltext/) → an AI node to summarise → [Browser Notification](/nodes/extension/browsernotification/).
+1. Tab Control: **Open** `https://example.com/pricing`, **Wait For Load** on.
+2. [Get All Text](/nodes/extension/getalltext/) reads the page.
+3. An AI node such as [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) summarises it.
+4. Tab Control: **Close**, with **Tab ID** `{{ $('Tab Control').tabId }}`, or leave it empty to close the active tab.
 
 ## Troubleshooting
 
-- **Wait for load** resolves as soon as the tab reports completion, and always resolves after a safety timeout — so a stalled page can never hang the run indefinitely.
-- If **Navigate**/**Close**/**Reload** targets a specific **Tab ID**, make sure that tab still exists; otherwise leave Tab ID blank to act on the active tab.
-- Setting a tab group's title or colour needs a separate permission and is a planned follow-up; **Group** currently just places tabs into one group.
+- **"A URL is required for the "open" operation".** Fill in **URL** for Open and Navigate.
+- **"At least one tab id is required for the "group" operation".** Add tab ids to **Tab IDs**.
+- **The next page node read the wrong tab.** Turn on **Open Focused** so the new tab is the active one, or turn on **Wait For Load** so the page is ready.
+- **Close or Reload did nothing.** The tab in **Tab ID** no longer exists. Leave the field empty to act on the active tab.
+- **The group has no name or colour.** Group only puts tabs together; it does not set a title or colour.
 
 ## Related nodes
 
-- [Navigation Trigger](/nodes/builtin/trigger/navigation/)
-- [Page Load](/nodes/builtin/trigger/pageload/)
-- [Get All Text](/nodes/extension/getalltext/)
+- [Wait For Element](/nodes/extension/ui/wait-for-element/): wait for a specific part of the page.
+- [Get All Text](/nodes/extension/getalltext/): read the page.
+- [Page Load](/nodes/builtin/trigger/pageload/): start a workflow when a page loads.
+- [Navigation](/nodes/builtin/trigger/navigation/): start a workflow when you visit a site.

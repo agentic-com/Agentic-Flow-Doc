@@ -1,49 +1,82 @@
 ---
-title: "Get All Links"
+title: "Get All Link"
 description: "Get all the links from the page of the actual openend tab"
 sidebar:
-  label: "Get All Links"
+  label: "Get All Link"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/getalllinks
+  family: inpage
 ---
 
-Get all the links from the page of the actual openend tab
+Collect the web addresses of all the links on the active tab, or inside one part of it.
 
 ## What it does
 
-Extracts all hyperlinks (URLs) from the currently active browser tab.
+Get All Link reads every link (`<a>` element) on the active tab and returns their URLs as a list in the field you name in **Output field name**.
+
+- Relative links are turned into full URLs, and each URL appears only once.
+- Email (`mailto:`), phone (`tel:`) and script (`javascript:`) links are left out.
+- With **DOM Selector** set, only links inside the first matching element are collected.
+- **Max links** keeps the first N links, in page order.
+
+The output holds only the new field. Turn on **Include input fields** to keep the incoming item's fields next to it.
 
 ## When to use it
 
-Use this node for web crawling, link discovery, or building navigation maps of websites.
+- Gather the article links from a listing or search page, then visit or read each one.
+- Check which pages a page links to.
+- For files you can download (PDF, ZIP, images…), [Get Page Assets](/nodes/extension/getpageassets/) is more precise. For a page that is not open, use [Get Links from Link](/nodes/builtin/core/getlinksfromlink/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Output field name | Source-backed field from the node schema. |
-| Max links | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+| **Max links** | Number |  | No | The maximum number of links to return. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
+
+- **Output field name**: for example `links`.
+- **DOM Selector**: click the crosshair button in the field and click the area to read (a results list, the main article), or type a CSS selector. Leave empty for the whole page, which also includes menus and footers.
+- **Max links**: leave empty to keep them all.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+One item with your field holding a list of URLs, for example `{ "links": ["https://example.com/post-1", "https://example.com/post-2"] }`. Use [Split Out](/nodes/builtin/datatransformation/splitout/) to turn it into one item per link.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Get All Links after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. Open a blog's article list and run the workflow from a [Hotkey](/nodes/builtin/trigger/hotkey/) trigger.
+2. Add **Get All Link** with **Output field name** = `links`, **DOM Selector** set to the list of posts and **Max links** = `10`.
+3. Add [Split Out](/nodes/builtin/datatransformation/splitout/) with **Field To Split Out** = `links`.
+4. Add [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) to read each post, then a [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) node.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The list is empty.** **DOM Selector** matched nothing, or the links had not loaded yet. Check the selector with **Ping**, and wait for the list with [Wait For Element](/nodes/extension/ui/wait-for-element/).
+- **The list is full of menu and footer links.** Set **DOM Selector** to the part of the page you care about.
+- **Links to the same page with `#section` endings appear.** Links to a section of a page count as separate URLs. Remove them with [Filter](/nodes/builtin/flow/filter/) after Split Out.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Get Page Assets](/nodes/extension/getpageassets/): downloadable files with names and types.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): one item per link.
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): skip links you already handled in earlier runs.
+- [Get Links from Link](/nodes/builtin/core/getlinksfromlink/): links from a URL without opening it.

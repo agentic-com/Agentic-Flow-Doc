@@ -3,45 +3,68 @@ title: "Delete UI Elements"
 description: "Delete selected UI elements from the opened web page"
 sidebar:
   label: "Delete UI Elements"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/ui/delete-elements
+  family: inpage
 ---
 
-Delete selected UI elements from the opened web page
+Remove elements you pick (banners, pop-ups, ads, sidebars) from the page open in the active tab.
 
 ## What it does
 
-Removes selected DOM elements from the current page.
+Delete UI Elements removes from the active tab **every** element that matches each selector in **Elements**, not just the first one. The change is only on your screen: reloading the page brings everything back, and the website itself is not changed.
+
+The incoming item is passed on unchanged, so the workflow can continue.
 
 ## When to use it
 
-Use this node to clean up page content, remove distractions, or modify page layout for better readability.
+- Clear cookie banners, newsletter pop-ups or chat bubbles before taking a screenshot or reading the page.
+- Remove ads, menus and sidebars so [Get All Text](/nodes/extension/getalltext/) reads only the article.
+- Clean up a page for reading, on every visit, with a [Page Load](/nodes/builtin/trigger/pageload/) trigger.
+- To hide something without removing it, set `display` to `none` with [Set Element Attribute Style](/nodes/extension/ui/set-element-attribute-style/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Target Element | Source-backed field from the node schema. |
-| Elements | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Elements** | List |  | Yes | List of DOM elements to delete from the opened web page. |
+{/* AUTO:settings:end */}
+
+Add one entry per thing to remove. In each **Target Element**, click the crosshair button and click the element on the page, or type a CSS selector. A selector that matches many elements, such as `.ad-slot`, removes them all.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The incoming item, unchanged.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Delete UI Elements after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. A [Page Load](/nodes/builtin/trigger/pageload/) trigger with **URL Patterns** = `https://news.example.com/*`.
+2. **Delete UI Elements** with two entries in **Elements**: the cookie banner and `.newsletter-popup`.
+3. [Screenshot Page](/nodes/extension/screenshotpage/) with **Mode** = **Full Page** captures the clean page.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The element is still there.** The selector matched nothing at the moment the node ran, often because the pop-up appears a few seconds later. Add [Wait For Element](/nodes/extension/ui/wait-for-element/) with **Condition** = **Exists** before this node, and check the selector with **Ping**.
+- **The element comes back.** Some sites add it again after a while or on scroll, and reloading always restores the page. Run the node again, or hide it with [Set Element Attribute Style](/nodes/extension/ui/set-element-attribute-style/).
+- **Too much was removed.** A broad selector (such as `div`) matches many elements. Pick a more specific one.
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Set Element Attribute Style](/nodes/extension/ui/set-element-attribute-style/): hide or restyle instead of removing.
+- [Highlight Elements](/nodes/extension/ui/highlight-elements/): check what a selector matches before deleting.
+- [Screenshot Page](/nodes/extension/screenshotpage/): capture the cleaned-up page.

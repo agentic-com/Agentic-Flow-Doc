@@ -3,42 +3,82 @@ title: "Try / Catch"
 description: "Guard the work after it, and route a failure instead of ending the run"
 sidebar:
   label: "Try / Catch"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/try
+  family: flow
 ---
 
-Guard the steps after it, and send a failure down a separate branch instead of failing the run.
+Guard the steps after it, so a failure goes down a separate branch instead of ending the run.
 
 ## What it does
 
-The node draws two output handles, **Try** and **Catch**.
+Try / Catch has two outputs, **Try** and **Catch**. Items go out of **Try** unchanged, and the steps you connect there are guarded.
 
-- The **Try** branch runs the guarded steps as normal.
-- If any node in the Try branch fails, the rest of that branch is abandoned and control jumps to the **Catch** branch — which receives the node that failed, its error message, and the input it was given, so it can react.
+If any guarded step fails, the rest of the guarded steps are skipped and the **Catch** branch runs instead. It receives one item describing the failure:
 
-Everything the Try branch reaches, up to the point where the Try and Catch branches join back together, is "inside" the guard. Where they rejoin marks the end of the guarded region.
+- `nodeLabel`: the name of the node that failed.
+- `message`: its error message.
+- `input`: the data that node was given.
+
+The guarded part is everything the **Try** branch reaches, up to the node where the Try and Catch branches join again. Whatever comes after that join runs in both cases. If the branches never join, everything after **Try** is guarded to the end of the workflow.
+
+Good to know:
+
+- A node set to retry uses up all its attempts first; Catch only sees what retrying could not fix. See [Error handling](/usage/key-concepts/flow-logic/error-handling/).
+- A failure inside the **Catch** branch is not caught by the same Try / Catch. It goes to an outer Try / Catch, if any, or ends the run.
 
 ## When to use it
 
-- Wrap a step that can fail (a network call, an integration, parsing untrusted data) so a failure becomes a handled branch instead of ending the run.
-- Notify, log, or fall back on failure — the Catch branch is an ordinary branch, so it can send a message, write a record, or try an alternative path.
+- Wrap a step that can fail now and then, such as an API call or reading a page that may change, so the rest of the run still happens.
+- Send yourself a message when a step fails, with the error and the data that caused it.
+- Fall back to another way of getting the data when the first one fails.
+
+To react when a whole workflow fails, from another workflow, use [Error Trigger](/nodes/builtin/trigger/errortrigger/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Note | Optional. A display-only label describing what this Try guards. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Note** | Text |  | No | What this boundary is protecting, for whoever reads the canvas next. |
+{/* AUTO:settings:end */}
+
+**Note** is shown on the node to explain what it guards, for example `Fetching the order from the API`. It does not change how the node behaves.
 
 ## Outputs
 
-- **Try** — the guarded steps; runs first.
-- **Catch** — runs only if a guarded step fails. It receives the failing node's name, its message, and its input.
+{/* AUTO:outputs:start */}
+2 output ports: **Try**, **Catch**.
+{/* AUTO:outputs:end */}
 
-## Good to know
+**Try** carries the incoming items. **Catch** carries the failure item described above: read it in the catch branch with `{{ $input.nodeLabel }}` and `{{ $input.message }}`.
 
-- **Retries run first.** A node set to [retry](/usage/key-concepts/flow-logic/error-handling/) exhausts its attempts before anything is reported as a failure, so the boundary catches only what retrying could not fix.
-- **A failure in the Catch branch is not caught by its own Try.** It propagates to an outer Try, or fails the run — the way a catch block behaves everywhere else.
-- To react when an *entire workflow* fails (not just a step), use the [Error Trigger](/nodes/builtin/trigger/errortrigger/) instead.
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+Get warned when an API call fails, without losing the run:
+
+1. [Schedule](/nodes/builtin/trigger/schedule/) runs the workflow every morning.
+2. Try / Catch with **Note** `Fetch today's orders`.
+3. From **Try**: [Http Request](/nodes/builtin/core/http-request/) calls `https://api.example.com/orders`, then [Google Sheets](/nodes/builtin/integration/google-sheets/) appends the orders.
+4. From **Catch**: [Slack](/nodes/builtin/integration/slack/) posts `{{ $input.nodeLabel }} failed: {{ $input.message }}`.
+
+## Troubleshooting
+
+- **The run still stops when a step fails.** The failing step is not inside the guarded part: it is before the Try / Catch, after the point where Try and Catch join, or in the Catch branch itself. Move the Try / Catch earlier, or connect the step from **Try**.
+- **Steps after the failure were skipped.** That is expected: once a guarded step fails, the remaining guarded steps don't run. Put steps that must always run after the node where both branches join.
+- **The Catch branch never runs.** Nothing failed, or the node retried until it succeeded. Check the run log.
 
 ## Related nodes
 
-- [Stop and Error](/nodes/builtin/flow/stopanderror/)
-- [Error handling](/usage/key-concepts/flow-logic/error-handling/)
+- [Stop and Error](/nodes/builtin/flow/stopanderror/): fail on purpose, for Catch to handle.
+- [Error Trigger](/nodes/builtin/trigger/errortrigger/): run another workflow when a whole run fails.
+- [IF](/nodes/builtin/flow/if/): branch on a value before it causes a failure.

@@ -3,71 +3,82 @@ title: "Extract From File"
 description: "Turn a file into items, with the format auto-detected"
 sidebar:
   label: "Extract From File"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/extractfromfile
+  family: data
 ---
 
-Turn a file into workflow items, whatever its format.
+Turn a downloaded or picked file (CSV, JSON, XML, text or PDF) into workflow items.
 
 ## What it does
 
-Reads a file and returns its contents as items. It generalises the PDF Parser: instead of one format it decodes several, detecting which one to use automatically. It runs entirely in the browser.
+Extract From File reads the file attached to the incoming item and returns its contents as a list of items. What you get depends on the format:
 
-The first-wave formats are:
+- **CSV**: one item per row, keyed by the header row. Empty rows are skipped.
+- **JSON**: an array gives one item per element; a single object gives one item; a plain value gives `{ "value": ... }`.
+- **XML**: the whole document as one object. Attributes get an `@` prefix and repeated elements become lists.
+- **Text**: one item per line, each as `{ "text": "..." }`.
+- **PDF**: one item with the extracted `text` and `pageCount`.
 
-- **CSV** — one item per row, keyed by the header row.
-- **JSON** — an array becomes one item per element; a single object becomes one item.
-- **XML** — the document is turned into a JSON object (attributes are read with an `@` prefix, repeated elements become arrays), returned as one item.
-- **Text** — one item per line, each as `{ text: "…" }`.
-- **PDF** — the extracted text, returned as one item `{ text, pageCount }`.
+The file can come from an [Http Request](/nodes/builtin/core/http-request/) download (stored under `$binary`) or from [Local File Read](/nodes/builtin/datatransformation/localfileread/) (`name`, `type`, `content`). Each incoming item is treated as its own file. Excel files (XLSX) are not supported.
 
-> XLSX (Excel) is **not yet supported**.
+With **Format** on *Auto-detect*, the node looks at the file's type first (for example `text/csv` or `application/pdf`), then the file name's extension (`.csv`, `.json`, `.xml`, `.pdf`, `.txt`), then the first characters of the content (`%PDF`, `{`, `[` or `<`).
 
-## Where the file comes from
+## When to use it
 
-The node accepts a file from either source:
-
-- **HTTP Request** — a downloaded file arrives as a binary attached to the item under `$binary` (by default the `data` slot). Point the node at it with the **Binary Field** setting.
-- **Local File Read** — the picked file arrives as `{ name, type, content }`; the node reads its `content` and uses the file name and type for detection.
-
-Any plain text/string field is also accepted for the text formats when no binary is present.
-
-## Format auto-detection
-
-With **Format** left on **Auto-detect**, the format is worked out in this order:
-
-1. the binary's MIME type (for example `text/csv`, `application/json`, `application/pdf`),
-2. the file-name extension (`.csv`, `.json`, `.xml`, `.pdf`, `.txt`),
-3. a light content sniff (a `%PDF` header, or leading `{` / `[` / `<`).
-
-If none of these decides, the node throws a clear error asking you to pick the format yourself. You can always **override** the detection by choosing a specific format.
+- Read rows from a CSV or JSON file that an [Http Request](/nodes/builtin/core/http-request/) downloaded.
+- Let someone pick a file with [Local File Read](/nodes/builtin/datatransformation/localfileread/) and process each row or line.
+- Get the text out of a PDF without caring about page settings. For per-page text or a custom output field, use [PDF Parser](/nodes/builtin/datatransformation/pdfparser/) instead.
+- For CSV with a different delimiter or no header row, use the [CSV](/nodes/builtin/datatransformation/csv/) node instead: this node always splits on commas and treats the first row as headers.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Format | The decoder to use, or `Auto-detect` (default). Choose CSV, JSON, XML, Text or PDF to override detection. |
-| Binary Field | Which `$binary` key on the incoming item holds the file. Defaults to `data` (where HTTP Request stores a downloaded file). Ignored when the item carries plain text content. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Format** | Choice | Auto-detect | No | The file format to decode, or auto-detect it. Options: Auto-detect, CSV, JSON, XML, Text, PDF. |
+| **Binary Field** | Text | `data` | No | Which $binary key on the incoming item holds the file. |
+{/* AUTO:settings:end */}
+
+**Binary Field** only matters for files from Http Request, which stores a download under `data` by default. Items without a binary are read from their `content` or `text` field instead.
+
+From Local File Read, set **Read as** to *Text* for CSV, JSON, XML and text files, and to *Data URL* or *Base64* for PDFs.
 
 ## Outputs
 
-An array of items whose shape depends on the format (see above). CSV and JSON arrays can produce many items; XML, PDF and single-object JSON produce one.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The output is always a list. CSV, JSON arrays and text files usually give many items, so the next node runs once per row or line. XML, PDF and single-object JSON give one item.
 
 ## Dependencies and credentials
 
-- No credential is required. Decoding runs in the browser.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Add an **HTTP Request** that downloads a CSV, connect it into **Extract From File** (leave Format on Auto-detect), then feed the resulting rows to **Edit Fields** or an **AI Agent**. Or start from **Local File Read** to let the user pick a file at runtime.
+1. An [Http Request](/nodes/builtin/core/http-request/) downloads `https://example.com/prices.csv`.
+2. **Extract From File** with **Format** on *Auto-detect* turns it into one item per row.
+3. [Filter](/nodes/builtin/flow/filter/) keeps rows where `{{ $input.stock }}` is `0`.
+4. [Slack](/nodes/builtin/integration/slack/) posts the out-of-stock products.
 
 ## Troubleshooting
 
-- If auto-detect fails, set the **Format** field manually.
-- Malformed content for the chosen (or detected) format — invalid JSON or XML, for example — throws a clear error.
-- Excel `.xlsx` files are not yet supported; export to CSV first.
+- **"Could not detect the file format. Set the Format field manually (CSV, JSON, XML, Text or PDF)."** The file had no useful type, extension or recognisable start. Choose the format in **Format**.
+- **"No file to extract. Attach a binary under $binary, or provide a file from Local File Read."** The incoming item has no file under **Binary Field** and no `content` or `text` field. Check the key name, or connect the node that produced the file.
+- **"Could not parse JSON: ..."** The file is not valid JSON, or auto-detect guessed JSON wrongly. Fix the file or pick the right **Format**.
+- **"Field "data" could not be decoded as base64 PDF data."** A PDF was read as *Text* by Local File Read. Set **Read as** to *Data URL*.
+- **A `.tsv` file comes out as one column.** Tab-separated files are detected as CSV but split on commas. Use the [CSV](/nodes/builtin/datatransformation/csv/) node with a tab delimiter.
 
 ## Related nodes
 
-- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/)
-- [CSV](/nodes/builtin/datatransformation/csv/)
-- [XML](/nodes/builtin/datatransformation/xml/)
-- [Local File Read](/nodes/builtin/datatransformation/localfileread/)
+- [PDF Parser](/nodes/builtin/datatransformation/pdfparser/): PDF text with per-page options.
+- [CSV](/nodes/builtin/datatransformation/csv/): CSV with custom delimiters, or writing CSV.
+- [XML](/nodes/builtin/datatransformation/xml/): convert XML text to JSON and back.
+- [Local File Read](/nodes/builtin/datatransformation/localfileread/): let the user pick a file.

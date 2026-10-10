@@ -3,45 +3,82 @@ title: "Basic LLM Chain"
 description: "A simple chain to prompt a LLM and return the response"
 sidebar:
   label: "Basic LLM Chain"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aiagents/basicllmchainnode
+  family: ai
 ---
 
-A simple chain to prompt a LLM and return the response
+Send a prompt to a chat model and get its answer. The simplest way to use AI in a workflow.
 
 ## What it does
 
-Sends a simple prompt to a language model and returns the generated response.
+Basic LLM Chain sends **Prompt** to the chat model connected to its **Model** slot and returns the reply as `{ response }`. There are no tools, no memory and no document lookup: one prompt in, one answer out.
+
+You must connect a chat model, for example [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/), [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/) or an on-device [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) model. Optionally connect an output parser to get structured data back instead of plain text.
 
 ## When to use it
 
-Use this agent for straightforward LLM interactions without tools or knowledge retrieval, such as text generation, summarization, or simple Q&A.
+- Rewrite, translate, classify or summarise text from earlier nodes.
+- Draft an email, a reply or a title from page data.
+- Turn free text into fields, with a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) attached.
+
+When the model must call tools or take actions, use [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/). To answer from your own documents, use [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) or [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| System message | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Prompt** | Text |  | Yes |  |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **System message** | Long text |  | No | The system message to use. |
+{/* AUTO:settings:end */}
+
+Use expressions in **Prompt** to include data, for example `Write a one-line summary of: {{ $input.text }}`. Add a **System message** under **Options** to set tone or rules ("Answer in French", "Reply in under 50 words").
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `response` | Any | The model reply; the parsed result when an output parser is connected |
+{/* AUTO:outputs:end */}
+
+`response` is the model's reply: text, or the structured data your output parser produced.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+| Slot | Accepts | Required | Connections |
+| --- | --- | --- | --- |
+| **Model** | chat model | Yes | One |
+| **Output Parser** | output parser | No | One |
+{/* AUTO:deps:end */}
+
+The node has no credential of its own. The connected model holds the API key or connection.
 
 ## Example workflow
 
-Connect Basic LLM Chain to an AI agent or dependency input that accepts this dependency type, then run the agent with data from previous nodes.
+1. [Get Selected Text](/nodes/extension/getselectedtext/) reads what you highlighted, with **Output field name** `text`.
+2. Basic LLM Chain with **Prompt** `Explain this in plain words: {{ $input.text }}`, and an [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model connected to **Model**.
+3. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"Dependency model is required".** Connect a chat model to the **Model** slot.
+- **"Model not found".** The connected model node is not set up: open it and choose a model and its credential.
+- **The reply is not in the shape you need.** Attach a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/), or ask for the format in the **System message**.
 
 ## Related nodes
 
-- [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/)
-- [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): a model that can call tools.
+- [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/): pull named fields out of text.
+- [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/): summarise long text.
+- [Chrome AI](/nodes/builtin/ai/aidependencies/llm/chrome-ai/): a prompt to Chrome's built-in model, no model node needed.

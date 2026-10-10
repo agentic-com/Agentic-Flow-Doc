@@ -3,48 +3,88 @@ title: "Get Time Between Dates"
 description: "Get the time between two dates"
 sidebar:
   label: "Get Time Between Dates"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/datetime/gettimebetweendates
+  family: data
 ---
 
-Get the time between two dates
+Compare the parts of two dates, such as their years or their days of the month.
 
 ## What it does
 
-Calculates the duration between two dates in specified units (days, hours, minutes, etc.).
+Get Time Between Dates reads **Start date** and **End date** and, for each unit you tick in **Units**, subtracts the start's value for that part from the end's value. The results go into one object under **Output field name**, with one key per unit.
+
+Each unit compares **only that part of the two dates**, not the total time between them:
+
+| Unit | What it subtracts |
+| --- | --- |
+| year | The years. |
+| month | The months of the year (0 to 11). |
+| week, day | The days of the month (both give the same number). |
+| hour, minute, second, millisecond | That part of the clock time. |
+
+For example, from `2026-01-31` to `2026-03-02` gives `{ year: 0, month: 2, day: -29 }`. The values are read in your computer's local time zone.
 
 ## When to use it
 
-Use this node to measure time elapsed, calculate age, or determine time remaining until a deadline.
+- Check whether two dates fall in the same year or month (the result is `0`).
+- Compare clock times on the same day, such as how many hours separate two meetings today.
+
+To get the total elapsed time (for example "how many days until the deadline"), use the recipe in the example below instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Start date | Source-backed field from the node schema. |
-| End date | Source-backed field from the node schema. |
-| Units | Source-backed field from the node schema. |
-| Output field name | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Start date** | Date and time |  | Yes | The start date. |
+| **End date** | Date and time |  | Yes | The end date. |
+| **Units** | Multiple choice |  | Yes | The units to subtract from the date. Options: year, month, week, day, hour, minute, second, millisecond. |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
+
+Both dates accept a picked date or an expression such as `{{ $input.dueDate }}`. Tick at least one unit.
 
 ## Outputs
 
-Returns transformed data for downstream nodes.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+The item holds an object under **Output field name**, for example `{ diff: { year: 1, month: -2 } }`. Read one value downstream with `{{ $input.diff.year }}`. A negative number means the end's part is smaller than the start's.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect data into Get Time Between Dates, configure the settings above, and use the output in the next workflow step.
+Count the whole days until a deadline (total elapsed time):
+
+1. [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/), **Date to format** `{{ $input.dueDate }}`, **Format** `Unix MS Timestamp`, **Output field name** `dueMs`, **Include input fields** on.
+2. [Get Current Date](/nodes/builtin/datatransformation/datetime/getcurrentdate/) then another Format Date with `Unix MS Timestamp`, **Output field name** `nowMs`, both with **Include input fields** on.
+3. [Math](/nodes/builtin/datatransformation/math/), **Operation** Subtract, **Value** `{{ $input.dueMs }}`, **Second Value** `{{ $input.nowMs }}`, **Put Result In Field** `msLeft`.
+4. Math, **Operation** Divide, **Value** `{{ $input.msLeft }}`, **Second Value** `86400000` (one day in milliseconds), **Put Result In Field** `daysLeft`. Add a third Math with **Operation** Round down if you want whole days.
+
+Use Get Time Between Dates itself for same-period checks: **Units** `year` and `month`, then an [IF](/nodes/builtin/flow/if/) that both are `0` to know two dates are in the same month.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **"day" is negative although the end date is later.** The node subtracts days of the month, not total days. From the 31st to the 2nd of a later month gives a negative number. Use the recipe above for elapsed time.
+- **"week" shows the same number as "day".** Both compare the day of the month. It is not a count of weeks.
+- **"Invalid duration unit".** A unit in **Units** is not one of the listed values. Re-select the units from the list.
+- **The values are `NaN`.** One of the dates could not be read. Use ISO dates such as `2026-03-05`.
 
 ## Related nodes
 
-- [Node types overview](/nodes/builtin/node-types/)
+- [Extract Part Of A Date](/nodes/builtin/datatransformation/datetime/extractpartofadate/): read one part of a single date.
+- [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/): convert dates to timestamps for exact differences.
+- [Math](/nodes/builtin/datatransformation/math/): subtract and divide timestamps.
+- [IF](/nodes/builtin/flow/if/): branch on the result.

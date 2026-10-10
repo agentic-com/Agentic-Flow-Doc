@@ -3,57 +3,94 @@ title: "Screenshot Page"
 description: "Capture a screenshot of the opened page or selected element"
 sidebar:
   label: "Screenshot Page"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/screenshotpage
+  family: inpage
 ---
 
-Capture a screenshot of the opened page or selected element
+Take a PNG screenshot of the active tab: what is on screen, the whole page, or one element.
 
 ## What it does
 
-Captures a PNG screenshot of the visible viewport, the entire page, or a specific element on the active browser tab.
+Pick a **Mode**:
 
-Screenshots are taken from the pixels Chrome actually renders, so images, web fonts, canvases, video frames, and cross-origin assets appear exactly as they do on screen. For `Full Page` and `Element` modes, the node scrolls the page, captures it in viewport-sized tiles, and stitches them into one image. Afterward, it restores your original scroll position, even if the capture fails.
+- **Viewport**: the part of the page currently visible in the tab.
+- **Full Page**: the entire page, from top to bottom.
+- **Element**: just the element in **DOM Selector**, even if it is taller than the screen.
+
+The screenshot is made from what the browser actually shows, so images, web fonts, charts, canvases and video frames look exactly as they do on screen. For **Full Page** and **Element**, the node scrolls the page, captures it piece by piece and stitches the pieces into one image. Afterwards it puts the page back where you had scrolled it, even if the capture fails.
+
+The image is returned both as a data URL and as a file attached to the item, so nodes that accept files (image editing, uploads, AI vision nodes) can use it directly.
 
 ## When to use it
 
-Use this node to document page states, create visual records, or capture content for analysis.
+- Keep a visual record of a page at a moment in time: an order confirmation, a dashboard, a price.
+- Send a picture of a chart or an error message to a chat channel or a ticket.
+- Give a page or a widget to an image AI node to describe or classify it.
+- To read the page's content as text instead, use [Get All Text](/nodes/extension/getalltext/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Mode | What to capture: `Viewport` (the visible part of the page, default), `Full Page` (the entire scrollable page), or `Element` (a selected element). |
-| Selector | Used with `Element` mode: the CSS selector of the element to capture. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Mode** | Choice | viewport | Yes | Choose what to capture. Options: viewport, fullPage, element. |
+| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+{/* AUTO:settings:end */}
+
+**DOM Selector** is used only in **Element** mode. Click the crosshair button in the field and click the element on the page, or type a CSS selector such as `#chart`.
 
 ## Outputs
 
-| Field | Notes |
-| --- | --- |
-| `dataUrl` | The screenshot as a `data:image/png;base64,…` URL. It is also attached as `$binary.data` for nodes that accept files. |
-| `found` | `false` in `Element` mode when the selector matches nothing. In that case, `dataUrl` is empty. |
-| `boundingBox` | `{ top, left, width, height }` of the captured area, in CSS pixels. For `Element` mode, it is the element's position relative to the viewport before the capture. |
-| `mode` / `selector` | The mode used and, for `Element` mode, the selector. |
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has these fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `mode` | Choice |  |
+| `selector` | Text |  |
+| `dataUrl` | Text | The image as a data: URL |
+| `found` | True/false |  |
+| `boundingBox` | Object |  |
+| `$binary` | Key-value pairs |  |
+{/* AUTO:outputs:end */}
+
+- `dataUrl`: the image as `data:image/png;base64,…`. The same image is attached as a file in `$binary.data`.
+- `found`: `false` in **Element** mode when the selector matches nothing. `dataUrl` is then empty and no file is attached.
+- `boundingBox`: the captured area (`top`, `left`, `width`, `height`, in page pixels). In **Element** mode it is the element's position on screen before the capture.
+- `mode` and, in **Element** mode, `selector`: what was captured.
 
 ## Dependencies and credentials
 
-- No credentials are needed.
-- **One-time browser permission:** the first time a screenshot runs, AWFlow asks you to allow it to capture web pages. Chrome usually grants this without a second prompt, because it is covered by the site access you accepted when you installed the extension. After you allow it, screenshots work in every workflow, including triggered and scheduled runs.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+No credential is needed. The first time a screenshot runs, AWFlow asks for your permission to capture images of the web pages you open. Choose **Allow**. The browser usually does not ask again, because this is covered by the site access you accepted when you installed the extension. Once allowed, screenshots work in every workflow, including scheduled and triggered runs.
 
 ## Example workflow
 
-Run Screenshot Page after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every morning.
+2. [Tab Control](/nodes/extension/tabcontrol/), **Operation** = **Open**, opens your dashboard with **Wait For Load** on.
+3. **Screenshot Page** with **Mode** = **Element** and **DOM Selector** set to the chart.
+4. [Slack](/nodes/builtin/integration/slack/), **File → Upload**, posts the image to `#daily-metrics`.
 
 ## Troubleshooting
 
-- **"Screenshot Page needs permission to capture web pages"**: the one-time permission hasn't been granted yet. It can only be granted while the AWFlow app is open, so run the workflow once from the side panel or app tab and choose **Allow**. A workflow started by a trigger while the app is closed fails with this error until you do.
-- **"Screenshot … is too large … Use Element mode"**: a capture is limited to 64 viewport tiles and 100 million pixels. For very long pages, capture a specific element instead.
-- **A sticky or fixed header appears more than once in a Full Page capture**: each tile records what is on screen while that part is scrolled into view, so fixed elements appear in every tile. Capture a specific element to avoid this.
-- **Animated or lazy-loaded content looks different between sections**: Full Page and Element captures take several frames over a short time. Let the page finish loading and scroll it once before running the node.
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **"Screenshot Page needs permission to capture web pages…"** You have not allowed screenshots yet. You can only allow it while the AWFlow app is open, so run the workflow once from the app or the side panel and choose **Allow**. A run started by a trigger while the app is closed fails with this message until you do.
+- **"Screenshot … is too large (maximum 64 tiles or 100000000 pixels). Use Element mode to capture a smaller target."** Very long pages exceed the limit. Capture a specific element instead.
+- **`found` is `false` and there is no image.** **DOM Selector** matched nothing. Check it with **Ping**, or wait for the element with [Wait For Element](/nodes/extension/ui/wait-for-element/) first.
+- **A sticky header appears several times in a Full Page image.** Each piece shows what is on screen while that part is scrolled into view, so fixed headers and banners repeat. Capture a specific element to avoid it.
+- **Images or animations look different from one part to the next.** Full Page and Element captures take several frames over a few seconds. Let the page finish loading, and scroll it once so late-loading images appear, before running the node.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Caption Image](/nodes/builtin/ai/localai/caption-image/): describe the screenshot on your device.
+- [Edit Image](/nodes/builtin/datatransformation/editimage/): crop or resize it.
+- [Download as file](/nodes/builtin/datatransformation/downloadasfile/): save it to your computer.
+- [Get Page Metadata](/nodes/extension/getpagemetadata/): the page's title and address to go with it.

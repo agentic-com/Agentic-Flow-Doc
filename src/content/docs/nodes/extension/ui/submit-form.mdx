@@ -3,44 +3,78 @@ title: "Submit Form"
 description: "Submit a selected form in the opened page"
 sidebar:
   label: "Submit Form"
+kind: node
+section: nodes
+worksIn: [extension]
+node:
+  id: extension/ui/submit-form
+  family: inpage
 ---
 
-Submit a selected form in the opened page
+Send a form on the active tab, as if you had pressed its submit button.
 
 ## What it does
 
-Programmatically submits a form on the current page after it has been filled.
+Submit Form finds the first element matching **DOM Selector** and submits the form it belongs to. You can point at:
+
+- **A button**: the button is clicked.
+- **The form, a field inside it, or a container around it**: the form is submitted the way the browser does when you press its submit button, so the page's own checks (required fields, formats) run first. If that is not possible, the node clicks the form's submit button, or submits the form directly.
+
+The node does not fail when it cannot submit: it passes the item on with a `result` that says what happened.
 
 ## When to use it
 
-Use this node to complete form automation workflows after filling fields with the Form Fill node.
+- Send a form after filling it with [Form Fill](/nodes/extension/ui/form-fill/).
+- Run a search on a site whose search box has no button: point at the search field.
+- When submitting needs more than one click (a confirmation dialog), use [UI Automation](/nodes/extension/ui/automation/) instead.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| domSelector | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
+{/* AUTO:settings:end */}
+
+Click the crosshair button in **DOM Selector** and click the form's submit button or any of its fields, or type a CSS selector such as `form#signup`. The **Ping** button flashes what it matches.
 
 ## Outputs
 
-Returns the extracted page data or the result of the page interaction.
+{/* AUTO:outputs:start */}
+One output port.
+
+Each output item has the fields `result` (object).
+{/* AUTO:outputs:end */}
+
+The incoming item passes through with a `result` field added:
+
+- `submitted`: `true` when the form was sent.
+- `found`: `false` when **DOM Selector** matched nothing.
+- `method`: how it was sent (`buttonClick`, `requestSubmit` or `submit`).
+- `error`: why it was not sent, for example `No form found for selector`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Run Submit Form after opening the target page, then pass its output to Edit Fields, an AI node, or an integration node.
+1. [Tab Control](/nodes/extension/tabcontrol/), **Operation** = **Open**, opens a contact page with **Wait For Load** on.
+2. [Form Fill](/nodes/extension/ui/form-fill/) in **Manual** mode fills `name`, `email` and `message`.
+3. **Submit Form** with **DOM Selector** set to the form's **Send** button.
+4. [Wait For Element](/nodes/extension/ui/wait-for-element/) with **Condition** = **Contains Text** and **Text** = `Thank you` to confirm it went through.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **`found` is `false`.** **DOM Selector** matched nothing. Check it with **Ping** on the page.
+- **`error` is "No form found for selector".** The element you picked is not inside a form. Pick the submit button itself, or use [UI Automation](/nodes/extension/ui/automation/) to click it.
+- **`submitted` is `true` but nothing happened.** The page's own checks may have blocked the submission (a required field is empty or invalid). Check the values from [Form Fill](/nodes/extension/ui/form-fill/), then confirm the result with [Wait For Element](/nodes/extension/ui/wait-for-element/).
+- **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
 
 ## Related nodes
 
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
-- [Http Request](/nodes/builtin/core/http-request/)
+- [Form Fill](/nodes/extension/ui/form-fill/): fill the fields first.
+- [Get Forms Schema](/nodes/extension/getformsschema/): find the form and its fields.
+- [Wait For Element](/nodes/extension/ui/wait-for-element/): wait for the confirmation.

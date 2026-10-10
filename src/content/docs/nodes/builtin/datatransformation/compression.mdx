@@ -3,62 +3,79 @@ title: "Compression"
 description: "Compress or decompress binary data with gzip"
 sidebar:
   label: "Compression"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/compression
+  family: data
 ---
 
-Compress or decompress binary data with gzip.
+Shrink a file into a `.gz` file, or unpack a `.gz` file back into its content.
 
 ## What it does
 
-Gzips and gunzips binary payloads using the browser's native `CompressionStream` and `DecompressionStream`, so the node needs no external dependency. Both directions read and write bytes through the `$binary` attachment model:
+Compression works on the file attached to each item (its binary data), one item at a time:
 
-- **Compress (gzip)** reads bytes from the item's `$binary` slot (or, when there is no attachment, from the raw **Text to compress** field) and emits the compressed bytes as a new `$binary` attachment with the `application/gzip` MIME type and a `.gz` file name.
-- **Decompress (gunzip)** reads gzip bytes from the item's `$binary` slot and emits the decompressed bytes as a `$binary` attachment, or — with **Decode to text** on — as UTF-8 text placed on the item.
+- **Compress (gzip)** reads the attached file in **Binary Field** and replaces it with a gzip file (`application/gzip`). If the item has no attached file, it compresses the text in **Text to compress** instead.
+- **Decompress (gunzip)** reads a gzip file from **Binary Field** and replaces it with the unpacked file. With **Decode to text** on, it puts the unpacked content on the item as plain text instead.
 
-Because input and output are always `$binary`, the result flows straight into any node that accepts a binary source (Download as File, Save as File, an HTTP request body, Google Drive, an email or Slack attachment) and back out of any node that produces one.
+It handles the gzip format (`.gz`) only. It cannot create or open `.zip` archives, which hold several files.
 
-## Scope: gzip only, not zip archives
+To protect your browser, decompression stops with an error if the result grows past 50 MB, or past 200 times the size of the compressed input.
 
-This node handles the **gzip** member format (`.gz`) only. It does **not** create or read `.zip` archives. A zip file is a *container* that holds many entries with its own central directory, which `CompressionStream` / `DecompressionStream` cannot build or parse — they operate on a single gzip/deflate stream. Multi-entry zip support is a separate decision and would require pulling in a library, which is deliberately not done here. To bundle several files into one gzip payload, combine them first (for example into a single `tar`-style stream) and gzip the result.
+## When to use it
 
-## Zip-bomb protection (size cap)
-
-Decompression is inherently risky: a few kilobytes of crafted input can expand into gigabytes and exhaust memory (a "zip bomb"). The **gunzip** path is therefore **size-capped**. It streams the output through the shared bounded-decompression helper, which aborts the moment the output crosses either ceiling:
-
-- a maximum decompressed byte count, and
-- a maximum compression ratio (decompressed size ÷ input size).
-
-When either ceiling is crossed the node stops immediately and raises a clear error rather than buffering an unbounded result. Legitimate payloads are unaffected; only pathologically over-compressed input is rejected.
+- Unpack a `.gz` export (a log, a JSON or CSV dump) you downloaded, so the next node can read it.
+- Compress a large text or file before you upload it or send it to an API that accepts gzip.
+- For `.zip` archives, use a different tool: this node cannot read them.
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Operation | Direction: `Compress (gzip)` or `Decompress (gunzip)`. Defaults to `Compress (gzip)`. |
-| Binary Field | The `$binary` slot the input bytes are read from and the result is written to. Defaults to `data`. |
-| Text to compress | For gzip only: text to compress when the item carries no `$binary` attachment. Accepts an expression such as `{{ $json.data }}`. |
-| Output file name | For gzip: name of the produced file. Left empty, the source file name with a `.gz` suffix (or `data.gz`) is used. |
-| Output MIME type | For gunzip: content type recorded on the decompressed file. Left empty, `application/octet-stream` is used. |
-| Decode to text | For gunzip: place the decompressed content as UTF-8 text on the item (under the binary field name) instead of a `$binary` attachment. Defaults to `off`. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Operation** | Choice | Compress (gzip) | No | Compress (gzip) or decompress (gunzip) the input. Options: Compress (gzip), Decompress (gunzip). |
+| **Binary Field** | Text | `data` | No | The $binary slot to read the input bytes from and write the result to. |
+| **Text to compress** | Long text |  | No | For gzip only: text to compress when the item has no $binary attachment. |
+| **Output file name** | Text |  | No | For gzip: name of the produced file. Left empty, the source name with a ".gz" suffix (or "data.gz") is used. |
+| **Output MIME type** | Text |  | No | For gunzip: content type recorded on the decompressed file. Left empty, application/octet-stream is used. |
+| **Decode to text** | Toggle | Off | No | For gunzip: place the decompressed content as UTF-8 text on the item (in the binary field name) instead of a $binary attachment. |
+{/* AUTO:settings:end */}
+
+- Leave **Binary Field** at `data` unless the previous node stored its file under another name.
+- **Text to compress** accepts expressions, for example `{{ $input.report }}`.
+- When decompressing, a name ending in `.gz` loses that suffix: `export.json.gz` becomes `export.json`. Set **Output MIME type** (for example `text/csv`) so later nodes know what the file is.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+Each item keeps its other fields and gets the new file plus `fileName`, `mimeType` and `size`. With **Decode to text** on, the item instead gets the text in a field named after **Binary Field** (by default `data`), so you can read it with `{{ $input.data }}`.
 
 ## Dependencies and credentials
 
-- No credential is required.
-- No node dependency is required. The node runs entirely in the browser via `CompressionStream` / `DecompressionStream`.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Place Compression after a node producing a file to shrink it before upload: set **Operation** to `Compress (gzip)`, leave **Binary Field** at `data`, and connect the result to Download as File or an HTTP request body. On the way back, put Compression before parsing a downloaded `.gz`: set **Operation** to `Decompress (gunzip)` and, if the content is text (JSON, CSV), turn on **Decode to text** so the following node reads it directly.
+1. [HTTP Request](/nodes/builtin/core/http-request/) downloads `https://example.com/export.json.gz` with **Response format** set to *file*.
+2. Compression with **Operation** set to *Decompress (gunzip)* and **Decode to text** on.
+3. [JSON](/nodes/builtin/datatransformation/json/) parses `{{ $input.data }}` into fields you can use.
 
 ## Troubleshooting
 
-- Gunzip fails with a size-cap / zip-bomb error when the input decompresses far beyond its size — this is the guard working; the input is either malicious or unusually over-compressed.
-- Gunzip fails with a "could not decompress as gzip" error when the input is not valid gzip data — confirm the upstream bytes are actually gzip (`.gz`), not a raw file or a `.zip` archive.
-- Gzip reports nothing to compress when the item has neither a `$binary` attachment nor **Text to compress** filled in.
-- Need `.zip` archives with multiple files? Not supported — see **Scope** above.
+- **"Nothing to compress. Connect an item carrying a $binary attachment, or fill in "Text to compress"."** The item has no file under **Binary Field** and the text box is empty. Check the field name, or fill in **Text to compress**.
+- **"No binary to decompress in "$binary.data"."** Decompressing needs an attached file. Make sure the previous node outputs a file, and that **Binary Field** matches its name.
+- **"Could not decompress the input as gzip. Ensure it is valid gzip data."** The file is not gzip. It may be a plain file or a `.zip` archive, which this node cannot open.
+- **"Decompressed output exceeded the … ceiling; refusing (possible zip bomb)."** or **"Decompression ratio exceeded 200×"**. The unpacked content is too large, or the file is suspiciously over-compressed. Use a smaller file.
 
 ## Related nodes
 
-- [Convert to File](/nodes/builtin/datatransformation/converttofile/)
-- [Download as File](/nodes/builtin/datatransformation/downloadasfile/)
-- [Crypto](/nodes/builtin/datatransformation/crypto/)
-- [Node types overview](/nodes/builtin/node-types/)
+- [Extract From File](/nodes/builtin/datatransformation/extractfromfile/): read CSV, JSON or text from the unpacked file.
+- [Convert to File](/nodes/builtin/datatransformation/converttofile/): turn data into a file before compressing it.
+- [Http Request](/nodes/builtin/core/http-request/): download a `.gz` file, or upload the compressed one.

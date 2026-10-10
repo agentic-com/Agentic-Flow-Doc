@@ -3,50 +3,83 @@ title: "Get Images from Link"
 description: "Get the Images content of a page from a given URL"
 sidebar:
   label: "Get Images from Link"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/getimagesfromlink
+  family: core
 ---
 
-Get the Images content of a page from a given URL
+Download a web page by its address and list the addresses of the images on it.
 
 ## What it does
 
-Extracts all image URLs from a web page at the specified URL.
+Get Images from Link downloads the page at **URL**, finds its images and returns their addresses as a list in the field named by **Output field name**.
+
+- It reads the `src` of every image tag and any `background-image` written in the page's inline styles.
+- Relative addresses are turned into full `https://` addresses.
+- Images embedded directly in the page as data (`data:` addresses) are skipped.
+- Duplicates are removed.
+
+Scripts on the page do not run, and images that load only as you scroll (lazy loading) often have no real `src` in the HTML, so they can be missing.
 
 ## When to use it
 
-Use this node to collect images from websites for downloading, cataloging, or analysis.
+- Collect product or gallery images from a page to download or catalogue.
+- Find the main image of an article to attach to a message.
+- Pass image addresses to an AI model that describes or classifies images.
+
+To list the images of the page open in your tab, including those added by scripts, use [Get All Images](/nodes/extension/getallimages/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| URL | Source-backed field from the node schema. |
-| Output field name | Source-backed field from the node schema. |
-| Timeout | Source-backed field from the node schema. |
-| Headers | Source-backed field from the node schema. |
-| Include input fields | Source-backed field from the node schema. |
-| Options | Source-backed field from the node schema. |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **URL** | Text |  | Yes | The URL to get the Images from. |
+| **Output field name** | Text |  | Yes | The name of the output field. |
+| **Timeout** | Number | 10000 | No | The timeout for the request. |
+| **Options** | Group |  | No | The options for the node. |
+| Options › **Headers** | Key-value pairs |  | No | The headers to send with the request. |
+| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+{/* AUTO:settings:end */}
+
+**URL** must be a full address starting with `https://` or `http://`, typed or as an expression. **Timeout** is in milliseconds.
 
 ## Outputs
 
-Returns node-specific output described by the implementation and visible in workflow execution data.
+{/* AUTO:outputs:start */}
+One output port.
+{/* AUTO:outputs:end */}
+
+One item with a list of addresses under **Output field name**, for example `{ images: ["https://example.com/a.jpg", "https://example.com/b.png"] }`. To handle each image separately, follow with [Split Out](/nodes/builtin/datatransformation/splitout/) on that field.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect data into Get Images from Link, configure the settings above, and use the output in the next workflow step.
+Describe every image on a page:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger, **Menu Contexts** `Link`.
+2. Get Images from Link, **URL** `{{ $input.linkUrl }}`, **Output field name** `images`.
+3. [Split Out](/nodes/builtin/datatransformation/splitout/), **Field To Split Out** `images`, **Output field name** `image`.
+4. [Caption Image](/nodes/builtin/ai/localai/caption-image/), **Image** `{{ $input.image }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- This node has source tests; use them as the reference for edge-case behavior during maintenance.
+- **The list is empty.** The page adds its images with JavaScript, or uses lazy loading. Open the page and use [Get All Images](/nodes/extension/getallimages/).
+- **"Invalid URL: …".** The address is malformed, or the request could not be sent. If the address is correct and the node runs in the web app, the site likely refuses requests from other websites; run the workflow from the extension.
+- **"HTTP error! status: 403"** (or another number). The server refused the request. Some sites block automated requests.
+- **"Request timeout".** Raise **Timeout**.
 
 ## Related nodes
 
-- [Code](/nodes/builtin/core/code/)
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Get All Images](/nodes/extension/getallimages/): images from the page open in your tab.
+- [Get Links from Link](/nodes/builtin/core/getlinksfromlink/): list the links instead.
+- [Split Out](/nodes/builtin/datatransformation/splitout/): one item per image.
+- [Http Request](/nodes/builtin/core/http-request/): download an image file.

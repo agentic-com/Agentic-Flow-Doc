@@ -3,43 +3,70 @@ title: "Calculator"
 description: "Evaluate arithmetic expressions."
 sidebar:
   label: "Calculator"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/aidependencies/tools/calculator
+  family: ai
+  agentTool: true
 ---
 
-Evaluate arithmetic expressions.
+Give an AI agent a calculator, so it computes numbers exactly instead of guessing.
 
 ## What it does
 
-Provides an arithmetic evaluation tool for AI agents. It is a simple, read-only compute tool with no side effects and no approval gate.
+Calculator is a tool for an agent, not a step in the flow. It has no output port: you connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), and the agent's model can call it whenever it needs a result.
+
+The model sends a math expression such as `(1299 * 0.8) + 4.99` and gets the result back as text. If the expression can't be read, the tool answers "I don't know how to do that." and the model carries on. It only computes: no approval is needed and nothing outside the run is touched.
 
 ## When to use it
 
-Connect this to Tools Agent nodes to give them the ability to evaluate arithmetic expressions, such as when a task requires precise numeric calculation rather than the model estimating a result.
+- The agent must add up prices, apply a discount or a tax rate, or convert units from data it read.
+- Answers must be exact: language models often get long arithmetic wrong.
+
+For a fixed calculation you already know, skip the agent and use an expression in a regular node, for example `{{ $input.price * 1.2 }}`.
 
 ## Inputs and settings
 
-This node has no editable settings.
+{/* AUTO:settings:start */}
+This node has no settings.
+{/* AUTO:settings:end */}
+
+There is nothing to configure. The model writes the expression on each call.
 
 ## Outputs
 
-Returns a tool dependency that agent nodes can call to evaluate arithmetic expressions.
+{/* AUTO:outputs:start */}
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+| Slot | Accepted by |
+| --- | --- |
+| Tools | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) |
+{/* AUTO:outputs:end */}
+
+The result goes back to the model, not to the next node. You see it in the agent's `steps` output, and the final answer in its `response`.
 
 ## Dependencies and credentials
 
-- No explicit credential or node dependency is declared in the node description.
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
 
 ## Example workflow
 
-Connect Calculator to a Tools Agent's tools input, then ask the agent a question that requires a numeric calculation. The agent can call the Calculator tool to evaluate the expression instead of estimating the answer itself.
+1. [Get All Text](/nodes/extension/getalltext/) reads your shopping cart page, with **Output field name** `text`.
+2. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Add up the item prices in this cart and apply a 15% discount: {{ $input.text }}`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and Calculator connected to **Tools**.
+3. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
-- No dedicated source test was found next to this node; verify behavior manually when changing this page.
+- **The agent does the math itself and gets it wrong.** Tell it in the **Prompt** or the **System message** to "use the calculator tool for every calculation".
+- **The tool answers "I don't know how to do that."** The model sent something that isn't a plain math expression, such as text with currency signs or words. Ask it to send numbers and operators only.
+- **The Calculator is never called.** Some small or on-device models handle tools poorly. Try a larger model.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
-- [Wikipedia Query](/nodes/builtin/ai/aidependencies/tools/wikipedia-query/)
-- [Tool Selection](/advanced-ai/concepts/tool-selection/)
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): the agent this tool plugs into.
+- [Think](/nodes/builtin/ai/aidependencies/tools/think/): let the agent plan multi-step work before calculating.
+- [Tool Selection](/advanced-ai/concepts/tool-selection/): how an agent chooses between its tools.

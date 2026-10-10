@@ -3,47 +3,84 @@ title: "Classify Image"
 description: "Label an image on-device with any installed image-classification model"
 sidebar:
   label: "Classify Image"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/ai/localai/classify-image
+  family: ai
 ---
 
-Label an image **entirely in your browser** with an installed image-classification model (MobileNet on TensorFlow.js, ViT on transformers.js). No cloud call, no cost, no data leaving the device.
+Label what an image shows, with confidence scores, using a model that runs in your browser so the image never leaves your device.
 
 ## What it does
 
-Loads the image you provide, runs it through the selected on-device classifier, and returns the predicted labels with confidence scores — filtered by a threshold and capped to the top results.
+Classify Image runs the **Image** through the image-classification model you pick, such as *MobileNet v2* (TensorFlow.js) or *ViT base (patch16)* (transformers.js). It returns the labels the model knows, each with a score from 0 to 1. The labels come from the model; the built-in ones recognise everyday objects and animals, such as "golden retriever" or "laptop".
+
+Labels below **Confidence threshold** are dropped, the rest are sorted best first and cut to **Top-K results**. There is no cost per run and no API key.
 
 ## When to use it
 
-Tag or route images by content: sort uploads, flag categories, or branch a workflow on what an image contains — all offline and private.
+- Tag screenshots or downloaded images with what they contain.
+- Branch a workflow on the content of an image, for example only save photos of a product type.
+
+To find several objects and where they are, use [Detect Objects](/nodes/builtin/ai/localai/detect-objects/). For a sentence describing the image, use [Caption Image](/nodes/builtin/ai/localai/caption-image/).
 
 ## Inputs and settings
 
-| Setting | Notes |
-| --- | --- |
-| Model | Any **installed** image-classification model, across engines. Download one from the picker if the list is empty. |
-| Image | Image **URL**, **data URL**, or **`$binary`** from a previous node. |
-| Confidence threshold | Drop predictions scoring below this value (default `0.1`). |
-| Top-K results | Keep at most this many labels (default `5`). |
+{/* AUTO:settings:start */}
+| Setting | Type | Default | Required | Description |
+| --- | --- | --- | --- | --- |
+| **Model** | Model picker |  | No | Any installed image-classification model, across engines. |
+| **Image** | Media |  | No | Image URL, data URL, or $binary from a previous node. |
+| **Confidence threshold** | Number | 0.1 | No | Drop predictions below this score. |
+| **Top-K results** | Number | 5 | No |  |
+{/* AUTO:settings:end */}
+
+**Image** has four tabs. **From input** takes an expression that points to an image from an earlier node, such as `{{ $input.dataUrl }}` after [Screenshot Page](/nodes/extension/screenshotpage/) or `{{ $binary }}` for an attached file. **URL** takes a web address. **Upload** and **Base64** store a fixed image with the node, handy for trying a model.
 
 ## Outputs
 
-Returns `{ predictions, top, score }`:
+{/* AUTO:outputs:start */}
+One output port.
 
-- `predictions` — array of `{ label, score }`, highest first, after threshold and top-K.
-- `top` — the highest-scoring label (or `null` if none pass the threshold).
-- `score` — that label's score.
+Each output item has these fields:
 
-## Before you run
+| Field | Type | Description |
+| --- | --- | --- |
+| `predictions` | List of entries | Labels above the threshold, best first |
+| `top` | Text | The best label, or null when none passed |
+| `score` | Number |  |
+{/* AUTO:outputs:end */}
 
-Install an image-classification model from the picker or the [Local AI](/usage/using-the-app/local-models/) page. The first run loads the model into memory; later runs are fast.
+Each entry in `predictions` is `{ label, score }`, and `score` is the score of `top`. Branch on `{{ $input.top }}` with an [IF](/nodes/builtin/flow/if/) that checks whether it contains a word, since labels often hold several names ("tabby, tabby cat").
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no credential and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The **Model** picker lists your installed models first, then models that download on first use. Manage them on the [Local AI](/usage/using-the-app/local-models/) page.
+
+## Example workflow
+
+Tag the image you right-click:
+
+1. [Context Menu](/nodes/builtin/trigger/contextmenu/) with **Menu Contexts** set to **Image**.
+2. Classify Image with **Model** *ViT base (patch16)*, **Image** (From input) `{{ $input.srcUrl }}`, **Confidence threshold** 0.2 and **Top-K results** 3.
+3. [Show Notification](/nodes/extension/shownotification/) with **Title** `Looks like` and **Message** `{{ $input.top }}`.
 
 ## Troubleshooting
 
-- **Empty picker** — no image-classification model is installed; add one first.
-- **No predictions** — lower the confidence threshold, or try a stronger model (ViT over MobileNet).
-- **Slow first run** — the model is loading/downloading; it stays warm for the session.
+- **"Choose a model to classify with."** **Model** is empty. Pick one.
+- **"No image provided. Pass an image URL, a data URL, or a $binary image from a previous node."** **Image** is empty, or its expression returned nothing. Check the field you point to.
+- **`top` is null or `predictions` is empty.** No label reached **Confidence threshold**. Lower it, or try *ViT base (patch16)* instead of *MobileNet v2*.
+- **The first run is slow.** The model downloads and loads on first use; later runs are fast.
 
 ## Related nodes
 
-- [Detect Objects](/nodes/builtin/ai/localai/detect-objects/)
-- [Caption Image](/nodes/builtin/ai/localai/caption-image/)
-- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/)
+- [Detect Objects](/nodes/builtin/ai/localai/detect-objects/): find, count and locate objects.
+- [Caption Image](/nodes/builtin/ai/localai/caption-image/): describe the image in a sentence.
+- [Screenshot Page](/nodes/extension/screenshotpage/): capture the page to classify.
+- [Run Local Model](/nodes/builtin/ai/localai/run-local-model/): segmentation, depth maps and custom models.
