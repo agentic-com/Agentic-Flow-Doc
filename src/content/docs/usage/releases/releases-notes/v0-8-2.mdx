@@ -5,9 +5,7 @@ sidebar:
   order: 1
 ---
 
-{/* TODO: set the publish date when v0.8.2 ships. */}
-
-Published: **To be announced**
+Published: **October 10, 2026**
 
 ## Highlights
 
@@ -18,6 +16,11 @@ read, search, export and clean them up. Facts are suggested before they are
 saved and picked by relevance. Workflows get one **Chat Memory** node instead
 of three. A new **Settings › Storage** page shows everything AWFlow keeps in
 your browser.
+
+The **Marketplace** also gets a large safety and quality pass: installs you can
+update in one click, listings you can stop sharing, a safety kill switch,
+access checked on your device, a stronger secret scan, and isolated moderation
+test runs. Agent and team templates get the same care.
 
 ## The Memory page
 
@@ -132,3 +135,99 @@ facts are encrypted on this device. Titles and sizes stay visible; unlock to
 read. Unlocking in the app also unlocks the notch for the session. While
 protection is on, search covers titles only and chats use your pinned and
 newest facts.
+
+## Marketplace
+
+### Installing and updating
+
+- Listing buttons show where you stand: **Install**, **Installing…**,
+  **Open** with the installed version, **Update to vN**, **Manage listing** for
+  your own listings, or **Needs extension vX+**.
+- **Update available** appears on the Installed tab, on listing pages and on
+  search cards. **Update** shows the release notes since your version, what
+  access changes, and which settings carry over. You only confirm again when
+  the update needs more access; otherwise you can also **Stay on vN**.
+- **Make it mine** turns an installed workflow into your own copy, credited to
+  the original. When a step is blocked, you can make it yours or remove that
+  step.
+- Listings show a **read-only preview of the workflow**, **Works with** chips
+  and the number of setup steps. Installs are all or nothing: a failed install
+  leaves nothing half-created.
+- **What it can access** is now checked on your device from the version's own
+  steps, and the page tells you when the author's list was incomplete. More
+  nodes that reach the network (AI providers, MCP tools, RSS, web search,
+  notifications and others) are now listed, and MCP servers are approved
+  before an agent connects to them.
+- An installed workflow whose steps did not change is no longer blocked just
+  because AWFlow now classifies a node differently. New access is asked for at
+  run time instead.
+- Running an installed workflow no longer fails with "its steps changed since
+  you approved it" after a previous run wrote a URL in its output.
+- Marketplace pages load faster: the home page in one go, paged category,
+  author and request board pages, and search that always shows the latest
+  results.
+
+### Publishing and sharing
+
+- **Stop sharing** removes a listing from the Marketplace while people who
+  installed it keep their copy. Use **Share again** to bring it back,
+  **Withdraw** for a listing still in review, and **Delete draft** for drafts.
+- The **secret scan** catches more kinds of keys, tokens and webhook URLs,
+  re-runs every time you tick **Blank for installers**, and marks each fix
+  **✓ Fixed**. Values AWFlow blanked automatically are shown to you.
+- Errors from the server are shown clearly: the exact step and field that look
+  like a secret, or which listing details are still missing, with a link to
+  that step.
+- Marketplace notifications have their own icons and open the right place,
+  for example the edit wizard when a listing needs changes.
+
+### Safety
+
+- If AWFlow removes a listing for safety, installed copies **stop running**,
+  their triggers are switched off, and you see a banner explaining why with
+  **Remove**. Listings under review show an amber notice instead.
+
+Relevant docs:
+
+- [Publishing workflows](/usage/using-the-app/workflows/publishing/)
+- [Stop sharing a listing](/usage/using-the-app/workflows/publishing/#stop-sharing-a-listing)
+- [Using shared workflows](/usage/using-the-app/workflows/publishing/#using-shared-workflows)
+
+## Agent and team templates
+
+- Before installing, a **What it can do** panel lists the template's tools,
+  workflows, hand-offs, knowledge search and routines, and asks you to confirm
+  when it can act on pages or run workflows.
+- Installs are all or nothing, and the template page shows **Installed · Open**
+  once you have it.
+- Authors can update a template (the approved version stays live during
+  review), **Remove from marketplace** and **Share again**.
+
+Relevant docs:
+
+- [Agent & team templates](/usage/using-the-app/chat-and-agents/templates/)
+
+## For moderators
+
+- Moderation decisions are tied to the **exact version you reviewed**. If the
+  author changes it meanwhile, your decision is not saved and you can load the
+  new version.
+- Approving uses a checklist; bulk approve is limited to AWFlow's official
+  imports, and rejecting or suspending always needs a reason.
+- **Test runs are isolated**: no saved accounts, page steps run in a fresh test
+  tab, every site asks first, and a panel lists the network activity.
+- The review page flags when a listing declares less access than its steps
+  need.
+- A new **Marketplace › Insights** page shows the install funnel, declined
+  permissions and where installs come from, based on anonymous usage events
+  you can opt out of.
+- The audit log is paged and can be filtered by action, person, target and
+  date.
+
+## Fixes and polish
+
+- **Faster sign-in**: AWFlow no longer requests an extra token at sign-in, and
+  changing your password works on Firefox.
+- A new **logo** across the app icons, sidebar and loading screen.
+- Marketplace and memory strings are translated into French, German and
+  Chinese, with no English fragments left in translated messages.
