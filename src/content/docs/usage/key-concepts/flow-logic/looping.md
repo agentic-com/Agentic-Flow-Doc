@@ -63,7 +63,7 @@ Coming soon
 
 ## Creating loops
 
-AWFlow typically handles the iteration for all incoming items. When you need to repeat steps until a condition holds, or work through a long list a few items at a time, build the loop yourself with the [Loop](/nodes/builtin/flow/loop/) or [Split In Batches](/nodes/builtin/flow/splitinbatches/) node.
+AWFlow typically handles the iteration for all incoming items. When you need to repeat steps until a condition holds, or work through a long list a few items at a time, build the loop yourself with the [Loop](/nodes/builtin/flow/loop/) or [Split in Batches](/nodes/builtin/flow/splitinbatches/) node.
 
 ### Loop until a condition is met
 

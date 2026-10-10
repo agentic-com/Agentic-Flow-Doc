@@ -11,15 +11,27 @@ node:
   family: core
 ---
 
-Makes a HTTP request and returns the response data
+Call any web address or API and use the response in the next steps.
 
 ## What it does
 
-Makes HTTP requests to external APIs and returns the response data.
+Http Request sends one request (GET, POST, PUT, DELETE, PATCH, OPTIONS or HEAD) to **URL**, with the headers, query parameters and body you set, and returns what the server sends back.
+
+- **Authentication** adds an `Authorization` header from a saved credential, so API keys stay out of the workflow.
+- **Query Params** are added to the URL for you.
+- **Body** is sent as JSON, as a URL-encoded form or as multipart form data, depending on **Body Content Type**.
+- Redirects are followed (up to **Max redirects**) unless you turn that off.
+- The response is read as JSON, text or a file. **Response format** set to *autodetect* decides from the server's content type.
+
+A file response (an image, a PDF, a download) arrives as binary data under the `data` key, ready for nodes such as [Save as File](/nodes/builtin/datatransformation/saveasfile/) or the Slack and Google Drive upload operations.
 
 ## When to use it
 
-Use this node to call REST APIs, fetch data from web services, or integrate with external systems via HTTP.
+- Call an API that has no dedicated node.
+- Download a file or a JSON feed.
+- Send data to a webhook (Zapier, Make, your own server).
+
+For apps that have their own node, such as [Slack](/nodes/builtin/integration/slack/) or [Notion](/nodes/builtin/integration/notion/), that node is easier. To read a web page as text, [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) is simpler.
 
 ## Inputs and settings
 
@@ -50,23 +62,34 @@ Use this node to call REST APIs, fetch data from web services, or integrate with
 One output port.
 {/* AUTO:outputs:end */}
 
+By default the item is `{ data }`, the response body. Turn on **Include response header and status** to also get `status`, `statusText`, `headers` and the final `url` after redirects.
+
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
 - **Authentication** (credential): optional. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
+Choose a credential of the type your API expects, for example a bearer token or basic auth. See [Create a credential](/usage/using-the-app/credentials/create/).
+
 ## Example workflow
 
-Connect data into Http Request, configure the settings above, and use the output in the next workflow step.
+1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on a link.
+2. Http Request, **POST** to your webhook URL, **Body Content Type** `application/json`, with a body field `url` = `{{ $input.linkUrl }}`.
+3. [Browser Notification](/nodes/extension/browsernotification/): "Sent".
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **"Response status: 401" or "403".** The credential is missing, wrong or lacks permission. Check the **Authentication** field and the key's rights.
+- **"Response status: 404".** Check the URL and the query parameters.
+- **"URL validation failed".** The URL is malformed or not allowed. Use a full `https://` address.
+- **"Maximum redirects exceeded".** The site redirects in a loop, or more times than **Max redirects** allows.
+- **It works in the extension but fails in the web app.** Some sites refuse requests sent from another website (a browser rule called CORS). Run the workflow from the extension.
+- **The request times out.** Raise **Timeout (ms)** under **Options**; the default is 10 seconds.
 
 ## Related nodes
 
-- [Code](/nodes/builtin/core/code/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Poll Until](/nodes/builtin/flow/polluntil/): call a URL repeatedly until it reports done.
+- [HTML Extract](/nodes/builtin/datatransformation/html-extract/): pull values out of an HTML response.
+- [JSON](/nodes/builtin/datatransformation/json/): reshape a JSON response.
+- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/): let an AI agent make requests.

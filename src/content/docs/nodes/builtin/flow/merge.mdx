@@ -11,15 +11,32 @@ node:
   family: flow
 ---
 
-Merge multiple streams into one
+Join two lists of items into one, pairing items that match.
 
 ## What it does
 
-Combines data from multiple workflow branches into a single stream.
+Merge has two inputs. It waits for both, then pairs each item from the first input (A) with the items from the second input (B) that satisfy your **Match Keys**, and combines each pair into one item.
+
+Each match key compares a field on the A side with a field on the B side, with an operator (for example **Is Equal To**). Several keys can be linked with AND or OR. With no match keys, every A item pairs with every B item.
+
+When both items have a field with the same name but different values, the result keeps both, renamed `left-<field>` and `right-<field>`. Fields with equal values are kept once.
+
+**Mode** decides what happens to items that find no partner:
+
+| Mode | Result |
+| --- | --- |
+| **Inner Join** | Only matched pairs. |
+| **Left Join** | Every A item: merged with its matches, or on its own when it has none. |
+| **Right Join** | Every B item: merged with its matches, or on its own when it has none. |
+| **Left Outer Join** | Same result as Left Join. |
+| **Right Outer Join** | Same result as Right Join. |
 
 ## When to use it
 
-Use this node to synchronize parallel workflow paths or combine data from different sources.
+- Add details from one source to another: contacts from a sheet plus their latest orders from an API, matched on email.
+- Keep only the records present in both lists (Inner Join).
+
+Merge does not wait for "whichever branch finishes first". For that, use [Funnel](/nodes/builtin/flow/funnel/). To find what is new, gone or changed between two lists, use [Compare Datasets](/nodes/builtin/flow/comparedatasets/).
 
 ## Inputs and settings
 
@@ -44,16 +61,20 @@ None. This node needs no credential and has no slots for other nodes.
 
 ## Example workflow
 
-Place Merge between data-producing nodes and downstream actions to control which data continues through the workflow.
+1. [Google Sheets](/nodes/builtin/integration/google-sheets/) reads your customer list (input A).
+2. [Http Request](/nodes/builtin/core/http-request/) fetches recent orders (input B).
+3. Merge in **Left Join** mode, with the match key A `email` **Is Equal To** B `customerEmail`.
+4. Every customer comes out once per matching order, or once on their own when they have no order.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **Nothing comes out.** In Inner Join mode no pair matched. Check that both fields hold the same kind of value (for example both lower-case emails) and that the field names are spelled as they appear in the data.
+- **Many more items than expected.** One A item matched several B items, and each pair becomes an item. Remove duplicates on B first, or add another match key.
+- **Fields called `left-…` and `right-…` appear.** Both sides had a field with that name and different values. Rename one side first with [Rename Keys](/nodes/builtin/datatransformation/renamekeys/) if you want to keep a single field.
 
 ## Related nodes
 
-- [Filter](/nodes/builtin/flow/filter/)
-- [Wait](/nodes/builtin/flow/wait/)
-- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/)
+- [Compare Datasets](/nodes/builtin/flow/comparedatasets/): sort two lists into new, gone, unchanged and changed.
+- [Funnel](/nodes/builtin/flow/funnel/): continue when any one branch completes.
+- [Aggregate](/nodes/builtin/datatransformation/aggregate/): gather items into one list.
+- [IF](/nodes/builtin/flow/if/): split one stream into two.

@@ -454,7 +454,8 @@ function outputFieldsOf(schema: AnySchema | undefined): { shape: NodeDoc['output
 	for (const [name, raw] of Object.entries(s)) {
 		const u = unwrap(raw);
 		const description = cleanText(raw?.description) ?? cleanText(u.inner?.description) ?? cleanText(u.meta?.description);
-		const t = typeLabel(u.inner, undefined);
+		const literal = kind(u.inner) === 'literal' ? (def(u.inner).values ?? []) : [];
+		const t = literal.length === 1 ? `Always ${JSON.stringify(literal[0])}` : typeLabel(u.inner, undefined);
 		fields.push({
 			name,
 			type: t === 'Toggle' ? 'True/false' : t === 'Group' ? 'Object' : t === 'Value' ? 'Any' : t,

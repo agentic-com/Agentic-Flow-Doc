@@ -11,15 +11,27 @@ node:
   family: integration
 ---
 
-Integrate with Slack to perform operations on channels, messages, users, and files.
+Post, read, edit and search Slack messages, look up channels and people, and share files, from a workflow.
 
 ## What it does
 
-Sends messages, manages channels, and performs operations within your Slack workspace.
+The Slack node works on four kinds of things (**Resource**), each with its own **Operation**:
+
+- **Channel**: list the channels the token can see, or get one channel's details.
+- **Message**: send, read, update, delete or search messages.
+- **User**: list workspace members, or get one person's profile.
+- **File**: upload a file to channels, or get a file's details.
+
+It cannot create or archive channels, or manage members.
+
+**Channel**, **User** and **Message** fields are lists loaded from your workspace once a credential is set, so you can pick instead of typing ids. You can still type an id or use an expression.
 
 ## When to use it
 
-Use this node to automate Slack notifications, post messages, create channels, or retrieve Slack data in your workflows.
+- Post an alert when something changes: a price drop, a new form entry, a failed run.
+- Send a daily digest built by earlier nodes to a channel.
+- Upload a screenshot or a generated file to a channel.
+- Search past messages and pass them to an AI node.
 
 ## Inputs and settings
 
@@ -122,11 +134,15 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 | **File ID** | Text |  | Yes | The ID of the file to retrieve. |
 {/* AUTO:settings:end */}
 
+To reply in a thread, put the parent message's timestamp in **Thread Timestamp** (Slack's `ts`, for example `1712345678.123456`). For **File → Upload**, the file comes from the incoming item's `$binary` data (the key named in **Binary source**, `data` by default), as produced by [Http Request](/nodes/builtin/core/http-request/), [Screenshot Page](/nodes/extension/screenshotpage/) or [Convert to File](/nodes/builtin/datatransformation/converttofile/).
+
 ## Outputs
 
 {/* AUTO:outputs:start */}
 One output port.
 {/* AUTO:outputs:end */}
+
+**Get many** and **Get** (messages) return a list, one item per channel, user or message. **Send** returns the posted message, including its `ts`, which you can reuse to update, delete or reply to it. **Search** returns the matching messages.
 
 ## Dependencies and credentials
 
@@ -134,17 +150,26 @@ One output port.
 - **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
 {/* AUTO:deps:end */}
 
+Use a Slack bot or user token. The token's scopes decide what works: for example `chat:write` to send, `channels:read` to list channels, `search:read` (user token) to search, `files:write` to upload. See [Create a credential](/usage/using-the-app/credentials/create/).
+
 ## Example workflow
 
-Connect prepared data into Slack, select the credential, choose the operation, then map previous node values into the operation fields.
+1. A [Schedule](/nodes/builtin/trigger/schedule/) trigger runs every weekday at 9:00.
+2. [RSS Feed Read](/nodes/builtin/core/rss-feed-read/) and [Limit](/nodes/builtin/datatransformation/limit/) pick the 3 newest posts.
+3. [Aggregate](/nodes/builtin/datatransformation/aggregate/) puts them in one item.
+4. Slack, **Message → Send**, to `#news`, with a **Text** listing the titles and links.
 
 ## Troubleshooting
 
-- Check that required settings are present before running the node.
-- If the node uses browser page data, run it on the target tab after the page has loaded.
-- If it calls an external service, verify credentials, permissions, and rate limits.
+- **The run is blocked in the web app.** Slack runs through the browser extension. Install the extension and allow Slack for this workflow when asked, or run the workflow from the extension.
+- **"missing_scope" or "not_allowed_token_type".** The token lacks the scope for this operation. Add the scope in your Slack app settings, reinstall the app to the workspace, and update the credential.
+- **"not_in_channel".** Invite the bot to the channel (`/invite @your-bot`) before sending to it.
+- **"Slack file upload: no binary found on the incoming item".** The previous node did not produce a file under the key in **Binary source**. Check the key, or add a node that produces a file.
+- **The channel list is empty.** Set the credential first; the list loads from Slack with it.
 
 ## Related nodes
 
-- [Http Request](/nodes/builtin/core/http-request/)
-- [Edit Fields](/nodes/builtin/datatransformation/editfields/)
+- [Discord](/nodes/builtin/integration/discord/) and [Telegram](/nodes/builtin/integration/telegram/): other chat apps.
+- [Push Notification](/nodes/builtin/integration/push-notification/): a message to your phone.
+- [Browser Notification](/nodes/extension/browsernotification/): a desktop notification, no account needed.
+- [Http Request](/nodes/builtin/core/http-request/): call Slack API methods this node does not cover.
