@@ -1,0 +1,107 @@
+---
+/**
+ * <GuidedShot> (GuideB.dc.html, "13B"): a task whose actions all happen on ONE screen.
+ * One full screenshot with numbered markers on the controls, and the numbered steps beside it
+ * (below it in a narrow column). Hovering, focusing or clicking a step highlights its marker;
+ * clicking a marker selects its step. Marker n is always step n.
+ *
+ *   import GuidedShot from '@components/awflow/GuidedShot.astro';
+ *   <GuidedShot shot="credentials-new" steps={[
+ *     { spot: 'app', title: 'Pick the app', body: 'Open **Integration App / Service**…', check: 'Slack shows in the field.' },
+ *   ]} />
+ *
+ * `shot` is a file name in src/assets/screenshots/ (without .json), `spot` an id from its `hotspots`.
+ * Both are checked while the site builds.
+ */
+import { getSpot, inlineMarkdown, resolveShot } from '../../data/shots';
+import GuidedShotIsland from './GuidedShot.svelte';
+
+interface Step {
+	/** Spot id in the shot's JSON (`hotspots[].id`). */
+	spot: string;
+	title: string;
+	/** One or two sentences. Inline **bold**, *italic* and `code` are supported. */
+	body?: string;
+	/** What the reader sees when the step worked. Rendered as "Check: …". */
+	check?: string;
+}
+interface Props {
+	shot: string;
+	steps: Step[];
+	caption?: string;
+	/** Overrides the shot's alt text from its JSON. */
+	alt?: string;
+	/**
+	 * `auto` (default) zooms to the area around the steps' controls (plus a margin), so a small
+	 * dialog isn't lost in a full app window. `full` shows the whole screenshot.
+	 */
+	focus?: 'auto' | 'full';
+	/**
+	 * Number of the first step (default 1). Split a crowded screen into two GuidedShots of the same
+	 * shot, the second with `start` after the first, so each zooms tighter and numbering continues.
+	 */
+	start?: number;
+}
+
+const { shot, steps, caption, alt, focus = 'auto', start = 1 } = Astro.props;
+if (!Array.isArray(steps) || steps.length === 0) throw new Error(`<GuidedShot shot="${shot}">: give at least one step.`);
+const r = await resolveShot(shot, 'GuidedShot');
+const items = steps.map((s, i) => {
+	if (!s.title) throw new Error(`<GuidedShot shot="${shot}">: step ${i + 1} has no title.`);
+	const spot = getSpot(r.entry, s.spot, 'GuidedShot');
+	return { n: start + i, title: s.title, bodyHtml: s.body ? inlineMarkdown(s.body) : undefined, check: s.check, label: spot.label, box: spot.box };
+});
+// Focus window: the union of the spots' boxes plus a margin, at least 45% of the image wide, kept
+// at the image's own proportions or wider, and clamped inside the image. Boxes become relative to it.
+let crop = { x: 0, y: 0, w: 100, h: 100 };
+if (focus === 'auto') {
+	const minX = Math.min(...items.map((i) => i.box.x)), maxX = Math.max(...items.map((i) => i.box.x + i.box.w));
+	const minY = Math.min(...items.map((i) => i.box.y)), maxY = Math.max(...items.map((i) => i.box.y + i.box.h));
+	const ratio = r.light.width / r.light.height;
+	let w = Math.max(45, maxX - minX + 16), h = Math.max(maxY - minY + 14, 20);
+	// Keep the window no taller (relative to the image) than the image itself is wide → avoid tall slivers.
+	if ((w * ratio) / h < 1.1) w = Math.min(100, (h * 1.1) / ratio);
+	w = Math.min(100, w);
+	// …and no wider than 1.9:1 → avoid thin strips when the spots spread across the screen.
+	if ((w * ratio) / h > 1.9) h = (w * ratio) / 1.9;
+	h = Math.min(100, h);
+	const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+	const x = Math.min(Math.max(0, cx - w / 2), 100 - w), y = Math.min(Math.max(0, cy - h / 2), 100 - h);
+	if (w * h < 8000) crop = { x, y, w, h };
+}
+const rel = (b: { x: number; y: number; w: number; h: number }) => ({
+	x: ((b.x - crop.x) / crop.w) * 100, y: ((b.y - crop.y) / crop.h) * 100, w: (b.w / crop.w) * 100, h: (b.h / crop.h) * 100,
+});
+for (const it of items) it.box = rel(it.box);
+// Marker placement: left of the control by default, else right, above or below, whichever doesn't
+// collide with an earlier marker. Worked out for the usual ~520px-wide frame; offsets stay in px.
+const FW = 520, FH = FW / ((ratioOf(r.light) * crop.w) / crop.h), GAP = 12, MIN = 30;
+function ratioOf(i: { width: number; height: number }) { return i.width / i.height; }
+const placed: { x: number; y: number }[] = [];
+const markers = items.map((it) => {
+	const b = { x: (it.box.x / 100) * FW, y: (it.box.y / 100) * FH, w: (it.box.w / 100) * FW, h: (it.box.h / 100) * FH };
+	const options = [
+		{ px: it.box.x, py: it.box.y + it.box.h / 2, dx: -GAP, dy: 0, cx: b.x - GAP, cy: b.y + b.h / 2 },
+		{ px: it.box.x + it.box.w, py: it.box.y + it.box.h / 2, dx: GAP, dy: 0, cx: b.x + b.w + GAP, cy: b.y + b.h / 2 },
+		{ px: it.box.x + it.box.w / 2, py: it.box.y, dx: 0, dy: -GAP, cx: b.x + b.w / 2, cy: b.y - GAP },
+		{ px: it.box.x + it.box.w / 2, py: it.box.y + it.box.h, dx: 0, dy: GAP, cx: b.x + b.w / 2, cy: b.y + b.h + GAP },
+	];
+	// The CSS keeps markers inside the frame, so test the clamped position.
+	for (const o of options) { o.cx = Math.min(Math.max(17, o.cx), FW - 17); o.cy = Math.min(Math.max(17, o.cy), FH - 17); }
+	const free = (o: (typeof options)[number]) => placed.every((p) => Math.hypot(p.x - o.cx, p.y - o.cy) >= MIN);
+	const pick = options.find(free);
+	if (!pick) console.warn(`[GuidedShot] ${Astro.url.pathname} shot="${shot}": marker ${it.n} overlaps another; split the steps (see start).`);
+	return keep(pick ?? options[0]);
+});
+function keep(pick: { px: number; py: number; dx: number; dy: number; cx: number; cy: number }) {
+	placed.push({ x: pick.cx, y: pick.cy });
+	return { x: pick.px, y: pick.py, dx: pick.dx, dy: pick.dy };
+}
+const placedItems = items.map((it, i) => ({ ...it, marker: markers[i] }));
+// Stable per page: shot name + position among this page's GuidedShots.
+const counter = ((Astro.locals as { __awfGuided?: number }).__awfGuided ?? 0) + 1;
+(Astro.locals as { __awfGuided?: number }).__awfGuided = counter;
+const uid = `awf-guided-${shot}-${counter}`;
+---
+
+<GuidedShotIsland client:visible uid={uid} alt={alt ?? r.entry.alt} light={r.light} dark={r.dark} items={placedItems} caption={caption} crop={crop} />

@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Badge } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -20,6 +21,16 @@ Each row shows the request's **Title** and **Votes**. Changes apply as soon as y
 - **Status**: *open*, *building*, *fulfilled* or *declined*.
 - **ETA**: when the status is *building*, pick an expected date, or clear it.
 - **Fulfilled workflow**: when the status is *fulfilled*, type the id of the published workflow that answers the request. Saving it marks the request fulfilled.
+
+<GuidedShot
+  shot="admin-requests"
+  steps={[
+    { spot: 'status', title: 'Set the status', body: '*open*, *building*, *fulfilled* or *declined*. It saves at once.' },
+    { spot: 'eta', title: 'Set or clear the ETA', body: 'Shown while the status is *building*.' },
+    { spot: 'fulfilled', title: 'Link the workflow that fulfils it', body: 'Type the published workflow id when the status is *fulfilled*.' },
+    { spot: 'merge', title: 'Merge a duplicate', body: '**Merge in** folds it into the canonical request, without asking.' },
+  ]}
+/>
 
 ## Merge duplicates
 

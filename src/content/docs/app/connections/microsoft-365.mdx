@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 6 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="OAuth2" />
 
@@ -29,11 +29,22 @@ This is the only method. Microsoft 365 uses a public client: only the Applicatio
 <Steps>
 
 1. **Register an app** in the Azure portal's [App registrations](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade): **New registration**, any name, **Accounts in any organizational directory and personal Microsoft accounts**.
-2. **Add the redirect URI** as a **Single-page application**. Copy it from the credential form in AWFlow (next step shows where), then click **Register**.
+2. **Add the redirect URI** as a **Single-page application**. Copy it from the credential form in AWFlow (step 4 shows where), then click **Register**.
 3. **Add permissions.** In **API permissions › Add a permission › Microsoft Graph › Delegated permissions**, add `offline_access`, `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite` and `Tasks.ReadWrite`.
-4. **Start the credential.** In AWFlow, open **Credentials**, click **Add Credential**, pick **Microsoft 365** under **Integration App / Service** and click **Continue**. **Auth Type** is set to **OAuth2**, and the form shows **Create your Microsoft OAuth client** with your redirect URI.
-5. **Paste the Application (client) ID** from the app's **Overview** page into **Client ID**. There is no secret field.
-6. **Click Check connection**, sign in and accept the permissions. Choose the **Storage location** and click **Create Credential**.
+4. **Fill the credential in AWFlow.** Open **Credentials** and click **Add Credential**, then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Microsoft 365** in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-microsoft-365"
+     steps={[
+       { spot: 'app', title: 'Pick Microsoft 365', body: 'Under **Integration App / Service**, pick **Microsoft 365**. There is no **Auth Type** menu: Microsoft 365 uses **OAuth2**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Microsoft 365 – work*. A **Description** is optional.' },
+       { spot: 'oauth-guide', title: 'Copy the redirect URI', body: 'Open **Create your Microsoft OAuth client**: it shows your redirect URI with a **Copy** button, for step 2.' },
+       { spot: 'client-id', title: 'Paste the Application (client) ID', body: "From the app's **Overview** page, into **Client ID**. There is no secret field." },
+       { spot: 'check-connection', title: 'Click Check connection', body: 'Sign in to Microsoft and accept the permissions.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in Microsoft 365 nodes.' },
+     ]}
+   />
 
 </Steps>
 

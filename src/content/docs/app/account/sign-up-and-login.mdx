@@ -8,38 +8,41 @@ sidebar:
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
-import { Screenshot } from '@components/awflow';
-import signUpLight from '@assets/screenshots/sign-up.light.webp';
-import signUpDark from '@assets/screenshots/sign-up.dark.webp';
+import { GuidedShot } from '@components/awflow';
 
 You don't need an account to use AWFlow. An account adds cloud storage, the Marketplace, publishing and notifications. See [Local or cloud](/app/account/local-vs-cloud/) to decide.
 
 ## Create an account with email
 
-<Steps>
+On the login screen, click **Sign up**. Then fill in the form:
 
-1. On the login screen, click **Sign up**.
-
-2. Enter your **Name**, **Email**, a **Password** of at least 8 characters, and **Confirm Password**.
-
-3. Click **Sign up**. You are taken back to the login screen.
-
-4. Open the email we sent you and click the link. A page confirms *Your email has been verified*. Click **Login to your account**.
-
-</Steps>
-
-<Screenshot
-  src={signUpLight}
-  srcDark={signUpDark}
-  alt="The sign-up form: Welcome, Sign up to your Agentic Workflow account, with Name, Email, Password and Confirm Password fields, the Sign up button, GitHub, Google and Hugging Face buttons under Or continue with, and an Already have an account? Login link. A photo of a person at a computer fills the right half."
-  hotspots={[{ x: 36.7, y: 39.8, label: 'Name, email and password' }, { x: 36.7, y: 62.4, label: 'Sign up' }, { x: 36.7, y: 68.6, label: 'Or continue with GitHub, Google or Hugging Face' }, { x: 42.5, y: 75.8, label: 'Already have an account? Login' }]}
+<GuidedShot
+  shot="sign-up"
+  steps={[
+    { spot: 'name-field', title: 'Enter your Name' },
+    { spot: 'name', title: 'Enter your Email' },
+    { spot: 'password', title: 'Choose a Password', body: 'At least 8 characters.' },
+    { spot: 'confirm-password', title: 'Type it again in Confirm Password' },
+    { spot: 'sign-up', title: 'Click Sign up', body: 'You are taken back to the login screen.' },
+  ]}
 />
+
+Then open the email we sent you and click the link. A page confirms *Your email has been verified*. Click **Login to your account**.
 
 ## Log in
 
-Enter your **Email** and **Password** and click **Login**.
+<GuidedShot
+  shot="login"
+  steps={[
+    { spot: 'email', title: 'Enter your Email' },
+    { spot: 'password', title: 'Enter your Password', body: 'Forgot it? Click **Forgot your password?**.' },
+    { spot: 'login', title: 'Click Login' },
+    { spot: 'social', title: 'Or use a social account', body: '**GitHub**, **Google** or **Hugging Face**, under *Or continue with*.' },
+    { spot: 'no-account', title: 'Or continue without an account', body: 'Your workflows are saved in this browser.' },
+  ]}
+/>
 
-To use a social account instead, click the **GitHub**, **Google** or **Hugging Face** button under *Or continue with*:
+If you forgot your password, see [Reset your password](/app/account/reset-password/). With a social account:
 
 - In the extension, a small window opens for you to finish signing in. Come back to AWFlow when you're done; it notices and logs you in. Click **Continue** if it doesn't.
 - In the web app, the page goes to the provider and comes back.

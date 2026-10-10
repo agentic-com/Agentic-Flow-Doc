@@ -6,6 +6,8 @@ sidebar:
 section: app
 ---
 
+import { GuidedShot, StepShot } from '@components/awflow';
+
 AWFlow can send you an occasional email newsletter with product updates. This page covers how the opt-in works, how to change your mind later, and — for workspace admins — how to compose and send an issue.
 
 ## Opting in
@@ -15,11 +17,22 @@ If you're signed in, you may occasionally see a small **"Stay in the loop"** car
 - **Subscribe** — opts you in immediately.
 - **Not now** (or the dismiss **✕**) — hides the card without subscribing. You may see it again later, but it backs off automatically and stops appearing after a few dismissals.
 
+<GuidedShot
+  shot="newsletter-card"
+  steps={[
+    { spot: 'subscribe', title: 'Subscribe', body: 'Opts you in at once.' },
+    { spot: 'not-now', title: 'Not now', body: 'Hides the card without subscribing.' },
+    { spot: 'dismiss', title: 'Or close it', body: 'Same as **Not now**.' },
+  ]}
+/>
+
 You'll only ever be prompted if you haven't already made a choice (subscribed or unsubscribed). Once you've decided — either way — the card won't ask again.
 
 ## Managing your subscription
 
 You don't need to wait for the card. You can subscribe or unsubscribe at any time from **Settings → General**, in the **Newsletter** section (you need to be signed in). The **Subscribe to the newsletter** toggle shows your current status and saves instantly.
+
+<StepShot shot="settings-general-password" spot="newsletter" n={1} zoom={40} />
 
 ## Unsubscribing from an email
 
@@ -33,6 +46,19 @@ Both links work even if you're not signed in on that device, since they use a pe
 ## Admin: composing and sending an issue
 
 Workspace admins compose and send newsletter issues from **`#/admin/newsletter`**.
+
+The steps are in [Admin › Newsletter](/app/admin/newsletter/):
+
+<GuidedShot
+  shot="admin-newsletter"
+  steps={[
+    { spot: 'new-issue', title: 'Click New issue' },
+    { spot: 'subject', title: 'Fill in the Subject' },
+    { spot: 'body', title: 'Write the Body in Markdown', body: 'Use `{{name}}` for the recipient\'s name.' },
+    { spot: 'send-test', title: 'Send test', body: 'To your own address only.' },
+    { spot: 'send-now', title: 'Send now', body: 'Confirm the number of recipients.' },
+  ]}
+/>
 
 ### Issues list
 

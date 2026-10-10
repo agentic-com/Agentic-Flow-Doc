@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
 
@@ -65,7 +65,19 @@ import { Badge, Callout } from '@components/awflow';
 
    Drop the scopes you won't use. The `user` scope is only for **Message › Search**.
 2. **Install it and copy the token.** Click **Install to Workspace** and allow. In **OAuth & Permissions**, copy the **Bot User OAuth Token** (it starts with `xoxb-`).
-3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Slack** and click **Continue**. Name it, for example *Slack – AWFlow bot*: **Auth Type** is already set to **Bearer Token**. Then paste the `xoxb-` token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Slack** in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-slack"
+     steps={[
+       { spot: 'app', title: 'Pick Slack', body: 'Under **Integration App / Service**, pick **Slack**. There is no **Auth Type** menu: Slack uses a **Bearer Token**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Slack – AWFlow bot*. A **Description** is optional.' },
+       { spot: 'token', title: 'Paste the token', body: 'Paste the `xoxb-` token into **Bearer Token**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
+
 4. **Invite the bot** to each channel it should post in or read: type `/invite @AWFlow` in the channel.
 
 </Steps>
@@ -83,7 +95,18 @@ In a **Slack** node, pick the credential: the **Channel** list fills with your c
 
 1. **Use the same app** (the manifest above already asks for `search:read` as a user scope), or add **User Token Scopes** under **OAuth & Permissions**.
 2. **Reinstall the app** to the workspace, then copy the **User OAuth Token** (it starts with `xoxp-`).
-3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Slack** and click **Continue**. Name it, for example *Slack – me (search)*: **Auth Type** is already set to **Bearer Token**. Then paste the `xoxp-` token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Slack** in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-slack"
+     steps={[
+       { spot: 'app', title: 'Pick Slack', body: 'Under **Integration App / Service**, pick **Slack**. There is no **Auth Type** menu: Slack uses a **Bearer Token**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Slack – me (search)*. A **Description** is optional.' },
+       { spot: 'token', title: 'Paste the token', body: 'Paste the `xoxp-` token into **Bearer Token**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
 
 </Steps>
 

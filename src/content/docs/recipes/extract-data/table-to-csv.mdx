@@ -16,7 +16,7 @@ recipe:
 
 import { Steps } from '@astrojs/starlight/components';
 import FlowPreview from '@components/awflow/FlowPreview.astro';
-import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+import { RecipeMeta, RecipeUse, RecipeSteps, StepShot } from '@components/awflow';
 
 <RecipeMeta slug="table-to-csv" />
 
@@ -53,13 +53,25 @@ import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
 			tweak: 'download a `.csv` file with [Save as File](/nodes/builtin/datatransformation/saveasfile/) instead.',
 		},
 	]}
-/>
+>
+	<StepShot slot="shot-1" shot="recipe-csv-canvas" spot="trigger-when-started" n={1} zoom={36} />
+	<StepShot slot="shot-2" shot="recipe-csv-read-table" spot="dom-selector" n={2} />
+	<StepShot slot="shot-3" shot="recipe-csv-build-csv" spot="delimiter" n={3} />
+	<StepShot slot="shot-4" shot="recipe-csv-canvas" spot="copy-clipboard" n={4} zoom={36} />
+</RecipeSteps>
 
 ## Test it
 
 <Steps>
 
-1. Install the recipe and save it. No setup is needed.
+1. Install the recipe and save it. No setup is needed. To import the file yourself, use **Add Workflow** › **Import**, choose the `.awf` and click **Create & open**. Then click **Make it mine** at the bottom of the canvas, tick the box and confirm, so you can edit it.
+
+   <StepShot shot="recipe-csv-import" spot="create-open" n={1} />
+
+   <StepShot shot="recipe-csv-consent" spot="make-it-mine" n={1} />
+
+   <StepShot shot="recipe-csv-canvas" spot="save" n={1} />
+
 2. Open a page with a table, such as a Wikipedia list.
 3. Right-click it and choose **Agentic Workflow** › **Personal Workflows** › **Page Table to CSV**.
 4. Paste into a new spreadsheet: each column lands in its own cell.

@@ -1,0 +1,161 @@
+---
+/**
+ * <StepShot> (GuideA.dc.html, "13A"): one step of a task that spans SEVERAL screens.
+ * A zoomed crop of the step's screenshot, centred on the control, with an amber ring around it and
+ * the step number; "Full screen" opens the whole screenshot (a <dialog>, or the image without JS).
+ * Put it inside the step it illustrates:
+ *
+ *   import StepShot from '@components/awflow/StepShot.astro';
+ *   <StepCard n={2} title="Add a Basic LLM Chain">
+ *     Click the **+** …
+ *     <StepShot shot="llm-chain" spot="basic-llm-chain" n={2} />
+ *   </StepCard>
+ *
+ * The crop is computed while the site builds from the spot's box in src/assets/screenshots/<shot>.json
+ * (clamped to the image), in percentages, so it scales with the column; narrow columns get a tighter crop.
+ */
+import { getSpot, resolveShot, type ShotBox } from '../../data/shots';
+
+interface Props {
+	shot: string;
+	/** Spot id in the shot's JSON (`hotspots[].id`). */
+	spot: string;
+	/** Step number shown in the badge. */
+	n: number;
+	/** Crop height in px for a ~640 px wide column (default 280). The crop keeps its proportions when the column is wider or narrower. */
+	height?: number;
+	/** Crop width as % of the image width (default 56). Smaller zooms in more. Widened if the control would not fit. */
+	zoom?: number;
+	/** Overrides the generated alt text of the crop. */
+	alt?: string;
+}
+
+const { shot, spot: spotId, n, height = 280, zoom = 56, alt } = Astro.props;
+if (!Number.isInteger(n) || n < 1) throw new Error(`<StepShot shot="${shot}" spot="${spotId}">: n must be a step number (1, 2, …).`);
+if (!(zoom > 5 && zoom <= 100)) throw new Error(`<StepShot shot="${shot}">: zoom must be between 5 and 100 (% of the image width).`);
+if (!(height >= 120 && height <= 800)) throw new Error(`<StepShot shot="${shot}">: height must be between 120 and 800 (px).`);
+const r = await resolveShot(shot, 'StepShot');
+const spot = getSpot(r.entry, spotId, 'StepShot');
+const ratio = r.width / r.height;
+
+/** Reference column widths (px) for the desktop and narrow (phone) crops. */
+const DESKTOP_W = 640;
+const PHONE_W = 358;
+const PHONE_H = 240;
+
+type Crop = { x: number; y: number; w: number; h: number; ar: number };
+/** A crop window in % of the image around `box`, with the container's aspect ratio `ar`. */
+function crop(box: ShotBox, cw: number, ar: number): Crop {
+	let w = cw;
+	let h = (w * ratio) / ar;
+	if (h > 100) {
+		h = 100;
+		w = (h * ar) / ratio;
+	}
+	// Room for the ring and badge around the control.
+	const f = Math.max(1, (box.w + 6) / w, (box.h + 6 * ratio) / h);
+	if (f > 1) {
+		w = Math.min(100, w * f);
+		h = Math.min(100, h * f);
+	}
+	const cx = box.x + box.w / 2;
+	const cy = box.y + box.h / 2;
+	const x = Math.min(Math.max(cx - w / 2, 0), 100 - w);
+	const y = Math.min(Math.max(cy - h / 2, 0), 100 - h);
+	return { x, y, w, h, ar: (w / 100) * r.width / ((h / 100) * r.height) };
+}
+const r2 = (v: number) => Math.round(v * 1000) / 1000;
+function vars(prefix: string, c: Crop, box: ShotBox): string {
+	return [
+		[`--${prefix}-ar`, r2(c.ar)],
+		[`--${prefix}-img-w`, `${r2((100 * 100) / c.w)}%`],
+		[`--${prefix}-img-h`, `${r2((100 * 100) / c.h)}%`],
+		[`--${prefix}-img-x`, `${r2((-c.x / c.w) * 100)}%`],
+		[`--${prefix}-img-y`, `${r2((-c.y / c.h) * 100)}%`],
+		[`--${prefix}-ring-x`, `${r2(((box.x - c.x) / c.w) * 100)}%`],
+		[`--${prefix}-ring-y`, `${r2(((box.y - c.y) / c.h) * 100)}%`],
+		[`--${prefix}-ring-w`, `${r2((box.w / c.w) * 100)}%`],
+		[`--${prefix}-ring-h`, `${r2((box.h / c.h) * 100)}%`]
+	]
+		.map(([k, v]) => `${k}: ${v}`)
+		.join('; ');
+}
+const desk = crop(spot.box, zoom, DESKTOP_W / height);
+const phone = crop(spot.box, zoom * 0.62, PHONE_W / PHONE_H);
+const style = `${vars('d', desk, spot.box)}; ${vars('m', phone, spot.box)}`;
+const sizes = `(max-width: 30rem) ${Math.round((PHONE_W * 100) / phone.w)}px, ${Math.round((DESKTOP_W * 100) / desk.w)}px`;
+const cropAlt = alt ?? `Step ${n}, close-up of the app: ${spot.label}, outlined.`;
+const fullAlt = r.entry.alt;
+const b = spot.box;
+const fullRing = `left: ${b.x}%; top: ${b.y}%; width: ${b.w}%; height: ${b.h}%`;
+---
+
+<div class="awf-stepshot not-content" style={style}>
+	<div class="awf-stepshot__crop">
+		<img
+			class="awf-stepshot__img awf-shot__img--light"
+			src={r.light.src}
+			srcset={r.light.srcset}
+			sizes={sizes}
+			alt={cropAlt}
+			width={r.light.width}
+			height={r.light.height}
+			loading="lazy"
+			decoding="async"
+			data-zoom-off
+		/>
+		<img
+			class="awf-stepshot__img awf-shot__img--dark"
+			src={r.dark.src}
+			srcset={r.dark.srcset}
+			sizes={sizes}
+			alt={cropAlt}
+			width={r.dark.width}
+			height={r.dark.height}
+			loading="lazy"
+			decoding="async"
+			data-zoom-off
+		/>
+		<span class="awf-stepshot__ring" aria-hidden="true"></span>
+		<span class="awf-stepshot__badge awf-ping" aria-hidden="true">{n}</span>
+		<a class="awf-stepshot__full" href={r.light.src} data-awf-full>
+			<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+				><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg
+			>
+			Full screen<span class="sr-only">: the whole screenshot for step {n}</span>
+		</a>
+	</div>
+	<dialog class="awf-shotdialog" aria-label={`Step ${n}: the whole screenshot`}>
+		<div class="awf-shotdialog__bar">
+			<span class="awf-shotdialog__title"><span class="awf-shotdialog__n" aria-hidden="true">{n}</span>{spot.label}</span>
+			<form method="dialog"><button class="awf-shotdialog__close" type="submit" autofocus>Close<span class="sr-only"> full screen</span></button></form>
+		</div>
+		<div class="awf-shotdialog__frame" style={`aspect-ratio: ${r.width} / ${r.height}; --awf-shot-ratio: ${r2(ratio)}`}>
+			<img class="awf-shot__img--light" src={r.light.src} alt={fullAlt} width={r.light.width} height={r.light.height} loading="lazy" decoding="async" data-zoom-off />
+			<img class="awf-shot__img--dark" src={r.dark.src} alt={fullAlt} width={r.dark.width} height={r.dark.height} loading="lazy" decoding="async" data-zoom-off />
+			<span class="awf-shotdialog__ring" style={fullRing} aria-hidden="true"></span>
+		</div>
+	</dialog>
+</div>
+
+<script>
+	// Progressive enhancement: without JS the link opens the image itself.
+	function wire(root: ParentNode) {
+		for (const link of root.querySelectorAll<HTMLAnchorElement>('a[data-awf-full]')) {
+			if (link.dataset.wired) continue;
+			link.dataset.wired = '1';
+			const dialog = link.closest('.awf-stepshot')?.querySelector('dialog');
+			if (!(dialog instanceof HTMLDialogElement) || typeof dialog.showModal !== 'function') continue;
+			link.addEventListener('click', (e) => {
+				e.preventDefault();
+				dialog.showModal();
+			});
+			// A click on the backdrop (outside the panel) closes it.
+			dialog.addEventListener('click', (e) => {
+				if (e.target === dialog) dialog.close();
+			});
+		}
+	}
+	wire(document);
+	document.addEventListener('astro:page-load', () => wire(document));
+</script>

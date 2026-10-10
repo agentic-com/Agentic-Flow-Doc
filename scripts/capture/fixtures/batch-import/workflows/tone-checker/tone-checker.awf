@@ -1,0 +1,187 @@
+{
+  "name": "Tone & Policy Checker",
+  "description": "Paste text and get warned if it may break your policy — offensive language or PII — on your device.",
+  "tags": [
+    "ai",
+    "tier-1",
+    "on-device",
+    "no-setup",
+    "extension"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "🛡️ Check text against a policy.\n\nPress Run, paste some text, and if it may contain offensive language or PII you get a heads-up notification. It runs locally in your browser — nothing leaves your device. Pick a model the first time."
+      },
+      "width": 340,
+      "height": 190
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": {
+        "x": 100,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:whenStarted"
+        },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": {
+          "notes": "Starts the workflow when you press Run."
+        }
+      }
+    },
+    {
+      "id": "ask-text",
+      "type": "inPageForm",
+      "position": {
+        "x": 420,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:inPageForm:inPageForm"
+        },
+        "label": "Paste text",
+        "inputs": {
+          "title": "Paste text",
+          "fields": [
+            {
+              "name": "text",
+              "label": "Text",
+              "type": "textarea",
+              "required": true
+            }
+          ]
+        },
+        "parameters": {
+          "notes": "Prompts you to paste the text you want checked."
+        }
+      }
+    },
+    {
+      "id": "guardrails",
+      "type": "agent",
+      "position": {
+        "x": 740,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:agent:guardrails"
+        },
+        "label": "Check the policy",
+        "inputs": {
+          "text": "{{ $input.text }}",
+          "policy": "no offensive language, no PII"
+        },
+        "parameters": {
+          "notes": "Checks the text against the policy. Routes to the notification only on the fail port.\n\nUNVERIFIED: guardrails port names — assuming the failing branch is the 'fail' port."
+        }
+      }
+    },
+    {
+      "id": "local-model",
+      "type": "dependency",
+      "position": {
+        "x": 740,
+        "y": 500
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:dependency:webLLM"
+        },
+        "label": "Local AI model",
+        "inputs": {
+          "model": "",
+          "options": {
+            "temperature": 0.4
+          }
+        },
+        "parameters": {
+          "notes": "Runs the check locally in your browser. Pick a model the first time — it downloads once, then works offline."
+        }
+      }
+    },
+    {
+      "id": "warn",
+      "type": "basic",
+      "position": {
+        "x": 1060,
+        "y": 280
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:showNotificationNode"
+        },
+        "label": "Warn me",
+        "inputs": {
+          "title": "Heads up",
+          "message": "This text may violate your policy"
+        },
+        "parameters": {
+          "notes": "Shows a notification when the text fails the policy check."
+        }
+      }
+    },
+    {
+      "id": "sticky-model",
+      "type": "stickyNote",
+      "position": {
+        "x": 740,
+        "y": 660
+      },
+      "data": {
+        "color": "#ffd9b3",
+        "content": "Setup needed: pick a local model the first time you run this. It downloads once, then runs fully offline."
+      },
+      "width": 300,
+      "height": 110
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-run-ask",
+      "source": "trigger-run",
+      "target": "ask-text",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-ask-guardrails",
+      "source": "ask-text",
+      "target": "guardrails",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-guardrails-model",
+      "source": "guardrails",
+      "target": "local-model",
+      "type": "flowEdge",
+      "sourceHandle": "dependency-0"
+    },
+    {
+      "id": "e-guardrails-warn",
+      "source": "guardrails",
+      "target": "warn",
+      "type": "flowEdge",
+      "sourceHandle": "output-fail"
+    }
+  ],
+  "requiredInputs": [
+    {
+      "nodeId": "local-model",
+      "field": "model"
+    }
+  ]
+}

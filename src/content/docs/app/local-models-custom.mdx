@@ -7,24 +7,31 @@ sidebar:
   label: "Add a custom model"
 ---
 
-import { Steps } from "@astrojs/starlight/components";
-import { Callout } from "@components/awflow";
+import { Callout, StepCard, StepShot } from "@components/awflow";
 
 On the [Local AI](/app/local-models/) page, click **Add custom model**. It takes two steps.
 
-<Steps>
+<StepCard n={1} title="The model" check="the fields for that engine are filled in.">
+  Pick the engine; the dialog asks for exactly what it needs:
 
-1. **The model.** Pick the engine; the dialog asks for exactly what it needs:
+  - **WebLLM**: an **MLC-compiled** model, with its **weights URL** and its compiled **model library (`.wasm`)**. WebLLM models are always **chat** models, and WebLLM can't load a raw `.gguf`: it needs the MLC build.
+  - **TensorFlow.js**: the **model URL** of a graph or layers model (a `model.json`).
+  - **transformers.js**: the **Hugging Face model id** (for example `Xenova/vit-base-patch16-224`). It needs an ONNX build (an `onnx/` folder); repos with only GPTQ, GGUF or safetensors weights won't run in the browser.
 
-   - **WebLLM**: an **MLC-compiled** model, with its **weights URL** and its compiled **model library (`.wasm`)**. WebLLM models are always **chat** models, and WebLLM can't load a raw `.gguf`: it needs the MLC build.
-   - **TensorFlow.js**: the **model URL** of a graph or layers model (a `model.json`).
-   - **transformers.js**: the **Hugging Face model id** (for example `Xenova/vit-base-patch16-224`). It needs an ONNX build (an `onnx/` folder); repos with only GPTQ, GGUF or safetensors weights won't run in the browser.
+  <StepShot shot="local-models-custom" spot="engine" n={1} />
+</StepCard>
 
-2. **Check the task.** As you type, the dialog **detects the model's task** and shows what it found: task, expected input and output, file size where known, and where the guess came from. For transformers.js it reads the model's hub metadata; for a TensorFlow.js `model.json` it reads the input and output shapes (for example `[1,224,224,3] → [1,1001]` means image classification). If the guess is wrong, or nothing was detected (for example offline), choose the task under **Use it as**. The task decides which nodes can pick the model.
+<StepCard n={2} title="Check the task, then Continue" check="Use it as shows the task you want.">
+  As you type, the dialog **detects the model's task** and shows what it found: task, expected input and output, file size where known, and where the guess came from. For transformers.js it reads the model's hub metadata; for a TensorFlow.js `model.json` it reads the input and output shapes (for example `[1,224,224,3] → [1,1001]` means image classification). If the guess is wrong, or nothing was detected (for example offline), choose the task under **Use it as**. The task decides which nodes can pick the model. Then click **Continue**.
 
-3. **Confirm you trust the source.** Tick **I trust this source and want to add the model**. The model is added and starts downloading.
+  <StepShot shot="local-models-custom" spot="use-it-as" n={2} />
+</StepCard>
 
-</Steps>
+<StepCard n={3} title="Confirm you trust the source" check="the model is listed with a Custom badge and starts downloading.">
+  Tick **I trust this source and want to add the model**. Then click **Add & download**.
+
+  <StepShot shot="local-models-custom-trust" spot="trust" n={3} />
+</StepCard>
 
 <Callout type="careful" title="Custom models aren't reviewed">
 

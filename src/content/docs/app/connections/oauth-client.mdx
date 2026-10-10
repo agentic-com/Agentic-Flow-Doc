@@ -8,9 +8,7 @@ section: app
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
-import { Screenshot } from '@components/awflow';
-import credentialsOauthLight from '@assets/screenshots/credentials-oauth.light.webp';
-import credentialsOauthDark from '@assets/screenshots/credentials-oauth.dark.webp';
+import { GuidedShot } from '@components/awflow';
 
 Google and Microsoft integrations sign in with **your own OAuth client**: a small app registration you create once in the vendor's console. Your tokens then go straight from Google or Microsoft to your browser and never pass through AWFlow's servers.
 
@@ -25,11 +23,15 @@ The credential form shows a **Create your … OAuth client** guide with the exac
 If you use AWFlow in **both** Chrome and Firefox, add **both** redirect URIs to the same OAuth client. Open the guide once in each browser to copy its URI.
 </Aside>
 
-<Screenshot
-  src={credentialsOauthLight}
-  srcDark={credentialsOauthDark}
-  alt="The New Credential dialog with Gmail picked: Name and Description fields, then the Create your Google OAuth client guide in 5 steps (create a Google Cloud project, enable the Gmail API, set up the consent screen, create a Web application client with the redirect URI shown and a Copy button, paste the Client ID and Secret), and a Step-by-step with screenshots link. This capture is the web app, so the redirect URI is https://app.awflow.io/oauth-callback/web."
-  hotspots={[{ x: 50, y: 15.4, label: 'The app: Gmail' }, { x: 50, y: 45.8, label: 'Create your Google OAuth client guide' }, { x: 63.7, y: 76.5, label: 'Redirect URI, with Copy' }]}
+To copy your redirect URI, open **Credentials**, click **Add Credential** and use the **New Credential** form:
+
+<GuidedShot
+  shot="credentials-oauth"
+  steps={[
+    { spot: 'app', title: 'Pick the app', body: 'Under **Integration App / Service**, pick a Google app (here **Gmail**) or **Microsoft 365**. In the browser side panel, tap it in the list first; the form then opens.' },
+    { spot: 'create-google-oauth-client', title: 'Open the guide', body: 'Click **Create your Google OAuth client** (or **Create your Microsoft OAuth client**) if it is collapsed: it lists the steps below in short.' },
+    { spot: 'redirect-uri', title: 'Copy the redirect URI', body: 'Click **Copy** next to the redirect URI, then paste it in the vendor console. This capture is the web app, so it shows `https://app.awflow.io/oauth-callback/web`.' },
+  ]}
 />
 
 ## Google

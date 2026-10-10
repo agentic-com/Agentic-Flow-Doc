@@ -17,7 +17,7 @@ recipe:
 
 import { Steps } from '@astrojs/starlight/components';
 import FlowPreview from '@components/awflow/FlowPreview.astro';
-import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
+import { RecipeMeta, RecipeUse, RecipeSteps, StepShot } from '@components/awflow';
 
 <RecipeMeta slug="rewrite-professionally" />
 
@@ -55,14 +55,29 @@ import { RecipeMeta, RecipeUse, RecipeSteps } from '@components/awflow';
 			tweak: 'show it first with [Display Markdown](/nodes/extension/displaymarkdown/) if you want to compare before pasting.',
 		},
 	]}
-/>
+>
+	<StepShot slot="shot-1" shot="recipe-rewrite-trigger-context-menu" spot="menu-contexts" n={1} />
+	<StepShot slot="shot-2" shot="recipe-rewrite-canvas" spot="get-selection" n={2} zoom={36} />
+	<StepShot slot="shot-3" shot="recipe-rewrite-rewrite" spot="prompt" n={3} />
+	<StepShot slot="shot-4" shot="recipe-rewrite-canvas" spot="copy-result" n={4} zoom={36} />
+</RecipeSteps>
 
 ## Test it
 
 <Steps>
 
-1. Install the recipe and pick a model in **Local AI model** (it downloads once; see [Local models](/app/local-models/)).
+1. Install the recipe and pick a model in **Local AI model** (it downloads once; see [Local models](/app/local-models/)). To import the file yourself, use **Add Workflow** › **Import**, choose the `.awf` and click **Create & open**. Then click **Make it mine** at the bottom of the canvas, tick the box and confirm, so you can edit it.
+
+   <StepShot shot="recipe-rewrite-import" spot="create-open" n={1} />
+
+   <StepShot shot="recipe-rewrite-consent" spot="make-it-mine" n={1} />
+
+   <StepShot shot="recipe-rewrite-local-model" spot="model" n={1} />
+
 2. Save and activate the workflow.
+
+   <StepShot shot="recipe-rewrite-canvas" spot="active" n={2} />
+
 3. Type "hey can u send the report asap thx" in any text box, highlight it, right-click and choose **Agentic Workflow** › **Personal Workflows** › **Rewrite Professionally**.
 4. Paste: you get something like "Hello, could you please send the report as soon as possible? Thank you."
 

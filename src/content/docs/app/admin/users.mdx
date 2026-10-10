@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Aside, Badge } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -21,6 +22,18 @@ import { Aside, Badge } from '@astrojs/starlight/components';
 - **Clear filters** resets everything.
 
 The table shows **User** (name and email), **Role**, **Status**, **Verified** and **Joined**. Click a column header to sort. 20 users show per page.
+
+<GuidedShot
+  shot="admin-users"
+  steps={[
+    { spot: 'segments', title: 'Pick a quick view', body: 'Click a segment chip: **All**, **Staff**, **Banned / Disabled**, **Published authors** or **New this month**.' },
+    { spot: 'search', title: 'Search', body: 'Type part of a name or email in **Search name or email…**. The list updates as you type.' },
+    { spot: 'filters', title: 'Narrow it down', body: 'Use **Role**, **Status**, **Plan**, **Email verified** and the **7d**, **30d** or **90d** joined buttons. **Clear filters** resets them.' },
+    { spot: 'select', title: 'Tick users to act on them', body: 'The bulk toolbar appears with the number selected.' },
+    { spot: 'bulk', title: 'Pick a bulk action', body: '**Enable**, **Disable**, **Ban…** or **Unban**. See below.' },
+    { spot: 'open-user', title: 'Open a user', body: 'Click a name to see that account in detail.' },
+  ]}
+/>
 
 ## Act on many users
 
@@ -45,6 +58,17 @@ Actions in the header:
 - **Ban…** (reason required, expiry optional) or **Unban**.
 
 These actions are disabled on other admin accounts.
+
+<GuidedShot
+  shot="admin-user-detail"
+  steps={[
+    { spot: 'reset-password', title: 'Reset password', body: 'Emails the user a link to choose a new password.' },
+    { spot: 'resend-verification', title: 'Resend verification', body: 'Emails a new verification link.' },
+    { spot: 'ban', title: 'Ban…', body: 'Asks for a **Reason** (required) and an optional **Expires** date. Becomes **Unban** on a banned account.' },
+    { spot: 'stats', title: 'Read the numbers', body: '**Workflows**, **Listings**, **Runs (30d)**, **Last active** and **Joined**.' },
+    { spot: 'tabs', title: 'Switch tabs', body: '**Account**, **Content**, **Activity** and **Admin history**, described below.' },
+  ]}
+/>
 
 The tabs:
 

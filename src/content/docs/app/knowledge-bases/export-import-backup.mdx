@@ -6,7 +6,8 @@ sidebar:
 section: app
 ---
 
-import { Steps, Aside } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+import { StepCard, StepShot } from "@components/awflow";
 
 Knowledge bases are stored in this browser only. The extension and the web app have separate storage, and clearing site data removes them. To move a knowledge base, or keep a copy, export it to a file and import that file where you need it.
 
@@ -22,13 +23,23 @@ An `.awkb` file is **not encrypted**. Anyone who has the file can read its passa
 
 ## Import a file
 
-<Steps>
+<StepCard n={1} title="Click Import" check="the Import a knowledge base dialog opens.">
+  On the **Knowledge bases** page, click **Import** (or **Import a file** when you have none yet).
 
-1. On the **Knowledge bases** page, click **Import** (or **Import a file** when you have none yet).
-2. Choose an `.awkb` file. A preview shows its embedding model, number of chunks and sources, file size and privacy.
-3. Change the **Name** if you want, then click **Import**.
+  <StepShot shot="kb-list" spot="import" n={1} />
+</StepCard>
 
-</Steps>
+<StepCard n={2} title="Choose the .awkb file" check="a preview shows its name, embedding model, chunks and sources, and the file size.">
+  Pick the file. **Choose another file** swaps it.
+
+  <StepShot shot="kb-import" spot="details" n={2} />
+</StepCard>
+
+<StepCard n={3} title="Check the name and click Import" check="the knowledge base is listed on the Knowledge bases page.">
+  Change the **Name** if you want, then click **Import**.
+
+  <StepShot shot="kb-import" spot="import" n={3} />
+</StepCard>
 
 The file is added as a **new** knowledge base; an existing one is never overwritten. If the name is already used, "(imported)" is added. Nothing is embedded again, so the import is quick and searches give the same results as on the original device.
 

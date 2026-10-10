@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Badge, Steps } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -17,17 +18,17 @@ The list shows each template's **Title** and slug, **Category**, **Status** (*pu
 
 ## Create a template
 
-<Steps>
+Click **New template**, then fill in the dialog:
 
-1. Click **New template**.
-
-2. Optionally, under **Start from**, pick an existing template to copy its icon, summary, category and tags. The canvas is never copied.
-
-3. Fill in the **Icon**, **Title** and **Summary**. Open **Details** for the category, tags and sort order.
-
-4. Click **Create draft & open canvas**.
-
-</Steps>
+<GuidedShot
+  shot="admin-template-new"
+  steps={[
+    { spot: 'start-from', title: 'Start from a template (optional)', body: 'Copies its icon, summary, category and tags. The canvas is never copied.' },
+    { spot: 'title', title: 'Fill in the Icon, Title and Summary', body: 'The slug is filled in from the title.' },
+    { spot: 'details', title: 'Open Details', body: 'For the **Category**, **Tags** and **Sort order**.' },
+    { spot: 'create', title: 'Click Create draft & open canvas' },
+  ]}
+/>
 
 The template is created as a draft and opens on the canvas.
 

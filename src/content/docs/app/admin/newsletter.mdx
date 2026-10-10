@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Aside, Badge, Steps } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -15,17 +16,16 @@ import { Aside, Badge, Steps } from '@astrojs/starlight/components';
 
 ## Write and send an issue
 
-<Steps>
-
-1. Click **New issue**. A draft is created and the editor opens above the list.
-
-2. Fill in the **Subject** and the **Body**. The body uses Markdown. Type `{{name}}` where you want the recipient's name.
-
-3. Click **Send test** to email the issue to yourself first. It saves the draft too.
-
-4. When it looks right, click **Send now**. A confirmation shows how many members will get it. Click **Send to N**.
-
-</Steps>
+<GuidedShot
+  shot="admin-newsletter"
+  steps={[
+    { spot: 'new-issue', title: 'Click New issue', body: 'A draft is created and the editor opens above the list.' },
+    { spot: 'subject', title: 'Fill in the Subject' },
+    { spot: 'body', title: 'Write the Body', body: 'It uses Markdown. Type `{{name}}` where you want the recipient\'s name.' },
+    { spot: 'send-test', title: 'Click Send test', body: 'Emails the issue to you only. It saves the draft too.' },
+    { spot: 'send-now', title: 'Click Send now', body: 'A confirmation shows how many members will get it. Click **Send to N**.', check: 'the issue shows as *sending*, then *sent*, in the list.' },
+  ]}
+/>
 
 **Save draft** keeps your work without sending. **Send now** stays disabled until both the subject and the body are filled in.
 

@@ -4,6 +4,8 @@ description: "Add plain-language notes to workflow steps and read any flow as a 
 section: app
 ---
 
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
+
 A workflow can explain itself. Add a plain-language **note** to any step, and
 AWFlow shows it as a sticky note on the canvas and reads all the
 notes back as a numbered story. This makes a flow someone shared with you
@@ -13,13 +15,25 @@ legible **the moment you open it** — you learn it by reading, not by studying.
 
 ## Add a note to a step
 
-There are three ways to annotate a node — all open the same markdown editor:
+<StepCard n={1} title="Right-click the step">
+  On the canvas, right-click the step you want to explain.
 
-1. **Hover** a node and click the **✎ Annotate** button.
-2. **Right-click** a node and choose **Annotate this step** (or **Edit note** if
-   it already has one).
-3. Open the node's settings and edit the **Notes** field in the **Settings**
-   tab.
+  <StepShot shot="node-context-menu" spot="step" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Click Annotate this step">
+  It reads **Edit note** when the step already has one.
+
+  <StepShot shot="node-context-menu" spot="edit-note" n={2} />
+</StepCard>
+
+<StepCard n={3} title="Write the note and click Save note" check="the note shows under the step on the canvas and in the story.">
+  The **Explain this step** dialog opens. Write what the step does in plain words, or click **✨ Draft with AI** for a first draft, then click **Save note**.
+
+  <StepShot shot="node-annotate" spot="save-note" n={3} zoom={44} />
+</StepCard>
+
+The same dialog opens from the **Explain this step** button that shows above a step when you hover it, and from the **Notes** field in the **Settings** tab of the step's settings.
 
 Notes support **markdown**, so you can use bold, lists, and links to explain
 what a step does and why.
@@ -39,14 +53,20 @@ Click the ✎ on a callout to edit that note.
 
 ## Read the flow as a story
 
-Click the **📖** button on the canvas toolbar to open **How this flow works** —
-the **Story** tab of the panel on the right. It lists every step in the order the flow runs and reads its note as a numbered,
-plain-language story. A step with no note yet shows a gentle gap so you can see
-what's still unexplained.
+Open **How this flow works**, the **Story** tab of the panel on the right of the canvas:
+
+<GuidedShot
+  shot="flow-story"
+  steps={[
+    { spot: 'how-flow-works', title: 'Click How this flow works', body: 'The book icon in the canvas controls at the bottom left. Click it again to close the story.' },
+    { spot: 'story', title: 'Read the Story tab', body: 'It lists every step in the order the flow runs.' },
+    { spot: 'story-step', title: 'Each step, with its note', body: 'A step with no note yet shows a gap, so you can see what is still unexplained.' },
+  ]}
+/>
 
 When you open a **template**, a **downloaded flow**, or any flow that already
 has notes, the story panel **opens automatically** — so a flow someone sent you
-reads like a walkthrough right away. You can reopen it any time with the 📖
+reads like a walkthrough right away. You can reopen it any time with the book
 button, including when you're only viewing a flow you can't edit.
 
 ---
@@ -57,8 +77,8 @@ If you'd rather not start from a blank note, the assistant can draft one for you
 in plain outcome-language — you stay in control and edit or approve what it
 writes.
 
-- **One step:** in the annotate dialog, click **✨ Draft with AI**. It reads the
-  step and fills the editor with a suggested note; edit it, then **Save**.
+- **One step:** in the **Explain this step** dialog, click **✨ Draft with AI**. It reads the
+  step and fills the editor with a suggested note; edit it, then **Save note**.
 - **The whole flow:** open **How this flow works** and click
   **✨ Draft missing notes**. A review window drafts a note for every step that
   doesn't have one yet, filling them in as it goes. For each one you can

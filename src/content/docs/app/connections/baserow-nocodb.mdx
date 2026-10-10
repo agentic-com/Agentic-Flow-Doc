@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 2 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
 
@@ -36,7 +36,19 @@ import { Badge, Callout } from '@components/awflow';
 <Steps>
 
 1. **Create the token.** In Baserow, open **Settings › Database tokens**, click **Create token**, pick the workspace that holds the table and allow create, read, update and delete. Copy it.
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Baserow / NocoDB** and click **Continue**. Name it, for example *Baserow – leads*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Baserow / NocoDB** in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-baserow-nocodb"
+     steps={[
+       { spot: 'app', title: 'Pick Baserow / NocoDB', body: 'Under **Integration App / Service**, pick **Baserow / NocoDB**. There is no **Auth Type** menu: Baserow / NocoDB uses a **Bearer Token**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Baserow – leads*. A **Description** is optional.' },
+       { spot: 'token', title: 'Paste the token', body: 'Paste the token into **Bearer Token**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
+
 3. **In the node**, choose **Baserow**, set **Base URL** (for example `https://api.baserow.io`) and the **Table ID**.
 
 </Steps>
@@ -53,7 +65,19 @@ Run **List rows**: the table's rows come back.
 <Steps>
 
 1. **Create the token.** In NocoDB, open **Account settings › Tokens**, click **Add new token** and copy it.
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Baserow / NocoDB** and click **Continue**. Name it, for example *NocoDB – inventory*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Baserow / NocoDB** in the list, then fill the rest.
+
+   <GuidedShot
+     shot="credentials-baserow-nocodb"
+     steps={[
+       { spot: 'app', title: 'Pick Baserow / NocoDB', body: 'Under **Integration App / Service**, pick **Baserow / NocoDB**. There is no **Auth Type** menu: Baserow / NocoDB uses a **Bearer Token**.' },
+       { spot: 'name', title: 'Name it', body: 'For example *NocoDB – inventory*. A **Description** is optional.' },
+       { spot: 'token', title: 'Paste the token', body: 'Paste the token into **Bearer Token**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
+
 3. **In the node**, choose **NocoDB**, set **Base URL** (for example `https://app.nocodb.com`) and the **Table ID**.
 
 </Steps>

@@ -7,7 +7,7 @@ sidebar:
   label: "Free space"
 ---
 
-import { Steps } from "@astrojs/starlight/components";
+import { GuidedShot } from "@components/awflow";
 
 **Memory › Storage** shows how much space memory takes **in this browser** and helps you free it. Sizes are AWFlow's own measures; *Can free* is an estimate.
 
@@ -20,13 +20,18 @@ import { Steps } from "@astrojs/starlight/components";
 
 ## Free space
 
-<Steps>
+Open **Memory › Storage**, then:
 
-1. Open **Memory › Storage** and pick the **Easy to free** filter.
-2. Select the conversations to act on.
-3. Click **Slim**, **Archive** or **Delete**: each button shows the space it frees before it runs.
-
-</Steps>
+<GuidedShot
+  shot="memory-storage"
+  steps={[
+    { spot: 'filters', title: 'Pick a filter', body: '**Easy to free** lists what slimming frees right away; **Largest first** and **Not opened in 90 days** help too.' },
+    { spot: 'select', title: 'Select the conversations', body: 'Tick each one, or the box in the header for all shown. A bar shows how many are selected and their size.' },
+    { spot: 'slim', title: 'Slim', body: 'Removes heavy data and keeps every message. The button shows what it frees.' },
+    { spot: 'archive', title: 'Or Archive', body: 'Exports them to an `.awmem` file, then removes them from this browser.' },
+    { spot: 'delete', title: 'Or Delete', body: "Removes them for good. The button shows the space it frees.", check: 'the storage total at the top goes down.' },
+  ]}
+/>
 
 **Clear orphans** appears when conversations or facts are left without an owner.
 

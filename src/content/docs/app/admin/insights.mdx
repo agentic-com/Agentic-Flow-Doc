@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Aside, Badge } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
 <Badge text="Admin" variant="caution" />
 
@@ -16,6 +17,17 @@ import { Aside, Badge } from '@astrojs/starlight/components';
 <Aside>
 Counts only include people who share anonymous usage statistics, and each person counts once per listing and step. Read the numbers as trends, not totals.
 </Aside>
+
+<GuidedShot
+  shot="admin-insights"
+  steps={[
+    { spot: 'range', title: 'Pick a period', body: '**7 days**, **30 days** or **90 days**.' },
+    { spot: 'funnel', title: 'Read the install funnel', body: 'Each step shows the share of the previous step that made it.' },
+    { spot: 'declined', title: 'See what people declined', body: 'Broken down by capability.' },
+    { spot: 'sources', title: 'See where installs come from' },
+    { spot: 'activity', title: 'Check the activity tiles', body: 'Searches, publishing, approvals, reviews, reports, requests and install errors.' },
+  ]}
+/>
 
 ## The cards
 

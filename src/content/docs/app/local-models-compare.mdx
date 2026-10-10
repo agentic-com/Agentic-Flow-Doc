@@ -7,23 +7,23 @@ sidebar:
   label: "Compare models"
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+import { GuidedShot } from '@components/awflow';
 
 The **Compare** page lines up two or three [Local AI](/app/local-models/) models so you can pick the right one for your device. Everything runs in your browser; nothing leaves your device.
 
 ## Start a comparison
 
-<Steps>
+Open **Local AI** from the sidebar, then:
 
-1. Open **Local AI** from the sidebar.
-
-2. Tick the small compare checkbox on a model, or click **Compare** in a model's detail view.
-
-3. Tick one or two more models **of the same task** (for example, two chat models).
-
-4. Click **Compare (N)** in the bar at the bottom. It stays disabled until you pick at least two.
-
-</Steps>
+<GuidedShot
+  shot="local-models-compare"
+  steps={[
+    { spot: 'first-model', title: 'Tick a model', body: 'Tick the small compare checkbox on its card, or click **Compare** in its detail view.' },
+    { spot: 'second-model', title: 'Tick one or two more of the same task', body: 'For example, two chat models. Models of other tasks are disabled.' },
+    { spot: 'compare', title: 'Click Compare (N)', body: 'In the bar at the bottom. It stays disabled until you pick at least two.', check: 'the Compare page shows one column per model.' },
+  ]}
+/>
 
 You can compare **up to three** models. The first model you pick sets the task; checkboxes on models of other tasks are disabled. **Clear** empties the selection.
 

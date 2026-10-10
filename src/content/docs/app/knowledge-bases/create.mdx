@@ -7,21 +7,25 @@ sidebar:
   label: "Create & add sources"
 ---
 
-import { Steps } from "@astrojs/starlight/components";
-import { Callout } from "@components/awflow";
+import { Callout, GuidedShot } from "@components/awflow";
 
 ## Create a knowledge base
 
-<Steps>
+Open **Knowledge bases** in the sidebar and click **New knowledge base**. Everything else happens in the dialog: hover or tap a step to find it on the screen.
 
-1. Open **Knowledge bases** in the sidebar and click **New knowledge base**.
-2. Enter a **Name** and, optionally, **What's in it**. The description helps agents pick the right knowledge base.
-3. Add sources right away (drop files, or use **Web page**, **Open tabs** or **Paste text**), or add them later.
-4. Choose **Who can read it**: any model (**Cloud OK**) or this device only (**Device only**). See [Privacy](/app/knowledge-bases/privacy/).
-5. Optionally open **Search engine** to see the embedding model it will use: by default *all-MiniLM-L6-v2*, on this device.
-6. Click **Create and index**. The knowledge base opens and shows the progress.
+<GuidedShot
+  shot="kb-new"
+  steps={[
+    { spot: 'name', title: 'Name it', body: 'Enter a **Name** you will recognise in agents and workflows.' },
+    { spot: 'description', title: "Say what's in it", body: "Optional. **What's in it** helps agents pick the right knowledge base." },
+    { spot: 'sources', title: 'Add sources now, or later', body: 'Drop files, or use **Web page**, **Open tabs** (extension) or **Paste text**. You can also add them after creating it.' },
+    { spot: 'privacy', title: 'Choose who can read it', body: 'Any model (**Cloud OK**) or on-device models only (**Device only**).' },
+    { spot: 'search-engine', title: 'Check the search engine', body: 'Optional. Open **Search engine** to see the embedding model it will use: by default *all-MiniLM-L6-v2*, on this device.' },
+    { spot: 'create', title: 'Click Create', body: 'The button reads **Create and index** when you added sources. The knowledge base opens and shows the progress.' },
+  ]}
+/>
 
-</Steps>
+Read more about the two choices in [Privacy](/app/knowledge-bases/privacy/).
 
 <Callout type="tip" title="Check it worked">
 
@@ -31,7 +35,19 @@ The card shows **sources · chunks · size** and no longer says **Empty**. Open 
 
 ## Add sources
 
-Open a knowledge base and click **Add sources** (or **Add sources** on its card). The dialog has four tabs:
+Open a knowledge base and click **Add sources** (or **Add sources** on its card).
+
+<GuidedShot
+  shot="kb-add-sources"
+  steps={[
+    { spot: 'tabs', title: 'Pick what to add', body: '**Files**, **Web pages** or **Paste text** (and **Open tabs** in the extension). The table below says what each tab takes.' },
+    { spot: 'drop-files', title: 'Add the content', body: 'Drop or browse for files, type one URL per line, or paste a title and text.' },
+    { spot: 'chunking', title: 'Adjust the chunking if needed', body: '**Automatic** suits most sources. See Chunking below.' },
+    { spot: 'done', title: 'Click Done', body: 'Indexing keeps going in the background.', check: 'each source shows **Added · N chunks** on the **Sources** tab.' },
+  ]}
+/>
+
+The dialog has four tabs:
 
 | Tab | What it adds |
 | --- | --- |

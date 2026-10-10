@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Badge, Callout } from '@components/awflow';
+import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" /> <Badge variant="neutral" text="Basic Auth" />
 
@@ -53,7 +53,20 @@ Click **Test step**: the notification arrives on your phone.
 <Steps>
 
 1. **Create an access token** on your ntfy server (`ntfy token add <user>`) or in your ntfy.sh account settings. Copy it (it starts with `tk_`).
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Credential** field). Pick **Simple Credential** and click **Continue**. Name it, for example *ntfy – my server*, set **Auth Type** to **Bearer Token** and paste the token into **Bearer Token**, exactly as copied. Choose the **Storage location** and click **Create Credential**.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+
+   <GuidedShot
+     shot="credentials-simple-bearer"
+     steps={[
+       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'name', title: 'Name it', body: 'For example *ntfy – my server*. A **Description** is optional.' },
+       { spot: 'auth-type', title: 'Set Auth Type to Bearer Token', body: 'Open **Auth Type** and choose **Bearer Token**.' },
+       { spot: 'token', title: 'Paste the token', body: 'Paste the token into **Bearer Token**, exactly as copied.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
+
 3. **In the node**, pick the credential and set **Server** to your server's address.
 
 </Steps>
@@ -70,7 +83,20 @@ Click **Test step**: the notification arrives on your phone.
 <Steps>
 
 1. **Create an application** at [pushover.net](https://pushover.net) to get an **API Token/Key**, and copy your **User Key** from your dashboard.
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Credential** field). Pick **Simple Credential** and click **Continue**. Name it, for example *Pushover – phone*, set **Auth Type** to **Basic Auth**, put the application token in **Username** and your user key in **Password**. Choose the **Storage location** and click **Create Credential**.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+
+   <GuidedShot
+     shot="credentials-simple-basic"
+     steps={[
+       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'name', title: 'Name it', body: 'For example *Pushover – phone*. A **Description** is optional.' },
+       { spot: 'auth-type', title: 'Set Auth Type to Basic Auth', body: 'Open **Auth Type** and choose **Basic Auth**.' },
+       { spot: 'username', title: 'Paste the application token', body: 'Put the application token in **Username**.' },
+       { spot: 'password', title: 'Paste your user key', body: 'Put your user key in **Password**.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+     ]}
+   />
 
 </Steps>
 
