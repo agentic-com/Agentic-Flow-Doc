@@ -55,12 +55,14 @@ const glyph = FAMILY_ICONS[node?.family ?? 'default'];
 			{node?.deprecated && <Badge variant="deprecated" />}
 			{node?.since && <Badge text={`Since ${node.since}`} />}
 		</div>
-		<PageActions
-			client:idle
-			compact
-			markdownUrl={markdownUrl}
-			editUrl={editUrl?.href}
-			askAriaHref={config.askAria?.href ?? '#ask-aria'}
-		/>
+		<div class="awf-node-header__actions" data-pagefind-ignore>
+			<PageActions
+				client:idle
+				compact
+				markdownUrl={markdownUrl}
+				editUrl={editUrl?.href}
+				askAriaHref={config.askAria?.href ?? '#ask-aria'}
+			/>
+		</div>
 	</div>
 </section>

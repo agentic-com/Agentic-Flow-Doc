@@ -63,6 +63,7 @@ export default function starlightAwflow(options: StarlightAwflowOptions): Starli
 						PageTitle: here('./overrides/PageTitle.astro'),
 						PageSidebar: here('./overrides/PageSidebar.astro'),
 						Footer: here('./overrides/Footer.astro'),
+						Search: here('./overrides/Search.astro'),
 						...config.components,
 					},
 					customCss: [
@@ -75,6 +76,7 @@ export default function starlightAwflow(options: StarlightAwflowOptions): Starli
 						here('./styles/content.css'),
 						here('./styles/components.css'),
 						here('./styles/mermaid.css'),
+						here('./styles/search.css'),
 					],
 				});
 
