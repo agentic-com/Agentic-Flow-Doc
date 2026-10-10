@@ -1,6 +1,6 @@
 ---
 title: Troubleshooting Guide
-description: Quick solutions for common extension and workflow issues in Agentic WorkFlow Studio.
+description: Quick solutions for common extension and workflow issues in AWFlow.
 ---
 
 If your workflow isn’t behaving as expected, this guide helps you diagnose and fix common problems quickly.

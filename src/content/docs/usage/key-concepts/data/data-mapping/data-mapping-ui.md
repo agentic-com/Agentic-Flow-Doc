@@ -1,6 +1,6 @@
 ---
 title: Mapping in the UI
-description: "Learn how to use <Agentic WorkFlow> browser extension for mapping in the ui with intelligent workflow creation."
+description: "Use data from earlier steps in a node field by dragging it in or writing an expression."
 ---
 
 Data mapping means “use data from a previous step”.
@@ -98,7 +98,7 @@ Given the following data:
 ]
 ```
 
-`Agentic WorkFlow` displays it in table form like this:
+AWFlow displays it in table form like this:
 
 
 ### Mapping nested fields

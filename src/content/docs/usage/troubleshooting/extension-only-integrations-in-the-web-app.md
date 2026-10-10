@@ -8,7 +8,7 @@ cross-origin browser requests. In the **web app** those integrations are normall
 **blocked**, and the node shows a message telling you it only works in the browser
 extension.
 
-If you also have the **awflow browser extension installed**, the web app can run
+If you also have the **AWFlow browser extension installed**, the web app can run
 those integrations anyway by asking the extension to make the network call on its
 behalf. The extension holds the browser permissions the web app lacks, so the node
 works — without the web app becoming an open proxy.
@@ -18,7 +18,7 @@ works — without the web app becoming an open proxy.
 ## When it applies
 
 - You are using the **web app** (not the extension), **and**
-- The **awflow extension is installed and enabled** in the same browser, **and**
+- The **AWFlow extension is installed and enabled** in the same browser, **and**
 - The integration's target host is **consented for that workflow**.
 
 If any of these is not true, the node keeps the normal "extension only" block. This

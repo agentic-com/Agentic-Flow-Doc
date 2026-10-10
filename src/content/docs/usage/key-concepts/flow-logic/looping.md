@@ -1,6 +1,6 @@
 ---
 title: Looping
-description: "Learn how to use <Agentic WorkFlow> browser extension for looping with intelligent workflow creation."
+description: "How AWFlow runs a step once per item, and how to repeat steps with the Loop and Split in Batches nodes."
 sidebar:
   order: 3
 ---
@@ -11,7 +11,7 @@ Example: send a message to every contact in a list.
 
 In many cases, you don’t need to build a manual loop: if a node receives multiple items, it usually runs once per item automatically.
 
-## Using loops in `Agentic WorkFlow`
+## Using loops in AWFlow
 
 ```mermaid
 flowchart TB
@@ -97,7 +97,7 @@ flowchart TB
     L_C_B_0@{ animation: slow } 
 ```
 
-To create a loop in an `Agentic WorkFlow` workflow, connect the output of one node back into a previous node. Use an [If](/nodes/builtin/flow/if/) node to decide when to stop.
+To create a loop in an AWFlow workflow, connect the output of one node back into a previous node. Use an [If](/nodes/builtin/flow/if/) node to decide when to stop.
 
 ### Repeat with the Loop node
 

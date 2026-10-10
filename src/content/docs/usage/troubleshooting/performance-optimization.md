@@ -12,7 +12,7 @@ This page explains how to make workflows **faster, smoother, and more stable**, 
 
 ## How Workflow Performance Works
 
-Agentic WorkFlow Studio runs:
+AWFlow runs:
 - Directly inside your browser
 - On the current webpage
 - Using your computer’s memory and CPU

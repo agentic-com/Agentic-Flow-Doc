@@ -1,6 +1,6 @@
 ---
 title: Splitting
-description: "Learn how to use <Agentic WorkFlow> browser extension for splitting with intelligent workflow creation."
+description: "Split one workflow path into several, for example with an If node, so the workflow does different things depending on a condition."
 sidebar:
   order: 1
 ---
