@@ -1,102 +1,72 @@
 ---
 title: "Agents"
-description: "Create agents — assistants with a job: identity, instructions, model, skills, knowledge, memory, rules and routines"
+description: "Assistants with a job: their own instructions, model, skills, knowledge, memory, rules and routines. Built in a few clicks, stored on your device."
+kind: guide
+section: app
 sidebar:
   label: "Agents"
-section: app
 ---
 
-An **agent** is an assistant with a job: its own instructions, model, skills, knowledge and rules. Aria is your built-in agent; you can edit it, but not delete it. A *persona* is simply an agent without skills.
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+import { Badge, Callout } from "@components/awflow";
 
-Agents live in your browser, use your logins when they browse, and are stored **only on this device**.
+<Badge variant="no-setup" text="Free · you pay only your cloud model, if any" /> <Badge variant="on-device" text="Stays in this browser" /> <Badge variant="new" text="New in 0.8.0" />
+
+**In the app:** sidebar › **Agents**
+
+An **agent** is an assistant with a job: its own instructions, model, skills, knowledge and rules. Aria is your built-in agent; you can edit it, but not delete it. A *persona* is simply an agent without skills. Agents live in your browser, use your logins when they browse, and are stored **only on this device**.
+
+{/* SCREENSHOT: agents */}
+
+1. **Agent cards.** One per agent, with **Chat** to talk to it.
+2. **Describe an agent.** One sentence, and Aria drafts it for you.
+3. **Templates.** Chief of staff, Inbox triager, Price watcher, Study buddy…
+4. **Builder tabs.** Identity, Instructions, Model, Skills, Knowledge, Memory, Rules and Routines, with **Try it** on the right.
+
+## What you can do
+
+<CardGrid>
+  <LinkCard title="Build and try an agent" href="/app/chat-and-agents/agent-builder/" description="Every builder tab, Try it, and the agent's look." />
+  <LinkCard title="Give it skills" href="/app/chat-and-agents/agent-skills/" description="Browser control, web search, workflows, MCP, teammates." />
+  <LinkCard title="Set its rules" href="/app/chat-and-agents/browser-control/" description="What it does alone, asks about, or never does." />
+  <LinkCard title="Run it on a schedule" href="#routines" description="Routines: a schedule, a page that opens or changes." />
+  <LinkCard title="Put agents in a team" href="/app/chat-and-agents/teams/" description="Agents that hand work to each other." />
+  <LinkCard title="Share or install agents" href="/app/chat-and-agents/templates/" description="Marketplace and agent files." />
+</CardGrid>
 
 ## Create an agent
 
 Open **Agents** in the sidebar:
 
-- **Describe an agent** — one sentence ("Every Monday, check 3 competitor pricing pages and post changes to Slack"). Aria drafts the agent for you to adjust.
-- **Start from a template** — Chief of staff, Inbox triager, Price watcher, Study buddy…
+- **Describe an agent**: one sentence ("Every Monday, check 3 competitor pricing pages and post changes to Slack"). Aria drafts the agent for you to adjust.
+- **Start from a template**: Chief of staff, Inbox triager, Price watcher, Study buddy…
 - **Blank agent**, or **Import** an agent or team file.
 - Browse community agents and teams in [Marketplace › Agents & teams](/app/chat-and-agents/templates/).
 
-Click **Chat** on a card to talk to that agent.
+Click **Chat** on a card to talk to that agent. Open it to edit it in the [builder](/app/chat-and-agents/agent-builder/); changes save automatically.
 
-## The builder
+## Use it everywhere
 
-Open an agent to edit it. Changes save automatically.
-
-| Tab | What you set |
+| Where | How |
 | --- | --- |
-| **Identity** | Its look, name, @handle, role, greeting and conversation starters. The preview shows how it looks in chat. |
-| **Instructions** | How it works and what it avoids. Use variables like `{today}`, `{my name}`, `{current tab}` and `{memory}`. **Improve** and **Generate** ask your model for help; earlier versions are kept. |
-| **Model** | *Same as Aria* or a specific on-device, Ollama (detected automatically when it is running) or cloud model, its creativity, max steps per answer, and whether to fall back to on-device when you're offline. |
-| **Skills** | What it can do: **Browser control**, **Web search**, **Workflows** (run chosen workflows as tools), **On-device AI** (image, text and audio models), **Teammates**, **MCP** servers. |
-| **Knowledge** | The knowledge bases it uses in every chat, routine and team it joins, when to look things up (always, when relevant, when asked), whether it shows sources, whether it may search on its own, and **Try it** to see what it would find. See [Knowledge for an agent](/app/chat-and-agents/knowledge/#knowledge-for-an-agent). |
-| **Memory** | Whether it learns from chats, whether it also reads Aria's memory, its suggested facts, and the memories it has — edit, forget, or share one with a team. See [Assistant memory](/app/chat-and-agents/memory/#the-agents-memory-tab). |
-| **Rules** | What it does alone, what it asks about, and what it never does. See [Browser control & safety](/app/chat-and-agents/browser-control/). |
-| **Routines** | Run it on a schedule, when a page opens or changes, or record the steps once (*Show it once*). |
+| **Chat** | Pick the agent in the chat, or type its `@handle`. It also answers in [projects](/app/chat-and-agents/projects/) and [team threads](/app/chat-and-agents/teams/). |
+| **Another agent** | With the **Teammates** skill, an agent can hand part of a task to it. |
+| **A workflow** | The [Run Agent](/nodes/builtin/ai/aiagents/runagentnode/) node runs it as a step. A [routine](#routines) is exactly that: a trigger followed by Run Agent. |
 
-The right panel lets you **Try it** — chat with the agent as you edit — and, on the Rules tab, **Test a rule** with a sentence like "click Reserve on booking.example".
+<Callout type="info" title="Your data" href="/app/privacy-and-data/" linkLabel="Privacy & your data">
 
-### Try it
+Agents, their chats and their memories are stored **only in this browser**. When an agent uses a cloud model, its messages go from your browser to that provider with your key; with an on-device model, nothing leaves your device. Actions are real: emails send and sheets change, so its [rules](/app/chat-and-agents/browser-control/) decide what it may do alone.
 
-**Try it** runs the **real agent**: its model, skills, rules, approvals and max steps — exactly what a chat with it would use. A row of chips shows what is in effect (the model and where it runs, each skill — marked *off* when it can't be used — the rules preset and the step limit). Edits you make in the tabs apply on your next message.
-
-:::caution[Actions are real]
-Emails send and sheets change. Approvals appear in the panel, the same as in a chat.
-:::
-
-You see the same [work timeline, step limit card and approval receipts](/app/chat-and-agents/seeing-the-work/) as in a chat, and a banner when a skill is off. **Reset** starts over with a fresh chat, tools and browser session.
-
-### Looks and living eyes
-
-Every agent is a character. On the **Identity** tab, pick its **shape**, **color**, **texture**, **eyes** and an **accessory**, or press **Shuffle**. The preview shows it at every size, and its eyes follow your pointer. New agents get a look that suits their job; press **Try another look** before creating one.
-
-The eyes show what an agent is doing, wherever it appears:
-
-| Eyes | Meaning |
-| --- | --- |
-| Blink and glance around | Idle |
-| Drift upward | Thinking |
-| Scan side to side | Working: browsing or using a tool |
-| Look at you and bounce | Needs your ok |
-| Happy squint and a hop | Done |
-| Worried brows | Can't: a step failed or a skill is unavailable |
-| Closed | Offline: its model isn't ready |
-
-Aria's look (orange, with sun rays) is fixed so you always recognize her. To calm the motion, go to **Settings › Preferences › Agent animations**: *Lively*, *Calm* (blinks and states only) or *Off*. Faces stay still when your system asks to reduce motion.
-
-### How skills work
-
-| Skill | What the agent gets |
-| --- | --- |
-| **Browser control** | Its own tab group to read, click and type in. Needs the AWFlow extension. |
-| **Web search** | Searches the web in a background tab and reads the results. Needs the AWFlow extension. |
-| **Workflows** | Each chosen workflow becomes a tool. The agent can pass it some text; it gets back what the workflow produced (the output of its last steps). A workflow that pauses for an approval or a wait can't finish inside the call, so the agent is told it failed. |
-| **On-device AI** | Image, text and audio models that run on your device. |
-| **Teammates** | Can ask the teammates you pick to do part of the work. Each teammate works on its own model, skills and rules and sends back its answer. Teammates don't see the chat, so the agent gives them a complete task. In a team thread, the team's own handoff map is used instead. |
-| **MCP** | The tools of each MCP server you add. For a server that needs a login, pick a saved credential (a Bearer token or API key from **Credentials**) next to it; only a reference to the credential is stored on the agent. Each call follows the **MCP** rule, with a row per server on the Rules tab: **Cautious** and **Balanced** ask you first, **Autonomous** lets it act. *Always allow* applies to that server only. |
-
-Skills need a model that can call tools. Chrome's built-in Gemini Nano handles a few simple skills (up to 8 tools at a time, no browser control); with a chat-only model, such as some Ollama models, the agent's skills are off. When a skill can't be used (no extension, a workflow was deleted, an MCP server doesn't answer), a banner above the composer says so, with a fix, and the agent says so instead of pretending — see [When a skill is off](/app/chat-and-agents/seeing-the-work/#when-a-skill-is-off).
-
-### Tool results and timeouts
-
-- What a tool brings back from **outside** — web pages, web search, MCP servers, workflows and teammates — is given to the model as **data to read, never as instructions**. The step shows *Page text treated as data*, and a warning when the text tried to instruct the agent. See [Prompt injection](/app/chat-and-agents/browser-control/#prompt-injection).
-- Each tool call has a **time limit**: 60 seconds, or 2 minutes for a workflow (a teammate has no limit). The clock pauses while the agent waits for your approval. A tool that runs out of time shows *Timed out* and the agent continues without it.
-- Very long results are **trimmed** before they reach the model (the step says *Result trimmed*), and the agent can't call exactly the same tool with the same input over and over: repeats are skipped.
-
-### Teammate results
-
-When an agent hands a task to a teammate, the teammate's answer comes back with a **status** — *done*, *partly done* (it ran out of steps or was stopped), *blocked* (an approval was declined or its model failed) or *needs you* (an approval wasn't answered) — so the agent knows whether to rely on it, retry or ask you. Ready-to-use pieces (a drafted email, a table, a list, links, code) come back as separate items the agent can use directly.
+</Callout>
 
 ## Routines
 
 A routine is an ordinary [workflow](/app/workflows/create/): a trigger followed by a **Run agent** node. Create one from the agent's **Routines** tab:
 
-- **On a schedule** — daily, weekly or a custom time.
-- **When a page opens** — match a site or address.
-- **When a page changes** — watch a price or an element.
-- **Show it once** — do it yourself while the agent watches; your steps are recorded as a workflow.
+- **On a schedule**: daily, weekly or a custom time.
+- **When a page opens**: match a site or address.
+- **When a page changes**: watch a price or an element.
+- **Show it once**: do it yourself while the agent watches; your steps are recorded as a workflow.
 - Or run one of your existing workflows.
 
 Routines run while your browser is open. In the background, actions the agent's rules mark *ask* are skipped and listed in **Activity** for you to review. Each run's answer is saved as a chat. Open the routine's workflow in the canvas to change it.
@@ -107,4 +77,4 @@ Routines run while your browser is open. In the background, actions the agent's 
 
 ## Share an agent
 
-**Share** in the builder publishes the agent to the marketplace or downloads it as a file. See [Agent & team templates](/app/chat-and-agents/templates/) for what is — and isn't — included.
+**Share** in the builder publishes the agent to the marketplace or downloads it as a file. See [Agent & team templates](/app/chat-and-agents/templates/) for what is, and isn't, included.
