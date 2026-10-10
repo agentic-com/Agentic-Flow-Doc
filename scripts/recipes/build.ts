@@ -284,7 +284,7 @@ for (const file of walk(RECIPES_DIR).sort()) {
 
 	// "You'll need": the extension, each connection, each on-device model the import leaves blank.
 	const needs: { label: string; href?: string }[] = [];
-	if (extension) needs.push({ label: 'The AWFlow browser extension', href: '/get-started/quick-intro/' });
+	if (extension) needs.push({ label: 'The AWFlow browser extension', href: '/get-started/install/' });
 	for (const req of wf.requiredInputs ?? []) {
 		const node = graph.find((g) => g.id === req.nodeId);
 		if (!node) continue;
