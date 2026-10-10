@@ -3,8 +3,6 @@ title: Node Types Overview
 description: Quick map of common workflow goals to the current source-aligned node pages.
 ---
 
-# Node Types Overview
-
 | Goal | Start with |
 | --- | --- |
 | Start manually | [When Started](/nodes/builtin/trigger/whenstarted/) |
