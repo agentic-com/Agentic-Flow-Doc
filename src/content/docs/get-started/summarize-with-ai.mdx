@@ -1,0 +1,106 @@
+---
+title: Summarise a page with AI
+description: "Add a chat model, on your device, with an API key or with Ollama, and get three bullets for whatever page you're reading."
+section: get-started
+kind: lesson
+lesson:
+  level: 1
+  order: 3
+  minutes: 8
+sidebar:
+  label: "3 · Summarise a page with AI"
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import { StepCard, LessonProgress, LessonDone, ModelTabs } from "@components/awflow";
+import FlowPreview from "@components/awflow/FlowPreview.astro";
+
+<LessonProgress
+  client:visible
+  level={1}
+  order={3}
+  total={5}
+  minutes={8}
+  onDevice
+  youWill={[
+    "Read a whole page with Get All Text",
+    "Connect a chat model to a Basic LLM Chain",
+    "Write a prompt that uses the page text",
+    "Show the result",
+  ]}
+  before={[
+    "Lesson 2 done: you know how to add and test nodes",
+    "A long article open in another tab",
+    "For the on-device path: about 1 GB free and a few minutes for the first download",
+  ]}
+/>
+
+AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **model** plugged into the chain's **Model** slot. The model can run on your device (free, private, offline after the download), through a provider with your API key, or through Ollama on your computer.
+
+<FlowPreview src="/examples/summarize-page-llm-chain.awf" caption="What you'll build: read the page, ask the model for three bullets, show them." />
+
+<StepCard n={1} title="Start a workflow that reads the page" check="When Started → Get All Text is on a new canvas.">
+  Create a new **Blank canvas** workflow named `Summarise this page`, as in [lesson 2](/get-started/first-workflow/). Add the **When Started** trigger, then click its **+** and add **Get All Text**. Set **Output field name** to `text`.
+</StepCard>
+
+<StepCard n={2} title="Add a Basic LLM Chain" check="a Basic LLM Chain is linked to Get All Text, with an empty Model slot underneath.">
+  Click the **+** on the right of **Get All Text**, type `LLM` and pick **Basic LLM Chain**. Its **Model** slot sits under the node, with its own **+**.
+</StepCard>
+
+{/* SCREENSHOT: llm-chain-model-slot — Basic LLM Chain on the canvas with the Model slot "+" highlighted */}
+
+<StepCard n={3} title="Connect a model" check="a model node hangs under the chain's Model slot and shows the model you picked.">
+  Click the **+** under **Model** and pick one of these:
+
+  <ModelTabs client:load>
+    <div slot="ondevice">
+      Pick **Web LLM**. In **Model**, open the list and choose a model under **Available to download**. **Llama 3.2 1B Instruct** is the smallest and fastest to download; a 3B model writes better summaries. It downloads the first time it runs, then works offline and nothing leaves your device. See [Local AI](/app/local-models/) to install models ahead of time.
+
+      In Firefox, some graphics setups can't run Web LLM; the model then shows **Not supported here**. Use **Transformers Chat** instead.
+    </div>
+    <div slot="apikey">
+      Pick **Chat OpenAI**, **Chat Anthropic** or **Chat Google**. In **Authentication**, click **+ Add Credential**, paste your API key from the provider's website, and click **Create Credential**. Then choose a model. The key is stored in AWFlow and sent only to that provider. See [Create credentials](/app/connections/create/).
+
+      This path costs a little per run, billed by the provider, and the page text is sent to them.
+    </div>
+    <div slot="ollama">
+      Install [Ollama](https://ollama.com) on your computer and pull a model, for example `ollama pull llama3.2`. Start it so the extension may call it:
+
+      ```sh title="Terminal"
+      OLLAMA_ORIGINS=chrome-extension://linlkeaipfpnhddjkpcbmldionajfifa ollama serve
+      ```
+
+      In Firefox, use `OLLAMA_ORIGINS=moz-extension://*`. Then pick the **Ollama** node and choose your model in **Model** (click **Refresh models** if the list is empty). Nothing leaves your computer. See [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/).
+    </div>
+  </ModelTabs>
+</StepCard>
+
+<StepCard n={4} title="Write the prompt" check="the Prompt field shows your text, with {{ $input.text }} at the end.">
+  Open **Basic LLM Chain** and paste this into **Prompt**:
+
+  ```text title="Prompt"
+  Summarise this page in 3 short bullets for a busy reader.
+
+  {{ $input.text }}
+  ```
+
+  `{{ $input.text }}` is replaced by the page text from **Get All Text** when the workflow runs.
+</StepCard>
+
+<StepCard n={5} title="Show the result" check="Display Markdown is linked after the chain, with Content set to {{ $input.response }}.">
+  Click the **+** on the right of **Basic LLM Chain** and add **Display Markdown**. Set **Title** to `Page summary` and **Content** to `{{ $input.response }}`: the chain puts the model's answer in a field called `response`.
+</StepCard>
+
+<StepCard n={6} title="Run it on an article" check="Basic LLM Chain → Output → Actual shows a response with three bullets about the article.">
+  Switch to the tab with the article, then back to the panel, and click **Test Workflow**. The first on-device run waits for the model download (progress shows in the node's run log); later runs take a few seconds. Click **Save** when it works.
+</StepCard>
+
+<Aside type="tip" title="Make it yours">
+Change the prompt: "Explain this page to a 10-year-old", "List every date and price mentioned", "Write a two-line reply to this email". The rest of the workflow stays the same. See [Prompting and outputs](/concepts/ai/prompting-and-outputs/).
+</Aside>
+
+The nodes in this lesson: [Get All Text](/nodes/extension/getalltext/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Display Markdown](/nodes/extension/displaymarkdown/). How models plug into nodes: [Model dependencies](/concepts/ai/model-dependencies/).
+
+<LessonDone client:load title="Nice: your workflow thinks now." next={{ href: "/get-started/first-automation/", label: "Lesson 4" }}>
+  Next you'll run it from a keyboard shortcut, without opening the canvas.
+</LessonDone>

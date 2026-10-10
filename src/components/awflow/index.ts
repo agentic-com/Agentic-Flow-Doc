@@ -17,3 +17,6 @@ export { default as RecipeCard } from './RecipeCard.svelte';
 export { default as Kbd } from './Kbd.svelte';
 export { default as FlowPreview } from './FlowPreview.svelte';
 export { default as SearchDialog } from './SearchDialog.svelte';
+export { default as LessonProgress } from './LessonProgress.svelte';
+export { default as LessonDone } from './LessonDone.svelte';
+export { default as ModelTabs } from './ModelTabs.svelte';

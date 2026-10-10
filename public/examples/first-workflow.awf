@@ -1,0 +1,105 @@
+{
+  "name": "My first workflow",
+  "description": "Reads the text you selected on a page and reshapes it into a small report. The workflow from lesson 2 of the AWFlow learning path.",
+  "tags": [
+    "tutorial",
+    "tier-1",
+    "extension",
+    "no-setup"
+  ],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "sticky-intro",
+      "type": "stickyNote",
+      "position": {
+        "x": 20,
+        "y": 20
+      },
+      "data": {
+        "color": "#fff266",
+        "content": "👋 Your first workflow.\n\nSelect some text on any web page, then press Test Workflow. Get Selected Text reads it, and Edit Fields turns it into a short report with its length."
+      },
+      "width": 360,
+      "height": 170
+    },
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": {
+        "x": 100,
+        "y": 260
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:trigger:whenStarted"
+        },
+        "label": "When Started",
+        "inputs": {},
+        "parameters": {
+          "notes": "Starts the workflow when you press Test Workflow."
+        }
+      }
+    },
+    {
+      "id": "get-selection",
+      "type": "basic",
+      "position": {
+        "x": 420,
+        "y": 260
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:getSelectedTextNode"
+        },
+        "label": "Get Selected Text",
+        "inputs": {
+          "outputFieldName": "text"
+        },
+        "parameters": {
+          "notes": "Reads the text you highlighted on the page you're viewing."
+        }
+      }
+    },
+    {
+      "id": "report",
+      "type": "basic",
+      "position": {
+        "x": 740,
+        "y": 260
+      },
+      "data": {
+        "instance": {
+          "id": "af-base-node:basic:editFields"
+        },
+        "label": "Edit Fields",
+        "inputs": {
+          "fields": {
+            "processed_text": {
+              "type": "string",
+              "value": "Text: {{ $input.text }}\nLength: {{ $input.text.length }} characters"
+            }
+          }
+        },
+        "parameters": {
+          "notes": "Builds a small report from the selected text."
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-run-get",
+      "source": "trigger-run",
+      "target": "get-selection",
+      "type": "flowEdge"
+    },
+    {
+      "id": "e-get-report",
+      "source": "get-selection",
+      "target": "report",
+      "type": "flowEdge"
+    }
+  ],
+  "requiredInputs": []
+}

@@ -18,3 +18,9 @@ declare module 'virtual:starlight-awflow/nodes' {
 	const nodes: unknown;
 	export default nodes;
 }
+
+declare module 'virtual:starlight-awflow/upstream-sidebar' {
+	/** The Sidebar component registered before starlight-awflow (wrapped by the lesson rail). */
+	const Sidebar: (props: Record<string, unknown>) => unknown;
+	export default Sidebar;
+}

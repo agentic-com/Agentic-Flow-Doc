@@ -1,0 +1,93 @@
+---
+title: Your first automation
+description: "Start a workflow without opening the canvas: add a Hotkey or Schedule trigger, activate the workflow, and check its runs."
+section: get-started
+kind: lesson
+lesson:
+  level: 1
+  order: 4
+  minutes: 5
+sidebar:
+  label: "4 · Your first automation"
+---
+
+import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
+import { StepCard, LessonProgress, LessonDone } from "@components/awflow";
+
+<LessonProgress
+  client:visible
+  level={1}
+  order={4}
+  total={5}
+  minutes={5}
+  onDevice
+  youWill={[
+    "Add a trigger that fires on its own",
+    "Activate the workflow",
+    "Run it without opening the canvas",
+    "Find the run in the Executions tab",
+  ]}
+  before={["The “Summarise this page” workflow from lesson 3, saved", "The AWFlow extension (Hotkey and Schedule don't run in the web app)"]}
+/>
+
+So far you started workflows with **Test Workflow**. An automation starts by itself: when you press a shortcut, at a set time, when a page loads, or from the right-click menu. Triggers like these only listen while the workflow is **active**.
+
+## Add the trigger
+
+<Tabs syncKey="lesson-trigger">
+<TabItem label="Hotkey (recommended)">
+
+<StepCard n={1} title="Add a Hotkey trigger" check="a Hotkey node is on the canvas, linked to Get All Text.">
+  Open **Summarise this page**. Click **Add a step** (the **+** in the canvas toolbar), search for **Hotkey** and add it. Then drag from the dot on the right of **Hotkey** onto the left edge of **Get All Text**, so both triggers lead to the same steps.
+</StepCard>
+
+<StepCard n={2} title="Pick a shortcut slot" check="the browser's shortcut page lists “Run workflow bound to Hotkey slot 1” with a key combination.">
+  In **Hotkey**, keep **Hotkey Slot** on **Hotkey slot 1**. Slot 1 comes with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> (<kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> on Mac). Browsers don't let extensions add a shortcut per workflow, so you choose the keys for each slot in the browser:
+
+  - Chrome, Edge, Brave: open `chrome://extensions/shortcuts`.
+  - Firefox: open `about:addons`, click the gear menu, then **Manage Extension Shortcuts**.
+
+  Find **Agentic Workflow**. If slot 1 shows no keys (another extension already uses them), type your own combination.
+</StepCard>
+
+</TabItem>
+<TabItem label="Schedule">
+
+<StepCard n={1} title="Add a Schedule trigger" check="a Schedule node is on the canvas, linked to the first step.">
+  Open the workflow you want to run on a timer. Click **Add a step** (the **+** in the canvas toolbar), search for **Schedule** and add it, then drag from its right dot onto your first step.
+</StepCard>
+
+<StepCard n={2} title="Set how often" check="the Schedule node shows your interval.">
+  Set **Trigger Interval** to *hours* and **Hours Between Triggers** to `1`, or to *days* with a **Trigger at Hour**. A schedule works best for workflows that don't depend on the tab you're looking at, such as checking a page with an HTTP request. The browser has to be open for it to fire. See [Schedule](/nodes/builtin/trigger/schedule/).
+</StepCard>
+
+</TabItem>
+</Tabs>
+
+## Activate and run it
+
+<StepCard n={3} title="Save and activate" check="the switch in the canvas header reads active.">
+  Click **Save**. Then turn on the switch next to the workflow's name in the canvas header (it says **inactive** until you do). You can also choose **Activate** in the workflow's **⋯** menu in the Workflows list.
+</StepCard>
+
+<StepCard n={4} title="Fire it" check="the Page summary with three bullets appears, without touching the canvas.">
+  Switch to a tab with an article and press your shortcut. (With a schedule, wait for the next interval.) You can close the canvas first: active workflows run in the background.
+</StepCard>
+
+<StepCard n={5} title="Check its runs" check="the newest row says Success, started a few seconds ago.">
+  Open the workflow and click the **Executions** tab at the top (it reads **Runs** in a narrow panel). Every run is listed with its status, start time and duration. Click a run to see what each step produced. See [Run history](/app/workflows/run-history/).
+</StepCard>
+
+<Aside type="caution" title="Nothing happens?">
+Check three things: the workflow is **active**, the slot in the node matches the line you set in the browser's shortcut page, and you're in the browser extension, not the web app. More in [Hotkey troubleshooting](/nodes/builtin/trigger/hotkey/#troubleshooting).
+</Aside>
+
+## Other ways to start a workflow
+
+- [Context Menu](/nodes/builtin/trigger/contextmenu/): right-click a selection, link or page.
+- [Page Load](/nodes/builtin/trigger/pageload/): every time a page matching a URL pattern loads.
+- [Element Change](/nodes/builtin/trigger/elementchange/): when something on a page changes, like a price.
+
+<LessonDone client:load title="It runs on its own now." next={{ href: "/get-started/build-with-aria/", label: "Lesson 5" }}>
+  Last lesson of level 1: let Aria build the next workflow for you.
+</LessonDone>

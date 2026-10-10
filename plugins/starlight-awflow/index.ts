@@ -15,6 +15,7 @@ export { SECTION_PALETTE };
 
 const VIRTUAL_CONFIG = 'virtual:starlight-awflow/config';
 const VIRTUAL_NODES = 'virtual:starlight-awflow/nodes';
+const VIRTUAL_UPSTREAM_SIDEBAR = 'virtual:starlight-awflow/upstream-sidebar';
 
 const here = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
@@ -56,7 +57,10 @@ export default function starlightAwflow(options: StarlightAwflowOptions): Starli
 		name: 'starlight-awflow',
 		hooks: {
 			'config:setup'({ addIntegration, addRouteMiddleware, config, updateConfig }) {
-				// Our overrides go first so a project-level override in astro.config.mjs still wins.
+				// The lesson rail (#1341) wraps whichever Sidebar was registered before us
+				// (starlight-sidebar-topics' one here), so it is set after the spread on purpose.
+				const upstreamSidebar = config.components?.Sidebar ?? '@astrojs/starlight/components/Sidebar.astro';
+				// Our other overrides go first so a project-level override in astro.config.mjs still wins.
 				updateConfig({
 					components: {
 						Header: here('./overrides/Header.astro'),
@@ -65,6 +69,7 @@ export default function starlightAwflow(options: StarlightAwflowOptions): Starli
 						Footer: here('./overrides/Footer.astro'),
 						Search: here('./overrides/Search.astro'),
 						...config.components,
+						Sidebar: here('./overrides/Sidebar.astro'),
 					},
 					customCss: [
 						'@fontsource-variable/geist',
@@ -86,18 +91,26 @@ export default function starlightAwflow(options: StarlightAwflowOptions): Starli
 				addIntegration({
 					name: 'starlight-awflow-virtual-modules',
 					hooks: {
-						'astro:config:setup'({ updateConfig: updateAstroConfig }) {
+						'astro:config:setup'({ config: astroConfig, updateConfig: updateAstroConfig }) {
+							// Project overrides are written relative to the project root ("./src/…").
+							const upstreamSidebarId = upstreamSidebar.startsWith('.')
+								? fileURLToPath(new URL(upstreamSidebar, astroConfig.root))
+								: upstreamSidebar;
 							updateAstroConfig({
 								vite: {
 									plugins: [
 										{
 											name: 'vite-plugin-starlight-awflow',
 											resolveId(id: string) {
-												if (id === VIRTUAL_CONFIG || id === VIRTUAL_NODES) return '\0' + id;
+												if (id === VIRTUAL_CONFIG || id === VIRTUAL_NODES || id === VIRTUAL_UPSTREAM_SIDEBAR)
+													return '\0' + id;
 											},
 											load(id: string) {
 												if (id === '\0' + VIRTUAL_CONFIG) {
 													return `export default ${JSON.stringify(resolved)};`;
+												}
+												if (id === '\0' + VIRTUAL_UPSTREAM_SIDEBAR) {
+													return `export { default } from ${JSON.stringify(upstreamSidebarId)};`;
 												}
 												if (id === '\0' + VIRTUAL_NODES) {
 													// import.meta.glob tolerates a missing file: the generator (#1313) may not have run yet.
