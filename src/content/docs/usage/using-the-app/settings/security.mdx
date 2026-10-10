@@ -1,0 +1,46 @@
+---
+title: "Security and Safe mode"
+description: "Decide whether the workflows you build must ask before contacting each website"
+kind: guide
+section: app
+sidebar:
+  label: "Security (Safe mode)"
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+**Settings › Security** has one setting: **Safe mode for my workflows**. It decides how strictly your own workflows are checked before they reach the internet.
+
+## Installed workflows always ask
+
+Workflows you install from the Marketplace or import always ask before they contact a website for the first time, use a connected app, or do something sensitive such as running code. Safe mode doesn't change that.
+
+## Your own workflows: Trusted or Safe mode
+
+For the workflows **you created**, you choose:
+
+- **Off (Trusted)**, the default. Your workflows run without asking. You built the graph and typed the URLs yourself.
+- **On**. Your workflows get the same check as installed ones: before a step contacts a website, that website must be allowed for this workflow.
+
+{/* SCREENSHOT: Settings › Security at #/app/settings/security with Safe mode switched on */}
+
+## What Safe mode checks
+
+Safe mode applies to steps with a URL field that needs permission, such as [HTTP Request](/nodes/builtin/core/http-request/) or [Custom API](/nodes/builtin/integration/custom-api/). Before such a step runs:
+
+1. AWFlow reads the website (host) from the URL. If the URL is built from an expression, it counts as *Any host (dynamic URL)*.
+2. If that host is already allowed for this workflow, the step runs.
+3. If not, you are asked to approve contacting it. When you approve, the host is saved as allowed for this workflow, so it won't ask again.
+4. If you reject, or nobody is there to answer (for example a scheduled run with the app closed), the step fails with a message telling you it needs permission. You can grant it in [Site access](/usage/using-the-app/settings/access/).
+
+Next to a permissioned URL field you can also click **Grant access** while you build.
+
+## Good to know
+
+- Safe mode is saved **on this device only**. Turn it on again on each browser you use.
+- With Safe mode off, the grants in [Site access](/usage/using-the-app/settings/access/) aren't applied to your own workflows, so turning a site off there won't stop them.
+- When an approval is needed and the app isn't open, you get a desktop notification asking you to open it.
+
+<Aside>
+Turn Safe mode on if you run workflows you didn't fully write yourself, or if you want a record of every site your workflows contact.
+</Aside>
