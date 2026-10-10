@@ -6,6 +6,8 @@ sidebar:
 section: app
 ---
 
+import { StepCard, StepShot } from "@components/awflow";
+
 When you’re building a workflow, you usually want to test it as you go.
 
 AWFlow gives you two ways to do that:
@@ -32,10 +34,23 @@ flowchart LR
 
 Use this when you want to see the complete result from start to finish.
 
-1. Open the page you want the workflow to work on.
-2. On the canvas, click **Test Workflow**.
-3. The workflow runs node by node. The button turns into **Running… 2 of 4 | Stop** so you can see how far it got.
-4. When it finishes, the **Last run** tab of the panel on the right says what happened. Click a node to see its output.
+<StepCard n={1} title="Click Test Workflow">
+  Open the page you want the workflow to work on, then, on the canvas, click **Test Workflow**. The workflow runs step by step, and the button turns into **Running… 2 of 4 | Stop** so you can see how far it got.
+
+  <StepShot shot="last-run" spot="test-workflow" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Read the Last run tab" check="it says It worked, or explains what went wrong.">
+  When the run ends, the **Last run** tab of the panel on the right says what happened in plain words. **Run again** starts it once more.
+
+  <StepShot shot="last-run" spot="last-run" n={2} zoom={44} />
+</StepCard>
+
+<StepCard n={3} title="Check each step">
+  Each step that ran has a green check, and each connection shows how many items passed along it. Double-click a step to see its input and output.
+
+  <StepShot shot="last-run" spot="step-output" n={3} />
+</StepCard>
 
 ### One run at a time
 
@@ -66,9 +81,17 @@ Use this when you’re adjusting one node and want fast feedback.
 
 When you run a step, AWFlow will also run any steps *before it* that are required to provide input.
 
-1. Click the node you want to test.
-2. Open its configuration panel.
-3. Click **Test step**.
+<StepCard n={1} title="Open the step's settings">
+  Double-click the step you want to test.
+
+  <StepShot shot="canvas" spot="step" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Click Test step" check="the Output side of the panel shows what the step returned.">
+  <StepShot shot="node-settings" spot="test-step" n={2} />
+</StepCard>
+
+You can also right-click a step and choose **Test Step**.
 
 If you don’t want parts of the workflow to run while testing, temporarily disable those nodes.
 

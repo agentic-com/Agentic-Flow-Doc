@@ -1,79 +1,99 @@
 ---
 title: Export and Import Workflows
-description: "Different ways to export, backup, and share workflows in AWFlow."
+description: "Save a workflow as a .awf file to back it up or share it, and import a .awf file or URL as a new workflow."
 section: app
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
-Workflows are saved as **JSON** files (a standard text format).
+A workflow is saved as a **`.awf` file**: a small JSON text file with its steps, connections and notes.
 
-You can:
+- **Export** a workflow to back it up or share it.
+- **Import** a `.awf` file (or a link to one) to use a workflow you downloaded or got from a teammate.
 
-- **Export** a workflow to save a backup or share it
-- **Import** a workflow to use a template you downloaded (or got from a teammate)
-
----
-
-## Exporting workflows
-
-You have a few ways to export:
-
-### Copy-and-Paste
-
-- In the editor canvas, select one or more nodes (`Ctrl + C` or `Cmd + C`).
-- Paste them into another canvas or file (`Ctrl + V` or `Cmd + V`).
-- This method is fast for sharing parts of a workflow.
-
-### Using the Editor UI Menu
-
-- In the workflow editor, click the menu (three dots ⋮) in the top-right.
-- You’ll see options such as:
-  - **Download** – saves the current workflow as a JSON file.
-  - **Export from URL** – pull workflow JSON from a URL.
-  - **Import from File** – upload a JSON file to load a workflow.
+Your credentials (keys, tokens, sign-ins) are never part of the file.
 
 ---
 
-## Importing workflows
+## Export a workflow
 
-To import a workflow:
+<StepCard n={1} title="Open the workflow's menu">
+  On the **Workflows** page, click the **⋮** at the start of the workflow's row.
 
-- Use **Import from File** to upload a JSON file from your computer.
-- Or **Import from URL** to load a JSON file hosted on the web.
-- After importing, review the node settings (especially credentials) before you run it.
+  <StepShot shot="workflow-row-menu" spot="row-menu" n={1} />
+</StepCard>
 
-<Aside type="caution" title="Sensitive information">
-When sharing workflow JSON files, be cautious:
+<StepCard n={2} title="Click Export" check="your browser downloads a file named after the workflow, ending in .awf.">
+  <StepShot shot="workflow-row-menu" spot="export" n={2} />
+</StepCard>
 
-- They may include credential names or IDs.
-- Sensitive information (like tokens) may require cleaning before sharing.  
+In the editor, the **⋮** at the top right has the same **Export** item. To export many workflows at once, select them in the list and click **Export** in the toolbar at the bottom (see [Bulk actions](/app/workflows/manage-list/#bulk-actions)).
+
+If AWFlow finds a secret typed into a step (an API key pasted in a field, for example), it tells you before downloading and offers to export the workflow **with the secrets removed**.
+
+### Copy and paste steps
+
+To share only a few steps, select them on the canvas and press <kbd>Ctrl</kbd> <kbd>C</kbd> (<kbd>⌘</kbd> <kbd>C</kbd> on a Mac), then press <kbd>Ctrl</kbd> <kbd>V</kbd> (<kbd>⌘</kbd> <kbd>V</kbd>) in another workflow.
+
+---
+
+## Import a workflow
+
+An import always creates a **new** workflow; it never changes one you already have.
+
+<StepCard n={1} title="Start an import">
+  On the **Workflows** page, click **Add Workflow**, pick **Import**, then click **Continue**.
+
+  <StepShot shot="import-source" spot="import" n={1} zoom={44} />
+</StepCard>
+
+<StepCard n={2} title="Choose the file or the link">
+  Under **From a file**, click **Choose a .awf file** and pick it. Under **From a URL**, paste the link and click **Fetch & validate**. Then click **Continue**.
+
+  <StepShot shot="import-file" spot="choose-file" n={2} zoom={44} />
+</StepCard>
+
+<StepCard n={3} title="Name it and create it" check="the imported workflow opens in the editor.">
+  The **Name** comes from the file; change it if you like, add a **Description**, then click **Create & open**.
+
+  <StepShot shot="import-details" spot="create-open" n={3} zoom={44} />
+</StepCard>
+
+After the import, review the steps, especially the ones that use a credential: pick your own credential where one is needed, then [test it](/app/workflows/executions/run-from-the-canvas/).
+
+### From the editor
+
+When a workflow is open, its **⋮** menu can import too:
+
+<GuidedShot
+  shot="canvas-menu"
+  steps={[
+    { spot: 'menu', title: 'Open the ⋮ menu', body: 'At the top right of the editor.' },
+    { spot: 'import-file', title: 'Import as new workflow', body: 'Pick a `.awf` file. It opens as a new workflow; the one you were editing is not changed.' },
+    { spot: 'import-url', title: 'Or Import as new workflow from URL', body: 'Paste the link to a `.awf` file.' },
+    { spot: 'export', title: 'Export downloads this workflow', body: 'The same as **Export** in the workflow list.' },
+  ]}
+/>
+
+<Aside type="caution" title="Before you share a file">
+A `.awf` file has no credentials, but it does hold everything typed into the steps: URLs, page selectors, prompts and any text you entered. Read it through, or open it in AWFlow, before you share it.
 </Aside>
 
 <Aside type="note" title="Imported workflows are treated as untrusted">
 A workflow you import from a file or URL didn't come from you, so it's treated as
-**untrusted code** — exactly like a workflow installed from the marketplace. Before
+**untrusted code**, exactly like a workflow installed from the marketplace. Before
 its steps run, they're **run-gated** against the permissions the workflow actually
 needs, and steps that do something sensitive (run code, change the current page,
 read or write local files, use a connected app, or reach a new site) ask for your
-**consent** the first time. Review and approve those prompts — or choose "Always
-allow for this flow" — when you're happy with what the workflow does.
+**consent** the first time. Review and approve those prompts, or choose "Always
+allow for this flow", when you're happy with what the workflow does.
 </Aside>
 
 ---
 
-## Why this matters
+## Good habits
 
-- Back up your workflows periodically by exporting them.
-- Share workflow templates with teammates or the community.
-- Migrate workflows between environments (development → production) by importing.
-- When importing into a new system, check that any credentials or connections are valid and secure.
-
----
-
-## Best Practices
-
-- Before sharing workflows, remove or anonymize sensitive info (credentials, URLs).
-- Keep backups somewhere safe (for example: a private folder, a team drive, or version control).
-- After import, test the workflow manually (see [Run from the canvas](/app/workflows/executions/run-from-the-canvas/)) to ensure it runs correctly.
-- Maintain clarity: rename nodes, clean unused nodes, add Sticky Notes to explain logic (see [Sticky Notes](/app/workflows/components/sticky-notes/)).
+- Export important workflows from time to time, and keep the files somewhere safe (a private folder, a team drive or version control).
+- After an import, run the workflow once by hand (see [Run from the canvas](/app/workflows/executions/run-from-the-canvas/)) to check it works.
+- Before sharing, rename steps clearly and add notes (see [Sticky Notes](/app/workflows/components/sticky-notes/) and [Notes & "How this flow works"](/app/workflows/narration/)) so the next person understands it.

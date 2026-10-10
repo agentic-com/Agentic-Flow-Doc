@@ -7,12 +7,10 @@ sidebar:
   label: "Manage the list"
 ---
 
-import { Aside, Steps } from '@astrojs/starlight/components';
-import { Screenshot } from '@components/awflow';
+import { Aside } from '@astrojs/starlight/components';
+import { Screenshot, StepCard, StepShot } from '@components/awflow';
 import workflowsListLight from '@assets/screenshots/workflows-list.light.webp';
 import workflowsListDark from '@assets/screenshots/workflows-list.dark.webp';
-import workflowsBulkLight from '@assets/screenshots/workflows-bulk.light.webp';
-import workflowsBulkDark from '@assets/screenshots/workflows-bulk.dark.webp';
 
 **Workflows** in the sidebar lists every workflow you have. Use it to find a workflow, turn it on or off, move it between this device and the cloud, and clean up many workflows at once.
 
@@ -63,7 +61,7 @@ Removed and under-review workflows also show a banner above the table. Click **D
 
 ## Actions on one workflow
 
-Open the **⋮** menu at the start of a row.
+Open the **⋮** menu at the start of a row. In the editor, the **⋮** at the top right has most of the same items, plus **Activate** / **Deactivate** and the import actions.
 
 On **My Workflows**:
 
@@ -112,31 +110,30 @@ Run history is stored in the same place as the workflow. See [Run history](/app/
 
 ## Bulk actions
 
-<Steps>
+<StepCard n={1} title="Select the workflows">
+  Tick the checkbox on each row you want, or the header checkbox to select them all. A toolbar appears at the bottom of the screen with how many you selected.
 
-1. Tick the checkbox on each row you want, or the header checkbox to select all.
+  <StepShot shot="workflows-bulk" spot="select-rows" n={1} />
+</StepCard>
 
-2. A toolbar appears at the bottom of the screen showing how many you selected.
+<StepCard n={2} title="Pick an action in the toolbar">
+  For example **Delete**. The toolbar shows progress while it works through the list. **Clear** drops the selection.
 
-3. Pick an action. The toolbar shows progress while it works through the list.
+  <StepShot shot="workflows-bulk" spot="bulk-delete" n={2} />
+</StepCard>
 
-4. A message at the end tells you how many succeeded, were skipped or failed.
+<StepCard n={3} title="Confirm, when asked" check="a message tells you how many succeeded, were skipped or failed.">
+  **Delete** asks first, because it can't be undone. Click **Delete** to go ahead, or **Cancel**.
 
-</Steps>
-
-<Screenshot
-  src={workflowsBulkLight}
-  srcDark={workflowsBulkDark}
-  alt="The Workflows page, My Workflows tab, with three of the listed workflows selected: their row checkboxes are ticked, the footer says how many rows are selected, and a toolbar at the bottom shows 3 selected with Export, Activate, Deactivate, Tags, Delete and Clear."
-  hotspots={[{ x: 23.4, y: 29.8, label: 'Select rows' }, { x: 34, y: 95.4, label: 'Bulk-action toolbar' }]}
-/>
+  <StepShot shot="workflows-bulk-delete" spot="confirm-delete" n={3} zoom={44} />
+</StepCard>
 
 Bulk actions on **My Workflows**:
 
 - **Export** downloads each selected workflow. If a workflow contains embedded secrets, it is exported with the secrets removed, and the summary tells you how many.
 - **To cloud** / **To local** moves the selection. Workflows already in that place are skipped. Signed-in users only.
 - **Activate** / **Deactivate** turns their triggers on or off.
-- **Tags** opens a dialog with **Add tags** and **Remove tags** fields. The change applies to every selected workflow.
+- **Tags** opens a dialog with **Add tags** and **Remove tags** fields. The change applies to every selected workflow. See [Workflow tags](/app/workflows/tags/#tag-many-workflows-at-once).
 - **Delete** removes them after you confirm. This can't be undone. If the workflows have their own chat memory, you choose whether to delete those conversations or keep them in [Memory](/app/memory/overview/).
 
 Bulk actions on **From Marketplace**:

@@ -1,0 +1,63 @@
+---
+title: Workflow tags
+description: "Label your workflows with tags and filter the workflow list by tag."
+sidebar:
+    order: 4
+section: app
+---
+
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
+
+Workflow tags let you label your workflows so you can organise and find them quickly. Tags are **per workflow**: each workflow keeps its own list of tag labels; there is no shared list of tags across workflows.
+
+## Add or edit tags on a workflow
+
+<StepCard n={1} title="Open the row menu">
+  On the **Workflows** page, click the **⋮** at the start of the workflow's row.
+
+  <StepShot shot="workflow-row-menu" spot="row-menu" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Click Manage tags">
+  <StepShot shot="workflow-row-menu" spot="manage-tags" n={2} />
+</StepCard>
+
+<StepCard n={3} title="Add or remove tags">
+  In the **Manage tags** dialog, type a tag and press <kbd>Enter</kbd> to add it. Click the **×** on a tag to remove it. A workflow can have as many tags as you like.
+
+  <StepShot shot="workflow-tags" spot="add-tag" n={3} zoom={44} />
+</StepCard>
+
+<StepCard n={4} title="Click Save" check="the new tags show in the workflow's Tags column.">
+  <StepShot shot="workflow-tags" spot="save" n={4} zoom={44} />
+</StepCard>
+
+You can also manage tags from the editor: the **⋮** menu at the top right of the canvas has the same **Manage tags** item.
+
+> **Note:** Tags are also editable when you publish a workflow to the marketplace, from the publish form.
+
+## Tag many workflows at once
+
+Tick the checkbox of each workflow on the **Workflows** page, then click **Tags** in the toolbar that appears at the bottom. The dialog applies to every selected workflow:
+
+<GuidedShot
+  shot="workflows-bulk-tags"
+  steps={[
+    { spot: 'add-tags', title: 'Add tags', body: 'Type a tag and press **Enter**. It is added to every selected workflow.' },
+    { spot: 'remove-tags', title: 'Remove tags', body: 'Type a tag to take it off every selected workflow that has it.' },
+    { spot: 'apply', title: 'Click Apply', check: 'the Tags column of each selected workflow shows the change.' },
+  ]}
+/>
+
+## Filter the list by tag
+
+On the **Workflows** page, open the **Tags** filter above the table. It only appears once at least one workflow has a tag.
+
+<GuidedShot
+  shot="workflows-filter"
+  steps={[
+    { spot: 'filter-button', title: 'Open the Tags filter', body: 'The number next to it says how many tags you picked.' },
+    { spot: 'filter-value', title: 'Tick one or more tags', body: 'The list shows the workflows that have **any** of the ticked tags.' },
+    { spot: 'reset', title: 'Click Reset to clear the filters', body: 'Or untick the tags. **Clear filters** at the bottom of the list resets this filter only.' },
+  ]}
+/>
