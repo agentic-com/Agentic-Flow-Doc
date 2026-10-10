@@ -12,6 +12,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { SHOTS, Session, type ShotDef } from './shots.ts';
 import { serveStatic } from './lib/static-server.ts';
+import { createFakeApi, FAKE_API_ORIGINS, FAKE_BEARER, FAKE_R2_ORIGINS, type FakeRoute } from './lib/fakeApi.ts';
 import { buildAge, measure, seedStorage, step, toWebp, type Hotspot, type Page, type Theme } from './lib/util.ts';
 
 const ROOT = resolve(import.meta.dir, '..', '..');
@@ -23,6 +24,7 @@ const MAX_WIDTH = 2000;
 const QUALITY = 85;
 const API = 'https://api.awflow.io';
 const DEBUG = join(tmpdir(), 'awflow-docs-capture-debug');
+const FIXTURES = join(import.meta.dir, 'fixtures');
 
 const argv = process.argv.slice(2);
 const flag = (n: string) => argv.includes(n);
@@ -177,59 +179,72 @@ const base = `http://127.0.0.1:${server.port}/`;
 const browser = await chromium.launch();
 try {
 	for (const theme of themes) {
-		const context = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: SCALE, colorScheme: theme, locale: 'en-US', timezoneId: 'Europe/Paris' });
-		await context.addInitScript((entries) => {
-			for (const [k, v] of Object.entries(entries)) localStorage.setItem(k, v);
-		}, seedStorage(theme));
-		// Reproducibility: never show models from a local Ollama on the capturing machine.
-		await context.route((u) => u.port === '11434', (r) => r.abort());
-		await context.route(`${API}/**`, (r) => corsProxy(r, base.slice(0, -1)));
-		const page = await context.newPage();
-		const session = new Session(page, base, theme);
-		for (const def of wanted) {
-			const prev = results.get(def.name);
-			if (prev && prev.status !== 'ok') continue; // skipped/failed in the first theme: don't half-capture
-			try {
-				const r = await step(`${def.name} (${theme})`, () => shoot(session, def));
-				const e: Entry = prev ?? {
-					shot: def.name,
-					page: def.page,
-					route: def.route,
-					alt: def.alt,
-					...(def.note ? { note: def.note } : {}),
-					status: 'ok',
-					files: {},
-					hotspots: r.hotspots,
-					appCommit: commit,
-					appVersion,
-					capturedAt: new Date().toISOString()
-				};
-				e.files[theme] = r.file;
-				e.width = r.width;
-				e.height = r.height;
-				results.set(def.name, e);
-				console.log(`${def.name} (${theme}): ok`);
-			} catch (err) {
-				const reason = (err instanceof Error ? err.message : String(err)).split('\n')[0];
-				const status = def.needsNetwork ? 'skipped' : 'failed';
-				if (status === 'failed') hardFail = true;
-				results.set(def.name, {
-					shot: def.name,
-					page: def.page,
-					route: def.route,
-					alt: def.alt,
-					status,
-					reason,
-					files: {},
-					hotspots: [],
-					appCommit: commit,
-					appVersion,
-					capturedAt: new Date().toISOString()
-				});
-				console.log(`${def.name} (${theme}): ${status.toUpperCase()} (${reason})`);
+		// Signed-in shots get their own browser context, whose backend is the fake API (lib/fakeApi.ts).
+		for (const signedIn of [false, true]) {
+			const defs = wanted.filter((s) => !!s.signedIn === signedIn);
+			if (!defs.length) continue;
+			const context = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: SCALE, colorScheme: theme, locale: 'en-US', timezoneId: 'Europe/Paris' });
+			await context.addInitScript(
+				(entries) => {
+					for (const [k, v] of Object.entries(entries)) localStorage.setItem(k, v);
+				},
+				{ ...seedStorage(theme), ...(signedIn ? { app_mode: 'authenticated', bearer_token: FAKE_BEARER } : {}) }
+			);
+			// Reproducibility: never show models from a local Ollama on the capturing machine.
+			await context.route((u) => u.port === '11434', (r) => r.abort());
+			const fake = signedIn ? createFakeApi(FIXTURES, base.slice(0, -1)) : null;
+			if (fake) {
+				for (const o of FAKE_API_ORIGINS) await context.route(`${o}/**`, (r) => fake.api(r as unknown as FakeRoute));
+				for (const o of FAKE_R2_ORIGINS) await context.route(`${o}/**`, (r) => fake.r2(r as unknown as FakeRoute));
+			} else await context.route(`${API}/**`, (r) => corsProxy(r, base.slice(0, -1)));
+			const page = await context.newPage();
+			const session = new Session(page, base, theme);
+			for (const def of defs) {
+				const prev = results.get(def.name);
+				if (prev && prev.status !== 'ok') continue; // skipped/failed in the first theme: don't half-capture
+				try {
+					const r = await step(`${def.name} (${theme})`, () => shoot(session, def));
+					const e: Entry = prev ?? {
+						shot: def.name,
+						page: def.page,
+						route: def.route,
+						alt: def.alt,
+						...(def.note ? { note: def.note } : {}),
+						status: 'ok',
+						files: {},
+						hotspots: r.hotspots,
+						appCommit: commit,
+						appVersion,
+						capturedAt: new Date().toISOString()
+					};
+					e.files[theme] = r.file;
+					e.width = r.width;
+					e.height = r.height;
+					results.set(def.name, e);
+					console.log(`${def.name} (${theme}): ok`);
+				} catch (err) {
+					const reason = (err instanceof Error ? err.message : String(err)).split('\n')[0];
+					const status = def.needsNetwork ? 'skipped' : 'failed';
+					if (status === 'failed') hardFail = true;
+					results.set(def.name, {
+						shot: def.name,
+						page: def.page,
+						route: def.route,
+						alt: def.alt,
+						status,
+						reason,
+						files: {},
+						hotspots: [],
+						appCommit: commit,
+						appVersion,
+						capturedAt: new Date().toISOString()
+					});
+					console.log(`${def.name} (${theme}): ${status.toUpperCase()} (${reason})`);
+				}
 			}
+			if (fake?.unknown.size) console.log(`  calls the fake API does not answer (404): ${[...fake.unknown].join(', ')}`);
+			await context.close();
 		}
-		await context.close();
 	}
 } catch (err) {
 	hardFail = true;

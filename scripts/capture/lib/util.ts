@@ -18,6 +18,9 @@ export interface Locator {
 	click(o?: { timeout?: number }): Promise<void>;
 	dblclick(o?: { timeout?: number }): Promise<void>;
 	fill(v: string, o?: { timeout?: number }): Promise<void>;
+	press(key: string): Promise<void>;
+	inputValue(): Promise<string>;
+	or(other: Locator): Locator;
 	waitFor(o?: { state?: 'attached' | 'detached' | 'visible' | 'hidden'; timeout?: number }): Promise<void>;
 	setInputFiles(f: string | { name: string; mimeType: string; buffer: Buffer }): Promise<void>;
 	boundingBox(): Promise<Box | null>;

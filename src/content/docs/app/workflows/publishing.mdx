@@ -6,6 +6,14 @@ sidebar:
 section: app
 ---
 
+import { Screenshot } from '@components/awflow';
+import publishBasicsLight from '@assets/screenshots/publish-basics.light.webp';
+import publishBasicsDark from '@assets/screenshots/publish-basics.dark.webp';
+import publishPreviewLight from '@assets/screenshots/publish-preview.light.webp';
+import publishPreviewDark from '@assets/screenshots/publish-preview.dark.webp';
+import publishReviewLight from '@assets/screenshots/publish-review.light.webp';
+import publishReviewDark from '@assets/screenshots/publish-review.dark.webp';
+
 Publishing lets you share your workflow in the Marketplace so other people can use it as a template.
 
 After you publish, others can browse it, import it, and adapt it to their own needs.
@@ -47,6 +55,15 @@ Make sure your workflow meets these key conditions:
    5. **Review & publish** — secret scan, shared values and permissions, then **Publish**.
 5. Your listing goes to a quick review, then appears in the Marketplace for others to import.
 
+The wizard opens on **Basics**, with the name and a starter description filled in from your workflow. Each **Next** saves the step to your draft, so you can close the wizard and pick up where you left off.
+
+<Screenshot
+  src={publishBasicsLight}
+  srcDark={publishBasicsDark}
+  alt="Step 1 of 5, Basics, of the Publish to the marketplace dialog for an example workflow: a five-step progress bar, the Name field filled with the workflow name (Summarise this page in 3 bullets), a Description editor with Write and Preview tabs and a formatting toolbar, prefilled with a starter description, the note Autofilled from your workflow, and Back and Next buttons."
+  hotspots={[{ x: 50, y: 33.5, label: "Five steps: Basics, Media, Details, Explain the steps, Review & publish" }, { x: 50, y: 39.5, label: "Listing name" }, { x: 50, y: 71.7, label: "Description, autofilled from your workflow" }, { x: 66.6, y: 77.1, label: "Next saves this step to your draft" }]}
+/>
+
 ---
 
 ## Generate a preview image
@@ -56,6 +73,13 @@ one for you. Under **Screenshots & video**, use **Generate a preview image** to
 compose a shareable 16:9 image from your workflow — a snapshot of the flow plus
 the nodes it uses, its trigger, a few quick stats and an AWFlow mark, arranged
 in a bento layout.
+
+<Screenshot
+  src={publishPreviewLight}
+  srcDark={publishPreviewDark}
+  alt="Step 2 of 5, Media, of the Publish to the marketplace dialog for an example workflow, with Generate selected under Screenshots & video: a bento-style preview image of the workflow (its trigger, the Get All Text, Basic LLM Chain, Web LLM and Display Markdown nodes, the title, an AWFlow mark and a 5 nodes, Runs in your browser card), then the Layout choices (Spotlight Halo selected, Cinematic Split, Filmstrip, Mosaic), five Accent colours, Image theme Light or Dark, a Show title checkbox and the Generate preview button for a 1600×900 PNG."
+  hotspots={[{ x: 34.9, y: 26.9, label: "Generate a preview image, or Upload your own" }, { x: 35.9, y: 69.6, label: "Layout" }, { x: 47.7, y: 77.8, label: "Accent colour, image theme and title" }, { x: 36.1, y: 82.1, label: "Generate preview adds the image to your previews" }]}
+/>
 
 It's one click, then a few optional tweaks:
 
@@ -150,6 +174,23 @@ writing good notes.
 
 A flow where **every step has a note** earns a **✨ Narrated** badge on its
 Marketplace card and listing — a signal that it teaches on open, not just runs.
+
+## Review & publish
+
+The last step shows your listing as people will see it, then what gets checked before you publish:
+
+- **Secret check.** Every step's settings are scanned for anything that looks like a key, token or password. If something is found, publishing is blocked until you blank it or move it into a credential.
+- **These values won't be shared.** Fields that are always left blank for installers, and other values you can choose to blank. Whoever installs the workflow fills them in.
+- **Permissions & Safety.** What the workflow can access (for example, reading the active tab) and where it connects, worked out from its steps. Installers see the same summary before they install.
+
+<Screenshot
+  src={publishReviewLight}
+  srcDark={publishReviewDark}
+  alt="Step 5 of 5, Review & publish, of the Publish to the marketplace dialog for an example workflow that summarises the page you're on, scrolled to Permissions & Safety: What it can access lists Reads the active tab (reads content, never writes), Where it connects says the workflow makes no network requests, How you're protected lists the runtime-enforced sandbox, capabilities disclosed up front and reviews from real installs only. Below, a Narrated badge (every step has a plain-language note), a What happens next note about the quick review, and the Publish button."
+  hotspots={[{ x: 38.5, y: 40.3, label: "What it can access, derived from the steps" }, { x: 51.2, y: 40.3, label: "Where it connects" }, { x: 41.9, y: 72.5, label: "Narrated: every step has a note" }, { x: 66.1, y: 88, label: "Publish sends it to review" }]}
+/>
+
+Click **Publish** to send the listing to review.
 
 ## How listings get discovered
 
