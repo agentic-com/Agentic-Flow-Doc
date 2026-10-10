@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 List the files a page uses or offers for download (images, documents, video, audio, scripts, styles) with their names and types.
 
 ## What it does
@@ -33,15 +36,7 @@ Addresses are made absolute, and the same file is listed only once per kind.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
-| **Options** | Group |  | No |  |
-| Options › **Images** | Toggle | On | No |  |
-| Options › **Downloadable Links** | Toggle | On | No |  |
-| Options › **Media** | Toggle | On | No |  |
-| Options › **Scripts** | Toggle | Off | No |  |
-| Options › **Styles** | Toggle | Off | No |  |
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group"},{"name":"Options › Images","type":"Toggle","default":"On"},{"name":"Options › Downloadable Links","type":"Toggle","default":"On"},{"name":"Options › Media","type":"Toggle","default":"On"},{"name":"Options › Scripts","type":"Toggle","default":"Off"},{"name":"Options › Styles","type":"Toggle","default":"Off"}]} />
 {/* AUTO:settings:end */}
 
 Leave **DOM Selector** empty to scan the whole page, or click the crosshair button in the field and click the area to scan (a downloads section, an article).
@@ -49,9 +44,25 @@ Leave **DOM Selector** empty to scan the whole page, or click the crosshair butt
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each run returns a list of items with the fields `url` (text), `category` (choice), `tagName` (text), `selector` (text), `text` (text), `filename` (text), `extension` (text).
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"url","type":"Text"},{"name":"category","type":"Choice"},{"name":"tagName","type":"Text"},{"name":"selector","type":"Text"},{"name":"text","type":"Text"},{"name":"filename","type":"Text"},{"name":"extension","type":"Text"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "url": "…",
+    "category": "…",
+    "tagName": "…",
+    "selector": "…",
+    "text": "…",
+    "filename": "…",
+    "extension": "…"
+  }
+]
+```
 {/* AUTO:outputs:end */}
 
 - `url`: the full address of the file.
@@ -63,7 +74,7 @@ Each run returns a list of items with the fields `url` (text), `category` (choic
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -73,7 +84,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add [Filter](/nodes/builtin/flow/filter/) to keep items where `{{ $input.extension }}` equals `pdf`.
 4. Add [Http Request](/nodes/builtin/core/http-request/) with **URL** = `{{ $input.url }}` and **Response format** = `file`, then [PDF Parser](/nodes/builtin/datatransformation/pdfparser/) to read each PDF.
 
-## Troubleshooting
+## Common issues
 
 - **The output is empty.** No file of the selected kinds was found, or **DOM Selector** matched nothing. Turn on more kinds under **Options**, or scan the whole page.
 - **A download link is missing.** Its address does not end in a known file type (for example a link like `/download?id=42`) and it has no download attribute. Use [Get All Link](/nodes/extension/getalllinks/) to see every link.

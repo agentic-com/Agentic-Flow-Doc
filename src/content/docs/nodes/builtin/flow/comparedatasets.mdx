@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Sort two collections into new, gone, unchanged and changed items.
 
 ## What it does
@@ -34,11 +37,7 @@ Equality ignores the order of keys inside an object, but the order of items insi
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Fields To Match On** | Tags |  | No | The fields that identify an item, so it can be found on both sides. |
-| **Fields To Compare** | Choice | All fields | No | Which part of two matched items decides whether they are the same. Options: All fields, Selected fields, All fields except. |
-| **Fields** | Tags |  | No | Field names to compare on, or to ignore. Dots address nested fields. |
+<AwfParamTable rows={[{"name":"Fields To Match On","type":"Tags","description":"The fields that identify an item, so it can be found on both sides."},{"name":"Fields To Compare","type":"Choice","default":"All fields","description":"Which part of two matched items decides whether they are the same. Options: All fields, Selected fields, All fields except."},{"name":"Fields","type":"Tags","description":"Field names to compare on, or to ignore. Dots address nested fields."}]} />
 {/* AUTO:settings:end */}
 
 Wire the older dataset to the first input (A) and the newer one to the second input (B). The node waits for both inputs and compares the whole lists at once.
@@ -48,7 +47,7 @@ On **Fields To Compare**, *All fields* compares every field, *Selected fields* c
 ## Outputs
 
 {/* AUTO:outputs:start */}
-4 output ports: **In A only**, **Same**, **Different**, **In B only**.
+<AwfOutputPorts ports={[{"name":"In A only"},{"name":"Same"},{"name":"Different"},{"name":"In B only"}]} />
 {/* AUTO:outputs:end */}
 
 Items on **Different** are pairs:
@@ -64,7 +63,7 @@ The other three ports send the original items.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -76,7 +75,7 @@ None. This node needs no credential and has no slots for other nodes.
 5. **Different** goes to a [Browser Notification](/nodes/extension/browsernotification/) that names the product and its new price. **In B only** goes to a Slack message about new products.
 6. A second Data Store node saves today's list for tomorrow.
 
-## Troubleshooting
+## Common issues
 
 - **"Compare Datasets needs at least one field to match on."** Fill in **Fields To Match On**.
 - **"Compare mode … needs at least one field."** You chose *Selected fields* or *All fields except*. Add names to **Fields**, or switch to *All fields*.

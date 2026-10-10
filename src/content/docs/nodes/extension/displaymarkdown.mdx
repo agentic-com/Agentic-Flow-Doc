@@ -11,7 +11,16 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Show formatted text (headings, lists, links, tables) in a panel on the page you are looking at.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/explain-eli5.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -31,10 +40,7 @@ Display Markdown renders the Markdown in **Content** and shows it in a panel in 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Title** | Text |  | No | The title of the markdown content. |
-| **Content** | Markdown |  | Yes | The markdown content to display. |
+<AwfParamTable rows={[{"name":"Title","type":"Text","description":"The title of the markdown content."},{"name":"Content","type":"Markdown","required":true,"description":"The markdown content to display."}]} />
 {/* AUTO:settings:end */}
 
 **Content** usually comes from an earlier node, for example `{{ $input.summary }}` after a Summarization node. You can mix fixed text and expressions:
@@ -54,7 +60,7 @@ This node has no output port: nothing runs after it on this branch.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -64,7 +70,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add a [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) node with **Text** = `{{ $input.pageText }}`, and connect a chat model to it.
 4. Add **Display Markdown** with **Title** = `Summary` and **Content** = `{{ $input.summary }}`.
 
-## Troubleshooting
+## Common issues
 
 - **No panel appears.** The panel is drawn on the active tab. Make sure the page you want is the active tab when the node runs; browser settings pages and the extension store cannot show it.
 - **The panel is empty.** **Content** resolved to nothing. Open the previous node's output and point the expression at the field that holds the text.

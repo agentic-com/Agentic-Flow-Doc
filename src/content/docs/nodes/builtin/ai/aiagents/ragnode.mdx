@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Answer questions with a chat model that looks up your knowledge base first, and can remember the conversation.
 
 ## What it does
@@ -38,19 +41,7 @@ To answer fully on-device by quoting your documents, use [Q&A Agent](/nodes/buil
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Prompt** | Text |  | Yes |  |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **System message** | Long text |  | No | The system message to use. |
-| Options › **Knowledge documents (k)** | Number | 4 | No | How many documents to retrieve from the connected knowledge base. |
-| Options › **Max knowledge context length** | Number | 4000 | No | Maximum characters of retrieved knowledge to inject into the prompt. |
-| Options › **Fail on knowledge error** | Toggle | Off | No | If enabled, the node fails when knowledge retrieval errors instead of answering without context. |
-| Options › **Search type** | Choice | Most similar | No | How passages are picked from the connected knowledge base. Options: Most similar, Diverse (MMR). |
-| Options › **Match by** | Choice | Keywords and meaning | No | How a knowledge base is searched with "Most similar". Diverse (MMR) and other vector stores always match by meaning. Options: Keywords and meaning, Meaning only. |
-| Options › **Minimum relevance** | Number | 0 | No | Drop passages less similar to the question than this (0 to 1). 0 keeps every passage. |
-| Options › **Metadata filter** | Key-value pairs |  | No | Only search passages whose metadata matches every key = value (e.g. sourceType = web). Keys use letters, numbers and \_; numbers and true/false are matched as such. |
-| Options › **Device-only knowledge with a cloud model** | Choice | Stop with an error | No | A knowledge base marked "Device only" is never sent to a cloud model. Choose what the node does when its model is a cloud model. Options: Stop with an error, Answer without it. |
+<AwfParamTable rows={[{"name":"Prompt","type":"Text","required":true},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."},{"name":"Options › Knowledge documents (k)","type":"Number","default":"4","description":"How many documents to retrieve from the connected knowledge base."},{"name":"Options › Max knowledge context length","type":"Number","default":"4000","description":"Maximum characters of retrieved knowledge to inject into the prompt."},{"name":"Options › Fail on knowledge error","type":"Toggle","default":"Off","description":"If enabled, the node fails when knowledge retrieval errors instead of answering without context."},{"name":"Options › Search type","type":"Choice","default":"Most similar","description":"How passages are picked from the connected knowledge base. Options: Most similar, Diverse (MMR)."},{"name":"Options › Match by","type":"Choice","default":"Keywords and meaning","description":"How a knowledge base is searched with \"Most similar\". Diverse (MMR) and other vector stores always match by meaning. Options: Keywords and meaning, Meaning only."},{"name":"Options › Minimum relevance","type":"Number","default":"0","description":"Drop passages less similar to the question than this (0 to 1). 0 keeps every passage."},{"name":"Options › Metadata filter","type":"Key-value pairs","description":"Only search passages whose metadata matches every key = value (e.g. sourceType = web). Keys use letters, numbers and _; numbers and true/false are matched as such."},{"name":"Options › Device-only knowledge with a cloud model","type":"Choice","default":"Stop with an error","description":"A knowledge base marked \"Device only\" is never sent to a cloud model. Choose what the node does when its model is a cloud model. Options: Stop with an error, Answer without it."}]} />
 {/* AUTO:settings:end */}
 
 **Prompt** is the question. Behind a Chat Trigger, use `{{ $input.chatInput }}`.
@@ -68,14 +59,18 @@ The knowledge base options are the same on the RAG Agent, the [Q&A Agent](/nodes
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `response` | Any | The model reply; the parsed result when an output parser is connected |
-| `sources` | List of entries | The knowledge base sources used for the answer |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"response","type":"Any","description":"The model reply; the parsed result when an output parser is connected"},{"name":"sources","type":"List of entries","description":"The knowledge base sources used for the answer"}]} />
+
+```json title="Shape of an output item"
+{
+  "response": null,
+  "sources": []
+}
+```
 {/* AUTO:outputs:end */}
 
 `sources` is present when a knowledge base is connected (it may be empty). Each entry has `title`, `url` (when there is one), `knowledgeId`, `sourceId` and `score`. After a run, the node shows a badge such as **3 sources cited**.
@@ -83,12 +78,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Model** | chat model | Yes | One |
-| **Memory** | chat memory | No | One |
-| **Knowledge** | vector store | No | One |
-| **Output Parser** | output parser | No | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Memory","type":"chat memory","description":"One node."},{"name":"Knowledge","type":"vector store","description":"One node."},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 - **Model**: a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/). Cloud models hold their own API key.
@@ -104,7 +94,7 @@ Each output item has these fields:
 
 Every message you send runs the workflow; the agent's replies appear in the chat window.
 
-## Troubleshooting
+## Common issues
 
 - **"… is on this device only, but … is a cloud model."** The knowledge base is marked **Device only**. Use an on-device model, change the knowledge base's privacy, or set **Device-only knowledge with a cloud model** to *Answer without it*.
 - **"Knowledge base "…" doesn't exist on this device."** The workflow comes from another device or the knowledge base was deleted. Pick a knowledge base in the Local Knowledge node, or import its `.awkb` file.

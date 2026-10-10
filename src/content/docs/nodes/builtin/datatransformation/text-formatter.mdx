@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Clean up, reshape, search or encode a piece of text, without writing code.
 
 ## What it does
@@ -36,153 +39,7 @@ You pick an **Operation** and point **Text** at your value, for example `{{ $inp
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-Pick **Operation** first; the fields below change with your choice.
-
-**Uppercase**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Lowercase**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Title Case**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**camelCase**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**snake\_case**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**kebab-case**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Trim**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Slugify**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Extract emails**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Extract URLs**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Extract numbers**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Extract phone numbers**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Word count**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Character count**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-
-**Pad**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-| **Target Length** | Number | 0 | No | Pad until the text reaches this many characters. |
-| **Pad With** | Text | ` ` | No | The characters repeated to fill the space. |
-| **Pad Side** | Choice | Start | No | Which end to pad. Options: Start, End. |
-
-**Replace**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-| **Find** | Text |  | No | The text or pattern to look for. |
-| **Replace With** | Text |  | No | The text put in place of each match. |
-| **Treat Find As Regex** | Toggle | Off | No | Read the Find field as a regular expression. |
-| **Regex Flags** | Text | `g` | No | Flags for the pattern, such as gi. |
-
-**Split**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-| **Separator** | Text | `,` | No | The string to split on. Empty splits into characters. |
-
-**Join**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-| **Separator** | Text | `,` | No | The string placed between joined items. |
-
-**Truncate**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-| **Maximum Length** | Number | 20 | No | Keep at most this many characters. |
-| **Ellipsis** | Text | `…` | No | Appended when the text is shortened. |
-
-**Default if empty**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-| **Default Value** | Text |  | No | Returned when the text is empty or only whitespace. |
-
-**Encode**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-| **Scheme** | Choice | Base64 | No | Which encoding to convert to or from. Options: Base64, URL (whole URL), URI component, HTML entities, Hex. |
-
-**Decode**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Value |  | No | The text to transform. Bind an upstream value with \{\{ \}\}. |
-| **Scheme** | Choice | Base64 | No | Which encoding to convert to or from. Options: Base64, URL (whole URL), URI component, HTML entities, Hex. |
+<AwfOperationTabs client:visible pick={"Operation"} common={[]} groups={[{"options":[{"label":"Uppercase","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Lowercase","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Title Case","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"camelCase","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"snake_case","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"kebab-case","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Trim","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Slugify","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Extract emails","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Extract URLs","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Extract numbers","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Extract phone numbers","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Word count","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Character count","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."}]},{"label":"Pad","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."},{"name":"Target Length","type":"Number","default":"0","description":"Pad until the text reaches this many characters."},{"name":"Pad With","type":"Text","default":" ","description":"The characters repeated to fill the space."},{"name":"Pad Side","type":"Choice","default":"Start","description":"Which end to pad. Options: Start, End."}]},{"label":"Replace","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."},{"name":"Find","type":"Text","description":"The text or pattern to look for."},{"name":"Replace With","type":"Text","description":"The text put in place of each match."},{"name":"Treat Find As Regex","type":"Toggle","default":"Off","description":"Read the Find field as a regular expression."},{"name":"Regex Flags","type":"Text","default":"g","description":"Flags for the pattern, such as gi."}]},{"label":"Split","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."},{"name":"Separator","type":"Text","default":",","description":"The string to split on. Empty splits into characters."}]},{"label":"Join","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."},{"name":"Separator","type":"Text","default":",","description":"The string placed between joined items."}]},{"label":"Truncate","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."},{"name":"Maximum Length","type":"Number","default":"20","description":"Keep at most this many characters."},{"name":"Ellipsis","type":"Text","default":"…","description":"Appended when the text is shortened."}]},{"label":"Default if empty","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."},{"name":"Default Value","type":"Text","description":"Returned when the text is empty or only whitespace."}]},{"label":"Encode","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."},{"name":"Scheme","type":"Choice","default":"Base64","description":"Which encoding to convert to or from. Options: Base64, URL (whole URL), URI component, HTML entities, Hex."}]},{"label":"Decode","rows":[{"name":"Text","type":"Value","description":"The text to transform. Bind an upstream value with {{ }}."},{"name":"Scheme","type":"Choice","default":"Base64","description":"Which encoding to convert to or from. Options: Base64, URL (whole URL), URI component, HTML entities, Hex."}]}]}]} />
 {/* AUTO:settings:end */}
 
 Every operation has **Operation** (default *Uppercase*) and **Text**. Some show extra settings:
@@ -204,7 +61,7 @@ Every operation has **Operation** (default *Uppercase*) and **Text**. Some show 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The field depends on the operation:
@@ -218,7 +75,7 @@ The output holds only that field. To keep the original data next to it, read it 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -228,7 +85,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. A second Text / Formatter with **Operation** *Join*, **Text** `{{ $input.matches }}` and **Separator** `, ` gives one line of addresses in `result`.
 4. A [Slack](/nodes/builtin/integration/slack/) node posts `{{ $input.result }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Invalid base64: could not decode the input as UTF-8 text."** The text is not Base64, or it is Base64 of a file rather than text. Check that you picked the right **Scheme**.
 - **"Invalid hex: expected an even number of hex digits."** or **"Invalid hex: contains non-hexadecimal characters."** The text is not a clean hex string. Remove spaces or prefixes such as `0x`.

@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Work through a list a few items at a time, running the same steps once per batch.
 
 ## What it does
@@ -39,10 +42,7 @@ Most nodes already run once per item, so you don't need Split in Batches just to
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Items** | Value |  | Yes | The list to split into batches. |
-| **Batch size** | Number | 1 | No | How many items to emit per pass. |
+<AwfParamTable rows={[{"name":"Items","type":"Value","required":true,"description":"The list to split into batches."},{"name":"Batch size","type":"Number","default":"1","description":"How many items to emit per pass."}]} />
 {/* AUTO:settings:end */}
 
 Set **Items** to an expression that returns a list, for example `{{ $input.data.contacts }}` after an Http Request. If your data arrives as many separate items, gather them into one list first with [Aggregate](/nodes/builtin/datatransformation/aggregate/).
@@ -50,17 +50,21 @@ Set **Items** to an expression that returns a list, for example `{{ $input.data.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-2 output ports: **Done**, **Loop**.
+<AwfOutputPorts ports={[{"name":"Done"},{"name":"Loop"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `done` | True/false | True once every item has been emitted |
-| `batch` | List | The items of this pass |
-| `batchIndex` | Number |  |
-| `isLast` | True/false |  |
-| `items` | List | Every item being split |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"done","type":"True/false","description":"True once every item has been emitted"},{"name":"batch","type":"List","description":"The items of this pass"},{"name":"batchIndex","type":"Number"},{"name":"isLast","type":"True/false"},{"name":"items","type":"List","description":"Every item being split"}]} />
+
+```json title="Shape of an output item"
+{
+  "done": true,
+  "batch": [],
+  "batchIndex": 0,
+  "isLast": true,
+  "items": []
+}
+```
 {/* AUTO:outputs:end */}
 
 In the repeated steps, read the current batch with `{{ $input.batch }}`. `batchIndex` counts batches from 0, and `isLast` is true on the final batch. From **Done**, `{{ $input.items }}` still gives you the whole list.
@@ -68,7 +72,7 @@ In the repeated steps, read the current batch with `{{ $input.batch }}`. `batchI
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -80,7 +84,7 @@ Send contacts to an API 25 at a time:
 3. From **Loop**: a second Http Request, **POST** to `https://api.example.com/contacts/bulk` with `{{ $input.batch }}` in the JSON body, then [Wait](/nodes/builtin/flow/wait/) with **Amount** `2` and **Unit** **Seconds**. Connect the Wait to **Loop Back**.
 4. From **Done**: [Show Notification](/nodes/extension/shownotification/) says `All contacts sent`.
 
-## Troubleshooting
+## Common issues
 
 - **The steps run only once.** The last repeated step is not connected to **Loop Back**, so the node never gets asked for the next batch. Connect it to the bottom input, not the top one.
 - **It goes straight to Done.** **Items** resolved to an empty list or to nothing. Check the expression in the run's input for this node; it must point to a list.

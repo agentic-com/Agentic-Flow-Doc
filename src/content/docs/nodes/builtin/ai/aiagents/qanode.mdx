@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Answer a question from your own documents, with a cloud chat model or fully on-device.
 
 ## What it does
@@ -33,19 +36,7 @@ For a multi-turn chat with memory over your documents, use [RAG Agent](/nodes/bu
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Prompt** | Text |  | Yes |  |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **System message** | Long text |  | No | The system message to use. |
-| Options › **Knowledge documents (k)** | Number | 4 | No | How many documents to retrieve from the connected knowledge base. |
-| Options › **Max knowledge context length** | Number | 4000 | No | Maximum characters of retrieved knowledge to inject into the prompt. |
-| Options › **Fail on knowledge error** | Toggle | Off | No | If enabled, the node fails when knowledge retrieval errors instead of answering without context. |
-| Options › **Search type** | Choice | Most similar | No | How passages are picked from the connected knowledge base. Options: Most similar, Diverse (MMR). |
-| Options › **Match by** | Choice | Keywords and meaning | No | How a knowledge base is searched with "Most similar". Diverse (MMR) and other vector stores always match by meaning. Options: Keywords and meaning, Meaning only. |
-| Options › **Minimum relevance** | Number | 0 | No | Drop passages less similar to the question than this (0 to 1). 0 keeps every passage. |
-| Options › **Metadata filter** | Key-value pairs |  | No | Only search passages whose metadata matches every key = value (e.g. sourceType = web). Keys use letters, numbers and \_; numbers and true/false are matched as such. |
-| Options › **Device-only knowledge with a cloud model** | Choice | Stop with an error | No | A knowledge base marked "Device only" is never sent to a cloud model. Choose what the node does when its model is a cloud model. Options: Stop with an error, Answer without it. |
+<AwfParamTable rows={[{"name":"Prompt","type":"Text","required":true},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."},{"name":"Options › Knowledge documents (k)","type":"Number","default":"4","description":"How many documents to retrieve from the connected knowledge base."},{"name":"Options › Max knowledge context length","type":"Number","default":"4000","description":"Maximum characters of retrieved knowledge to inject into the prompt."},{"name":"Options › Fail on knowledge error","type":"Toggle","default":"Off","description":"If enabled, the node fails when knowledge retrieval errors instead of answering without context."},{"name":"Options › Search type","type":"Choice","default":"Most similar","description":"How passages are picked from the connected knowledge base. Options: Most similar, Diverse (MMR)."},{"name":"Options › Match by","type":"Choice","default":"Keywords and meaning","description":"How a knowledge base is searched with \"Most similar\". Diverse (MMR) and other vector stores always match by meaning. Options: Keywords and meaning, Meaning only."},{"name":"Options › Minimum relevance","type":"Number","default":"0","description":"Drop passages less similar to the question than this (0 to 1). 0 keeps every passage."},{"name":"Options › Metadata filter","type":"Key-value pairs","description":"Only search passages whose metadata matches every key = value (e.g. sourceType = web). Keys use letters, numbers and _; numbers and true/false are matched as such."},{"name":"Options › Device-only knowledge with a cloud model","type":"Choice","default":"Stop with an error","description":"A knowledge base marked \"Device only\" is never sent to a cloud model. Choose what the node does when its model is a cloud model. Options: Stop with an error, Answer without it."}]} />
 {/* AUTO:settings:end */}
 
 **Prompt** is the question, for example `{{ $input.question }}` or a fixed `What is our refund window?`.
@@ -55,17 +46,21 @@ With a Local Q&A Model, **Max knowledge context length** limits how much of each
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `response` | Any | The model reply; the parsed result when an output parser is connected |
-| `answer` | Text |  |
-| `score` | Number |  |
-| `source` | Text |  |
-| `sources` | List of entries | The knowledge base sources used for the answer |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"response","type":"Any","description":"The model reply; the parsed result when an output parser is connected"},{"name":"answer","type":"Text"},{"name":"score","type":"Number"},{"name":"source","type":"Text"},{"name":"sources","type":"List of entries","description":"The knowledge base sources used for the answer"}]} />
+
+```json title="Shape of an output item"
+{
+  "response": null,
+  "answer": "…",
+  "score": 0,
+  "source": "…",
+  "sources": []
+}
+```
 {/* AUTO:outputs:end */}
 
 - With a **chat model**, you get `response`, plus `sources` when a knowledge base is connected.
@@ -76,11 +71,7 @@ Each entry in `sources` has `title`, `url` (when there is one), `knowledgeId`, `
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Model** | chat model, local qa | Yes | One |
-| **Knowledge** | vector store | No | One |
-| **Output Parser** | output parser | No | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local qa","description":"One node.","required":true},{"name":"Knowledge","type":"vector store","description":"One node."},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 - **Model**: a chat model, or a [Local Q&A Model](/nodes/builtin/ai/aidependencies/llm/localqamodel/) to answer on-device. Cloud models hold their own API key.
@@ -96,7 +87,7 @@ Each entry in `sources` has `title`, `url` (when there is one), `knowledgeId`, `
 
 Nothing leaves the browser.
 
-## Troubleshooting
+## Common issues
 
 - **"The Local Q&A Model answers by quoting a passage, so it needs a context: connect a Knowledge to the Q&A Agent."** Connect a Local Knowledge node to **Knowledge**.
 - **`answer` is empty.** None of the retrieved passages contained an answer (a warning is logged). Raise **Knowledge documents (k)**, lower **Minimum relevance**, or rephrase the question.

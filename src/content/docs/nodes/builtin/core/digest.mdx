@@ -11,6 +11,9 @@ node:
   family: core
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Collect items over many runs and hand them all over at once, on a schedule, on demand or once you have enough.
 
 ## What it does
@@ -36,11 +39,7 @@ To combine items from a single run, use [Aggregate](/nodes/builtin/datatransform
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Mode** | Choice | Add to digest | No | What to do with the digest. Options: Add to digest, Peek, Release. |
-| **Bucket** | Text | `default` | No | Name of the digest to add to, peek at, or release. |
-| **Release at (count)** | Number | 0 | No | Used by Add: release automatically once the bucket reaches this many items. 0 means only a Release (or manual/scheduled) empties it. |
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","default":"Add to digest","description":"What to do with the digest. Options: Add to digest, Peek, Release."},{"name":"Bucket","type":"Text","default":"default","description":"Name of the digest to add to, peek at, or release."},{"name":"Release at (count)","type":"Number","default":"0","description":"Used by Add: release automatically once the bucket reaches this many items. 0 means only a Release (or manual/scheduled) empties it."}]} />
 {/* AUTO:settings:end */}
 
 The items to collect come from the node's incoming connection. Use the same **Bucket** name on the Add node and on the Release node that should empty it. A bucket does not clash with a Data Store key of the same name.
@@ -48,7 +47,7 @@ The items to collect come from the node's incoming connection. Use the same **Bu
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port: **Released**.
+<AwfOutputPorts ports={[{"name":"Released"}]} />
 {/* AUTO:outputs:end */}
 
 **Released** only receives items when the node releases (a Release, a Peek, or an Add that reached its count). The items come out as they went in, one per collected item, so you can follow with [Aggregate](/nodes/builtin/datatransformation/aggregate/) to build one summary.
@@ -56,7 +55,7 @@ One output port: **Released**.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -68,7 +67,7 @@ A reading list you get once a day. One workflow, two branches using the bucket `
 3. From **Released**: [Aggregate](/nodes/builtin/datatransformation/aggregate/), **Mode** Individual fields, field `linkUrl`.
 4. [Slack](/nodes/builtin/integration/slack/), post a message with `{{ $input.linkUrl }}`.
 
-## Troubleshooting
+## Common issues
 
 - **Nothing runs after an Add.** That is by design: Add collects and stops the branch. Connect the next steps after a Release or Peek node, or set **Release at (count)**.
 - **The Release branch gets old or unrelated items.** Two Digest nodes share the same **Bucket** name. Give each digest its own name.

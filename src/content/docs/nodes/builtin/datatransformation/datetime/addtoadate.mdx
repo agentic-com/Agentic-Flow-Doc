@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Move a date forward by a number of years, months, days, hours or other units.
 
 ## What it does
@@ -31,14 +34,7 @@ Add To A Date takes **Date to add to**, adds **Duration** of the chosen **Time u
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Date to add to** | Date and time |  | Yes | The date to add days to. |
-| **Time unit to add** | Choice |  | Yes | The time unit to add to the date. Options: year, quarter, month, week, day, hour, minute, second. |
-| **Duration** | Number |  | Yes | The duration to add to the date. |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Date to add to","type":"Date and time","required":true,"description":"The date to add days to."},{"name":"Time unit to add","type":"Choice","required":true,"description":"The time unit to add to the date. Options: year, quarter, month, week, day, hour, minute, second."},{"name":"Duration","type":"Number","required":true,"description":"The duration to add to the date."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 **Date to add to** accepts a date you pick, or an expression such as `{{ $input.createdAt }}`. ISO dates (`2026-03-01`, `2026-03-01T09:30:00Z`) are the safest format.
@@ -46,7 +42,7 @@ Add To A Date takes **Date to add to**, adds **Duration** of the chosen **Time u
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The item holds one field, named by **Output field name**, with the new date. Turn on **Include input fields** to keep the incoming fields next to it, for example `{ dueDate, orderId, customer }`.
@@ -54,7 +50,7 @@ The item holds one field, named by **Output field name**, with the new date. Tur
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +62,7 @@ Remind yourself of a follow-up one week from today:
 3. [Format Date](/nodes/builtin/datatransformation/datetime/formatdate/), **Date to format** `{{ $input.followUp }}`, **Format** `DD/MM/YYYY`.
 4. [Browser Notification](/nodes/extension/browsernotification/) showing the formatted date.
 
-## Troubleshooting
+## Common issues
 
 - **The output is "Invalid Date" or empty.** The incoming value is not a date the browser understands. Use an ISO date such as `2026-03-01`, or reshape it first.
 - **The result is off by a few hours.** The date was read in a different time zone than you expected. Include the time zone in the input (`Z` or `+02:00`).

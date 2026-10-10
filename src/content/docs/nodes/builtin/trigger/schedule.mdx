@@ -11,6 +11,9 @@ node:
   family: trigger
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Run the workflow automatically at set times: every few minutes, daily at 9:00, every Monday, on the 1st of the month.
 
 ## What it does
@@ -39,64 +42,27 @@ Daily, weekly and monthly schedules (and hourly ones pinned to a minute) stay on
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Rules** | List |  | Yes |  |
+<AwfParamTable rows={[{"name":"Rules","type":"List","required":true}]} />
 
-**Rules** changes shape with its **Trigger Interval** choice (seconds, minutes, hours, days, weeks, months):
+**Rules** changes shape with its **Trigger Interval** choice:
 
-*Rules — Trigger Interval: seconds*
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Seconds Between Triggers** | Number |  | Yes | Seconds between each run. Note: the browser floors alarms at ~1 minute, so second-level schedules are best-effort — the minimum is 10s and short intervals are effectively rounded up to about 1 minute. For reliable sub-minute timing, keep the flow running yourself. |
-
-*Rules — Trigger Interval: minutes*
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Minutes Between Triggers** | Number |  | Yes | Number of minutes between each workflow trigger. |
-
-*Rules — Trigger Interval: hours*
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Hours Between Triggers** | Number |  | No | Number of hours between each workflow trigger. |
-| **Trigger at Minute** | Number |  | No | Minute of the hour at which the workflow will be triggered. |
-
-*Rules — Trigger Interval: days*
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Days Between Triggers** | Number |  | No | Number of days between each workflow trigger. |
-| **Trigger at Hour** | Choice |  | Yes | Hour of the day at which the workflow will be triggered. 24 options. |
-| **Trigger at Minute** | Number |  | No | Minute of the hour at which the workflow will be triggered. |
-
-*Rules — Trigger Interval: weeks*
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Weeks Between Triggers** | Number |  | No | Would run every week unless specified otherwise. |
-| **Units** | Multiple choice |  | Yes | The units to subtract from the date. Options: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday. |
-| **Trigger at Hour** | Choice |  | Yes | Hour of the day at which the workflow will be triggered. 24 options. |
-| **Trigger at Minute** | Number |  | No | Minute of the hour at which the workflow will be triggered. |
-
-*Rules — Trigger Interval: months*
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Months Between Triggers** | Number |  | No | Number of months between each workflow trigger. |
-| **Trigger at Day of Month** | Number |  | No | Day of the month at which the workflow will be triggered. |
-| **Trigger at Hour** | Number |  | Yes | Hour of the day at which the workflow will be triggered. |
-| **Trigger at Minute** | Number |  | No | Minute of the hour at which the workflow will be triggered. |
+<AwfOperationTabs client:visible pick={"Trigger Interval"} groups={[{"options":[{"label":"seconds","rows":[{"name":"Seconds Between Triggers","type":"Number","required":true,"description":"Seconds between each run. Note: the browser floors alarms at ~1 minute, so second-level schedules are best-effort — the minimum is 10s and short intervals are effectively rounded up to about 1 minute. For reliable sub-minute timing, keep the flow running yourself."}]},{"label":"minutes","rows":[{"name":"Minutes Between Triggers","type":"Number","required":true,"description":"Number of minutes between each workflow trigger."}]},{"label":"hours","rows":[{"name":"Hours Between Triggers","type":"Number","description":"Number of hours between each workflow trigger."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]},{"label":"days","rows":[{"name":"Days Between Triggers","type":"Number","description":"Number of days between each workflow trigger."},{"name":"Trigger at Hour","type":"Choice","required":true,"description":"Hour of the day at which the workflow will be triggered. 24 options."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]},{"label":"weeks","rows":[{"name":"Weeks Between Triggers","type":"Number","description":"Would run every week unless specified otherwise."},{"name":"Units","type":"Multiple choice","required":true,"description":"The units to subtract from the date. Options: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday."},{"name":"Trigger at Hour","type":"Choice","required":true,"description":"Hour of the day at which the workflow will be triggered. 24 options."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]},{"label":"months","rows":[{"name":"Months Between Triggers","type":"Number","description":"Number of months between each workflow trigger."},{"name":"Trigger at Day of Month","type":"Number","description":"Day of the month at which the workflow will be triggered."},{"name":"Trigger at Hour","type":"Number","required":true,"description":"Hour of the day at which the workflow will be triggered."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]}]}]} />
 {/* AUTO:settings:end */}
 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `scheduled` (always true).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"scheduled","type":"Always true"}]} />
+
+```json title="Shape of an output item"
+{
+  "scheduled": true
+}
+```
 {/* AUTO:outputs:end */}
 
 Schedule only sends `{ "scheduled": true }`. It carries no date or other context; use [Get Current Date](/nodes/builtin/datatransformation/datetime/getcurrentdate/) when the next steps need the time.
@@ -104,7 +70,7 @@ Schedule only sends `{ "scheduled": true }`. It carries no date or other context
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -114,7 +80,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [Limit](/nodes/builtin/datatransformation/limit/) keeps the 5 newest posts.
 4. [Telegram](/nodes/builtin/integration/telegram/) sends them to you.
 
-## Troubleshooting
+## Common issues
 
 - **The workflow never runs on its own.** Publish the workflow: schedules only run for published workflows. To test, run it from the canvas.
 - **A seconds schedule runs about once a minute.** The browser runs scheduled alarms at most about once a minute, so second-level schedules are approximate. The minimum is 10 seconds.

@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Open, update and comment on GitHub issues, read and review pull requests, and look up repositories and releases.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a GitHub connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -34,157 +43,11 @@ Every operation that targets a repository takes **Owner** and **Repository** as 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| Issue | Create, Get, Update, Comment, List, Close |
-| Pull request | Get, List, Comment, Review, List files |
-| Repository | Get, List, Search |
-| Release | Get latest, List |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Credential to use to make the request."}]} groups={[{"label":"Issue","options":[{"label":"Create","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Title","type":"Text","required":true,"description":"The title of the issue."},{"name":"Body","type":"Text","description":"The contents (Markdown supported)."},{"name":"Labels","type":"List","description":"Labels to associate with the issue."},{"name":"Assignees","type":"List","description":"GitHub logins to assign to the issue."}]},{"label":"Get","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Issue Number","type":"Number","required":true,"description":"The number that identifies the issue."}]},{"label":"Update","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Issue Number","type":"Number","required":true,"description":"The number that identifies the issue."},{"name":"Title","type":"Text","description":"The title of the issue."},{"name":"Body","type":"Text","description":"The contents (Markdown supported)."},{"name":"State","type":"Choice","description":"The open or closed state to set. Options: Open, Closed."},{"name":"Labels","type":"List","description":"Labels to associate with the issue."},{"name":"Assignees","type":"List","description":"GitHub logins to assign to the issue."}]},{"label":"Comment","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Issue Number","type":"Number","required":true,"description":"The number that identifies the issue."},{"name":"Comment","type":"Text","required":true,"description":"The comment text (Markdown supported)."}]},{"label":"List","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"State","type":"Choice","description":"Filter by state. Options: Open, Closed, All."},{"name":"Labels","type":"Text","description":"Comma-separated list of label names to filter by."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]},{"label":"Close","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Issue Number","type":"Number","required":true,"description":"The number that identifies the issue."}]}]},{"label":"Pull request","options":[{"label":"Get","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Pull Request Number","type":"Number","required":true,"description":"The number that identifies the pull request."}]},{"label":"List","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"State","type":"Choice","description":"Filter by state. Options: Open, Closed, All."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]},{"label":"Comment","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Pull Request Number","type":"Number","required":true,"description":"The number that identifies the pull request."},{"name":"Comment","type":"Text","required":true,"description":"The comment text (Markdown supported)."}]},{"label":"Review","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Pull Request Number","type":"Number","required":true,"description":"The number that identifies the pull request."},{"name":"Review Event","type":"Choice","required":true,"description":"The kind of review to submit. Options: Approve, Request changes, Comment."},{"name":"Review Body","type":"Text","description":"The body text of the review (required for Request changes and Comment)."}]},{"label":"List files","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Pull Request Number","type":"Number","required":true,"description":"The number that identifies the pull request."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]}]},{"label":"Repository","options":[{"label":"Get","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."}]},{"label":"List","rows":[{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]},{"label":"Search","rows":[{"name":"Search Query","type":"Text","required":true,"description":"The repository search query."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]}]},{"label":"Release","options":[{"label":"Get latest","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."}]},{"label":"List","rows":[{"name":"Owner","type":"Text","required":true,"description":"The account owner of the repository (user or organization)."},{"name":"Repository","type":"Text","required":true,"description":"The name of the repository (without the owner)."},{"name":"Limit","type":"Number","default":"30","description":"Number of results to return (1-100)."}]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | The Credential to use to make the request. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**Issue → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Title** | Text |  | Yes | The title of the issue. |
-| **Body** | Text |  | No | The contents (Markdown supported). |
-| **Labels** | List |  | No | Labels to associate with the issue. |
-| **Assignees** | List |  | No | GitHub logins to assign to the issue. |
-
-**Issue → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Issue Number** | Number |  | Yes | The number that identifies the issue. |
-
-**Issue → Update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Issue Number** | Number |  | Yes | The number that identifies the issue. |
-| **Title** | Text |  | No | The title of the issue. |
-| **Body** | Text |  | No | The contents (Markdown supported). |
-| **State** | Choice |  | No | The open or closed state to set. Options: Open, Closed. |
-| **Labels** | List |  | No | Labels to associate with the issue. |
-| **Assignees** | List |  | No | GitHub logins to assign to the issue. |
-
-**Issue → Comment**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Issue Number** | Number |  | Yes | The number that identifies the issue. |
-| **Comment** | Text |  | Yes | The comment text (Markdown supported). |
-
-**Issue → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **State** | Choice |  | No | Filter by state. Options: Open, Closed, All. |
-| **Labels** | Text |  | No | Comma-separated list of label names to filter by. |
-| **Limit** | Number | 30 | No | Number of results to return (1-100). |
-
-**Issue → Close**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Issue Number** | Number |  | Yes | The number that identifies the issue. |
-
-**Pull request → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Pull Request Number** | Number |  | Yes | The number that identifies the pull request. |
-
-**Pull request → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **State** | Choice |  | No | Filter by state. Options: Open, Closed, All. |
-| **Limit** | Number | 30 | No | Number of results to return (1-100). |
-
-**Pull request → Comment**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Pull Request Number** | Number |  | Yes | The number that identifies the pull request. |
-| **Comment** | Text |  | Yes | The comment text (Markdown supported). |
-
-**Pull request → Review**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Pull Request Number** | Number |  | Yes | The number that identifies the pull request. |
-| **Review Event** | Choice |  | Yes | The kind of review to submit. Options: Approve, Request changes, Comment. |
-| **Review Body** | Text |  | No | The body text of the review (required for Request changes and Comment). |
-
-**Pull request → List files**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Pull Request Number** | Number |  | Yes | The number that identifies the pull request. |
-| **Limit** | Number | 30 | No | Number of results to return (1-100). |
-
-**Repository → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-
-**Repository → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Limit** | Number | 30 | No | Number of results to return (1-100). |
-
-**Repository → Search**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Search Query** | Text |  | Yes | The repository search query. |
-| **Limit** | Number | 30 | No | Number of results to return (1-100). |
-
-**Release → Get latest**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-
-**Release → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Owner** | Text |  | Yes | The account owner of the repository (user or organization). |
-| **Repository** | Text |  | Yes | The name of the repository (without the owner). |
-| **Limit** | Number | 30 | No | Number of results to return (1-100). |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the GitHub API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - Split the repository address: for `github.com/octocat/hello-world`, **Owner** is `octocat` and **Repository** is `hello-world`.
@@ -196,7 +59,7 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - Issue, pull request, repository and release operations return the GitHub object, with fields such as `number`, `title`, `state` and `html_url` (the link to open it in the browser).
@@ -206,7 +69,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, Bearer Token): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Use a GitHub **personal access token**. A fine-grained token is safest: on GitHub, open **Settings → Developer settings → Personal access tokens → Fine-grained tokens**, limit it to the repositories you need, and give it only the permissions you use, for example **Issues: Read and write** or **Pull requests: Read and write** (plus **Contents: Read** for releases). A classic token also works but opens your whole account. See [Create a credential](/app/connections/create/).
@@ -218,7 +81,7 @@ Use a GitHub **personal access token**. A fine-grained token is safest: on GitHu
 3. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) writes a short bug title and description.
 4. GitHub, **Issue → Create**, **Owner** `my-org`, **Repository** `my-app`, **Title** and **Body** from the previous step, **Labels** `bug`.
 
-## Troubleshooting
+## Common issues
 
 - **"GitHub API Error: Bad credentials".** The token is wrong, expired or revoked. Create a new one and update the credential.
 - **"GitHub API Error: Not Found" on a repository you can see.** The token does not include that repository, or lacks the permission for this operation. Edit the token on GitHub.

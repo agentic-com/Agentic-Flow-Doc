@@ -13,6 +13,7 @@ import starlightKbd from "starlight-kbd";
 import starlightHeadingBadges from "starlight-heading-badges";
 import mermaid from "astro-mermaid";
 import starlightAwflow from "./plugins/starlight-awflow/index.ts";
+import { nodesSidebar } from "./scripts/nodes/sidebar.mjs";
 
 import svelte from "@astrojs/svelte";
 
@@ -84,6 +85,7 @@ export default defineConfig({
     "/advanced-ai/langchain/getting-started/": "/concepts/ai/",
     "/advanced-ai/langchain/langchain-learning-resources/": "/concepts/ai/",
     "/advanced-ai/langchain/workflow-patterns/": "/concepts/ai/ai-agents/",
+    "/nodes/builtin/node-types/": "/nodes/",
     "/usage/": "/get-started/",
     "/usage/admin/": "/app/admin/",
     "/usage/admin/agent-templates/": "/app/admin/agent-templates/",
@@ -439,80 +441,8 @@ export default defineConfig({
           },
           link: "/nodes/",
           icon: "puzzle",
-          items: [
-            {
-              label: "Built-in Overview",
-              link: "nodes/builtin",
-            },
-            {
-              label: "Trigger",
-              items: [{ autogenerate: {
-                directory: "nodes/builtin/trigger",
-                collapsed: true,
-              } }],
-            },
-            {
-              label: "Lambda",
-              items: [{ autogenerate: {
-                directory: "nodes/builtin/lambda",
-                collapsed: true,
-              } }],
-            },
-            {
-              label: "In Page Action",
-              items: [{ autogenerate: {
-                directory: "nodes/extension",
-                collapsed: true,
-              } }],
-            },
-            {
-              label: "Flow",
-              items: [{ autogenerate: {
-                directory: "nodes/builtin/flow",
-                collapsed: true,
-              } }],
-            },
-            {
-              label: "Data Transformation",
-              items: [{ autogenerate: {
-                directory: "nodes/builtin/datatransformation",
-                collapsed: true,
-              } }],
-            },
-            {
-              label: "Core",
-              items: [{ autogenerate: {
-                directory: "nodes/builtin/core",
-                collapsed: true,
-              } }],
-            },
-            {
-              label: "AI",
-              items: [{ autogenerate: {
-                directory: "nodes/builtin/ai",
-                collapsed: true,
-              } }],
-            },
-            {
-              label: "Integrations",
-              items: [{ autogenerate: {
-                directory: "nodes/builtin/integration",
-                collapsed: true,
-              } }],
-            },
-            {
-              label: "Node Types Overview",
-              link: "nodes/builtin/node-types",
-            },
-            {
-              label: "Rate Limits",
-              link: "nodes/builtin/rate-limits",
-            },
-            {
-              label: "Unknown Node",
-              link: "nodes/builtin/unknownode",
-            },
-          ],
+          // Families, integrations by use case, and a collapsed "Deprecated" group (#1337).
+          items: nodesSidebar(),
         },
         {
           label: "Concepts",

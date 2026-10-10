@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Classify text on your device by plugging an on-device classifier into Text Classifier or Sentiment Analysis, instead of a chat model.
 
 ## What it does
@@ -33,9 +36,7 @@ To classify with reasoning or long instructions, connect a chat model such as [C
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Model picker |  | No | An on-device text classifier: zero-shot (uses your labels), sentiment or toxicity. Install one from Local AI, or download it from the picker. |
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"An on-device text classifier: zero-shot (uses your labels), sentiment or toxicity. Install one from Local AI, or download it from the picker."}]} />
 {/* AUTO:settings:end */}
 
 The **Model** picker lists on-device classifiers: zero-shot, sentiment and toxicity models. Install one from the [Local Models](/app/local-models/) page, or download it from the picker. When you publish or share the workflow, **Model** is cleared, so whoever installs it picks their own.
@@ -45,9 +46,7 @@ The **Model** picker lists on-device classifiers: zero-shot, sentiment and toxic
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Model | [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/) |
+- **Model** slot of [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/)
 {/* AUTO:outputs:end */}
 
 The connected node produces the output. With a Local Classifier, it also returns `scores`, a map of each label to its score (for example `{ "bug": 0.82, "question": 0.11 }`), which you can use in a later [IF](/nodes/builtin/flow/if/) node.
@@ -55,7 +54,7 @@ The connected node produces the output. With a Local Classifier, it also returns
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -65,7 +64,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Local Classifier in its **Model** slot, with an installed zero-shot model.
 4. [Browser Notification](/nodes/extension/browsernotification/) with **Message** `{{ $input.category }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Choose an on-device classifier in the Local Classifier node."** **Model** is empty. Pick a model.
 - **"Model "…" isn't available. Install it from Local AI."** The model is not installed in this browser. Install it from [Local Models](/app/local-models/), or download it from the picker.

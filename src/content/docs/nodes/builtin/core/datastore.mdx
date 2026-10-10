@@ -11,7 +11,16 @@ node:
   family: core
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Remember values from one run of a workflow to the next.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/price-on-page-watch.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -40,14 +49,7 @@ To remove duplicates across runs without building it yourself, [Remove Duplicate
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | Get | No | What to do to the store. Options: Get, Set, Delete, Increment, List keys, Clear all. |
-| **Scope** | Choice | This workflow only | No | Which keys this node can see. Options: This workflow only, Shared with all workflows. |
-| **Key** | Text |  | No | Name of the value to store or read. |
-| **Value** | Value |  | No | The value to store. Used by Set. |
-| **Value Format** | Choice | Text | No | How to read text typed into Value. Options: Text, Number, True / false, JSON. |
-| **Increment By** | Number | 1 | No | How much to add. Use a negative number to count down. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Get","description":"What to do to the store. Options: Get, Set, Delete, Increment, List keys, Clear all."},{"name":"Scope","type":"Choice","default":"This workflow only","description":"Which keys this node can see. Options: This workflow only, Shared with all workflows."},{"name":"Key","type":"Text","description":"Name of the value to store or read."},{"name":"Value","type":"Value","description":"The value to store. Used by Set."},{"name":"Value Format","type":"Choice","default":"Text","description":"How to read text typed into Value. Options: Text, Number, True / false, JSON."},{"name":"Increment By","type":"Number","default":"1","description":"How much to add. Use a negative number to count down."}]} />
 {/* AUTO:settings:end */}
 
 - **Key** is needed by every operation except **List keys** and **Clear all**. Up to 512 characters.
@@ -57,7 +59,7 @@ To remove duplicates across runs without building it yourself, [Remove Duplicate
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The output depends on the operation:
@@ -78,7 +80,7 @@ Keys in the shared scope are managed in **Settings → Preferences → Data stor
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -91,7 +93,7 @@ Get notified only when an API returns a new latest item:
 4. [IF](/nodes/builtin/flow/if/): `{{ $('Http Request').data.id }}` is not equal to `{{ $input.value }}`.
 5. On true: [Browser Notification](/nodes/extension/browsernotification/), then Data Store, **Operation** Set, **Key** `last-seen-id`, **Value** `{{ $('Http Request').data.id }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"The get operation needs a key."** (or set, delete, increment). **Key** is empty or only spaces. Fill it in.
 - **"This node is scoped to the current workflow but no workflow is running."** You tested the node on its own. Run the whole workflow, or switch **Scope** to *Shared with all workflows*.

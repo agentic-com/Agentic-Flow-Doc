@@ -11,6 +11,9 @@ node:
   family: trigger
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Start a workflow when another workflow fails, with the details of what went wrong.
 
 ## What it does
@@ -36,10 +39,7 @@ To recover inside the run and keep going, use [Try / Catch](/nodes/builtin/flow/
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Watch** | Choice | This workflow | No | Which workflows this trigger listens to. Options: This workflow, Selected workflows, All workflows. |
-| **Workflows** | Workflow picker |  | No | The workflows to watch. |
+<AwfParamTable rows={[{"name":"Watch","type":"Choice","default":"This workflow","description":"Which workflows this trigger listens to. Options: This workflow, Selected workflows, All workflows."},{"name":"Workflows","type":"Workflow picker","description":"The workflows to watch."}]} />
 {/* AUTO:settings:end */}
 
 - **This workflow** watches the workflow the trigger is in. It keeps pointing at the right workflow after you duplicate or import it.
@@ -49,21 +49,25 @@ To recover inside the run and keep going, use [Try / Catch](/nodes/builtin/flow/
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `workflowId` | Text |  |
-| `workflowName` | Text |  |
-| `nodeId` | Text |  |
-| `nodeLabel` | Text |  |
-| `message` | Text | What the failing node said |
-| `input` | Any | The input the failing node was given |
-| `failedAt` | Text |  |
-| `triggerType` | Always "errorTrigger" |  |
-| `triggeredAt` | Text |  |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"workflowId","type":"Text"},{"name":"workflowName","type":"Text"},{"name":"nodeId","type":"Text"},{"name":"nodeLabel","type":"Text"},{"name":"message","type":"Text","description":"What the failing node said"},{"name":"input","type":"Any","description":"The input the failing node was given"},{"name":"failedAt","type":"Text"},{"name":"triggerType","type":"Always \"errorTrigger\""},{"name":"triggeredAt","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "workflowId": "…",
+  "workflowName": "…",
+  "nodeId": "…",
+  "nodeLabel": "…",
+  "message": "…",
+  "input": null,
+  "failedAt": "…",
+  "triggerType": "errorTrigger",
+  "triggeredAt": "…"
+}
+```
 {/* AUTO:outputs:end */}
 
 `workflowName` and `nodeLabel` are the names you see in the app, so they read well in a message. `input` is left out when the failing node had no input. When you test the trigger yourself in the designer, only `triggerType` and `triggeredAt` are set.
@@ -71,7 +75,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -82,7 +86,7 @@ Get a desktop alert whenever any workflow fails:
 2. Add [Browser Notification](/nodes/extension/browsernotification/) with **Title** `{{ $input.workflowName }} failed` and **Message** `{{ $input.nodeLabel }}: {{ $input.message }}`.
 3. Activate the workflow.
 
-## Troubleshooting
+## Common issues
 
 - **A workflow failed but the Error Trigger did not run.** The failed run was started by hand, or a Try / Catch handled the error. Only runs started on their own by the extension report failures.
 - **Nothing runs even for scheduled failures.** The workflow with the Error Trigger is not activated, or **Watch** does not include the failed workflow. With **Selected workflows**, check the list in **Workflows**.

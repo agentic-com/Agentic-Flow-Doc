@@ -11,7 +11,16 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Read the HTML of the page open in the active tab, or of one element on it, into a field.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/article-to-markdown.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -33,12 +42,7 @@ It reads the main page only, not embedded frames.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - **Output field name**: for example `html`. Later nodes read it with `{{ $input.html }}`.
@@ -47,7 +51,7 @@ It reads the main page only, not embedded frames.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 One item with your field holding the HTML as text, for example `{ "html": "<div id=\"product\">…</div>" }`.
@@ -55,7 +59,7 @@ One item with your field holding the HTML as text, for example `{ "html": "<div 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -65,7 +69,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add [HTML Extract](/nodes/builtin/datatransformation/html-extract/) with **HTML** = `{{ $input.html }}`, **Mode** = **Single value** and **Selector** = `.price`.
 4. Remember the price with [Data Store](/nodes/builtin/core/datastore/), **Operation** = **Set**.
 
-## Troubleshooting
+## Common issues
 
 - **"No content found".** **DOM Selector** matched nothing on the page. Use **Ping** to check it, or wait for the element with [Wait For Element](/nodes/extension/ui/wait-for-element/) first.
 - **The HTML is very large.** A whole page can be hundreds of kilobytes. Pick a smaller element in **DOM Selector**.

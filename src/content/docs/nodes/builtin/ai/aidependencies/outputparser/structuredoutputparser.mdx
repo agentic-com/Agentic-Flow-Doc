@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Make an AI node answer with JSON in the exact shape you give as an example.
 
 ## What it does
@@ -30,12 +33,7 @@ For a plain list of words, [Item List Output Parser](/nodes/builtin/ai/aidepende
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **JSON Output Example** | Code | `{
-    "name": "John",
-    "age": 30
-}` | Yes | An example of the JSON output you expect. |
+<AwfParamTable rows={[{"name":"JSON Output Example","type":"Code","required":true,"default":"{\n    \"name\": \"John\",\n    \"age\": 30\n}","description":"An example of the JSON output you expect."}]} />
 {/* AUTO:settings:end */}
 
 Write a real example, not a description. The value types matter more than the values: `"John"` means text, `30` means a number, `true` means true/false, `["a"]` means a list of text. For example:
@@ -56,10 +54,8 @@ The example must be valid JSON: double quotes around names and text, no trailing
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Output Parser | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) |
-| Base Parser | [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
+- **Output Parser** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/)
+- **Base Parser** slot of [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
 {/* AUTO:outputs:end */}
 
 The data appears on the node it is plugged into. On [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) and the agents, `response` becomes an object, so you can read single fields downstream, for example `{{ $input.response.email }}`. On [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/) the object is in `extracted`.
@@ -67,7 +63,7 @@ The data appears on the node it is plugged into. On [Basic LLM Chain](/nodes/bui
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -77,7 +73,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Structured Output Parser connected to the **Output Parser** slot of Basic LLM Chain, with **JSON Output Example** `{ "name": "Ada Lovelace", "email": "ada@example.com", "company": "Analytical Engines" }`.
 4. [Display Markdown](/nodes/extension/displaymarkdown/) with **Content** `{{ $input.response.name }} works at {{ $input.response.company }}`.
 
-## Troubleshooting
+## Common issues
 
 - **The run fails with a JSON error such as "Unexpected token" before the model is called.** **JSON Output Example** is not valid JSON. Fix the quotes and commas.
 - **"Failed to parse".** The model's reply was not JSON in the expected shape. Use a stronger model, simplify the example, or wrap this parser in an [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/).

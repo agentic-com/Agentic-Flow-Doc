@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Keep one field from the incoming data and drop everything else.
 
 ## What it does
@@ -33,10 +36,7 @@ The `<name>` is **Output field name** if you set it, otherwise the last part of 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **FieldPath** | Text |  | Yes | The path to the field to pick from the input object (without the node's name or id). |
-| **Output field name** | Text |  | No | The name of the output field to be used in case the target data is an array of non objects (like strings, numbers, etc.). |
+<AwfParamTable rows={[{"name":"FieldPath","type":"Text","required":true,"description":"The path to the field to pick from the input object (without the node's name or id)."},{"name":"Output field name","type":"Text","description":"The name of the output field to be used in case the target data is an array of non objects (like strings, numbers, etc.)."}]} />
 {/* AUTO:settings:end */}
 
 Write **FieldPath** as plain field names joined by dots, starting from the incoming data: `user.name`, not `$input.user.name` or the node's name. If the incoming data is a list, start with the position of the item, counting from 0: `0.title` reads the title of the first item.
@@ -44,7 +44,7 @@ Write **FieldPath** as plain field names joined by dots, starting from the incom
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 For example, with the input `{ "user": { "name": "Ada", "tags": ["vip", "beta"] } }`:
@@ -56,7 +56,7 @@ For example, with the input `{ "user": { "name": "Ada", "tags": ["vip", "beta"] 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +66,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. [Limit](/nodes/builtin/datatransformation/limit/) with **Max Items** `5` keeps the first five.
 4. A [Slack](/nodes/builtin/integration/slack/) node posts each result's `title` with `{{ $input.title }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Field "…" does not exist in the input object".** One part of the path is missing or misspelled. The message shows the data the node received: compare the names, including upper and lower case. If the data is a list, start the path with an item position such as `0.`.
 - **"No source node is connected to this node."** Pick Field has nothing to read. Connect the node that produces the data to its input.

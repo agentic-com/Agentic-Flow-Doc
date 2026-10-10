@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn speech into text with a Whisper model that runs in your browser, so the audio never leaves your device.
 
 ## What it does
@@ -27,10 +30,7 @@ There is no cost per run and no API key.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Model picker |  | No | Any installed speech-to-text model. |
-| **Audio** | Media |  | No | Audio URL, data URL, $binary from Record Audio / a file node, or a clip recorded here. |
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"Any installed speech-to-text model."},{"name":"Audio","type":"Media","description":"Audio URL, data URL, $binary from Record Audio / a file node, or a clip recorded here."}]} />
 {/* AUTO:settings:end */}
 
 **Audio** has five tabs:
@@ -43,15 +43,19 @@ There is no cost per run and no API key.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `transcript` | Text |  |
-| `segments` | List of entries |  |
-| `chunks` | Any | The raw timestamped chunks |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"transcript","type":"Text"},{"name":"segments","type":"List of entries"},{"name":"chunks","type":"Any","description":"The raw timestamped chunks"}]} />
+
+```json title="Shape of an output item"
+{
+  "transcript": "…",
+  "segments": [],
+  "chunks": null
+}
+```
 {/* AUTO:outputs:end */}
 
 - `transcript`: the full text. Use it as `{{ $input.transcript }}`.
@@ -61,7 +65,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 The **Model** picker lists your installed Whisper models first, then ones that download on first use. *Whisper tiny* is smaller and faster; *Whisper base* is more accurate. Manage them on the [Local AI](/app/local-models/) page.
@@ -74,7 +78,7 @@ Dictate a note and copy it as text:
 2. Transcribe Audio with **Model** *Whisper base* and **Audio** (From input) `{{ $binary }}`.
 3. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.transcript }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Choose a speech-to-text model."** **Model** is empty. Pick one.
 - **"No audio provided. Pass a URL, a data URL, or a $binary from a previous node."** **Audio** is empty, or its expression returned nothing. If Record Audio was dismissed, it continues with no recording.

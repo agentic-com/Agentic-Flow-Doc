@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Ask a chat model whether a piece of text follows your rules, then send the data down a **Pass** or a **Fail** path.
 
 ## What it does
@@ -34,10 +37,7 @@ To sort text into more than two groups, use [Text Classifier](/nodes/builtin/ai/
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Long text |  | Yes | The text to check (bind upstream data with \{\{ \}\}). |
-| **Policy** | Long text |  | Yes | Describe what is allowed / disallowed (e.g. no PII, no profanity, must be on-topic about X). |
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to check (bind upstream data with {{ }})."},{"name":"Policy","type":"Long text","required":true,"description":"Describe what is allowed / disallowed (e.g. no PII, no profanity, must be on-topic about X)."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Text** with an expression, for example `{{ $input.response }}` to check the reply of an earlier AI node.
@@ -47,7 +47,7 @@ Write **Policy** as clear, checkable rules, for example: `No email addresses or 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-2 output ports: **Pass**, **Fail**.
+<AwfOutputPorts ports={[{"name":"Pass"},{"name":"Fail"}]} />
 {/* AUTO:outputs:end */}
 
 What comes out depends on whether something is connected to the node's input:
@@ -58,9 +58,7 @@ What comes out depends on whether something is connected to the node's input:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Model** | chat model | Yes | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true}]} />
 {/* AUTO:deps:end */}
 
 Connect a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/). Guardrails has no credential of its own: the model node holds the API key.
@@ -72,7 +70,7 @@ Connect a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/
 3. Guardrails with **Text** `{{ $input.response }}` and **Policy** `No refunds or discounts may be promised. No personal data.`, with an [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model on **Model**.
 4. From **Pass**, [Clipboard Write](/nodes/extension/clipboardwrite/) copies the reply. From **Fail**, [Show Notification](/nodes/extension/shownotification/) tells you to write it by hand.
 
-## Troubleshooting
+## Common issues
 
 - **Everything goes out of Fail.** The model probably adds text around its verdict, which counts as a failure. Use a stronger model, or make the policy shorter and more precise. Run the node with nothing connected to its input to see the `reason`.
 - **"Dependency model is required".** Connect a chat model to the **Model** slot.

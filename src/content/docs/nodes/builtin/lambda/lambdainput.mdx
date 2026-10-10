@@ -11,6 +11,9 @@ node:
   family: lambda
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Lambda Input is the starting point of a lambda workflow: it lists the values the workflow accepts from whoever calls it.
 
 ## What it does
@@ -31,9 +34,7 @@ For a workflow that starts on its own (a shortcut, a schedule, a page event), us
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Inputs** | Field list |  | Yes | The inputs for the lambda workflow. |
+<AwfParamTable rows={[{"name":"Inputs","type":"Field list","required":true,"description":"The inputs for the lambda workflow."}]} />
 {/* AUTO:settings:end */}
 
 Give inputs short, clear names such as `email` or `pageUrl`: they become the field labels callers see and the field names you read later with `{{ $input.email }}`.
@@ -43,7 +44,7 @@ A default value is used both when a caller leaves the field empty and when you t
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The output is one item with exactly the inputs you declared, for example `{ "email": "ana@example.com", "pageUrl": "https://example.com" }`. Connect the first step of your lambda workflow to it and read the values with `{{ $input.email }}`, or from later steps with `{{ $('Lambda Input').email }}`.
@@ -51,7 +52,7 @@ The output is one item with exactly the inputs you declared, for example `{ "ema
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -63,7 +64,7 @@ A reusable "Summarize a page" lambda workflow:
 3. Add a summarizing step, then [Lambda Output](/nodes/builtin/lambda/lambdaoutput/) with an output `summary` set to that step's result.
 4. In another workflow, open the node list, go to the **Customs** tab, and add the workflow from **My Lambda Workflows**. Its node shows a **url** field.
 
-## Troubleshooting
+## Common issues
 
 - **"Input url is required".** The caller sent no value for that input and it has no default. Fill the field on the calling node or set a default value. A value of `0`, `false` or empty text also counts as missing, so pass those as text (for example `"0"`) or set a non-empty default.
 - **There is no Test Workflow button on the canvas.** A lambda workflow can only be tested once it has both a Lambda Input and a Lambda Output. Use the **Add Lambda Input** or **Add Lambda Output** button in the top right.

@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Pause a run, record a voice clip from your microphone, and continue with the recording.
 
 ## What it does
@@ -36,10 +39,7 @@ For typed input, use [In-Page Form](/nodes/builtin/flow/in-page-form/).
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Prompt** | Text | `Record audio` | No |  |
-| **Max length (seconds)** | Number | 60 | No |  |
+<AwfParamTable rows={[{"name":"Prompt","type":"Text","default":"Record audio"},{"name":"Max length (seconds)","type":"Number","default":"60"}]} />
 {/* AUTO:settings:end */}
 
 **Prompt** is the instruction shown above the record button, for example `Dictate your reply`. **Max length (seconds)** caps the clip; recording stops automatically when it is reached.
@@ -47,9 +47,18 @@ For typed input, use [In-Page Form](/nodes/builtin/flow/in-page-form/).
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `recordedAt` (text), `$binary` (key-value pairs).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"recordedAt","type":"Text"},{"name":"$binary","type":"Key-value pairs"}]} />
+
+```json title="Shape of an output item"
+{
+  "recordedAt": "…",
+  "$binary": {}
+}
+```
 {/* AUTO:outputs:end */}
 
 `$binary` holds the audio file (usually `audio/webm`) and `recordedAt` the time it was sent. Pass the item straight into [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) or any node that accepts a file. The incoming item is not passed on.
@@ -57,7 +66,7 @@ Each output item has the fields `recordedAt` (text), `$binary` (key-value pairs)
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -69,7 +78,7 @@ Dictate a task:
 3. [Transcribe Audio](/nodes/builtin/ai/localai/transcribe-audio/) turns the clip into text.
 4. [Todoist](/nodes/builtin/integration/todoist/), **Task** › **Create**, with **Content** `{{ $input.transcript }}`.
 
-## Troubleshooting
+## Common issues
 
 - **The page card says the microphone is blocked or missing.** The card runs inside the website, so the browser asks for that site's microphone permission. Allow it in the site settings, plug in a microphone, or record from the window in the app instead.
 - **No card appears on the page.** The card only shows on normal web pages (`http` or `https`) in the extension. Record from the app window or open the paused run from the **Executions** pane.

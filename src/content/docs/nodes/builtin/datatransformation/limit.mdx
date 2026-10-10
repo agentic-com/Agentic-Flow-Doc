@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Cap the number of items that flow through the workflow.
 
 ## What it does
@@ -29,10 +32,7 @@ If the list already has fewer items than the limit, it passes through unchanged.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Max Items** | Number | 10 | No | The maximum number of items to keep. |
-| **Keep** | Choice | First items | No | Whether to keep the first or the last items. Options: First items, Last items. |
+<AwfParamTable rows={[{"name":"Max Items","type":"Number","default":"10","description":"The maximum number of items to keep."},{"name":"Keep","type":"Choice","default":"First items","description":"Whether to keep the first or the last items. Options: First items, Last items."}]} />
 {/* AUTO:settings:end */}
 
 **Max Items** must be a whole number of at least `1`.
@@ -40,7 +40,7 @@ If the list already has fewer items than the limit, it passes through unchanged.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The kept items, unchanged and in their original order. The next node runs once per kept item.
@@ -48,7 +48,7 @@ The kept items, unchanged and in their original order. The next node runs once p
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -57,7 +57,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. **Limit** with **Max Items** `5` and **Keep** *First items*.
 3. [Get All Text from Link](/nodes/builtin/core/getalltextfromlink/) reads only those five pages.
 
-## Troubleshooting
+## Common issues
 
 - **"No source node is connected to this node."** Limit has no input. Connect the node that produces the list.
 - **Limit seems to have no effect.** The node before it sends one object that contains a list, not a list of items. Use [Split Out](/nodes/builtin/datatransformation/splitout/) first to turn that list into items.

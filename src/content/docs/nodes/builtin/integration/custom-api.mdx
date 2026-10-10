@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Call any web API that publishes an OpenAPI (Swagger) description: paste the spec URL, pick an operation, and fill the fields the node builds for you.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use a Custom API connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Credential** field when the service needs one.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -35,12 +44,7 @@ Limits:
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | No | Optional. A credential matching the API’s security scheme: Bearer Token for bearer / API-key schemes, Basic Auth for basic. |
-| **OpenAPI spec URL** | URL |  | Yes | URL of a public OpenAPI (Swagger) JSON document. Grant access, then pick an operation. |
-| **Operation** | Choice (loaded from your account) |  | Yes | Choose an operation from the spec. |
-| **Parameters** | Field list |  | No | Fields generated from the selected operation (path, query, header and body). |
+<AwfParamTable rows={[{"name":"Credential","type":"Credential","description":"Optional. A credential matching the API’s security scheme: Bearer Token for bearer / API-key schemes, Basic Auth for basic."},{"name":"OpenAPI spec URL","type":"URL","required":true,"description":"URL of a public OpenAPI (Swagger) JSON document. Grant access, then pick an operation."},{"name":"Operation","type":"Choice (loaded from your account)","required":true,"description":"Choose an operation from the spec."},{"name":"Parameters","type":"Field list","description":"Fields generated from the selected operation (path, query, header and body)."}]} />
 {/* AUTO:settings:end */}
 
 - **OpenAPI spec URL** must point at the JSON document itself (often ending in `openapi.json` or `swagger.json`), not at the human-readable documentation page. Click **Grant access** next to the field: it allows both loading the spec and calling the API on that site. You can review it later in **Settings → Site access**; see [Permissions and security](/app/troubleshooting/permissions-security/).
@@ -49,7 +53,7 @@ Limits:
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The output is the API's response: parsed JSON when the API returns JSON, otherwise the raw text. An empty success response (204) returns `success: true`. Any error status stops the node with an error.
@@ -57,7 +61,7 @@ The output is the API's response: parsed JSON when the API returns JSON, otherwi
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential): optional. Pick a saved connection or create one from this field.
+- **Credential** (connection): optional. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Leave **Credential** empty for public APIs. Otherwise, pick the credential type that matches the API's security, as described in the spec:
@@ -78,7 +82,7 @@ See [Create a credential](/app/connections/create/).
 3. [Limit](/nodes/builtin/datatransformation/limit/) keeps the first 5 results.
 4. [Browser Notification](/nodes/extension/browsernotification/) shows how many were found.
 
-## Troubleshooting
+## Common issues
 
 - **"The OpenAPI spec could not be read as JSON. Only JSON specs are supported for now."** The URL serves YAML or a web page. Find the JSON version of the spec.
 - **"Failed to fetch the OpenAPI spec: 404 Not Found".** The spec URL is wrong, or access to the site was not granted.

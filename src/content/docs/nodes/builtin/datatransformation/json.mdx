@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Parse, build, pick from, merge and repair JSON.
 
 ## What it does
@@ -35,16 +38,7 @@ Repair undoes a fixed set of common mistakes, in this order: a Markdown code fen
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | Parse | No | What to do with the JSON. Options: Parse, Stringify, Pick by path, Merge, Repair. |
-| **JSON** | Value |  | No | The JSON text or data to work on. |
-| **Source Field** | Text |  | No | Field on the incoming item to read, when JSON above is left empty. |
-| **Path** | Text |  | No | Dot path to read, for example product.offers.price. |
-| **Merge With** | Value |  | No | The object merged into the JSON. Its values win on conflict. |
-| **Repair If Needed** | Toggle | On | No | Try to fix nearly-valid JSON before parsing it. |
-| **Pretty Print** | Toggle | Off | No | Indent the output of Stringify. |
-| **Put Result In Field** | Text | `data` | No | Name of the field holding the answer. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Parse","description":"What to do with the JSON. Options: Parse, Stringify, Pick by path, Merge, Repair."},{"name":"JSON","type":"Value","description":"The JSON text or data to work on."},{"name":"Source Field","type":"Text","description":"Field on the incoming item to read, when JSON above is left empty."},{"name":"Path","type":"Text","description":"Dot path to read, for example product.offers.price."},{"name":"Merge With","type":"Value","description":"The object merged into the JSON. Its values win on conflict."},{"name":"Repair If Needed","type":"Toggle","default":"On","description":"Try to fix nearly-valid JSON before parsing it."},{"name":"Pretty Print","type":"Toggle","default":"Off","description":"Indent the output of Stringify."},{"name":"Put Result In Field","type":"Text","default":"data","description":"Name of the field holding the answer."}]} />
 {/* AUTO:settings:end */}
 
 The node finds its input in this order: the **JSON** field (for example `{{ $input.output }}`), then the field named in **Source Field** (dots allowed), then the whole incoming item.
@@ -54,7 +48,7 @@ The node finds its input in this order: the **JSON** field (for example `{{ $inp
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Parse**: a parsed object becomes the item itself, so you can use `{{ $input.title }}` directly. A list becomes one item per entry. Any other value goes in **Put Result In Field**. When repair was needed, a `_repaired` field lists the fixes.
@@ -65,7 +59,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -74,7 +68,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. **JSON** with **Operation** *Parse*, **JSON** set to the model's answer, and **Repair If Needed** on. A reply wrapped in a code fence still parses.
 3. [Notion](/nodes/builtin/integration/notion/) creates a page titled `{{ $input.title }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"This is not valid JSON: ... Turn on "Repair If Needed" to try to fix it."** The text is broken and repair is off. Turn **Repair If Needed** on.
 - **"This could not be read as JSON even after repair: ..."** The text is more than nearly valid, for example plain prose with no braces. Ask the model for JSON only, or check the field you read.

@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Condense long text into a short summary with a model that runs in your browser, so the text never leaves your device.
 
 ## What it does
@@ -29,13 +32,7 @@ To summarize with a chat model and your own instructions, use [Summarization](/n
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Long text |  | No | Long input is split into chunks and summarized piece by piece. |
-| **Length** | Choice | Medium | No | Short ≈ 20–60 words · Medium ≈ 60–130 · Detailed ≈ 130–250. Options: Short, Medium, Detailed. |
-| **Model** | Model picker |  | No | Only summarization models are listed here. |
-| **Min tokens (advanced)** | Number |  | No | Overrides the length preset minimum. |
-| **Max tokens (advanced)** | Number |  | No | Overrides the length preset maximum. |
+<AwfParamTable rows={[{"name":"Text","type":"Long text","description":"Long input is split into chunks and summarized piece by piece."},{"name":"Length","type":"Choice","default":"Medium","description":"Short ≈ 20–60 words · Medium ≈ 60–130 · Detailed ≈ 130–250. Options: Short, Medium, Detailed."},{"name":"Model","type":"Model picker","description":"Only summarization models are listed here."},{"name":"Min tokens (advanced)","type":"Number","description":"Overrides the length preset minimum."},{"name":"Max tokens (advanced)","type":"Number","description":"Overrides the length preset maximum."}]} />
 {/* AUTO:settings:end */}
 
 Lengths count tokens, roughly one per word in English. Use **Min tokens (advanced)** and **Max tokens (advanced)** only when the presets do not fit; if the minimum is larger than the maximum, the maximum wins. On very long text the length applies to each piece, then to the final pass.
@@ -43,14 +40,18 @@ Lengths count tokens, roughly one per word in English. Use **Min tokens (advance
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `summary` | Text |  |
-| `words` | Number | Words in the summary |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"summary","type":"Text"},{"name":"words","type":"Number","description":"Words in the summary"}]} />
+
+```json title="Shape of an output item"
+{
+  "summary": "…",
+  "words": 0
+}
+```
 {/* AUTO:outputs:end */}
 
 `summary` is the summary text. Use it as `{{ $input.summary }}` in the next node.
@@ -58,7 +59,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 The **Model** picker lists your installed summarization models first, then ones that download on first use. Manage them on the [Local AI](/app/local-models/) page.
@@ -71,7 +72,7 @@ Get a short summary of the page you are reading:
 2. Summarize with **Text** `{{ $input.pageText }}`, **Length** **Short** and **Model** *DistilBART CNN (summarize)*.
 3. [Show Notification](/nodes/extension/shownotification/) with **Title** `Summary` and **Message** `{{ $input.summary }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Choose a summarization model."** **Model** is empty. Pick one.
 - **"Provide some text to summarize."** **Text** is empty after expressions run. Check the field name in your expression.

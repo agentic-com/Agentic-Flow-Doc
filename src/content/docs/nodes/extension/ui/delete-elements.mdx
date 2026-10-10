@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Remove elements you pick (banners, pop-ups, ads, sidebars) from the page open in the active tab.
 
 ## What it does
@@ -29,9 +32,7 @@ The incoming item is passed on unchanged, so the workflow can continue.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Elements** | List |  | Yes | List of DOM elements to delete from the opened web page. |
+<AwfParamTable rows={[{"name":"Elements","type":"List","required":true,"description":"List of DOM elements to delete from the opened web page."}]} />
 {/* AUTO:settings:end */}
 
 Add one entry per thing to remove. In each **Target Element**, click the crosshair button and click the element on the page, or type a CSS selector. A selector that matches many elements, such as `.ad-slot`, removes them all.
@@ -39,7 +40,7 @@ Add one entry per thing to remove. In each **Target Element**, click the crossha
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The incoming item, unchanged.
@@ -47,7 +48,7 @@ The incoming item, unchanged.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -56,7 +57,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. **Delete UI Elements** with two entries in **Elements**: the cookie banner and `.newsletter-popup`.
 3. [Screenshot Page](/nodes/extension/screenshotpage/) with **Mode** = **Full Page** captures the clean page.
 
-## Troubleshooting
+## Common issues
 
 - **The element is still there.** The selector matched nothing at the moment the node ran, often because the pop-up appears a few seconds later. Add [Wait For Element](/nodes/extension/ui/wait-for-element/) with **Condition** = **Exists** before this node, and check the selector with **Ping**.
 - **The element comes back.** Some sites add it again after a while or on scroll, and reloading always restores the page. Run the node again, or hide it with [Set Element Attribute Style](/nodes/extension/ui/set-element-attribute-style/).

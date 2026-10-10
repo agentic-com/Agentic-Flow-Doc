@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Continue as soon as any one of several incoming branches completes.
 
 ## What it does
@@ -37,7 +40,7 @@ Connect as many branches as you like to its single input.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The item that arrives is passed on unchanged. To read data from a specific earlier node instead, use an expression that names that node.
@@ -45,7 +48,7 @@ The item that arrives is passed on unchanged. To read data from a specific earli
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -56,7 +59,7 @@ None. This node needs no credential and has no slots for other nodes.
 
 Pressing the shortcut or using the right-click menu now runs the same two steps.
 
-## Troubleshooting
+## Common issues
 
 - **The steps after Funnel run more than once in one run.** Two branches reached the Funnel in the same run, and each one fires it. If you need the steps to run only once after *all* branches finish, connect the branches to the next node directly (nodes wait for every input by default), or join them with [Merge](/nodes/builtin/flow/merge/).
 - **The next node gets `{ "passed": true }` instead of data.** The branch that fired Funnel produced no output. Read the data you need from the node that produced it with an expression.

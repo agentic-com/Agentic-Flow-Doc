@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Find the objects in an image, with where each one is and how sure the model is, using a model that runs in your browser.
 
 ## What it does
@@ -30,12 +33,7 @@ For one overall label, use [Classify Image](/nodes/builtin/ai/localai/classify-i
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Model picker |  | No | Any installed object-detection model, across engines. |
-| **Image** | Media |  | No | Image URL, data URL, or $binary from a previous node. |
-| **Confidence threshold** | Number | 0.5 | No |  |
-| **Max objects** | Number | 20 | No | Keep at most this many objects (highest score first). |
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"Any installed object-detection model, across engines."},{"name":"Image","type":"Media","description":"Image URL, data URL, or $binary from a previous node."},{"name":"Confidence threshold","type":"Number","default":"0.5"},{"name":"Max objects","type":"Number","default":"20","description":"Keep at most this many objects (highest score first)."}]} />
 {/* AUTO:settings:end */}
 
 **Image** has four tabs. **From input** takes an expression that points to an image from an earlier node, such as `{{ $input.dataUrl }}` after [Screenshot Page](/nodes/extension/screenshotpage/) or `{{ $binary }}` for an attached file. **URL** takes a web address. **Upload** and **Base64** store a fixed image with the node, handy for trying a model.
@@ -43,15 +41,19 @@ For one overall label, use [Classify Image](/nodes/builtin/ai/localai/classify-i
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `objects` | List of entries |  |
-| `count` | Number |  |
-| `top` | Text | The best label, or null when none passed |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"objects","type":"List of entries"},{"name":"count","type":"Number"},{"name":"top","type":"Text","description":"The best label, or null when none passed"}]} />
+
+```json title="Shape of an output item"
+{
+  "objects": [],
+  "count": 0,
+  "top": "…"
+}
+```
 {/* AUTO:outputs:end */}
 
 - `objects`: each entry is `{ label, score, box }`, best first. `box` holds `xmin`, `ymin`, `xmax` and `ymax`, in pixels from the top-left corner of the image.
@@ -61,7 +63,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 The **Model** picker lists your installed models first, then models that download on first use. Manage them on the [Local AI](/app/local-models/) page.
@@ -74,7 +76,7 @@ Check whether the visible page shows a person:
 2. Detect Objects with **Model** *COCO-SSD (MobileNet v2)*, **Image** (From input) `{{ $input.dataUrl }}` and **Confidence threshold** 0.6.
 3. [IF](/nodes/builtin/flow/if/) with the condition `{{ $input.top }}` equals `person`, then continue from the true branch.
 
-## Troubleshooting
+## Common issues
 
 - **"Choose a detection model."** **Model** is empty. Pick one.
 - **"No image provided. Pass an image URL, a data URL, or a $binary image from a previous node."** **Image** is empty, or its expression returned nothing. Check the field you point to.

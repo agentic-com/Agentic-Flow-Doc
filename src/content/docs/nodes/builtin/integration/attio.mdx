@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Add or update people and companies in Attio CRM, search them by name, and log notes from the page you are on.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs an Attio connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -35,60 +44,11 @@ A **Note** is plain text: your **Note** text, then the **Selection** in quotes, 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| Person | Create or update, Search |
-| Company | Create or update, Search |
-| Note | Create |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"An Attio API key (Workspace settings → Developers → Access tokens). It is account-wide — it can read and write everything your workspace permits. Keep it secret."}]} groups={[{"label":"Person","options":[{"label":"Create or update","rows":[{"name":"Email","type":"Text","required":true,"description":"The person’s email — the unique key used to find an existing record."},{"name":"First name","type":"Text"},{"name":"Last name","type":"Text"},{"name":"Phone","type":"Text"},{"name":"Job title","type":"Text"}]},{"label":"Search","rows":[{"name":"Query","type":"Text","required":true,"description":"Text to match against the record’s name."},{"name":"Limit","type":"Number","description":"Maximum number of results."}]}]},{"label":"Company","options":[{"label":"Create or update","rows":[{"name":"Domain","type":"Text","required":true,"description":"The company domain — the unique key used to find an existing record."},{"name":"Name","type":"Text"},{"name":"Description","type":"Text"}]},{"label":"Search","rows":[{"name":"Query","type":"Text","required":true,"description":"Text to match against the record’s name."},{"name":"Limit","type":"Number","description":"Maximum number of results."}]}]},{"label":"Note","options":[{"label":"Create","rows":[{"name":"Attach to","type":"Choice","required":true,"description":"Whether the note is attached to a person or a company. Options: Person, Company."},{"name":"Record ID","type":"Text","required":true,"description":"The Attio record ID to attach the note to."},{"name":"Title","type":"Text","description":"The note title."},{"name":"Note","type":"Text","required":true,"description":"The note text."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the note when present."},{"name":"Selection","type":"Text","description":"Selected text to quote in the note (optional)."}]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | An Attio API key (Workspace settings → Developers → Access tokens). It is account-wide — it can read and write everything your workspace permits. Keep it secret. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**Person → Create or update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Email** | Text |  | Yes | The person’s email — the unique key used to find an existing record. |
-| **First name** | Text |  | No |  |
-| **Last name** | Text |  | No |  |
-| **Phone** | Text |  | No |  |
-| **Job title** | Text |  | No |  |
-
-**Person → Search**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Query** | Text |  | Yes | Text to match against the record’s name. |
-| **Limit** | Number |  | No | Maximum number of results. |
-
-**Company → Create or update**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Domain** | Text |  | Yes | The company domain — the unique key used to find an existing record. |
-| **Name** | Text |  | No |  |
-| **Description** | Text |  | No |  |
-
-**Company → Search**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Query** | Text |  | Yes | Text to match against the record’s name. |
-| **Limit** | Number |  | No | Maximum number of results. |
-
-**Note → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Attach to** | Choice |  | Yes | Whether the note is attached to a person or a company. Options: Person, Company. |
-| **Record ID** | Text |  | Yes | The Attio record ID to attach the note to. |
-| **Title** | Text |  | No | The note title. |
-| **Note** | Text |  | Yes | The note text. |
-| **Source URL** | Text |  | No | The page URL to attach — appended to the note when present. |
-| **Selection** | Text |  | No | Selected text to quote in the note (optional). |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Attio API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - **Domain** is the bare domain, for example `acme.com`, not a full URL.
@@ -98,7 +58,7 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Create or update** returns the record: `id.record_id`, `values` (each attribute as a list of Attio values) and `created`, which is `true` for a new record and `false` for an update. Branch on it with [IF](/nodes/builtin/flow/if/).
@@ -108,7 +68,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, Bearer Token): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, Bearer Token): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Use an Attio API key, created in Attio under **Workspace settings → Developers → Access tokens**. It can read and write everything your workspace allows, so keep it secret. Save it as a Bearer Token credential: see [Create a credential](/app/connections/create/).
@@ -121,7 +81,7 @@ Use an Attio API key, created in Attio under **Workspace settings → Developers
 4. Attio, **Person → Create or update**, with **Email** `{{ $input.email }}`, **First name** `{{ $input.firstName }}` and so on.
 5. Attio, **Note → Create**, **Attach to** `Person`, **Record ID** `{{ $input.id.record_id }}`, **Note** `Seen on the web`, **Source URL** set to the page URL.
 
-## Troubleshooting
+## Common issues
 
 - **"Attio API Error: 401 Unauthorized — the API key is missing or invalid".** The key is wrong or was revoked. Create a new one in Attio and update the credential.
 - **A duplicate record was created.** Two **Create or update** steps for the same email or domain ran back to back, before Attio could find the first record. Space them out, or run them one at a time.

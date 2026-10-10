@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Upload files to Google Drive, find, copy and delete them, and create and manage folders.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Google Drive connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with an OAuth2.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -34,86 +43,11 @@ The node works with file details (name, type, dates, link), not file contents: *
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| File | List, Get, Create, Delete, Copy, Search |
-| Folder | List, Get, Create, Delete |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Credential to use to make request."}]} groups={[{"label":"File","options":[{"label":"List","rows":[{"name":"Search Query","type":"Text","description":"Search query for files/folders."},{"name":"Page Size","type":"Number","default":"100","description":"Number of results per page (1-1000)."}]},{"label":"Get","rows":[{"name":"File ID","type":"Choice (loaded from your account)","required":true,"description":"The Google Drive file ID."}]},{"label":"Create","rows":[{"name":"Name","type":"Text","required":true,"description":"The name for the file or folder."},{"name":"Binary source","type":"Text","default":"data","description":"The logical $binary key on the incoming item to upload (defaults to 'data'). When the item carries this binary it becomes the file content; otherwise the Content field is used."},{"name":"Content","type":"One of several shapes","description":"File content (text or binary)."},{"name":"MIME Type","type":"Text","description":"MIME type of the file."},{"name":"Parent ID","type":"Choice (loaded from your account)","description":"Parent folder ID (optional)."}]},{"label":"Delete","rows":[{"name":"File ID","type":"Choice (loaded from your account)","required":true,"description":"The Google Drive file ID."}]},{"label":"Copy","rows":[{"name":"File ID","type":"Choice (loaded from your account)","required":true,"description":"The Google Drive file ID."},{"name":"Name","type":"Text","description":"The name for the file or folder."},{"name":"Parent ID","type":"Choice (loaded from your account)","description":"Parent folder ID (optional)."}]},{"label":"Search","rows":[{"name":"Search Query","type":"Text","required":true,"description":"Search query for files/folders."},{"name":"Page Size","type":"Number","default":"100","description":"Number of results per page (1-1000)."}]}]},{"label":"Folder","options":[{"label":"List","rows":[{"name":"Search Query","type":"Text","description":"Search query for files/folders."},{"name":"Page Size","type":"Number","default":"100","description":"Number of results per page (1-1000)."}]},{"label":"Get","rows":[{"name":"Folder ID","type":"Choice (loaded from your account)","required":true,"description":"The Google Drive folder ID."}]},{"label":"Create","rows":[{"name":"Name","type":"Text","required":true,"description":"The name for the file or folder."},{"name":"Parent ID","type":"Choice (loaded from your account)","description":"Parent folder ID (optional)."}]},{"label":"Delete","rows":[{"name":"Folder ID","type":"Choice (loaded from your account)","required":true,"description":"The Google Drive folder ID."}]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | The Credential to use to make request. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**File → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Search Query** | Text |  | No | Search query for files/folders. |
-| **Page Size** | Number | 100 | No | Number of results per page (1-1000). |
-
-**File → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **File ID** | Choice (loaded from your account) |  | Yes | The Google Drive file ID. |
-
-**File → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Name** | Text |  | Yes | The name for the file or folder. |
-| **Binary source** | Text | `data` | No | The logical `$binary` key on the incoming item to upload (defaults to 'data'). When the item carries this binary it becomes the file content; otherwise the Content field is used. |
-| **Content** | One of several shapes |  | No | File content (text or binary). |
-| **MIME Type** | Text |  | No | MIME type of the file. |
-| **Parent ID** | Choice (loaded from your account) |  | No | Parent folder ID (optional). |
-
-**File → Delete**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **File ID** | Choice (loaded from your account) |  | Yes | The Google Drive file ID. |
-
-**File → Copy**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **File ID** | Choice (loaded from your account) |  | Yes | The Google Drive file ID. |
-| **Name** | Text |  | No | The name for the file or folder. |
-| **Parent ID** | Choice (loaded from your account) |  | No | Parent folder ID (optional). |
-
-**File → Search**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Search Query** | Text |  | Yes | Search query for files/folders. |
-| **Page Size** | Number | 100 | No | Number of results per page (1-1000). |
-
-**Folder → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Search Query** | Text |  | No | Search query for files/folders. |
-| **Page Size** | Number | 100 | No | Number of results per page (1-1000). |
-
-**Folder → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Folder ID** | Choice (loaded from your account) |  | Yes | The Google Drive folder ID. |
-
-**Folder → Create**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Name** | Text |  | Yes | The name for the file or folder. |
-| **Parent ID** | Choice (loaded from your account) |  | No | Parent folder ID (optional). |
-
-**Folder → Delete**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Folder ID** | Choice (loaded from your account) |  | Yes | The Google Drive folder ID. |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Google Drive API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - **Search Query** uses Google Drive's search syntax, for example `name contains 'invoice'`, `mimeType = 'application/pdf'`, or both joined with `and`. On **File → List** it is optional; leave it empty to list all files.
@@ -124,7 +58,7 @@ Pick **Resource** and **Operation** first; the fields below change with your cho
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - Each file or folder has `id`, `name`, `mimeType`, `createdTime`, `modifiedTime` and `webViewLink`, the link that opens it in Drive.
@@ -135,7 +69,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Google Drive connects by signing in to your Google account (OAuth). You first create your own Google OAuth client once, with the Google Drive API enabled: follow [Create your OAuth client](/app/connections/oauth-client/#google). Then create a Google Drive credential, paste the **Client ID** and **Client Secret**, click **Check connection** and approve the Google window. AWFlow asks for full access to your Drive, which it needs to list, copy and delete files it did not create itself. The sign-in is kept and refreshed for you. See also [Create a credential](/app/connections/create/).
@@ -147,7 +81,7 @@ Google Drive connects by signing in to your Google account (OAuth). You first cr
 3. Google Drive, **File → Create**, **Name** `{{ $('Context Menu').tabTitle }}.png`, **Parent ID** your `Screenshots` folder.
 4. [Clipboard Write](/nodes/extension/clipboardwrite/) copies `{{ $input.webViewLink }}` so you can paste the link anywhere.
 
-## Troubleshooting
+## Common issues
 
 - **The uploaded file contains text instead of your file.** No file arrived under the key in **Binary source**, so **Content** was used. Check the key name the previous node uses.
 - **"Google Drive Error: … File not found".** The id is wrong, or the file is in a shared drive or folder your account cannot open.

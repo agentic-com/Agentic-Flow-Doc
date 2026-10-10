@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn text into vectors on your own device, so a knowledge base can find passages by meaning without an API key or sending anything out.
 
 ## What it does
@@ -32,9 +35,7 @@ Since a new knowledge base already uses all-MiniLM-L6-v2 when nothing is connect
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Model picker | `Xenova/all-MiniLM-L6-v2` | No | An on-device embeddings model. all-MiniLM-L6-v2 is the recommended default; Universal Sentence Encoder keeps older stores readable. |
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","default":"Xenova/all-MiniLM-L6-v2","description":"An on-device embeddings model. all-MiniLM-L6-v2 is the recommended default; Universal Sentence Encoder keeps older stores readable."}]} />
 {/* AUTO:settings:end */}
 
 Pick the **Model** before the knowledge base's first fill. To switch an existing knowledge base to another model, re-embed it from its settings on the [knowledge bases page](/app/knowledge-bases/overview/). Install more models from the [Local Models](/app/local-models/) page, or download them from the picker.
@@ -44,9 +45,7 @@ Pick the **Model** before the knowledge base's first fill. To switch an existing
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Embeddings | [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) |
+- **Embeddings** slot of [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/)
 {/* AUTO:outputs:end */}
 
 The vectors go to the knowledge base, not to the next node.
@@ -54,7 +53,7 @@ The vectors go to the knowledge base, not to the next node.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +65,7 @@ None. This node needs no credential and has no slots for other nodes.
 
 Later, a [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/) with the same Local Knowledge answers questions about the pages you saved.
 
-## Troubleshooting
+## Common issues
 
 - **"Embeddings model "…" isn't available. Install it from Local AI."** The model is not installed in this browser. Install it from [Local Models](/app/local-models/), or download it from the picker.
 - **A "Model mismatch" warning in the run log.** The knowledge base was built with another model, so that model was used. Disconnect this node, or re-embed the knowledge base with this model.

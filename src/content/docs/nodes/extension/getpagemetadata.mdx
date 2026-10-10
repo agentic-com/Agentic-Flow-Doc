@@ -11,7 +11,16 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Read the address, title, description, language, icon and social-sharing tags of the page open in the active tab.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/copy-title-url.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -40,20 +49,24 @@ This node has no settings.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `url` | Text |  |
-| `title` | Text |  |
-| `canonicalUrl` | Text |  |
-| `description` | Text |  |
-| `lang` | Text |  |
-| `favicon` | Text |  |
-| `openGraph` | Key-value pairs | og:\* meta tags |
-| `twitter` | Key-value pairs | twitter:\* meta tags |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"url","type":"Text"},{"name":"title","type":"Text"},{"name":"canonicalUrl","type":"Text"},{"name":"description","type":"Text"},{"name":"lang","type":"Text"},{"name":"favicon","type":"Text"},{"name":"openGraph","type":"Key-value pairs","description":"og:* meta tags"},{"name":"twitter","type":"Key-value pairs","description":"twitter:* meta tags"}]} />
+
+```json title="Shape of an output item"
+{
+  "url": "…",
+  "title": "…",
+  "canonicalUrl": "…",
+  "description": "…",
+  "lang": "…",
+  "favicon": "…",
+  "openGraph": {},
+  "twitter": {}
+}
+```
 {/* AUTO:outputs:end */}
 
 Read the sharing tags with expressions such as `{{ $input.openGraph.image }}` or `{{ $input.twitter.card }}`. A tag the page does not set is simply absent.
@@ -61,7 +74,7 @@ Read the sharing tags with expressions such as `{{ $input.openGraph.image }}` or
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -71,7 +84,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add [Edit Fields](/nodes/builtin/datatransformation/editfields/) with three fields: `title` = `{{ $input.title }}`, `link` = `{{ $input.url }}` and `image` = `{{ $input.openGraph.image }}`.
 4. Keep it with [Data Store](/nodes/builtin/core/datastore/), **Operation** = **Set**, **Key** = `{{ $input.link }}`.
 
-## Troubleshooting
+## Common issues
 
 - **`description`, `canonicalUrl` or `lang` is empty.** The page does not declare it. Fall back to another field, or read the text with [Get All Text](/nodes/extension/getalltext/).
 - **`openGraph` is empty.** The page has no social-sharing tags.

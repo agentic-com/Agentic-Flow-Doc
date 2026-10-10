@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Change attributes and CSS styles of elements on the active tab: hide, recolor, resize, enable, set a value.
 
 ## What it does
@@ -33,16 +36,7 @@ Changes are only on your screen: reloading the page undoes them.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **DOM Selector** | Page element |  | Yes | The selector of the DOM element to interact with. |
-| **Attributes** | List of entries |  | No |  |
-| Attributes (each entry) › **Name** | Text |  | Yes |  |
-| Attributes (each entry) › **Value** | Text |  | No |  |
-| Attributes (each entry) › **Remove** | Toggle | Off | No |  |
-| **Styles** | List of entries |  | No |  |
-| Styles (each entry) › **CSS property** | Text |  | Yes |  |
-| Styles (each entry) › **Value** | Text |  | Yes |  |
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Attributes","type":"List of entries"},{"name":"Attributes (each entry) › Name","type":"Text","required":true},{"name":"Attributes (each entry) › Value","type":"Text"},{"name":"Attributes (each entry) › Remove","type":"Toggle","default":"Off"},{"name":"Styles","type":"List of entries"},{"name":"Styles (each entry) › CSS property","type":"Text","required":true},{"name":"Styles (each entry) › Value","type":"Text","required":true}]} />
 {/* AUTO:settings:end */}
 
 - **DOM Selector**: click the crosshair button and click an element, or type a CSS selector. A selector such as `.sponsored` changes all matching elements.
@@ -51,9 +45,17 @@ Changes are only on your screen: reloading the page undoes them.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `result` (object).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"result","type":"Object"}]} />
+
+```json title="Shape of an output item"
+{
+  "result": {}
+}
+```
 {/* AUTO:outputs:end */}
 
 The incoming item passes through with a `result` field added: `matched` (how many elements the selector found), `updated` (how many were changed) and, for an invalid selector, `error`.
@@ -61,7 +63,7 @@ The incoming item passes through with a `result` field added: `matched` (how man
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -70,7 +72,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. **Set Element Attribute Style** with **DOM Selector** = `.sponsored`, and one **Styles** entry: **CSS property** `display`, **Value** `none`.
 3. A second **Set Element Attribute Style** with **DOM Selector** = `.price` and **Styles**: `font-weight` = `bold`, `background-color` = `#fff3cd`.
 
-## Troubleshooting
+## Common issues
 
 - **`matched` is 0.** The selector found nothing when the node ran. Check it with **Ping**, or add [Wait For Element](/nodes/extension/ui/wait-for-element/) first.
 - **`error` says the selector is not valid.** **DOM Selector** has a typo or uses an unsupported form. Pick the element again with the crosshair.

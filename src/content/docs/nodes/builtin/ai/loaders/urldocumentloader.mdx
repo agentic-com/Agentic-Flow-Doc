@@ -12,6 +12,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Load a web page as plain text, ready to index into a knowledge base.
 
 ## What it does
@@ -29,14 +32,7 @@ It is meant to feed the [Indexer](/nodes/builtin/ai/aiagents/indexernode/), but 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **URL** | Text |  | Yes | The URL to load text from. |
-| **Output field name** | Text | `text` | No | The name of the output field that will hold the loaded text. |
-| **Timeout** | Number | 10000 | No | The timeout for the request in milliseconds. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Headers** | Key-value pairs |  | No | The headers to send with the request. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"URL","type":"Text","required":true,"description":"The URL to load text from."},{"name":"Output field name","type":"Text","default":"text","description":"The name of the output field that will hold the loaded text."},{"name":"Timeout","type":"Number","default":"10000","description":"The timeout for the request in milliseconds."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Headers","type":"Key-value pairs","description":"The headers to send with the request."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - **URL** must be a full address including `https://`. It can be an expression, such as `{{ $input.url }}`, to load one page per incoming item.
@@ -46,7 +42,7 @@ It is meant to feed the [Indexer](/nodes/builtin/ai/aiagents/indexernode/), but 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 Each item has the page text in the field you named (default `text`). With **Include input fields** on, the incoming fields are kept next to it. Pass it to the Indexer's **Input** as `{{ $input.text }}`.
@@ -54,7 +50,7 @@ Each item has the page text in the field you named (default `text`). With **Incl
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -65,7 +61,7 @@ None. This node needs no credential and has no slots for other nodes.
 
 Each day the same source is updated in place in the knowledge base.
 
-## Troubleshooting
+## Common issues
 
 - **"HTTP error! status: 404"** (or another number). The server refused the page: 404 means not found, 403 means access denied. Check the address in a browser.
 - **"Invalid URL: …".** The address is malformed, or the page could not be reached at all (offline, or the site blocks the request). Check the address; if it opens fine in a tab, try running the workflow from the browser extension.

@@ -12,6 +12,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Load the text of the page in your current tab, ready to index into a knowledge base.
 
 ## What it does
@@ -29,13 +32,7 @@ Set **DOM Selector** to read only part of the page, such as the main article. It
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Output field name** | Text | `text` | No | The name of the output field that will hold the loaded text. |
-| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Visible text only** | Toggle | Off | No | Only return text from visible elements. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","default":"text","description":"The name of the output field that will hold the loaded text."},{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Visible text only","type":"Toggle","default":"Off","description":"Only return text from visible elements."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - Leave **DOM Selector** empty to read the whole page. Use the picker to click the part you want, or type a selector such as `article` or `main`.
@@ -44,7 +41,7 @@ Set **DOM Selector** to read only part of the page, such as the main article. It
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 Each item has the page text in the field you named (default `text`). With **Include input fields** on, the incoming fields are kept next to it. Pass it to the Indexer's **Input** as `{{ $input.text }}`.
@@ -52,7 +49,7 @@ Each item has the page text in the field you named (default `text`). With **Incl
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -61,7 +58,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. Current Page Document Loader with **DOM Selector** `article`, **Visible text only** on and **Output field name** `text`.
 3. [Indexer](/nodes/builtin/ai/aiagents/indexernode/) with **Input** `{{ $input.text }}`. Connect [Local Knowledge](/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/) to **Knowledge** and [Recursive Character Text Splitter](/nodes/builtin/ai/aidependencies/textsplitter/recursivecharactertextsplitter/) to **Text Splitter**.
 
-## Troubleshooting
+## Common issues
 
 - **"No content found".** The page, or the element matched by **DOM Selector**, has no text. Run the workflow once the page has loaded, and check or clear **DOM Selector**.
 - **The node doesn't run in the web app.** This node runs in the browser extension; install it or run the workflow from the extension.

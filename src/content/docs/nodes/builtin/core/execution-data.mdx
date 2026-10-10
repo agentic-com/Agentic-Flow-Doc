@@ -11,6 +11,9 @@ node:
   family: core
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Read details about the current run, or tag the run with a value you can search for later in run history.
 
 ## What it does
@@ -33,11 +36,7 @@ To remember values from one run to the next, use [Data Store](/nodes/builtin/cor
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | Read run context | No | Read run context, or attach metadata to the run. Options: Read run context, Attach metadata. |
-| **Key** | Text |  | No | Name of the metadata field to attach (Attach metadata only). |
-| **Value** | Text |  | No | Value to store under the key (Attach metadata only). |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Read run context","description":"Read run context, or attach metadata to the run. Options: Read run context, Attach metadata."},{"name":"Key","type":"Text","description":"Name of the metadata field to attach (Attach metadata only)."},{"name":"Value","type":"Text","description":"Value to store under the key (Attach metadata only)."}]} />
 {/* AUTO:settings:end */}
 
 **Value** is usually an expression, such as `{{ $input.orderId }}`. **Key** is required for **Attach metadata**.
@@ -45,7 +44,7 @@ To remember values from one run to the next, use [Data Store](/nodes/builtin/cor
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 **Read run context** outputs:
@@ -63,7 +62,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -75,7 +74,7 @@ Tag each run with the page it processed, then find it in run history:
 3. The rest of your steps, for example [Get All Text](/nodes/extension/getalltext/) and a summary.
 4. Later, open run history and type part of the page title in the search box to find that run.
 
-## Troubleshooting
+## Common issues
 
 - **"Attaching metadata needs a key."** **Key** is empty. Fill it in.
 - **`persisted` is `false`.** You tested the node on its own. Run the whole workflow and the pair is saved on that run.

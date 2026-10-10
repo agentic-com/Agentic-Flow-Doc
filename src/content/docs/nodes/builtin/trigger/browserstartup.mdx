@@ -11,6 +11,9 @@ node:
   family: trigger
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Run a workflow automatically each time you open your browser.
 
 ## What it does
@@ -36,9 +39,20 @@ This node has no settings.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `triggerType` (always "browserStartup"), `triggeredAt` (text), `reason` (text), `startedAt` (any).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"browserStartup\""},{"name":"triggeredAt","type":"Text"},{"name":"reason","type":"Text"},{"name":"startedAt","type":"Any"}]} />
+
+```json title="Shape of an output item"
+{
+  "triggerType": "browserStartup",
+  "triggeredAt": "…",
+  "reason": "…",
+  "startedAt": null
+}
+```
 {/* AUTO:outputs:end */}
 
 `reason` is `startup`. `triggeredAt` and `startedAt` are the date and time of the run. When you test the trigger yourself in the designer, `startedAt` is empty.
@@ -46,7 +60,7 @@ Each output item has the fields `triggerType` (always "browserStartup"), `trigge
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -58,7 +72,7 @@ Open your work tabs when the browser starts:
 3. Add a second Tab Control with **Operation** **Open**, **URL** `https://calendar.google.com/` and **Open Focused** turned off.
 4. Activate the workflow, then restart the browser.
 
-## Troubleshooting
+## Common issues
 
 - **Nothing runs when the browser opens.** The workflow must be activated. Also check that the browser really restarted: some browsers keep running in the background after you close the last window, so reopening a window is not a startup.
 - **It does not run right after installing the extension.** That is expected. The trigger only fires on the next browser startup.

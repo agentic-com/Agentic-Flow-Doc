@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Repeat a group of steps while your conditions hold, up to a safety limit.
 
 ## What it does
@@ -37,10 +40,7 @@ To work through a long list a few items at a time, [Split in Batches](/nodes/bui
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Max Iterations** | Number | 100 | No | Maximum number of loop iterations. |
-| **Conditions** | Conditions |  | Yes | The conditions to evaluate. |
+<AwfParamTable rows={[{"name":"Max Iterations","type":"Number","default":"100","description":"Maximum number of loop iterations."},{"name":"Conditions","type":"Conditions","required":true,"description":"The conditions to evaluate."}]} />
 {/* AUTO:settings:end */}
 
 **Max Iterations** accepts 1 to 1,000. The limit stops a loop whose conditions never fail from freezing the tab.
@@ -48,15 +48,19 @@ To work through a long list a few items at a time, [Split in Batches](/nodes/bui
 ## Outputs
 
 {/* AUTO:outputs:start */}
-2 output ports: **Done**, **Loop**.
+<AwfOutputPorts ports={[{"name":"Done"},{"name":"Loop"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `done` | True/false | True when the loop exits through Done |
-| `currentIndex` | Number |  |
-| `inData` | Any | The incoming data, unchanged |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"done","type":"True/false","description":"True when the loop exits through Done"},{"name":"currentIndex","type":"Number"},{"name":"inData","type":"Any","description":"The incoming data, unchanged"}]} />
+
+```json title="Shape of an output item"
+{
+  "done": true,
+  "currentIndex": 0,
+  "inData": null
+}
+```
 {/* AUTO:outputs:end */}
 
 When the loop exits through **Done**, its pass counter resets, so a loop nested inside another loop starts again from 1 on the next outer pass.
@@ -64,7 +68,7 @@ When the loop exits through **Done**, its pass counter resets, so a loop nested 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -76,7 +80,7 @@ Fetch every page of a paginated API:
 3. From **Loop**: [Http Request](/nodes/builtin/core/http-request/) to `https://api.example.com/items?page={{ $input.currentIndex }}`, then Set Variable stores the response's `hasMore` flag. Connect it back to **Loop Back**.
 4. From **Done**: continue with the collected data.
 
-## Troubleshooting
+## Common issues
 
 - **The loop stops after one pass.** The conditions were false on the second check. Make sure the repeated steps update the value the condition reads, and that the last step is connected to **Loop Back**, not to the top input.
 - **The loop always runs exactly Max Iterations times.** The conditions never become false. Check the field and operator, or raise the limit if the work really needs more passes.

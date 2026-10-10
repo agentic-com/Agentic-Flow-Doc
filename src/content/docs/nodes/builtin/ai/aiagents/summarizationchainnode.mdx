@@ -11,7 +11,16 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Turn a long text into a short summary with a chat model.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/summarize-this-page.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -32,13 +41,7 @@ To summarise on-device without a model node, use [Summarize](/nodes/builtin/ai/l
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Long text |  | Yes | The text to summarize. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Max words** | Number |  | No | The approximate maximum number of words the summary should contain. |
-| Options › **Style** | Text |  | No | The style of the summary, e.g. "bullet points", "one paragraph", "formal". |
-| Options › **System message** | Long text |  | No | The system message to use. |
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to summarize."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Max words","type":"Number","description":"The approximate maximum number of words the summary should contain."},{"name":"Options › Style","type":"Text","description":"The style of the summary, e.g. \"bullet points\", \"one paragraph\", \"formal\"."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Text** with an expression such as `{{ $input.text }}`. **Style** is free text: `bullet points`, `one paragraph`, `formal`, `for a ten-year-old`. Use **System message** for other rules, such as `Write in French.`
@@ -46,13 +49,17 @@ Fill **Text** with an expression such as `{{ $input.text }}`. **Style** is free 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `summary` | Any | The model reply; the parsed result when an output parser is connected |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"summary","type":"Any","description":"The model reply; the parsed result when an output parser is connected"}]} />
+
+```json title="Shape of an output item"
+{
+  "summary": null
+}
+```
 {/* AUTO:outputs:end */}
 
 `summary` is the summary as text. This node has no output parser slot. Use it downstream with `{{ $input.summary }}`.
@@ -60,9 +67,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Model** | chat model | Yes | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true}]} />
 {/* AUTO:deps:end */}
 
 Connect a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/) or an on-device [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/). The model node holds the API key; Summarization has no credential of its own.
@@ -73,7 +78,7 @@ Connect a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/
 2. Summarization with **Text** `{{ $input.text }}`, **Max words** `120` and **Style** `bullet points`, with an [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model on **Model**.
 3. [Display Markdown](/nodes/extension/displaymarkdown/) with **Content** `{{ $input.summary }}`.
 
-## Troubleshooting
+## Common issues
 
 - **The summary is longer than Max words.** The limit is an instruction, not a hard cut. Lower it, or add `Never exceed the word limit.` in **System message**.
 - **The model fails on a very long page.** The text is larger than the model's context window. Use a model with a larger window, or shorten the text first (for example with a **DOM Selector** in Get All Text).

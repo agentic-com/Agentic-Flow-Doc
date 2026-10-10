@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Pause a run until a person approves or rejects it, then continue down the matching branch.
 
 ## What it does
@@ -33,9 +36,7 @@ To ask for values rather than a yes or no, use [In-Page Form](/nodes/builtin/flo
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Prompt** | Text |  | No | What the person is being asked to approve. |
+<AwfParamTable rows={[{"name":"Prompt","type":"Text","description":"What the person is being asked to approve."}]} />
 {/* AUTO:settings:end */}
 
 Write the **Prompt** as a question and include the details the person needs, for example `Send this reply to {{ $input.to }}?`. Left empty, it shows `Approve this step?`.
@@ -43,7 +44,7 @@ Write the **Prompt** as a question and include the details the person needs, for
 ## Outputs
 
 {/* AUTO:outputs:start */}
-2 output ports: **Approved**, **Rejected**.
+<AwfOutputPorts ports={[{"name":"Approved"},{"name":"Rejected"}]} />
 {/* AUTO:outputs:end */}
 
 The items that reached the node come out unchanged, so the next nodes read the same fields as before. Leave **Rejected** unconnected if a "no" should simply end that path.
@@ -51,7 +52,7 @@ The items that reached the node come out unchanged, so the next nodes read the s
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -63,7 +64,7 @@ Review an AI-written summary before posting it:
 3. Wait For Approval with **Prompt** `Post this summary to Slack?`.
 4. From **Approved**: [Slack](/nodes/builtin/integration/slack/) posts the summary. From **Rejected**: [Show Notification](/nodes/extension/shownotification/) with the message `Summary discarded`.
 
-## Troubleshooting
+## Common issues
 
 - **The run stays "waiting".** Nobody has answered yet. Open the **Executions** pane and approve, reject or cancel it.
 - **No card appears on the page.** The card only appears on normal web pages (`http` or `https`), and only in the extension. Browser settings pages, the extension store and the AWFlow app tab can't show it; answer from the **Executions** pane or the desktop notification.

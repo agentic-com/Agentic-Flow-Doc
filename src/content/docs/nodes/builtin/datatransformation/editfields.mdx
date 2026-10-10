@@ -11,7 +11,16 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Build a new item with exactly the fields you list, each with a name, a type and a value.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/copy-title-url.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -31,9 +40,7 @@ The node runs once per incoming item, so ten items in give ten edited items out.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Fields** | Key-value pairs |  | Yes |  |
+<AwfParamTable rows={[{"name":"Fields","type":"Key-value pairs","required":true}]} />
 {/* AUTO:settings:end */}
 
 How each type treats the value:
@@ -47,7 +54,7 @@ How each type treats the value:
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 Each output item holds only the fields you defined, with the types you chose. Read them downstream with `{{ $input.fieldName }}`.
@@ -55,7 +62,7 @@ Each output item holds only the fields you defined, with the types you chose. Re
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -64,7 +71,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. Edit Fields defines `title` (*String*, `{{ $input.title }}`), `savedFrom` (*String*, `AWFlow`) and `priority` (*Number*, `2`).
 3. [Data Store](/nodes/builtin/core/datastore/) saves the tidy item.
 
-## Troubleshooting
+## Common issues
 
 - **A field from the previous node is missing.** Edit Fields only outputs what you list. Add the field with an expression such as `{{ $input.url }}`.
 - **"Failed to parse object …"** A field of type *Object* does not contain valid JSON. Check quotes and braces, or change the type to *String*.

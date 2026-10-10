@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Calculate with numbers and format them for people.
 
 ## What it does
@@ -36,21 +39,7 @@ Round avoids the usual decimal trap: rounding `1.005` to 2 decimals gives `1.01`
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | Add | No | The calculation to perform. 21 options. |
-| **Value** | Value |  | No | The number to work on. |
-| **Second Value** | Value |  | No | The second number, for Add, Subtract, Percentage and the rest. |
-| **Values** | Value |  | No | The list of numbers, for Minimum, Maximum, Sum and Average. |
-| **Decimal Places** | Number | 0 | No | How many decimal places Round keeps. |
-| **Format As** | Choice | Plain number | No | How Format presents the number. Options: Plain number, Currency, Percentage. |
-| **Locale** | Text |  | No | Language tag deciding separators, such as en-US or fr-FR. |
-| **Currency** | Text | `USD` | No | Three-letter currency code, used when formatting as currency. |
-| **Minimum Decimals** | Number | 0 | No | Fewest decimal places Format shows. |
-| **Maximum Decimals** | Number | 2 | No | Most decimal places Format shows. |
-| **Whole Number** | Toggle | On | No | Whether Random returns a whole number. |
-| **Put Result In Field** | Text | `result` | No | Name of the field holding the answer. |
-| **Include Input Fields** | Toggle | On | No | Keep the incoming item’s fields alongside the answer. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Add","description":"The calculation to perform. 21 options."},{"name":"Value","type":"Value","description":"The number to work on."},{"name":"Second Value","type":"Value","description":"The second number, for Add, Subtract, Percentage and the rest."},{"name":"Values","type":"Value","description":"The list of numbers, for Minimum, Maximum, Sum and Average."},{"name":"Decimal Places","type":"Number","default":"0","description":"How many decimal places Round keeps."},{"name":"Format As","type":"Choice","default":"Plain number","description":"How Format presents the number. Options: Plain number, Currency, Percentage."},{"name":"Locale","type":"Text","description":"Language tag deciding separators, such as en-US or fr-FR."},{"name":"Currency","type":"Text","default":"USD","description":"Three-letter currency code, used when formatting as currency."},{"name":"Minimum Decimals","type":"Number","default":"0","description":"Fewest decimal places Format shows."},{"name":"Maximum Decimals","type":"Number","default":"2","description":"Most decimal places Format shows."},{"name":"Whole Number","type":"Toggle","default":"On","description":"Whether Random returns a whole number."},{"name":"Put Result In Field","type":"Text","default":"result","description":"Name of the field holding the answer."},{"name":"Include Input Fields","type":"Toggle","default":"On","description":"Keep the incoming item’s fields alongside the answer."}]} />
 {/* AUTO:settings:end */}
 
 - **Value**: usually an expression such as `{{ $input.price }}`. Left empty, Math uses the item's `value` field.
@@ -62,7 +51,7 @@ Round avoids the usual decimal trap: rounding `1.005` to 2 decimals gives `1.01`
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The answer is in **Put Result In Field**, for example `{{ $input.result }}`. Format returns text; every other operation returns a number. With **Include Input Fields** on, the answer is added to the incoming item; off, the item holds only the answer. Minimum, Maximum, Sum and Average always return only the answer.
@@ -70,7 +59,7 @@ The answer is in **Put Result In Field**, for example `{{ $input.result }}`. For
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -80,7 +69,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. **Math** with **Operation** *Sum* and **Values** `{{ $input.price }}`.
 4. A second **Math** with **Operation** *Format*, **Value** `{{ $input.result }}`, **Format As** *Currency*, **Currency** `EUR` and **Locale** `fr-FR` gives text such as `1 234,50 €`.
 
-## Troubleshooting
+## Common issues
 
 - **"The value is missing, not a number."** or **"The value is empty, so there is nothing to calculate with."** The field you pointed at does not exist or is blank on this item. Check the expression in **Value**, or remove the item first with [Filter](/nodes/builtin/flow/filter/).
 - **"The value "19,99 €" is not a number."** Text with a currency sign or a decimal comma is not a number. Clean it first with [Regex](/nodes/builtin/datatransformation/regex/) or [Text / Formatter](/nodes/builtin/datatransformation/text-formatter/).

@@ -11,6 +11,9 @@ node:
   family: core
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Run your own Python code on the incoming data when no other node does what you need.
 
 ## What it does
@@ -33,9 +36,7 @@ For simple field changes, [Edit Fields](/nodes/builtin/datatransformation/editfi
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Code to Execute** | Code |  | Yes | The code will be executed in the context of the node. |
+<AwfParamTable rows={[{"name":"Code to Execute","type":"Code","required":true,"description":"The code will be executed in the context of the node."}]} />
 {/* AUTO:settings:end */}
 
 ### Reading `input`
@@ -78,13 +79,17 @@ words = input.get("selectionText", "").split()
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `result` | Any | What the code returned; null when it returned nothing |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"result","type":"Any","description":"What the code returned; null when it returned nothing"}]} />
+
+```json title="Shape of an output item"
+{
+  "result": null
+}
+```
 {/* AUTO:outputs:end */}
 
 Read the returned value downstream with `{{ $input.result }}`, or a field of it with `{{ $input.result.words }}`. The value travels as JSON: dicts become objects, sets become lists, integers too large for JSON become text, and values with no JSON form (such as class instances) are returned as their text form.
@@ -92,7 +97,7 @@ Read the returned value downstream with `{{ $input.result }}`, or a field of it 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -103,7 +108,7 @@ Count the words in text you select on a page:
 2. Code with the snippet from **Returning a value** above.
 3. [Browser Notification](/nodes/extension/browsernotification/), **Title** `Word count`, **Message** `{{ $input.result.words }} words, longest: {{ $input.result.longest }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Network access is disabled in the Code node sandbox. Use an HTTP Request node to call APIs."** The code tried to fetch something. Fetch it with [Http Request](/nodes/builtin/core/http-request/) before the Code node and read the response from `input`.
 - **"Code execution timed out after 30000ms".** The code ran longer than 30 seconds (start-up included), often an endless loop. Simplify it or split the work across items.

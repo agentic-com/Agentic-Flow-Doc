@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Tell the Indexer how to cut long text into chunks at one separator of your choice.
 
 ## What it does
@@ -30,11 +33,7 @@ A single piece longer than **Chunk Size** (no separator inside it) is kept whole
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Chunk Size** | Number | 1000 | No | The size of each chunk. |
-| **Separator** | Text |  | No | The separator to use. |
-| **Chunk Overlap** | Number | 200 | No | The overlap between chunks. |
+<AwfParamTable rows={[{"name":"Chunk Size","type":"Number","default":"1000","description":"The size of each chunk."},{"name":"Separator","type":"Text","description":"The separator to use."},{"name":"Chunk Overlap","type":"Number","default":"200","description":"The overlap between chunks."}]} />
 {/* AUTO:settings:end */}
 
 - **Chunk Size** and **Chunk Overlap** count characters. Keep the overlap smaller than the chunk size. A value of `0` in either field is replaced by its default (1000 and 200).
@@ -45,9 +44,7 @@ A single piece longer than **Chunk Size** (no separator inside it) is kept whole
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Text Splitter | [Indexer](/nodes/builtin/ai/aiagents/indexernode/) |
+- **Text Splitter** slot of [Indexer](/nodes/builtin/ai/aiagents/indexernode/)
 {/* AUTO:outputs:end */}
 
 The chunks are counted in the Indexer's output (`chunks`) and stored in the knowledge base connected to it.
@@ -55,7 +52,7 @@ The chunks are counted in the Indexer's output (`chunks`) and stored in the know
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -66,7 +63,7 @@ None. This node needs no credential and has no slots for other nodes.
 
 Each note becomes its own chunk unless notes are short enough to be joined.
 
-## Troubleshooting
+## Common issues
 
 - **"Cannot have chunkOverlap >= chunkSize".** **Chunk Overlap** is as large as **Chunk Size** or larger. Lower the overlap.
 - **Chunks are much bigger than Chunk Size.** The separator does not appear in the text, so nothing was cut. Check **Separator**, or leave it empty to split at spaces.

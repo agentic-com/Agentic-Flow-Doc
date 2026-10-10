@@ -11,7 +11,16 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Pull named pieces of information (a name, a date, an amount) out of free text with a chat model.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/selection-to-todoist.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -30,12 +39,7 @@ To rewrite or answer freely, use [Basic LLM Chain](/nodes/builtin/ai/aiagents/ba
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Long text |  | Yes | The text to extract information from. |
-| **What to extract** | Long text |  | Yes | Describe the fields to extract, or connect an Output Parser. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **System message** | Long text |  | No | The system message to use. |
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to extract information from."},{"name":"What to extract","type":"Long text","required":true,"description":"Describe the fields to extract, or connect an Output Parser."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Text** with an expression such as `{{ $input.text }}`.
@@ -47,13 +51,17 @@ Use **System message** under **Options** for extra rules, such as `Leave a field
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each output item has these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `extracted` | Any | The data the model extracted |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"extracted","type":"Any","description":"The data the model extracted"}]} />
+
+```json title="Shape of an output item"
+{
+  "extracted": null
+}
+```
 {/* AUTO:outputs:end */}
 
 With a Structured Output Parser connected, read single fields downstream with expressions such as `{{ $input.extracted.total }}`. Without one, `extracted` is text, so field access does not work.
@@ -61,10 +69,7 @@ With a Structured Output Parser connected, read single fields downstream with ex
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-| Slot | Accepts | Required | Connections |
-| --- | --- | --- | --- |
-| **Model** | chat model | Yes | One |
-| **Output Parser** | output parser | No | One |
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 - **Model**: a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/). The model node holds the API key; this node has no credential of its own.
@@ -76,7 +81,7 @@ With a Structured Output Parser connected, read single fields downstream with ex
 2. Information Extractor with **Text** `{{ $input.text }}` and **What to extract** `customer name, order number, total`. Connect an [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model and a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) with **JSON Output Example** `{ "customer": "Jane Doe", "orderNumber": "A-1042", "total": 59.9 }`.
 3. [Display Object](/nodes/extension/displayobject/) shows `extracted`, or a [Google Sheets](/nodes/builtin/integration/google-sheets/) node appends `{{ $input.extracted.customer }}` and `{{ $input.extracted.total }}` as a row.
 
-## Troubleshooting
+## Common issues
 
 - **`{{ $input.extracted.field }}` is empty.** No output parser is connected, so `extracted` is plain text. Connect a Structured Output Parser.
 - **The parser fails on the reply.** The model answered with extra text around the data. Add an [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/), or use a stronger model.

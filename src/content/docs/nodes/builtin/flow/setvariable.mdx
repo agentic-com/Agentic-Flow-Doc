@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Remember a named value for the rest of this run, so any later node can read it as `{{ $run.name }}`.
 
 ## What it does
@@ -35,12 +38,7 @@ Variables last for **one run** and are gone when it ends. To remember something 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | Set | No | What to do to the variable. Options: Set, Add to number, Append to list, Delete. |
-| **Name** | Text |  | No | Name to store the value under. Read it later as \{\{ $run.name \}\}. |
-| **Value** | Value |  | No | The value to store. |
-| **Pass The Item Through** | Toggle | On | No | Emit the incoming item unchanged, so this node can sit inline. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Set","description":"What to do to the variable. Options: Set, Add to number, Append to list, Delete."},{"name":"Name","type":"Text","description":"Name to store the value under. Read it later as {{ $run.name }}."},{"name":"Value","type":"Value","description":"The value to store."},{"name":"Pass The Item Through","type":"Toggle","default":"On","description":"Emit the incoming item unchanged, so this node can sit inline."}]} />
 {/* AUTO:settings:end */}
 
 - **Name** may contain letters, digits, `_` and `$`, and must not start with a digit, for example `cursor` or `total_price`.
@@ -49,7 +47,7 @@ Variables last for **one run** and are gone when it ends. To remember something 
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 With **Pass The Item Through** on (the default), the incoming item goes out unchanged, so you can drop Set Variable in the middle of a chain. With it off, the item is replaced by a summary: `name`, `value` (what the variable now holds) and `operation`.
@@ -57,7 +55,7 @@ With **Pass The Item Through** on (the default), the incoming item goes out unch
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -70,7 +68,7 @@ Count the links on a page that point to PDFs:
 4. Set Variable with **Operation** **Add to number**, **Name** `pdfCount`, **Value** `1`. It runs once per kept link.
 5. A later [Show Notification](/nodes/extension/shownotification/) shows `Found {{ $run.pdfCount }} PDFs`.
 
-## Troubleshooting
+## Common issues
 
 - **"Variable "x" has not been set at this point in the run."** A node read `{{ $run.x }}` before Set Variable ran. Only nodes downstream of Set Variable are sure to run after it; a node on a parallel branch may run first. Connect Set Variable upstream of the reader. The canvas also warns you when a read may come before the write.
 - **"Variables only exist while a workflow is running."** You ran the node on its own. Run the whole workflow.

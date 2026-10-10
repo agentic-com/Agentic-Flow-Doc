@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 List the buttons, links, form fields and other controls you can see on the active tab, with a name and a selector for each.
 
 ## What it does
@@ -35,9 +38,7 @@ For each element you get:
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **DOM Selector** | Page element |  | No | The selector of the DOM element to interact with. |
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."}]} />
 {/* AUTO:settings:end */}
 
 Leave **DOM Selector** empty to scan the whole page. To limit the scan to one area (a dialog, a sidebar), click the crosshair button in the field and click that area, or type a CSS selector.
@@ -45,22 +46,28 @@ Leave **DOM Selector** empty to scan the whole page. To limit the scan to one ar
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
 Each run returns a list of items with these fields:
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `selector` | Text |  |
-| `tagName` | Text |  |
-| `role` | Text |  |
-| `name` | Text | The accessible name |
-| `text` | Text |  |
-| `disabled` | True/false |  |
-| `checked` | True/false |  |
-| `selected` | True/false |  |
-| `expanded` | True/false |  |
-| `boundingBox` | Object |  |
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"selector","type":"Text"},{"name":"tagName","type":"Text"},{"name":"role","type":"Text"},{"name":"name","type":"Text","description":"The accessible name"},{"name":"text","type":"Text"},{"name":"disabled","type":"True/false"},{"name":"checked","type":"True/false"},{"name":"selected","type":"True/false"},{"name":"expanded","type":"True/false"},{"name":"boundingBox","type":"Object"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "selector": "…",
+    "tagName": "…",
+    "role": "…",
+    "name": "…",
+    "text": "…",
+    "disabled": true,
+    "checked": true,
+    "selected": true,
+    "expanded": true,
+    "boundingBox": {}
+  }
+]
+```
 {/* AUTO:outputs:end */}
 
 Each element is one item, so the next node runs once per element. To give the whole list to an AI node in one go, first combine the items with [Aggregate](/nodes/builtin/datatransformation/aggregate/).
@@ -68,7 +75,7 @@ Each element is one item, so the next node runs once per element. To give the wh
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -78,7 +85,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add [Filter](/nodes/builtin/flow/filter/) to keep items where `{{ $input.role }}` equals `button`.
 4. Combine the buttons into one item with [Aggregate](/nodes/builtin/datatransformation/aggregate/), then show it with [Display Object](/nodes/extension/displayobject/) to see every button's name and selector.
 
-## Troubleshooting
+## Common issues
 
 - **The output is empty.** Nothing visible and interactive was found, or **DOM Selector** matched nothing. Wait for the page to finish loading, or check the selector with **Ping**.
 - **A control you can see is missing.** It may be inside an embedded frame (not scanned), or built from plain elements without a role, which the page gives no hint about.

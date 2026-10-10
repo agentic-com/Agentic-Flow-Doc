@@ -11,7 +11,16 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Give an AI node access to DeepSeek's chat and reasoning models, using your own DeepSeek API key.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a DeepSeek connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Authentication** field, or create one from there.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -30,14 +39,7 @@ Chat DeepSeek is a model you plug into the **Model** slot of an AI node, such as
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Text |  | Yes | The DeepSeek model to use, e.g. deepseek-chat or deepseek-reasoner. |
-| **Authentication** | Credential |  | Yes | Use your DeepSeek API key as a Bearer token. |
-| **Options** | Group |  | No | The options to use with the model. |
-| Options › **Temperature** | Number |  | No | The temperature to use for the model. |
-| Options › **Max Retries** | Number | 2 | No | The maximum number of retries to use for the model. |
-| Options › **Max Tokens** | Number | 4096 | No | The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window. |
+<AwfParamTable rows={[{"name":"Model","type":"Text","required":true,"description":"The DeepSeek model to use, e.g. deepseek-chat or deepseek-reasoner."},{"name":"Authentication","type":"Credential","required":true,"description":"Use your DeepSeek API key as a Bearer token."},{"name":"Options","type":"Group","description":"The options to use with the model."},{"name":"Options › Temperature","type":"Number","description":"The temperature to use for the model."},{"name":"Options › Max Retries","type":"Number","default":"2","description":"The maximum number of retries to use for the model."},{"name":"Options › Max Tokens","type":"Number","default":"4096","description":"The most tokens the model may generate in one reply. Defaults to 4096, which keeps providers from reserving credit for the whole output window."}]} />
 {/* AUTO:settings:end */}
 
 Type the **Model** id as DeepSeek names it: `deepseek-chat` or `deepseek-reasoner`. A reasoning model takes longer to answer and uses more tokens, so raise **Max Tokens** if its answers get cut off.
@@ -47,9 +49,7 @@ Type the **Model** id as DeepSeek names it: `deepseek-chat` or `deepseek-reasone
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Model | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
+- **Model** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
 {/* AUTO:outputs:end */}
 
 The AI node you connect it to produces the output. Chat DeepSeek only decides which model answers.
@@ -57,7 +57,7 @@ The AI node you connect it to produces the output. Chat DeepSeek only decides wh
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Authentication** (credential): required. Pick a saved connection or create one from this field.
+- **Authentication** (connection): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 In **Authentication**, use a Bearer Token credential that holds your DeepSeek API key. Create the key on the API keys page of the DeepSeek platform. See [Create a credential](/app/connections/create/).
@@ -69,7 +69,7 @@ In **Authentication**, use a Bearer Token credential that holds your DeepSeek AP
 3. Chat DeepSeek in its **Model** slot, **Model** `deepseek-reasoner`, **Max Tokens** `8000`.
 4. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.response }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Model parameter is required and cannot be empty".** Fill in **Model**.
 - **A 401 error.** The key is wrong or revoked. Create a new key and update the credential.

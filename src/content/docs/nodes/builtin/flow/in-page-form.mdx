@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Pause a run to ask a person for input, then continue with what they enter.
 
 ## What it does
@@ -33,15 +36,7 @@ For a plain yes or no, [Wait For Approval](/nodes/builtin/flow/wait-for-approval
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Form title** | Text | `Please provide input` | No |  |
-| **Fields** | List of entries |  | Yes |  |
-| Fields (each entry) › **Field name** | Text |  | Yes | Key the entered value is stored under, referenced downstream. |
-| Fields (each entry) › **Label** | Text |  | No | Shown above the control. |
-| Fields (each entry) › **Type** | Choice | text | No | Options: text, textarea, number, checkbox, select, date. |
-| Fields (each entry) › **Options** | Text |  | No | Comma-separated choices, for a select field. |
-| Fields (each entry) › **Required** | Toggle |  | No |  |
+<AwfParamTable rows={[{"name":"Form title","type":"Text","default":"Please provide input"},{"name":"Fields","type":"List of entries","required":true},{"name":"Fields (each entry) › Field name","type":"Text","required":true,"description":"Key the entered value is stored under, referenced downstream."},{"name":"Fields (each entry) › Label","type":"Text","description":"Shown above the control."},{"name":"Fields (each entry) › Type","type":"Choice","default":"text","description":"Options: text, textarea, number, checkbox, select, date."},{"name":"Fields (each entry) › Options","type":"Text","description":"Comma-separated choices, for a select field."},{"name":"Fields (each entry) › Required","type":"Toggle"}]} />
 {/* AUTO:settings:end */}
 
 - **Field name** is how later nodes read the answer, so keep it short and unique, for example `subject`.
@@ -51,7 +46,7 @@ For a plain yes or no, [Wait For Approval](/nodes/builtin/flow/wait-for-approval
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The output is one item holding the submitted values, one field per **Field name**: a field named `subject` is read later as `{{ $input.subject }}`. A **checkbox** gives true or false. The incoming item is **not** passed on; to reuse its data after the form, read it from the earlier node with `{{ $('Node Label').field }}`.
@@ -59,7 +54,7 @@ The output is one item holding the submitted values, one field per **Field name*
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -70,7 +65,7 @@ Turn highlighted text into a task, asking when it is due:
 2. In-Page Form with **Form title** `When is this due?` and one field: **Field name** `due`, **Label** `Due date`, **Type** text, **Required** on.
 3. [Todoist](/nodes/builtin/integration/todoist/), **Task** › **Create**, with **Content** `{{ $('Get Selected Text').selection }}` and **Due (natural language)** `{{ $input.due }}`. Typing `tomorrow 9am` in the form sets the due date.
 
-## Troubleshooting
+## Common issues
 
 - **"Add at least one field to the form."** The **Fields** list is empty. Add a field with a **Field name**.
 - **No form appears on the page.** The card only appears on normal web pages (`http` or `https`). Browser settings pages, the extension store and the AWFlow app tab itself can't show it. Answer it from the **Executions** pane instead.

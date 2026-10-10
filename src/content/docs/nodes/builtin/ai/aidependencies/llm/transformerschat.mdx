@@ -11,6 +11,9 @@ node:
   family: ai
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Give an AI node a small chat model that runs inside your browser, even on a computer without WebGPU.
 
 ## What it does
@@ -36,12 +39,7 @@ For better answers on a device with WebGPU, use [Web LLM](/nodes/builtin/ai/aide
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Model** | Model picker |  | No | An installed transformers.js chat model. Install one from Local AI, or download it from the picker. |
-| **Options** | Group |  | No |  |
-| Options › **Temperature** | Number | 0.5 | No | Higher is more creative; 0 is deterministic. |
-| Options › **Max new tokens** | Number | 256 | No | Cap on the reply length. |
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"An installed transformers.js chat model. Install one from Local AI, or download it from the picker."},{"name":"Options","type":"Group"},{"name":"Options › Temperature","type":"Number","default":"0.5","description":"Higher is more creative; 0 is deterministic."},{"name":"Options › Max new tokens","type":"Number","default":"256","description":"Cap on the reply length."}]} />
 {/* AUTO:settings:end */}
 
 The **Model** picker lists only chat models for this engine. Install one from the [Local Models](/app/local-models/) page, or download it from the picker. When you publish or share the workflow, **Model** is cleared, so whoever installs it picks their own.
@@ -51,9 +49,7 @@ The **Model** picker lists only chat models for this engine. Install one from th
 {/* AUTO:outputs:start */}
 This node has no output port. It plugs into a slot on another node instead of passing items along.
 
-| Slot | Accepted by |
-| --- | --- |
-| Model | [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) |
+- **Model** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), [Q&A Agent](/nodes/builtin/ai/aiagents/qanode/), [RAG Agent](/nodes/builtin/ai/aiagents/ragnode/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Indexer](/nodes/builtin/ai/aiagents/indexernode/), [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/), [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimentanalysisnode/), [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/), [Information Extractor](/nodes/builtin/ai/aiagents/informationextractornode/), [Guardrails](/nodes/builtin/ai/aiagents/guardrails/), [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/)
 {/* AUTO:outputs:end */}
 
 The AI node you connect it to produces the output. Transformers Chat only decides which model answers.
@@ -61,7 +57,7 @@ The AI node you connect it to produces the output. Transformers Chat only decide
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -71,7 +67,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Transformers Chat in its **Model** slot, with an installed SmolLM2 instruct model and **Max new tokens** `40`.
 4. [Clipboard Write](/nodes/extension/clipboardwrite/) with **Text** `{{ $input.response }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"Model parameter is required and cannot be empty".** Pick a model in **Model**.
 - **"… isn't a transformers.js chat model. Pick one from the picker, or use the Web LLM node."** The model belongs to another engine (often after importing a workflow). Pick one from this node's list, or use [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/).

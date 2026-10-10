@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Pause the workflow for a set time, then carry on with the same data.
 
 ## What it does
@@ -36,10 +39,7 @@ To wait until something is actually ready rather than for a fixed time, use [Pol
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Amount** | Number |  | Yes | How long to wait. Waits of a minute or more are durable — the run survives a closed tab and resumes at the deadline (up to 30 days). Shorter waits run in-memory. |
-| **Unit** | Choice | Seconds | Yes | The unit of time to wait. Options: Milliseconds, Seconds, Minutes, Hours. |
+<AwfParamTable rows={[{"name":"Amount","type":"Number","required":true,"description":"How long to wait. Waits of a minute or more are durable — the run survives a closed tab and resumes at the deadline (up to 30 days). Shorter waits run in-memory."},{"name":"Unit","type":"Choice","required":true,"default":"Seconds","description":"The unit of time to wait. Options: Milliseconds, Seconds, Minutes, Hours."}]} />
 {/* AUTO:settings:end */}
 
 Waits longer than 30 days are cut to 30 days.
@@ -47,7 +47,7 @@ Waits longer than 30 days are cut to 30 days.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The data that came in goes out unchanged.
@@ -55,7 +55,7 @@ The data that came in goes out unchanged.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -64,7 +64,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. Wait **2** **Hours**.
 3. A [Browser Notification](/nodes/extension/browsernotification/) reminds you to read the link.
 
-## Troubleshooting
+## Common issues
 
 - **A long wait never finished.** It ran in the web app, or was shorter than a minute, and the tab was closed. Run long waits from the extension.
 - **The run resumed a little late.** Durable waits resume within about a minute of the deadline. For precise short delays, keep the wait under a minute.

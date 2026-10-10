@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Read the HTML behind the part of the page you have highlighted, with its links and formatting.
 
 ## What it does
@@ -28,11 +31,7 @@ The output holds only the new field. Turn on **Include input fields** to keep th
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Output field name** | Text |  | Yes | The name of the output field. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the input fields in the output. |
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 **Output field name**: for example `selectionHtml`. Later nodes read it with `{{ $input.selectionHtml }}`.
@@ -40,7 +39,7 @@ The output holds only the new field. Turn on **Include input fields** to keep th
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 One item with your field, for example `{ "selectionHtml": "Read <a href=\"https://example.com\">this guide</a>" }`.
@@ -48,7 +47,7 @@ One item with your field, for example `{ "selectionHtml": "Read <a href=\"https:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -58,7 +57,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add [Markdown](/nodes/builtin/datatransformation/markdown/) with **Operation** = **HTML to Markdown** and **Content** = `{{ $input.selectionHtml }}`.
 4. Copy the result with [Clipboard Write](/nodes/extension/clipboardwrite/), ready to paste into your notes app.
 
-## Troubleshooting
+## Common issues
 
 - **The node fails with an error about the selection, or "No content found".** Nothing was selected on the active tab. Select the text first and keep that tab active while the workflow runs.
 - **The HTML is cut in the middle of an element.** The node returns exactly the selected range. Select a little more, or read a whole element with [Get All HTML](/nodes/extension/getallhtml/) and a **DOM Selector**.

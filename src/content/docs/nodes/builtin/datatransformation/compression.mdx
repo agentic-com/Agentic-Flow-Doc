@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Shrink a file into a `.gz` file, or unpack a `.gz` file back into its content.
 
 ## What it does
@@ -33,14 +36,7 @@ To protect your browser, decompression stops with an error if the result grows p
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | Compress (gzip) | No | Compress (gzip) or decompress (gunzip) the input. Options: Compress (gzip), Decompress (gunzip). |
-| **Binary Field** | Text | `data` | No | The $binary slot to read the input bytes from and write the result to. |
-| **Text to compress** | Long text |  | No | For gzip only: text to compress when the item has no $binary attachment. |
-| **Output file name** | Text |  | No | For gzip: name of the produced file. Left empty, the source name with a ".gz" suffix (or "data.gz") is used. |
-| **Output MIME type** | Text |  | No | For gunzip: content type recorded on the decompressed file. Left empty, application/octet-stream is used. |
-| **Decode to text** | Toggle | Off | No | For gunzip: place the decompressed content as UTF-8 text on the item (in the binary field name) instead of a $binary attachment. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Compress (gzip)","description":"Compress (gzip) or decompress (gunzip) the input. Options: Compress (gzip), Decompress (gunzip)."},{"name":"Binary Field","type":"Text","default":"data","description":"The $binary slot to read the input bytes from and write the result to."},{"name":"Text to compress","type":"Long text","description":"For gzip only: text to compress when the item has no $binary attachment."},{"name":"Output file name","type":"Text","description":"For gzip: name of the produced file. Left empty, the source name with a \".gz\" suffix (or \"data.gz\") is used."},{"name":"Output MIME type","type":"Text","description":"For gunzip: content type recorded on the decompressed file. Left empty, application/octet-stream is used."},{"name":"Decode to text","type":"Toggle","default":"Off","description":"For gunzip: place the decompressed content as UTF-8 text on the item (in the binary field name) instead of a $binary attachment."}]} />
 {/* AUTO:settings:end */}
 
 - Leave **Binary Field** at `data` unless the previous node stored its file under another name.
@@ -50,7 +46,7 @@ To protect your browser, decompression stops with an error if the result grows p
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 Each item keeps its other fields and gets the new file plus `fileName`, `mimeType` and `size`. With **Decode to text** on, the item instead gets the text in a field named after **Binary Field** (by default `data`), so you can read it with `{{ $input.data }}`.
@@ -58,7 +54,7 @@ Each item keeps its other fields and gets the new file plus `fileName`, `mimeTyp
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -67,7 +63,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. Compression with **Operation** set to *Decompress (gunzip)* and **Decode to text** on.
 3. [JSON](/nodes/builtin/datatransformation/json/) parses `{{ $input.data }}` into fields you can use.
 
-## Troubleshooting
+## Common issues
 
 - **"Nothing to compress. Connect an item carrying a $binary attachment, or fill in "Text to compress"."** The item has no file under **Binary Field** and the text box is empty. Check the field name, or fill in **Text to compress**.
 - **"No binary to decompress in "$binary.data"."** Decompressing needs an attached file. Make sure the previous node outputs a file, and that **Binary Field** matches its name.

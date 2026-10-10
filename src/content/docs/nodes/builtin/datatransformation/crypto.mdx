@@ -11,7 +11,16 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Hash or sign text, or generate random values and UUIDs, right in the browser.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use a Crypto connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **HMAC Key** field when the service needs one.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -34,17 +43,7 @@ Hashes, signatures and random bytes come out as lowercase hex or base64 text, de
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Operation** | Choice | Hash | No | What to do. Options: Hash, HMAC, Random bytes, UUID v4. |
-| **Algorithm** | Choice | SHA-256 | No | The digest algorithm, for Hash and HMAC. Options: SHA-1, SHA-256, SHA-512, MD5. |
-| **HMAC Key** | Credential |  | No | Credential holding the secret key, for HMAC. |
-| **Text** | Value |  | No | The text to hash or HMAC. |
-| **Source Field** | Text |  | No | Field holding the text, when the field above is left empty. |
-| **Byte Length** | Number | 32 | No | How many random bytes to generate. |
-| **Encoding** | Choice | Hex | No | How the result bytes are presented as text. Options: Hex, Base64. |
-| **Include Input Fields** | Toggle | On | No | Keep the incoming item’s fields alongside the result. |
-| **Put Result In Field** | Text | `result` | No | Field holding the hash, HMAC, random bytes or UUID. |
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Hash","description":"What to do. Options: Hash, HMAC, Random bytes, UUID v4."},{"name":"Algorithm","type":"Choice","default":"SHA-256","description":"The digest algorithm, for Hash and HMAC. Options: SHA-1, SHA-256, SHA-512, MD5."},{"name":"HMAC Key","type":"Credential","description":"Credential holding the secret key, for HMAC."},{"name":"Text","type":"Value","description":"The text to hash or HMAC."},{"name":"Source Field","type":"Text","description":"Field holding the text, when the field above is left empty."},{"name":"Byte Length","type":"Number","default":"32","description":"How many random bytes to generate."},{"name":"Encoding","type":"Choice","default":"Hex","description":"How the result bytes are presented as text. Options: Hex, Base64."},{"name":"Include Input Fields","type":"Toggle","default":"On","description":"Keep the incoming item’s fields alongside the result."},{"name":"Put Result In Field","type":"Text","default":"result","description":"Field holding the hash, HMAC, random bytes or UUID."}]} />
 {/* AUTO:settings:end */}
 
 - For Hash and HMAC, the node reads the text from **Text** first, for example `{{ $input.body }}`. If **Text** is empty, it reads the field named in **Source Field** (dots work for nested fields).
@@ -53,7 +52,7 @@ Hashes, signatures and random bytes come out as lowercase hex or base64 text, de
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 Each item comes out with the result as text in **Put Result In Field**, next to its original fields. Turn off **Include Input Fields** to output only the result. Use it downstream with `{{ $input.result }}`.
@@ -61,7 +60,7 @@ Each item comes out with the result as text in **Put Result In Field**, next to 
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **HMAC Key** (credential): optional. Pick a saved connection or create one from this field.
+- **HMAC Key** (connection): optional. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 Only *HMAC* needs a credential. Save the shared secret as a token credential (API Token / Bearer) and pick it in **HMAC Key**; see [Create a credential](/app/connections/create/). The secret stays in your credential store, so it is not included when you export or share the workflow.
@@ -72,7 +71,7 @@ Only *HMAC* needs a credential. Save the shared secret as a token credential (AP
 2. Crypto with **Operation** *HMAC*, **Algorithm** *SHA-256*, **HMAC Key** set to your saved secret, **Text** `{{ $input.body }}` and **Encoding** *Hex*.
 3. [Http Request](/nodes/builtin/core/http-request/) sends `body` and adds a signature header with the value `{{ $input.result }}`.
 
-## Troubleshooting
+## Common issues
 
 - **"HMAC requires a credential holding the secret key. Select one in the HMAC Key field."** Pick or create a credential in **HMAC Key**.
 - **"MD5 is not a valid HMAC algorithm. Choose SHA-1, SHA-256, or SHA-512."** MD5 works for *Hash* only. Change **Algorithm**.

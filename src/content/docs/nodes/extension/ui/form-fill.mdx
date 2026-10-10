@@ -11,6 +11,9 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Fill the fields of a form on the active tab with values you set or values from earlier nodes.
 
 ## What it does
@@ -32,22 +35,7 @@ After each change the node tells the page the field was edited, so sites built w
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-Pick **Mode** first; the fields below change with your choice.
-
-**auto**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Form** | Page element |  | Yes | The form to fill. You can select the form, a container containing it, or a field inside it. |
-
-**manual**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Form** | Page element |  | Yes | The form to fill. You can select the form, a container containing it, or a field inside it. |
-| **Values** | List of entries |  | Yes | List of field ids and values to fill. |
-| Values (each entry) › **Field ID** | Text |  | Yes | The id or name of the form field to fill. |
-| Values (each entry) › **Value** | Text |  | Yes | The value to set for the field. |
+<AwfOperationTabs client:visible pick={"Mode"} common={[]} groups={[{"options":[{"label":"auto","rows":[{"name":"Form","type":"Page element","required":true,"description":"The form to fill. You can select the form, a container containing it, or a field inside it."}]},{"label":"manual","rows":[{"name":"Form","type":"Page element","required":true,"description":"The form to fill. You can select the form, a container containing it, or a field inside it."},{"name":"Values","type":"List of entries","required":true,"description":"List of field ids and values to fill."},{"name":"Values (each entry) › Field ID","type":"Text","required":true,"description":"The id or name of the form field to fill."},{"name":"Values (each entry) › Value","type":"Text","required":true,"description":"The value to set for the field."}]}]}]} />
 {/* AUTO:settings:end */}
 
 In short:
@@ -63,9 +51,17 @@ To find each field's id or name, run [Get Forms Schema](/nodes/extension/getform
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `result` (list of entries).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"result","type":"List of entries"}]} />
+
+```json title="Shape of an output item"
+{
+  "result": []
+}
+```
 {/* AUTO:outputs:end */}
 
 `result` has one entry per value you sent: `id`, `filled` (`true` or `false`) and, when it was not filled, a `reason`: `Field not found`, `Option not found`, `Unsupported field type` or `Form not found`. The incoming fields are not passed on.
@@ -73,7 +69,7 @@ Each output item has the fields `result` (list of entries).
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -82,7 +78,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. **Form Fill** with **Mode** = **Manual**, **Form** set to the contact form, and **Values**: `name` = `Jane Doe`, `email` = `jane@example.com`, `topic` = `support`.
 3. [Submit Form](/nodes/extension/ui/submit-form/) with **DOM Selector** set to the form's send button.
 
-## Troubleshooting
+## Common issues
 
 - **A `reason` of "Field not found".** No field in the form has that id or name. Check the exact spelling with [Get Forms Schema](/nodes/extension/getformsschema/); it is case-sensitive.
 - **A `reason` of "Option not found".** For a drop-down, the value must match an option's value, not its visible label. Get Forms Schema lists both.

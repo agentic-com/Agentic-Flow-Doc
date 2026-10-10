@@ -11,7 +11,16 @@ node:
   family: inpage
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Copy text to your clipboard so it is ready to paste anywhere.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/article-to-markdown.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -28,9 +37,7 @@ The copy is made through the active tab, and the browser only allows it while th
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Text** | Long text |  | Yes |  |
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true}]} />
 {/* AUTO:settings:end */}
 
 **Text** usually comes from an earlier node, for example `{{ $input.text }}`. It cannot be empty.
@@ -38,9 +45,17 @@ The copy is made through the active tab, and the browser only allows it while th
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `written` (always true).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"written","type":"Always true"}]} />
+
+```json title="Shape of an output item"
+{
+  "written": true
+}
+```
 {/* AUTO:outputs:end */}
 
 `written` is `true` when the text is on the clipboard. When the copy fails, the node fails instead, so later nodes only run after a successful copy.
@@ -48,7 +63,7 @@ Each output item has the fields `written` (always true).
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -58,7 +73,7 @@ None. This node needs no credential and has no slots for other nodes.
 3. Add a [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) with **Prompt** = `Write a short, polite reply to: {{ $input.email }}`, and connect a chat model.
 4. Add **Clipboard Write** with **Text** = `{{ $input.response }}`, then paste the reply in your mail app.
 
-## Troubleshooting
+## Common issues
 
 - **"Document is not focused" or "Clipboard write failed".** The browser only allows copying while the page has focus. Click into the page, keep it in front while the workflow runs, and try again.
 - **The node fails on a browser page.** Browser settings pages and the extension store cannot be used; run it with a normal web page as the active tab.

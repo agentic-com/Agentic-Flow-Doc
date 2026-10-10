@@ -11,6 +11,9 @@ node:
   family: data
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Extract the text from a PDF, as one string or one string per page.
 
 ## What it does
@@ -29,13 +32,7 @@ With **Merge pages** on, you get the whole document as one string. Turn it off t
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Input field** | Text | `data` | No | The path to the field holding the PDF data (base64 string, data URL, ArrayBuffer/Uint8Array, or array of bytes). |
-| **Output field name** | Text | `text` | No | The name of the output field that will hold the extracted text. |
-| **Merge pages** | Toggle | On | No | When enabled, output one merged string for the whole document. When disabled, output an array with one string per page. |
-| **Options** | Group |  | No | The options for the node. |
-| Options › **Include input fields** | Toggle | Off | No | Whether to include the original input fields in the output. |
+<AwfParamTable rows={[{"name":"Input field","type":"Text","default":"data","description":"The path to the field holding the PDF data (base64 string, data URL, ArrayBuffer/Uint8Array, or array of bytes)."},{"name":"Output field name","type":"Text","default":"text","description":"The name of the output field that will hold the extracted text."},{"name":"Merge pages","type":"Toggle","default":"On","description":"When enabled, output one merged string for the whole document. When disabled, output an array with one string per page."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the original input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 **Input field** is a field name, not an expression. Use dots for nested fields, for example `file.content`. After [Local File Read](/nodes/builtin/datatransformation/localfileread/), set it to `content` and read the file as *Data URL* or *Base64*.
@@ -43,7 +40,7 @@ With **Merge pages** on, you get the whole document as one string. Turn it off t
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 The output has two fields: the text under the **Output field name** (`text` by default) and `pageCount`. Turn on **Include input fields** to keep the incoming fields too, such as the file name from Local File Read. Use `{{ $input.text }}` in the next node.
@@ -51,7 +48,7 @@ The output has two fields: the text under the **Output field name** (`text` by d
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -60,7 +57,7 @@ None. This node needs no credential and has no slots for other nodes.
 2. **PDF Parser** with **Input field** `content`.
 3. [Summarization](/nodes/builtin/ai/aiagents/summarizationchainnode/) with **Text** set to `{{ $input.text }}`, using a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/).
 
-## Troubleshooting
+## Common issues
 
 - **"Field "data" does not exist in the input object ..."** No field has the name in **Input field**. Set it to the field that holds the PDF, for example `content`.
 - **"Field "content" could not be decoded as base64 PDF data."** The field holds plain text, not a PDF encoding. Read the file as *Data URL* or *Base64*.

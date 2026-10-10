@@ -11,6 +11,9 @@ node:
   family: flow
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Stop the run on purpose, with an error message you write.
 
 ## What it does
@@ -32,9 +35,7 @@ To simply drop items without failing, use [Filter](/nodes/builtin/flow/filter/),
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Fields** | Key-value pairs |  | Yes |  |
+<AwfParamTable rows={[{"name":"Fields","type":"Key-value pairs","required":true}]} />
 {/* AUTO:settings:end */}
 
 Add a field with the key `message` and your text as the value. Expressions work, so the message can say what went wrong, for example `No price found for {{ $input.url }}`. Other keys are ignored.
@@ -48,7 +49,7 @@ This node has no output port: nothing runs after it on this branch.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -60,7 +61,7 @@ Stop when a page has no price:
 3. From **True**: Stop and Error with a field `message` set to `No price found on this page`.
 4. From **False**: [Google Sheets](/nodes/builtin/integration/google-sheets/) appends the price.
 
-## Troubleshooting
+## Common issues
 
 - **The error says `Error throwed by : <Stop and Error node>`.** No field is named exactly `message`. Rename the key (it is case-sensitive).
 - **The run fails even though the data looks fine.** Data reached Stop and Error, so check the IF or Switch in front of it: open the run and see which branch the item took.

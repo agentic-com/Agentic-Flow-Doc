@@ -11,7 +11,16 @@ node:
   family: trigger
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Run a workflow from the browser's right-click menu, with details of what you clicked.
+
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/explain-eli5.awf" />
+{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -31,11 +40,7 @@ A workflow can have several Context Menu triggers with different settings, for e
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Menu Contexts** | Multiple choice | Page | No | Options: Page, Selection, Link, Editable Field, Image, Video, Audio. |
-| **Document URL Patterns** | List |  | No | Optional browser match patterns for the page URL. |
-| **Target URL Patterns** | List |  | No | Optional browser match patterns for link, image, video, or audio targets. |
+<AwfParamTable rows={[{"name":"Menu Contexts","type":"Multiple choice","default":"Page","description":"Options: Page, Selection, Link, Editable Field, Image, Video, Audio."},{"name":"Document URL Patterns","type":"List","description":"Optional browser match patterns for the page URL."},{"name":"Target URL Patterns","type":"List","description":"Optional browser match patterns for link, image, video, or audio targets."}]} />
 {/* AUTO:settings:end */}
 
 - **Menu Contexts** decides where you right-click. **Page** means a right-click on the page itself, **Selection** a right-click on selected text, **Editable Field** inside a text box, and so on.
@@ -47,9 +52,29 @@ Patterns use the form `scheme://host/path` with `*` as a wildcard; see [Page Loa
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-Each output item has the fields `triggerType` (always "contextMenu"), `triggeredAt` (text), `pageUrl` (text), `selectionText` (text), `linkUrl` (text), `srcUrl` (text), `frameUrl` (text), `editable` (true/false), `mediaType` (text), `tabId` (number), `windowId` (number), `tabUrl` (text), `tabTitle` (text).
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"contextMenu\""},{"name":"triggeredAt","type":"Text"},{"name":"pageUrl","type":"Text"},{"name":"selectionText","type":"Text"},{"name":"linkUrl","type":"Text"},{"name":"srcUrl","type":"Text"},{"name":"frameUrl","type":"Text"},{"name":"editable","type":"True/false"},{"name":"mediaType","type":"Text"},{"name":"tabId","type":"Number"},{"name":"windowId","type":"Number"},{"name":"tabUrl","type":"Text"},{"name":"tabTitle","type":"Text"}]} />
+
+```json title="Shape of an output item"
+{
+  "triggerType": "contextMenu",
+  "triggeredAt": "…",
+  "pageUrl": "…",
+  "selectionText": "…",
+  "linkUrl": "…",
+  "srcUrl": "…",
+  "frameUrl": "…",
+  "editable": true,
+  "mediaType": "…",
+  "tabId": 0,
+  "windowId": 0,
+  "tabUrl": "…",
+  "tabTitle": "…"
+}
+```
 {/* AUTO:outputs:end */}
 
 Which fields are filled depends on what you clicked:
@@ -65,7 +90,7 @@ Use them downstream, for example `{{ $input.selectionText }}`.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no credential and has no slots for other nodes.
+None. This node needs no connection and has no slots for other nodes.
 {/* AUTO:deps:end */}
 
 ## Example workflow
@@ -77,7 +102,7 @@ Summarize selected text on any page:
 3. Add [Browser Notification](/nodes/extension/browsernotification/) with **Title** `Summary` and **Message** `{{ $input.summary }}`.
 4. Activate the workflow, select a paragraph on a page, right-click, and choose the workflow's name.
 
-## Troubleshooting
+## Common issues
 
 - **The workflow is not in the right-click menu.** Activate the workflow, then right-click and choose **Get / Refresh Workflows** so the menu picks up your changes. Also check that you right-clicked on the right kind of content: with only **Page** selected, the entry does not show on selected text or links.
 - **The entry shows, but clicking it does nothing.** What you clicked did not match this trigger's contexts or patterns (the menu can show the entry more broadly than each trigger allows when a workflow has several Context Menu triggers). Check **Menu Contexts** and both pattern lists.

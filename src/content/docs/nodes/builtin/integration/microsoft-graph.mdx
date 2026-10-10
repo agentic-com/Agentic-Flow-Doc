@@ -11,7 +11,16 @@ node:
   family: integration
 ---
 
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
 Send and read Outlook mail, put files in OneDrive, add calendar events and To Do tasks, all from one Microsoft 365 node.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a Microsoft 365 connection"} href="/app/connections/create/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Credential** field, or create one from there. It signs in with an OAuth2.
+</AwfCallout>
+{/* AUTO:callout:end */}
 
 ## What it does
 
@@ -38,104 +47,11 @@ If you use Google's apps, see [Gmail](/nodes/builtin/integration/gmail/), [Googl
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-| Resource | Operations |
-| --- | --- |
-| Mail | Send, List, Get, Draft |
-| File | Upload, List, Get link |
-| Calendar | Create event, List |
-| To Do | Create task, List |
+<AwfOperationTabs client:visible pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"Sign in with Microsoft. Register a public client (auth-code + PKCE) with delegated permissions; the credential only needs the Application (client) ID."}]} groups={[{"label":"Mail","options":[{"label":"Send","rows":[{"name":"Subject","type":"Text","required":true,"description":"The email/event subject."},{"name":"Body","type":"Text","required":true,"description":"The email body."},{"name":"To","type":"List","required":true,"description":"Recipient email addresses."},{"name":"Body type","type":"Choice","description":"How to interpret the body. Options: Text, HTML."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the body/description when present."}]},{"label":"List","rows":[{"name":"Limit","type":"Number","default":"10","description":"Number of results to return (1-100)."}]},{"label":"Get","rows":[{"name":"Message ID","type":"Text","required":true,"description":"The Outlook message ID."}]},{"label":"Draft","rows":[{"name":"Subject","type":"Text","required":true,"description":"The email/event subject."},{"name":"Body","type":"Text","required":true,"description":"The email body."},{"name":"To","type":"List","required":true,"description":"Recipient email addresses."},{"name":"Body type","type":"Choice","description":"How to interpret the body. Options: Text, HTML."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the body/description when present."}]}]},{"label":"File","options":[{"label":"Upload","rows":[{"name":"File path","type":"Text","required":true,"description":"Destination path in OneDrive (relative to the drive root)."},{"name":"File content","type":"Text","required":true,"description":"The text content to upload."},{"name":"Content type","type":"Text","description":"MIME type for the uploaded content."}]},{"label":"List","rows":[]},{"label":"Get link","rows":[{"name":"Item ID","type":"Text","required":true,"description":"The OneDrive item (file/folder) ID to share."},{"name":"Link type","type":"Choice","description":"Sharing link permission. Options: View, Edit."},{"name":"Link scope","type":"Choice","description":"Who the link works for. Options: Anyone, Organization."}]}]},{"label":"Calendar","options":[{"label":"Create event","rows":[{"name":"Subject","type":"Text","required":true,"description":"The email/event subject."},{"name":"Description","type":"Text","description":"The event description."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the body/description when present."},{"name":"Location","type":"Text","description":"The event location."},{"name":"Start (date-time)","type":"Text","description":"Event start as an ISO date-time, e.g. 2026-09-10T09:00:00."},{"name":"End (date-time)","type":"Text","description":"Event end as an ISO date-time."},{"name":"Time Zone","type":"Text","description":"IANA time zone (defaults to UTC), e.g. America/New_York."},{"name":"Attendees","type":"List","description":"Email addresses to invite."}]},{"label":"List","rows":[{"name":"Limit","type":"Number","default":"10","description":"Number of results to return (1-100)."}]}]},{"label":"To Do","options":[{"label":"Create task","rows":[{"name":"Title","type":"Text","required":true,"description":"The task title."},{"name":"Note","type":"Text","description":"A note/body for the task."},{"name":"Source URL","type":"Text","description":"The page URL to attach — appended to the body/description when present."},{"name":"List ID","type":"Text","description":"The To Do list ID (defaults to your default list)."}]},{"label":"List","rows":[{"name":"List ID","type":"Text","description":"The To Do list ID (defaults to your default list)."}]}]}]} />
 
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Credential** | Credential |  | Yes | Sign in with Microsoft. Register a public client (auth-code + PKCE) with delegated permissions; the credential only needs the Application (client) ID. |
-
-Pick **Resource** and **Operation** first; the fields below change with your choice.
-
-**Mail → Send**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Subject** | Text |  | Yes | The email/event subject. |
-| **Body** | Text |  | Yes | The email body. |
-| **To** | List |  | Yes | Recipient email addresses. |
-| **Body type** | Choice |  | No | How to interpret the body. Options: Text, HTML. |
-| **Source URL** | Text |  | No | The page URL to attach — appended to the body/description when present. |
-
-**Mail → Draft**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Subject** | Text |  | Yes | The email/event subject. |
-| **Body** | Text |  | Yes | The email body. |
-| **To** | List |  | Yes | Recipient email addresses. |
-| **Body type** | Choice |  | No | How to interpret the body. Options: Text, HTML. |
-| **Source URL** | Text |  | No | The page URL to attach — appended to the body/description when present. |
-
-**Mail → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Limit** | Number | 10 | No | Number of results to return (1-100). |
-
-**Mail → Get**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Message ID** | Text |  | Yes | The Outlook message ID. |
-
-**File → Upload**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **File path** | Text |  | Yes | Destination path in OneDrive (relative to the drive root). |
-| **File content** | Text |  | Yes | The text content to upload. |
-| **Content type** | Text |  | No | MIME type for the uploaded content. |
-
-**File → List**
-
-No further settings.
-
-**File → Get link**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Item ID** | Text |  | Yes | The OneDrive item (file/folder) ID to share. |
-| **Link type** | Choice |  | No | Sharing link permission. Options: View, Edit. |
-| **Link scope** | Choice |  | No | Who the link works for. Options: Anyone, Organization. |
-
-**Calendar → Create event**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Subject** | Text |  | Yes | The email/event subject. |
-| **Description** | Text |  | No | The event description. |
-| **Source URL** | Text |  | No | The page URL to attach — appended to the body/description when present. |
-| **Location** | Text |  | No | The event location. |
-| **Start (date-time)** | Text |  | No | Event start as an ISO date-time, e.g. 2026-09-10T09:00:00. |
-| **End (date-time)** | Text |  | No | Event end as an ISO date-time. |
-| **Time Zone** | Text |  | No | IANA time zone (defaults to UTC), e.g. America/New\_York. |
-| **Attendees** | List |  | No | Email addresses to invite. |
-
-**Calendar → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Limit** | Number | 10 | No | Number of results to return (1-100). |
-
-**To Do → Create task**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **Title** | Text |  | Yes | The task title. |
-| **Note** | Text |  | No | A note/body for the task. |
-| **Source URL** | Text |  | No | The page URL to attach — appended to the body/description when present. |
-| **List ID** | Text |  | No | The To Do list ID (defaults to your default list). |
-
-**To Do → List**
-
-| Setting | Type | Default | Required | Description |
-| --- | --- | --- | --- | --- |
-| **List ID** | Text |  | No | The To Do list ID (defaults to your default list). |
+<AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
+  Call the Microsoft 365 API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
+</AwfCallout>
 {/* AUTO:settings:end */}
 
 - **To** and **Attendees** take one email address per entry.
@@ -149,7 +65,7 @@ No further settings.
 ## Outputs
 
 {/* AUTO:outputs:start */}
-One output port.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
 - **Mail → Send** returns `success: true` once Outlook accepts the email. The email is also saved in Sent Items.
@@ -162,7 +78,7 @@ One output port.
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (credential, OAuth2): required. Pick a saved connection or create one from this field.
+- **Credential** (connection, OAuth2): required. See [Create a connection](/app/connections/create/).
 {/* AUTO:deps:end */}
 
 The credential is a Microsoft sign-in (OAuth2). You first register a small app in the Azure portal, as a public client with no secret, and paste its **Application (client) ID** into the credential. Give it these delegated Microsoft Graph permissions: `offline_access`, `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite` and `Tasks.ReadWrite`. Then sign in with your Microsoft account and accept the permissions.
@@ -176,7 +92,7 @@ Follow [Create your OAuth client](/app/connections/oauth-client/#microsoft-365) 
 3. Microsoft 365, **To Do → Create task**, with **Title** `Read: {{ $input.title }}` and **Source URL** `{{ $input.url }}`. Leave **List ID** empty to use your default list.
 4. [Browser Notification](/nodes/extension/browsernotification/) confirms the task was added.
 
-## Troubleshooting
+## Common issues
 
 - **"Microsoft Graph Error: access denied — your organization's admin may have blocked this app…".** Your organization blocks the app, or one of the permissions needs an admin's consent. Ask your Microsoft 365 admin to approve the app, or use an account that allows it.
 - **"Missing credential".** No credential is selected. Pick or create one in **Credential**.
