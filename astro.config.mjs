@@ -15,12 +15,18 @@ import svelte from "@astrojs/svelte";
 //const { PUBLIC_SITE_URL } = import.meta.env;
 import { loadEnv } from "vite";
 import mdx from "@astrojs/mdx";
+import { satteri } from "@astrojs/markdown-satteri";
 const { DOCS_SITE_URL } = loadEnv(process.env.NODE_ENV, process.cwd(), "");
 //const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL;
 
 // https://astro.build/config
 export default defineConfig({
   site: DOCS_SITE_URL,
+  markdown: {
+    // Astro 7's default Sätteri processor rejects raw `html` nodes in MDX;
+    // astro-mermaid emits one per ```mermaid block, so let MDX parse them.
+    processor: satteri({ features: { rawHtml: true } }),
+  },
   integrations: [mermaid({
     theme: "forest",
     autoTheme: true,
@@ -33,10 +39,7 @@ export default defineConfig({
     iconPacks: [
       {
         name: "fa",
-        loader: () =>
-          fetch(
-            "https://unpkg.com/@iconify-json/fa6-solid@1.2.4/icons.json",
-          ).then((res) => res.json()),
+        url: "https://unpkg.com/@iconify-json/fa6-solid@1.2.4/icons.json",
       },
     ],
   }), starlight({
@@ -94,10 +97,10 @@ export default defineConfig({
           items: [
             {
               label: "Getting started",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "usage/getting-started",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "Using the app",
@@ -160,26 +163,26 @@ export default defineConfig({
                     },
                     {
                       label: "Components",
-                      autogenerate: {
+                      items: [{ autogenerate: {
                         directory: "usage/using-the-app/workflows/components",
                         collapsed: true,
-                      },
+                      } }],
                     },
                     {
                       label: "Executions",
-                      autogenerate: {
+                      items: [{ autogenerate: {
                         directory: "usage/using-the-app/workflows/executions",
                         collapsed: true,
-                      },
+                      } }],
                     },
                   ],
                 },
                 {
                   label: "Credentials",
-                  autogenerate: {
+                  items: [{ autogenerate: {
                     directory: "usage/using-the-app/credentials",
                     collapsed: true,
-                  },
+                  } }],
                 },
                 {
                   label: "Knowledge bases",
@@ -230,10 +233,10 @@ export default defineConfig({
                   items: [
                     {
                       label: "Data Mapping",
-                      autogenerate: {
+                      items: [{ autogenerate: {
                         directory: "usage/key-concepts/data/data-mapping",
                         collapsed: true,
-                      },
+                      } }],
                     },
                     {
                       label: "Code",
@@ -251,10 +254,10 @@ export default defineConfig({
                 },
                 {
                   label: "Flow Logic",
-                  autogenerate: {
+                  items: [{ autogenerate: {
                     directory: "usage/key-concepts/flow-logic",
                     collapsed: true,
-                  },
+                  } }],
                 },
                 {
                   label: "Glossary",
@@ -265,23 +268,23 @@ export default defineConfig({
             {
               label: "Releases",
               collapsed: true,
-              autogenerate: { directory: "usage/releases", collapsed: true },
+              items: [{ autogenerate: { directory: "usage/releases", collapsed: true } }],
             },
             {
               label: "Help and Community",
               collapsed: true,
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "usage/help-and-community",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "Troubleshooting",
               collapsed: true,
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "usage/troubleshooting",
                 collapsed: false,
-              },
+              } }],
             },
           ],
         },
@@ -299,59 +302,59 @@ export default defineConfig({
             },
             {
               label: "Trigger",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "nodes/builtin/trigger",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "Lambda",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "nodes/builtin/lambda",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "In Page Action",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "nodes/extension",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "Flow",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "nodes/builtin/flow",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "Data Transformation",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "nodes/builtin/datatransformation",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "Core",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "nodes/builtin/core",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "AI",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "nodes/builtin/ai",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "Integrations",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "nodes/builtin/integration",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "Node Types Overview",
@@ -377,17 +380,17 @@ export default defineConfig({
           items: [
             {
               label: "Concepts",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "advanced-ai/concepts",
                 collapsed: true,
-              },
+              } }],
             },
             {
               label: "LangChain",
-              autogenerate: {
+              items: [{ autogenerate: {
                 directory: "advanced-ai/langchain",
                 collapsed: true,
-              },
+              } }],
             },
           ],
         },
