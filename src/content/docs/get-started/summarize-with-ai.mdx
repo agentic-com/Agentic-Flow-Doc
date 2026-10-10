@@ -12,10 +12,8 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
-import { StepCard, LessonProgress, LessonDone, ModelTabs, Screenshot } from "@components/awflow";
+import { StepCard, StepShot, LessonProgress, LessonDone, ModelTabs } from "@components/awflow";
 import FlowPreview from "@components/awflow/FlowPreview.astro";
-import llmChainLight from '@assets/screenshots/llm-chain.light.webp';
-import llmChainDark from '@assets/screenshots/llm-chain.dark.webp';
 
 <LessonProgress
   client:visible
@@ -45,10 +43,14 @@ AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **mod
 
 <StepCard n={1} title="Start a workflow that reads the page" check="When Started → Get All Text is on a new canvas.">
   Create a new **Blank canvas** workflow named `Summarise this page`, as in [lesson 2](/get-started/first-workflow/). Add the **When Started** trigger, then click its **+** and add **Get All Text**. Set **Output field name** to `text`.
+
+  <StepShot shot="create-workflow" spot="blank-canvas" n={1} />
 </StepCard>
 
 <StepCard n={2} title="Add a Basic LLM Chain" check="a Basic LLM Chain is linked to Get All Text, with an empty Model slot underneath.">
   Click the **+** on the right of **Get All Text**, type `LLM` and pick **Basic LLM Chain**. Its **Model** slot sits under the node, with its own **+**.
+
+  <StepShot shot="llm-chain" spot="basic-llm-chain" n={2} zoom={44} />
 </StepCard>
 
 <StepCard n={3} title="Connect a model" check="a model node hangs under the chain's Model slot and shows the model you picked.">
@@ -75,14 +77,9 @@ AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **mod
       In Firefox, use `OLLAMA_ORIGINS=moz-extension://*`. Then pick the **Ollama** node and choose your model in **Model** (click **Refresh models** if the list is empty). Nothing leaves your computer. See [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/).
     </div>
   </ModelTabs>
-</StepCard>
 
-<Screenshot
-  src={llmChainLight}
-  srcDark={llmChainDark}
-  alt="The workflow editor with the Summarise this page in 3 bullets example: a sticky note, then When Started, Get All Text, Basic LLM Chain and Display Markdown in a row. A Web LLM model node hangs under the chain’s Model slot. The chain has a warning badge and the Ready to run? button counts one setting still to fill."
-  hotspots={[{ x: 75.9, y: 56.5, label: 'Basic LLM Chain' }, { x: 72, y: 79.5, label: 'Model slot, with a model node under it' }, { x: 94.7, y: 56.5, label: 'Display Markdown shows the result' }]}
-/>
+  <StepShot shot="llm-chain" spot="model-slot" n={3} zoom={44} />
+</StepCard>
 
 <StepCard n={4} title="Write the prompt" check="the Prompt field shows your text, with {{ $input.text }} at the end.">
   Open **Basic LLM Chain** and paste this into **Prompt**:
@@ -94,14 +91,20 @@ AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **mod
   ```
 
   `{{ $input.text }}` is replaced by the page text from **Get All Text** when the workflow runs.
+
+  <StepShot shot="llm-chain-prompt" spot="prompt" n={4} />
 </StepCard>
 
 <StepCard n={5} title="Show the result" check="Display Markdown is linked after the chain, with Content set to {{ $input.response }}.">
   Click the **+** on the right of **Basic LLM Chain** and add **Display Markdown**. Set **Title** to `Page summary` and **Content** to `{{ $input.response }}`: the chain puts the model's answer in a field called `response`.
+
+  <StepShot shot="llm-chain" spot="display-markdown" n={5} zoom={44} />
 </StepCard>
 
 <StepCard n={6} title="Run it on an article" check="Basic LLM Chain → Output → Actual shows a response with three bullets about the article.">
   Switch to the tab with the article, then back to the panel, and click **Test Workflow**. The first on-device run waits for the model download (progress shows in the node's run log); later runs take a few seconds. Click **Save** when it works.
+
+  <StepShot shot="llm-chain" spot="run" n={6} />
 </StepCard>
 
 <Aside type="tip" title="Make it yours">

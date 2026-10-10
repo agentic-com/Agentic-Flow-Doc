@@ -7,10 +7,8 @@ sidebar:
   order: 1
 ---
 
-import { Steps, LinkCard, CardGrid } from '@astrojs/starlight/components';
-import { Callout, Screenshot } from '@components/awflow';
-import credentialsNewLight from '@assets/screenshots/credentials-new.light.webp';
-import credentialsNewDark from '@assets/screenshots/credentials-new.dark.webp';
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Callout, GuidedShot } from '@components/awflow';
 
 A **credential** is a saved key, token or sign-in that lets a node act in another service: an API key for OpenAI, a Slack bot token, a Google sign-in. You create it once, then pick it in any node. When you share or export a workflow, your credentials stay behind.
 
@@ -20,26 +18,21 @@ Each service has its own page with the exact steps, the permissions to grant and
 
 </Callout>
 
-<Screenshot
-  src={credentialsNewLight}
-  srcDark={credentialsNewDark}
-  alt="The New Credential dialog over the Credentials page: an Integration App / Service picker, Name and Description fields, an Auth Type menu set to Basic Auth with Username and Password fields, a note that the secret is saved locally and encrypted in this browser, and the Create Credential button."
-  hotspots={[{ x: 50, y: 19.6, label: 'Pick the app or service' }, { x: 50, y: 30.2, label: 'Name it so you can find it in nodes' }, { x: 50, y: 51.6, label: 'Auth type decides which fields you fill' }, { x: 50, y: 74.7, label: 'Where the secret is stored' }]}
-/>
-
 ## From the Credentials page
 
-<Steps>
+Open **Credentials** in the sidebar and click **Add Credential**. Everything else happens in the **New Credential** form: hover or tap a step to find it on the screen.
 
-1. Open **Credentials** in the sidebar and click **Add Credential**.
-2. Under **Integration App / Service**, pick the app the credential is for, for example **Slack** or **Gmail**. For an AI provider or any other API, pick **Simple Credential**. Click **Continue**.
-3. Give it a **Name** you'll recognise later (service, account and purpose, for example *Slack – marketing bot*) and, if you like, a **Description**.
-4. Check the **Auth Type**. For an app it is set for you. For a simple credential, choose it: see the table below.
-5. Fill the fields for that type. For **OAuth2** (Google, Microsoft 365), click **Check connection** and sign in.
-6. Choose the **Storage location**: **Local (this browser only)** or **Cloud (synced to your account)**.
-7. Click **Create Credential**.
-
-</Steps>
+<GuidedShot
+  shot="credentials-new"
+  steps={[
+    { spot: 'app', title: 'Pick the app or service', body: 'Under **Integration App / Service**, pick the app the credential is for, for example **Slack** or **Gmail**. For an AI provider or any other API, pick **Simple Credential**.' },
+    { spot: 'name', title: 'Name it', body: "Give it a **Name** you'll recognise in nodes (service, account and purpose, for example *Slack – marketing bot*) and, if you like, a **Description**." },
+    { spot: 'auth-type', title: 'Check the auth type', body: 'For an app it is set for you. For a simple credential, choose it: see **Auth types** below.' },
+    { spot: 'fields', title: 'Fill its fields', body: 'The fields follow the auth type: here **Username** and **Password**. For **OAuth2** (Google, Microsoft 365), click **Check connection** and sign in.' },
+    { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)**. Without an account it is saved locally in this browser, as here.' },
+    { spot: 'create', title: 'Click Create Credential', check: 'the new credential is listed on the Credentials page, ready to pick in nodes.' },
+  ]}
+/>
 
 ## From a node
 
