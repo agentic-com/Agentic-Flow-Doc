@@ -130,6 +130,14 @@ import { Callout, StepCard } from '@components/awflow';
 
 The site chrome (section tabs, banners, node headers, the "at a glance" card, the Ask Aria pill, brand tokens and motion) lives in the in-repo plugin `plugins/starlight-awflow/`. Its options are typed in `plugins/starlight-awflow/types.ts`; the header tabs come from its `sections` option in `astro.config.mjs`. Motion respects "reduce motion".
 
+## 🌍 Languages
+
+The docs are **English only** for now. This was decided in awflow/Agentic-Flow#1332, while the docs are being restructured (epic #1308): translating pages that are still moving and being rewritten would waste the effort and leave stale copies behind.
+
+- The app itself ships French, German and Chinese. The docs will follow once the information architecture (#1334) and the templates are stable.
+- **When we add a language:** enable a Starlight locale in `astro.config.mjs` (`locales`), then translate in this order: getting started → recipes → privacy & data. Pages that aren't translated fall back to English automatically.
+- The dead `fr` config and the empty `i18n` collection have been removed. Don't add UI-string translations until a locale is enabled.
+
 ## ⚖️ Legal
 
 By contributing to our documentation, you agree to license your contribution under the project's [License](./LICENSE.md). You also confirm that you have the right to submit your work under that license.
