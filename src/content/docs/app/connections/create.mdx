@@ -1,96 +1,74 @@
 ---
-title: Create Credentials
-description: "A guide to creating and managing credentials in AWFlow — secure information for external services."
+title: Create a credential
+description: "Save a key, token or sign-in once in Credentials, then pick it in any node that needs it."
+kind: guide
+section: app
 sidebar:
   order: 1
-section: app
 ---
 
-import Social from "@images/social.webp";
-import { Image } from "astro:assets";
-import { Steps } from '@astrojs/starlight/components';
+import { Steps, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Callout } from '@components/awflow';
 
-Credentials are saved “login details” that some nodes need to access an external service.
+A **credential** is a saved key, token or sign-in that lets a node act in another service: an API key for OpenAI, a Slack bot token, a Google sign-in. You create it once, then pick it in any node. When you share or export a workflow, your credentials stay behind.
 
-Examples:
+<Callout type="tip" title="Looking for one app?" href="/app/connections/" linkLabel="All connections">
 
-- An API key for a service
-- A token (Bearer token)
-- A username/password
-- An OAuth connection (sign in with Google, etc.)
+Each service has its own page with the exact steps, the permissions to grant and the common errors: Slack, Notion, Google, OpenAI and more.
 
----
+</Callout>
 
-## Why credentials matter
+{/* SCREENSHOT: credentials-new */}
 
-- They keep sensitive information out of your workflow steps.
-- You can reuse the same credential across multiple workflows.
-- If you update a credential later, everything using it can keep working.
-- When you share a workflow, you should never share your real secrets.
+## From the Credentials page
 
----
-
-## How to create a credential
-
-### From the Credentials section
 <Steps>
-1. Open the extension and go to the **Credentials** section.
-2. Click **Create New Credential** (or the “+” icon).
-3. Choose the type of credential (Token, Basic Auth, OAuth2, etc.).
-4. Fill in the required fields.
-5. Give your credential a **descriptive name** — for example: “Google Sheets – Marketing Team”.
-6. Hit **Save**. The system may test the connection automatically to ensure it works.
+
+1. Open **Credentials** in the sidebar and click **Add Credential**.
+2. Under **Integration App / Service**, pick the app the credential is for, for example **Slack** or **Gmail**. For an AI provider or any other API, pick **Simple Credential**. Click **Continue**.
+3. Give it a **Name** you'll recognise later (service, account and purpose, for example *Slack – marketing bot*) and, if you like, a **Description**.
+4. Check the **Auth Type**. For an app it is set for you. For a simple credential, choose it: see the table below.
+5. Fill the fields for that type. For **OAuth2** (Google, Microsoft 365), click **Check connection** and sign in.
+6. Choose the **Storage location**: **Local (this browser only)** or **Cloud (synced to your account)**.
+7. Click **Create Credential**.
+
 </Steps>
-   <Image src={Social} alt="credential creation screenshot" />
 
+## From a node
 
-### From a node
-<Steps>
-1. Open the extension and go to the **Workflows** section.
-2. Go to the node you want to use the credential for (In a Workflow).
-3. On the Credential field, click **Create New**.
-4. Choose the type of credential (Token, Basic Auth, OAuth2, etc.).
-5. Fill in the required fields.
-6. Give your credential a **descriptive name** — for example: “Google Sheets – Marketing Team”.
-7. Hit **Save**. The system may test the connection automatically to ensure it works.
-</Steps>
-   <Image src={Social} alt="credential creation screenshot" />
+In a node's **Credential** (or **Authentication**) field, open the list and click **+ Add Credential**. The same form opens. When you save, the new credential is in the list, ready to pick.
 
----
+## Auth types
 
-## Tips for naming, testing & organizing
+| Auth Type | Fields | Use it for |
+| --- | --- | --- |
+| **Bearer Token** | Bearer Token | Most app tokens and API keys (Slack, Notion, GitHub…). Paste only the token: AWFlow adds `Bearer`. |
+| **Basic Auth** | Username, Password | Services that take two values, such as Trello (API key + token) or Pushover. |
+| **JWT** | JWT | A value sent exactly as typed. Use it for AI provider API keys in workflow nodes. |
+| **OAuth2** | Client ID, Client Secret (optional) | Google (Gmail, Drive, Sheets, Calendar) and Microsoft 365, with [your own OAuth client](/app/connections/oauth-client/). |
 
-- Use names that make sense later: service + account + purpose.
-- After saving, test it with a small workflow.
-- If you have many credentials, keep them organized by team or by project.
-- Don’t paste secrets directly into node fields if the node supports credentials.
+<Callout type="info" title="Client Secret">
 
----
+Microsoft 365 is a **public client**: it has no secret, so the field is hidden and any old value is cleared when you save. A Google **Web application** client needs its secret; a Google **Desktop app** client has none.
 
-## Using credentials in nodes
+</Callout>
 
-When you add or edit a node (for example: HTTP Request, Google Sheets, Email), you’ll often see a **Credential** field:
+## Where credentials are stored
 
-- Open the node’s configuration.
-- In the “Credential” dropdown, select an existing credential.
-- If the credential isn’t created yet, you can select **Create New** from within the node configuration.
-- Once selected, the node will use the stored credential when the workflow runs.
+- **Local (this browser only)**: encrypted in this browser. The key sits on the same device, which guards against casual inspection. Turn on the [local secret vault](/app/account/secret-vault/) to lock local credentials with a passphrase.
+- **Cloud (synced to your account)**: stored encrypted on your AWFlow account, so you can use them on your other devices.
 
----
+If you use AWFlow without an account, credentials are always local. See [Privacy & your data](/app/privacy-and-data/#credentials-and-secrets).
 
-## Common credential types and what to check
+## Tips
 
-| Credential Type                  | What to configure                      | Things to check                                   |
-| -------------------------------- | -------------------------------------- | ------------------------------------------------- |
-| Basic Auth (username + password) | Provide login credentials              | Ensure password is correct and user has access    |
-| OAuth2                           | Client ID (Client Secret only for confidential "Web application" clients), Redirect URL | Make sure tokens are valid and scopes are granted |
-| API Token / Bearer               | A single token/key                     | Confirm token hasn’t expired or been revoked      |
-| Generic / Custom Auth            | Headers, query params, certificates    | Ensure fields match the service requirements      |
+- Create **one credential per account and purpose**, and reuse it across workflows. Updating it updates every workflow that uses it.
+- Give a token **only the permissions** your workflow needs. Each connection page lists them per operation.
+- Never paste a secret into a node's normal fields: those travel with the workflow when you share it.
 
-:::note[Client Secret storage]
-Some integrations use a **public OAuth client** (PKCE-only) — for example **Microsoft 365 / Microsoft Graph**. Public clients never send a client secret to the token endpoint, so no client secret is stored for them: the field is hidden, and any secret from an older connection is cleared the next time you save the credential.
+## Next steps
 
-**Google** integrations (Gmail, Drive, Sheets, Calendar) remain a **confidential client**: a Google "Web application" OAuth client still requires its client secret at the token endpoint even with PKCE, so Google credentials keep their secret. (A Google "Desktop app" client is public and needs no secret — leave the field blank.)
-:::
-
-Google and Microsoft credentials need your own OAuth client first: follow [Create your OAuth client](/app/connections/oauth-client/) (the credential form also shows these steps inline, with your redirect URI ready to copy). For other services, see e.g. [HTTP Request Credentials](/nodes/builtin/core/http-request/).
+<CardGrid>
+  <LinkCard title="All connections" href="/app/connections/" description="Step-by-step pages per service." />
+  <LinkCard title="Edit a credential" href="/app/connections/edit/" />
+</CardGrid>

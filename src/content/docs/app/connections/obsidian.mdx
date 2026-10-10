@@ -1,0 +1,68 @@
+---
+title: "Connect Obsidian"
+description: "Install the Local REST API plugin in Obsidian and paste its API key. Your notes never leave your computer."
+kind: connection
+section: app
+sidebar:
+  label: "Obsidian"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- The Obsidian desktop app, open while the workflow runs.
+- The **Local REST API** community plugin.
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Obsidian](/nodes/builtin/integration/obsidian/)
+
+## Set it up
+
+<Steps>
+
+1. **Install the plugin.** In Obsidian, open **Settings › Community plugins**, browse for **Local REST API**, install it and enable it.
+2. **Turn on the HTTP server.** In the plugin's settings, enable the non-encrypted (HTTP) server on port `27123`. The HTTPS port `27124` uses a self-signed certificate that the browser rejects.
+3. **Copy the API key** from the plugin's settings.
+4. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Obsidian** and click **Continue**. Name it, for example *Obsidian – vault*: **Auth Type** is already set to **Bearer Token**. Then paste the key into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **Search vault** with a word from one of your notes: the note comes back.
+
+</Callout>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to your own computer (`http://127.0.0.1:27123` by default). AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **"Could not reach the Obsidian Local REST API at…".** Obsidian is closed, the plugin or its HTTP server is off, or **Server URL** doesn't match the port.
+- **"401 … check the API key from the plugin settings".** The key was regenerated in the plugin. Copy it again.
+- **The run is blocked in the web app.** Obsidian runs through the browser extension. Install the extension and allow Obsidian for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Obsidian node" href="/nodes/builtin/integration/obsidian/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

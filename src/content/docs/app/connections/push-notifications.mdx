@@ -1,0 +1,113 @@
+---
+title: "Connect ntfy or Pushover"
+description: "Send push notifications to your phone with ntfy (no account needed on ntfy.sh) or Pushover."
+kind: connection
+section: app
+sidebar:
+  label: "ntfy / Pushover"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 3 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" /> <Badge variant="neutral" text="Basic Auth" />
+
+## Before you start
+
+- The ntfy or Pushover app on your phone.
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Push Notification](/nodes/builtin/integration/push-notification/)
+
+## Pick a method
+
+| Method | Use it when |
+| --- | --- |
+| **ntfy.sh public topic** <Badge variant="new" text="Recommended" /> | No account and no credential. Anyone who knows the topic name can read it, so pick a hard-to-guess one. |
+| **ntfy with access control** | Your own ntfy server, or reserved topics. |
+| **Pushover** | A paid, reliable push service with priorities and sounds. |
+
+## Set it up
+
+<Tabs syncKey="connect-push-notifications">
+<TabItem label="ntfy.sh public topic (recommended)">
+
+<Steps>
+
+1. **Subscribe on your phone.** In the ntfy app, subscribe to a topic with a long, random name.
+2. **In the node**, leave **Credential** empty and type the same **Topic**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Click **Test step**: the notification arrives on your phone.
+
+</Callout>
+
+</TabItem>
+<TabItem label="ntfy with access control">
+
+<Steps>
+
+1. **Create an access token** on your ntfy server (`ntfy token add <user>`) or in your ntfy.sh account settings. Copy it (it starts with `tk_`).
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Credential** field). Pick **Simple Credential** and click **Continue**. Name it, for example *ntfy – my server*, set **Auth Type** to **Bearer Token** and paste the token into **Bearer Token**, exactly as copied. Choose the **Storage location** and click **Create Credential**.
+3. **In the node**, pick the credential and set **Server** to your server's address.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Click **Test step**: the notification arrives on your phone.
+
+</Callout>
+
+</TabItem>
+<TabItem label="Pushover">
+
+<Steps>
+
+1. **Create an application** at [pushover.net](https://pushover.net) to get an **API Token/Key**, and copy your **User Key** from your dashboard.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Credential** field). Pick **Simple Credential** and click **Continue**. Name it, for example *Pushover – phone*, set **Auth Type** to **Basic Auth**, put the application token in **Username** and your user key in **Password**. Choose the **Storage location** and click **Create Credential**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Click **Test step**: the notification arrives on your phone.
+
+</Callout>
+
+</TabItem>
+</Tabs>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to ntfy.sh or your ntfy server and `api.pushover.net`. AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **The ntfy notification never arrives.** The phone is subscribed to another topic or server. Check the exact **Topic** and **Server**.
+- **"ntfy Error: 403 Forbidden" or 401.** The server needs an access token. Add a Bearer Token credential.
+- **"Pushover needs a Basic Auth credential…".** The credential isn't Basic Auth, or a field is empty. The application token goes in **Username**, the user key in **Password**.
+- **The run is blocked in the web app.** Push Notification runs through the browser extension. With the extension installed, the web app can use ntfy.sh and Pushover, but not your own ntfy server.
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Push Notification node" href="/nodes/builtin/integration/push-notification/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>

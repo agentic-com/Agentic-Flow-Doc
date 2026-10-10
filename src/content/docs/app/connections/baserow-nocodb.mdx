@@ -1,0 +1,96 @@
+---
+title: "Connect Baserow or NocoDB"
+description: "Create a Baserow database token or a NocoDB API token, for cloud or self-hosted instances."
+kind: connection
+section: app
+sidebar:
+  label: "Baserow / NocoDB"
+---
+
+import { Steps, Tabs, TabItem, LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { Badge, Callout } from '@components/awflow';
+
+<Badge variant="neutral" text="≈ 2 min" /> <Badge variant="extension" /> <Badge variant="neutral" text="Bearer Token" />
+
+## Before you start
+
+- A Baserow or NocoDB account, cloud or self-hosted. Self-hosted addresses such as `localhost` work from the extension.
+- The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
+
+## Used by
+
+- [Baserow / NocoDB](/nodes/builtin/integration/baserow-nocodb/)
+
+## Pick a method
+
+| Method | Use it when |
+| --- | --- |
+| **Baserow database token** <Badge variant="new" text="Recommended" /> | For Baserow (baserow.io or your own server). |
+| **NocoDB API token** | For NocoDB (app.nocodb.com or your own server). |
+
+## Set it up
+
+<Tabs syncKey="connect-baserow-nocodb">
+<TabItem label="Baserow database token (recommended)">
+
+<Steps>
+
+1. **Create the token.** In Baserow, open **Settings › Database tokens**, click **Create token**, pick the workspace that holds the table and allow create, read, update and delete. Copy it.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Baserow / NocoDB** and click **Continue**. Name it, for example *Baserow – leads*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+3. **In the node**, choose **Baserow**, set **Base URL** (for example `https://api.baserow.io`) and the **Table ID**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **List rows**: the table's rows come back.
+
+</Callout>
+
+</TabItem>
+<TabItem label="NocoDB API token">
+
+<Steps>
+
+1. **Create the token.** In NocoDB, open **Account settings › Tokens**, click **Add new token** and copy it.
+2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field). Under **Integration App / Service** pick **Baserow / NocoDB** and click **Continue**. Name it, for example *NocoDB – inventory*: **Auth Type** is already set to **Bearer Token**. Then paste the token into **Bearer Token**, choose the **Storage location** and click **Create Credential**.
+3. **In the node**, choose **NocoDB**, set **Base URL** (for example `https://app.nocodb.com`) and the **Table ID**.
+
+</Steps>
+
+<Callout type="tip" title="Check it's connected">
+
+Run **List rows**: the table's rows come back.
+
+</Callout>
+
+</TabItem>
+</Tabs>
+
+## Where your token lives
+
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+
+The credential is stored where you choose when you create it:
+
+- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+
+When a step runs, your browser sends it only to the **Base URL** you set in the node (for example `api.baserow.io` or `app.nocodb.com`). AWFlow's servers never relay the call.
+
+</Callout>
+
+## Common issues
+
+- **"Baserow API Error: 401" or "NocoDB API Error: 401".** The token is wrong or doesn't cover this table. Create one that does.
+- **"404 Not Found".** Check **Base URL** (no path after the address, right port) and **Table ID**.
+- **The run is blocked in the web app.** Baserow / NocoDB runs through the browser extension. Install the extension and allow Baserow / NocoDB for this workflow when asked, or run the workflow from the extension. See [Extension-only integrations in the web app](/app/troubleshooting/extension-only-integrations-in-the-web-app/).
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Baserow / NocoDB node" href="/nodes/builtin/integration/baserow-nocodb/" />
+  <LinkCard title="All connections" href="/app/connections/" />
+  <LinkCard title="Create and manage credentials" href="/app/connections/create/" />
+  <LinkCard title="Privacy & your data" href="/app/privacy-and-data/" />
+</CardGrid>
