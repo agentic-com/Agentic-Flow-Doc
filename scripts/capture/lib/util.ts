@@ -92,6 +92,8 @@ export async function toWebp(png: Buffer, maxWidth = 2000, quality = 85): Promis
 }
 
 export type Hotspot = {
+	/** Stable kebab-case id, unique within the shot (<GuidedShot>/<StepShot> `spot`). */
+	id: string;
 	/** Legend text, as the <Screenshot> component's `hotspots[].label`. */
 	label: string;
 	/** Centre of the element, in % of the image (the component's `x` / `y`). */
@@ -104,16 +106,17 @@ export type Hotspot = {
 const pct = (v: number, of: number) => Math.round((v / of) * 1000) / 10;
 
 /** Measures elements on screen as percentages of the viewport (the screenshot is the viewport). */
-export async function measure(page: Page, spots: { label: string; locate: (p: Page) => Locator }[]): Promise<Hotspot[]> {
+export async function measure(page: Page, spots: { id: string; label: string; locate: (p: Page) => Locator }[]): Promise<Hotspot[]> {
 	const vp = page.viewportSize();
 	if (!vp) return [];
 	const out: Hotspot[] = [];
 	for (const s of spots) {
 		const box = await s.locate(page).filter({ visible: true }).first().boundingBox().catch(() => null);
-		if (!box || box.width === 0) throw new Error(`hotspot "${s.label}" not found on screen`);
+		if (!box || box.width === 0) throw new Error(`spot "${s.id}" (${s.label}) not found on screen`);
 		const x0 = Math.max(0, box.x), y0 = Math.max(0, box.y);
 		const x1 = Math.min(vp.width, box.x + box.width), y1 = Math.min(vp.height, box.y + box.height);
 		out.push({
+			id: s.id,
 			label: s.label,
 			x: pct((x0 + x1) / 2, vp.width),
 			y: pct((y0 + y1) / 2, vp.height),
