@@ -42,6 +42,21 @@ Agentic Workflow is available as a browser extension for all major Chromium and 
 *   👥 [Community Forum]() - Get support, share ideas, and connect with other Agentic Workflow users.
 *   🌐 [Marketplace]() - Share and download community-created workflows.
 
+## Data endpoints
+
+The docs publish static JSON at build time (CORS `*`), consumed by the awflow.io website (`awflow/awflow-website`, `bun run data:sync`). **Changing a field is a breaking change for the website.**
+
+| Endpoint | Source |
+| --- | --- |
+| `/data/nodes.json` | `src/data/nodes.json` |
+| `/data/integration-groups.json` | `src/data/integration-groups.json` |
+| `/data/recipes.json` | `src/data/recipes.json` |
+| `/data/releases.json` | `src/data/releases.ts`: `[{ version, date, title, summary, href, teaser, breaking, browsers }]`, newest first, `href` absolute |
+
+## Screenshots
+
+`bun run docs:capture` also takes `--locale en|fr|de|zh` (seeds the app language; files become `<shot>.<locale>.<theme>.webp` only when passed) and `--out <dir>` (write images and JSON there instead of `src/assets/screenshots`).
+
 ## Contributing
 
 We welcome contributions from the community! We welcome contributions to our documentation, bug reports, and feature suggestions. Please check out our [Contributing Guide]() for details on how to help.
