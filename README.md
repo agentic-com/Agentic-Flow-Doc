@@ -51,7 +51,7 @@ The docs publish static JSON at build time (CORS `*`), consumed by the awflow.io
 | `/data/nodes.json` | `src/data/nodes.json` |
 | `/data/integration-groups.json` | `src/data/integration-groups.json` |
 | `/data/recipes.json` | `src/data/recipes.json` |
-| `/data/releases.json` | `src/data/releases.ts`: `[{ version, date, title, summary, href, teaser, breaking, browsers }]`, newest first, `href` absolute |
+| `/data/releases.json` | `src/data/releases.ts`: `[{ version, date, title, summary, href, teaser, breaking, browsers, changes }]`, newest first, `href` absolute; `changes` is `[{ type: 'new' \| 'improved' \| 'fixed', text, href? }]` (`href` absolute, only when the change links to a docs page; see `src/data/releaseItem.ts`) |
 
 ## Screenshots
 
