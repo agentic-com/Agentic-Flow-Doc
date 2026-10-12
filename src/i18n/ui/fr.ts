@@ -30,5 +30,7 @@ const fr: Dict = {
 	'search.group.fix': 'Dépannage',
 	'search.group.releases': 'Versions',
 	'search.group.other': 'Autres',
+	'i18n.stale': 'La version anglaise a été mise à jour depuis cette traduction.',
+	'i18n.readEnglish': 'Lire en anglais',
 };
 export default fr;

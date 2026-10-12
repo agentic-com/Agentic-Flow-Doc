@@ -62,3 +62,11 @@ const sectionVars = section
 	</div>
 	<SectionTabs />
 </div>
+
+<script>
+	import { langFromPath } from '../../../src/i18n/locales';
+	import { saveDocsLang } from '../../../src/i18n/docs-lang';
+	for (const select of document.querySelectorAll<HTMLSelectElement>('starlight-lang-select select')) {
+		select.addEventListener('change', () => saveDocsLang(langFromPath(new URL(select.value, location.href).pathname)));
+	}
+</script>

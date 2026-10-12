@@ -30,5 +30,7 @@ const zh: Dict = {
 	'search.group.fix': '排障',
 	'search.group.releases': '版本发布',
 	'search.group.other': '更多',
+	'i18n.stale': '自此翻译发布后，英文版已更新。',
+	'i18n.readEnglish': '阅读英文版',
 };
 export default zh;

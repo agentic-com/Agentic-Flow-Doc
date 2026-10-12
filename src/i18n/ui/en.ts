@@ -34,4 +34,6 @@ export default {
 	'search.group.fix': 'Fix it',
 	'search.group.releases': 'Releases',
 	'search.group.other': 'More',
+	'i18n.stale': 'The English version was updated since this translation.',
+	'i18n.readEnglish': 'Read it in English',
 } as const;

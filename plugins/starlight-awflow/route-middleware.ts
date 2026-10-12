@@ -1,8 +1,11 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { defineRouteMiddleware } from '@astrojs/starlight/route-data';
 import config from 'virtual:starlight-awflow/config';
 import nodesData from 'virtual:starlight-awflow/nodes';
 import { findNodeEntry, normaliseNode } from './lib/nodes';
 import { scopePagination } from './lib/pagination';
+import { englishFileFor, gitBlobHash } from '../../src/i18n/blob';
 import { localizeHref, stripLocale, toLang } from '../../src/i18n/locales';
 import { ogPageKey } from '../../src/i18n/og-key';
 import { createT, type UIKey } from '../../src/i18n/ui';
@@ -92,5 +95,15 @@ export const onRequest = defineRouteMiddleware((context) => {
 		markdownUrl: route.id && route.id !== 'index' ? `/${trimSlashes(route.id)}.md` : undefined,
 		lang,
 	};
+
+	// 5 · Stale-translation note: the translation records the blob hash of the English file it came from.
+	const source = (data.i18n as { source?: string } | undefined)?.source;
+	const english = route.entry.filePath ? englishFileFor(resolve(route.entry.filePath)) : null;
+	if (route.locale && !route.isFallback && source && english && existsSync(english)) {
+		awflow.i18n = {
+			stale: gitBlobHash(readFileSync(english)) !== source,
+			englishHref: `/${stripLocale(route.id)}/`.replace(/\/+/g, '/'),
+		};
+	}
 	route.awflow = awflow;
 });
