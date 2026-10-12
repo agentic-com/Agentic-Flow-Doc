@@ -120,17 +120,17 @@ const fullRing = `left: ${b.x}%; top: ${b.y}%; width: ${b.w}%; height: ${b.h}%`;
 		/>
 		<span class="awf-stepshot__ring" aria-hidden="true"></span>
 		<span class="awf-stepshot__badge awf-ping" aria-hidden="true">{n}</span>
-		<a class="awf-stepshot__full" href={r.light.src} data-awf-full>
+		<a class="awf-stepshot__full" href={r.light.src} data-awf-full aria-label={t('shot.fullScreenLabel', { n })}>
 			<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 				><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg
 			>
-			{t('shot.fullScreen')}<span class="sr-only">{t('shot.fullScreenSr', { n })}</span>
+			{t('shot.fullScreen')}
 		</a>
 	</div>
 	<dialog class="awf-shotdialog" aria-label={t('shot.dialog', { n })}>
 		<div class="awf-shotdialog__bar">
 			<span class="awf-shotdialog__title"><span class="awf-shotdialog__n" aria-hidden="true">{n}</span>{spot.label}</span>
-			<form method="dialog"><button class="awf-shotdialog__close" type="submit" autofocus>{t('shot.close')}<span class="sr-only"> {t('shot.closeSr')}</span></button></form>
+			<form method="dialog"><button class="awf-shotdialog__close" type="submit" autofocus aria-label={t('shot.closeLabel')}>{t('shot.close')}</button></form>
 		</div>
 		<div class="awf-shotdialog__frame" style={`aspect-ratio: ${r.width} / ${r.height}; --awf-shot-ratio: ${r2(ratio)}`}>
 			<img class="awf-shot__img--light" src={r.light.src} alt={fullAlt} width={r.light.width} height={r.light.height} loading="lazy" decoding="async" data-zoom-off />

@@ -794,8 +794,13 @@
 		{/if}
 
 		<div class="awf-aria__actions">
-			<button type="button" class="awf-btn awf-btn--primary awf-press" onclick={() => ask('ask')}>
-				{t('aria.askBtn')}{#if !handoff}<span class="sr-only"> {t('aria.opensApp')}</span>{/if}
+			<button
+				type="button"
+				class="awf-btn awf-btn--primary awf-press"
+				aria-label={handoff ? undefined : t('aria.askBtnApp')}
+				onclick={() => ask('ask')}
+			>
+				{t('aria.askBtn')}
 			</button>
 			<button type="button" class="awf-btn awf-press" onclick={() => ask('build')}>{t('aria.build')}</button>
 		</div>

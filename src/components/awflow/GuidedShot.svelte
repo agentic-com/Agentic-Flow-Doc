@@ -133,7 +133,7 @@
 					>
 						<span class="awf-guided__num" aria-hidden="true">{it.n}</span>
 						<span class="awf-guided__text">
-							<span class="awf-guided__title"><span class="sr-only">{t('shot.step', { n: it.n })} </span>{it.title}</span>
+							<span class="awf-guided__title"><span class="sr-only">{t('shot.step', { n: it.n })}</span>{it.title}</span>
 							{#if it.bodyHtml}<span class="awf-guided__body">{@html it.bodyHtml}</span>{/if}
 							{#if it.check}<span class="awf-guided__check"><strong>{t('shot.check')}</strong> {it.check}</span>{/if}
 						</span>

@@ -42,7 +42,8 @@
 
 	const t = $derived(createT(lang));
 	const pick = $derived(pickProp ?? t('node.ops.defaultPick'));
-	const pickLower = $derived(pick.toLowerCase());
+	// Only English lower-cases the pick; German nouns keep their capital.
+	const pickLower = $derived(lang === 'en' ? pick.toLowerCase() : pick);
 	const settingsFor = (name: string) => richParts(t('node.ops.settingsFor', { name }));
 
 	const uid = $props.id();

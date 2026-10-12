@@ -299,7 +299,7 @@
 
 	{#snippet card(n: CatalogNode)}
 		<li>
-			<a class="awf-catalog__card" href={n.href} style={`--fc: ${FAMILY[n.family]?.color ?? '#4338ca'}`}>
+			<a class="awf-catalog__card" href={t.href(n.href)} style={`--fc: ${FAMILY[n.family]?.color ?? '#4338ca'}`}>
 				<span class="awf-catalog__card-head">
 					<span class="awf-catalog__icon" aria-hidden="true">{initials(n.name)}</span>
 					<span class="awf-catalog__name">{n.name}</span>

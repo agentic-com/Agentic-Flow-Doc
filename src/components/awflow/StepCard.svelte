@@ -24,7 +24,7 @@
 	{#if n !== undefined}<span class="awf-step__n" aria-hidden="true">{n}</span>{/if}
 	<div class="awf-step__body">
 		<svelte:element this={`h${level}`} class="awf-step__title"
-			>{#if n !== undefined}<span class="sr-only">{t('shot.step', { n })} </span>{/if}{title}</svelte:element
+			>{#if n !== undefined}<span class="sr-only">{t('shot.step', { n })}</span>{/if}{title}</svelte:element
 		>
 		{#if children}<div class="awf-step__content">{@render children()}</div>{/if}
 		{#if check}<p class="awf-step__check"><strong>{t('shot.check')}</strong> {check}</p>{/if}
