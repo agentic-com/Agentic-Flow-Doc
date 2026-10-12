@@ -155,7 +155,7 @@ export default {
 	'recipe.count_one': '{shown} of {total} recipes',
 	'recipe.count_other': '{shown} of {total} recipes',
 	'recipe.use.market.also': 'Also on the {link}, published by the AWFlow team.',
-	'recipe.steps.nodeRef': '{type}[[node]] reference',
+	'recipe.steps.nodeRef': '{type}[[ node]] reference',
 	'release.count.new_one': '{count} new',
 	'release.count.new_other': '{count} new',
 	'release.count.improved_one': '{count} improved',
