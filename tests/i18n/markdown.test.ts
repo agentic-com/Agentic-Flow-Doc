@@ -66,3 +66,28 @@ describe('plugins on a French page', () => {
 		expect(code).not.toContain('id:');
 	});
 });
+
+describe('englishHeadings parity with Astro heading ids', () => {
+	test('mdx expression text is included like textContent', async () => {
+		expect(await englishHeadings('## {1+1} x\n', 'mdx')).toEqual([{ depth: 2, slug: '11-x' }]);
+	});
+	test('smart punctuation and gfm are on', async () => {
+		const [h] = await englishHeadings('## It\'s "quoted" ~~gone~~\n', 'mdx');
+		// compare with Astro's own plugin
+		const { satteriHeadingIdsPlugin } = await import('@astrojs/markdown-satteri');
+		let id = '';
+		const probe = { name: 'probe', element: { filter: ['h2'], visit: (n: any) => { id = n.properties.id; } } };
+		await mdxToJs('## It\'s "quoted" ~~gone~~\n', {
+			features: { gfm: true, smartPunctuation: true, rawHtml: true },
+			hastPlugins: [satteriHeadingIdsPlugin(), probe],
+		} as any);
+		expect(h.slug).toBe(id);
+	});
+	test('expression heading equals Astro id', async () => {
+		const { satteriHeadingIdsPlugin } = await import('@astrojs/markdown-satteri');
+		let id = '';
+		const probe = { name: 'probe', element: { filter: ['h2'], visit: (n: any) => { id = n.properties.id; } } };
+		await mdxToJs('## {1+1} x\n', { hastPlugins: [satteriHeadingIdsPlugin(), probe] } as any);
+		expect(id).toBe('11-x');
+	});
+});
