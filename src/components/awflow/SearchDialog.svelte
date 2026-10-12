@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Docs search + Ask Aria (awflow/Agentic-Flow#1340, Search.dc.html).
 	 *
@@ -25,6 +26,8 @@
 	} from '../../../plugins/starlight-awflow/lib/search';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		/** Base URL of the AWFlow web app (fallback when the extension hand-off is absent). */
 		appUrl?: string;
 		/** Site base path, e.g. `/`. */
@@ -33,10 +36,10 @@
 		placeholder?: string;
 	}
 
-	let { appUrl = 'https://app.awflow.io', base = '/', placeholder = 'Search the docs' }: Props = $props();
+	let { lang = 'en', appUrl = 'https://app.awflow.io', base = '/', placeholder = 'Search the docs' }: Props = $props();
 
 	// Task 8 passes the page language; until then the dialog is English.
-	const t = createT('en');
+	const t = $derived(createT(lang));
 	const groupLabel = (g: { labelKey: UIKey }) => t(g.labelKey);
 
 	type Tab = 'search' | 'aria';

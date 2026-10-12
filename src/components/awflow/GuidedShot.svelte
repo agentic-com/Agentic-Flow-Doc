@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Interactive part of <GuidedShot> (GuideB.dc.html, "13B"). Rendered on the server with step 1
 	 * active, then hydrated: hovering, focusing or clicking a step highlights its marker, and clicking a
@@ -18,6 +19,8 @@
 		marker: { x: number; y: number; dx: number; dy: number };
 	}
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		uid: string;
 		alt: string;
 		light: Img;
@@ -28,7 +31,7 @@
 		crop?: Box;
 	}
 
-	let { uid, alt, light, dark, items, caption, crop = { x: 0, y: 0, w: 100, h: 100 } }: Props = $props();
+	let { lang = 'en', uid, alt, light, dark, items, caption, crop = { x: 0, y: 0, w: 100, h: 100 } }: Props = $props();
 	// The image is drawn larger than the frame and shifted so only the crop window shows.
 	const imgStyle = $derived(
 		crop.w >= 100 && crop.h >= 100

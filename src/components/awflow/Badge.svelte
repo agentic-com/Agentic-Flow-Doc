@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	import type { Snippet } from 'svelte';
 
 	type BadgeVariant =
@@ -15,6 +16,8 @@
 		| 'neutral';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		/** Visual + semantic variant. */
 		variant?: BadgeVariant;
 		/** Overrides the default label for the variant (e.g. "New in 0.8"). */
@@ -25,7 +28,7 @@
 		children?: Snippet;
 	}
 
-	let { variant = 'neutral', text, count, class: className = '', children }: Props = $props();
+	let { lang = 'en', variant = 'neutral', text, count, class: className = '', children }: Props = $props();
 
 	const LABELS: Record<BadgeVariant, string> = {
 		new: 'New',

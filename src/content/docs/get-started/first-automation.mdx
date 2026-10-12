@@ -15,7 +15,7 @@ import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
 import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awflow";
 
 <LessonProgress
-  client:visible
+  hydrate="visible"
   level={1}
   order={4}
   total={5}
@@ -100,6 +100,6 @@ Check three things: the workflow is **active**, the slot in the node matches the
 - [Page Load](/nodes/builtin/trigger/pageload/): every time a page matching a URL pattern loads.
 - [Element Change](/nodes/builtin/trigger/elementchange/): when something on a page changes, like a price.
 
-<LessonDone client:load title="It runs on its own now." next={{ href: "/get-started/build-with-aria/", label: "Lesson 5" }}>
+<LessonDone hydrate="load" title="It runs on its own now." next={{ href: "/get-started/build-with-aria/", label: "Lesson 5" }}>
   Last lesson of level 1: let Aria build the next workflow for you.
 </LessonDone>

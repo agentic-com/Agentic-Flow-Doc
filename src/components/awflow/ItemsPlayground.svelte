@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <ItemsPlayground> — "See it happen" on concept pages (awflow/Agentic-Flow#1343).
 	 *
@@ -32,6 +33,8 @@
 		kind?: Kind;
 	}
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		steps: Step[];
 		/** Index of the step whose items are shown first. Defaults to the last step with items. */
 		selected?: number;
@@ -41,7 +44,7 @@
 		view?: 'table' | 'json';
 	}
 
-	let { steps, selected, caption, view = 'table' }: Props = $props();
+	let { lang = 'en', steps, selected, caption, view = 'table' }: Props = $props();
 
 	const hasItems = (s: Step) => s.items !== undefined;
 	const lastWithItems = () => {

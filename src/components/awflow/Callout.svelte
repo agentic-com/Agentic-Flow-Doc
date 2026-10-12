@@ -1,8 +1,11 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	import type { Snippet } from 'svelte';
 
 	type CalloutType = 'tip' | 'info' | 'credential' | 'careful' | 'danger' | 'new';
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		type?: CalloutType;
 		/** Bold lead-in, e.g. "Needs a Slack connection". Defaults to the type name. */
 		title?: string;
@@ -12,7 +15,7 @@
 		children?: Snippet;
 	}
 
-	let { type = 'tip', title, href, linkLabel, children }: Props = $props();
+	let { lang = 'en', type = 'tip', title, href, linkLabel, children }: Props = $props();
 
 	const NAMES: Record<CalloutType, string> = {
 		tip: 'Tip',

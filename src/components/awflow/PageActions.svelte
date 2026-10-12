@@ -1,10 +1,13 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Page actions: copy the page as Markdown (from the starlight-md-txt twin), ask Aria, edit on GitHub.
 	 * Interactive: hydrate it in MDX with `client:visible`. Without JS it renders a
 	 * "View as Markdown" link instead of the copy button.
 	 */
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		/** URL of the Markdown twin. Defaults to `<current path>.md`. */
 		markdownUrl?: string;
 		editUrl?: string;
@@ -14,7 +17,7 @@
 		compact?: boolean;
 	}
 
-	let {
+	let { lang = 'en',
 		markdownUrl,
 		editUrl,
 		askAriaHref = '#ask-aria',

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <CompareCards> — several ways to do one thing, side by side (awflow/Agentic-Flow#1343).
 	 *
@@ -47,12 +48,14 @@
 		icon?: Icon;
 	}
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		cards: Card[];
 		/** Accessible name of the group, e.g. "Ways to repeat work". */
 		label?: string;
 	}
 
-	let { cards, label = 'Options compared' }: Props = $props();
+	let { lang = 'en', cards, label = 'Options compared' }: Props = $props();
 
 	// Lucide-style 24px stroke icons.
 	const ICONS: Record<Icon, string> = {

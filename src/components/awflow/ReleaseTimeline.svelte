@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Release timeline for /releases/ (awflow/Agentic-Flow#1345, Releases.dc.html).
 	 * Newest first; the current release is open, older ones collapse (native <details>,
@@ -9,10 +10,12 @@
 	import ReleaseChanges from './ReleaseChanges.svelte';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		releases: Release[];
 	}
 
-	let { releases }: Props = $props();
+	let { lang = 'en', releases }: Props = $props();
 
 	let area = $state('All');
 
@@ -83,7 +86,7 @@
 					</header>
 					<div class="awf-tl__body">
 						{#if currentChanges.length}
-							<ReleaseChanges release={current} changes={currentChanges} layout="flat" />
+							<ReleaseChanges {lang} release={current} changes={currentChanges} layout="flat" />
 						{:else}
 							<p class="awf-tl__empty">No {area} changes in this release.</p>
 						{/if}
@@ -107,7 +110,7 @@
 					</summary>
 					<div class="awf-tl__older-body">
 						<p class="awf-tl__summary">{r.teaser ?? r.summary}</p>
-						<ReleaseChanges release={r} changes={pick(r)} layout="flat" />
+						<ReleaseChanges {lang} release={r} changes={pick(r)} layout="flat" />
 						<a class="awf-tl__more" href={href(r.version)}>Read the full v{r.version} notes →</a>
 					</div>
 				</details>

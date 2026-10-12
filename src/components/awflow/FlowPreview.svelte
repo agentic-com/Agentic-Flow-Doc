@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <FlowPreview> — a real .awf workflow, drawn read-only (awflow/Agentic-Flow#1336).
 	 *
@@ -14,6 +15,8 @@
 	import { appImportUrl, handoffAvailable, requestHandoff, watchHandoff } from './FlowPreviewHandoff';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		/** Path or URL of the .awf file, e.g. "/examples/summarize-this-page.awf". */
 		src: string;
 		/** Optional caption under the preview. */
@@ -22,7 +25,7 @@
 		raw?: string;
 	}
 
-	let { src, caption, raw }: Props = $props();
+	let { lang = 'en', src, caption, raw }: Props = $props();
 
 	function parse(text: string): { model: FlowModel | null; error: string | null } {
 		try {

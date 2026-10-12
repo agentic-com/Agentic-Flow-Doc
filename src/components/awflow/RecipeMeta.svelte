@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <RecipeMeta> — the level · time · setup · apps row under a recipe's title (awflow/Agentic-Flow#1342).
 	 *
@@ -6,7 +7,7 @@
 	 */
 	import { LEVEL_LABEL, SETUP, getRecipe } from './recipes';
 
-	let { slug }: { slug: string } = $props();
+	let { lang = 'en', slug }: { lang?: Lang; slug: string } = $props();
 	// svelte-ignore state_referenced_locally
 	const r = getRecipe(slug);
 </script>

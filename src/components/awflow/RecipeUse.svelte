@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <RecipeUse> — the "Use this recipe" card (awflow/Agentic-Flow#1342): install, copy the .awf,
 	 * what you'll need and what the workflow touches. On wide screens it sits in a sticky column
@@ -14,7 +15,7 @@
 	import { appImportUrl, handoffAvailable, requestHandoff, watchHandoff } from './FlowPreviewHandoff';
 	import { MARKETPLACE_URL, getRecipe, marketplaceHref } from './recipes';
 
-	let { slug }: { slug: string } = $props();
+	let { lang = 'en', slug }: { lang?: Lang; slug: string } = $props();
 	// svelte-ignore state_referenced_locally
 	const r = getRecipe(slug);
 	const fileName = r.awf.split('/').pop()!;

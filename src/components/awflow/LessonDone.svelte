@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Lesson completion card (awflow/Agentic-Flow#1341): "Mark done & continue" saves the lesson as
 	 * done (in this browser, see plugins/starlight-awflow/lib/lesson-progress.ts) and opens the next
@@ -17,6 +18,8 @@
 	} from '../../../plugins/starlight-awflow/lib/lesson-progress';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		/** Headline, e.g. "Nice — your workflow thinks now." */
 		title: string;
 		/** Where "continue" goes. Omit on the last lesson of the site. */
@@ -24,7 +27,7 @@
 		children?: Snippet;
 	}
 
-	let { title, next, children }: Props = $props();
+	let { lang = 'en', title, next, children }: Props = $props();
 
 	let id = $state('');
 	let done = $state(false);

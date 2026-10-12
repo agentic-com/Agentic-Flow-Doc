@@ -9,6 +9,7 @@
 </script>
 
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * A release's changes (awflow/Agentic-Flow#1345).
 	 * - `grouped` (default, version pages): New / Improved / Fixed sections.
@@ -16,6 +17,8 @@
 	 * Data lives in src/data/releases.ts.
 	 */
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		release: Release;
 		/** Override the list, e.g. filtered by area. Defaults to all of the release's changes. */
 		changes?: Change[];
@@ -26,7 +29,7 @@
 		meta?: boolean;
 	}
 
-	let { release, changes, layout = 'grouped', level = 2, meta = false }: Props = $props();
+	let { lang = 'en', release, changes, layout = 'grouped', level = 2, meta = false }: Props = $props();
 
 	const list = $derived(changes ?? release.changes);
 	const groups = $derived(

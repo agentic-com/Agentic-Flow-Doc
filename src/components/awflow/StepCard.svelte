@@ -1,7 +1,10 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		/** Step number shown in the dot. */
 		n?: number;
 		title: string;
@@ -12,7 +15,7 @@
 		children?: Snippet;
 	}
 
-	let { n, title, check, level = 3, children }: Props = $props();
+	let { lang = 'en', n, title, check, level = 3, children }: Props = $props();
 </script>
 
 <section class="awf-step">

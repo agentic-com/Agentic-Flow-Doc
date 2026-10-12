@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <RecipeSteps> — "How it works" for a recipe (awflow/Agentic-Flow#1342): one card per step of
 	 * the workflow, with the node it uses (linked to its reference page) and a "Make it yours" hint.
@@ -25,7 +26,7 @@
 		body: string;
 		tweak?: string;
 	}
-	let { slug, steps, ...slots }: { slug: string; steps: Step[]; [slot: `shot-${number}`]: Snippet | undefined } = $props();
+	let { lang = 'en', slug, steps, ...slots }: { lang?: Lang; slug: string; steps: Step[]; [slot: `shot-${number}`]: Snippet | undefined } = $props();
 
 	// svelte-ignore state_referenced_locally
 	const recipe = getRecipe(slug);

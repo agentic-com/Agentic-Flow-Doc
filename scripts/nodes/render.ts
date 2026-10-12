@@ -148,7 +148,7 @@ export function renderSettings(n: NodeDoc): string {
 	if (n.variants || n.operations?.length) {
 		const keys = n.variants?.fields[0]?.when.map((w) => plain(w.label)) ?? ['Operation'];
 		out.push(
-			`<AwfOperationTabs client:visible pick=${prop(keys.join(' and '))} common=${prop(common.map(row))} groups=${prop(operationGroups(n))} />`
+			`<AwfOperationTabs hydrate="visible" pick=${prop(keys.join(' and '))} common=${prop(common.map(row))} groups=${prop(operationGroups(n))} />`
 		);
 	} else if (common.length) {
 		out.push(`<AwfParamTable rows=${prop(common.map(row))} />`);
@@ -164,7 +164,7 @@ export function renderSettings(n: NodeDoc): string {
 			'',
 			`**${mdx(f.label)}** changes shape with its **${mdx(key)}** choice:`,
 			'',
-			`<AwfOperationTabs client:visible pick=${prop(key)} groups=${prop(groups)} />`
+			`<AwfOperationTabs hydrate="visible" pick=${prop(key)} groups=${prop(groups)} />`
 		);
 	}
 	return out.join('\n').trim();

@@ -1,5 +1,8 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		title: string;
 		href: string;
 		/** One-line outcome. */
@@ -11,7 +14,7 @@
 		setup?: 'none' | 'connection' | 'on-device';
 	}
 
-	let { title, href, goal, level, minutes, apps = [], setup }: Props = $props();
+	let { lang = 'en', title, href, goal, level, minutes, apps = [], setup }: Props = $props();
 
 	const meta = $derived([level, minutes ? `${minutes} min` : undefined].filter(Boolean).join(' · '));
 	const SETUP = {

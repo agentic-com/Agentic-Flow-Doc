@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Settings switcher for nodes whose form changes with a choice (awflow/Agentic-Flow#1338):
 	 * operations grouped by resource ("What it can do"), and the settings of the picked one.
@@ -26,6 +27,8 @@
 		options: Option[];
 	}
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		groups: Group[];
 		/** Settings shared by every operation (e.g. the connection). */
 		common?: Row[];
@@ -33,7 +36,7 @@
 		pick?: string;
 	}
 
-	let { groups = [], common = [], pick = 'Operation' }: Props = $props();
+	let { lang = 'en', groups = [], common = [], pick = 'Operation' }: Props = $props();
 
 	const uid = $props.id();
 	const optionName = (g: Group, o: Option) => (g.label ? `${g.label} · ${o.label}` : o.label);
@@ -47,7 +50,7 @@
 
 <div class="awf-optabs">
 	{#if common.length}
-		<ParamTable rows={common} caption="For every choice" />
+		<ParamTable {lang} rows={common} caption="For every choice" />
 	{/if}
 
 	<div class="awf-optabs__picker" role="group" aria-label={`Pick ${pick.toLowerCase()} to see its settings`}>
@@ -88,7 +91,7 @@
 		>
 			<p class="awf-optabs__for">Settings for <strong>{item.name}</strong></p>
 			{#if item.option.rows.length}
-				<ParamTable rows={item.option.rows} />
+				<ParamTable {lang} rows={item.option.rows} />
 			{:else}
 				<p class="awf-optabs__none">No further settings.</p>
 			{/if}

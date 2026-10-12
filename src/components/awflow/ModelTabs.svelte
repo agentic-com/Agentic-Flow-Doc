@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Model choice tabs for lessons (awflow/Agentic-Flow#1341): on-device, API key, Ollama.
 	 * Pass each path as a named slot; the reader's choice is remembered across lessons (best effort).
@@ -15,6 +16,8 @@
 	type ModelId = 'ondevice' | 'apikey' | 'ollama';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		ondevice?: Snippet;
 		apikey?: Snippet;
 		ollama?: Snippet;
@@ -22,7 +25,7 @@
 		label?: string;
 	}
 
-	let { ondevice, apikey, ollama, label = 'Model choice' }: Props = $props();
+	let { lang = 'en', ondevice, apikey, ollama, label = 'Model choice' }: Props = $props();
 
 	const KEY = 'awf-learn-model';
 	const pid = $props.id();

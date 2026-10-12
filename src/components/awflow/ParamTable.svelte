@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	interface ParamRow {
 		/** Label as the app shows it (e.g. "Open Focused"). */
 		name: string;
@@ -9,6 +10,8 @@
 		description?: string;
 	}
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		rows: ParamRow[];
 		/** Table caption, e.g. "Settings for Message · Send". */
 		caption?: string;
@@ -18,7 +21,7 @@
 		descriptionLabel?: string;
 	}
 
-	let {
+	let { lang = 'en',
 		rows = [],
 		caption,
 		nameLabel = 'Setting',

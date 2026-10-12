@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Filterable node catalog for /nodes/ (awflow/Agentic-Flow#1337). Data comes from
 	 * src/data/nodeCatalog.ts (built from the generated nodes.json), never hand-maintained:
@@ -13,11 +14,13 @@
 	import type { CatalogGroup, CatalogNode, CatalogFamily, CatalogNeeds } from '../../data/nodeCatalog';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		nodes: CatalogNode[];
 		/** Integration use-case groups, in display order. */
 		groups?: CatalogGroup[];
 	}
-	let { nodes = [], groups = [] }: Props = $props();
+	let { lang = 'en', nodes = [], groups = [] }: Props = $props();
 
 	const FAMILIES: { id: CatalogFamily; label: string; color: string }[] = [
 		{ id: 'trigger', label: 'Triggers', color: '#d97706' },

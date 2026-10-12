@@ -1,14 +1,17 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * A fixed key combination, e.g. <Kbd keys="⌘+K" />. For shortcuts that differ per OS, use
 	 * starlight-kbd's <Kbd mac="…" windows="…" /> instead.
 	 */
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		/** "Ctrl+Shift+K" or an array of keys. */
 		keys: string | string[];
 	}
 
-	let { keys }: Props = $props();
+	let { lang = 'en', keys }: Props = $props();
 
 	const list = $derived(Array.isArray(keys) ? keys : keys.split(/\s*\+\s*/).filter(Boolean));
 </script>

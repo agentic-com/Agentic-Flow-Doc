@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Lesson header (awflow/Agentic-Flow#1341): "Lesson 3 of 5 · 8 min · Level 1", an optional
 	 * "Works on-device" badge, a "Done" pill once the lesson is marked done, and the
@@ -14,6 +15,8 @@
 	import { lessonIdFromPath, onLessonProgress } from '../../../plugins/starlight-awflow/lib/lesson-progress';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		level: number;
 		order: number;
 		/** Lessons in this level. */
@@ -27,7 +30,7 @@
 		before?: string[];
 	}
 
-	let { level, order, total, minutes, onDevice = false, youWill = [], before = [] }: Props = $props();
+	let { lang = 'en', level, order, total, minutes, onDevice = false, youWill = [], before = [] }: Props = $props();
 
 	let done = $state(false);
 	onMount(() => {
@@ -41,7 +44,7 @@
 		<span class="awf-lesson__crumb"
 			>Lesson {order} of {total}{#if minutes} · {minutes} min{/if} · Level {level}</span
 		>
-		{#if onDevice}<Badge variant="on-device" text="Works on-device" />{/if}
+		{#if onDevice}<Badge {lang} variant="on-device" text="Works on-device" />{/if}
 		{#if done}<span class="awf-lesson__done" role="status">✓ Done</span>{/if}
 	</div>
 	{#if youWill.length || before.length}

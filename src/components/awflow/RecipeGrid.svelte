@@ -8,8 +8,11 @@
 	 * Goal chips, app, level and setup filters are mirrored in the URL query
 	 * (?goal=…&app=…&level=…&setup=…) so a filtered list can be shared. Without JS every card shows.
 	 */
+	import type { Lang } from '../../i18n/locales';
 	import { onMount } from 'svelte';
 	import { GOALS, LEVEL_LABEL, SETUP, recipes, type Recipe, type RecipeLevel, type RecipeSetup } from './recipes';
+
+	let { lang = 'en' }: { lang?: Lang } = $props();
 
 	const ALL = 'all';
 	const goals = GOALS.filter((g) => recipes.some((r) => r.goal === g));

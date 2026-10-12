@@ -16,7 +16,7 @@ import { StepCard, StepShot, LessonProgress, LessonDone, ModelTabs } from "@comp
 import FlowPreview from "@components/awflow/FlowPreview.astro";
 
 <LessonProgress
-  client:visible
+  hydrate="visible"
   level={1}
   order={3}
   total={5}
@@ -56,7 +56,7 @@ AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **mod
 <StepCard n={3} title="Connect a model" check="a model node hangs under the chain's Model slot and shows the model you picked.">
   Click the **+** under **Model** and pick one of these:
 
-  <ModelTabs client:load>
+  <ModelTabs hydrate="load">
     <div slot="ondevice">
       Pick **Web LLM**. In **Model**, open the list and choose a model under **Available to download**. **Llama 3.2 1B Instruct** is the smallest and fastest to download; a 3B model writes better summaries. It downloads the first time it runs, then works offline and nothing leaves your device. See [Local AI](/app/local-models/) to install models ahead of time.
 
@@ -113,6 +113,6 @@ Change the prompt: "Explain this page to a 10-year-old", "List every date and pr
 
 The nodes in this lesson: [Get All Text](/nodes/extension/getalltext/), [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Display Markdown](/nodes/extension/displaymarkdown/). How models plug into nodes: [Model dependencies](/concepts/ai/model-dependencies/).
 
-<LessonDone client:load title="Nice: your workflow thinks now." next={{ href: "/get-started/first-automation/", label: "Lesson 4" }}>
+<LessonDone hydrate="load" title="Nice: your workflow thinks now." next={{ href: "/get-started/first-automation/", label: "Lesson 4" }}>
   Next you'll run it from a keyboard shortcut, without opening the canvas.
 </LessonDone>

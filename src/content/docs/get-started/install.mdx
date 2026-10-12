@@ -16,7 +16,7 @@ import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awfl
 import { CHROME_WEB_STORE_URL, FIREFOX_ADDONS_URL } from "../../../data/stores";
 
 <LessonProgress
-  client:visible
+  hydrate="visible"
   level={1}
   order={1}
   total={5}
@@ -87,6 +87,6 @@ Sign in later if you want your workflows in the cloud on several devices, or to 
 Almost everything works the same. The main differences: the app opens in the **sidebar**, keyboard shortcuts are set in `about:addons`, and on-device **WebLLM** models need WebGPU, which some Firefox setups lack. See [Firefox differences](/app/troubleshooting/browser-compatibility/#firefox). Safari isn't supported yet.
 </Aside>
 
-<LessonDone client:load title="AWFlow is installed." next={{ href: "/get-started/first-workflow/", label: "Lesson 2" }}>
+<LessonDone hydrate="load" title="AWFlow is installed." next={{ href: "/get-started/first-workflow/", label: "Lesson 2" }}>
   Next you'll build your own two-step workflow on the canvas.
 </LessonDone>
