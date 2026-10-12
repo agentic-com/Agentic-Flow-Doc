@@ -15,6 +15,7 @@
  * (clamped to the image), in percentages, so it scales with the column; narrow columns get a tighter crop.
  */
 import { getSpot, resolveShot, type ShotBox } from '../../data/shots';
+import { useT } from '../../i18n/ui';
 
 interface Props {
 	shot: string;
@@ -31,6 +32,7 @@ interface Props {
 }
 
 const { shot, spot: spotId, n, height = 280, zoom = 56, alt } = Astro.props;
+const t = useT(Astro);
 if (!Number.isInteger(n) || n < 1) throw new Error(`<StepShot shot="${shot}" spot="${spotId}">: n must be a step number (1, 2, …).`);
 if (!(zoom > 5 && zoom <= 100)) throw new Error(`<StepShot shot="${shot}">: zoom must be between 5 and 100 (% of the image width).`);
 if (!(height >= 120 && height <= 800)) throw new Error(`<StepShot shot="${shot}">: height must be between 120 and 800 (px).`);
@@ -122,13 +124,13 @@ const fullRing = `left: ${b.x}%; top: ${b.y}%; width: ${b.w}%; height: ${b.h}%`;
 			<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 				><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg
 			>
-			Full screen<span class="sr-only">: the whole screenshot for step {n}</span>
+			{t('shot.fullScreen')}<span class="sr-only">{t('shot.fullScreenSr', { n })}</span>
 		</a>
 	</div>
-	<dialog class="awf-shotdialog" aria-label={`Step ${n}: the whole screenshot`}>
+	<dialog class="awf-shotdialog" aria-label={t('shot.dialog', { n })}>
 		<div class="awf-shotdialog__bar">
 			<span class="awf-shotdialog__title"><span class="awf-shotdialog__n" aria-hidden="true">{n}</span>{spot.label}</span>
-			<form method="dialog"><button class="awf-shotdialog__close" type="submit" autofocus>Close<span class="sr-only"> full screen</span></button></form>
+			<form method="dialog"><button class="awf-shotdialog__close" type="submit" autofocus>{t('shot.close')}<span class="sr-only"> {t('shot.closeSr')}</span></button></form>
 		</div>
 		<div class="awf-shotdialog__frame" style={`aspect-ratio: ${r.width} / ${r.height}; --awf-shot-ratio: ${r2(ratio)}`}>
 			<img class="awf-shot__img--light" src={r.light.src} alt={fullAlt} width={r.light.width} height={r.light.height} loading="lazy" decoding="async" data-zoom-off />

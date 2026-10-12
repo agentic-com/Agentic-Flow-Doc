@@ -4,12 +4,11 @@ import { readFileSync } from 'node:fs';
 import { Glob } from 'bun';
 import allow from './hardcoded-allow.json';
 
-// Task 9 covers these files; Task 10 widens the list to every component.
 const FILES = [
-	'src/components/awflow/Recipe{Grid,Card,Meta,Use,Steps}.svelte',
-	'src/components/awflow/Lesson{Progress,Done}.svelte',
-	'src/components/awflow/Release{Timeline,Changes}.svelte',
-	'src/components/awflow/FlowPreview.svelte',
+	'src/components/awflow/*.{svelte,astro}',
+	'src/components/home/*.astro',
+	'plugins/starlight-awflow/components/*.astro',
+	'plugins/starlight-awflow/overrides/*.astro',
 ];
 
 const markup = (src: string) =>
@@ -18,12 +17,16 @@ const markup = (src: string) =>
 		.replace(/<style[\s\S]*?<\/style>/g, '')
 		.replace(/^---[\s\S]*?\n---/, '')
 		.replace(/<!--[\s\S]*?-->/g, '')
-		.replace(/\{[^{}]*\}/g, '{}');
+		.replace(/\{[^{}]*\}/g, '{}')
+		.replace(/&nbsp;/g, '\u00a0')
+		.replace(/&amp;/g, '&');
 
 const findings = (src: string) => [
 	...[...markup(src).matchAll(/>([^<>{}]*[A-Za-z]{2,}[^<>{}]*)</g)].map((m) => m[1].trim()),
 	...[...markup(src).matchAll(/\b(aria-label|title|placeholder|alt)="([^"]*[A-Za-z]{2,}[^"]*)"/g)].map((m) => m[2]),
-].filter((s) => s && !(allow as string[]).includes(s));
+]
+	// JSX/Astro control flow that survives the brace stripping (`) : cond ? (`), not text.
+	.filter((s) => s && !/^\)|\($|^[\s\S]*Astro\.slots/.test(s) && !(allow as string[]).includes(s));
 
 describe('no hard-coded interface text', () => {
 	test('components', async () => {

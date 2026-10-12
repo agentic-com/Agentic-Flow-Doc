@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Lang } from '../../i18n/locales';
 	import type { Snippet } from 'svelte';
+	import { createT, type UIKey } from '../../i18n/ui';
 
 	type CalloutType = 'tip' | 'info' | 'credential' | 'careful' | 'danger' | 'new';
 	interface Props {
@@ -17,13 +18,14 @@
 
 	let { lang = 'en', type = 'tip', title, href, linkLabel, children }: Props = $props();
 
-	const NAMES: Record<CalloutType, string> = {
-		tip: 'Tip',
-		info: 'Note',
-		credential: 'Needs a connection',
-		careful: 'Careful',
-		danger: 'Danger',
-		new: 'New',
+	const t = $derived(createT(lang));
+	const NAMES: Record<CalloutType, UIKey> = {
+		tip: 'callout.tip',
+		info: 'callout.info',
+		credential: 'callout.credential',
+		careful: 'callout.careful',
+		danger: 'callout.danger',
+		new: 'callout.new',
 	};
 	// Lucide-style 24px stroke icons.
 	const ICONS: Record<CalloutType, string> = {
@@ -34,7 +36,7 @@
 		danger: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15 9l-6 6M9 9l6 6',
 		new: 'M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z',
 	};
-	const heading = $derived(title ?? NAMES[type]);
+	const heading = $derived(title ?? t(NAMES[type]));
 </script>
 
 <aside class="awf-callout awf-callout--{type}" aria-label={heading}>
@@ -54,7 +56,7 @@
 		<strong class="awf-callout__title">{heading}</strong>{#if children}<span class="awf-callout__sep">&nbsp;—&nbsp;</span
 			>{@render children()}{/if}
 		{#if href}
-			<a class="awf-callout__link" {href}>{linkLabel ?? 'Learn more'} <span class="awf-arr" aria-hidden="true">→</span></a>
+			<a class="awf-callout__link" {href}>{linkLabel ?? t('callout.learnMore')} <span class="awf-arr" aria-hidden="true">→</span></a>
 		{/if}
 	</div>
 </aside>

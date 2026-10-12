@@ -1,10 +1,11 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Page actions: copy the page as Markdown (from the starlight-md-txt twin), ask Aria, edit on GitHub.
-	 * Interactive: hydrate it in MDX with `client:visible`. Without JS it renders a
+	 * Interactive: hydrate it in MDX with `hydrate="idle"` (or "visible"). Without JS it renders a
 	 * "View as Markdown" link instead of the copy button.
 	 */
+	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
 	interface Props {
 		/** Page language, passed by the Astro wrapper. */
 		lang?: Lang;
@@ -21,11 +22,13 @@
 		markdownUrl,
 		editUrl,
 		askAriaHref = '#ask-aria',
-		askAriaLabel = 'Ask Aria',
+		askAriaLabel,
 		compact = false,
 	}: Props = $props();
 
-	let status = $state('');
+	const t = $derived(createT(lang));
+	const askLabel = $derived(askAriaLabel ?? t('aria.pill'));
+	let status = $state<'' | 'copied' | 'failed'>('');
 	let hydrated = $state(false);
 	$effect(() => {
 		hydrated = true;
@@ -38,9 +41,9 @@
 			const res = await fetch(twin());
 			if (!res.ok) throw new Error(String(res.status));
 			await navigator.clipboard.writeText(await res.text());
-			status = 'Copied';
+			status = 'copied';
 		} catch {
-			status = 'Could not copy. Opening the Markdown instead.';
+			status = 'failed';
 			location.href = twin();
 		}
 		setTimeout(() => (status = ''), 2400);
@@ -64,10 +67,10 @@
 					d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
 				/></svg
 			>
-			{status === 'Copied' ? 'Copied' : 'Copy as Markdown'}
+			{status === 'copied' ? t('page.copied') : t('page.copyMd')}
 		</button>
 	{:else if markdownUrl}
-		<a class="awf-action awf-press" href={markdownUrl}>View as Markdown</a>
+		<a class="awf-action awf-press" href={markdownUrl}>{t('page.viewMd')}</a>
 	{/if}
 	<a class="awf-action awf-press" href={askAriaHref}>
 		<svg
@@ -80,7 +83,7 @@
 			stroke-linecap="round"
 			aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z" /></svg
 		>
-		{askAriaLabel}
+		{askLabel}
 	</a>
 	{#if editUrl}
 		<a class="awf-action awf-press" href={editUrl} rel="noopener">
@@ -95,8 +98,10 @@
 				stroke-linejoin="round"
 				aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" /></svg
 			>
-			Edit<span class="sr-only"> this page on GitHub</span>
+			{t('page.edit')}<span class="sr-only"> {t('page.editSr')}</span>
 		</a>
 	{/if}
-	<span class="sr-only" role="status" aria-live="polite">{status}</span>
+	<span class="sr-only" role="status" aria-live="polite"
+		>{status === 'copied' ? t('page.copied') : status === 'failed' ? t('page.copyFailed') : ''}</span
+	>
 </div>

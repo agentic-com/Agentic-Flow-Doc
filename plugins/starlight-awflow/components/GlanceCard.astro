@@ -2,23 +2,25 @@
 /** "At a glance" card for node pages. Shows only the rows we actually know. */
 import { getAwflowRoute } from '../route-data';
 import { SECTION_PALETTE } from '../palette';
+import { familyLabel } from '../lib/nodes';
+import { useT } from '../../../src/i18n/ui';
 
 const { node, section } = getAwflowRoute(Astro.locals);
-const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const t = useT(Astro);
 const rows = node
 	? ([
-			['Family', node.familyLabel],
-			['Needs', node.needs],
-			['Operations', node.operations !== undefined ? String(node.operations) : undefined],
-			['Outputs', node.outputs !== undefined ? plural(node.outputs, 'port') : undefined],
+			[t('node.glance.family'), node.family ? familyLabel(node.family, t) : undefined],
+			[t('node.glance.needs'), node.needs],
+			[t('node.glance.operations'), node.operations !== undefined ? String(node.operations) : undefined],
+			[t('node.glance.outputs'), node.outputs !== undefined ? t.plural('node.glance.ports', node.outputs) : undefined],
 			[
-				'Works in',
+				t('node.glance.worksIn'),
 				node.worksIn?.length
-					? node.worksIn.map((e) => (e === 'web' ? 'Web app' : 'Extension')).join(' · ')
+					? node.worksIn.map((e) => t(e === 'web' ? 'badge.web' : 'badge.extension')).join(' · ')
 					: undefined,
 			],
-			['Agent tool', node.agentTool === undefined ? undefined : node.agentTool ? 'Yes' : 'No'],
-			['Since', node.since],
+			[t('node.glance.agentTool'), node.agentTool === undefined ? undefined : t(node.agentTool ? 'node.glance.yes' : 'node.glance.no')],
+			[t('node.glance.since'), node.since],
 		].filter(([, v]) => v) as [string, string][])
 	: [];
 const color = section?.color ?? SECTION_PALETTE.nodes.color;
@@ -29,7 +31,7 @@ const tint = section?.tint ?? SECTION_PALETTE.nodes.tint;
 	rows.length > 0 && (
 		<section class="awf-glance" aria-labelledby="awf-glance-title" style={`--awf-c: ${color}; --awf-t: ${tint}`}>
 			<h2 id="awf-glance-title" class="awf-glance__title">
-				At a glance
+				{t('page.glance')}
 			</h2>
 			<dl>
 				{rows.map(([k, v]) => (

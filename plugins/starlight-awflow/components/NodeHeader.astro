@@ -6,6 +6,8 @@
 import config from 'virtual:starlight-awflow/config';
 import { getAwflowRoute } from '../route-data';
 import { FAMILY_ICONS } from '../lib/icons';
+import { familyLabel } from '../lib/nodes';
+import { useT } from '../../../src/i18n/ui';
 import { SECTION_PALETTE } from '../palette';
 import Badge from '../../../src/components/awflow/Badge.astro';
 import WorksIn from '../../../src/components/awflow/WorksIn.astro';
@@ -14,6 +16,7 @@ import PageActions from '../../../src/components/awflow/PageActions.astro';
 /** Starlight's PAGE_TITLE_ID (not exported): the skip link and TOC "Overview" point at it. */
 const PAGE_TITLE_ID = '_top';
 
+const t = useT(Astro);
 const { node, section, eyebrow, markdownUrl } = getAwflowRoute(Astro.locals);
 const { entry, editUrl } = Astro.locals.starlightRoute;
 const { title, description } = entry.data;
@@ -49,11 +52,11 @@ const glyph = FAMILY_ICONS[node?.family ?? 'default'];
 	</div>
 	<div class="awf-node-header__meta">
 		<div class="awf-node-header__badges">
-			{node?.familyLabel && <Badge text={node.familyLabel} class="awf-badge--family" />}
+			{node?.family && <Badge text={familyLabel(node.family, t)} class="awf-badge--family" />}
 			{node?.worksIn && node.worksIn.length > 0 && <WorksIn envs={node.worksIn} />}
 			{node?.agentTool && <Badge variant="agent-tool" />}
 			{node?.deprecated && <Badge variant="deprecated" />}
-			{node?.since && <Badge text={`Since ${node.since}`} />}
+			{node?.since && <Badge text={t('node.since', { version: node.since })} />}
 		</div>
 		<div class="awf-node-header__actions" data-pagefind-ignore>
 			<PageActions

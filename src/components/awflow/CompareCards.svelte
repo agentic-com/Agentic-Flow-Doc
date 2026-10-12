@@ -1,11 +1,10 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <CompareCards> — several ways to do one thing, side by side (awflow/Agentic-Flow#1343).
 	 *
 	 * Use it on concept and hub pages when the reader has to pick between approaches
 	 * (Loop vs Split in Batches vs Poll Until, Try / Catch vs Retry vs Continue On Fail).
-	 * Static: no client directive needed.
+	 * Static: no `hydrate` needed.
 	 *
 	 * In MDX:
 	 *   import { CompareCards } from '@components/awflow';
@@ -15,6 +14,8 @@
 	 *       meta: 'Loop · Done' },
 	 *   ]} />
 	 */
+	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
 
 	type Icon =
 		| 'loop'
@@ -55,7 +56,9 @@
 		label?: string;
 	}
 
-	let { lang = 'en', cards, label = 'Options compared' }: Props = $props();
+	let { lang = 'en', cards, label: labelProp }: Props = $props();
+	const t = $derived(createT(lang));
+	const label = $derived(labelProp ?? t('compare.label'));
 
 	// Lucide-style 24px stroke icons.
 	const ICONS: Record<Icon, string> = {
@@ -102,7 +105,7 @@
 				<span class="awf-cmp__body">
 					<span class="awf-cmp__title">{c.title}{#if c.href}&nbsp;<span class="awf-arr" aria-hidden="true">→</span>{/if}</span>
 					<span class="awf-cmp__when">{c.when}</span>
-					{#if c.example}<span class="awf-cmp__example"><span class="awf-cmp__k">Example</span> {c.example}</span>{/if}
+					{#if c.example}<span class="awf-cmp__example"><span class="awf-cmp__k">{t('compare.example')}</span> {c.example}</span>{/if}
 					{#if c.meta}<span class="awf-cmp__meta">{c.meta}</span>{/if}
 				</span>
 			</svelte:element>

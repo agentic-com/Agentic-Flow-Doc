@@ -3,7 +3,7 @@
  * override and the SearchDialog island; no DOM access here.
  */
 import { stripLocale } from '../../../src/i18n/locales';
-import type { UIKey } from '../../../src/i18n/ui';
+import type { T, UIKey } from '../../../src/i18n/ui';
 import { SECTION_PALETTE } from '../palette';
 
 export interface SearchGroup {
@@ -84,33 +84,36 @@ export type AriaIntent = 'ask' | 'build';
 /** Longest prompt the app accepts from a launch link (MAX_PROMPT in the app's quickChat protocol). */
 export const MAX_ARIA_PROMPT = 8000;
 
-/** The prompt Aria receives: the question plus the page and docs it should lean on. */
-export function buildAriaPrompt(opts: {
-	question: string;
-	intent: AriaIntent;
-	page?: AriaSource;
-	sources: AriaSource[];
-	llmsTxt?: string;
-}): string {
-	const q = opts.question.trim();
+/**
+ * The prompt Aria receives: the question plus the page and docs it should lean on. The framing
+ * sentences come from the dictionary (`aria.prompt.*`) in the page language. On a non-English page
+ * `aria.answerIn` ends the prompt so Aria replies in that language; English output is unchanged.
+ */
+export function buildAriaPrompt(
+	question: string,
+	sources: AriaSource[],
+	intent: AriaIntent,
+	t: T,
+	extra: { page?: AriaSource; llmsTxt?: string } = {}
+): string {
+	const q = question.trim();
 	const lines: string[] = [];
-	if (opts.intent === 'build') {
-		lines.push(`Build a workflow for this: ${q}`);
-		lines.push('', 'Follow the AWFlow docs below and tell me which nodes and connections it needs.');
+	if (intent === 'build') {
+		lines.push(t('aria.prompt.build', { question: q }));
+		lines.push('', t('aria.prompt.buildHint'));
 	} else {
 		lines.push(q);
-		lines.push(
-			'',
-			"Answer from the AWFlow docs and cite the pages you use. If the docs don't cover it, say so."
-		);
+		lines.push('', t('aria.prompt.askHint'));
 	}
-	if (opts.page) lines.push('', `I'm reading: ${opts.page.title} (${opts.page.url})`);
-	if (opts.sources.length) {
-		lines.push('', 'Relevant docs (each page also has a Markdown copy at <url>.md):');
-		opts.sources.forEach((s, i) => lines.push(`[${i + 1}] ${s.title}: ${s.url}`));
+	if (extra.page) lines.push('', t('aria.prompt.reading', { title: extra.page.title, url: extra.page.url }));
+	if (sources.length) {
+		lines.push('', t('aria.prompt.sources'));
+		sources.forEach((s, i) => lines.push(`[${i + 1}] ${s.title}: ${s.url}`));
 	}
-	if (opts.llmsTxt) lines.push('', `Docs index for AI: ${opts.llmsTxt}`);
-	return lines.join('\n').slice(0, MAX_ARIA_PROMPT);
+	if (extra.llmsTxt) lines.push('', t('aria.prompt.llms', { url: extra.llmsTxt }));
+	// The cut happens before the language line, so a long prompt never loses it.
+	const body = lines.join('\n').slice(0, MAX_ARIA_PROMPT - 80);
+	return t.lang === 'en' ? lines.join('\n').slice(0, MAX_ARIA_PROMPT) : `${body}\n\n${t('aria.answerIn')}`;
 }
 
 /** Web-app fallback when the extension hand-off isn't on the page. */

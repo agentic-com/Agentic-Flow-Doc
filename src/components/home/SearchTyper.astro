@@ -5,22 +5,30 @@
  * button opens its Ask Aria tab. Without JS the links fall back to Recipes and #ask-aria.
  * Under prefers-reduced-motion the first example is shown, static.
  */
-const phrases = [
-	'save this page to Notion',
-	'watch a price for me',
-	'summarise my unread emails',
-	'fill this form from a sheet',
-];
+import { useT } from '../../i18n/ui';
+
+const t = useT(Astro);
+// Example goals, per language. They are chosen to match words in that language's Get started page
+// titles, so a reader who clicks one finds results in the index of their own language.
+const phrases = (['home.typer.1', 'home.typer.2', 'home.typer.3', 'home.typer.4'] as const).map((key) => t(key));
+// Quote marks follow the language (“…”, « … », „…“); the script below needs the two halves.
+// English keeps the default marks, so no attribute is written for it.
+const [quoteOpen, quoteClose] = t('home.typer.quote', { text: '{text}' }).split('{text}');
 ---
 
 <div class="awh-ask awf-rise awf-d3">
-	<a href="/recipes/" class="awh-ask__field" data-awf-search-open aria-label="Search the docs: what do you want to automate?">
+	<a href={t.href('/recipes/')} class="awh-ask__field" data-awf-search-open aria-label={t('home.typer.label')}>
 		<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"
 			><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg
 		>
 		<span class="awh-ask__text" aria-hidden="true">
-			<span class="awh-ask__prompt">What do you want to automate?</span>
-			<span class="awh-ask__typed" data-awh-typer data-phrases={JSON.stringify(phrases)}>“{phrases[0]}”</span><span
+			<span class="awh-ask__prompt">{t('home.typer.prompt')}</span>
+			<span
+				class="awh-ask__typed"
+				data-awh-typer
+				data-phrases={JSON.stringify(phrases)}
+				data-quote-open={quoteOpen === '“' ? undefined : quoteOpen}
+				data-quote-close={quoteClose === '”' ? undefined : quoteClose}>{quoteOpen}{phrases[0]}{quoteClose}</span><span
 				class="awh-caret"></span>
 		</span>
 	</a>
@@ -28,7 +36,7 @@ const phrases = [
 		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"
 			><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"></path></svg
 		>
-		Ask Aria
+		{t('aria.title')}
 	</a>
 </div>
 
@@ -42,6 +50,8 @@ const phrases = [
 			continue;
 		}
 		if (!phrases.length) continue;
+		const open = el.dataset.quoteOpen ?? '“';
+		const close = el.dataset.quoteClose ?? '”';
 		let p = 0;
 		let n = 0;
 		setInterval(() => {
@@ -51,7 +61,7 @@ const phrases = [
 				p = (p + 1) % phrases.length;
 				n = 0;
 			}
-			el.textContent = '“' + full.slice(0, Math.min(n, full.length)) + (n >= full.length ? '”' : '');
+			el.textContent = open + full.slice(0, Math.min(n, full.length)) + (n >= full.length ? close : '');
 		}, 90);
 	}
 </script>

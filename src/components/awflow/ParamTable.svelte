@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
+	import { richParts } from '../../i18n/rich';
 	interface ParamRow {
 		/** Label as the app shows it (e.g. "Open Focused"). */
 		name: string;
@@ -15,7 +17,7 @@
 		rows: ParamRow[];
 		/** Table caption, e.g. "Settings for Message · Send". */
 		caption?: string;
-		/** Column headers (defaults fit settings; node pages reuse it for output fields and slots). */
+		/** Column headers (default to the translated "Setting / Type / What it does"; node pages reuse the table for output fields and slots). */
 		nameLabel?: string;
 		typeLabel?: string;
 		descriptionLabel?: string;
@@ -24,10 +26,15 @@
 	let { lang = 'en',
 		rows = [],
 		caption,
-		nameLabel = 'Setting',
-		typeLabel = 'Type',
-		descriptionLabel = 'What it does',
+		nameLabel: nameProp,
+		typeLabel: typeProp,
+		descriptionLabel: descProp,
 	}: Props = $props();
+	const t = $derived(createT(lang));
+	const nameLabel = $derived(nameProp ?? t('node.params.setting'));
+	const typeLabel = $derived(typeProp ?? t('node.params.type'));
+	const descriptionLabel = $derived(descProp ?? t('node.params.what'));
+	const defaultParts = $derived(richParts(t('node.params.default')));
 </script>
 
 <!-- Below 640px the rows become stacked cards (#1338); the column name is repeated from data-label. -->
@@ -42,13 +49,15 @@
 				<tr>
 					<th scope="row">
 						{row.name}
-						{#if row.required}<span class="awf-req"><span aria-hidden="true">REQ</span><span class="sr-only">(required)</span></span>{/if}
+						{#if row.required}<span class="awf-req"><span aria-hidden="true">{t('node.params.req')}</span><span class="sr-only">{t('node.params.reqSr')}</span></span>{/if}
 					</th>
 					<td data-label={typeLabel}><code>{row.type ?? '—'}</code></td>
 					<td data-label={descriptionLabel}>
 						{row.description ?? ''}
 						{#if row.default !== undefined && row.default !== ''}
-							<span class="awf-params__default">Default: <code>{String(row.default)}</code></span>
+							<span class="awf-params__default"
+								>{#each defaultParts as p, pi (pi)}{#if p.kind === 'slot'}<code>{String(row.default)}</code>{:else if p.kind === 'text'}{p.text}{/if}{/each}</span
+							>
 						{/if}
 					</td>
 				</tr>

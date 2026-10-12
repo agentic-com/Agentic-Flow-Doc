@@ -1,13 +1,15 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Settings switcher for nodes whose form changes with a choice (awflow/Agentic-Flow#1338):
 	 * operations grouped by resource ("What it can do"), and the settings of the picked one.
 	 * Every panel is in the HTML (search indexes all of them); only the picked one is shown.
 	 * The node page generator writes it into the AUTO:settings block:
 	 *
-	 *   <OperationTabs client:visible pick="Resource and Operation" common={[…]} groups={[…]} />
+	 *   <AwfOperationTabs hydrate="visible" pick="Resource and Operation" common={[…]} groups={[…]} />
 	 */
+	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
+	import { richParts } from '../../i18n/rich';
 	import ParamTable from './ParamTable.svelte';
 
 	interface Row {
@@ -36,7 +38,12 @@
 		pick?: string;
 	}
 
-	let { lang = 'en', groups = [], common = [], pick = 'Operation' }: Props = $props();
+	let { lang = 'en', groups = [], common = [], pick: pickProp }: Props = $props();
+
+	const t = $derived(createT(lang));
+	const pick = $derived(pickProp ?? t('node.ops.defaultPick'));
+	const pickLower = $derived(pick.toLowerCase());
+	const settingsFor = (name: string) => richParts(t('node.ops.settingsFor', { name }));
 
 	const uid = $props.id();
 	const optionName = (g: Group, o: Option) => (g.label ? `${g.label} · ${o.label}` : o.label);
@@ -50,13 +57,12 @@
 
 <div class="awf-optabs">
 	{#if common.length}
-		<ParamTable {lang} rows={common} caption="For every choice" />
+		<ParamTable {lang} rows={common} caption={t('node.ops.forEvery')} />
 	{/if}
 
-	<div class="awf-optabs__picker" role="group" aria-label={`Pick ${pick.toLowerCase()} to see its settings`}>
+	<div class="awf-optabs__picker" role="group" aria-label={t('node.ops.pickLabel', { pick: pickLower })}>
 		<p class="awf-optabs__lead">
-			<span class="awf-optabs__count">{total} {total === 1 ? 'choice' : 'choices'}</span> · pick
-			{pick.toLowerCase()} to see its settings
+			<span class="awf-optabs__count">{t.plural('node.ops.choices', total)}</span> · {t('node.ops.lead', { pick: pickLower })}
 		</p>
 		{#each groups as group, gi (gi)}
 			<div class="awf-optabs__row">
@@ -86,18 +92,18 @@
 		<section
 			class="awf-optabs__panel"
 			id={`${uid}-p${item.key}`}
-			aria-label={`Settings for ${item.name}`}
+			aria-label={t('node.ops.settingsForLabel', { name: item.name })}
 			hidden={current?.key !== item.key}
 		>
-			<p class="awf-optabs__for">Settings for <strong>{item.name}</strong></p>
+			<p class="awf-optabs__for">{#each settingsFor(item.name) as p, pi (pi)}{#if p.kind === 'strong'}<strong>{p.text}</strong>{:else if p.kind === 'text'}{p.text}{/if}{/each}</p>
 			{#if item.option.rows.length}
 				<ParamTable {lang} rows={item.option.rows} />
 			{:else}
-				<p class="awf-optabs__none">No further settings.</p>
+				<p class="awf-optabs__none">{t('node.ops.none')}</p>
 			{/if}
 		</section>
 	{/each}
-	<p class="sr-only" aria-live="polite">{current ? `Showing settings for ${current.name}` : ''}</p>
+	<p class="sr-only" aria-live="polite">{current ? t('node.ops.showing', { name: current.name }) : ''}</p>
 </div>
 
 <style>

@@ -1,9 +1,8 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Docs search + Ask Aria (awflow/Agentic-Flow#1340, Search.dc.html).
 	 *
-	 * Rendered by the starlight-awflow `Search` override as a `client:load` island: the header
+	 * Rendered by the starlight-awflow `Search` override as a hydrated island: the header
 	 * button and a modal <dialog>. Uses Pagefind's index through its JS API (the index only exists
 	 * after `astro build`). Ask Aria never answers on the docs server: the question is handed to the
 	 * reader's own AWFlow, through the extension hand-off when it's on the page, else the web app.
@@ -13,7 +12,9 @@
 	 * `[data-awf-search-open]` opens Search.
 	 */
 	import { onMount, tick } from 'svelte';
+	import type { Lang } from '../../i18n/locales';
 	import { createT, type UIKey } from '../../i18n/ui';
+	import { richParts } from '../../i18n/rich';
 	import {
 		SEARCH_GROUPS,
 		ariaAppUrl,
@@ -32,15 +33,19 @@
 		appUrl?: string;
 		/** Site base path, e.g. `/`. */
 		base?: string;
-		/** Placeholder of the search field. */
+		/** Placeholder of the search field (defaults to the translated "Search the docs"). */
 		placeholder?: string;
 	}
 
-	let { lang = 'en', appUrl = 'https://app.awflow.io', base = '/', placeholder = 'Search the docs' }: Props = $props();
+	let { lang = 'en', appUrl = 'https://app.awflow.io', base = '/', placeholder: placeholderProp }: Props = $props();
 
-	// Task 8 passes the page language; until then the dialog is English.
 	const t = $derived(createT(lang));
+	const placeholder = $derived(placeholderProp ?? t('search.dialog'));
 	const groupLabel = (g: { labelKey: UIKey }) => t(g.labelKey);
+	const suggestions = $derived(
+		(['slack', 'sheets', 'loop', 'table'] as const).map((id) => t(`search.suggest.${id}` as UIKey)),
+	);
+	const askExamples = $derived(([1, 2, 3] as const).map((n) => t(`aria.ask.${n}` as UIKey)));
 
 	type Tab = 'search' | 'aria';
 	interface Result {
@@ -87,7 +92,9 @@
 	const mdTwin = $derived.by(() => {
 		if (!open) return '';
 		const path = location.pathname.replace(/\/$/, '');
-		return path && path !== base_.replace(/\/$/, '') ? `${path}.md` : '';
+		// The home page (`/`, `/fr/`…) has no Markdown twin.
+		const homes = [base_, t.href(base_)].map((h) => h.replace(/\/$/, ''));
+		return path && !homes.includes(path) ? `${path}.md` : '';
 	});
 
 	const counts = $derived.by(() => {
@@ -432,16 +439,13 @@
 	function ask(intent: AriaIntent) {
 		const q = query.trim();
 		if (!q) {
-			ariaStatus = 'Type a question first.';
+			ariaStatus = t('aria.typeFirst');
 			input?.focus();
 			return;
 		}
 		remember(q);
-		const prompt = buildAriaPrompt({
-			question: q,
-			intent,
+		const prompt = buildAriaPrompt(q, sources, intent, t, {
 			page: pageContext(),
-			sources,
 			llmsTxt: absolute(`${base_}llms.txt`),
 		});
 		const fallback = ariaAppUrl(appUrl, prompt, intent);
@@ -450,7 +454,7 @@
 			const id = crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 			// `mode`: Ask opens chat, Build opens Build mode (older extensions ignore it and use Build).
 			window.postMessage({ type: 'awflow:docs-handoff', id, action: 'aria', mode: intent === 'build' ? 'build' : 'chat', prompt }, location.origin);
-			ariaStatus = 'Sending to Aria in your AWFlow extension…';
+			ariaStatus = t('aria.sending');
 			fallbackUrl = '';
 			const timeout = setTimeout(() => settle(false), 1500);
 			const onReply = (e: MessageEvent) => {
@@ -460,12 +464,12 @@
 			const settle = (ok: boolean) => {
 				clearTimeout(timeout);
 				window.removeEventListener('message', onReply);
-				if (ok) ariaStatus = 'Sent to Aria in your AWFlow extension.';
-				else openApp(fallback, 'The extension did not take it, so Aria opens in the AWFlow app.');
+				if (ok) ariaStatus = t('aria.sent');
+				else openApp(fallback, t('aria.notTaken'));
 			};
 			window.addEventListener('message', onReply);
 		} else {
-			openApp(fallback, 'Aria opens in the AWFlow app, in a new tab.');
+			openApp(fallback, t('aria.newTab'));
 		}
 	}
 
@@ -544,7 +548,7 @@
 <dialog
 	bind:this={dialog}
 	class="awf-search"
-	aria-label={tab === 'aria' ? 'Ask Aria' : 'Search the docs'}
+	aria-label={tab === 'aria' ? t('aria.title') : t('search.dialog')}
 	oncancel={(e) => {
 		e.preventDefault();
 		close();
@@ -573,15 +577,15 @@
 					autocomplete="off"
 					autocapitalize="off"
 					spellcheck="false"
-					placeholder={tab === 'aria' ? 'Ask Aria a question about AWFlow' : placeholder}
-					aria-label={tab === 'aria' ? 'Your question for Aria' : placeholder}
+					placeholder={tab === 'aria' ? t('aria.inputPlaceholder') : placeholder}
+					aria-label={tab === 'aria' ? t('aria.inputLabel') : placeholder}
 					role={tab === 'search' ? 'combobox' : undefined}
 					aria-expanded={tab === 'search' ? optionCount > 0 : undefined}
 					aria-controls={tab === 'search' ? `${uid}-list` : undefined}
 					aria-autocomplete={tab === 'search' ? 'list' : undefined}
 					aria-activedescendant={activeId}
 				/>
-				<div class="awf-search__tabs" role="tablist" aria-label="Mode">
+				<div class="awf-search__tabs" role="tablist" aria-label={t('search.mode')}>
 					<button
 						type="button"
 						role="tab"
@@ -590,7 +594,7 @@
 						aria-controls="{uid}-panel-search"
 						tabindex={tab === 'search' ? 0 : -1}
 						onclick={() => setTab('search')}
-						onkeydown={onTabKey}>Search</button
+						onkeydown={onTabKey}>{t('search.tab')}</button
 					>
 					<button
 						type="button"
@@ -601,21 +605,21 @@
 						tabindex={tab === 'aria' ? 0 : -1}
 						onclick={() => setTab('aria')}
 						onkeydown={onTabKey}
-						>Ask Aria <span class="awf-wave" aria-hidden="true"><i></i><i></i><i></i></span></button
+						>{t('aria.title')} <span class="awf-wave" aria-hidden="true"><i></i><i></i><i></i></span></button
 					>
 				</div>
 				<button type="button" class="awf-search__close" onclick={close}>
-					<span class="awf-search__esc" aria-hidden="true">esc</span><span class="sr-only">Close</span>
+					<span class="awf-search__esc" aria-hidden="true">{t('search.esc')}</span><span class="sr-only">{t('search.close')}</span>
 				</button>
 			</div>
 
 			{#if tab === 'search'}
 				<div id="{uid}-panel-search" role="tabpanel" aria-labelledby="{uid}-tab-search" class="awf-search__panel">
 					{#if query.trim() && results.length}
-						<div class="awf-search__chips" role="group" aria-label="Filter by section">
+						<div class="awf-search__chips" role="group" aria-label={t('search.filterSection')}>
 							<button type="button" class="awf-chip" aria-pressed={filter === 'all'}
 								onclick={() => ((filter = 'all'), (active = 0), input?.focus())}>
-								All <span class="awf-chip__n">{results.length}</span>
+								{t('search.all')} <span class="awf-chip__n">{results.length}</span>
 							</button>
 							{#each chips as g (g.id)}
 								<button type="button" class="awf-chip" aria-pressed={filter === g.id} style="--awf-chip:{g.color}"
@@ -631,8 +635,8 @@
 						<div class="awf-search__results">
 							{#if showRecent}
 								<div class="awf-search__head">
-									<span id="{uid}-recent">Recent searches</span>
-									<button type="button" class="awf-search__link" onclick={clearRecent}>Clear</button>
+									<span id="{uid}-recent">{t('search.recent')}</span>
+									<button type="button" class="awf-search__link" onclick={clearRecent}>{t('search.clear')}</button>
 								</div>
 								<ul id="{uid}-list" role="listbox" aria-labelledby="{uid}-recent" class="awf-search__list">
 									{#each recent as r, i (r)}
@@ -655,42 +659,45 @@
 									{/each}
 								</ul>
 							{:else if !query.trim()}
-								<ul id="{uid}-list" role="listbox" aria-label="Results" class="awf-search__list"></ul>
+								<ul id="{uid}-list" role="listbox" aria-label={t('search.results')} class="awf-search__list"></ul>
 								<div class="awf-search__empty">
-									<p>Search recipes, nodes, guides and fixes.</p>
+									<p>{t('search.empty')}</p>
 									<p class="awf-search__try">
-										Try
-										{#each ['slack', 'google sheets', 'loop', 'scrape a table'] as s (s)}
+										{t('search.try')}
+										{#each suggestions as s (s)}
 											<button type="button" class="awf-chip awf-chip--suggest" onclick={() => useRecent(s)}>{s}</button>
 										{/each}
 									</p>
 								</div>
 							{:else if unavailable}
-								<ul id="{uid}-list" role="listbox" aria-label="Results" class="awf-search__list"></ul>
+								<ul id="{uid}-list" role="listbox" aria-label={t('search.results')} class="awf-search__list"></ul>
 								<div class="awf-search__empty">
-									<p><strong>Search isn't available here.</strong></p>
-									<p>The search index is built with the site (<code>bun run build</code>), so it doesn't exist in <code>astro dev</code>. You can still ask Aria.</p>
-									<button type="button" class="awf-btn awf-btn--primary awf-press" onclick={() => setTab('aria')}>Ask Aria</button>
+									<p><strong>{t('search.unavailable.title')}</strong></p>
+									<p>
+										{#each richParts(t('search.unavailable.body')) as p, pi (pi)}{#if p.kind === 'text'}{p.text}{:else if p.kind === 'slot' && p.name === 'build'}<code>bun run build</code
+												>{:else if p.kind === 'slot' && p.name === 'dev'}<code>astro dev</code>{/if}{/each}
+									</p>
+									<button type="button" class="awf-btn awf-btn--primary awf-press" onclick={() => setTab('aria')}>{t('aria.title')}</button>
 								</div>
 							{:else if loading && !visible.length}
-								<ul id="{uid}-list" role="listbox" aria-label="Results" class="awf-search__list"></ul>
+								<ul id="{uid}-list" role="listbox" aria-label={t('search.results')} class="awf-search__list"></ul>
 								<div class="awf-search__skel" aria-hidden="true">
 									<span class="awf-skel"></span><span class="awf-skel"></span><span class="awf-skel"></span>
 								</div>
 							{:else if !visible.length && searched === query.trim()}
-								<ul id="{uid}-list" role="listbox" aria-label="Results" class="awf-search__list"></ul>
+								<ul id="{uid}-list" role="listbox" aria-label={t('search.results')} class="awf-search__list"></ul>
 								<div class="awf-search__empty">
-									<p><strong>No results for “{query.trim()}”.</strong></p>
-									<p>Try another word, or ask Aria: she answers in your own AWFlow, using these docs.</p>
+									<p><strong>{t('search.noResults', { query: query.trim() })}</strong></p>
+									<p>{t('search.noResults.hint')}</p>
 									<button type="button" class="awf-btn awf-btn--primary awf-press" onclick={() => setTab('aria')}>
-										Ask Aria instead
+										{t('search.askInstead')}
 									</button>
 								</div>
 							{:else}
 								{#if loose}
-									<p class="awf-search__loose">No page has every word. Showing pages that match some of them.</p>
+									<p class="awf-search__loose">{t('search.loose')}</p>
 								{/if}
-								<ul id="{uid}-list" role="listbox" aria-label="Results" class="awf-search__list">
+								<ul id="{uid}-list" role="listbox" aria-label={t('search.results')} class="awf-search__list">
 									{#each visible as r, i (r.id)}
 										{@const g = groupById(r.group)}
 										{#if i === 0 || visible[i - 1].group !== r.group}
@@ -721,7 +728,7 @@
 							{/if}
 						</div>
 						{#if query.trim()}
-							<aside class="awf-search__aside" aria-label="Ask Aria">
+							<aside class="awf-search__aside" aria-label={t('aria.title')}>
 								{@render ariaPanel(true)}
 							</aside>
 						{/if}
@@ -735,18 +742,18 @@
 
 			<div class="awf-search__foot">
 				<span class="awf-search__keys" aria-hidden="true">
-					<span><kbd>↑</kbd><kbd>↓</kbd> move</span>
-					<span><kbd>↵</kbd> open</span>
-					<span><kbd>esc</kbd> close</span>
-					<span><kbd>{mod}</kbd><kbd>I</kbd> ask Aria</span>
+					<span><kbd>↑</kbd><kbd>↓</kbd> {t('search.key.move')}</span>
+					<span><kbd>↵</kbd> {t('search.key.open')}</span>
+					<span><kbd>esc</kbd> {t('search.key.close')}</span>
+					<span><kbd>{mod}</kbd><kbd>I</kbd> {t('search.key.ask')}</span>
 				</span>
 				<span class="awf-search__ai">
-					For AI tools: <a href="{base_}llms.txt">llms.txt</a>
-					{#if mdTwin}· <a href={mdTwin}>this page as Markdown</a>{:else}· every page has a <code>.md</code> twin{/if}
+					{t('search.forAi')} <a href="{base_}llms.txt">llms.txt</a>
+					{#if mdTwin}· <a href={mdTwin}>{t('search.asMarkdown')}</a>{:else}· {#each richParts(t('search.mdTwin')) as p, pi (pi)}{#if p.kind === 'text'}{p.text}{:else if p.kind === 'slot' && p.name === 'md'}<code>.md</code>{/if}{/each}{/if}
 				</span>
 			</div>
 			<p class="sr-only" role="status" aria-live="polite">
-				{#if tab === 'search' && searched && !loading}{visible.length} results{/if}
+				{#if tab === 'search' && searched && !loading}{t.plural('search.count', visible.length)}{/if}
 				{ariaStatus}
 			</p>
 		</div>
@@ -760,22 +767,16 @@
 				<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
 					stroke-linecap="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z" /></svg>
 			</span>
-			<span class="awf-aria__title">Ask Aria</span>
-			<span class="awf-aria__badge">{handoff ? 'in your extension' : 'in your AWFlow'}</span>
+			<span class="awf-aria__title">{t('aria.title')}</span>
+			<span class="awf-aria__badge">{handoff ? t('aria.badge.ext') : t('aria.badge.app')}</span>
 		</div>
 		<p class="awf-aria__note">
-			Aria answers in <strong>your own AWFlow</strong>, not on this site.
-			{#if handoff}
-				Your extension is connected: the question goes straight to Aria with this page and the sources below.
-			{:else}
-				The question opens in the AWFlow app (<span translate="no">{appUrl.replace(/^https?:\/\//, '')}</span>) with this
-				page and the sources below. Nothing is sent until you press Ask.
-			{/if}
+			{#each richParts(t(handoff ? 'aria.note.ext' : 'aria.note.app')) as p, pi (pi)}{#if p.kind === 'strong'}<strong>{p.text}</strong>{:else if p.kind === 'slot' && p.name === 'host'}<span translate="no">{appUrl.replace(/^https?:\/\//, '')}</span>{:else if p.kind === 'text'}{p.text}{/if}{/each}
 		</p>
 
 		{#if query.trim()}
 			<div class="awf-aria__sources">
-				<span class="awf-aria__label">{sources.length ? 'Start with these pages' : loading ? 'Finding sources…' : 'No matching pages'}</span>
+				<span class="awf-aria__label">{sources.length ? t('aria.sources.start') : loading ? t('aria.sources.finding') : t('aria.sources.none')}</span>
 				{#each sources as s, i (s.url)}
 					{@const g = groupById(groupFor(s.url, base_))}
 					<a class="awf-cite" href={s.url} style="--awf-cite:{g.color}" onclick={() => remember(query)}>
@@ -785,8 +786,8 @@
 			</div>
 		{:else if !compact}
 			<div class="awf-aria__sources">
-				<span class="awf-aria__label">Try asking</span>
-				{#each ['How do I copy a table from a page into Google Sheets?', 'Post a message to Slack when a page changes', 'What runs on-device and what needs a connection?'] as s (s)}
+				<span class="awf-aria__label">{t('aria.tryAsking')}</span>
+				{#each askExamples as s (s)}
 					<button type="button" class="awf-cite awf-cite--ask" onclick={() => ((query = s), onInput(), input?.focus())}>{s}</button>
 				{/each}
 			</div>
@@ -794,14 +795,14 @@
 
 		<div class="awf-aria__actions">
 			<button type="button" class="awf-btn awf-btn--primary awf-press" onclick={() => ask('ask')}>
-				Ask Aria{#if !handoff}<span class="sr-only"> (opens the AWFlow app in a new tab)</span>{/if}
+				{t('aria.askBtn')}{#if !handoff}<span class="sr-only"> {t('aria.opensApp')}</span>{/if}
 			</button>
-			<button type="button" class="awf-btn awf-press" onclick={() => ask('build')}>Build this with Aria</button>
+			<button type="button" class="awf-btn awf-press" onclick={() => ask('build')}>{t('aria.build')}</button>
 		</div>
 		{#if ariaStatus}
 			<p class="awf-aria__status" aria-hidden="true">
 				{ariaStatus}
-				{#if fallbackUrl}<a href={fallbackUrl} target="_blank" rel="noopener">Open the app</a>{/if}
+				{#if fallbackUrl}<a href={fallbackUrl} target="_blank" rel="noopener">{t('aria.openApp')}</a>{/if}
 			</p>
 		{/if}
 	</div>

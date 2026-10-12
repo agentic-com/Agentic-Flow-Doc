@@ -1,15 +1,17 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Filterable node catalog for /nodes/ (awflow/Agentic-Flow#1337). Data comes from
 	 * src/data/nodeCatalog.ts (built from the generated nodes.json), never hand-maintained:
 	 *
-	 *   import NodeCatalog from '@components/awflow/NodeCatalog.svelte';
+	 *   import { NodeCatalog } from '@components/awflow';
 	 *   import { catalogNodes, catalogGroups } from '../../data/nodeCatalog';
-	 *   <NodeCatalog client:load nodes={catalogNodes()} groups={catalogGroups()} />
+	 *   <NodeCatalog hydrate="load" nodes={catalogNodes()} groups={catalogGroups()} />
 	 *
 	 * Filters live in the URL (?q=&family=&works=&needs=&tool=1&new=1) so a filtered view can be shared.
 	 */
+	import type { Lang } from '../../i18n/locales';
+	import { createT, type UIKey } from '../../i18n/ui';
+	import { richParts } from '../../i18n/rich';
 	import { onMount } from 'svelte';
 	import type { CatalogGroup, CatalogNode, CatalogFamily, CatalogNeeds } from '../../data/nodeCatalog';
 
@@ -22,27 +24,34 @@
 	}
 	let { lang = 'en', nodes = [], groups = [] }: Props = $props();
 
-	const FAMILIES: { id: CatalogFamily; label: string; color: string }[] = [
-		{ id: 'trigger', label: 'Triggers', color: '#d97706' },
-		{ id: 'inpage', label: 'In-page', color: '#db2777' },
-		{ id: 'flow', label: 'Flow', color: '#2563eb' },
-		{ id: 'data', label: 'Data', color: '#0d9488' },
-		{ id: 'core', label: 'Core', color: '#78716c' },
-		{ id: 'ai', label: 'AI', color: '#7c3aed' },
-		{ id: 'integration', label: 'Integrations', color: '#16a34a' },
-		{ id: 'lambda', label: 'Lambda', color: '#a8a29e' },
-	];
-	const FAMILY = Object.fromEntries(FAMILIES.map((f) => [f.id, f])) as Record<CatalogFamily, (typeof FAMILIES)[number]>;
-	const NEEDS: { id: CatalogNeeds; label: string }[] = [
-		{ id: 'none', label: 'No setup' },
-		{ id: 'connection', label: 'A connection' },
-		{ id: 'on-device', label: 'On-device AI' },
-	];
-	const WORKS = [
-		{ id: 'web', label: 'Web app' },
-		{ id: 'extension', label: 'Extension only' },
-	] as const;
-	type Works = (typeof WORKS)[number]['id'];
+	const t = $derived(createT(lang));
+	const FAMILIES = $derived<{ id: CatalogFamily; label: string; color: string }[]>(
+		(
+			[
+				['trigger', 'catalog.family.trigger', '#d97706'],
+				['inpage', 'catalog.family.inpage', '#db2777'],
+				['flow', 'catalog.family.flow', '#2563eb'],
+				['data', 'catalog.family.data', '#0d9488'],
+				['core', 'catalog.family.core', '#78716c'],
+				['ai', 'catalog.family.ai', '#7c3aed'],
+				['integration', 'catalog.family.integration', '#16a34a'],
+				['lambda', 'catalog.family.lambda', '#a8a29e'],
+			] as [CatalogFamily, UIKey, string][]
+		).map(([id, key, color]) => ({ id, label: t(key), color })),
+	);
+	const FAMILY = $derived(
+		Object.fromEntries(FAMILIES.map((f) => [f.id, f])) as Record<CatalogFamily, { id: CatalogFamily; label: string; color: string }>,
+	);
+	const NEEDS = $derived<{ id: CatalogNeeds; label: string }[]>([
+		{ id: 'none', label: t('catalog.needs.none') },
+		{ id: 'connection', label: t('catalog.needs.connection') },
+		{ id: 'on-device', label: t('catalog.needs.onDevice') },
+	]);
+	const WORKS = $derived([
+		{ id: 'web', label: t('catalog.web') },
+		{ id: 'extension', label: t('catalog.extension') },
+	] as const);
+	type Works = 'web' | 'extension';
 
 	let q = $state('');
 	let family = $state<CatalogFamily | ''>('');
@@ -63,14 +72,14 @@
 			.replace(/is(e|es|ed|ing|ation)\b/g, 'iz$1');
 
 	const groupLabel = new Map(groups.map((g) => [g.id, g.label]));
-	const haystack = new Map(
+	const haystack = $derived(new Map(
 		nodes.map((n) => [
 			n.id,
 			norm(
 				[n.name, n.description, FAMILY[n.family]?.label ?? '', n.group ? groupLabel.get(n.group) ?? '' : '', ...n.ops].join(' '),
 			),
 		]),
-	);
+	));
 
 	function matches(n: CatalogNode, ignoreFamily = false): boolean {
 		if (!ignoreFamily && family && n.family !== family) return false;
@@ -103,7 +112,7 @@
 				f.id === 'integration'
 					? [
 							...groups.map((g) => ({ id: g.id, label: g.label, nodes: list.filter((n) => n.group === g.id) })),
-							{ id: 'ungrouped', label: 'Other apps', nodes: list.filter((n) => !n.group || !groupLabel.has(n.group)) },
+							{ id: 'ungrouped', label: t('catalog.otherApps'), nodes: list.filter((n) => !n.group || !groupLabel.has(n.group)) },
 						].filter((g) => g.nodes.length)
 					: undefined;
 			return { ...f, nodes: list, sub };
@@ -112,9 +121,11 @@
 
 	const status = $derived(
 		results.length === nodes.length
-			? `${nodes.length} nodes`
-			: `${results.length} of ${nodes.length} nodes${results.length === 0 ? ' match' : ''}`,
+			? t.plural('catalog.count', nodes.length)
+			: t.plural(results.length === 0 ? 'catalog.match' : 'catalog.of', nodes.length, { shown: results.length }),
 	);
+	const missingBody = $derived(richParts(t('catalog.missing.body')));
+	const showing = $derived(richParts(t('catalog.showing', { status })));
 
 	function readUrl() {
 		try {
@@ -168,14 +179,14 @@
 
 	function badges(n: CatalogNode): { text: string; variant: string }[] {
 		const out: { text: string; variant: string }[] = [];
-		if (n.deprecated) out.push({ text: 'Deprecated', variant: 'deprecated' });
-		if (n.isNew) out.push({ text: 'New', variant: 'new' });
-		if (n.needs === 'connection') out.push({ text: 'Needs a connection', variant: 'connections' });
-		else if (n.needs === 'on-device') out.push({ text: 'On-device', variant: 'on-device' });
-		else out.push({ text: 'No setup', variant: 'no-setup' });
-		if (n.ops.length) out.push({ text: `${n.ops.length} operation${n.ops.length === 1 ? '' : 's'}`, variant: 'neutral' });
-		if (!n.web) out.push({ text: 'Extension only', variant: 'extension' });
-		if (n.agentTool) out.push({ text: 'Agent tool', variant: 'agent-tool' });
+		if (n.deprecated) out.push({ text: t('badge.deprecated'), variant: 'deprecated' });
+		if (n.isNew) out.push({ text: t('badge.new'), variant: 'new' });
+		if (n.needs === 'connection') out.push({ text: t('badge.needsConnection'), variant: 'connections' });
+		else if (n.needs === 'on-device') out.push({ text: t('badge.onDevice'), variant: 'on-device' });
+		else out.push({ text: t('badge.noSetup'), variant: 'no-setup' });
+		if (n.ops.length) out.push({ text: t.plural('badge.operations', n.ops.length), variant: 'neutral' });
+		if (!n.web) out.push({ text: t('badge.extensionOnly'), variant: 'extension' });
+		if (n.agentTool) out.push({ text: t('badge.agentTool'), variant: 'agent-tool' });
 		return out;
 	}
 
@@ -191,7 +202,7 @@
 
 <div class="awf-catalog not-content">
 	<div class="awf-catalog__search">
-		<label class="awf-catalog__label" for={`${uid}-q`}>Filter nodes by name or task</label>
+		<label class="awf-catalog__label" for={`${uid}-q`}>{t('catalog.label')}</label>
 		<div class="awf-catalog__field">
 			<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"
 				><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg
@@ -200,7 +211,7 @@
 				id={`${uid}-q`}
 				type="search"
 				bind:value={q}
-				placeholder="Try “click”, “pdf”, “summarise”, “slack send”"
+				placeholder={t('catalog.placeholder')}
 				autocomplete="off"
 				spellcheck="false"
 				aria-describedby={`${uid}-status`}
@@ -210,10 +221,10 @@
 
 	<div class="awf-catalog__facets">
 		<div class="awf-catalog__facet" role="group" aria-labelledby={`${uid}-fam`}>
-			<span class="awf-catalog__facet-label" id={`${uid}-fam`}>Family</span>
+			<span class="awf-catalog__facet-label" id={`${uid}-fam`}>{t('catalog.family')}</span>
 			<div class="awf-catalog__chips">
 				<button type="button" class="awf-catalog__chip" aria-pressed={family === ''} onclick={() => (family = '')}>
-					All <span class="awf-catalog__n">{allCount}</span>
+					{t('catalog.all')} <span class="awf-catalog__n">{allCount}</span>
 				</button>
 				{#each FAMILIES as f (f.id)}
 					<button
@@ -232,7 +243,7 @@
 
 		<div class="awf-catalog__facet-row">
 			<div class="awf-catalog__facet" role="group" aria-labelledby={`${uid}-works`}>
-				<span class="awf-catalog__facet-label" id={`${uid}-works`}>Works in</span>
+				<span class="awf-catalog__facet-label" id={`${uid}-works`}>{t('catalog.worksIn')}</span>
 				<div class="awf-catalog__chips">
 					{#each WORKS as w (w.id)}
 						<button
@@ -245,7 +256,7 @@
 				</div>
 			</div>
 			<div class="awf-catalog__facet" role="group" aria-labelledby={`${uid}-needs`}>
-				<span class="awf-catalog__facet-label" id={`${uid}-needs`}>Needs</span>
+				<span class="awf-catalog__facet-label" id={`${uid}-needs`}>{t('catalog.needs')}</span>
 				<div class="awf-catalog__chips">
 					{#each NEEDS as nd (nd.id)}
 						<button
@@ -258,13 +269,13 @@
 				</div>
 			</div>
 			<div class="awf-catalog__facet" role="group" aria-labelledby={`${uid}-more`}>
-				<span class="awf-catalog__facet-label" id={`${uid}-more`}>Only</span>
+				<span class="awf-catalog__facet-label" id={`${uid}-more`}>{t('catalog.only')}</span>
 				<div class="awf-catalog__chips">
 					<button type="button" class="awf-catalog__chip awf-catalog__chip--soft" aria-pressed={tool} onclick={() => (tool = !tool)}
-						>Agent tools</button
+						>{t('catalog.tools')}</button
 					>
 					<button type="button" class="awf-catalog__chip awf-catalog__chip--soft" aria-pressed={fresh} onclick={() => (fresh = !fresh)}
-						>New</button
+						>{t('catalog.new')}</button
 					>
 				</div>
 			</div>
@@ -273,16 +284,16 @@
 
 	<div class="awf-catalog__status">
 		<p id={`${uid}-status`} role="status" aria-live="polite" aria-atomic="true">
-			Showing <strong>{status}</strong>
+			{#each showing as p, pi (pi)}{#if p.kind === 'strong'}<strong>{p.text}</strong>{:else if p.kind === 'text'}{p.text}{/if}{/each}
 		</p>
 		{#if filtered}
-			<button type="button" class="awf-catalog__reset" onclick={reset}>Clear filters</button>
+			<button type="button" class="awf-catalog__reset" onclick={reset}>{t('catalog.clear')}</button>
 		{/if}
 	</div>
 
 	{#if results.length === 0}
 		<div class="awf-catalog__empty">
-			<p><strong>No node matches.</strong> Try a shorter word, or clear the filters.</p>
+			<p>{#each richParts(t('catalog.noMatch')) as p, pi (pi)}{#if p.kind === 'strong'}<strong>{p.text}</strong>{:else if p.kind === 'text'}{p.text}{/if}{/each}</p>
 		</div>
 	{/if}
 
@@ -325,11 +336,11 @@
 	{/each}
 
 	<aside class="awf-catalog__missing" aria-labelledby={`${uid}-missing`}>
-		<h2 id={`${uid}-missing`} class="awf-catalog__missing-title">Missing an app?</h2>
+		<h2 id={`${uid}-missing`} class="awf-catalog__missing-title">{t('catalog.missing.title')}</h2>
 		<p>
-			Call any API with <a href="/nodes/builtin/core/http-request/">HTTP Request</a> or
-			<a href="/nodes/builtin/integration/custom-api/">Custom API</a> and your own key, or ask for it on the
-			<a href="/app/request-board/">request board</a>.
+			{#each missingBody as p, pi (pi)}{#if p.kind === 'text'}{p.text}{:else if p.kind === 'slot' && p.name === 'http'}<a href={t.href('/nodes/builtin/core/http-request/')}>HTTP Request</a
+					>{:else if p.kind === 'slot' && p.name === 'custom'}<a href={t.href('/nodes/builtin/integration/custom-api/')}>Custom API</a
+					>{:else if p.kind === 'slot' && p.name === 'board'}<a href={t.href('/app/request-board/')}>{t('catalog.missing.board')}</a>{/if}{/each}
 		</p>
 	</aside>
 </div>

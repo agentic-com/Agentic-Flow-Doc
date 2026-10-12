@@ -4,12 +4,14 @@
  * "running" badge and a run log. Decorative — the whole stage is aria-hidden and summarised by the
  * figcaption. Below ~540px of width the cards stack vertically and the curves are hidden.
  */
+import { useT } from '../../i18n/ui';
+
+const t = useT(Astro);
 ---
 
 <figure class="awh-stage" aria-labelledby="awh-stage-cap">
 	<figcaption id="awh-stage-cap" class="awh-sr">
-		Example run: a Schedule trigger fires, Get Links collects 5 links, an on-device model summarises
-		them, and Notion saves the result.
+		{t('home.stage.caption')}
 	</figcaption>
 	<div class="awh-stage__inner" aria-hidden="true">
 		<svg class="awh-stage__wires" viewBox="0 0 560 440" preserveAspectRatio="none">
@@ -23,7 +25,7 @@
 					><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg
 				>
 			</span>
-			<span class="awh-node__text"><b>Schedule</b><small>every day · 08:00</small></span>
+			<span class="awh-node__text"><b>Schedule</b><small>{t('home.stage.schedule')}</small></span>
 		</div>
 		<div class="awh-node awh-node--b awf-float awf-f3 awf-run awf-r2">
 			<span class="awh-node__icon" style="--i:#BE185D">
@@ -40,7 +42,7 @@
 					><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"></path></svg
 				>
 			</span>
-			<span class="awh-node__text"><b>Summarise</b><small>on-device model</small></span>
+			<span class="awh-node__text"><b>{t('home.stage.summarise')}</b><small>{t('home.stage.onDevice')}</small></span>
 		</div>
 		<div class="awh-node awh-node--d awf-float awf-run awf-r4">
 			<span class="awh-node__icon" style="--i:#15803D">
@@ -48,13 +50,13 @@
 					><path d="M5 4h10l4 4v12H5z"></path><path d="M9 12h6M9 16h4"></path></svg
 				>
 			</span>
-			<span class="awh-node__text"><b>Notion</b><small class="awh-ok">✓ journal updated</small></span>
+			<span class="awh-node__text"><b>Notion</b><small class="awh-ok">{t('home.stage.updated')}</small></span>
 		</div>
-		<div class="awh-stage__status"><span class="awh-dot awf-ping"></span>running · 3.4s</div>
+		<div class="awh-stage__status"><span class="awh-dot awf-ping"></span>{t('home.stage.running')}</div>
 		<div class="awh-stage__log">
-			<span class="awh-log">▶ Schedule fired</span>
-			<span class="awh-log" style="animation-delay:.9s">Get Links · 5 items</span>
-			<span class="awh-log" style="animation-delay:1.8s">Summarise · 5 × 3 bullets</span>
+			<span class="awh-log">{t('home.stage.log.fired')}</span>
+			<span class="awh-log" style="animation-delay:.9s">{t('home.stage.log.links')}</span>
+			<span class="awh-log" style="animation-delay:1.8s">{t('home.stage.log.summarise')}</span>
 			<span class="awh-log awh-ok" style="animation-delay:2.7s">Notion ✓</span>
 		</div>
 	</div>
