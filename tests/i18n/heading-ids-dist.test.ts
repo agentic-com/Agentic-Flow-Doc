@@ -23,3 +23,33 @@ describe.skipIf(!hasDist)('English heading ids match the build', () => {
 		expect(mismatches).toEqual([]);
 	});
 });
+
+/** Built heading ids in document order, without Starlight's own page-title and on-this-page ids. */
+const builtIds = (html: string) =>
+	[...readFileSync(html, 'utf8').matchAll(/<h([1-6])[^>]*\sid="([^"]+)"/g)]
+		.map((m) => m[2])
+		.filter((x) => x !== '_top' && x !== 'starlight__on-this-page');
+
+const distPath = (id: string) => `dist/${id ? id + '/' : ''}index.html`;
+
+describe.skipIf(!hasDist)('Translated pages keep the English heading ids', () => {
+	test('every translated page', async () => {
+		const mismatches: string[] = [];
+		let checked = 0;
+		for await (const file of new Glob('src/content/docs/{fr,de,zh-cn}/**/*.{md,mdx}').scan('.')) {
+			const id = file.replace(/^src\/content\/docs\//, '').replace(/\.mdx?$/, '').replace(/(^|\/)index$/, '');
+			const englishId = id.replace(/^(fr|de|zh-cn)(\/|$)/, '');
+			const html = distPath(id);
+			const englishHtml = distPath(englishId);
+			if (!existsSync(html) || !existsSync(englishHtml)) continue;
+			checked++;
+			const ours = builtIds(html);
+			const english = builtIds(englishHtml);
+			if (JSON.stringify(ours) !== JSON.stringify(english)) {
+				mismatches.push(`${file}: [${ours.join(', ')}] != English [${english.join(', ')}]`);
+			}
+		}
+		expect(mismatches).toEqual([]);
+		expect(checked).toBeGreaterThan(0);
+	});
+});

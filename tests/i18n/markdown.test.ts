@@ -53,6 +53,22 @@ describe('plugins on a French page', () => {
 		expect(code).toContain('use-it');
 		expect(code).not.toContain('avant-de-commencer');
 	});
+	test('English ids win over ids set by an earlier plugin (starlight-heading-badges runs first)', async () => {
+		const file = join(docs, 'fr/app/page.mdx');
+		const earlier = {
+			name: 'translated-slugs',
+			element: {
+				filter: ['h1', 'h2', 'h3'],
+				visit: (n: any, c: any) => c.setProperty(n, 'id', 'fr-' + c.textContent(n).toLowerCase().replaceAll(' ', '-')),
+			},
+		};
+		const code = String(
+			(await mdxToJs(await Bun.file(file).text(), { fileURL: pathToFileURL(file), hastPlugins: [earlier, i18nHeadingIds] } as any)).code,
+		);
+		expect(code).toContain('before-you-start');
+		expect(code).toContain('use-it');
+		expect(code).not.toContain('fr-avant-de-commencer');
+	});
 	test('internal page links are localized, files and anchors kept', async () => {
 		const code = await compile(join(docs, 'fr/app/page.mdx'));
 		expect(code).toContain('/fr/app/connections/slack/');
