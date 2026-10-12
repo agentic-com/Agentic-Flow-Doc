@@ -11,7 +11,36 @@ import remarkGfm from 'remark-gfm';
 import remarkDirective from 'remark-directive';
 import { parse as parseYaml } from 'yaml';
 
-export const TEXT_PROPS = ['title', 'body', 'check', 'caption', 'alt', 'label', 'description', 'tweak'];
+/**
+ * Ruling R6: every JSX attribute name and every object key inside expression props used in the
+ * English corpus is classified. TEXT may differ in a translation; STRUCTURAL must match. The corpus
+ * test (tests/i18n/check.test.ts) fails when a name appears in neither set, forcing a decision.
+ */
+// Attribute names whose value is human-readable (string, or array of strings): skipped when comparing.
+export const TEXT_PROPS = [
+	'title', 'body', 'check', 'caption', 'alt', 'label', 'description', 'tweak',
+	'text', 'meta', 'before', 'youWill', 'pick', 'linkLabel', 'descriptionLabel', 'nameLabel', 'typeLabel',
+];
+// Attribute names that must match: ids, urls, icons, variants, numbers, shots and data-bearing expressions
+// (whose own text keys are masked through TEXT_KEYS).
+export const STRUCTURAL_PROPS = [
+	'cards', 'common', 'groups', 'height', 'hotspots', 'href', 'hydrate', 'icon', 'id', 'level', 'minutes', 'n',
+	'next', 'nodes', 'onDevice', 'order', 'ports', 'rel', 'release', 'releases', 'rows', 'selected', 'setup',
+	'shot', 'slot', 'slug', 'spot', 'src', 'srcDark', 'start', 'steps', 'syncKey', 'target', 'total', 'type',
+	'variant', 'view', 'zoom',
+];
+// Object keys inside expression props whose string literal values are prose: masked.
+export const TEXT_KEYS = [
+	'title', 'body', 'check', 'caption', 'alt', 'label', 'description', 'tweak', 'when', 'example', 'note', 'meta',
+	'name', 'count', 'response', 'summary', 'text', 'message', 'selection', 'query', 'chatInput', 'type', 'default',
+];
+// Object keys that must match (ids, urls, icons, kinds, coordinates, flags, sample-data identifiers, containers).
+export const STRUCTURAL_KEYS = [
+	'also', 'args', 'batch', 'batchIndex', 'canonicalUrl', 'company', 'done', 'durationMs', 'email', 'first',
+	'href', 'icon', 'input', 'isLast', 'items', 'kind', 'last', 'length', 'links', 'node', 'nodeLabel', 'options',
+	'required', 'rows', 'runs', 'score', 'size', 'source', 'sources', 'spot', 'status', 'steps', 'total', 'url',
+	'x', 'y',
+];
 export const TEXT_FRONTMATTER = [
 	'title',
 	'description',
@@ -28,6 +57,7 @@ const globToRegExp = (glob: string) =>
 	new RegExp(`^${glob.replace(/\./g, '\\.').replace(/\*/g, '[^.]+')}(\\.|$)`);
 const TEXT_FRONTMATTER_RES = TEXT_FRONTMATTER.map(globToRegExp);
 const TEXT_PROP_SET = new Set(TEXT_PROPS);
+const TEXT_KEY_SET = new Set(TEXT_KEYS);
 
 export interface Item {
 	kind: 'heading' | 'component' | 'code' | 'inlineCode' | 'link' | 'image' | 'esm';
@@ -47,11 +77,57 @@ const flatten = (v: unknown, prefix = '', out: Record<string, unknown> = {}) => 
 	return out;
 };
 
-const maskTextInExpression = (src: string) =>
-	src.replace(
-		new RegExp(`\\b(${TEXT_PROPS.join('|')})\\s*:\\s*(["'\`])(?:\\\\.|(?!\\2).)*\\2`, 'g'),
-		'$1:"…"',
-	);
+const isStringLiteral = (n: any) =>
+	(n?.type === 'Literal' && typeof n.value === 'string') || (n?.type === 'TemplateLiteral' && n.expressions.length === 0);
+const stringValue = (n: any) => (n.type === 'Literal' ? n.value : n.quasis.map((q: any) => q.value.cooked).join(''));
+
+/** Canonical form of an expression prop: literals normalised, prose under TEXT_KEYS masked, the rest as source. */
+const serializeExpression = (n: any, body: string): string => {
+	switch (n?.type) {
+		case 'Literal':
+			return typeof n.value === 'string' ? JSON.stringify(n.value) : (n.raw ?? String(n.value));
+		case 'TemplateLiteral':
+			return n.expressions.length === 0 ? JSON.stringify(stringValue(n)) : body.slice(n.start, n.end);
+		case 'ArrayExpression':
+			return `[${n.elements.map((e: any) => (e ? serializeExpression(e, body) : '')).join(',')}]`;
+		case 'ObjectExpression':
+			return `{${n.properties.map((p: any) => serializeExpression(p, body)).join(',')}}`;
+		case 'Property': {
+			if (n.computed || n.kind !== 'init' || n.method) return body.slice(n.start, n.end);
+			const key = n.key.name ?? String(n.key.value);
+			const masked = TEXT_KEY_SET.has(key) && isStringLiteral(n.value);
+			return `${key}:${masked ? '"…"' : serializeExpression(n.value, body)}`;
+		}
+		default:
+			return body.slice(n.start, n.end);
+	}
+};
+
+/** Every attribute name and expression-prop object key in a page: used by the classification test. */
+export function collectNames(source: string): { attrs: Set<string>; keys: Set<string> } {
+	const fm = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/.exec(source);
+	const tree: any = unified().use(remarkParse).use(remarkMdx).use(remarkGfm).use(remarkDirective).parse(fm ? source.slice(fm[0].length) : source);
+	const attrs = new Set<string>();
+	const keys = new Set<string>();
+	const visit = (n: any) => {
+		if (!n || typeof n !== 'object') return;
+		if (Array.isArray(n)) return n.forEach(visit);
+		if (n.type === 'Property' && !n.computed) keys.add(n.key.name ?? String(n.key.value));
+		for (const [k, c] of Object.entries(n)) if (k !== 'loc' && k !== 'range') visit(c);
+	};
+	const walk = (n: any) => {
+		if (n.type === 'mdxJsxFlowElement' || n.type === 'mdxJsxTextElement') {
+			for (const a of n.attributes ?? []) {
+				if (a.type !== 'mdxJsxAttribute') continue;
+				attrs.add(a.name);
+				if (a.value && typeof a.value !== 'string') visit(a.value.data?.estree);
+			}
+		}
+		n.children?.forEach(walk);
+	};
+	walk(tree);
+	return { attrs, keys };
+}
 
 /** Resolve relative import specifiers against the file's own directory (project-relative). */
 const resolveImports = (esm: string, filePath?: string) => {
@@ -86,7 +162,9 @@ export function structureOf(source: string, filePath?: string): Structure {
 					.map((a: any) => {
 						if (a.type !== 'mdxJsxAttribute') return `{${a.value}}`;
 						if (typeof a.value === 'string') return `${a.name}=${JSON.stringify(a.value)}`;
-						return `${a.name}=${a.value?.value != null ? maskTextInExpression(a.value.value) : 'true'}`;
+						if (a.value?.value == null) return `${a.name}=true`;
+						const expr = a.value.data?.estree?.body?.[0]?.expression;
+						return `${a.name}=${expr ? serializeExpression(expr, body) : a.value.value}`;
 					})
 					.sort();
 				items.push({ kind: 'component', sig: `<${n.name ?? ''} ${props.join(' ')}>`, line: line(n) });
@@ -98,6 +176,8 @@ export function structureOf(source: string, filePath?: string): Structure {
 	walk(tree);
 	return { frontmatter, fmLine: 2, items };
 }
+
+const specifiers = (esm: string) => [...esm.matchAll(/(?:from\s*|import\s*)(["'])([^"']*)\1/g)].map((m) => m[2]);
 
 export function compareStructures(en: Structure, tr: Structure): { line: number; message: string }[] {
 	const out: { line: number; message: string }[] = [];
@@ -111,9 +191,16 @@ export function compareStructures(en: Structure, tr: Structure): { line: number;
 		const b = tr.items.filter((i) => i.kind === kind);
 		for (let i = 0; i < Math.max(a.length, b.length); i++) {
 			if (a[i]?.sig !== b[i]?.sig) {
+				let detail = '';
+				if (kind === 'esm') {
+					const sa = specifiers(a[i]?.sig ?? '');
+					const sb = specifiers(b[i]?.sig ?? '');
+					const j = [...Array(Math.max(sa.length, sb.length)).keys()].find((x) => sa[x] !== sb[x]);
+					if (j !== undefined) detail = ` (import specifier: expected ${JSON.stringify(sa[j] ?? '(none)')}, found ${JSON.stringify(sb[j] ?? '(none)')})`;
+				}
 				out.push({
 					line: b[i]?.line ?? b[b.length - 1]?.line ?? 1,
-					message: `${kind} #${i + 1}: expected ${a[i] ? JSON.stringify(a[i].sig) : '(none)'}, found ${b[i] ? JSON.stringify(b[i].sig) : '(none)'}`,
+					message: `${kind} #${i + 1}: expected ${a[i] ? JSON.stringify(a[i].sig) : '(none)'}, found ${b[i] ? JSON.stringify(b[i].sig) : '(none)'}${detail}`,
 				});
 				break; // one report per kind: later items are usually shifted by the same cause
 			}

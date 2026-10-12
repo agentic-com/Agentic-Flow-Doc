@@ -15,7 +15,11 @@ let failures = 0;
 let checked = 0;
 for (const file of files.sort()) {
 	const m = /^src\/content\/docs\/(fr|de|zh-cn)\/(.+)$/.exec(file);
-	if (!m || (only && m[1] !== only)) continue;
+	if (!m) {
+		console.warn(`i18n:check — skipped ${file}: not a translated docs file (src/content/docs/{fr,de,zh-cn}/…)`);
+		continue;
+	}
+	if (only && m[1] !== only) continue;
 	const english = `src/content/docs/${m[2]}`;
 	if (!existsSync(english)) continue; // orphans are reported by i18n:status
 	checked++;

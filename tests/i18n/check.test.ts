@@ -55,3 +55,55 @@ describe('i18n:check', () => {
 		expect(compareStructures(en, bad)).toHaveLength(1);
 	});
 });
+
+describe('R6 text/structural classification', () => {
+	test('Badge text translated passes; changing variant fails', () => {
+		const en = structureOf('<Badge text="Free" variant="neutral" />\n', EN_PATH);
+		expect(compareStructures(en, structureOf('<Badge text="Gratuit" variant="neutral" />\n', FR_PATH))).toEqual([]);
+		expect(compareStructures(en, structureOf('<Badge text="Gratuit" variant="new" />\n', FR_PATH))).toHaveLength(1);
+	});
+
+	test('steps text keys (when, example, note, meta, double/single/template quoted) may be translated', () => {
+		const en = structureOf(
+			'<Cards cards={[{ title: "Loop", icon: "loop", when: "Repeat.", example: `Click`, note: \'Hi\', meta: "A · B" }]} />\n',
+			EN_PATH,
+		);
+		const ok = structureOf(
+			'<Cards cards={[{ title: "Boucle", icon: "loop", when: "Répéter.", example: `Cliquer`, note: \'Salut\', meta: "A · B" }]} />\n',
+			FR_PATH,
+		);
+		expect(compareStructures(en, ok)).toEqual([]);
+	});
+
+	test('a structural key changed inside steps fails', () => {
+		const en = structureOf('<X steps={[{ spot: "a", title: "T", kind: "data" }]} />\n', EN_PATH);
+		expect(compareStructures(en, structureOf('<X steps={[{ spot: "b", title: "U", kind: "data" }]} />\n', FR_PATH))).toHaveLength(1);
+		expect(compareStructures(en, structureOf('<X steps={[{ spot: "a", title: "U", kind: "flow" }]} />\n', FR_PATH))).toHaveLength(1);
+	});
+
+	test('non-literal values under a text key are compared as written', () => {
+		const en = structureOf('<X steps={[{ title: t1 }]} />\n', EN_PATH);
+		expect(compareStructures(en, structureOf('<X steps={[{ title: t2 }]} />\n', FR_PATH))).toHaveLength(1);
+	});
+
+	test('esm mismatch names the differing specifier', () => {
+		const en = structureOf("import a from '@components/awflow';\n", EN_PATH);
+		const fr = structureOf("import a from '@components/other';\n", FR_PATH);
+		expect(compareStructures(en, fr)[0].message).toContain('"@components/other"');
+	});
+
+	test('every attribute name and expression key in the English corpus is classified', async () => {
+		const { Glob } = await import('bun');
+		const { collectNames, TEXT_PROPS, STRUCTURAL_PROPS, TEXT_KEYS, STRUCTURAL_KEYS } = await import('../../scripts/i18n/structure');
+		const attrOk = new Set([...TEXT_PROPS, ...STRUCTURAL_PROPS]);
+		const keyOk = new Set([...TEXT_KEYS, ...STRUCTURAL_KEYS]);
+		const missing: string[] = [];
+		for await (const f of new Glob('src/content/docs/**/*.{md,mdx}').scan('.')) {
+			if (/^src\/content\/docs\/(fr|de|zh-cn)\//.test(f)) continue;
+			const { attrs, keys } = collectNames(readFileSync(f, 'utf8'));
+			for (const a of attrs) if (!attrOk.has(a)) missing.push(`attribute "${a}" (${f})`);
+			for (const k of keys) if (!keyOk.has(k)) missing.push(`key "${k}" (${f})`);
+		}
+		expect([...new Set(missing)].slice(0, 20)).toEqual([]);
+	});
+});
