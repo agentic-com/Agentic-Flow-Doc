@@ -1,16 +1,15 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <FlowPreview> — a real .awf workflow, drawn read-only (awflow/Agentic-Flow#1336).
 	 *
-	 * In MDX:
-	 *   import FlowPreview from '@components/awflow/FlowPreview.svelte';
-	 *   <FlowPreview src="/examples/summarize-this-page.awf" client:visible />
-	 * or, rendered at build time (no layout shift, works without JS):
-	 *   import FlowPreview from '@components/awflow/FlowPreview.astro';
+	 * In MDX, rendered at build time (no layout shift, works without JS) and hydrated when it
+	 * scrolls into view:
+	 *   import { FlowPreview } from '@components/awflow';
 	 *   <FlowPreview src="/examples/summarize-this-page.awf" />
 	 */
+	import type { Lang } from '../../i18n/locales';
 	import { onMount } from 'svelte';
+	import { createT } from '../../i18n/ui';
 	import { buildFlowModel, type FlowModel } from '../../data/flowPreview';
 	import { appImportUrl, handoffAvailable, requestHandoff, watchHandoff } from './FlowPreviewHandoff';
 
@@ -26,12 +25,13 @@
 	}
 
 	let { lang = 'en', src, caption, raw }: Props = $props();
+	const t = $derived(createT(lang));
 
 	function parse(text: string): { model: FlowModel | null; error: string | null } {
 		try {
-			return { model: buildFlowModel(JSON.parse(text)), error: null };
+			return { model: buildFlowModel(JSON.parse(text), t), error: null };
 		} catch (e) {
-			return { model: null, error: e instanceof SyntaxError ? 'This file is not valid JSON.' : (e as Error).message };
+			return { model: null, error: e instanceof SyntaxError ? t('flow.error.json') : (e as Error).message };
 		}
 	}
 
@@ -54,7 +54,7 @@
 	async function load(): Promise<string> {
 		if (text !== null) return text;
 		const res = await fetch(src, { headers: { Accept: 'application/json' } });
-		if (!res.ok) throw new Error(`Couldn't load ${fileName} (error ${res.status}).`);
+		if (!res.ok) throw new Error(t('flow.error.load', { file: fileName, status: res.status }));
 		text = await res.text();
 		return text;
 	}
@@ -63,7 +63,7 @@
 		appHref = appImportUrl(src);
 		if (!model && !error) {
 			load()
-				.then((t) => ({ model, error } = parse(t)))
+				.then((body) => ({ model, error } = parse(body)))
 				.catch((e: Error) => (error = e.message));
 		}
 		return watchHandoff(() => {});
@@ -80,24 +80,24 @@
 		event.preventDefault();
 		// Posted synchronously inside the click: the extension only accepts user-initiated requests.
 		const answer = requestHandoff(src);
-		say('Opening in AWFlow…', 'info', undefined, 0);
+		say(t('flow.opening'), 'info', undefined, 0);
 		answer.then((r) => {
-			if (r.ok) return say('Sent to AWFlow. Review it in the extension and confirm the import.');
+			if (r.ok) return say(t('flow.sent'));
 			const win = window.open(appHref, '_blank');
 			if (win) {
 				win.opener = null;
-				say('Opened the AWFlow web app to import it.');
-			} else say("Your browser blocked the new tab.", 'warn', appHref, 0);
+				say(t('flow.openedApp'));
+			} else say(t('flow.blocked'), 'warn', appHref, 0);
 		});
 	}
 
 	async function copy() {
 		try {
-			const t = await load();
+			const body = await load();
 			try {
-				await navigator.clipboard.writeText(t);
+				await navigator.clipboard.writeText(body);
 			} catch {
-				const area = Object.assign(document.createElement('textarea'), { value: t });
+				const area = Object.assign(document.createElement('textarea'), { value: body });
 				area.setAttribute('readonly', '');
 				area.style.cssText = 'position:fixed;opacity:0';
 				document.body.append(area);
@@ -106,9 +106,9 @@
 				area.remove();
 				if (!ok) throw new Error('copy refused');
 			}
-			say(`Copied ${fileName}. In AWFlow, use Import workflow and paste it.`);
+			say(t('flow.copied', { file: fileName }));
 		} catch {
-			say("Couldn't copy. Download the file instead.", 'warn', src, 0);
+			say(t('flow.copyFailed'), 'warn', src, 0);
 		}
 	}
 </script>
@@ -116,13 +116,13 @@
 <figure class="awf-flow not-content">
 	<div class="awf-flow__panel">
 		<div class="awf-flow__head">
-			<span class="awf-flow__eyebrow">workflow · {fileName}</span>
-			{#if model}<span class="awf-flow__count">{model.steps.length} steps</span>{/if}
+			<span class="awf-flow__eyebrow">{t('flow.eyebrow', { file: fileName })}</span>
+			{#if model}<span class="awf-flow__count">{t.plural('flow.steps', model.steps.length)}</span>{/if}
 		</div>
 
 		{#if model}
 			<p class="awf-flow__sr">{model.summary}</p>
-			<ol class="awf-flow__graph" aria-label="Steps of {model.name}, in run order">
+			<ol class="awf-flow__graph" aria-label={t('flow.graph', { name: model.name })}>
 				{#each model.layers as layer, i (i)}
 					<li class="awf-flow__layer">
 						{#snippet card(s: (typeof layer)[number])}
@@ -134,16 +134,16 @@
 								<span class="awf-flow__num" aria-hidden="true">{i + 1}</span>
 								<span class="awf-flow__text">
 									{#if s.docLink}
-										<a class="awf-flow__name" href={s.docLink}>{s.name}<span class="awf-flow__sr"> ({s.subtitle} — open its doc page)</span></a>
+										<a class="awf-flow__name" href={t.href(s.docLink)}>{s.name}<span class="awf-flow__sr"> {t('flow.openDoc', { subtitle: s.subtitle })}</span></a>
 									{:else}
 										<span class="awf-flow__name">{s.name}</span>
 									{/if}
 									<span class="awf-flow__sub" aria-hidden={s.docLink ? 'true' : undefined}>{s.subtitle}</span>
-									{#if s.via}<span class="awf-flow__via">if {s.via}</span>{/if}
+									{#if s.via}<span class="awf-flow__via">{t('flow.via', { via: s.via })}</span>{/if}
 									{#if s.attachments.length}
 										<span class="awf-flow__deps">
 											{#each s.attachments as a (a.id)}
-												{#if a.docLink}<a class="awf-flow__dep" href={a.docLink}>+ {a.name}</a>
+												{#if a.docLink}<a class="awf-flow__dep" href={t.href(a.docLink)}>+ {a.name}</a>
 												{:else}<span class="awf-flow__dep">+ {a.name}</span>{/if}
 											{/each}
 										</span>
@@ -155,7 +155,7 @@
 						{#if layer.length === 1}
 							{@render card(layer[0])}
 						{:else}
-							<ul class="awf-flow__branch" aria-label="{layer.length} branches">
+							<ul class="awf-flow__branch" aria-label={t('flow.branches', { count: layer.length })}>
 								{#each layer as s (s.id)}<li>{@render card(s)}</li>{/each}
 							</ul>
 						{/if}
@@ -168,9 +168,9 @@
 				{/each}
 			</ol>
 		{:else if error}
-			<p class="awf-flow__error" role="alert">{error} <a href={src}>Open the file</a></p>
+			<p class="awf-flow__error" role="alert">{error} <a href={src}>{t('flow.openFile')}</a></p>
 		{:else}
-			<div class="awf-flow__loading" aria-label="Loading workflow preview" role="img">
+			<div class="awf-flow__loading" aria-label={t('flow.loading')} role="img">
 				<span class="awf-skel"></span><span class="awf-wire" aria-hidden="true"></span><span class="awf-skel"></span><span
 					class="awf-wire"
 					aria-hidden="true"
@@ -180,13 +180,13 @@
 
 		<div class="awf-flow__actions">
 			<a class="awf-flow__btn awf-flow__btn--primary awf-press" href={appHref} target="_blank" rel="noopener" onclick={openInApp}>
-				Open in AWFlow
+				{t('flow.open')}
 			</a>
-			<button type="button" class="awf-flow__btn" onclick={copy}>Copy .awf</button>
+			<button type="button" class="awf-flow__btn" onclick={copy}>{t('flow.copy')}</button>
 			<span class="awf-flow__status awf-flow__status--{status?.tone ?? 'ok'}" role="status" aria-live="polite">
 				{#if status}
 					{status.message}
-					{#if status.link}<a href={status.link} target="_blank" rel="noopener">{status.link === src ? 'Download .awf' : 'Open the web app'}</a>{/if}
+					{#if status.link}<a href={status.link} target="_blank" rel="noopener">{status.link === src ? t('flow.downloadAwf') : t('flow.openApp')}</a>{/if}
 				{/if}
 			</span>
 		</div>

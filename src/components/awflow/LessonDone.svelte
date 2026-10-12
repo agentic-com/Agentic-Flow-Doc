@@ -1,16 +1,18 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Lesson completion card (awflow/Agentic-Flow#1341): "Mark done & continue" saves the lesson as
 	 * done (in this browser, see plugins/starlight-awflow/lib/lesson-progress.ts) and opens the next
 	 * lesson. "Mark as done" only saves it, so the reader can stay on the page; it toggles back.
 	 *
-	 *   <LessonDone client:load title="Your workflow thinks now." next={{ href: '/get-started/first-automation/', label: 'Lesson 4' }}>
+	 *   import { LessonDone } from '@components/awflow';
+	 *   <LessonDone hydrate="load" title="Your workflow thinks now." next={{ href: '/get-started/first-automation/', label: 'Lesson 4' }}>
 	 *     Next you'll run it from a schedule, without clicking.
 	 *   </LessonDone>
 	 */
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
+	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
 	import {
 		lessonIdFromPath,
 		onLessonProgress,
@@ -28,6 +30,7 @@
 	}
 
 	let { lang = 'en', title, next, children }: Props = $props();
+	const t = $derived(createT(lang));
 
 	let id = $state('');
 	let done = $state(false);
@@ -47,7 +50,7 @@
 	}
 </script>
 
-<aside class="awf-done not-content" aria-label="Finish this lesson" data-pagefind-ignore>
+<aside class="awf-done not-content" aria-label={t('lesson.finish')} data-pagefind-ignore>
 	<span class="awf-done__spark awf-done__spark--1" aria-hidden="true"></span>
 	<span class="awf-done__spark awf-done__spark--2" aria-hidden="true"></span>
 	<div class="awf-done__text">
@@ -56,15 +59,15 @@
 	</div>
 	<div class="awf-done__actions">
 		<button type="button" class="awf-done__toggle" aria-pressed={done} onclick={toggle}>
-			{done ? 'Done ✓' : 'Mark as done'}
+			{done ? t('lesson.doneBtn') : t('lesson.markDone')}
 		</button>
 		{#if next}
-			<a class="awf-done__next" href={next.href} onclick={finish}>
-				{done ? `Continue to ${next.label}` : 'Mark done & continue'} →
+			<a class="awf-done__next" href={t.href(next.href)} onclick={finish}>
+				{done ? t('lesson.continue', { label: next.label }) : t('lesson.markContinue')} →
 			</a>
 		{/if}
 	</div>
-	<p class="sr-only" aria-live="polite">{done ? 'Lesson marked as done.' : ''}</p>
+	<p class="sr-only" aria-live="polite">{done ? t('lesson.marked') : ''}</p>
 </aside>
 
 <style>

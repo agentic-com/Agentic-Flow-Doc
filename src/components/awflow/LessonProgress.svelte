@@ -1,16 +1,18 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Lesson header (awflow/Agentic-Flow#1341): "Lesson 3 of 5 · 8 min · Level 1", an optional
 	 * "Works on-device" badge, a "Done" pill once the lesson is marked done, and the
 	 * "You will" / "Before you start" cards.
 	 *
-	 *   <LessonProgress client:visible level={1} order={3} total={5} minutes={8} onDevice
+	 *   import { LessonProgress } from '@components/awflow';
+	 *   <LessonProgress hydrate="visible" level={1} order={3} total={5} minutes={8} onDevice
 	 *     youWill={['Add a chat model', '…']} before={['AWFlow installed', '…']} />
 	 *
 	 * Without JavaScript it renders everything except the "Done" pill.
 	 */
+	import type { Lang } from '../../i18n/locales';
 	import { onMount } from 'svelte';
+	import { createT } from '../../i18n/ui';
 	import Badge from './Badge.svelte';
 	import { lessonIdFromPath, onLessonProgress } from '../../../plugins/starlight-awflow/lib/lesson-progress';
 
@@ -31,6 +33,7 @@
 	}
 
 	let { lang = 'en', level, order, total, minutes, onDevice = false, youWill = [], before = [] }: Props = $props();
+	const t = $derived(createT(lang));
 
 	let done = $state(false);
 	onMount(() => {
@@ -42,16 +45,16 @@
 <div class="awf-lesson not-content" data-pagefind-ignore>
 	<div class="awf-lesson__meta">
 		<span class="awf-lesson__crumb"
-			>Lesson {order} of {total}{#if minutes} · {minutes} min{/if} · Level {level}</span
+			>{t('lesson.crumb', { order, total })}{#if minutes} · {t('common.minutes', { n: minutes })}{/if} · {t('rail.level', { n: level })}</span
 		>
-		{#if onDevice}<Badge {lang} variant="on-device" text="Works on-device" />{/if}
-		{#if done}<span class="awf-lesson__done" role="status">✓ Done</span>{/if}
+		{#if onDevice}<Badge {lang} variant="on-device" text={t('lesson.onDevice')} />{/if}
+		{#if done}<span class="awf-lesson__done" role="status">{t('lesson.done')}</span>{/if}
 	</div>
 	{#if youWill.length || before.length}
 		<div class="awf-lesson__cards">
 			{#if youWill.length}
 				<div class="awf-lesson__card">
-					<span class="awf-lesson__label">You will</span>
+					<span class="awf-lesson__label">{t('lesson.youWill')}</span>
 					<ul>
 						{#each youWill as item (item)}<li>{item}</li>{/each}
 					</ul>
@@ -59,7 +62,7 @@
 			{/if}
 			{#if before.length}
 				<div class="awf-lesson__card">
-					<span class="awf-lesson__label">Before you start</span>
+					<span class="awf-lesson__label">{t('lesson.before')}</span>
 					<ul class="awf-lesson__checks">
 						{#each before as item (item)}
 							<li><label><input type="checkbox" />{item}</label></li>

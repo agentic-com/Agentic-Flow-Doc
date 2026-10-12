@@ -1,23 +1,25 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <RecipeMeta> — the level · time · setup · apps row under a recipe's title (awflow/Agentic-Flow#1342).
 	 *
 	 *   <RecipeMeta slug="summarize-this-page" />
 	 */
-	import { LEVEL_LABEL, SETUP, getRecipe } from './recipes';
+	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
+	import { SETUP, getRecipe, goalLabel, levelLabel } from './recipes';
 
 	let { lang = 'en', slug }: { lang?: Lang; slug: string } = $props();
+	const t = $derived(createT(lang));
 	// svelte-ignore state_referenced_locally
 	const r = getRecipe(slug);
 </script>
 
 <p class="awf-rmeta not-content">
-	<span class="awf-chip">{LEVEL_LABEL[r.level]}</span>
-	<span class="awf-chip">{r.minutes} min</span>
-	<span class="awf-badge awf-badge--{SETUP[r.setup].variant}">{SETUP[r.setup].label}{r.apps.length ? ` · ${r.apps.join(', ')}` : ''}</span>
-	{#if r.touches.models.length && r.setup !== 'on-device'}<span class="awf-badge awf-badge--on-device">On-device model</span>{/if}
-	<a class="awf-chip awf-rmeta__goal" href={`/recipes/?goal=${encodeURIComponent(r.goal)}`}>{r.goal}</a>
+	<span class="awf-chip">{levelLabel(r.level, t)}</span>
+	<span class="awf-chip">{t('common.minutes', { n: r.minutes })}</span>
+	<span class="awf-badge awf-badge--{SETUP[r.setup].variant}">{t(SETUP[r.setup].labelKey)}{r.apps.length ? ` · ${r.apps.join(', ')}` : ''}</span>
+	{#if r.touches.models.length && r.setup !== 'on-device'}<span class="awf-badge awf-badge--on-device">{t('recipe.modelBadge')}</span>{/if}
+	<a class="awf-chip awf-rmeta__goal" href={t.href(`/recipes/?goal=${encodeURIComponent(r.goal)}`)}>{goalLabel(r.goal, t)}</a>
 </p>
 
 <style>

@@ -1,21 +1,24 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <RecipeUse> — the "Use this recipe" card (awflow/Agentic-Flow#1342): install, copy the .awf,
 	 * what you'll need and what the workflow touches. On wide screens it sits in a sticky column
 	 * beside the recipe; on narrow ones it stays where it is placed (after the <FlowPreview>).
 	 *
-	 *   <RecipeUse slug="summarize-this-page" client:idle />
+	 *   import { RecipeUse } from '@components/awflow';
+	 *   <RecipeUse slug="summarize-this-page" hydrate="idle" />
 	 *
 	 * "Install in AWFlow" uses the same extension handoff as <FlowPreview> (FlowPreviewHandoff.ts),
 	 * falling back to the web app's import page. "It touches" is derived by scripts/recipes/build.ts
 	 * the way the app derives a marketplace listing's permission manifest.
 	 */
+	import type { Lang } from '../../i18n/locales';
 	import { onMount } from 'svelte';
+	import { createT, type UIKey } from '../../i18n/ui';
 	import { appImportUrl, handoffAvailable, requestHandoff, watchHandoff } from './FlowPreviewHandoff';
 	import { MARKETPLACE_URL, getRecipe, marketplaceHref } from './recipes';
 
 	let { lang = 'en', slug }: { lang?: Lang; slug: string } = $props();
+	const t = $derived(createT(lang));
 	// svelte-ignore state_referenced_locally
 	const r = getRecipe(slug);
 	const fileName = r.awf.split('/').pop()!;
@@ -41,14 +44,14 @@
 		event.preventDefault();
 		// Posted synchronously inside the click: the extension only accepts user-initiated requests.
 		const answer = requestHandoff(r.awf);
-		say('Opening in AWFlow…', 'info', undefined, 0);
+		say(t('flow.opening'), 'info', undefined, 0);
 		answer.then((res) => {
-			if (res.ok) return say('Sent to AWFlow. Review it in the extension and confirm the import.');
+			if (res.ok) return say(t('flow.sent'));
 			const win = window.open(appHref, '_blank');
 			if (win) {
 				win.opener = null;
-				say('Opened the AWFlow web app to import it.');
-			} else say('Your browser blocked the new tab.', 'warn', appHref, 0);
+				say(t('flow.openedApp'));
+			} else say(t('flow.blocked'), 'warn', appHref, 0);
 		});
 	}
 
@@ -69,73 +72,73 @@
 				area.remove();
 				if (!ok) throw new Error('copy refused');
 			}
-			say(`Copied ${fileName}. In AWFlow, choose Import workflow and paste it.`);
+			say(t('recipe.use.copied', { file: fileName }));
 		} catch {
-			say("Couldn't copy. Download the file instead.", 'warn', r.awf, 0);
+			say(t('flow.copyFailed'), 'warn', r.awf, 0);
 		}
 	}
 
-	const CAPS: Record<string, { label: string; tone: string }> = {
-		'page-read': { label: 'the page you run it on', tone: 'page' },
-		'page-write': { label: 'changes that page', tone: 'page' },
-		clipboard: { label: 'your clipboard', tone: 'local' },
-		'local-file': { label: 'a file download', tone: 'local' },
-		storage: { label: 'values saved on this device', tone: 'local' },
-		'code-execution': { label: 'runs code', tone: 'page' },
+	const CAPS: Record<string, { key: UIKey; tone: string }> = {
+		'page-read': { key: 'recipe.touch.page', tone: 'page' },
+		'page-write': { key: 'recipe.touch.pageWrite', tone: 'page' },
+		clipboard: { key: 'recipe.touch.clipboard', tone: 'local' },
+		'local-file': { key: 'recipe.touch.file', tone: 'local' },
+		storage: { key: 'recipe.touch.storage', tone: 'local' },
+		'code-execution': { key: 'recipe.touch.code', tone: 'page' },
 	};
-	const t = r.touches;
-	const touches = [
-		...t.capabilities.filter((c) => CAPS[c]).map((c) => CAPS[c]),
-		...t.models.map((m) => ({ label: m.toLowerCase().startsWith('an on-device') ? 'an on-device model' : m, tone: 'model' })),
-		...t.apps.map((a) => ({ label: `your ${a} account`, tone: 'app' })),
-		...t.domains.map((d) => ({ label: d, tone: 'site' })),
-		...(t.dynamic ? [{ label: 'sites chosen while it runs', tone: 'site' }] : []),
-	];
+	const touch = r.touches;
+	const touches = $derived([
+		...touch.capabilities.filter((c) => CAPS[c]).map((c) => ({ label: t(CAPS[c].key), tone: CAPS[c].tone })),
+		...touch.models.map((m) => ({ label: m.toLowerCase().startsWith('an on-device') ? t('recipe.touch.model') : m, tone: 'model' })),
+		...touch.apps.map((a) => ({ label: t('recipe.touch.app', { app: a }), tone: 'app' })),
+		...touch.domains.map((d) => ({ label: d, tone: 'site' })),
+		...(touch.dynamic ? [{ label: t('recipe.touch.dynamic'), tone: 'site' }] : []),
+	]);
 </script>
 
 <aside class="awf-ruse not-content" aria-labelledby="awf-ruse-title-{r.slug}" data-pagefind-ignore>
 	<div class="awf-ruse__card">
-		<h2 class="awf-ruse__title" id="awf-ruse-title-{r.slug}">Use this recipe</h2>
-		<a class="awf-ruse__install" href={appHref} target="_blank" rel="noopener" onclick={install}>Install in AWFlow</a>
+		<h2 class="awf-ruse__title" id="awf-ruse-title-{r.slug}">{t('recipe.use.title')}</h2>
+		<a class="awf-ruse__install" href={appHref} target="_blank" rel="noopener" onclick={install}>{t('recipe.use.install')}</a>
 		<div class="awf-ruse__row">
-			<button type="button" class="awf-ruse__ghost" onclick={copy}>Copy .awf</button>
-			<a class="awf-ruse__ghost" href={r.awf} download={fileName}>Download</a>
+			<button type="button" class="awf-ruse__ghost" onclick={copy}>{t('recipe.use.copy')}</button>
+			<a class="awf-ruse__ghost" href={r.awf} download={fileName}>{t('recipe.use.download')}</a>
 		</div>
 		{#if status}
 			<p class="awf-ruse__status awf-ruse__status--{status.tone}" role="status">
 				{status.message}
-				{#if status.link}<a href={status.link} target="_blank" rel="noopener">Open it</a>{/if}
+				{#if status.link}<a href={status.link} target="_blank" rel="noopener">{t('recipe.use.openIt')}</a>{/if}
 			</p>
 		{/if}
 
 		<div class="awf-ruse__section">
-			<h3 class="awf-ruse__label">You'll need</h3>
+			<h3 class="awf-ruse__label">{t('recipe.use.needs')}</h3>
 			<ul>
 				{#each r.needs as n (n.label)}
-					<li>{#if n.href}<a href={n.href}>{n.label}</a>{:else}{n.label}{/if}</li>
+					<li>{#if n.href}<a href={t.href(n.href)}>{n.label}</a>{:else}{n.label}{/if}</li>
 				{:else}
-					<li>Nothing else: it runs as soon as it's imported.</li>
+					<li>{t('recipe.use.nothing')}</li>
 				{/each}
 			</ul>
 		</div>
 
 		<div class="awf-ruse__section">
-			<h3 class="awf-ruse__label">It touches</h3>
+			<h3 class="awf-ruse__label">{t('recipe.use.touches')}</h3>
 			{#if touches.length}
 				<ul class="awf-ruse__chips">
 					{#each touches as x (x.label)}<li class="awf-ruse__chip awf-ruse__chip--{x.tone}">{x.label}</li>{/each}
 				</ul>
 			{:else}
-				<p>Nothing outside AWFlow.</p>
+				<p>{t('recipe.use.nothingOutside')}</p>
 			{/if}
-			<p class="awf-ruse__note">Worked out from the workflow's steps, like the permission list the marketplace shows before you install.</p>
+			<p class="awf-ruse__note">{t('recipe.use.note')}</p>
 		</div>
 	</div>
 	<p class="awf-ruse__market">
 		{#if listing}
-			Also on the <a href={listing} target="_blank" rel="noopener">marketplace</a>, published by the AWFlow team.
+			{t('recipe.use.market.before')}<a href={listing} target="_blank" rel="noopener">{t('recipe.use.market.link')}</a>{t('recipe.use.market.after')}
 		{:else}
-			Not on the marketplace yet. <a href={MARKETPLACE_URL} target="_blank" rel="noopener">Browse the marketplace</a>
+			{t('recipe.use.market.none')} <a href={MARKETPLACE_URL} target="_blank" rel="noopener">{t('recipe.use.market.browse')}</a>
 		{/if}
 	</p>
 </aside>

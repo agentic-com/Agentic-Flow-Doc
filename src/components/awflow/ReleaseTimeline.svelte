@@ -1,12 +1,13 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * Release timeline for /releases/ (awflow/Agentic-Flow#1345, Releases.dc.html).
 	 * Newest first; the current release is open, older ones collapse (native <details>,
 	 * so they work without JS). Area chips filter every release's changes; they need
-	 * hydration (`client:load`), and without it every change stays visible.
+	 * hydration (`hydrate="load"`), and without it every change stays visible.
 	 */
-	import type { Release } from '../../data/releases';
+	import type { Lang } from '../../i18n/locales';
+	import { formatReleaseDate, type Release } from '../../data/releases';
+	import { createT } from '../../i18n/ui';
 	import ReleaseChanges from './ReleaseChanges.svelte';
 
 	interface Props {
@@ -16,56 +17,52 @@
 	}
 
 	let { lang = 'en', releases }: Props = $props();
+	const t = $derived(createT(lang));
 
-	let area = $state('All');
+	/** Internal value of the "all areas" chip; the label shown comes from the dictionary. */
+	const ALL = 'All';
+	let area = $state(ALL);
 
 	const areas = $derived([
-		'All',
+		ALL,
 		...Array.from(new Set(releases.flatMap((r) => r.changes.map((c) => c.area)))),
 	]);
 	const [current, ...older] = $derived(releases);
 
 	function pick(r: Release) {
-		return area === 'All' ? r.changes : r.changes.filter((c) => c.area === area);
+		return area === ALL ? r.changes : r.changes.filter((c) => c.area === area);
 	}
 	function href(version: string) {
-		return `/releases/v${version.replace(/\./g, '-')}/`;
+		return t.href(`/releases/v${version.replace(/\./g, '-')}/`);
 	}
-	function date(iso: string) {
-		return new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', {
-			day: 'numeric',
-			month: 'short',
-			year: 'numeric',
-			timeZone: 'UTC',
-		});
-	}
+	const date = (iso: string) => formatReleaseDate(iso, lang);
 	function counts(r: Release) {
 		const list = pick(r);
 		return (['new', 'improved', 'fixed'] as const)
 			.map((k) => [k, list.filter((c) => c.kind === k).length] as const)
 			.filter(([, n]) => n > 0)
-			.map(([k, n]) => `${n} ${k}`)
+			.map(([k, n]) => t(`release.count.${k}`, { n }))
 			.join(' · ');
 	}
 	const currentChanges = $derived(current ? pick(current) : []);
-	const visibleOlder = $derived(older.filter((r) => area === 'All' || pick(r).length > 0));
+	const visibleOlder = $derived(older.filter((r) => area === ALL || pick(r).length > 0));
 </script>
 
 <div class="awf-tl not-content">
 	<div class="awf-tl__actions">
 		<a class="awf-tl__btn awf-tl__btn--solid" href="/releases/rss.xml">
 			<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M5 3a16 16 0 0 1 16 16h-3A13 13 0 0 0 5 6V3Zm0 6a10 10 0 0 1 10 10h-3a7 7 0 0 0-7-7V9Zm2 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"/></svg>
-			Subscribe (RSS)
+			{t('release.subscribe')}
 		</a>
-		<a class="awf-tl__btn" href="/releases/breaking-changes/">Breaking changes &amp; migration</a>
+		<a class="awf-tl__btn" href={t.href('/releases/breaking-changes/')}>{t('release.breaking')}</a>
 	</div>
-	<div class="awf-tl__chips" role="group" aria-label="Filter changes by area">
+	<div class="awf-tl__chips" role="group" aria-label={t('release.filter')}>
 		{#each areas as a (a)}
-			<button type="button" class="awf-tl__chip" aria-pressed={a === area} onclick={() => (area = a)}>{a}</button>
+			<button type="button" class="awf-tl__chip" aria-pressed={a === area} onclick={() => (area = a)}>{a === ALL ? t('release.all') : a}</button>
 		{/each}
 	</div>
 	<p class="awf-tl__status" aria-live="polite">
-		{area === 'All' ? '' : `Showing ${area} changes only.`}
+		{area === ALL ? '' : t('release.showing', { area })}
 	</p>
 
 	<ol class="awf-tl__rail" role="list">
@@ -77,7 +74,7 @@
 						<p class="awf-tl__meta">
 							<span class="awf-tl__ver awf-tl__ver--solid">v{current.version}</span>
 							<span><time datetime={current.date}>{date(current.date)}</time> · {current.browsers.join(', ')}</span>
-							<span class="awf-tl__latest">Latest</span>
+							<span class="awf-tl__latest">{t('release.latest')}</span>
 						</p>
 						<h2 id="rel-current" class="awf-tl__headline">
 							<a href={href(current.version)}>{current.headline}</a>
@@ -88,9 +85,9 @@
 						{#if currentChanges.length}
 							<ReleaseChanges {lang} release={current} changes={currentChanges} layout="flat" />
 						{:else}
-							<p class="awf-tl__empty">No {area} changes in this release.</p>
+							<p class="awf-tl__empty">{t('release.empty', { area })}</p>
 						{/if}
-						<a class="awf-tl__more" href={href(current.version)}>Read the full v{current.version} notes →</a>
+						<a class="awf-tl__more" href={href(current.version)}>{t('release.readFull', { version: current.version })}</a>
 					</div>
 				</article>
 			</li>
@@ -111,7 +108,7 @@
 					<div class="awf-tl__older-body">
 						<p class="awf-tl__summary">{r.teaser ?? r.summary}</p>
 						<ReleaseChanges {lang} release={r} changes={pick(r)} layout="flat" />
-						<a class="awf-tl__more" href={href(r.version)}>Read the full v{r.version} notes →</a>
+						<a class="awf-tl__more" href={href(r.version)}>{t('release.readFull', { version: r.version })}</a>
 					</div>
 				</details>
 			</li>

@@ -14,6 +14,9 @@
  * Draft a new entry with `bun scripts/releases/draft.ts --from <ref> --to <ref>` (see CONTRIBUTING.md).
  */
 
+import type { Lang } from '../i18n/locales';
+import { createT } from '../i18n/ui';
+
 export type ChangeKind = 'new' | 'improved' | 'fixed';
 
 export const AREAS = [
@@ -296,14 +299,12 @@ export function getRelease(version: string): Release {
 	return release;
 }
 
-/** "2026-10-10" → "10 Oct 2026" (fixed locale and UTC so server and client agree). */
-export function formatReleaseDate(iso: string): string {
-	return new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', {
-		day: 'numeric',
-		month: 'short',
-		year: 'numeric',
-		timeZone: 'UTC',
-	});
+/**
+ * "2026-10-10" → "10 Oct 2026" (or "10 October 2026" with `month: 'long'`). Fixed locale per language
+ * and UTC so server and client agree; English keeps en-GB.
+ */
+export function formatReleaseDate(iso: string, lang: Lang | string = 'en', month: 'short' | 'long' = 'short'): string {
+	return createT(lang).date(iso, { day: 'numeric', month, year: 'numeric' });
 }
 
 /**

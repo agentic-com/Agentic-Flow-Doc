@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Lang } from '../../i18n/locales';
 	/**
 	 * <RecipeSteps> — "How it works" for a recipe (awflow/Agentic-Flow#1342): one card per step of
 	 * the workflow, with the node it uses (linked to its reference page) and a "Make it yours" hint.
 	 *
+	 *   import { RecipeSteps } from '@components/awflow';
 	 *   <RecipeSteps slug="summarize-this-page" steps={[
 	 *     { node: 'get-text', title: 'Read the page', body: 'Takes the visible text…', tweak: 'Set **DOM Selector** to `article`…' },
 	 *   ]} />
@@ -11,12 +11,14 @@
 	 * `node` is the step's id inside the .awf (`also` lists nodes plugged into it, such as the model).
 	 * `body` and `tweak` accept `code`, **bold** and [links](/path/).
 	 * The build fails when a step names a node the workflow doesn't have.
- *
- * A step can carry screenshots: pass Astro children with `slot="shot-<n>"` (n = step number), e.g.
- *   <StepShot slot="shot-2" shot="recipe-summarize-get-text" spot="dom-selector" n={2} />
- * Several shots for one step go in one wrapper: `<div slot="shot-2">…</div>`.
+	 *
+	 * A step can carry screenshots: pass Astro children with `slot="shot-<n>"` (n = step number), e.g.
+	 *   <StepShot slot="shot-2" shot="recipe-summarize-get-text" spot="dom-selector" n={2} />
+	 * Several shots for one step go in one wrapper: `<div slot="shot-2">…</div>`.
 	 */
 	import type { Snippet } from 'svelte';
+	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
 	import { getRecipe, type RecipeNode } from './recipes';
 
 	interface Step {
@@ -27,6 +29,7 @@
 		tweak?: string;
 	}
 	let { lang = 'en', slug, steps, ...slots }: { lang?: Lang; slug: string; steps: Step[]; [slot: `shot-${number}`]: Snippet | undefined } = $props();
+	const t = $derived(createT(lang));
 
 	// svelte-ignore state_referenced_locally
 	const recipe = getRecipe(slug);
@@ -42,7 +45,7 @@
 		return escape(s)
 			.replace(/`([^`]+)`/g, '<code>$1</code>')
 			.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-			.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+			.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_m, text, href) => `<a href="${t.href(href)}">${text}</a>`);
 	}
 
 	// svelte-ignore state_referenced_locally
@@ -58,13 +61,13 @@
 				<p class="awf-rsteps__nodes">
 					{#each [s.main, ...s.extra] as n (n.id)}
 						<span class="awf-rsteps__node" style="--awf-node: var(--awf-family-{n.family}, var(--awf-family-core))">
-							{#if n.docLink}<a href={n.docLink}>{n.type}<span class="sr-only"> node</span> reference <span aria-hidden="true">→</span></a>
+							{#if n.docLink}<a href={t.href(n.docLink)}>{n.type}<span class="sr-only"> {t('recipe.steps.node')}</span> {t('recipe.steps.reference')} <span aria-hidden="true">→</span></a>
 							{:else}{n.type}{/if}
 						</span>
 					{/each}
 				</p>
 				<p class="awf-rsteps__text">{@html inline(s.body)}</p>
-				{#if s.tweak}<p class="awf-rsteps__tweak"><strong>Make it yours</strong> — {@html inline(s.tweak)}</p>{/if}
+				{#if s.tweak}<p class="awf-rsteps__tweak"><strong>{t('recipe.steps.tweak')}</strong> — {@html inline(s.tweak)}</p>{/if}
 				{#if slots[`shot-${i + 1}`]}<div class="awf-rsteps__shot">{@render slots[`shot-${i + 1}`]?.()}</div>{/if}
 			</div>
 		</li>
