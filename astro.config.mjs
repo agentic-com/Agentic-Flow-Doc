@@ -21,6 +21,8 @@ import svelte from "@astrojs/svelte";
 import { loadEnv } from "vite";
 import mdx from "@astrojs/mdx";
 import { satteri } from "@astrojs/markdown-satteri";
+import { i18nLinks } from "./src/i18n/markdown/links.ts";
+import { i18nHeadingIds } from "./src/i18n/markdown/heading-ids.ts";
 import { CHROME_WEB_STORE_URL } from "./src/data/stores.ts";
 const { DOCS_SITE_URL } = loadEnv(
   process.env.NODE_ENV ?? "production",
@@ -222,7 +224,7 @@ export default defineConfig({
   markdown: {
     // Astro 7's default Sätteri processor rejects raw `html` nodes in MDX;
     // astro-mermaid emits one per ```mermaid block, so let MDX parse them.
-    processor: satteri({ features: { rawHtml: true } }),
+    processor: satteri({ features: { rawHtml: true }, hastPlugins: [i18nLinks, i18nHeadingIds] }),
   },
   integrations: [mermaid({
     theme: "base",
