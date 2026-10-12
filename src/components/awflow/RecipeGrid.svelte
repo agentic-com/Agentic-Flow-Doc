@@ -3,18 +3,23 @@
 	 * <RecipeGrid> — the filterable recipe cards on /recipes/ (awflow/Agentic-Flow#1342).
 	 *
 	 *   import { RecipeGrid } from '@components/awflow';
-	 *   <RecipeGrid client:load />
+	 *   <RecipeGrid hydrate="load" />
 	 *
 	 * Goal chips, app, level and setup filters are mirrored in the URL query
 	 * (?goal=…&app=…&level=…&setup=…) so a filtered list can be shared. Without JS every card shows.
 	 */
+	import type { Lang } from '../../i18n/locales';
 	import { onMount } from 'svelte';
-	import { GOALS, LEVEL_LABEL, SETUP, recipes, type Recipe, type RecipeLevel, type RecipeSetup } from './recipes';
+	import { createT } from '../../i18n/ui';
+	import { GOALS, LEVELS, SETUP, goalLabel, levelLabel, recipes, type Recipe, type RecipeSetup } from './recipes';
+
+	let { lang = 'en' }: { lang?: Lang } = $props();
+	const t = $derived(createT(lang));
 
 	const ALL = 'all';
-	const goals = GOALS.filter((g) => recipes.some((r) => r.goal === g));
+	const goals = GOALS.map((g) => g.id).filter((id) => recipes.some((r) => r.goal === id));
 	const apps = [...new Set(recipes.flatMap((r) => r.apps))].sort((a, b) => a.localeCompare(b));
-	const levels = (Object.keys(LEVEL_LABEL) as RecipeLevel[]).filter((l) => recipes.some((r) => r.level === l));
+	const levels = LEVELS.filter((l) => recipes.some((r) => r.level === l));
 	const setups = (Object.keys(SETUP) as RecipeSetup[]).filter((s) => recipes.some((r) => r.setup === s));
 
 	let goal = $state<string>(ALL);
@@ -72,39 +77,39 @@
 </script>
 
 <div class="awf-rgrid not-content">
-	<div class="awf-rgrid__goals" role="group" aria-label="Filter by goal">
-		<button type="button" class="awf-rgrid__goal" aria-pressed={goal === ALL} onclick={() => choose(ALL)}>All goals</button>
+	<div class="awf-rgrid__goals" role="group" aria-label={t('recipe.filter.label')}>
+		<button type="button" class="awf-rgrid__goal" aria-pressed={goal === ALL} onclick={() => choose(ALL)}>{t('recipe.filter.allGoals')}</button>
 		{#each goals as g (g)}
-			<button type="button" class="awf-rgrid__goal" aria-pressed={goal === g} onclick={() => choose(g)}>{g}</button>
+			<button type="button" class="awf-rgrid__goal" aria-pressed={goal === g} onclick={() => choose(g)}>{goalLabel(g, t)}</button>
 		{/each}
 	</div>
 
 	<div class="awf-rgrid__filters">
 		<label>
-			App
+			{t('recipe.filter.app')}
 			<select bind:value={app} onchange={sync}>
-				<option value={ALL}>Any</option>
-				<option value="none">None (no account)</option>
+				<option value={ALL}>{t('recipe.filter.any')}</option>
+				<option value="none">{t('recipe.filter.noApp')}</option>
 				{#each apps as a (a)}<option value={a}>{a}</option>{/each}
 			</select>
 		</label>
 		<label>
-			Level
+			{t('recipe.filter.level')}
 			<select bind:value={level} onchange={sync}>
-				<option value={ALL}>All</option>
-				{#each levels as l (l)}<option value={l}>{LEVEL_LABEL[l]}</option>{/each}
+				<option value={ALL}>{t('recipe.filter.all')}</option>
+				{#each levels as l (l)}<option value={l}>{levelLabel(l, t)}</option>{/each}
 			</select>
 		</label>
 		<label>
-			Setup
+			{t('recipe.filter.setup')}
 			<select bind:value={setup} onchange={sync}>
-				<option value={ALL}>Any</option>
-				{#each setups as s (s)}<option value={s}>{SETUP[s].label}</option>{/each}
+				<option value={ALL}>{t('recipe.filter.any')}</option>
+				{#each setups as s (s)}<option value={s}>{t(SETUP[s].labelKey)}</option>{/each}
 			</select>
 		</label>
 		<span class="awf-rgrid__count" aria-live="polite">
-			{shown.length} of {recipes.length} recipes
-			{#if filtered}<button type="button" class="awf-rgrid__reset" onclick={reset}>Clear filters</button>{/if}
+			{t.plural('recipe.count', shown.length, { shown: shown.length, total: recipes.length })}
+			{#if filtered}<button type="button" class="awf-rgrid__reset" onclick={reset}>{t('recipe.clear')}</button>{/if}
 		</span>
 	</div>
 
@@ -112,7 +117,7 @@
 		<ul class="awf-rgrid__list" role="list">
 			{#each shown as r (r.slug)}
 				<li>
-					<a class="awf-rcard" href={r.href}>
+					<a class="awf-rcard" href={t.href(r.href)}>
 						<span class="awf-rcard__thumb" aria-hidden="true">
 							{#each strip(r) as n, i (n.id)}
 								{#if i > 0}<span class="awf-rcard__wire"><i style="animation-delay: {(i - 1) * 0.6}s"></i></span>{/if}
@@ -123,15 +128,15 @@
 							{#if more(r)}<span class="awf-rcard__more">+{more(r)}</span>{/if}
 						</span>
 						<span class="awf-rcard__body">
-							<span class="awf-rcard__goal">{r.goal}</span>
+							<span class="awf-rcard__goal">{goalLabel(r.goal, t)}</span>
 							<span class="awf-rcard__title">{r.title}</span>
 							<span class="awf-rcard__desc">{r.description}</span>
 							<span class="awf-rcard__meta">
-								<span class="awf-chip">{LEVEL_LABEL[r.level]}</span>
-								<span class="awf-chip">{r.minutes} min</span>
-								<span class="awf-badge awf-badge--{SETUP[r.setup].variant}">{SETUP[r.setup].label}</span>
+								<span class="awf-chip">{levelLabel(r.level, t)}</span>
+								<span class="awf-chip">{t('common.minutes', { n: r.minutes })}</span>
+								<span class="awf-badge awf-badge--{SETUP[r.setup].variant}">{t(SETUP[r.setup].labelKey)}</span>
 								{#each r.apps as a (a)}<span class="awf-chip">{a}</span>{/each}
-								<span class="awf-rcard__try">Try it <span aria-hidden="true">→</span></span>
+								<span class="awf-rcard__try">{t('recipe.try')} <span aria-hidden="true">→</span></span>
 							</span>
 						</span>
 					</a>
@@ -140,14 +145,14 @@
 		</ul>
 	{:else}
 		<p class="awf-rgrid__empty">
-			No recipe matches these filters yet. <button type="button" class="awf-rgrid__reset" onclick={reset}>Clear filters</button>
+			{t('recipe.empty')} <button type="button" class="awf-rgrid__reset" onclick={reset}>{t('recipe.clear')}</button>
 		</p>
 	{/if}
 
 	<div class="awf-rgrid__cta">
-		<p><strong>Can't find it?</strong> Describe the outcome and Aria builds a first version for you, or ask for it on the request board.</p>
-		<a class="awf-rgrid__aria" href="#ask-aria">Describe it to Aria</a>
-		<a class="awf-rgrid__request" href="https://app.awflow.io/#/app/marketplace/requests" target="_blank" rel="noopener">Request a recipe</a>
+		<p><strong>{t('recipe.cta.lead')}</strong> {t('recipe.cta.body')}</p>
+		<a class="awf-rgrid__aria" href="#ask-aria">{t('recipe.cta.aria')}</a>
+		<a class="awf-rgrid__request" href="https://app.awflow.io/#/app/marketplace/requests" target="_blank" rel="noopener">{t('recipe.cta.request')}</a>
 	</div>
 </div>
 

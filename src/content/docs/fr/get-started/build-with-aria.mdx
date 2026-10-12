@@ -1,0 +1,83 @@
+---
+title: Demander à Aria d'en créer un
+description: "Décrivez un workflow avec vos mots, laissez Aria le créer, passez en revue les changements et ouvrez-le sur le canevas."
+section: get-started
+kind: lesson
+lesson:
+  level: 1
+  order: 5
+  minutes: 5
+sidebar:
+  label: "5 · Demander à Aria d'en créer un"
+i18n:
+  source: "a69fd7b01769451f2d0375dbb8222c9dbbca07b0"
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awflow";
+
+<LessonProgress
+  hydrate="visible"
+  level={1}
+  order={5}
+  total={5}
+  minutes={5}
+  youWill={[
+    "Choisir un modèle pour Aria",
+    "Passer un chat en mode Build et décrire un workflow",
+    "Passer en revue ce qu'Aria a créé et demander une modification",
+    "L'enregistrer et l'ouvrir sur le canevas",
+  ]}
+  before={["Leçons 2 à 4 terminées, pour pouvoir lire ce qu'Aria crée", "Un modèle sur l'appareil ou un fournisseur d'IA (vous en choisirez un à l'étape 1)"]}
+/>
+
+**Aria** est l'assistant d'AWFlow. En mode **Build**, chaque message que vous envoyez modifie un workflow : Aria choisit les nœuds, les relie et remplit leurs paramètres. Vous avez créé trois workflows à la main, vous pouvez donc maintenant vérifier son travail et corriger ce qu'elle oublie.
+
+## Étapes
+
+<StepCard n={1} title="Ouvrir Aria et choisir un modèle" check="la zone de saisie du chat est prête, avec votre modèle affiché dans son sélecteur de modèle.">
+  Cliquez sur **Assistant** dans la barre latérale d'AWFlow. La première fois, **Découvrez Aria, votre IA privée** vous demande quel modèle utiliser :
+
+  - **Privé, sur cet appareil** (*Recommandé*) : gratuit, rien ne quitte votre appareil, téléchargé une seule fois en arrière-plan. Il nécessite WebGPU ; sans lui, la carte indique que ce navigateur ne peut pas exécuter de modèles sur l'appareil.
+  - **IA intégrée de Chrome** (dans Chrome) : Gemini Nano, téléchargé une fois par Chrome. **Configurer** vous guide pas à pas.
+  - **Connecter un fournisseur cloud** : **Ajouter une clé** ouvre [Fournisseurs d'IA](/app/settings/providers/). Les modèles cloud plus grands créent plus fiablement des workflows complexes.
+
+  Cliquez sur **Commencer à discuter**. Vous pouvez changer de modèle à tout moment depuis la zone de saisie.
+
+  <StepShot shot="gs-meet-aria" spot="start-chatting" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Passer en mode Build et décrire le workflow" check="une carte Building your workflow affiche ses étapes, et l'Aperçu du flux de travail dessine les nœuds.">
+  Sous la zone de message, faites passer **Chat | Build** sur **Build**. Décrivez ensuite ce qu'il faut automatiser, avec le déclencheur, les étapes et le résultat :
+
+  ```text title="Message"
+  When I press a keyboard shortcut, take the text I selected on the page,
+  translate it into French with an on-device model, and show the translation.
+  ```
+
+  Aria enchaîne *Understand your request*, *Look for similar workflows*, *Choose an approach*, *Write the workflow* et *Check it's valid*.
+
+  <StepShot shot="aria-build" spot="chat-build-switch" n={2} />
+</StepCard>
+
+<StepCard n={3} title="Passer en revue ce qu'elle a créé" check="vous pouvez nommer chaque nœud de l'aperçu et dire ce qu'il fait.">
+  Lisez l'**Aperçu du flux de travail** de gauche à droite. Vous devriez reconnaître les éléments des leçons précédentes : un déclencheur **Raccourci clavier**, **Obtenir le texte sélectionné**, une chaîne avec un modèle dans son emplacement **Modèle**, et une étape d'affichage. Si une carte indique **settings to check before it runs**, cliquez sur chaque ligne pour voir ce qu'Aria attend de vous, par exemple un modèle à choisir.
+</StepCard>
+
+<StepCard n={4} title="Demander une modification" check="la réponse se termine par une pastille de changement comme « v2 · +1 step ».">
+  Continuez à discuter en mode Build : `Also copy the translation to the clipboard.` Chaque modification ajoute une version. **View changes** met en évidence ce qui a bougé, et **Annuler** annule la dernière modification.
+</StepCard>
+
+<StepCard n={5} title="L'enregistrer et l'ouvrir sur le canevas" check="le canevas s'ouvre avec les mêmes nœuds que l'aperçu.">
+  Cliquez sur **Enregistrer le flux de travail**, donnez-lui un nom, gardez **Local (this browser)**, puis cliquez sur **Créer un flux de travail**. Cliquez ensuite sur **Ouvrir dans l'éditeur**. À partir de là, c'est un workflow normal : testez-le avec **Tester le workflow**, puis activez-le comme dans la [leçon 4](/get-started/first-automation/).
+</StepCard>
+
+<Aside type="tip" title="De cette documentation directement à Aria">
+Appuyez sur <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>I</kbd> sur n'importe quelle page de la documentation (ou cliquez sur **Demander à Aria**), saisissez ce que vous voulez et choisissez **Build this with Aria**. La demande s'ouvre dans votre AWFlow en mode Build, avec la page que vous lisiez comme contexte.
+</Aside>
+
+Envie d'aller plus loin ? [Créer des workflows dans le chat](/app/chat-and-agents/building-workflows-in-chat/) explique comment améliorer un workflow existant, mentionner d'autres workflows et utiliser le dock du canevas.
+
+<LessonDone hydrate="load" title="Niveau 1 terminé. Vous automatisez maintenant." next={{ href: "/get-started/working-with-data/", label: "Niveau 2" }}>
+  Vous savez créer, exécuter, automatiser et déléguer un workflow. Le niveau 2 porte sur les données qui circulent entre les étapes.
+</LessonDone>

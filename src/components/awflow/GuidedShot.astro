@@ -15,6 +15,7 @@
  */
 import { getSpot, inlineMarkdown, resolveShot } from '../../data/shots';
 import GuidedShotIsland from './GuidedShot.svelte';
+import { pageLang } from '../../i18n/ui';
 
 interface Step {
 	/** Spot id in the shot's JSON (`hotspots[].id`). */
@@ -104,4 +105,4 @@ const counter = ((Astro.locals as { __awfGuided?: number }).__awfGuided ?? 0) + 
 const uid = `awf-guided-${shot}-${counter}`;
 ---
 
-<GuidedShotIsland client:visible uid={uid} alt={alt ?? r.entry.alt} light={r.light} dark={r.dark} items={placedItems} caption={caption} crop={crop} />
+<GuidedShotIsland client:visible uid={uid} alt={alt ?? r.entry.alt} light={r.light} dark={r.dark} items={placedItems} caption={caption} crop={crop} lang={pageLang(Astro)} />

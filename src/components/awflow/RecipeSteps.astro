@@ -1,0 +1,32 @@
+---
+/** Passes the page language to the island; `hydrate` replaces `client:*` (spec §1). */
+import Island from './RecipeSteps.svelte';
+import { pageLang } from '../../i18n/ui';
+
+interface Props {
+	hydrate?: 'load' | 'idle' | 'visible';
+	[key: string]: unknown;
+}
+const { hydrate, ...props } = Astro.props;
+const lang = pageLang(Astro);
+// Step screenshots are named slots `shot-<n>`; forward only the ones the page filled.
+const names = (Array.isArray(props.steps) ? props.steps : []).map((_, i) => `shot-${i + 1}`);
+---
+
+{hydrate === 'load' ? (
+	<Island client:load {...props} lang={lang}>
+		{names.map((name) => Astro.slots.has(name) && (<Fragment slot={name}><slot name={name} /></Fragment>))}
+	</Island>
+) : hydrate === 'idle' ? (
+	<Island client:idle {...props} lang={lang}>
+		{names.map((name) => Astro.slots.has(name) && (<Fragment slot={name}><slot name={name} /></Fragment>))}
+	</Island>
+) : hydrate === 'visible' ? (
+	<Island client:visible {...props} lang={lang}>
+		{names.map((name) => Astro.slots.has(name) && (<Fragment slot={name}><slot name={name} /></Fragment>))}
+	</Island>
+) : (
+	<Island {...props} lang={lang}>
+		{names.map((name) => Astro.slots.has(name) && (<Fragment slot={name}><slot name={name} /></Fragment>))}
+	</Island>
+)}

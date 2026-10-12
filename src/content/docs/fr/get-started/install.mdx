@@ -1,0 +1,94 @@
+---
+title: Installer AWFlow
+description: "Ajoutez l'extension à votre navigateur, épinglez-la, ouvrez le panneau latéral et choisissez si vous avez besoin d'un compte."
+section: get-started
+kind: lesson
+lesson:
+  level: 1
+  order: 1
+  minutes: 3
+sidebar:
+  label: "1 · Installer AWFlow"
+i18n:
+  source: "dc2b34a0e2b23ce8aa048e8937f2ee17765fdfd3"
+---
+
+import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
+import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awflow";
+import { CHROME_WEB_STORE_URL, FIREFOX_ADDONS_URL } from "../../../../data/stores";
+
+<LessonProgress
+  hydrate="visible"
+  level={1}
+  order={1}
+  total={5}
+  minutes={3}
+  youWill={[
+    "Installer l'extension AWFlow",
+    "L'épingler dans votre barre d'outils",
+    "Ouvrir l'application dans le panneau latéral",
+    "Décider si vous avez besoin d'un compte (pas encore)",
+  ]}
+  before={["Chrome, Edge, Brave ou Firefox 140+ sur un ordinateur", "L'autorisation d'installer des extensions de navigateur"]}
+/>
+
+AWFlow est une extension de navigateur. Elle s'exécute dans votre navigateur, à côté de la page que vous consultez, et peut donc lire cette page et agir dessus. Vous n'avez besoin ni d'un compte ni d'un serveur.
+
+## Installation
+
+<Tabs syncKey="browser">
+<TabItem label="Chrome, Edge, Brave">
+
+<StepCard n={1} title="Ajouter l'extension" check="un onglet de bienvenue « Agentic Workflow » s'ouvre.">
+  Ouvrez <a href={CHROME_WEB_STORE_URL} target="_blank" rel="noopener">AWFlow sur le Chrome Web Store</a> et cliquez sur **Ajouter à Chrome**, puis sur **Ajouter l'extension**. Edge, Brave et les autres navigateurs Chromium l'installent depuis le même store.
+</StepCard>
+
+<StepCard n={2} title="L'épingler dans la barre d'outils" check="l'icône AWFlow reste visible à côté de la barre d'adresse.">
+  Cliquez sur l'icône en forme de pièce de puzzle **Extensions** dans la barre d'outils, puis sur l'épingle à côté de **Agentic Workflow**.
+</StepCard>
+
+</TabItem>
+<TabItem label="Firefox">
+
+<StepCard n={1} title="Ajouter l'extension" check="un onglet de bienvenue « Agentic Workflow » s'ouvre.">
+  {FIREFOX_ADDONS_URL ? (
+    <>Ouvrez <a href={FIREFOX_ADDONS_URL} target="_blank" rel="noopener">AWFlow sur Firefox Add-ons</a> et cliquez sur <strong>Ajouter à Firefox</strong>, puis sur <strong>Ajouter</strong>. Il vous faut Firefox 140 ou une version ultérieure, sur un ordinateur.</>
+  ) : (
+    <>AWFlow n'est pas encore sur Firefox Add-ons. La fiche arrive ; d'ici là, installez-le dans Chrome, Edge ou Brave. Une fois la fiche en ligne : ouvrez AWFlow sur Firefox Add-ons et cliquez sur <strong>Ajouter à Firefox</strong>, puis sur <strong>Ajouter</strong>. Il vous faut Firefox 140 ou une version ultérieure, sur un ordinateur.</>
+  )}
+</StepCard>
+
+<StepCard n={2} title="L'épingler et autoriser l'accès aux sites web" check="l'icône AWFlow est dans la barre d'outils, et l'application n'affiche pas de carte Autoriser l'accès.">
+  Si l'icône n'est pas dans la barre d'outils, ouvrez le menu **Extensions** (pièce de puzzle) et choisissez **Épingler dans la barre d'outils**. Les étapes qui agissent sur une page ont besoin d'accéder aux sites que vous visitez : laissez **Accéder à vos données pour tous les sites web** activé dans `about:addons` → **Agentic Workflow** → **Permissions**. S'il est désactivé, l'application affiche une carte **Autoriser l'accès**.
+</StepCard>
+
+</TabItem>
+</Tabs>
+
+<StepCard n={3} title="Lancer le workflow de démarrage" check="les trois étapes s'allument l'une après l'autre et une citation apparaît, en cinq secondes environ.">
+  Sur la **page de bienvenue**, cliquez sur **Run “Start here”**. Un workflow prêt à l'emploi en trois étapes s'exécute sur votre appareil. Rien ne quitte votre navigateur.
+
+  La même page propose aussi **Commencer à partir d'un modèle**, **Décrivez-le à l'IA** et le **tutoriel de 2 minutes**. Vous ferez tout cela dans les prochaines leçons, vous pouvez donc les laisser de côté pour l'instant. Voir [La page de bienvenue](/app/account/welcome/).
+
+  <StepShot shot="welcome" spot="run-start-here" n={3} />
+</StepCard>
+
+<StepCard n={4} title="Ouvrir le panneau latéral" check="l'application AWFlow s'ouvre à côté de la page que vous consultez, et la page reste visible.">
+  Allez sur n'importe quel site web, puis cliquez sur l'icône **AWFlow** dans la barre d'outils. L'application s'ouvre dans le **panneau latéral** de Chrome (dans Firefox, la **barre latérale**), à côté de la page. Dans un panneau étroit, le bouton de la barre latérale en haut à gauche ouvre **Workflows**, **Assistant** et le reste. Faites glisser le bord gauche du panneau pour l'élargir ; le canevas est plus facile à utiliser au-dessus de 670 px environ. Voir [Utiliser le panneau latéral](/app/side-panel/).
+
+  <StepShot shot="gs-side-panel-home" spot="sidebar-button" n={4} zoom={100} height={360} />
+</StepCard>
+
+## Espace de travail local ou compte ?
+
+Vous démarrez dans un **espace de travail local** : pas de compte, et tout est enregistré dans ce navigateur. C'est tout ce qu'il vous faut pour chaque leçon du niveau 1.
+
+Connectez-vous plus tard si vous voulez retrouver vos workflows dans le cloud sur plusieurs appareils, ou installer et publier des workflows sur la Place de marché. Votre travail local peut alors être transféré vers votre compte. Les fournisseurs d'IA, les chats et les bases de connaissances restent toujours sur votre appareil. Voir [Local ou cloud](/app/account/local-vs-cloud/).
+
+<Aside type="note" title="Vous utilisez Firefox ?">
+Presque tout fonctionne de la même façon. Les principales différences : l'application s'ouvre dans la **barre latérale**, les raccourcis clavier se définissent dans `about:addons`, et les modèles **WebLLM** sur l'appareil ont besoin de WebGPU, qui manque à certaines configurations Firefox. Voir [Différences avec Firefox](/app/troubleshooting/browser-compatibility/#firefox). Safari n'est pas encore pris en charge.
+</Aside>
+
+<LessonDone hydrate="load" title="AWFlow est installé." next={{ href: "/get-started/first-workflow/", label: "Leçon 2" }}>
+  Vous allez maintenant créer votre propre workflow en deux étapes sur le canevas.
+</LessonDone>

@@ -3,18 +3,22 @@
 	 * Model choice tabs for lessons (awflow/Agentic-Flow#1341): on-device, API key, Ollama.
 	 * Pass each path as a named slot; the reader's choice is remembered across lessons (best effort).
 	 *
-	 *   <ModelTabs client:load>
+	 *   <ModelTabs hydrate="load">
 	 *     <div slot="ondevice">…</div>
 	 *     <div slot="apikey">…</div>
 	 *     <div slot="ollama">…</div>
 	 *   </ModelTabs>
 	 */
+	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
 	import type { Snippet } from 'svelte';
 	import { onMount } from 'svelte';
 
 	type ModelId = 'ondevice' | 'apikey' | 'ollama';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		ondevice?: Snippet;
 		apikey?: Snippet;
 		ollama?: Snippet;
@@ -22,7 +26,9 @@
 		label?: string;
 	}
 
-	let { ondevice, apikey, ollama, label = 'Model choice' }: Props = $props();
+	let { lang = 'en', ondevice, apikey, ollama, label: labelProp }: Props = $props();
+	const t = $derived(createT(lang));
+	const label = $derived(labelProp ?? t('model.label'));
 
 	const KEY = 'awf-learn-model';
 	const pid = $props.id();
@@ -30,11 +36,11 @@
 	const tabs = $derived(
 		(
 			[
-				{ id: 'ondevice', label: 'On-device (free)', panel: ondevice },
-				{ id: 'apikey', label: 'API key', panel: apikey },
-				{ id: 'ollama', label: 'Ollama', panel: ollama },
+				{ id: 'ondevice', label: t('model.ondevice'), panel: ondevice },
+				{ id: 'apikey', label: t('model.apikey'), panel: apikey },
+				{ id: 'ollama', label: t('model.ollama'), panel: ollama },
 			] as { id: ModelId; label: string; panel?: Snippet }[]
-		).filter((t) => t.panel),
+		).filter((tab) => tab.panel),
 	);
 
 	let selected = $state<ModelId>('ondevice');

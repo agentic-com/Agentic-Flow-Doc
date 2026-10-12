@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
 	interface Port {
 		/** Port name as shown on the node, e.g. "true", "done", "item". */
 		name: string;
@@ -7,12 +9,16 @@
 		type?: string;
 	}
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		ports: Port[];
 		/** Accessible name of the list. */
 		label?: string;
 	}
 
-	let { ports = [], label = 'Output ports' }: Props = $props();
+	let { lang = 'en', ports = [], label: labelProp }: Props = $props();
+	const t = $derived(createT(lang));
+	const label = $derived(labelProp ?? t('node.ports'));
 </script>
 
 <ul class="awf-ports" aria-label={label}>

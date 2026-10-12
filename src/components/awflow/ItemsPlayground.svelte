@@ -8,11 +8,14 @@
 	 *
 	 * In MDX:
 	 *   import { ItemsPlayground } from '@components/awflow';
-	 *   <ItemsPlayground client:visible steps={[
+	 *   <ItemsPlayground hydrate="visible" steps={[
 	 *     { name: 'Get All Links', items: [{ text: 'Pricing', href: '/pricing' }] },
 	 *     { name: 'Edit Fields', runs: 1, items: [{ title: 'Pricing' }] },
 	 *   ]} />
 	 */
+	import type { Lang } from '../../i18n/locales';
+	import { createT } from '../../i18n/ui';
+	import { richParts } from '../../i18n/rich';
 
 	type Kind = 'trigger' | 'data' | 'flow' | 'ai' | 'io';
 	interface Step {
@@ -32,6 +35,8 @@
 		kind?: Kind;
 	}
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		steps: Step[];
 		/** Index of the step whose items are shown first. Defaults to the last step with items. */
 		selected?: number;
@@ -41,7 +46,8 @@
 		view?: 'table' | 'json';
 	}
 
-	let { steps, selected, caption, view = 'table' }: Props = $props();
+	let { lang = 'en', steps, selected, caption, view = 'table' }: Props = $props();
+	const t = $derived(createT(lang));
 
 	const hasItems = (s: Step) => s.items !== undefined;
 	const lastWithItems = () => {
@@ -65,7 +71,7 @@
 		if (s.count) return s.count;
 		if (!hasItems(s)) return '';
 		const n = asList(s.items).length;
-		return `${n} item${n === 1 ? '' : 's'}`;
+		return t.plural('items.count', n);
 	}
 	function cell(v: unknown): string {
 		if (v === undefined) return '';
@@ -88,13 +94,13 @@
 	const json = $derived(JSON.stringify(step?.items ?? null, null, 2));
 	const summary = $derived(
 		steps
-			.map((s) => [s.name, s.runs ? `ran ${s.runs} times` : '', countLabel(s)].filter(Boolean).join(', '))
+			.map((s) => [s.name, s.runs ? t.plural('items.ran', s.runs) : '', countLabel(s)].filter(Boolean).join(', '))
 			.join(' → ')
 	);
 </script>
 
 <figure class="awf-ip not-content" aria-labelledby="{uid}-cap">
-	<p class="awf-ip__sr" id="{uid}-cap">Example run: {summary}.{caption ? ` ${caption}` : ''}</p>
+	<p class="awf-ip__sr" id="{uid}-cap">{t('items.example', { summary })}{caption ? ` ${caption}` : ''}</p>
 	<ol class="awf-ip__steps">
 		{#each steps as s, i (i)}
 			<li class="awf-ip__step-wrap">
@@ -106,7 +112,7 @@
 					onclick={() => (current = i)}
 				>
 					<span class="awf-ip__name">{s.name}</span>
-					{#if s.runs}<span class="awf-ip__runs">ran {s.runs}×</span>{/if}
+					{#if s.runs}<span class="awf-ip__runs">{t('items.ranBadge', { count: s.runs })}</span>{/if}
 					{#if countLabel(s)}<span class="awf-ip__count">{countLabel(s)}</span>{/if}
 					{#if s.note}<span class="awf-ip__note">{s.note}</span>{/if}
 				</button>
@@ -117,19 +123,21 @@
 
 	<div class="awf-ip__panel">
 		<div class="awf-ip__bar">
-			<span class="awf-ip__label">Output of <strong>{step?.name}</strong></span>
-			<span class="awf-ip__toggle" role="group" aria-label="View as">
-				<button type="button" aria-pressed={mode === 'table'} onclick={() => (mode = 'table')}>Table</button>
-				<button type="button" aria-pressed={mode === 'json'} onclick={() => (mode = 'json')}>JSON</button>
+			<span class="awf-ip__label"
+				>{#each richParts(t('items.outputOf', { name: step?.name ?? '' })) as p, pi (pi)}{#if p.kind === 'strong'}<strong>{p.text}</strong>{:else if p.kind === 'text'}{p.text}{/if}{/each}</span
+			>
+			<span class="awf-ip__toggle" role="group" aria-label={t('items.viewAs')}>
+				<button type="button" aria-pressed={mode === 'table'} onclick={() => (mode = 'table')}>{t('items.table')}</button>
+				<button type="button" aria-pressed={mode === 'json'} onclick={() => (mode = 'json')}>{t('items.json')}</button>
 			</span>
 		</div>
 		{#if mode === 'table'}
 			<div class="awf-ip__table-wrap">
 				{#if rows.length === 0}
-					<p class="awf-ip__empty">No items. Nothing runs after this step on this path.</p>
+					<p class="awf-ip__empty">{t('items.empty')}</p>
 				{:else if columns.length === 0}
 					<table class="awf-ip__table">
-						<thead><tr><th scope="col">#</th><th scope="col">value</th></tr></thead>
+						<thead><tr><th scope="col">#</th><th scope="col">{t('items.value')}</th></tr></thead>
 						<tbody>
 							{#each rows as r, i (i)}<tr><td class="awf-ip__idx">{i}</td><td>{cell(r)}</td></tr>{/each}
 						</tbody>
