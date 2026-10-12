@@ -108,7 +108,7 @@
 			</select>
 		</label>
 		<span class="awf-rgrid__count" aria-live="polite">
-			{t('recipe.count', { shown: shown.length, total: recipes.length })}
+			{t.plural('recipe.count', shown.length, { shown: shown.length, total: recipes.length })}
 			{#if filtered}<button type="button" class="awf-rgrid__reset" onclick={reset}>{t('recipe.clear')}</button>{/if}
 		</span>
 	</div>

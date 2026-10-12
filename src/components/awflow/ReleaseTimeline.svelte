@@ -41,7 +41,7 @@
 		return (['new', 'improved', 'fixed'] as const)
 			.map((k) => [k, list.filter((c) => c.kind === k).length] as const)
 			.filter(([, n]) => n > 0)
-			.map(([k, n]) => t(`release.count.${k}`, { n }))
+			.map(([k, n]) => t.plural(`release.count.${k}`, n))
 			.join(' · ');
 	}
 	const currentChanges = $derived(current ? pick(current) : []);

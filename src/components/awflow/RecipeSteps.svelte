@@ -48,6 +48,12 @@
 			.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_m, text, href) => `<a href="${t.href(href)}">${text}</a>`);
 	}
 
+	/** "{type}[[ node]] reference" → text before, screen-reader-only part, text after. */
+	const nodeRef = (type: string): [string, string, string] => {
+		const m = /^([\s\S]*?)\[\[([\s\S]*?)\]\]([\s\S]*)$/.exec(t('recipe.steps.nodeRef', { type }));
+		return m ? [m[1], m[2], m[3]] : [type, '', ''];
+	};
+
 	// svelte-ignore state_referenced_locally
 	const rows = steps.map((s) => ({ ...s, main: find(s.node), extra: (s.also ?? []).map(find) }));
 </script>
@@ -61,7 +67,7 @@
 				<p class="awf-rsteps__nodes">
 					{#each [s.main, ...s.extra] as n (n.id)}
 						<span class="awf-rsteps__node" style="--awf-node: var(--awf-family-{n.family}, var(--awf-family-core))">
-							{#if n.docLink}<a href={t.href(n.docLink)}>{n.type}<span class="sr-only"> {t('recipe.steps.node')}</span> {t('recipe.steps.reference')} <span aria-hidden="true">→</span></a>
+							{#if n.docLink}{@const ref = nodeRef(n.type)}<a href={t.href(n.docLink)}>{ref[0]}<span class="sr-only">{ref[1]}</span>{ref[2]} <span aria-hidden="true">→</span></a>
 							{:else}{n.type}{/if}
 						</span>
 					{/each}

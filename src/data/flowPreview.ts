@@ -196,12 +196,16 @@ export function buildFlowModel(workflow: unknown, t: T = createT('en')): FlowMod
 	const steps = layers.flat();
 	const name = typeof workflow.name === 'string' && workflow.name.trim() ? workflow.name.trim() : t('flow.defaultName');
 	const branches = layers.filter((l) => l.length > 1).length;
+	// One full sentence per shape, so each language controls its own clause order.
+	const vars = { name, steps: steps.length, first: steps[0]?.name ?? '', last: steps[steps.length - 1]?.name ?? '' };
 	const summary =
-		t.plural('flow.summary.base', steps.length, { name }) +
-		(steps[0] ? t('flow.summary.start', { first: steps[0].name }) : '') +
-		(steps.length > 1 ? t('flow.summary.end', { last: steps[steps.length - 1].name }) : '') +
-		(branches ? t.plural('flow.summary.branch', branches) : '') +
-		t('flow.summary.stop');
+		steps.length === 0
+			? t('flow.summary.none', vars)
+			: steps.length === 1
+				? t('flow.summary.single', vars)
+				: branches
+					? t.plural('flow.summary.branched', branches, vars)
+					: t('flow.summary.multi', vars);
 	return {
 		name,
 		description: typeof workflow.description === 'string' ? workflow.description : undefined,

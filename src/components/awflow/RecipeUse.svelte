@@ -86,6 +86,8 @@
 		storage: { key: 'recipe.touch.storage', tone: 'local' },
 		'code-execution': { key: 'recipe.touch.code', tone: 'page' },
 	};
+	// The sentence holds a {link} placeholder so each language puts the link where it belongs.
+	const [marketBefore, marketAfter] = $derived(t('recipe.use.market.also', { link: '{link}' }).split('{link}'));
 	const touch = r.touches;
 	const touches = $derived([
 		...touch.capabilities.filter((c) => CAPS[c]).map((c) => ({ label: t(CAPS[c].key), tone: CAPS[c].tone })),
@@ -136,7 +138,7 @@
 	</div>
 	<p class="awf-ruse__market">
 		{#if listing}
-			{t('recipe.use.market.before')}<a href={listing} target="_blank" rel="noopener">{t('recipe.use.market.link')}</a>{t('recipe.use.market.after')}
+			{marketBefore}<a href={listing} target="_blank" rel="noopener">{t('recipe.use.market.link')}</a>{marketAfter}
 		{:else}
 			{t('recipe.use.market.none')} <a href={MARKETPLACE_URL} target="_blank" rel="noopener">{t('recipe.use.market.browse')}</a>
 		{/if}
