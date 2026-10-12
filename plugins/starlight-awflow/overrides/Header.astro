@@ -13,8 +13,10 @@ import Search from 'virtual:starlight/components/Search';
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
 import BrandMark from '../components/BrandMark.astro';
 import SectionTabs from '../components/SectionTabs.astro';
+import { useT } from '../../../src/i18n/ui';
 import { getAwflowRoute } from '../route-data';
 
+const t = useT(Astro);
 const { siteTitleHref } = Astro.locals.starlightRoute;
 const shouldRenderSearch =
 	config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
@@ -40,7 +42,7 @@ const sectionVars = section
 		<div class="awf-header__end print:hidden">
 			{
 				awflow.version && (
-					<a class="awf-version" href={awflow.version.href ?? '#'} title="Release notes">
+					<a class="awf-version" href={awflow.version.href ?? '#'} title={t('header.releaseNotes')}>
 						{awflow.version.label}
 					</a>
 				)
@@ -48,7 +50,7 @@ const sectionVars = section
 			{
 				awflow.install && (
 					<a class="awf-install awf-press" href={awflow.install.href} rel="noopener">
-						{awflow.install.label}
+						{t('header.install')}
 					</a>
 				)
 			}

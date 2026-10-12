@@ -1,3 +1,5 @@
+import type { Lang } from '../../src/i18n/locales';
+
 /**
  * Public types for the in-repo `starlight-awflow` plugin (awflow/Agentic-Flow#1346).
  */
@@ -36,7 +38,7 @@ export interface StarlightAwflowOptions {
 	sections: AwflowSectionOption[];
 	/** Version pill in the header, e.g. `v0.8.2`. Omit to hide it. */
 	version?: { label: string; href?: string };
-	/** Primary call to action in the header. Omit to hide it. */
+	/** Primary call to action in the header. Omit to hide it. The label is rendered from `header.install` in the UI dictionary. */
 	install?: { label: string; href: string };
 	/** Target of the floating Ask Aria pill. Defaults to `#ask-aria`, which opens the search dialog's Ask Aria tab. */
 	askAria?: { href?: string; label?: string; shortcut?: string } | false;
@@ -114,4 +116,8 @@ export interface AwflowRouteData {
 	eyebrow: string;
 	/** URL of the raw Markdown twin (starlight-md-txt). */
 	markdownUrl: string | undefined;
+	/** Language of the page being rendered. */
+	lang: Lang;
+	/** Translation status; filled by the translation-status middleware step (Task 7). */
+	i18n?: { stale: boolean; englishHref: string };
 }

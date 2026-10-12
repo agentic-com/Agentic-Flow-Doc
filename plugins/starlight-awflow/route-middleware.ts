@@ -3,6 +3,8 @@ import config from 'virtual:starlight-awflow/config';
 import nodesData from 'virtual:starlight-awflow/nodes';
 import { findNodeEntry, normaliseNode } from './lib/nodes';
 import { scopePagination } from './lib/pagination';
+import { localizeHref, stripLocale, toLang } from '../../src/i18n/locales';
+import { createT, type UIKey } from '../../src/i18n/ui';
 import type { AwflowRouteData, AwflowSection, AwflowTab } from './types';
 
 const trimSlashes = (s: string) => s.replace(/^\/+|\/+$/g, '');
@@ -11,7 +13,11 @@ const withSlashes = (s: string) => `/${trimSlashes(s)}/`.replace(/\/+/g, '/');
 export const onRequest = defineRouteMiddleware((context) => {
 	const route = context.locals.starlightRoute;
 	const data = route.entry.data as Record<string, any>;
-	const path = withSlashes(route.id);
+	const lang = toLang(route.lang);
+	const t = createT(lang);
+	// Locale-free id (`fr/app/x` → `app/x`): section, pagination and eyebrow logic is language-agnostic.
+	const baseId = stripLocale(route.id);
+	const path = withSlashes(baseId);
 
 	// 1 · Which section (tab) is this page in?
 	// Frontmatter wins, then the current starlight-sidebar-topics topic, then path prefixes.
@@ -20,18 +26,18 @@ export const onRequest = defineRouteMiddleware((context) => {
 	const currentTopicLink = topics?.topics.find((t) => t.isCurrent)?.link;
 	const pick = () =>
 		config.sections.find((s) => data.section && s.id === data.section) ??
-		config.sections.find((s) => s.topic && currentTopicLink && withSlashes(s.topic) === withSlashes(currentTopicLink)) ??
+		config.sections.find((s) => s.topic && currentTopicLink && withSlashes(s.topic) === withSlashes(stripLocale(currentTopicLink))) ??
 		config.sections.find((s) =>
 			[s.link, ...s.match].some((p) => trimSlashes(p) && path.startsWith(withSlashes(p))),
 		);
-	const found = route.id === '' || route.id === 'index' || route.id === '404' ? undefined : pick();
+	const found = baseId === '' || baseId === 'index' || baseId === '404' ? undefined : pick();
 	const section: AwflowSection | undefined = found
-		? { id: found.id, label: found.label, link: found.link, color: found.color, tint: found.tint }
+		? { id: found.id, label: t(`section.${found.id}` as UIKey), link: localizeHref(found.link, lang), color: found.color, tint: found.tint }
 		: undefined;
 	const tabs: AwflowTab[] = config.sections.map((s) => ({
 		id: s.id,
-		label: s.label,
-		link: s.link,
+		label: t(`section.${s.id}` as UIKey),
+		link: localizeHref(s.link, lang),
 		color: s.color,
 		tint: s.tint,
 		isCurrent: s.id === section?.id,
@@ -70,19 +76,20 @@ export const onRequest = defineRouteMiddleware((context) => {
 		!isSplash &&
 		(config.banner === 'auto' ? Boolean(section) || kind === 'node' : Boolean(data.section || data.kind));
 
-	const segments = trimSlashes(route.id).split('/').slice(0, -1);
+	const segments = trimSlashes(baseId).split('/').slice(0, -1);
 	// "use the app / usage / …" → "use the app / …": the section label already names the root folder.
-	if (section && segments[0] === trimSlashes(section.link).split('/')[0]) segments.shift();
+	if (section && segments[0] === trimSlashes(found!.link).split('/')[0]) segments.shift();
 	const awflow: AwflowRouteData = {
 		section,
 		tabs,
 		kind,
 		node,
 		showBanner,
-		eyebrow: [section?.label.toLowerCase(), ...segments.map((s) => s.replace(/-/g, ' '))]
+		eyebrow: [section?.label.toLocaleLowerCase(lang), ...segments.map((s) => s.replace(/-/g, ' '))]
 			.filter(Boolean)
 			.join(' / '),
 		markdownUrl: route.id && route.id !== 'index' ? `/${trimSlashes(route.id)}.md` : undefined,
+		lang,
 	};
 	route.awflow = awflow;
 });

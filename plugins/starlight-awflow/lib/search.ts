@@ -2,25 +2,27 @@
  * Search & Ask Aria helpers (awflow/Agentic-Flow#1340). Pure functions, shared by the Search
  * override and the SearchDialog island; no DOM access here.
  */
+import { stripLocale } from '../../../src/i18n/locales';
+import type { UIKey } from '../../../src/i18n/ui';
 import { SECTION_PALETTE } from '../palette';
 
 export interface SearchGroup {
 	id: string;
-	label: string;
+	labelKey: UIKey;
 	color: string;
 	tint: string;
 }
 
 /** Display order of result groups. "Fix it" (troubleshooting) beats the section it lives in. */
 export const SEARCH_GROUPS: SearchGroup[] = [
-	{ id: 'get-started', label: 'Get started', ...SECTION_PALETTE['get-started'] },
-	{ id: 'recipes', label: 'Recipes', ...SECTION_PALETTE.recipes },
-	{ id: 'nodes', label: 'Nodes', ...SECTION_PALETTE.nodes },
-	{ id: 'app', label: 'Guides', ...SECTION_PALETTE.app },
-	{ id: 'concepts', label: 'Concepts', ...SECTION_PALETTE.concepts },
-	{ id: 'fix', label: 'Fix it', color: '#DC2626', tint: '#FEE2E2' },
-	{ id: 'releases', label: 'Releases', ...SECTION_PALETTE.releases },
-	{ id: 'other', label: 'More', color: '#57534E', tint: '#F5F0E8' },
+	{ id: 'get-started', labelKey: 'search.group.get-started', ...SECTION_PALETTE['get-started'] },
+	{ id: 'recipes', labelKey: 'search.group.recipes', ...SECTION_PALETTE.recipes },
+	{ id: 'nodes', labelKey: 'search.group.nodes', ...SECTION_PALETTE.nodes },
+	{ id: 'app', labelKey: 'search.group.app', ...SECTION_PALETTE.app },
+	{ id: 'concepts', labelKey: 'search.group.concepts', ...SECTION_PALETTE.concepts },
+	{ id: 'fix', labelKey: 'search.group.fix', color: '#DC2626', tint: '#FEE2E2' },
+	{ id: 'releases', labelKey: 'search.group.releases', ...SECTION_PALETTE.releases },
+	{ id: 'other', labelKey: 'search.group.other', color: '#57534E', tint: '#F5F0E8' },
 ];
 
 /**
@@ -47,6 +49,7 @@ export function groupFor(url: string, base = '/'): string {
 	}
 	const b = base.replace(/\/$/, '');
 	if (b && path.startsWith(b)) path = path.slice(b.length) || '/';
+	path = stripLocale(path);
 	for (const [re, id] of PREFIXES) if (re.test(path)) return id;
 	return 'other';
 }

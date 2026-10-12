@@ -12,6 +12,7 @@
 	 * `[data-awf-search-open]` opens Search.
 	 */
 	import { onMount, tick } from 'svelte';
+	import { createT, type UIKey } from '../../i18n/ui';
 	import {
 		SEARCH_GROUPS,
 		ariaAppUrl,
@@ -33,6 +34,10 @@
 	}
 
 	let { appUrl = 'https://app.awflow.io', base = '/', placeholder = 'Search the docs' }: Props = $props();
+
+	// Task 8 passes the page language; until then the dialog is English.
+	const t = createT('en');
+	const groupLabel = (g: { labelKey: UIKey }) => t(g.labelKey);
 
 	type Tab = 'search' | 'aria';
 	interface Result {
@@ -612,7 +617,7 @@
 							{#each chips as g (g.id)}
 								<button type="button" class="awf-chip" aria-pressed={filter === g.id} style="--awf-chip:{g.color}"
 									onclick={() => ((filter = g.id), (active = 0), input?.focus())}>
-									<span class="awf-chip__dot" aria-hidden="true"></span>{g.label}
+									<span class="awf-chip__dot" aria-hidden="true"></span>{groupLabel(g)}
 									<span class="awf-chip__n">{counts[g.id]}</span>
 								</button>
 							{/each}
@@ -686,7 +691,7 @@
 									{#each visible as r, i (r.id)}
 										{@const g = groupById(r.group)}
 										{#if i === 0 || visible[i - 1].group !== r.group}
-											<li role="presentation" class="awf-search__group">{g.label}</li>
+											<li role="presentation" class="awf-search__group">{groupLabel(g)}</li>
 										{/if}
 										<li
 											id="{uid}-opt-{i}"
@@ -697,7 +702,7 @@
 											onmousemove={() => (active = i)}
 										>
 											<a href={r.url} tabindex="-1" onclick={(e) => onResultClick(e, r)}>
-												<span class="awf-res__icon" aria-hidden="true">{g.id === 'fix' ? '!' : g.label[0]}</span>
+												<span class="awf-res__icon" aria-hidden="true">{g.id === 'fix' ? '!' : groupLabel(g)[0]}</span>
 												<span class="awf-res__text">
 													<span class="awf-res__title"
 														>{r.title}{#if r.heading}<span class="awf-res__heading">{` › ${r.heading}`}</span>{/if}</span
@@ -771,7 +776,7 @@
 				{#each sources as s, i (s.url)}
 					{@const g = groupById(groupFor(s.url, base_))}
 					<a class="awf-cite" href={s.url} style="--awf-cite:{g.color}" onclick={() => remember(query)}>
-						<span class="awf-cite__n">{i + 1}</span><span class="awf-cite__t">{g.label} · {s.title}</span>
+						<span class="awf-cite__n">{i + 1}</span><span class="awf-cite__t">{groupLabel(g)} · {s.title}</span>
 					</a>
 				{/each}
 			</div>
