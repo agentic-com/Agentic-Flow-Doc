@@ -18,3 +18,11 @@ test('parsePo', () => {
 	expect(m.has('')).toBe(false);
 	expect(m.get('Say "hi"')).toBe('Dites "salut"');
 });
+
+test('parsePo uses msgstr[0] for plurals', () => {
+	const po = ['msgid "One file"', 'msgid_plural "Many files"', 'msgstr[0] "Un fichier"', 'msgstr[1] "Plusieurs fichiers"', '', 'msgid "Next"', 'msgstr "Suivant"'].join('\n');
+	const m = parsePo(po);
+	expect(m.get('One file')).toBe('Un fichier');
+	expect(m.has('Many files')).toBe(false);
+	expect(m.get('Next')).toBe('Suivant');
+});

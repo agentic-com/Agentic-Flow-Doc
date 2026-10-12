@@ -1,5 +1,5 @@
 /** Minimal gettext .po reader for the glossary (msgid → msgstr). Plurals: msgstr[0] is used. */
-const unquote = (s: string) => JSON.parse(s.replace(/\\t/g, '\\t'));
+const unquote = (s: string) => JSON.parse(s);
 
 export function parsePo(text: string): Map<string, string> {
 	const out = new Map<string, string>();

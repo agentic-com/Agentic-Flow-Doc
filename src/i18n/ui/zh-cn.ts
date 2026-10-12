@@ -316,7 +316,7 @@ const zh: Dict = {
 	'items.viewAs': '查看方式',
 	'items.table': '表格',
 	'items.json': 'JSON',
-	'items.empty': '没有项目。在此路径上，该步骤之后不会再运行任何内容。',
+	'items.empty': '没有数据项。在此路径上，该步骤之后不会再运行任何内容。',
 	'items.value': '值',
 	'compare.example': '示例',
 	'compare.label': '选项对比',

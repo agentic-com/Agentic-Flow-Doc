@@ -15,7 +15,10 @@ Work on `missing` and `stale` pages. Ignore `releases/**` (release notes stay En
 
 ## 2. Load the references once per locale
 
-- `src/i18n/glossary/<locale>.json` — `app` (every UI label as the app shows it; always use these), `terms`, `doNotTranslate`.
+- `src/i18n/glossary/<locale>.json` — read ONLY `terms` and `doNotTranslate` up front, e.g. `bun -e 'const g=require("./src/i18n/glossary/<locale>.json");console.log(JSON.stringify({terms:g.terms,doNotTranslate:g.doNotTranslate},null,1))'`. Never open the file whole: `app` holds thousands of UI labels. Look a label up on demand, and always use what you find:
+
+      grep -n -F '"<English label>":' src/i18n/glossary/<locale>.json
+      bun -e 'const g=require("./src/i18n/glossary/<locale>.json");console.log(g.app["<English label>"])'
 - `src/i18n/style/<locale>.md` — tone and punctuation. Follow it exactly.
 
 ## 3. Translate a missing page
@@ -24,16 +27,18 @@ Copy the English file to the locale path and translate in place:
 - Translate prose, headings, frontmatter `title`, `description`, `sidebar.label`, `sidebar.badge.text`, hero text, and component text props. What may be translated is defined in `scripts/i18n/structure.ts`: `TEXT_PROPS` (component attributes) and, inside expression props such as `steps={[…]}` / `spots={[…]}`, only the keys in `TEXT_KEYS`. Read those two sets instead of relying on a remembered list.
 - Everything else must stay identical (`i18n:check` compares it): imports, component names, every other prop and object key (`STRUCTURAL_PROPS` / `STRUCTURAL_KEYS`: `shot`, `spot`, `n`, `start`, `href`, ids, ...), `hydrate="load|idle|visible"` island attributes (not `client:*`; leave them as they are), code blocks, inline code, link targets (keep `/app/…` — the build localizes them), image paths, other frontmatter values, heading count and levels.
 - Relative imports: a translated page sits one folder deeper than the English one, so add one more `../` (`../../../data/stores` instead of `../../data/stores`). `i18n:check` resolves them; a wrong depth fails. Aliases such as `@components/awflow` stay as written.
-- Add `i18n: { source: "<hash>" }` to the frontmatter, where `<hash>` is `git hash-object src/content/docs/<english path>`. The hash must be a QUOTED string (`source: "abc…"`): an unquoted all-digit hash parses as a number.
+- Frontmatter that is not text (`sidebar.order`, and everything else outside `title`, `description`, `sidebar.label`, `sidebar.badge.text`, hero text, `head`) stays identical to English. Add `i18n: { source: "<hash>" }` to the frontmatter, where `<hash>` is `git hash-object src/content/docs/<english path>`. The hash must be a QUOTED string (`source: "abc…"`): an unquoted all-digit hash parses as a number.
 
 ## 4. Re-sync a stale page
 
 The status gives the old `source`. Get the English diff:
 
-    git cat-file -p <old source> > /tmp/en-old.mdx
-    git diff --no-index /tmp/en-old.mdx src/content/docs/<english path>
+    git cat-file -p <old source> > "$TMPDIR/en-old.mdx"
+    git diff --no-index "$TMPDIR/en-old.mdx" src/content/docs/<english path>
 
-Change only the parts of the translation that correspond to the diff; keep everything else (a reviewer may have fixed it). Update `i18n.source` (quoted) to the new hash. If `reviewed: true` was set, keep it only if your edits are a few words; otherwise set it to `false`.
+Change only the parts of the translation that correspond to the diff; keep everything else (a reviewer may have fixed it). Update `i18n.source` (quoted) to the new hash. `reviewed` is nested: `i18n: { source: "<hash>", reviewed: true }` (`i18n.reviewed`), never a top-level key (`i18n:check` would fail on it). If it was `true`, keep it only if your edits are a few words; otherwise set it to `false`.
+
+Other statuses: `unsourced` (translation without `i18n.source`) — check the page matches the current English, then add `i18n.source` with the current hash; if it does not match, re-translate the differing parts first. `orphaned` (the English page was deleted) — delete the translated file.
 
 ## 5. Interface strings
 

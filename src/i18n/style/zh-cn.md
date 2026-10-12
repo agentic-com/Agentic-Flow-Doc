@@ -6,5 +6,5 @@
 - UI labels exactly as the app shows them: the glossary's `app` map wins. Labels in **bold** as in English.
 - Keep in English: product, provider and app names, node ids, keyboard keys, code, anything in backticks.
 - Translate meaning; reorder sentences freely.
-- Terms follow the app: 工作流, 节点, 触发器, 项目 (item, not 数据项), 教程 (recipe), 凭据, 智能体, 知识库, 画布, 表达式.
+- Terms follow the app: 工作流, 节点, 触发器, 数据项 (item; 项目 means Projects), 配方 (recipe), 凭据, 智能体, 知识库, 画布, 表达式.
 - Interface strings (`src/i18n/ui/zh-cn.ts`): flat keys, plurals as `_one` / `_other`; never assemble one sentence from several keys. Sidebar labels live in `src/i18n/nav-labels.ts`.

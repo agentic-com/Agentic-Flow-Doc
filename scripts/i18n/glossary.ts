@@ -23,7 +23,7 @@ for (const t of TARGETS) {
 	if (!existsSync(poPath)) throw new Error(`[i18n:glossary] ${poPath} not found. Set AWFLOW_APP_DIR to the agentic-flow checkout.`);
 	const app = Object.fromEntries(
 		[...parsePo(readFileSync(poPath, 'utf8'))]
-			.filter(([en, tr]) => en.length <= 80 && !/[{<]/.test(en) && en !== tr) // labels, not sentences or templates
+			.filter(([en, tr]) => en.length <= 80 && !/[{<(=\/]/.test(en) && !en.endsWith('.') && en !== tr) // labels, not sentences or templates
 			.sort(([a], [b]) => a.localeCompare(b)),
 	);
 	const out = {
