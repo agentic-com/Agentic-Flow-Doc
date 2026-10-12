@@ -33,8 +33,9 @@ describe('createT', () => {
 	test('looks up, interpolates, falls back to English for unknown langs', () => {
 		const t = createT('fr');
 		expect(t.lang).toBe('fr');
-		expect(t('common.minutes', { n: 5 })).toBe(fr['common.minutes'].replace('{n}', '5'));
-		expect(createT('es')('common.minutes', { n: 5 })).toBe(en['common.minutes'].replace('{n}', '5'));
+		expect(t('common.lessons_one', { count: 1 })).toBe(fr['common.lessons_one'].replace('{count}', '1'));
+		expect(t('common.lessons_one', { count: 1 })).toBe('1 leçon');
+		expect(createT('es')('common.lessons_one', { count: 1 })).toBe('1 lesson');
 	});
 	test('plural picks the CLDR category', () => {
 		expect(createT('en').plural('common.lessons', 1)).toBe('1 lesson');
