@@ -1,5 +1,7 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	import type { Snippet } from 'svelte';
+	import { createT, type UIKey } from '../../i18n/ui';
 
 	type BadgeVariant =
 		| 'new'
@@ -15,6 +17,8 @@
 		| 'neutral';
 
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		/** Visual + semantic variant. */
 		variant?: BadgeVariant;
 		/** Overrides the default label for the variant (e.g. "New in 0.8"). */
@@ -25,28 +29,31 @@
 		children?: Snippet;
 	}
 
-	let { variant = 'neutral', text, count, class: className = '', children }: Props = $props();
+	let { lang = 'en', variant = 'neutral', text, count, class: className = '', children }: Props = $props();
 
-	const LABELS: Record<BadgeVariant, string> = {
-		new: 'New',
-		deprecated: 'Deprecated',
-		admin: 'Admin',
-		'on-device': 'On-device',
-		'no-setup': 'No setup',
-		connections: 'Connections',
-		'agent-tool': 'Agent tool',
-		extension: 'Extension',
-		web: 'Web app',
-		beta: 'Beta',
-		neutral: '',
+	const t = $derived(createT(lang));
+	const LABELS: Record<BadgeVariant, UIKey | null> = {
+		new: 'badge.new',
+		deprecated: 'badge.deprecated',
+		admin: 'badge.admin',
+		'on-device': 'badge.onDevice',
+		'no-setup': 'badge.noSetup',
+		connections: 'badge.connections',
+		'agent-tool': 'badge.agentTool',
+		extension: 'badge.extension',
+		web: 'badge.web',
+		beta: 'badge.beta',
+		neutral: null,
 	};
 	const DOT = new Set<BadgeVariant>(['extension', 'web', 'on-device']);
 
 	const label = $derived(
 		text ??
 			(variant === 'connections'
-				? `${count ?? 1} connection${(count ?? 1) === 1 ? '' : 's'}`
-				: LABELS[variant]),
+				? t.plural('badge.connections', count ?? 1)
+				: LABELS[variant]
+					? t(LABELS[variant]!)
+					: ''),
 	);
 </script>
 

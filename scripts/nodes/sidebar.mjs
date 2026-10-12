@@ -10,6 +10,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { nav } from '../../src/i18n/nav.ts';
 import { assertNoFiller } from './filler.mjs';
 import { groupIntegrations, newestMinor } from './shared.mjs';
 
@@ -22,7 +23,7 @@ const readJson = (/** @type {string} */ rel) => {
 };
 
 const family = (/** @type {string} */ label, /** @type {string} */ directory) => ({
-	label,
+	...nav(label),
 	collapsed: true,
 	items: [{ autogenerate: { directory, collapsed: true } }],
 });
@@ -48,8 +49,8 @@ export function nodesSidebar() {
 	const deprecated = nodes.filter((n) => n.deprecated).sort((a, b) => a.name.localeCompare(b.name));
 
 	return [
-		{ label: 'Node catalog', link: '/nodes/' },
-		{ label: 'Built-in overview', link: '/nodes/builtin/' },
+		{ ...nav('Node catalog'), link: '/nodes/' },
+		{ ...nav('Built-in overview'), link: '/nodes/builtin/' },
 		family('Triggers', 'nodes/builtin/trigger'),
 		family('Lambda', 'nodes/builtin/lambda'),
 		family('In-page actions', 'nodes/extension'),
@@ -58,20 +59,20 @@ export function nodesSidebar() {
 		family('Core', 'nodes/builtin/core'),
 		family('AI', 'nodes/builtin/ai'),
 		{
-			label: 'Integrations',
+			...nav('Integrations'),
 			collapsed: true,
 			items: groupIntegrations(nodes, readJson('src/data/integration-groups.json')).map((g) => ({
-				label: g.label,
+				...nav(g.label),
 				collapsed: true,
 				items: g.nodes.map(link),
 			})),
 		},
-		{ label: 'Rate limits', link: '/nodes/builtin/rate-limits/' },
-		{ label: 'Unknown node', link: '/nodes/builtin/unknownode/' },
+		{ ...nav('Rate limits'), link: '/nodes/builtin/rate-limits/' },
+		{ ...nav('Unknown node'), link: '/nodes/builtin/unknownode/' },
 		...(deprecated.length
 			? [
 					{
-						label: 'Deprecated',
+						...nav('Deprecated'),
 						collapsed: true,
 						items: deprecated.map((n) => ({
 							slug: `nodes/${n.id}`,

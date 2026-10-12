@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Lang } from '../../i18n/locales';
 	type Src = string | { src: string; width?: number; height?: number };
 	interface Hotspot {
 		/** Horizontal position in % of the image width. */
@@ -9,6 +10,8 @@
 		label: string;
 	}
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		/** Light-theme capture (public path or imported image). */
 		src: Src;
 		/** Dark-theme capture. Without it, `src` shows in both themes. */
@@ -20,7 +23,7 @@
 		height?: number;
 	}
 
-	let { src, srcDark, alt, caption, hotspots = [], width, height }: Props = $props();
+	let { lang = 'en', src, srcDark, alt, caption, hotspots = [], width, height }: Props = $props();
 
 	const url = (s: Src | undefined) => (typeof s === 'string' ? s : s?.src);
 	const w = $derived(width ?? (typeof src === 'object' ? src.width : undefined));

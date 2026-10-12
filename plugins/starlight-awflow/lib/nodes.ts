@@ -1,15 +1,8 @@
+import type { T } from '../../../src/i18n/ui';
 import type { AwflowNodeFamily, AwflowNodeMeta } from '../types';
 
-export const FAMILY_LABELS: Record<AwflowNodeFamily, string> = {
-	trigger: 'Trigger',
-	lambda: 'Lambda',
-	inpage: 'In-page action',
-	flow: 'Flow',
-	data: 'Data',
-	core: 'Core',
-	ai: 'AI',
-	integration: 'Integration',
-};
+/** Label of a node family in the page language (`node.family.<id>`). */
+export const familyLabel = (family: AwflowNodeFamily, t: T): string => t(`node.family.${family}`);
 
 type Raw = Record<string, unknown>;
 
@@ -71,7 +64,6 @@ export function normaliseNode(
 	return {
 		id: front.id,
 		family,
-		familyLabel: family ? FAMILY_LABELS[family] : undefined,
 		agentTool: front.agentTool ?? (typeof e.agentTool === 'boolean' ? e.agentTool : undefined),
 		deprecated: front.deprecated ?? (typeof e.deprecated === 'boolean' ? e.deprecated : undefined),
 		since: front.since ?? str(e.since),

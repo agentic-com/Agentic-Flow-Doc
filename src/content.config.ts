@@ -11,6 +11,14 @@ import { topicSchema } from 'starlight-sidebar-topics/schema'
  * section banners, node headers, lesson rails and recipe cards.
  */
 const awflowSchema = z.object({
+	/** Translation tracking (docs i18n): the git blob hash of the English file this page was translated from. */
+	i18n: z
+		.object({
+			source: z.string().regex(/^[0-9a-f]{40}$/),
+			/** True once a native speaker checked the page. Informational only. */
+			reviewed: z.boolean().optional(),
+		})
+		.optional(),
 	/** Which page template the plugin renders. */
 	kind: z.enum(['node', 'lesson', 'recipe', 'concept', 'guide', 'connection', 'release', 'hub']).optional(),
 	/** Top-level tab the page belongs to (drives the section colour). */

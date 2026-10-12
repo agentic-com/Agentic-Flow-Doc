@@ -15,7 +15,7 @@ import { Aside } from "@astrojs/starlight/components";
 import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awflow";
 
 <LessonProgress
-  client:visible
+  hydrate="visible"
   level={1}
   order={5}
   total={5}
@@ -76,6 +76,6 @@ Press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>I</kbd> on any docs page (or click *
 
 Want to go further? [Building workflows in chat](/app/chat-and-agents/building-workflows-in-chat/) covers improving an existing workflow, mentioning other workflows, and the canvas dock.
 
-<LessonDone client:load title="Level 1 complete. You automate now." next={{ href: "/get-started/working-with-data/", label: "Level 2" }}>
+<LessonDone hydrate="load" title="Level 1 complete. You automate now." next={{ href: "/get-started/working-with-data/", label: "Level 2" }}>
   You can build, run, automate and delegate a workflow. Level 2 is about the data that flows between steps.
 </LessonDone>

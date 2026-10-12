@@ -1,0 +1,107 @@
+---
+title: Votre première automatisation
+description: "Démarrez un workflow sans ouvrir le canevas : ajoutez un déclencheur Raccourci clavier ou Planification, activez le workflow et consultez ses exécutions."
+section: get-started
+kind: lesson
+lesson:
+  level: 1
+  order: 4
+  minutes: 5
+sidebar:
+  label: "4 · Votre première automatisation"
+i18n:
+  source: "a7f7fe4d99b837d4ffb0a4843927e4e40ec7b27f"
+---
+
+import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
+import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awflow";
+
+<LessonProgress
+  hydrate="visible"
+  level={1}
+  order={4}
+  total={5}
+  minutes={5}
+  onDevice
+  youWill={[
+    "Ajouter un déclencheur qui se lance tout seul",
+    "Activer le workflow",
+    "Le lancer sans ouvrir le canevas",
+    "Retrouver l'exécution dans l'onglet Exécutions",
+  ]}
+  before={["Le workflow « Summarise this page » de la leçon 3, enregistré", "L'extension AWFlow (Raccourci clavier et Planification ne s'exécutent pas dans l'application web)"]}
+/>
+
+Jusqu'ici, vous démarriez les workflows avec **Tester le workflow**. Une automatisation démarre toute seule : quand vous appuyez sur un raccourci, à une heure donnée, quand une page se charge, ou depuis le menu du clic droit. Ces déclencheurs n'écoutent que lorsque le workflow est **actif**.
+
+## Ajouter le déclencheur
+
+<Tabs syncKey="lesson-trigger">
+<TabItem label="Raccourci clavier (recommandé)">
+
+<StepCard n={1} title="Ajouter un déclencheur Raccourci clavier" check="un nœud Raccourci clavier est sur le canevas, relié à Obtenir tout le texte.">
+  Ouvrez **Summarise this page**. Cliquez sur **Ajouter une étape** (le **+** de la barre d'outils du canevas), cherchez **Raccourci clavier** et ajoutez-le. Faites ensuite glisser le point à droite de **Raccourci clavier** jusqu'au bord gauche de **Obtenir tout le texte**, pour que les deux déclencheurs mènent aux mêmes étapes.
+
+  <StepShot shot="gs-hotkey-search" spot="hotkey" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Choisir un emplacement de raccourci" check="la page des raccourcis du navigateur liste « Run workflow bound to Hotkey slot 1 » avec une combinaison de touches.">
+  Double-cliquez sur **Raccourci clavier** pour ouvrir ses paramètres et laissez **Emplacement de raccourci** sur le premier emplacement, `run-workflow-1` (**Emplacement de raccourci 1**). L'emplacement 1 est fourni avec <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> (<kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd> sur Mac). Les navigateurs ne permettent pas aux extensions d'ajouter un raccourci par workflow, vous choisissez donc les touches de chaque emplacement dans le navigateur :
+
+  - Chrome, Edge, Brave : ouvrez `chrome://extensions/shortcuts`.
+  - Firefox : ouvrez `about:addons`, cliquez sur le menu en forme de roue dentée, puis sur **Gérer les raccourcis des extensions**.
+
+  Trouvez **Agentic Workflow**. Si l'emplacement 1 n'affiche aucune touche (une autre extension les utilise déjà), saisissez votre propre combinaison.
+
+  <StepShot shot="gs-hotkey-slot" spot="hotkey-slot" n={2} />
+</StepCard>
+
+</TabItem>
+<TabItem label="Planification">
+
+<StepCard n={1} title="Ajouter un déclencheur Planification" check="un nœud Planification est sur le canevas, relié à la première étape.">
+  Ouvrez le workflow que vous voulez lancer avec une minuterie. Cliquez sur **Ajouter une étape** (le **+** de la barre d'outils du canevas), cherchez **Planification** et ajoutez-la, puis faites glisser son point de droite jusqu'à votre première étape.
+
+  <StepShot shot="gs-schedule-search" spot="schedule" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Définir la fréquence" check="le nœud Planification affiche votre intervalle.">
+  Double-cliquez sur **Planification** pour ouvrir ses paramètres. Sous **Règles**, cliquez sur **Ajouter**, puis définissez **Trigger Interval** sur *hours* et **Hours Between Triggers** sur `1`, ou sur *days* avec un **Trigger at Hour**. Une planification convient surtout aux workflows qui ne dépendent pas de l'onglet que vous regardez, comme la vérification d'une page avec une requête HTTP. Le navigateur doit être ouvert pour qu'elle se déclenche. Voir [Schedule](/nodes/builtin/trigger/schedule/).
+
+  <StepShot shot="gs-schedule-rule" spot="trigger-interval" n={2} />
+</StepCard>
+
+</TabItem>
+</Tabs>
+
+## Activer et lancer
+
+<StepCard n={3} title="Enregistrer et activer" check="l'interrupteur de l'en-tête du canevas indique Actif.">
+  Cliquez sur **Enregistrer**. Vérifiez ensuite l'interrupteur à côté du nom du workflow dans l'en-tête du canevas : il doit indiquer **Actif**. S'il indique **Inactif**, activez-le. Vous pouvez aussi choisir **Activer** dans le menu **⋯** du workflow, dans la liste Workflows.
+
+  <StepShot shot="gs-activate" spot="active-switch" n={3} zoom={40} />
+</StepCard>
+
+<StepCard n={4} title="Le déclencher" check="le Page summary avec trois points clés apparaît, sans toucher au canevas.">
+  Passez à un onglet contenant un article et appuyez sur votre raccourci. (Avec une planification, attendez le prochain intervalle.) Vous pouvez d'abord fermer le canevas : les workflows actifs s'exécutent en arrière-plan.
+</StepCard>
+
+<StepCard n={5} title="Consulter ses exécutions" check="la ligne la plus récente indique Success, démarrée il y a quelques secondes.">
+  Ouvrez le workflow et cliquez sur l'onglet **Exécutions** en haut (il porte le même nom dans un panneau étroit). Chaque exécution est listée avec son statut, son heure de début et sa durée. Cliquez sur une exécution pour voir ce que chaque étape a produit. Voir [Historique des exécutions](/app/workflows/run-history/).
+
+  <StepShot shot="run-history" spot="executions-tab" n={5} />
+</StepCard>
+
+<Aside type="caution" title="Rien ne se passe ?">
+Vérifiez trois choses : le workflow est **actif**, l'emplacement du nœud correspond à la ligne que vous avez définie dans la page des raccourcis du navigateur, et vous êtes dans l'extension de navigateur, pas dans l'application web. Plus de détails dans [Dépannage du raccourci clavier](/nodes/builtin/trigger/hotkey/#common-issues).
+</Aside>
+
+## Autres façons de démarrer un workflow
+
+- [Menu contextuel](/nodes/builtin/trigger/contextmenu/) : clic droit sur une sélection, un lien ou une page.
+- [Chargement de page](/nodes/builtin/trigger/pageload/) : chaque fois qu'une page correspondant à un motif d'URL se charge.
+- [Changement d'élément](/nodes/builtin/trigger/elementchange/) : quand quelque chose change sur une page, comme un prix.
+
+<LessonDone hydrate="load" title="Il s'exécute tout seul maintenant." next={{ href: "/get-started/build-with-aria/", label: "Leçon 5" }}>
+  Dernière leçon du niveau 1 : laissez Aria créer le prochain workflow pour vous.
+</LessonDone>

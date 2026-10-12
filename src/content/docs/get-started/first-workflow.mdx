@@ -16,7 +16,7 @@ import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awfl
 import FlowPreview from "@components/awflow/FlowPreview.astro";
 
 <LessonProgress
-  client:visible
+  hydrate="visible"
   level={1}
   order={2}
   total={5}
@@ -91,6 +91,6 @@ Hover a node and click **Test this step** to run just that step, or open it and 
 
 The nodes in this lesson: [Get Selected Text](/nodes/extension/getselectedtext/) and [Edit Fields](/nodes/builtin/datatransformation/editfields/).
 
-<LessonDone client:load title="You built and ran a workflow." next={{ href: "/get-started/summarize-with-ai/", label: "Lesson 3" }}>
+<LessonDone hydrate="load" title="You built and ran a workflow." next={{ href: "/get-started/summarize-with-ai/", label: "Lesson 3" }}>
   Next you'll add an AI model and summarise a whole page.
 </LessonDone>

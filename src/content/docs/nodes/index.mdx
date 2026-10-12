@@ -6,12 +6,12 @@ section: nodes
 tableOfContents: false
 ---
 
-import NodeCatalog from '@components/awflow/NodeCatalog.svelte';
+import { NodeCatalog } from '@components/awflow';
 import { catalogGroups, catalogNodes } from '../../../data/nodeCatalog';
 
 A workflow is a chain of nodes: a trigger starts it, and each node does one step. Type what you want to do, such as "click", "pdf" or "summarise", or narrow the list by family, by where the node runs and by what it needs before it works. Each card opens the node's page: its settings, what it sends to the next node, and fixes for common problems.
 
-<NodeCatalog client:load nodes={catalogNodes()} groups={catalogGroups()} />
+<NodeCatalog hydrate="load" nodes={catalogNodes()} groups={catalogGroups()} />
 
 ## Start with a goal
 

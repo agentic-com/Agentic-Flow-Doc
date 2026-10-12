@@ -9,14 +9,18 @@
  */
 import Upstream from 'virtual:starlight-awflow/upstream-sidebar';
 import { getCollection } from 'astro:content';
-import { levelInfo } from '../lib/levels';
+import { langFromPath, localizeHref, toLang } from '../../../src/i18n/locales';
+import { createT } from '../../../src/i18n/ui';
+import { hasLevel, levelInfo } from '../lib/levels';
 
 const route = Astro.locals.starlightRoute;
 const data = route.entry.data as { kind?: string; lesson?: { level: number; order: number; minutes?: number } };
+const lang = toLang(route.lang);
+const t = createT(lang);
 const current = data.kind === 'lesson' && data.lesson ? data.lesson : undefined;
 
 let lessons: { id: string; href: string; title: string; order: number; minutes?: number }[] = [];
-let level = current ? levelInfo(current.level) : undefined;
+let level = current ? levelInfo(current.level, lang) : undefined;
 let nextLevel: ReturnType<typeof levelInfo> | undefined;
 
 if (current) {
@@ -24,21 +28,24 @@ if (current) {
 		'docs',
 		(e) => (e.data as typeof data).kind === 'lesson' && (e.data as typeof data).lesson?.level === current.level,
 	);
-	lessons = entries
+	// Lessons in the page language; a level not translated yet shows the English lessons under this
+	// language's URLs (they render as fallback pages). Progress is keyed by lesson id, so per language.
+	const inLang = entries.filter((e) => langFromPath(e.id) === lang);
+	const source = inLang.length ? inLang : entries.filter((e) => langFromPath(e.id) === 'en');
+	lessons = source
 		.map((e) => {
 			// The title, not the sidebar label: labels carry a "3 · " prefix the rail's dot already shows.
 			const d = e.data as typeof data & { title: string };
 			return {
 				id: e.id,
-				href: `/${e.id}/`,
+				href: localizeHref(`/${e.id}/`, lang),
 				title: d.title,
 				order: d.lesson!.order,
 				minutes: d.lesson!.minutes,
 			};
 		})
 		.sort((a, b) => a.order - b.order);
-	const next = levelInfo(current.level + 1);
-	if (!next.title.startsWith('Level ')) nextLevel = next;
+	if (hasLevel(current.level + 1)) nextLevel = levelInfo(current.level + 1, lang);
 }
 
 const R = 20;
@@ -47,7 +54,7 @@ const C = +(2 * Math.PI * R).toFixed(2);
 
 {
 	current && level && (
-		<nav class="awf-rail" aria-label="Learning path" data-awf-rail data-pagefind-ignore>
+		<nav class="awf-rail" aria-label={t('rail.label')} data-awf-rail data-pagefind-ignore>
 			<div class="awf-rail__head">
 				<svg class="awf-rail__ring" width="56" height="56" viewBox="0 0 48 48" aria-hidden="true">
 					<circle cx="24" cy="24" r={R} class="awf-rail__track" />
@@ -67,12 +74,17 @@ const C = +(2 * Math.PI * R).toFixed(2);
 					</text>
 				</svg>
 				<div class="awf-rail__title">
-					<span class="awf-rail__eyebrow">Level {level.level}</span>
+					<span class="awf-rail__eyebrow">{t('rail.level', { n: level.level })}</span>
 					<a href={level.href} class="awf-rail__name">
 						{level.title}
 					</a>
 					<span class="awf-rail__note" data-awf-rail-note>
-						<span data-awf-done-count>0</span> of {lessons.length} done · saved in this browser
+						<Fragment
+							set:html={t('rail.progress', {
+								done: '<span data-awf-done-count>0</span>',
+								total: lessons.length,
+							})}
+						/>
 					</span>
 				</div>
 			</div>
@@ -91,16 +103,16 @@ const C = +(2 * Math.PI * R).toFixed(2);
 							</span>
 							<span class="awf-rail__label">
 								{l.title}
-								<span class="sr-only awf-rail__sr-done"> (done)</span>
+								<span class="sr-only awf-rail__sr-done"> {t('rail.done')}</span>
 							</span>
-							{l.minutes && <span class="awf-rail__min">{l.minutes}m</span>}
+							{l.minutes && <span class="awf-rail__min">{t('rail.minutes', { n: l.minutes })}</span>}
 						</a>
 					</li>
 				))}
 			</ol>
 			{nextLevel && (
 				<a href={nextLevel.href} class="awf-rail__next">
-					<span class="awf-rail__next-eyebrow">next · level {nextLevel.level}</span>
+					<span class="awf-rail__next-eyebrow">{t('rail.next', { n: nextLevel.level })}</span>
 					<span class="awf-rail__next-title">{nextLevel.title} →</span>
 				</a>
 			)}

@@ -5,11 +5,13 @@
  */
 import config from 'virtual:starlight-awflow/config';
 import { getAwflowRoute } from '../route-data';
+import { useT } from '../../../src/i18n/ui';
 
 const aria = config.askAria;
 const { node } = getAwflowRoute(Astro.locals);
 const title = Astro.locals.starlightRoute.entry.data.title;
-const label = aria ? (node ? `${aria.label} about ${title}` : aria.label) : '';
+const t = useT(Astro);
+const label = aria ? (node ? t('aria.pillAbout', { title }) : t('aria.pill')) : '';
 ---
 
 {

@@ -1,0 +1,41 @@
+---
+/** Passes the page language to the island; `hydrate` replaces `client:*` (spec §1). */
+import Island from './LessonDone.svelte';
+import { pageLang } from '../../i18n/ui';
+
+interface Props {
+	hydrate?: 'load' | 'idle' | 'visible';
+	[key: string]: unknown;
+}
+const { hydrate, ...props } = Astro.props;
+const lang = pageLang(Astro);
+// An empty slot would still make the island think it got children (and hide its fallback).
+const hasChildren = Astro.slots.has('default');
+---
+
+{hasChildren && (
+	<>
+	{hydrate === 'load' ? (
+		<Island client:load {...props} lang={lang}><slot /></Island>
+	) : hydrate === 'idle' ? (
+		<Island client:idle {...props} lang={lang}><slot /></Island>
+	) : hydrate === 'visible' ? (
+		<Island client:visible {...props} lang={lang}><slot /></Island>
+	) : (
+		<Island {...props} lang={lang}><slot /></Island>
+	)}
+	</>
+)}
+{!hasChildren && (
+	<>
+	{hydrate === 'load' ? (
+		<Island client:load {...props} lang={lang} />
+	) : hydrate === 'idle' ? (
+		<Island client:idle {...props} lang={lang} />
+	) : hydrate === 'visible' ? (
+		<Island client:visible {...props} lang={lang} />
+	) : (
+		<Island {...props} lang={lang} />
+	)}
+	</>
+)}

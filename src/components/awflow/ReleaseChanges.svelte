@@ -1,11 +1,7 @@
 <script lang="ts" module>
 	import type { Change, ChangeKind, Release } from '../../data/releases';
 
-	export const KINDS: { kind: ChangeKind; label: string }[] = [
-		{ kind: 'new', label: 'New' },
-		{ kind: 'improved', label: 'Improved' },
-		{ kind: 'fixed', label: 'Fixed' },
-	];
+	export const KINDS: ChangeKind[] = ['new', 'improved', 'fixed'];
 </script>
 
 <script lang="ts">
@@ -15,7 +11,13 @@
 	 * - `flat` (timeline card): one list with a kind column.
 	 * Data lives in src/data/releases.ts.
 	 */
+	import type { Lang } from '../../i18n/locales';
+	import { formatReleaseDate } from '../../data/releases';
+	import { createT } from '../../i18n/ui';
+
 	interface Props {
+		/** Page language, passed by the Astro wrapper. */
+		lang?: Lang;
 		release: Release;
 		/** Override the list, e.g. filtered by area. Defaults to all of the release's changes. */
 		changes?: Change[];
@@ -26,21 +28,15 @@
 		meta?: boolean;
 	}
 
-	let { release, changes, layout = 'grouped', level = 2, meta = false }: Props = $props();
+	let { lang = 'en', release, changes, layout = 'grouped', level = 2, meta = false }: Props = $props();
+	const t = $derived(createT(lang));
 
 	const list = $derived(changes ?? release.changes);
 	const groups = $derived(
-		KINDS.map((k) => ({ ...k, items: list.filter((c) => c.kind === k.kind) })).filter((g) => g.items.length),
+		KINDS.map((kind) => ({ kind, items: list.filter((c) => c.kind === kind) })).filter((g) => g.items.length),
 	);
-	const date = $derived(
-		new Date(`${release.date}T00:00:00Z`).toLocaleDateString('en-GB', {
-			day: 'numeric',
-			month: 'long',
-			year: 'numeric',
-			timeZone: 'UTC',
-		}),
-	);
-	const breakingHref = $derived(`/releases/breaking-changes/#v${release.version.replace(/\./g, '')}`);
+	const date = $derived(formatReleaseDate(release.date, lang, 'long'));
+	const breakingHref = $derived(t.href(`/releases/breaking-changes/#v${release.version.replace(/\./g, '')}`));
 </script>
 
 <div class="awf-rel not-content">
@@ -51,7 +47,7 @@
 			<span aria-hidden="true">·</span>
 			<span>{release.browsers.join(', ')}</span>
 			<a class="awf-rel__breaking" href={breakingHref}>
-				{release.breaking ? 'Breaking changes & migration' : 'No breaking changes'}
+				{release.breaking ? t('release.breaking') : t('release.noBreaking')}
 			</a>
 		</p>
 	{/if}
@@ -60,10 +56,10 @@
 		<ul class="awf-rel__list" role="list">
 			{#each list as c, i (i)}
 				<li class="awf-rel__row">
-					<span class="awf-rel__kind awf-rel__kind--{c.kind}">{KINDS.find((k) => k.kind === c.kind)?.label}</span>
+					<span class="awf-rel__kind awf-rel__kind--{c.kind}">{t(`release.kind.${c.kind}`)}</span>
 					<span class="awf-rel__text">{c.text}</span>
 					{#if c.link}
-						<a class="awf-rel__link" href={c.link}>{c.label ?? 'Read more'} <span class="awf-rel__arr" aria-hidden="true">→</span></a>
+						<a class="awf-rel__link" href={t.href(c.link)}>{c.label ?? t('release.readMore')} <span class="awf-rel__arr" aria-hidden="true">→</span></a>
 					{/if}
 				</li>
 			{/each}
@@ -72,7 +68,7 @@
 		{#each groups as g (g.kind)}
 			<section class="awf-rel__group">
 				<svelte:element this={`h${level}`} class="awf-rel__heading awf-rel__kind--{g.kind}" id={`${g.kind}-in-v${release.version.replace(/\./g, '-')}`}>
-					{g.label} <span class="awf-rel__count">{g.items.length}</span>
+					{t(`release.kind.${g.kind}`)} <span class="awf-rel__count">{g.items.length}</span>
 				</svelte:element>
 				<ul class="awf-rel__list" role="list">
 					{#each g.items as c, i (i)}
@@ -80,7 +76,7 @@
 							<span class="awf-rel__area">{c.area}</span>
 							<span class="awf-rel__text">{c.text}</span>
 							{#if c.link}
-								<a class="awf-rel__link" href={c.link}>{c.label ?? 'Read more'} <span class="awf-rel__arr" aria-hidden="true">→</span></a>
+								<a class="awf-rel__link" href={t.href(c.link)}>{c.label ?? t('release.readMore')} <span class="awf-rel__arr" aria-hidden="true">→</span></a>
 							{/if}
 						</li>
 					{/each}

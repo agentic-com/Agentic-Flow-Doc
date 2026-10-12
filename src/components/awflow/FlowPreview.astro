@@ -10,6 +10,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import FlowPreviewIsland from './FlowPreview.svelte';
+import { pageLang } from '../../i18n/ui';
 
 interface Props {
 	/** Site path of a file in public/, e.g. "/examples/summarize-this-page.awf". */
@@ -28,4 +29,4 @@ if (src.startsWith('/') && !src.startsWith('//')) {
 }
 ---
 
-<FlowPreviewIsland client:visible src={src} caption={caption} raw={raw} />
+<FlowPreviewIsland client:visible src={src} caption={caption} raw={raw} lang={pageLang(Astro)} />

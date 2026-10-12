@@ -110,7 +110,7 @@ Import from `@components/awflow`, e.g. `import { Callout, ParamTable } from '@co
 | `<Screenshot>` | App captures, ideally a light and a dark pair, with numbered hotspots explained in a legend. | `src`, `srcDark`, `alt` (required), `caption`, `hotspots`: `{ x, y, label }[]` (x/y in %), `width`, `height`. |
 | `<GuidedShot>` | A task whose actions all happen on **one screen**: one screenshot with numbered markers, the numbered steps beside it. See [Guided screenshots](#guided-screenshots). | `shot`, `steps`: `{ spot, title, body?, check? }[]`, `caption`, `alt`. Astro component. |
 | `<StepShot>` | One step of a task that spans **several screens**: a zoomed crop around the control, ringed and numbered, with "Full screen". See [Guided screenshots](#guided-screenshots). | `shot`, `spot`, `n`, `height` (px, default 280), `zoom` (% of the image width, default 56), `alt`. Astro component. |
-| `<PageActions>` | Copy as Markdown / Ask Aria / Edit buttons. Node headers already include it. Interactive: add `client:visible`. | `markdownUrl` (defaults to the page's `.md` twin), `editUrl`, `askAriaHref`, `askAriaLabel`, `compact`. |
+| `<PageActions>` | Copy as Markdown / Ask Aria / Edit buttons. Node headers already include it. Interactive: add `hydrate="visible"`. | `markdownUrl` (defaults to the page's `.md` twin), `editUrl`, `askAriaHref`, `askAriaLabel`, `compact`. |
 | `<RecipeCard>` | Linking to a recipe from a node, concept or hub page. | `title`, `href`, `goal`, `level` (`beginner` · `intermediate` · `advanced`), `minutes`, `apps`, `setup` (`none` · `connection` · `on-device`). |
 | `<Kbd>` | A fixed key or combination. For shortcuts that differ per OS, use starlight-kbd's `<Kbd>` instead. | `keys`: `"Ctrl+Shift+K"` or `['⌘', 'K']`. |
 
@@ -191,7 +191,7 @@ The plugin replaces Starlight's search box with its own dialog (awflow/Agentic-F
 
 Release notes are **data first** (awflow/Agentic-Flow#1345). One file, `src/data/releases.ts`, holds every version (newest first) and feeds:
 
-- `/releases/`: the timeline (`<ReleaseTimeline client:load releases={RELEASES} />`). The current release is open, older ones collapse, and area chips filter the changes.
+- `/releases/`: the timeline (`<ReleaseTimeline hydrate="load" releases={RELEASES} />`). The current release is open, older ones collapse, and area chips filter the changes.
 - each version page, `src/content/docs/releases/v{major}-{minor}-{patch}.mdx`, through `<ReleaseChanges release={getRelease('x.y.z')} level={3} meta />` (New / Improved / Fixed groups, plus a version · date · browsers row). **Keep that URL shape:** the extension opens `/releases/v0-8-2/` after an update.
 - the RSS feed at `/releases/rss.xml` (`src/pages/releases/rss.xml.ts`).
 - `/releases/breaking-changes/`: written by hand, one `## vX.Y.Z` section per release. Write **None.** when there is nothing to act on.

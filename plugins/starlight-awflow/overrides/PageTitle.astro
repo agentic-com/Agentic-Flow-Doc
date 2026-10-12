@@ -10,8 +10,11 @@ import Default from '@astrojs/starlight/components/PageTitle.astro';
 import { getAwflowRoute } from '../route-data';
 import NodeHeader from '../components/NodeHeader.astro';
 import SectionBanner from '../components/SectionBanner.astro';
+import { useT } from '../../../src/i18n/ui';
 
-const { showBanner, node, section } = getAwflowRoute(Astro.locals);
+const awflow = getAwflowRoute(Astro.locals);
+const { showBanner, node, section } = awflow;
+const t = useT(Astro);
 ---
 
 {
@@ -23,5 +26,13 @@ const { showBanner, node, section } = getAwflowRoute(Astro.locals);
 		<Default {...Astro.props}>
 			<slot />
 		</Default>
+	)
+}
+
+{
+	awflow.i18n?.stale && (
+		<p class="awf-stale" data-pagefind-ignore>
+			{t('i18n.stale')} <a href={awflow.i18n.englishHref} hreflang="en">{t('i18n.readEnglish')}</a>
+		</p>
 	)
 }

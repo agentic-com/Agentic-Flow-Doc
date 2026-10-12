@@ -46,10 +46,12 @@ export interface Page extends Pick<Locator, 'locator' | 'getByRole' | 'getByText
 }
 
 /** localStorage entries: anonymous local workspace, telemetry notice seen, first-run tours dismissed, theme. */
-export function seedStorage(theme: Theme): Record<string, string> {
+export function seedStorage(theme: Theme, locale = 'en'): Record<string, string> {
 	const tours = ['workflows', 'home', 'knowledges', 'marketplace', 'credentials', 'memory', 'local-models', 'history', 'settings'];
 	return {
 		app_mode: 'anonymous',
+		// The app's UI language (wuchale locale key).
+		'app:locale': locale,
 		awf_telemetry_prefs: JSON.stringify({
 			usageStats: false,
 			errorReports: false,

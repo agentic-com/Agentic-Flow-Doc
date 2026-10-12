@@ -1,0 +1,22 @@
+---
+/** Passes the page language to the island; `hydrate` replaces `client:*` (spec §1). */
+import Island from './RecipeUse.svelte';
+import { pageLang } from '../../i18n/ui';
+
+interface Props {
+	hydrate?: 'load' | 'idle' | 'visible';
+	[key: string]: unknown;
+}
+const { hydrate, ...props } = Astro.props;
+const lang = pageLang(Astro);
+---
+
+{hydrate === 'load' ? (
+	<Island client:load {...props} lang={lang} />
+) : hydrate === 'idle' ? (
+	<Island client:idle {...props} lang={lang} />
+) : hydrate === 'visible' ? (
+	<Island client:visible {...props} lang={lang} />
+) : (
+	<Island {...props} lang={lang} />
+)}

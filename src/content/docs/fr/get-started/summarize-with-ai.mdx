@@ -1,0 +1,120 @@
+---
+title: Résumer une page avec l'IA
+description: "Ajoutez un modèle de chat, sur votre appareil, avec une clé d'API ou avec Ollama, et obtenez trois points clés pour n'importe quelle page que vous lisez."
+section: get-started
+kind: lesson
+lesson:
+  level: 1
+  order: 3
+  minutes: 8
+sidebar:
+  label: "3 · Résumer une page avec l'IA"
+i18n:
+  source: "1607d7a56ef3750b3fd81f4ea99a20a226d724b2"
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import { StepCard, StepShot, LessonProgress, LessonDone, ModelTabs } from "@components/awflow";
+import FlowPreview from "@components/awflow/FlowPreview.astro";
+
+<LessonProgress
+  hydrate="visible"
+  level={1}
+  order={3}
+  total={5}
+  minutes={8}
+  onDevice
+  youWill={[
+    "Lire toute une page avec Obtenir tout le texte",
+    "Connecter un modèle de chat à une chaîne LLM basique",
+    "Écrire un prompt qui utilise le texte de la page",
+    "Afficher le résultat",
+  ]}
+  before={[
+    "Leçon 2 terminée : vous savez ajouter et tester des nœuds",
+    "Un long article ouvert dans un autre onglet",
+    "Pour le chemin sur l'appareil : environ 1 Go libre et quelques minutes pour le premier téléchargement",
+  ]}
+/>
+
+L'IA dans un workflow demande deux nœuds : une **chaîne** qui contient le prompt, et un **modèle** branché sur l'emplacement **Modèle** de la chaîne. Le modèle peut s'exécuter sur votre appareil (gratuit, privé, hors ligne après le téléchargement), via un fournisseur avec votre clé d'API, ou via Ollama sur votre ordinateur.
+
+<FlowPreview src="/examples/summarize-page-llm-chain.awf" caption="Ce que vous allez créer : lire la page, demander au modèle trois points clés, les afficher." />
+
+## Étapes
+
+<StepCard n={1} title="Démarrer un workflow qui lit la page" check="Au démarrage → Obtenir tout le texte est sur un nouveau canevas.">
+  Créez un nouveau workflow **Blank canvas** nommé `Summarise this page`, comme dans la [leçon 2](/get-started/first-workflow/). Ajoutez le déclencheur **Au démarrage**, puis cliquez sur son **+** et ajoutez **Obtenir tout le texte**. Définissez **Nom du champ de sortie** sur `text`.
+
+  <StepShot shot="create-workflow" spot="blank-canvas" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Ajouter une chaîne LLM basique" check="une Chaîne LLM basique est reliée à Obtenir tout le texte, avec un emplacement Modèle vide en dessous.">
+  Cliquez sur le **+** à droite de **Obtenir tout le texte**, saisissez `LLM` et choisissez **Chaîne LLM basique**. Son emplacement **Modèle** se trouve sous le nœud, avec son propre **+**.
+
+  <StepShot shot="llm-chain" spot="basic-llm-chain" n={2} zoom={44} />
+</StepCard>
+
+<StepCard n={3} title="Connecter un modèle" check="un nœud de modèle est accroché sous l'emplacement Modèle de la chaîne et affiche le modèle que vous avez choisi.">
+  Cliquez sur le **+** sous **Modèle** et choisissez l'une de ces options :
+
+  <ModelTabs hydrate="load">
+    <div slot="ondevice">
+      Choisissez **Web LLM**. Dans **Modèle**, ouvrez la liste et choisissez un modèle sous **Disponible au téléchargement**. **Llama 3.2 1B Instruct** est le plus petit et le plus rapide à télécharger ; un modèle 3B rédige de meilleurs résumés. Il se télécharge la première fois qu'il s'exécute, puis fonctionne hors ligne et rien ne quitte votre appareil. Voir [IA locale](/app/local-models/) pour installer des modèles à l'avance.
+
+      Dans Firefox, certaines configurations graphiques ne peuvent pas exécuter Web LLM ; le modèle affiche alors **Non pris en charge ici**. Utilisez plutôt **Conversation Transformers**.
+    </div>
+    <div slot="apikey">
+      Choisissez **Chat OpenAI**, **Chat Anthropic** ou **Chat Google**. Dans **Authentification**, cliquez sur **+ Add Credential**, collez votre clé d'API depuis le site web du fournisseur, puis cliquez sur **Create Credential**. Choisissez ensuite un modèle. La clé est stockée dans AWFlow et envoyée uniquement à ce fournisseur. Voir [Créer des identifiants](/app/connections/create/).
+
+      Cette option coûte un peu à chaque exécution, facturé par le fournisseur, et le texte de la page lui est envoyé.
+    </div>
+    <div slot="ollama">
+      Installez [Ollama](https://ollama.com) sur votre ordinateur et téléchargez un modèle, par exemple `ollama pull llama3.2`. Démarrez-le pour que l'extension puisse l'appeler :
+
+      ```sh title="Terminal"
+      OLLAMA_ORIGINS=chrome-extension://linlkeaipfpnhddjkpcbmldionajfifa ollama serve
+      ```
+
+      Dans Firefox, utilisez `OLLAMA_ORIGINS=moz-extension://*`. Choisissez ensuite le nœud **Ollama** et sélectionnez votre modèle dans **Modèle** (cliquez sur **Actualiser les modèles** si la liste est vide). Rien ne quitte votre ordinateur. Voir [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/).
+    </div>
+  </ModelTabs>
+
+  <StepShot shot="llm-chain" spot="model-slot" n={3} zoom={44} />
+</StepCard>
+
+<StepCard n={4} title="Écrire le prompt" check="le champ Message affiche votre texte, avec {{ $input.text }} à la fin.">
+  Ouvrez **Chaîne LLM basique** et collez ceci dans **Message** :
+
+  ```text title="Prompt"
+  Summarise this page in 3 short bullets for a busy reader.
+
+  {{ $input.text }}
+  ```
+
+  `{{ $input.text }}` est remplacé par le texte de la page issu de **Obtenir tout le texte** quand le workflow s'exécute.
+
+  <StepShot shot="llm-chain-prompt" spot="prompt" n={4} />
+</StepCard>
+
+<StepCard n={5} title="Afficher le résultat" check="Afficher le Markdown est relié après la chaîne, avec Contenu défini sur {{ $input.response }}.">
+  Cliquez sur le **+** à droite de **Chaîne LLM basique** et ajoutez **Afficher le Markdown**. Définissez **Titre** sur `Page summary` et **Contenu** sur `{{ $input.response }}` : la chaîne place la réponse du modèle dans un champ appelé `response`.
+
+  <StepShot shot="llm-chain" spot="display-markdown" n={5} zoom={44} />
+</StepCard>
+
+<StepCard n={6} title="L'exécuter sur un article" check="Chaîne LLM basique → Output → Actual affiche une réponse avec trois points clés sur l'article.">
+  Passez à l'onglet de l'article, puis revenez au panneau et cliquez sur **Tester le workflow**. La première exécution sur l'appareil attend le téléchargement du modèle (la progression s'affiche dans le journal d'exécution du nœud) ; les suivantes prennent quelques secondes. Cliquez sur **Enregistrer** quand tout fonctionne.
+
+  <StepShot shot="llm-chain" spot="run" n={6} />
+</StepCard>
+
+<Aside type="tip" title="Personnalisez-le">
+Changez le prompt : « Explique cette page à un enfant de 10 ans », « Liste toutes les dates et tous les prix mentionnés », « Écris une réponse de deux lignes à cet e-mail ». Le reste du workflow ne change pas. Voir [Prompts et sorties](/concepts/ai/prompting-and-outputs/).
+</Aside>
+
+Les nœuds de cette leçon : [Obtenir tout le texte](/nodes/extension/getalltext/), [Chaîne LLM basique](/nodes/builtin/ai/aiagents/basicllmchainnode/), [Afficher le Markdown](/nodes/extension/displaymarkdown/). Comment les modèles se branchent sur les nœuds : [Dépendances de modèle](/concepts/ai/model-dependencies/).
+
+<LessonDone hydrate="load" title="Bravo : votre workflow réfléchit maintenant." next={{ href: "/get-started/first-automation/", label: "Leçon 4" }}>
+  Vous allez maintenant l'exécuter depuis un raccourci clavier, sans ouvrir le canevas.
+</LessonDone>

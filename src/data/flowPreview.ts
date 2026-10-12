@@ -6,20 +6,24 @@
  *
  * Node labels and doc links come from flow-node-map.json, generated from the app's node
  * definitions by scripts/examples/build-node-map.ts. Pure: no DOM, safe in SSR and islands.
+ * Reader-facing text (family names, branch names, the screen-reader summary, errors) comes from the
+ * interface dictionary: pass the page's `t`.
  */
 import NODE_MAP from './flow-node-map.json';
+import { createT, type T, type UIKey } from '../i18n/ui';
 
 export type FlowFamily = 'trigger' | 'lambda' | 'inpage' | 'flow' | 'data' | 'core' | 'ai' | 'integration';
 
-export const FLOW_FAMILY_LABELS: Record<FlowFamily, string> = {
-	trigger: 'Trigger',
-	lambda: 'Lambda',
-	inpage: 'In-page action',
-	flow: 'Flow',
-	data: 'Data',
-	core: 'Core',
-	ai: 'AI',
-	integration: 'Integration',
+/** Dictionary key of each family's name. */
+export const FLOW_FAMILY_KEYS: Record<FlowFamily, UIKey> = {
+	trigger: 'flow.family.trigger',
+	lambda: 'flow.family.lambda',
+	inpage: 'flow.family.inpage',
+	flow: 'flow.family.flow',
+	data: 'flow.family.data',
+	core: 'flow.family.core',
+	ai: 'flow.family.ai',
+	integration: 'flow.family.integration',
 };
 
 export interface FlowNodeInfo {
@@ -88,19 +92,20 @@ export function resolveFlowNode(instanceId: string): FlowNodeInfo {
 	};
 }
 
-function branchLabel(sourceInstance: string, handle: string | undefined): string | undefined {
+function branchLabel(sourceInstance: string, handle: string | undefined, t: T): string | undefined {
 	if (!handle?.startsWith('output-')) return undefined;
 	const port = handle.slice(7);
-	if (port === '__fallback__') return 'otherwise';
-	if (/:if$/.test(sourceInstance) || /:filter$/.test(sourceInstance)) return port === '0' ? 'true' : port === '1' ? 'false' : undefined;
-	if (/^\d+$/.test(port)) return port === '0' ? undefined : `output ${Number(port) + 1}`;
+	if (port === '__fallback__') return t('flow.branch.otherwise');
+	if (/:if$/.test(sourceInstance) || /:filter$/.test(sourceInstance))
+		return port === '0' ? t('flow.branch.true') : port === '1' ? t('flow.branch.false') : undefined;
+	if (/^\d+$/.test(port)) return port === '0' ? undefined : t('flow.branch.output', { n: Number(port) + 1 });
 	return port;
 }
 
-/** Throws a readable Error when the value is not a usable workflow. */
-export function buildFlowModel(workflow: unknown): FlowModel {
+/** Throws a readable Error (in the reader's language) when the value is not a usable workflow. */
+export function buildFlowModel(workflow: unknown, t: T = createT('en')): FlowModel {
 	if (!isObj(workflow) || !Array.isArray(workflow.nodes) || !Array.isArray(workflow.edges))
-		throw new Error('This file is not an AWFlow workflow.');
+		throw new Error(t('flow.error.notWorkflow'));
 
 	const nodes = (workflow.nodes as Raw[]).filter(
 		(n) => isObj(n) && typeof n.id === 'string' && n.type !== 'stickyNote' && isObj(n.data) && isObj(n.data.instance),
@@ -149,7 +154,7 @@ export function buildFlowModel(workflow: unknown): FlowModel {
 	for (const n of main) {
 		const labels = flowEdges
 			.filter((e) => e.target === n.id)
-			.map((e) => branchLabel(byId.get(e.source)!.data.instance.id, e.sourceHandle));
+			.map((e) => branchLabel(byId.get(e.source)!.data.instance.id, e.sourceHandle, t));
 		if (labels.length && labels.every(Boolean)) via.set(n.id, [...new Set(labels)].join(' / '));
 	}
 
@@ -160,7 +165,7 @@ export function buildFlowModel(workflow: unknown): FlowModel {
 		return {
 			id: n.id,
 			name,
-			subtitle: name.toLowerCase() === info.label.toLowerCase() ? FLOW_FAMILY_LABELS[info.family] : info.label,
+			subtitle: name.toLowerCase() === info.label.toLowerCase() ? t(FLOW_FAMILY_KEYS[info.family]) : info.label,
 			family: info.family,
 			docLink: info.docLink,
 			notes,
@@ -189,14 +194,18 @@ export function buildFlowModel(workflow: unknown): FlowModel {
 	}
 
 	const steps = layers.flat();
-	const name = typeof workflow.name === 'string' && workflow.name.trim() ? workflow.name.trim() : 'Workflow';
+	const name = typeof workflow.name === 'string' && workflow.name.trim() ? workflow.name.trim() : t('flow.defaultName');
 	const branches = layers.filter((l) => l.length > 1).length;
+	// One full sentence per shape, so each language controls its own clause order.
+	const vars = { name, steps: steps.length, first: steps[0]?.name ?? '', last: steps[steps.length - 1]?.name ?? '' };
 	const summary =
-		`${name}: a workflow with ${steps.length} step${steps.length === 1 ? '' : 's'}` +
-		(steps[0] ? `, starting with ${steps[0].name}` : '') +
-		(steps.length > 1 ? ` and ending with ${steps[steps.length - 1].name}` : '') +
-		(branches ? `, with ${branches} branching point${branches === 1 ? '' : 's'}` : '') +
-		'.';
+		steps.length === 0
+			? t('flow.summary.none', vars)
+			: steps.length === 1
+				? t('flow.summary.single', vars)
+				: branches
+					? t.plural('flow.summary.branched', branches, vars)
+					: t('flow.summary.multi', vars);
 	return {
 		name,
 		description: typeof workflow.description === 'string' ? workflow.description : undefined,
