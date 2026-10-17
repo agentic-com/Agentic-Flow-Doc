@@ -608,9 +608,11 @@ export const shots: ShotDef[] = [
 			await s.page.goto('about:blank');
 			await agentBuilder(s, 'Identity');
 			await s.page.getByRole('radiogroup', { name: 'Preview a state' }).waitFor({ timeout: T });
-			// A blank agent starts with the legacy face; upgrading keeps the switch on screen.
+			// A blank agent starts with the new face, so "Upgrade face" is only offered for an
+			// agent made before the new faces (re-capture that spot with one). When the switch
+			// is there, turn it on so it stays on screen.
 			const upgrade = s.page.getByRole('switch', { name: 'Upgrade face' });
-			if ((await upgrade.getAttribute('aria-checked')) !== 'true') await upgrade.click({ timeout: T });
+			if ((await upgrade.count()) && (await upgrade.getAttribute('aria-checked')) !== 'true') await upgrade.click({ timeout: T });
 			await scrollPane(s.page.getByRole('heading', { name: 'Identity' }).first(), 'start');
 			await s.page.waitForTimeout(800);
 		}
