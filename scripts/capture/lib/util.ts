@@ -57,6 +57,8 @@ export function seedStorage(theme: Theme, locale = 'en'): Record<string, string>
 			errorReports: false,
 			installId: 'inst_00000000000000000000000000000000',
 			noticeSeen: true,
+			// The app's consent model (opt-in, CONSENT_MODEL 2): older prefs are migrated and the notice asks again.
+			model: 2,
 			lastAppOpenedDay: null,
 			reportedSchedules: null
 		}),
