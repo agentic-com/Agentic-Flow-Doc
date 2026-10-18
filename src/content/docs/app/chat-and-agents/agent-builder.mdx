@@ -19,7 +19,7 @@ Open an agent from **Agents** to edit it. Changes save automatically.
   <StepShot shot="agents" spot="blank-agent" n={1} />
 </StepCard>
 
-<StepCard n={2} title="Name it" check="the preview on the right shows the new name.">
+<StepCard n={2} title="Name it" check="the name shows in the header, in the example chat and in the agent list on the right.">
   On **Identity**, enter a **Name** (its @handle follows) and a **One-line role**. Design its look in the studio above if you like: see [Design its look](#design-its-look).
 
   <StepShot shot="agent-identity" spot="name" n={2} />
@@ -53,7 +53,7 @@ Open an agent from **Agents** to edit it. Changes save automatically.
 
 | Tab | What you set |
 | --- | --- |
-| **Identity** | Its look (in the look studio), name, @handle, role, greeting and conversation starters. The preview shows how it looks in chat. |
+| **Identity** | Its look (in the look studio), name, @handle, role, greeting and conversation starters. **Try it · chat · live states** shows it in an example chat, a team thread and the agent list. |
 | **Instructions** | How it works and what it avoids. Use variables like `{today}`, `{my name}`, `{current tab}` and `{memory}`. **Improve** and **Generate** ask your model for help; earlier versions are kept. |
 | **Model** | *Same as Aria* or a specific on-device, Ollama (detected automatically when it is running) or cloud model, its creativity, max steps per answer, and whether to fall back to on-device when you're offline. |
 | **Skills** | What it can do: **Browser control**, **Web search**, **Workflows**, **On-device AI**, **Teammates**, **MCP** servers. See [Give it skills](/app/chat-and-agents/agent-skills/). |
@@ -99,25 +99,29 @@ At the top of a team thread, the members' faces sit side by side and all **look 
 
 ### Design its look
 
-The look studio is at the top of the **Identity** tab. Every change saves at once, and the preview on the right shows it in the agent list, a new chat and a team thread. Hover or tap a step to find it on the screen.
+The look studio is at the top of the **Identity** tab. Every change saves at once. On the left, a preview stays in view while you scroll the pickers on the right. On the right, the **Try it · chat · live states** rail shows the same agent in an example chat, a team thread and the agent list. Hover or tap a step to find it on the screen.
 
 <GuidedShot
   shot="agent-look"
   steps={[
-    { spot: 'preview', title: 'Preview a state', body: 'Pick **Idle**, **Thinking**, **Working**, **Needs you**, **Done** or **Offline** to see how the face shows it. Only the preview changes, never the agent.' },
+    { spot: 'preview', title: 'Preview a state', body: 'Pick **Idle**, **Thinking**, **Working**, **Needs you**, **Done** or **Offline** to see how the face shows it. Only the preview changes, never the agent. Its own row in the agent list on the right follows the state you pick.' },
     { spot: 'reactions', title: 'Try a reaction', body: '**Wink**, **Hop**, **Nod** or **Celebrate** play once on the preview.' },
-    { spot: 'upgrade-face', title: 'Upgrade face', body: 'Shown for agents made before the new faces. Turn it on to add brows, a mouth and cheeks; shape, colour and wardrobe stay. Turn it off to go back.' },
     { spot: 'describe', title: 'Describe a look', body: 'Type a sentence like "a cheerful wizard who loves coffee" and click **Ask Aria**.', check: 'the preview takes the new look.' },
     { spot: 'shuffle', title: 'Or press Shuffle', body: 'A random look in the current theme. Press it again until you like one.' },
-    { spot: 'suggestions', title: 'Pick a look suggested for its role', body: 'When the name or role says what it does (prices, email, code…), three ready looks appear: **Classic**, **Pastel** and **Clay figure**.' },
+    { spot: 'suggestions', title: 'Pick a look suggested for its role', body: 'When the name or role matches one of twelve themes (travel, code, data, writing, money…), three ready looks named for that kind of role appear, like **Explorer**, **Concierge** and **Night owl** for "travel". The label says which word it matched, for example **Suggested for "travel"**.' },
     { spot: 'theme', title: 'Choose a theme', body: '**Soft**, **Bold**, **Mono**, **Neon** or **Clay** change the drawing style, not who it is.' },
     { spot: 'shape', title: 'Choose a shape', body: 'Fifteen body shapes, from Diamond to Flower.' },
     { spot: 'colour', title: 'Choose a colour', body: 'Pick a swatch, or **Custom** for any colour.' },
     { spot: 'face', title: 'Choose eyes and a mouth', body: 'Six kinds of eyes and six mouths, including **No mouth**.' },
-    { spot: 'headwear', title: 'Add headwear', body: 'A bow, cap, crown, wizard hat, headphones and more, or nothing.' },
-    { spot: 'eyewear-prop', title: 'Add eyewear and a held prop', body: 'Glasses, sunglasses, a monocle… and something to hold: a magnifier, pencil, coffee, light bulb, book or wrench.' },
+    { spot: 'headwear', title: 'Add headwear', body: 'Under **Wardrobe · head**: a bow, cap, crown, wizard hat, headphones and more, or nothing.' },
+    { spot: 'eyewear-prop', title: 'Add eyewear and a held prop', body: 'Glasses, sunglasses, a monocle… and, under **Held prop · follows the work**, something to hold: a magnifier, pencil, coffee, light bulb, book or wrench.' },
+    { spot: 'try-chat', title: 'See it in a chat', body: 'An example chat, picked from the role, shows the agent **working**, **needing you** and **done**. It is only a sample: nothing is sent or saved, and **Approve** and **Not now** do nothing.' },
+    { spot: 'try-team', title: 'See it in a team thread', body: 'Your agent is the one talking, and the other faces look its way.' },
+    { spot: 'try-list', title: 'See it in the agent list', body: 'Your agent sits in the list with its presence ring, next to examples of a working agent with a progress ring and a sleeping one.' },
   ]}
 />
+
+The name is only a name: it does not change the face. Agents made before the new faces show an **Upgrade face** switch above the pickers. Turn it on to add brows, a mouth and cheeks; shape, colour and wardrobe stay. Turn it off to go back.
 
 :::note[Describe a look needs a model]
 **Ask Aria** uses the model you set up for Aria on the **Assistant** page (on-device, Ollama or a cloud provider). Without one, the studio says so and nothing changes. The other controls work without a model.

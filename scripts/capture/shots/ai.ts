@@ -49,7 +49,9 @@ async function agentBuilder(s: Session, tab: string) {
 		await p.waitForTimeout(800);
 		await name.fill('Price checker');
 		await name.press('Tab');
-		await p.getByText(/Hi, I.m Price checker/).filter({ visible: true }).first().waitFor({ timeout: T });
+		// The name shows in the header and the Try it rail's chat/list once saved.
+		await p.getByText('Price checker', { exact: true }).filter({ visible: true }).first().waitFor({ timeout: T });
+		await p.waitForTimeout(500);
 		const role = p.getByRole('textbox', { name: /^One-line role/ });
 		await role.fill('Watches competitor prices and reports changes');
 		await role.press('Tab');
@@ -566,7 +568,7 @@ export const shots: ShotDef[] = [
 		name: 'agent-identity',
 		page: 'app/chat-and-agents/agent-builder',
 		route: '#/app/agents/<id>',
-		alt: "The Identity tab of the agent builder for a new agent, Price checker: the end of the look studio (headwear, eyewear and held prop) above the Name, One-line role, Greeting and Conversation starters fields, with the builder tabs on the left and a preview of the agent in the list, a new chat and a team thread on the right.",
+		alt: "The Identity tab of the agent builder for a new agent, Price checker: the end of the look studio (headwear, eyewear and held prop) above the Name, One-line role, Greeting and Conversation starters fields, with the builder tabs on the left and the Try it rail on the right.",
 		note: 'The agent is created with Blank agent during capture and stays in the session.',
 		spots: [
 			{ id: 'tabs', label: 'Builder tabs', locator: btn(/^Identity/) },
@@ -585,22 +587,24 @@ export const shots: ShotDef[] = [
 		name: 'agent-look',
 		page: 'app/chat-and-agents/agent-builder',
 		route: '#/app/agents/<id>',
-		alt: 'The look studio at the top of the Identity tab for Price checker, a blue square character. On the left, the large preview with Preview a state chips (Idle, Thinking, Working, Needs you, Done, Offline) and Try a reaction buttons (Wink, Hop, Nod, Celebrate). On the right, the Upgrade face switch (on), Describe a look with Ask Aria and Shuffle, looks suggested for the role (Classic, Pastel, Clay figure), then Theme, Shape, Colour, Eyes, Mouth, Headwear, Eyewear and Held prop pickers.',
-		note: 'The look studio at the top of the Identity tab, for the Price checker agent made with Blank agent. A taller viewport fits the whole studio.',
+		alt: 'The Identity tab of the agent builder for Price checker, a blue square character. In the middle, the look studio: on the left a sticky preview with Preview a state chips (Idle, Thinking, Working, Needs you, Done, Offline) and Try a reaction buttons (Wink, Hop, Nod, Celebrate); on the right Describe a look with Ask Aria and Shuffle, role-named suggested looks, then Theme, Shape, Colour, Eyes, Mouth, Wardrobe · head, Eyewear and Held prop · follows the work pickers. In the right rail, Try it · chat · live states shows an example chat with the agent working, needing you and done, a team thread where the others look at the talking agent, and the agent list with presence rings.',
+		note: 'The Identity tab for the Price checker agent made with Blank agent: look studio plus the Try it rail. A taller viewport fits the whole studio. The Upgrade face switch only shows for agents made before the new faces, so it is not in this shot.',
 		viewport: { width: 1440, height: 1560 },
 		spots: [
-			{ id: 'upgrade-face', label: 'Upgrade face', locator: (p) => p.getByRole('switch', { name: 'Upgrade face' }) },
 			{ id: 'preview', label: 'Preview a state', locator: (p) => p.getByRole('radiogroup', { name: 'Preview a state' }) },
 			{ id: 'reactions', label: 'Try a reaction', locator: btn('Wink', true) },
 			{ id: 'describe', label: 'Describe a look', locator: (p) => p.getByRole('textbox', { name: /Describe a look/ }) },
 			{ id: 'shuffle', label: 'Shuffle', locator: btn(/Shuffle/) },
-			{ id: 'suggestions', label: 'Suggested for this role', locator: text('Suggested for this role:') },
+			{ id: 'suggestions', label: 'Suggested looks', locator: (p) => p.getByTestId('role-suggestions') },
 			{ id: 'theme', label: 'Theme', locator: (p) => p.getByRole('radiogroup', { name: 'Theme' }) },
 			{ id: 'shape', label: 'Shape', locator: (p) => p.getByRole('radiogroup', { name: 'Shape' }) },
 			{ id: 'colour', label: 'Colour', locator: (p) => p.getByRole('radiogroup', { name: 'Colour' }) },
 			{ id: 'face', label: 'Eyes and mouth', locator: (p) => p.getByRole('radiogroup', { name: 'Eyes' }) },
-			{ id: 'headwear', label: 'Headwear', locator: (p) => p.getByRole('radiogroup', { name: 'Headwear' }) },
-			{ id: 'eyewear-prop', label: 'Eyewear and held prop', locator: (p) => p.getByRole('radiogroup', { name: 'Eyewear' }) }
+			{ id: 'headwear', label: 'Wardrobe · head', locator: (p) => p.getByRole('radiogroup', { name: 'Headwear' }) },
+			{ id: 'eyewear-prop', label: 'Eyewear and held prop', locator: (p) => p.getByRole('radiogroup', { name: 'Eyewear' }) },
+			{ id: 'try-chat', label: 'Example chat', locator: (p) => p.getByRole('region', { name: 'Example chat' }) },
+			{ id: 'try-team', label: 'Team thread', locator: (p) => p.getByRole('region', { name: /^Team thread/ }) },
+			{ id: 'try-list', label: 'Agent list', locator: (p) => p.getByRole('region', { name: /^Agent list/ }) }
 		],
 		prepare: async (s) => {
 			await closeOverlays(s);
@@ -608,11 +612,6 @@ export const shots: ShotDef[] = [
 			await s.page.goto('about:blank');
 			await agentBuilder(s, 'Identity');
 			await s.page.getByRole('radiogroup', { name: 'Preview a state' }).waitFor({ timeout: T });
-			// A blank agent starts with the new face, so "Upgrade face" is only offered for an
-			// agent made before the new faces (re-capture that spot with one). When the switch
-			// is there, turn it on so it stays on screen.
-			const upgrade = s.page.getByRole('switch', { name: 'Upgrade face' });
-			if ((await upgrade.count()) && (await upgrade.getAttribute('aria-checked')) !== 'true') await upgrade.click({ timeout: T });
 			await scrollPane(s.page.getByRole('heading', { name: 'Identity' }).first(), 'start');
 			await s.page.waitForTimeout(800);
 		}
