@@ -19,8 +19,8 @@ Open an agent from **Agents** to edit it. Changes save automatically.
   <StepShot shot="agents" spot="blank-agent" n={1} />
 </StepCard>
 
-<StepCard n={2} title="Name it" check="the name shows in the header, in the example chat and in the agent list on the right.">
-  On **Identity**, enter a **Name** (its @handle follows) and a **One-line role**. Design its look in the studio above if you like: see [Design its look](#design-its-look).
+<StepCard n={2} title="Name it" check="the name shows in the header and in the agent list on the right, and the face changes as you type.">
+  On **Identity**, start with the **Name** and **One-line role** at the top. While the agent is new, its look and its @handle follow what you type, so it gets a face that suits its job right away. Then change anything you like in the look studio below: see [Design its look](#design-its-look).
 
   <StepShot shot="agent-identity" spot="name" n={2} />
 </StepCard>
@@ -51,9 +51,11 @@ Open an agent from **Agents** to edit it. Changes save automatically.
 
 ## The builder tabs
 
+The tabs sit in the header, next to the agent's name. In a narrow window they move to a row under the name.
+
 | Tab | What you set |
 | --- | --- |
-| **Identity** | Its look (in the look studio), name, @handle, role, greeting and conversation starters. **Try it · chat · live states** shows it in an example chat, a team thread and the agent list. |
+| **Identity** | Its name, @handle and role at the top, then its look (in the look studio), greeting and conversation starters. **Try it · chat · live states** shows it in an example chat, a team thread and the agent list. |
 | **Instructions** | How it works and what it avoids. Use variables like `{today}`, `{my name}`, `{current tab}` and `{memory}`. **Improve** and **Generate** ask your model for help; earlier versions are kept. |
 | **Model** | *Same as Aria* or a specific on-device, Ollama (detected automatically when it is running) or cloud model, its creativity, max steps per answer, and whether to fall back to on-device when you're offline. |
 | **Skills** | What it can do: **Browser control**, **Web search**, **Workflows**, **On-device AI**, **Teammates**, **MCP** servers. See [Give it skills](/app/chat-and-agents/agent-skills/). |
@@ -99,7 +101,7 @@ At the top of a team thread, the members' faces sit side by side and all **look 
 
 ### Design its look
 
-The look studio is at the top of the **Identity** tab. Every change saves at once. On the left, a preview stays in view while you scroll the pickers on the right. On the right, the **Try it · chat · live states** rail shows the same agent in an example chat, a team thread and the agent list. Hover or tap a step to find it on the screen.
+The look studio is on the **Identity** tab, under the name and role. Every change saves at once. On the left, a preview stays in view while you scroll the pickers on the right. On the right, the **Try it · chat · live states** rail shows the same agent in an example chat, a team thread and the agent list. Hover or tap a step to find it on the screen.
 
 <GuidedShot
   shot="agent-look"
@@ -121,7 +123,9 @@ The look studio is at the top of the **Identity** tab. Every change saves at onc
   ]}
 />
 
-The name is only a name: it does not change the face. Agents made before the new faces show an **Upgrade face** switch above the pickers. Turn it on to add brows, a mouth and cheeks; shape, colour and wardrobe stay. Turn it off to go back.
+A new agent's look comes from its name and role, and changes as you type them, until you change any option yourself. From then on, renaming keeps your look; click **Generate one from the name** under the role to start again from the name. Its @handle also follows the name until its first chat, so @mentions you already use never break.
+
+Agents made before the new faces show an **Upgrade face** switch above the pickers. Turn it on to add brows, a mouth and cheeks; shape, colour and wardrobe stay. Turn it off to go back.
 
 :::note[Describe a look needs a model]
 **Ask Aria** uses the model you set up for Aria on the **Assistant** page (on-device, Ollama or a cloud provider). Without one, the studio says so and nothing changes. The other controls work without a model.

@@ -568,18 +568,19 @@ export const shots: ShotDef[] = [
 		name: 'agent-identity',
 		page: 'app/chat-and-agents/agent-builder',
 		route: '#/app/agents/<id>',
-		alt: "The Identity tab of the agent builder for a new agent, Price checker: the end of the look studio (headwear, eyewear and held prop) above the Name, One-line role, Greeting and Conversation starters fields, with the builder tabs on the left and the Try it rail on the right.",
+		alt: "The Identity tab of the agent builder for a new agent, Price checker, with the builder tabs in the header. At the top, Name (Price checker, used for @mentions as @price-checker) and One-line role (Watches competitor prices and reports changes), then the line The look below comes from the name and role. Change any option to make it yours, above the look studio with the generated look, a yellow ghost with an antenna. The Try it rail is on the right.",
 		note: 'The agent is created with Blank agent during capture and stays in the session.',
 		spots: [
 			{ id: 'tabs', label: 'Builder tabs', locator: btn(/^Identity/) },
 			{ id: 'name', label: 'Name', locator: (p) => p.getByRole('textbox', { name: /^Name/ }) },
 			{ id: 'role', label: 'One-line role', locator: (p) => p.getByRole('textbox', { name: /^One-line role/ }) },
+			{ id: 'look-follows', label: 'The look follows the name', locator: (p) => p.getByTestId('look-follows') },
 			{ id: 'done', label: 'Done', locator: btn('Done', true) }
 		],
 		prepare: async (s) => {
 			await closeOverlays(s);
 			await agentBuilder(s, 'Identity');
-			await scrollPane(s.page.getByRole('textbox', { name: /^Name/ }), 'center');
+			await scrollPane(s.page.getByRole('heading', { name: 'Identity' }).first(), 'start');
 			await s.page.waitForTimeout(500);
 		}
 	},
@@ -587,7 +588,7 @@ export const shots: ShotDef[] = [
 		name: 'agent-look',
 		page: 'app/chat-and-agents/agent-builder',
 		route: '#/app/agents/<id>',
-		alt: 'The Identity tab of the agent builder for Price checker, a blue square character. In the middle, the look studio: on the left a sticky preview with Preview a state chips (Idle, Thinking, Working, Needs you, Done, Offline) and Try a reaction buttons (Wink, Hop, Nod, Celebrate); on the right Describe a look with Ask Aria and Shuffle, role-named suggested looks, then Theme, Shape, Colour, Eyes, Mouth, Wardrobe · head, Eyewear and Held prop · follows the work pickers. In the right rail, Try it · chat · live states shows an example chat with the agent working, needing you and done, a team thread where the others look at the talking agent, and the agent list with presence rings.',
+		alt: 'The Identity tab of the agent builder for Price checker, with the builder tabs in the header and Name and One-line role at the top. Its look, generated from the name and role, is a yellow ghost with an antenna. Below, the look studio: on the left a sticky preview with Preview a state chips (Idle, Thinking, Working, Needs you, Done, Offline) and Try a reaction buttons (Wink, Hop, Nod, Celebrate); on the right Describe a look with Ask Aria and Shuffle, role-named suggested looks, then Theme, Shape, Colour, Eyes, Mouth, Wardrobe · head, Eyewear and Held prop · follows the work pickers. In the right rail, Try it · chat · live states shows an example chat with the agent working, needing you and done, a team thread where the others look at the talking agent, and the agent list with presence rings.',
 		note: 'The Identity tab for the Price checker agent made with Blank agent: look studio plus the Try it rail. A taller viewport fits the whole studio. The Upgrade face switch only shows for agents made before the new faces, so it is not in this shot.',
 		viewport: { width: 1440, height: 1560 },
 		spots: [
