@@ -208,13 +208,14 @@ export const shots: ShotDef[] = [
 		name: 'settings-preferences',
 		page: 'app/settings/preferences',
 		route: '#/app/settings/preferences',
-		viewport: { width: 1440, height: 1000 },
-		alt: 'Settings, Preferences, in a local workspace: Language (English) with its Change language button, the Appearance Settings card with the Light and Dark theme choices and an Update preferences button, the Play a sound when your approval is needed switch (on), and Agent animations with Lively (selected), Calm and Off.',
+		viewport: { width: 1440, height: 1240 },
+		alt: "Settings, Preferences, in a local workspace: Language (English) with its Change language button, the Appearance Settings card with the Light and Dark theme choices and an Update preferences button, the Play a sound when your approval is needed switch (on), Aria's look with two cards showing her mascots, Ember Mochi (selected) and Pip the Owlet, and Agent animations with Lively (selected), Calm and Off.",
 		spots: [
 			{ id: 'language', label: 'Change language', locator: (p) => main(p).getByRole('button', { name: 'Change language' }) },
 			{ id: 'theme', label: 'Theme: Light or Dark', locator: (p) => main(p).getByRole('radio', { name: 'Dark' }) },
 			{ id: 'update-preferences', label: 'Update preferences', locator: (p) => main(p).getByRole('button', { name: 'Update preferences' }) },
 			{ id: 'approval-sound', label: 'Play a sound when your approval is needed', locator: (p) => main(p).getByRole('switch', { name: 'Play a sound when your approval is needed' }) },
+			{ id: 'aria-look', label: "Aria's look: Ember Mochi or Pip the Owlet", locator: (p) => main(p).getByRole('radio', { name: /^Pip the Owlet/ }) },
 			{ id: 'agent-animations', label: 'Agent animations: Lively, Calm or Off', locator: (p) => main(p).getByRole('radio', { name: /^Calm/ }) }
 		],
 		prepare: async (s) => {

@@ -618,6 +618,24 @@ export const shots: ShotDef[] = [
 		}
 	},
 	{
+		name: 'aria-identity',
+		page: 'app/chat-and-agents/agent-builder',
+		route: '#/app/agents/aria',
+		alt: "The Identity tab of the agent builder for Aria, drawn as Ember Mochi, a squishy amber spirit with a glowing flame. Her name reads Aria, Built in; her role is Your helper in the browser. In the look studio, the large preview with Preview a state and Try a reaction on the left; on the right, Her look with two cards, Ember Mochi (selected, Official AWFlow mascot) and Pip the Owlet (Alternative look), and How she shows what she is doing with live tiles for Thinking, Working, Needs you and Done. The Try it rail is on the right.",
+		viewport: { width: 1440, height: 1100 },
+		spots: [
+			{ id: 'mascots', label: "Her look: Ember Mochi or Pip the Owlet", locator: (p) => p.getByRole('radiogroup', { name: 'Mascot' }) },
+			{ id: 'states', label: 'How she shows what she is doing', locator: (p) => p.getByTestId('aria-state').first() },
+			{ id: 'preview', label: 'Preview a state', locator: (p) => p.getByRole('radiogroup', { name: 'Preview a state' }) }
+		],
+		prepare: async (s) => {
+			await closeOverlays(s);
+			await s.go('#/app/agents/aria');
+			await s.page.getByRole('radiogroup', { name: 'Mascot' }).waitFor({ timeout: T });
+			await s.page.waitForTimeout(1200);
+		}
+	},
+	{
 		name: 'agent-instructions',
 		page: 'app/chat-and-agents/agent-builder',
 		route: '#/app/agents/<id>',
