@@ -1,13 +1,13 @@
 ---
 title: "Build and try an agent"
-description: "Every tab of the agent builder, how Try it runs the real agent, and how an agent's look and eyes show what it is doing."
+description: "Every tab of the agent builder, how Try it runs the real agent, how to design an agent's look, and what its face shows while it works."
 kind: guide
 section: app
 sidebar:
   label: "Agent builder"
 ---
 
-import { StepCard, StepShot } from "@components/awflow";
+import { GuidedShot, StepCard, StepShot } from "@components/awflow";
 
 Open an agent from **Agents** to edit it. Changes save automatically.
 
@@ -19,8 +19,8 @@ Open an agent from **Agents** to edit it. Changes save automatically.
   <StepShot shot="agents" spot="blank-agent" n={1} />
 </StepCard>
 
-<StepCard n={2} title="Name it" check="the preview on the right shows the new name.">
-  On **Identity**, enter a **Name** (its @handle follows) and a **One-line role**. Pick a look if you like.
+<StepCard n={2} title="Name it" check="the name shows in the header and in the agent list on the right, and the face changes as you type.">
+  On **Identity**, start with the **Name** and **One-line role** at the top. While the agent is new, its look and its @handle follow what you type, so it gets a face that suits its job right away. Then change anything you like in the look studio below: see [Design its look](#design-its-look).
 
   <StepShot shot="agent-identity" spot="name" n={2} />
 </StepCard>
@@ -51,9 +51,11 @@ Open an agent from **Agents** to edit it. Changes save automatically.
 
 ## The builder tabs
 
+The tabs sit in the header, next to the agent's name. In a narrow window they move to a row under the name.
+
 | Tab | What you set |
 | --- | --- |
-| **Identity** | Its look, name, @handle, role, greeting and conversation starters. The preview shows how it looks in chat. |
+| **Identity** | Its name, @handle and role at the top, then its look (in the look studio), greeting and conversation starters. **Try it · chat · live states** shows it in an example chat, a team thread and the agent list. |
 | **Instructions** | How it works and what it avoids. Use variables like `{today}`, `{my name}`, `{current tab}` and `{memory}`. **Improve** and **Generate** ask your model for help; earlier versions are kept. |
 | **Model** | *Same as Aria* or a specific on-device, Ollama (detected automatically when it is running) or cloud model, its creativity, max steps per answer, and whether to fall back to on-device when you're offline. |
 | **Skills** | What it can do: **Browser control**, **Web search**, **Workflows**, **On-device AI**, **Teammates**, **MCP** servers. See [Give it skills](/app/chat-and-agents/agent-skills/). |
@@ -78,18 +80,59 @@ You see the same [work timeline, step limit card and approval receipts](/app/cha
 
 ## Looks and living eyes
 
-Every agent is a character. On the **Identity** tab, pick its **shape**, **color**, **texture**, **eyes** and an **accessory**, or press **Shuffle**. The preview shows it at every size, and its eyes follow your pointer. New agents get a look that suits their job; press **Try another look** before creating one.
+Every agent is a character. Its face shows what it is doing, in chats, in the agent list and in team threads, so you can tell at a glance which agent is busy and which one needs you.
 
-The eyes show what an agent is doing, wherever it appears:
+### What the face shows
 
-| Eyes | Meaning |
+| What you see | What it means |
 | --- | --- |
-| Blink and glance around | Idle |
-| Drift upward | Thinking |
-| Scan side to side | Working: browsing or using a tool |
-| Look at you and bounce | Needs your ok |
-| Happy squint and a hop | Done |
-| Worried brows | Can't: a step failed or a skill is unavailable |
-| Closed | Offline: its model isn't ready |
+| Blinks and glances around | **Idle**: nothing to do right now. |
+| Eyes drift up, a thought bubble | **Thinking**: it is working out an answer. |
+| Eyes scan side to side, a spinner | **Working**: browsing a page or using a tool. |
+| Mouth moves with the words | **Speaking**: its reply is coming in. |
+| Looks at you and bounces, an orange "?" | **Needs you**: it is waiting for your ok. |
+| Happy squint and a hop, sparkles | **Done**: it just finished. |
+| Worried brows, a sweat drop | **Can't**: a step failed or a skill isn't available. |
+| Eyes closed, "zzz" | **Offline**: its model isn't ready yet. |
 
-Aria's look (orange, with sun rays) is fixed so you always recognize her. To calm the motion, go to **Settings › Preferences › Agent animations**: *Lively*, *Calm* (blinks and states only) or *Off*. Faces stay still when your system asks to reduce motion.
+When an agent is waiting for an approval you can answer, its picture in **Agents & teams** also gets a pulsing orange **needs-you ring** until you answer.
+
+At the top of a team thread, the members' faces sit side by side and all **look at whoever is speaking**, so you can follow the conversation. See [Teams](/app/chat-and-agents/teams/).
+
+### Design its look
+
+The look studio is on the **Identity** tab, under the name and role. Every change saves at once. On the left, a preview stays in view while you scroll the pickers on the right. On the right, the **Try it · chat · live states** rail shows the same agent in an example chat, a team thread and the agent list. Hover or tap a step to find it on the screen.
+
+<GuidedShot
+  shot="agent-look"
+  steps={[
+    { spot: 'preview', title: 'Preview a state', body: 'Pick **Idle**, **Thinking**, **Working**, **Needs you**, **Done** or **Offline** to see how the face shows it. Only the preview changes, never the agent. Its own row in the agent list on the right follows the state you pick.' },
+    { spot: 'reactions', title: 'Try a reaction', body: '**Wink**, **Hop**, **Nod** or **Celebrate** play once on the preview.' },
+    { spot: 'describe', title: 'Describe a look', body: 'Type a sentence like "a cheerful wizard who loves coffee" and click **Ask Aria**.', check: 'the preview takes the new look.' },
+    { spot: 'shuffle', title: 'Or press Shuffle', body: 'A random look in the current theme. Press it again until you like one.' },
+    { spot: 'suggestions', title: 'Pick a look suggested for its role', body: 'When the name or role matches one of twelve themes (travel, code, data, writing, money…), three ready looks named for that kind of role appear, like **Explorer**, **Concierge** and **Night owl** for "travel". The label says which word it matched, for example **Suggested for "travel"**.' },
+    { spot: 'theme', title: 'Choose a theme', body: '**Soft**, **Bold**, **Mono**, **Neon** or **Clay** change the drawing style, not who it is.' },
+    { spot: 'shape', title: 'Choose a shape', body: 'Fifteen body shapes, from Diamond to Flower.' },
+    { spot: 'colour', title: 'Choose a colour', body: 'Pick a swatch, or **Custom** for any colour.' },
+    { spot: 'face', title: 'Choose eyes and a mouth', body: 'Six kinds of eyes and six mouths, including **No mouth**.' },
+    { spot: 'headwear', title: 'Add headwear', body: 'Under **Wardrobe · head**: a bow, cap, crown, wizard hat, headphones and more, or nothing.' },
+    { spot: 'eyewear-prop', title: 'Add eyewear and a held prop', body: 'Glasses, sunglasses, a monocle… and, under **Held prop · follows the work**, something to hold: a magnifier, pencil, coffee, light bulb, book or wrench.' },
+    { spot: 'try-chat', title: 'See it in a chat', body: 'An example chat, picked from the role, shows the agent **working**, **needing you** and **done**. It is only a sample: nothing is sent or saved, and **Approve** and **Not now** do nothing.' },
+    { spot: 'try-team', title: 'See it in a team thread', body: 'Your agent is the one talking, and the other faces look its way.' },
+    { spot: 'try-list', title: 'See it in the agent list', body: 'Your agent sits in the list with its presence ring, next to examples of a working agent with a progress ring and a sleeping one.' },
+  ]}
+/>
+
+A new agent's look comes from its name and role, and changes as you type them, until you change any option yourself. From then on, renaming keeps your look; click **Generate one from the name** under the role to start again from the name. Its @handle also follows the name until its first chat, so @mentions you already use never break.
+
+Agents made before the new faces show an **Upgrade face** switch above the pickers. Turn it on to add brows, a mouth and cheeks; shape, colour and wardrobe stay. Turn it off to go back.
+
+:::note[Describe a look needs a model]
+**Ask Aria** uses the model you set up for Aria on the **Assistant** page (on-device, Ollama or a cloud provider). Without one, the studio says so and nothing changes. The other controls work without a model.
+:::
+
+New agents get a look that suits their job; press **Try another look** before creating one. Aria's look (orange, with sun rays) can't be changed, so you always recognize her; her face still shows what she is doing.
+
+### Calm the motion
+
+Go to **Settings › Preferences › Agent animations**: **Lively** (faces move and react, and eyes follow your pointer), **Calm** (faces move and react) or **Off** (still faces). Status marks, like the needs-you badge and ring, always show, whatever you pick. When your system asks to reduce motion, faces stay still. See [Preferences](/app/settings/preferences/#agent-animations).

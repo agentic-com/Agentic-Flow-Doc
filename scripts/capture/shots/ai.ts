@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { type ShotDef, btn, link, text, inDialog } from './define.ts';
 import { T, type Session } from '../lib/session.ts';
+import type { Locator } from '../lib/util.ts';
 import { buildAwmem, CHAT_TITLE } from '../lib/awmem.ts';
 
 /** Closes a dialog or menu the previous shot left open. */
@@ -12,6 +13,26 @@ async function closeOverlays(s: Session) {
 		await s.page.keyboard.press('Escape');
 		await s.page.waitForTimeout(300);
 	}
+}
+
+/**
+ * Scrolls only the nearest scrolling pane so `el` sits at its top or centre. Unlike scrollIntoView, the
+ * outer page stays put, so the app header and the bottom of the layout stay in the frame.
+ */
+async function scrollPane(loc: Locator, block: 'start' | 'center') {
+	// Serialized into the page: no closures, so the alignment is read from a data attribute.
+	await loc.evaluate((el) => el.setAttribute('data-capture-scroll', 'start'));
+	if (block === 'center') await loc.evaluate((el) => el.setAttribute('data-capture-scroll', 'center'));
+	await loc.evaluate((el) => {
+		let p = el.parentElement;
+		while (p && !(p.scrollHeight > p.clientHeight && /(auto|scroll)/.test(getComputedStyle(p).overflowY))) p = p.parentElement;
+		const center = el.getAttribute('data-capture-scroll') === 'center';
+		el.removeAttribute('data-capture-scroll');
+		if (!p) return;
+		const r = el.getBoundingClientRect();
+		const pr = p.getBoundingClientRect();
+		p.scrollTop += r.top - pr.top - (center ? (pr.height - r.height) / 2 : 16);
+	});
 }
 
 /** The "Price checker" agent made once per session with Blank agent; returns after opening the builder on `tab`. */
@@ -28,7 +49,9 @@ async function agentBuilder(s: Session, tab: string) {
 		await p.waitForTimeout(800);
 		await name.fill('Price checker');
 		await name.press('Tab');
-		await p.getByText(/Hi, I.m Price checker/).filter({ visible: true }).first().waitFor({ timeout: T });
+		// The name shows in the header and the Try it rail's chat/list once saved.
+		await p.getByText('Price checker', { exact: true }).filter({ visible: true }).first().waitFor({ timeout: T });
+		await p.waitForTimeout(500);
 		const role = p.getByRole('textbox', { name: /^One-line role/ });
 		await role.fill('Watches competitor prices and reports changes');
 		await role.press('Tab');
@@ -545,19 +568,53 @@ export const shots: ShotDef[] = [
 		name: 'agent-identity',
 		page: 'app/chat-and-agents/agent-builder',
 		route: '#/app/agents/<id>',
-		alt: "The Identity tab of the agent builder for a new agent, Price checker: the look options (color, texture, eyes, accessory) above the Name, One-line role, Greeting and Conversation starters fields, with the builder tabs on the left and a preview of the agent in the list, a new chat and a team thread on the right.",
+		alt: "The Identity tab of the agent builder for a new agent, Price checker, with the builder tabs in the header. At the top, Name (Price checker, used for @mentions as @price-checker) and One-line role (Watches competitor prices and reports changes), then the line The look below comes from the name and role. Change any option to make it yours, above the look studio with the generated look, a yellow ghost with an antenna. The Try it rail is on the right.",
 		note: 'The agent is created with Blank agent during capture and stays in the session.',
 		spots: [
 			{ id: 'tabs', label: 'Builder tabs', locator: btn(/^Identity/) },
 			{ id: 'name', label: 'Name', locator: (p) => p.getByRole('textbox', { name: /^Name/ }) },
 			{ id: 'role', label: 'One-line role', locator: (p) => p.getByRole('textbox', { name: /^One-line role/ }) },
+			{ id: 'look-follows', label: 'The look follows the name', locator: (p) => p.getByTestId('look-follows') },
 			{ id: 'done', label: 'Done', locator: btn('Done', true) }
 		],
 		prepare: async (s) => {
 			await closeOverlays(s);
 			await agentBuilder(s, 'Identity');
-			await s.page.getByRole('textbox', { name: /^Name/ }).evaluate((el) => el.scrollIntoView({ block: 'center' }));
+			await scrollPane(s.page.getByRole('heading', { name: 'Identity' }).first(), 'start');
 			await s.page.waitForTimeout(500);
+		}
+	},
+	{
+		name: 'agent-look',
+		page: 'app/chat-and-agents/agent-builder',
+		route: '#/app/agents/<id>',
+		alt: 'The Identity tab of the agent builder for Price checker, with the builder tabs in the header and Name and One-line role at the top. Its look, generated from the name and role, is a yellow ghost with an antenna. Below, the look studio: on the left a sticky preview with Preview a state chips (Idle, Thinking, Working, Needs you, Done, Offline) and Try a reaction buttons (Wink, Hop, Nod, Celebrate); on the right Describe a look with Ask Aria and Shuffle, role-named suggested looks, then Theme, Shape, Colour, Eyes, Mouth, Wardrobe · head, Eyewear and Held prop · follows the work pickers. In the right rail, Try it · chat · live states shows an example chat with the agent working, needing you and done, a team thread where the others look at the talking agent, and the agent list with presence rings.',
+		note: 'The Identity tab for the Price checker agent made with Blank agent: look studio plus the Try it rail. A taller viewport fits the whole studio. The Upgrade face switch only shows for agents made before the new faces, so it is not in this shot.',
+		viewport: { width: 1440, height: 1560 },
+		spots: [
+			{ id: 'preview', label: 'Preview a state', locator: (p) => p.getByRole('radiogroup', { name: 'Preview a state' }) },
+			{ id: 'reactions', label: 'Try a reaction', locator: btn('Wink', true) },
+			{ id: 'describe', label: 'Describe a look', locator: (p) => p.getByRole('textbox', { name: /Describe a look/ }) },
+			{ id: 'shuffle', label: 'Shuffle', locator: btn(/Shuffle/) },
+			{ id: 'suggestions', label: 'Suggested looks', locator: (p) => p.getByTestId('role-suggestions') },
+			{ id: 'theme', label: 'Theme', locator: (p) => p.getByRole('radiogroup', { name: 'Theme' }) },
+			{ id: 'shape', label: 'Shape', locator: (p) => p.getByRole('radiogroup', { name: 'Shape' }) },
+			{ id: 'colour', label: 'Colour', locator: (p) => p.getByRole('radiogroup', { name: 'Colour' }) },
+			{ id: 'face', label: 'Eyes and mouth', locator: (p) => p.getByRole('radiogroup', { name: 'Eyes' }) },
+			{ id: 'headwear', label: 'Wardrobe · head', locator: (p) => p.getByRole('radiogroup', { name: 'Headwear' }) },
+			{ id: 'eyewear-prop', label: 'Eyewear and held prop', locator: (p) => p.getByRole('radiogroup', { name: 'Eyewear' }) },
+			{ id: 'try-chat', label: 'Example chat', locator: (p) => p.getByRole('region', { name: 'Example chat' }) },
+			{ id: 'try-team', label: 'Team thread', locator: (p) => p.getByRole('region', { name: /^Team thread/ }) },
+			{ id: 'try-list', label: 'Agent list', locator: (p) => p.getByRole('region', { name: /^Agent list/ }) }
+		],
+		prepare: async (s) => {
+			await closeOverlays(s);
+			// A fresh load, so the builder lays out for the taller viewport.
+			await s.page.goto('about:blank');
+			await agentBuilder(s, 'Identity');
+			await s.page.getByRole('radiogroup', { name: 'Preview a state' }).waitFor({ timeout: T });
+			await scrollPane(s.page.getByRole('heading', { name: 'Identity' }).first(), 'start');
+			await s.page.waitForTimeout(800);
 		}
 	},
 	{
