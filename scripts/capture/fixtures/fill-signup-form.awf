@@ -1,0 +1,41 @@
+{
+  "name": "Fill the Newsletter Sign-up",
+  "description": "Replays recorded actions on a sign-up page: types your email, ticks the consent box and submits the form.",
+  "tags": ["automation", "forms"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": { "x": 120, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": { "notes": "Starts the workflow when you press Run." }
+      }
+    },
+    {
+      "id": "replay",
+      "type": "basic",
+      "position": { "x": 440, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:uiAutomationNode" },
+        "label": "Fill the sign-up form",
+        "inputs": {
+          "actions": [
+            { "action": "click", "domSelector": "#email" },
+            { "action": "type", "domSelector": "#email", "text": "alex.doe@example.com" },
+            { "action": "check", "domSelector": "input[name=\"consent\"]" },
+            { "action": "click", "domSelector": "form.signup button[type=\"submit\"]" }
+          ]
+        },
+        "parameters": { "notes": "The actions recorded on the sign-up page, replayed in order." }
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e-run-replay", "source": "trigger-run", "target": "replay", "type": "flowEdge" }
+  ],
+  "requiredInputs": []
+}

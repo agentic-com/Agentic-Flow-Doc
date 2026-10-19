@@ -1,0 +1,64 @@
+{
+  "name": "Remember the Last Price",
+  "description": "Keeps the last price it saw, the product it watches and how many checks it ran, so the next run can compare.",
+  "tags": ["data store", "price"],
+  "type": "triggered",
+  "nodes": [
+    {
+      "id": "trigger-run",
+      "type": "trigger",
+      "position": { "x": 120, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:trigger:whenStarted" },
+        "label": "Run now",
+        "inputs": {},
+        "parameters": { "notes": "Starts the workflow when you press Run." }
+      }
+    },
+    {
+      "id": "save-price",
+      "type": "basic",
+      "position": { "x": 440, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:dataStore" },
+        "label": "Save the price",
+        "inputs": { "operation": "set", "scope": "workflow", "key": "last-price", "value": "129.99", "valueFormat": "number" },
+        "parameters": { "notes": "Remembers the price seen on this run." }
+      }
+    },
+    {
+      "id": "save-product",
+      "type": "basic",
+      "position": { "x": 760, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:dataStore" },
+        "label": "Save the product",
+        "inputs": {
+          "operation": "set",
+          "scope": "workflow",
+          "key": "product",
+          "value": "{ \"name\": \"Noise-cancelling headphones\", \"url\": \"https://shop.example.com/headphones\", \"currency\": \"EUR\" }",
+          "valueFormat": "json"
+        },
+        "parameters": { "notes": "Remembers which product page is watched." }
+      }
+    },
+    {
+      "id": "count-checks",
+      "type": "basic",
+      "position": { "x": 1080, "y": 300 },
+      "data": {
+        "instance": { "id": "af-base-node:basic:dataStore" },
+        "label": "Count the checks",
+        "inputs": { "operation": "increment", "scope": "workflow", "key": "checks", "amount": 1 },
+        "parameters": { "notes": "Adds one to the number of checks run so far." }
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e-run-price", "source": "trigger-run", "target": "save-price", "type": "flowEdge" },
+    { "id": "e-price-product", "source": "save-price", "target": "save-product", "type": "flowEdge" },
+    { "id": "e-product-count", "source": "save-product", "target": "count-checks", "type": "flowEdge" }
+  ],
+  "requiredInputs": []
+}

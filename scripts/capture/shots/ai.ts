@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { type ShotDef, btn, link, text, inDialog } from './define.ts';
 import { T, type Session } from '../lib/session.ts';
-import type { Locator } from '../lib/util.ts';
+import type { Locator, Page } from '../lib/util.ts';
 import { buildAwmem, CHAT_TITLE } from '../lib/awmem.ts';
 
 /** Closes a dialog or menu the previous shot left open. */
@@ -34,6 +34,21 @@ async function scrollPane(loc: Locator, block: 'start' | 'center') {
 		p.scrollTop += r.top - pr.top - (center ? (pr.height - r.height) / 2 : 16);
 	});
 }
+
+const POPOVER = '[data-slot="popover-content"]';
+const OLLAMA_URL = 'http://localhost:11434/**';
+type PageRoutes = {
+	route(url: string, handler: (r: { request(): { url(): string }; fulfill(o: Record<string, unknown>): Promise<void> }) => Promise<void>): Promise<void>;
+	unroute(url: string): Promise<void>;
+};
+/** Three models as Ollama's /api/tags lists them: two that can call tools, one chat-only. */
+const OLLAMA_MODELS = [
+	{ name: 'llama3.1:8b', size: 4_920_753_328, details: { family: 'llama', parameter_size: '8.0B' }, capabilities: ['completion', 'tools'] },
+	{ name: 'qwen2.5:7b', size: 4_683_087_332, details: { family: 'qwen2', parameter_size: '7.6B' }, capabilities: ['completion', 'tools'] },
+	{ name: 'gemma2:2b', size: 1_629_518_495, details: { family: 'gemma2', parameter_size: '2.6B' }, capabilities: ['completion'] }
+];
+/** The composer's model chip (its name is the model in use). */
+const modelChip = (p: Page) => p.locator('[data-slot="popover-trigger"]').filter({ hasText: /Auto|Gemini|llama|qwen|gemma/ }).last();
 
 /** The "Price checker" agent made once per session with Blank agent; returns after opening the builder on `tab`. */
 const agentRoutes = new WeakMap<Session, string>();
@@ -774,4 +789,41 @@ export const shots: ShotDef[] = [
 			await teamWizard(s, 4);
 		}
 	},
+	{
+		name: 'ollama-picker',
+		page: 'app/chat-and-agents/chat',
+		route: '#/app/assistant (model picker)',
+		alt: "A new chat with Aria with the model picker open above the composer: the Ollama · this computer group lists three models found in a running Ollama (llama3.1:8b, selected, and qwen2.5:7b, each 8k with Tools; gemma2:2b marked No tools), followed by the On this device models to download, a Manage local models link and Compare.",
+		note: "Ollama's model list (GET localhost:11434/api/tags) is answered by the capture with three example models; no Ollama runs on the capturing machine.",
+		spots: [
+			{ id: 'model-picker', label: 'Model picker', locator: (p) => modelChip(p) },
+			{ id: 'ollama-group', label: 'Ollama · this computer', locator: text(/^Ollama · this computer/) },
+			{ id: 'ollama-model', label: 'A model found in Ollama', locator: (p) => p.locator(POPOVER).getByRole('button', { name: /llama3\.1:8b/ }) },
+			{ id: 'no-tools', label: 'No tools: this model can chat but not use tools', locator: (p) => p.locator(POPOVER).getByRole('button', { name: /gemma2:2b/ }).getByText('No tools') }
+		],
+		prepare: async (s) => {
+			await closeOverlays(s);
+			// A running Ollama, as the app's discovery sees it (the capture otherwise blocks port 11434).
+			await (s.page as unknown as PageRoutes).route(OLLAMA_URL, (route) =>
+				route.fulfill(
+					new URL(route.request().url()).pathname === '/api/tags'
+						? { status: 200, headers: { 'access-control-allow-origin': '*' }, contentType: 'application/json', body: JSON.stringify({ models: OLLAMA_MODELS }) }
+						: { status: 404, headers: { 'access-control-allow-origin': '*' }, body: '' }
+				)
+			);
+			await s.page.goto('about:blank');
+			await s.assistant();
+			await s.page.getByRole('button', { name: 'New chat' }).first().click({ timeout: T });
+			await s.page.getByRole('textbox', { name: 'Ask Aria anything…' }).waitFor({ timeout: T });
+			await s.page.waitForTimeout(1500);
+			await modelChip(s.page).click({ timeout: T });
+			await s.page.getByText(/^Ollama · this computer/).waitFor({ timeout: T });
+			await s.page.waitForTimeout(800);
+		},
+		cleanup: async (s) => {
+			await (s.page as unknown as PageRoutes).unroute(OLLAMA_URL);
+			// Drops the app's in-memory list of detected models, so later shots see no Ollama.
+			await s.page.goto('about:blank');
+		}
+	}
 ];

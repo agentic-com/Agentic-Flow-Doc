@@ -159,6 +159,7 @@ async function shoot(session: Session, def: ShotDef) {
 		console.log(`  debug screenshot: ${shot}`);
 		throw err;
 	} finally {
+		if (def.cleanup) await def.cleanup(session).catch(() => {});
 		if (def.viewport) await page.setViewportSize(VIEWPORT);
 	}
 }

@@ -570,4 +570,53 @@ export const shots: ShotDef[] = [
 			await page.waitForTimeout(1500);
 		}
 	},
+	{
+		name: 'data-store-panel',
+		page: 'app/data-store',
+		route: '#/app/workflows/<id> (Stored data)',
+		alt: 'The Remember the Last Price workflow after two test runs, with the Stored data tab of the panel on the right open: 3 values, 106 B of 5.0 MB, kept in this browser only; checks (number, 2), last-price (number, 129.99) and product (an object with the product name and link), each updated a second ago with Copy and Delete buttons, and Clear all below. The Stored data button is in the canvas controls at the bottom left.',
+		css: NO_MINIMAP,
+		spots: [
+			{ id: 'stored-data', label: 'Stored data', locator: btn('Stored data') },
+			{ id: 'value', label: 'A stored value: click to see all of it', locator: (p) => p.locator('li').filter({ hasText: 'last-price' }).first() },
+			{ id: 'copy', label: 'Copy the value', locator: btn('Copy the value of last-price') },
+			{ id: 'delete', label: 'Delete this value', locator: btn('Delete last-price') },
+			{ id: 'clear-all', label: 'Clear all', locator: btn('Clear all') }
+		],
+		prepare: async (s) => {
+			await fresh(s);
+			await canvas(s, 'price-memory');
+			const page = s.page;
+			// Two runs: the values are saved, and the checks counter reaches 2.
+			for (let i = 0; i < 2; i++) {
+				await page.getByRole('button', { name: 'Test Workflow' }).first().click({ timeout: T });
+				await page.getByText('It worked').first().waitFor({ timeout: T });
+				await page.waitForTimeout(1000);
+			}
+			await page.getByRole('button', { name: 'Stored data' }).click({ timeout: T });
+			await page.getByRole('button', { name: 'Clear all' }).waitFor({ timeout: T });
+			await page.waitForTimeout(800);
+		}
+	},
+	{
+		name: 'recorder',
+		page: 'nodes/extension/ui/automation',
+		route: '#/app/workflows/<id> (UI Automation settings)',
+		alt: 'The settings of a UI Automation step, Fill the sign-up form: under Actions, the Record actions button and the note that recording follows you across page loads, then the recorded actions in order, each with its Target Element (#email), its Action (Click, then Type) and a Wait timeout, with a delete button and a drag handle on the left of each action.',
+		note: 'Recording itself runs in the extension, on a web page. The actions shown are the saved parameters of the fixture workflow fill-signup-form.awf.',
+		spots: [
+			{ id: 'record-actions', label: 'Record actions', locator: inDialog((d) => d.getByRole('button', { name: 'Record actions' })) },
+			{ id: 'target', label: 'The element the action targets', locator: inDialog((d) => d.getByRole('textbox').first()) },
+			{ id: 'action', label: 'The recorded action: Click, Type…', locator: inDialog((d) => d.getByRole('button', { name: 'Click', exact: true }).first()) },
+			{ id: 'next-action', label: 'The next recorded action', locator: inDialog((d) => d.getByRole('button', { name: 'Type', exact: true }).first()) }
+		],
+		prepare: async (s) => {
+			await fresh(s);
+			await s.editor('fill-signup-form');
+			const page = s.page;
+			await page.locator('.svelte-flow__node[data-id="replay"]').dblclick({ timeout: T });
+			await page.getByRole('dialog').getByRole('button', { name: 'Record actions' }).waitFor({ timeout: T });
+			await page.waitForTimeout(800);
+		}
+	}
 ];
