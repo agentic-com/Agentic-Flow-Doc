@@ -5,8 +5,5 @@
 export const CHROME_WEB_STORE_URL =
 	'https://chromewebstore.google.com/detail/agentic-workflow/linlkeaipfpnhddjkpcbmldionajfifa';
 
-/**
- * The Firefox Add-ons listing. Not live yet (awflow/Agentic-Flow#1019): while it's null, the home
- * page hides "Add to Firefox" and the install page says the listing is coming.
- */
-export const FIREFOX_ADDONS_URL: string | null = null;
+/** The Firefox Add-ons (AMO) listing, live since October 2026 (awflow/Agentic-Flow#1019). */
+export const FIREFOX_ADDONS_URL = 'https://addons.mozilla.org/addon/awflow/';
