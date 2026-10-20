@@ -27,7 +27,7 @@ export const STRUCTURAL_PROPS = [
 	'cards', 'common', 'groups', 'height', 'hotspots', 'href', 'hydrate', 'icon', 'id', 'level', 'minutes', 'n',
 	'next', 'nodes', 'onDevice', 'order', 'ports', 'rel', 'release', 'releases', 'rows', 'selected', 'setup',
 	'shot', 'slot', 'slug', 'spot', 'src', 'srcDark', 'start', 'steps', 'syncKey', 'target', 'total', 'type',
-	'variant', 'view', 'zoom',
+	'variant', 'view', 'zoom', 'width', 'mac', 'windows',
 ];
 // Object keys inside expression props whose string literal values are prose: masked.
 export const TEXT_KEYS = [
