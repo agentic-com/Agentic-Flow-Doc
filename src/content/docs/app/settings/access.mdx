@@ -23,7 +23,7 @@ You don't add entries here. A workflow asks the first time it needs a website or
 </StepCard>
 
 <StepCard n={2} title="Allow it, always" check="the run goes on. If another step needs another site, a new prompt follows.">
-  The prompt names the step and the website, for example *“Get the forecast” wants to contact api.open-meteo.com*. Tick **Always allow for this workflow**, then click **Allow**. Without the tick, the answer only lasts for this run; **Don’t allow** stops the step.
+  The prompt names the step and the website, and says where the workflow came from. For your own workflow it reads *Let “Get the forecast” contact api.open-meteo.com?*, with **Always allow** already ticked; an installed workflow adds a trust warning. Click **Allow**. Without the tick, the answer only lasts for this run; **Not now** stops the step. (The screenshot shows the earlier wording.)
 
   <StepShot shot="site-access-consent" spot="always-allow" n={2} zoom={40} />
 </StepCard>
@@ -45,7 +45,7 @@ Each workflow has a card with its hosts and, under **Apps**, its apps. Everythin
     { spot: 'status-tabs', title: 'Filter by status', body: '**All**, **Enabled** or **Disabled**.' },
     { spot: 'host-switch', title: 'Switch a host off', body: 'The workflow asks again the next time it needs it. Switch it back on to restore it. Here *api.github.com* is off.' },
     { spot: 'remove-host', title: 'Remove a host for good', body: 'The **trash** button deletes the permission.' },
-    { spot: 'remove-all', title: 'Remove all', body: 'Clears every permission of that workflow.' },
+    { spot: 'remove-all', title: 'Remove all', body: 'Clears every permission of that workflow, after naming what it removes. **Undo** in the toast restores exactly what was there.' },
   ]}
 />
 
@@ -57,6 +57,6 @@ When nothing has been granted yet, the page says *No site or app access granted 
 These permissions always apply to workflows you installed. For workflows **you created**, they only apply when [Safe mode](/app/settings/security/) is on. A banner reminds you when it's off.
 </Aside>
 
-Permissions are saved **on this device only**.
+Permissions are saved **on this device only**. [Health](/app/settings/health/) lists sites AWFlow can read that no workflow uses any more, with **Remove access**.
 
 To clear all permissions of an installed workflow at once, you can also use **Reset permissions** in its row menu on the [workflows list](/app/workflows/manage-list/).

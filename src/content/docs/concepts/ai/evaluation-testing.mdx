@@ -49,6 +49,10 @@ The [Debug](/nodes/builtin/core/debug/) node can generate sample items or a long
 
 Most wrong RAG answers come from retrieving the wrong passages, not from the model. Open the knowledge base and use **Test search**: type a question and see which passages come back and how similar they are. Fix the sources or the search options before you change the prompt. See [Test search](/app/knowledge-bases/overview/#test-search).
 
+## Measure with test runs
+
+For more than a handful of cases, put them in a dataset and let AWFlow score every answer: add an [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) with the cases and an [Evaluation](/nodes/builtin/flow/evaluation/) step with metrics (exact match, contains, similar text, category, tools used, an AI judge…), then run **Test runs** from the canvas **⋯** menu. Compare two test runs before and after a change: regressions are listed first. See [Test runs](/app/workflows/test-runs/).
+
 ## Watch real runs
 
 Once the workflow runs on its own, check the first few runs:

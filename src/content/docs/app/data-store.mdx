@@ -40,7 +40,7 @@ The [Data Store](/nodes/builtin/core/datastore/) node lets a workflow remember v
 
 <Callout type="info" title="Your data">
 
-Values are kept **in this browser profile** only. The same workflow on another device keeps its own separate store, and clearing the extension's data removes them for good.
+Values are kept **in this browser profile** only (and included in an encrypted [backup](/app/settings/storage/#backups)). The same workflow on another device keeps its own separate store, and clearing the extension's data removes them for good.
 
 </Callout>
 
@@ -64,4 +64,10 @@ Each group shows its key count and size; inside, every key has a short preview o
 - **One value**: the delete (trash) control on its row.
 - **A whole scope**: **Clear all** on the group's header (or in the canvas panel). The next run behaves like the workflow's first run.
 
-Deletions take effect immediately and can't be undone.
+- In the canvas panel, a deleted value shows struck through with an **Undo** toast for 8 seconds, which writes it back. **Clear all** asks first.
+
+In Settings, deletions take effect immediately and can't be undone.
+
+### Polling trigger positions
+
+A [polling trigger](/concepts/flow/polling-triggers/) (New email, New row…) remembers what it has already seen in the workflow's stored data. It shows as a read-only row on the canvas **Stored data** tab; **Reset** forgets the position, so the next check behaves like a first check.
