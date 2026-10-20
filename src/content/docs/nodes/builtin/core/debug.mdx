@@ -1,8 +1,8 @@
 ---
-title: "Debug"
+title: "Test helper"
 description: "Generate sample data, delay, or throw on demand"
 sidebar:
-  label: "Debug"
+  label: "Test helper"
 kind: node
 section: nodes
 worksIn: [extension, web]
@@ -13,6 +13,8 @@ node:
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+*Formerly **Debug**. The step was renamed in AWFlow 1.0; searching for the old name still finds it.*
 
 Generate sample data, add a short pause, or force an error while you build and test a workflow.
 
@@ -38,7 +40,7 @@ For waits longer than a few seconds, or that must survive closing the tab, use [
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Mode","type":"Choice","default":"Generate","description":"What this node does when it runs. Options: Generate, Delay, Throw."},{"name":"Shape","type":"Choice","default":"Indexed items","description":"Used by Generate: which sample data shape to emit. Options: Indexed items, Long string, Nested object, Random JSON."},{"name":"Count","type":"Number","default":"5","description":"Used by Generate → Indexed items: how many items to emit."},{"name":"Length","type":"Number","default":"1000","description":"Used by Generate → Long string: the exact length of the string."},{"name":"Depth","type":"Number","default":"3","description":"Used by Generate → Nested object: how many levels deep to nest."},{"name":"Delay (ms)","type":"Number","default":"1000","description":"Used by Delay: how long to wait, in milliseconds."},{"name":"Error message","type":"Long text","default":"Debug node threw on demand","description":"Used by Throw: the error message to raise."}]} />
+<AwfParamTable rows={[{"name":"Mode","type":"Choice","default":"Generate","description":"What this step does when it runs. Options: Generate, Delay, Throw."},{"name":"Shape","type":"Choice","default":"Indexed items","description":"Used by Generate: which sample data shape to emit. Options: Indexed items, Long string, Nested object, Random JSON."},{"name":"Count","type":"Number","default":"5","description":"Used by Generate → Indexed items: how many items to emit."},{"name":"Length","type":"Number","default":"1000","description":"Used by Generate → Long string: the exact length of the string."},{"name":"Depth","type":"Number","default":"3","description":"Used by Generate → Nested object: how many levels deep to nest."},{"name":"Delay","type":"Number","default":"1000","description":"Used by Delay: how long to wait, in milliseconds."},{"name":"Error message","type":"Long text","default":"Test helper threw on demand","description":"Used by Throw: the error message to raise."}]} />
 {/* AUTO:settings:end */}
 
 Each **Generate** setting applies to one shape only: **Count** to *Indexed items* (default 5), **Length** to *Long string* (default 1000), **Depth** to *Nested object* (default 3). The others are ignored. **Error message** defaults to "Debug node threw on demand".

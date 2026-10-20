@@ -46,7 +46,7 @@ For a one-off question without a chat window, start the agent from [When Started
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Assistant name","type":"Text","default":"Assistant"},{"name":"Icon","type":"Text","description":"Emoji or image URL shown in the chat header."},{"name":"Greeting","type":"Long text","default":"How can I help you today?"},{"name":"Input placeholder","type":"Text","default":"Type a message…"},{"name":"Starter prompts","type":"Tags","description":"Suggested prompts shown before the conversation begins."},{"name":"Allow clearing the conversation","type":"Toggle","default":"On"},{"name":"URL Patterns","type":"Tags","default":"[\"<all_urls>\"]"}]} />
+<AwfParamTable rows={[{"name":"Assistant name","type":"Text","default":"Assistant"},{"name":"Icon","type":"Text","description":"Emoji or image URL shown in the chat header."},{"name":"Greeting","type":"Long text","default":"How can I help you today?"},{"name":"Input placeholder","type":"Text","default":"Type a message…"},{"name":"Starter prompts","type":"Tags","description":"Suggested prompts shown before the conversation begins."},{"name":"Allow clearing the conversation","type":"Toggle","default":"On"},{"name":"Show in Aria","type":"Toggle","description":"Chat with this workflow from Aria, next to your agents (while it is on)."},{"name":"Attachments","type":"Group","description":"What people can send with a message."},{"name":"Attachments › Accept files","type":"Toggle","default":"Off"},{"name":"Attachments › File types","type":"Tags","default":"[\"image/*\",\"application/pdf\",\"text/csv\",\"text/plain\",\"application/json\"]"},{"name":"Attachments › Largest file (MB)","type":"Number","default":"10"},{"name":"Attachments › The page you are on","type":"Choice","default":"Off","description":"Options: Off, This tab, This tab and the selection."},{"name":"Description","type":"Text","description":"One line under its name in Aria."},{"name":"URL Patterns","type":"Tags","default":"[\"<all_urls>\"]"}]} />
 {/* AUTO:settings:end */}
 
 **Assistant name**, **Icon**, **Greeting**, **Input placeholder** and **Starter prompts** only change how the chat window looks. **URL Patterns** decides on which pages the chat bubble shows (`<all_urls>` means every page); it uses the form `https://*.example.com/*`.
@@ -58,7 +58,7 @@ For a one-off question without a chat window, start the agent from [When Started
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"chat\""},{"name":"triggeredAt","type":"Text"},{"name":"chatInput","type":"Text","description":"The message the user sent"},{"name":"sessionId","type":"Text","description":"The connected Chat Memory conversation"},{"name":"url","type":"Text"},{"name":"title","type":"Text"},{"name":"tabId","type":"Number"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"chat\""},{"name":"triggeredAt","type":"Text"},{"name":"chatInput","type":"Text","description":"The message the user sent"},{"name":"sessionId","type":"Text","description":"The connected Chat Memory conversation"},{"name":"url","type":"Text"},{"name":"title","type":"Text"},{"name":"tabId","type":"Number"},{"name":"$binary","type":"Key-value pairs"},{"name":"files","type":"List of entries","description":"The files sent with the message"},{"name":"page","type":"Object","description":"The page the user shared, its text fenced as untrusted data"}]} />
 
 ```json title="Shape of an output item"
 {
@@ -68,7 +68,10 @@ Each output item has these fields:
   "sessionId": "…",
   "url": "…",
   "title": "…",
-  "tabId": 0
+  "tabId": 0,
+  "$binary": {},
+  "files": [],
+  "page": {}
 }
 ```
 {/* AUTO:outputs:end */}

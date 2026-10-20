@@ -1,0 +1,93 @@
+---
+title: "New email"
+description: "Start the workflow when a new email arrives in Gmail"
+sidebar:
+  label: "New email"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/gmail-trigger
+  family: trigger
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Start the workflow when a new email arrives in Gmail: in the inbox, under a label, or matching a search.
+
+:::note[A polling trigger]
+It checks for new items on a timer while the workflow is **On**, in the browser extension. Read [Polling triggers](/concepts/flow/polling-triggers/) for the first check, test events and what happens when a check fails.
+:::
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a New email connection"} href="/app/connections/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Connection** field, or create one from there. It signs in with an OAuth2.
+</AwfCallout>
+{/* AUTO:callout:end */}
+
+## What it does
+
+Every **Check every** minutes, the trigger looks at the newest 25 emails of the **Label** (the inbox when empty) that match the **Search**, and starts one run with the ones it hasn't seen yet.
+
+A check that finds nothing new starts no run. Press **Run** to fetch a test event: the latest items, without moving the trigger's position.
+
+## When to use it
+
+- Save invoices from billing emails to Google Drive.
+- Turn emails with a label into tasks.
+- Get a notification when a specific sender writes.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Connection","type":"Credential","required":true},{"name":"Label","type":"Text","description":"A Gmail label; empty = Inbox."},{"name":"Search","type":"Text","description":"Gmail search words. Only matching emails start a run."},{"name":"Check every","type":"Number","default":"5","description":"At least 1 minute, only while the workflow is On."},{"name":"On the first check","type":"Choice","default":"Skip what’s already there","description":"Options: Skip what’s already there, Start with the latest."},{"name":"How many to start with","type":"Number","default":"3","description":"For “Start with the latest” and Fetch test event (1–20)."}]} />
+{/* AUTO:settings:end */}
+
+**Search** takes Gmail's own search words, for example `from:billing@example.com has:attachment`. Only matching emails start a run.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"id","type":"Text"},{"name":"threadId","type":"Text"},{"name":"snippet","type":"Text"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "id": "…",
+    "threadId": "…",
+    "snippet": "…"
+  }
+]
+```
+{/* AUTO:outputs:end */}
+
+One item per new email, with its id and the message details Gmail returns.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Connection** (connection, OAuth2): required. See [Create a connection](/app/connections/).
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. New email with **Search** `has:attachment subject:invoice`.
+2. [Gmail](/nodes/builtin/integration/gmail/) gets the attachment.
+3. [Google Drive](/nodes/builtin/integration/google-drive/) uploads it to an *Invoices* folder.
+
+## Common issues
+
+- **It misses some emails**: a check reads the newest 25 matching emails. With a busy inbox, check more often or narrow the **Search**.
+- **Not working** on the connection: reconnect Gmail on the [Connections](/app/connections/) page.
+
+## Related nodes
+
+- [Polling triggers](/concepts/flow/polling-triggers/): how every "New …" trigger checks.
+- [Gmail](/nodes/builtin/integration/gmail/): send, read and label emails.
+- [Schedule Trigger](/nodes/builtin/trigger/schedule/): run at fixed times instead.

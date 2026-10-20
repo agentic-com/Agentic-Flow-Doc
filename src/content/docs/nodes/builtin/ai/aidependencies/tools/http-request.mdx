@@ -42,7 +42,7 @@ When the call is always the same, use the [Http Request](/nodes/builtin/core/htt
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Authentication","type":"Credential","description":"The authentication to use for requests made by this tool."}]} />
+<AwfParamTable rows={[{"name":"Authentication","type":"Credential","description":"The authentication to use for requests made by this tool."},{"name":"Ask before a call","type":"Choice","description":"When the agent must ask you before this tool runs. Options: Every call, Only calls that change things, Skip trusted sites, Ask me anywhere, even when I’m away."},{"name":"Trusted sites","type":"Tags","description":"Added here when you tick “Always allow on this site”."}]} />
 {/* AUTO:settings:end */}
 
 **Authentication** is the only setting, and it applies to every request the agent makes. Everything else comes from the model on each call, so describe the API in the agent's **Prompt** or **System message**: the base URL, the endpoints and what they return.

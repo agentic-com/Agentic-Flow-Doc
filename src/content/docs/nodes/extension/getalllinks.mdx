@@ -1,8 +1,8 @@
 ---
-title: "Get All Link"
+title: "Get all links"
 description: "Get all the links from the page of the actual openend tab"
 sidebar:
-  label: "Get All Link"
+  label: "Get all links"
 kind: node
 section: nodes
 worksIn: [extension]
@@ -13,6 +13,8 @@ node:
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+*Formerly **Get All Link**. The step was renamed in AWFlow 1.0; searching for the old name still finds it.*
 
 Collect the web addresses of all the links on the active tab, or inside one part of it.
 
@@ -42,7 +44,7 @@ The output holds only the new field. Turn on **Include input fields** to keep th
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."},{"name":"Max links","type":"Number","description":"The maximum number of links to return."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
+<AwfParamTable rows={[{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"DOM Selector","type":"Page element","description":"The selector of the DOM element to interact with."},{"name":"Max links","type":"Number","description":"The maximum number of links to return."},{"name":"Options","type":"Group","description":"The options for this step."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 - **Output field name**: for example `links`.

@@ -1,8 +1,8 @@
 ---
-title: "Browser Tool"
+title: "Browser"
 description: "Let an agent act on the live page — click, fill, type, select, submit, navigate — with an approval gate on every action."
 sidebar:
-  label: "Browser Tool"
+  label: "Browser"
 kind: node
 section: nodes
 worksIn: [extension]
@@ -14,6 +14,8 @@ node:
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+*Formerly **Browser Tool**. The step was renamed in AWFlow 1.0; searching for the old name still finds it.*
 
 Let an AI agent click, fill, type, select, submit or navigate on the active tab, with your approval before every action.
 
@@ -36,7 +38,7 @@ For fixed, planned page actions, use the regular page action nodes instead: they
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-This node has no settings.
+<AwfParamTable rows={[{"name":"What it can do","type":"Choice","default":"Read only","description":"Options: Read only, Read + act."},{"name":"Act","type":"Multiple choice","description":"What it may do on a page (with Read + act). Options: click, type, select."},{"name":"Ask before a call","type":"Choice","description":"When the agent must ask you before this tool runs. Options: Every call, Only calls that change things, Skip trusted sites, Ask me anywhere, even when I’m away."},{"name":"Allowed sites","type":"Tags","description":"The agent opens and acts only on these. “Always allow” on a new site adds it here."}]} />
 {/* AUTO:settings:end */}
 
 There is nothing to configure. The model picks the action, the selector, the value and the URL on each call. Give it page structure to work with: pass the page's text or structured data into the agent's **Prompt** so it can choose the right selectors.

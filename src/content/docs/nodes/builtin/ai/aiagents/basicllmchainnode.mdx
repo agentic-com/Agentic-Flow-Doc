@@ -51,11 +51,12 @@ Use expressions in **Prompt** to include data, for example `Write a one-line sum
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"response","type":"Any","description":"The model reply; the parsed result when an output parser is connected"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"response","type":"Any","description":"The model reply; the parsed result when an output parser is connected"},{"name":"usedFallback","type":"Text"}]} />
 
 ```json title="Shape of an output item"
 {
-  "response": null
+  "response": null,
+  "usedFallback": "…"
 }
 ```
 {/* AUTO:outputs:end */}
@@ -65,7 +66,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."},{"name":"Fallback","type":"chat model","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 The node has no credential of its own. The connected model holds the API key or connection.

@@ -1,0 +1,89 @@
+---
+title: "When a form is submitted"
+description: "Start the workflow when someone fills in and sends a form"
+sidebar:
+  label: "When a form is submitted"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/form-trigger
+  family: trigger
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Build a form in the workflow. When it is filled in and sent, the answers start a run.
+
+## What it does
+
+This trigger is page 1 of a form. Press **Run** on the workflow and the form opens in a sheet of the side panel; **Open in a window** shows it as a centred card in its own window. Sending it starts a run, and the answers become this trigger's output, one field per answer.
+
+Need more than one page?
+
+- Add **Pages** to the trigger: each page has its own fields, with **Back** and **Next**. Everything is sent once, at the end.
+- Or put [In-Page Form](/nodes/builtin/flow/in-page-form/) steps later in the workflow. They show in the same window, one after the other, while the run continues. The person sees "Earlier answers are already sent" when they can't go back.
+- End with a [Form ending](/nodes/builtin/flow/form-ending/) step to show a thank-you message, open a page, or close the form. Without one, the form says **Done** (or **Something went wrong** when the run fails).
+
+Answers are checked before the run starts: required fields, emails, links, numbers within their min and max. A wrong answer is marked at its field and nothing is sent.
+
+:::note[This browser only]
+The form opens in your AWFlow, in this browser. It is not a public link others can open.
+:::
+
+## When to use it
+
+- A request form you fill in yourself or at a colleague's desk: a bug report, an expense, a content brief.
+- A guided checklist: page 1 asks the basics, later steps ask follow-ups based on the answers.
+- Collecting the inputs of a workflow in a friendly way instead of editing step settings each time.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Form title","type":"Text","default":"Request"},{"name":"Description","type":"Text"},{"name":"Page 1 fields","type":"List of entries"},{"name":"Page 1 fields (each entry) › Field name","type":"Text","required":true,"description":"Key the entered value is stored under, referenced downstream."},{"name":"Page 1 fields (each entry) › Label","type":"Text","description":"Shown above the control."},{"name":"Page 1 fields (each entry) › Type","type":"Choice","default":"Short text","description":"Options: Short text, Long text, Number, Email, Link, Date, Yes / no, Dropdown, Choice, Checkboxes, Hidden (from an expression)."},{"name":"Page 1 fields (each entry) › Choices","type":"List","description":"For a dropdown, choice or checkboxes field."},{"name":"Page 1 fields (each entry) › Required","type":"Toggle"},{"name":"Page 1 fields (each entry) › Placeholder","type":"Text"},{"name":"Page 1 fields (each entry) › Help text","type":"Text"},{"name":"Page 1 fields (each entry) › Default","type":"Text","description":"Prefill, e.g. an answer from an earlier page."},{"name":"Page 1 fields (each entry) › Min length","type":"Number"},{"name":"Page 1 fields (each entry) › Max length","type":"Number"},{"name":"Page 1 fields (each entry) › Min","type":"Number"},{"name":"Page 1 fields (each entry) › Max","type":"Number"},{"name":"Pages","type":"List of entries","description":"Pages with Back and Next, sent once at the end."},{"name":"Pages (each entry) › Page title","type":"Text","required":true},{"name":"Pages (each entry) › Description","type":"Text"},{"name":"Pages (each entry) › Fields","type":"List of entries","required":true},{"name":"Pages (each entry) › Fields (each entry) › Field name","type":"Text","required":true,"description":"Key the entered value is stored under, referenced downstream."},{"name":"Pages (each entry) › Fields (each entry) › Label","type":"Text","description":"Shown above the control."},{"name":"Pages (each entry) › Fields (each entry) › Type","type":"Choice","default":"Short text","description":"Options: Short text, Long text, Number, Email, Link, Date, Yes / no, Dropdown, Choice, Checkboxes, Hidden (from an expression)."},{"name":"Pages (each entry) › Fields (each entry) › Choices","type":"List","description":"For a dropdown, choice or checkboxes field."},{"name":"Pages (each entry) › Fields (each entry) › Required","type":"Toggle"},{"name":"Pages (each entry) › Fields (each entry) › Placeholder","type":"Text"},{"name":"Pages (each entry) › Fields (each entry) › Help text","type":"Text"},{"name":"Pages (each entry) › Fields (each entry) › Default","type":"Text","description":"Prefill, e.g. an answer from an earlier page."},{"name":"Pages (each entry) › Fields (each entry) › Min length","type":"Number"},{"name":"Pages (each entry) › Fields (each entry) › Max length","type":"Number"},{"name":"Pages (each entry) › Fields (each entry) › Min","type":"Number"},{"name":"Pages (each entry) › Fields (each entry) › Max","type":"Number"}]} />
+{/* AUTO:settings:end */}
+
+Each field has a **name** (the key in the output), a **label**, a **type** and options such as **required**, **placeholder**, **help**, a **default** and **min/max**. Types: **Short text**, **Long text**, **Number**, **Email**, **Link**, **Date**, **Yes / no**, **Dropdown**, **Choice**, **Checkboxes** (several options) and **Hidden** (a value from an expression, sent with the answers). Dropdown, Choice and Checkboxes take a list of **Choices**.
+
+When you press **Run step** in the editor, the form's default values stand in for answers, so you can build the rest of the workflow without filling it in each time.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+One item with a field per form field, for example:
+
+```json title="Output"
+{ "email": "sam@example.com", "topic": "Billing", "urgent": true }
+```
+
+**Yes / no** gives `true` or `false`, **Checkboxes** a list of the ticked options, **Number** a number.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. **When a form is submitted** with fields *email* (email, required), *topic* (choice) and *details* (long text).
+2. [Switch](/nodes/builtin/flow/switch/) routes by `{{ $input.topic }}`.
+3. [Slack](/nodes/builtin/integration/slack/) posts the request to the right channel.
+4. [Form ending](/nodes/builtin/flow/form-ending/): "Thanks, it's filed".
+
+## Common issues
+
+- **"Add at least one field to the form."**: the trigger has no fields yet.
+- **The form doesn't open**: open the workflow and press **Run**. The form opens from the workflow, not from a link.
+- **Nothing happens after Send**: check **Runs** for a failed run; the form shows **Something went wrong** when the run fails.
+
+## Related nodes
+
+- [In-Page Form](/nodes/builtin/flow/in-page-form/): later pages, or a form on the web page you are on.
+- [Form ending](/nodes/builtin/flow/form-ending/): what the person sees at the end.
+- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/): ask for a yes or no instead of a form.

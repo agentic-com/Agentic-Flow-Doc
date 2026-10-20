@@ -1,0 +1,54 @@
+---
+title: Polling triggers
+description: How the "New email", "New row" and other "New …" triggers check an app for new items, and what they do on the first check.
+sidebar:
+  label: Polling triggers
+  badge:
+    text: New
+    variant: tip
+---
+
+import { Badge } from '@astrojs/starlight/components';
+
+A **polling trigger** starts a workflow when something new appears in an app: a new email, a new row, a new issue. AWFlow runs in your browser and has no server to receive notifications, so it **checks** the app on a timer and remembers what it has already seen.
+
+| Trigger | Starts a run when… | Needs |
+| --- | --- | --- |
+| [New feed item](/nodes/builtin/trigger/rss-feed-trigger/) | a blog or RSS/Atom feed has a new item | nothing |
+| [New email](/nodes/builtin/trigger/gmail-trigger/) | an email arrives in Gmail (inbox, a label or a search) | a Gmail connection |
+| [New issue or pull request](/nodes/builtin/trigger/github-trigger/) | an issue or pull request is opened or updated | a GitHub connection |
+| [New row](/nodes/builtin/trigger/google-sheets-trigger/) | rows are added at the bottom of a Google Sheet | a Google Sheets connection |
+| [New or updated page](/nodes/builtin/trigger/notion-trigger/) | a page is added to, or edited in, a Notion database | a Notion connection |
+| [New Linear issue](/nodes/builtin/trigger/linear-trigger/) | an issue is created in Linear | a Linear connection |
+
+## When it checks
+
+- Only while the workflow is **On**, and only in the browser extension <Badge text="Extension" variant="note" />.
+- Every **Check every** minutes: 5 by default, at least 1, at most 24 hours (1,440 minutes).
+- A check that finds nothing new starts **no run**, so it doesn't fill your Runs list.
+- A check that finds new items starts **one run** with all of them, oldest first. At most 100 items per check; the rest come with the next check.
+
+## The first check
+
+**On the first check** decides what happens with the items already there when you turn the workflow On:
+
+- **Skip what's already there** (default): nothing runs now. Only items that arrive later start runs.
+- **Start with the latest**: one run with the newest items, as many as **How many to start with** (3 by default, at most 20).
+
+## Try it without waiting
+
+Press **Run** (or **Run this step** on the trigger) to **fetch a test event**: the trigger reads the latest items, as many as **How many to start with**, so you can build the next steps with real data. A test event doesn't move the trigger's position: the next real check still starts from where it was.
+
+## Where the position is kept
+
+The trigger remembers what it has seen in the workflow's [stored data](/app/data-store/): you see it as a read-only row on the canvas **Stored data** tab. **Reset** on that row forgets the position; the next check then behaves like a first check.
+
+## When a check fails
+
+When the app can't be reached or the connection stops working, the trigger waits longer before the next check (twice as long each time, up to 60 minutes). The third failure in a row is recorded as **one failed run**, so an [Error Trigger](/nodes/builtin/trigger/errortrigger/) and your notifications see it. The first check that works again resets the wait.
+
+## Tips
+
+- For a feed, a 15- or 30-minute interval is plenty, and kinder to the site.
+- Combine a polling trigger with [If](/nodes/builtin/flow/if/) or [Filter](/nodes/builtin/flow/filter/) to act only on some items.
+- A deleted row in Google Sheets doesn't replay old rows: the trigger starts again from the new bottom, with a warning.

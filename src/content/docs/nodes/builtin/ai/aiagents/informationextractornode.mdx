@@ -55,11 +55,12 @@ Use **System message** under **Options** for extra rules, such as `Leave a field
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"extracted","type":"Any","description":"The data the model extracted"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"extracted","type":"Any","description":"The data the model extracted"},{"name":"usedFallback","type":"Text"}]} />
 
 ```json title="Shape of an output item"
 {
-  "extracted": null
+  "extracted": null,
+  "usedFallback": "…"
 }
 ```
 {/* AUTO:outputs:end */}
@@ -69,7 +70,7 @@ With a Structured Output Parser connected, read single fields downstream with ex
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."},{"name":"Fallback","type":"chat model","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 - **Model**: a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/). The model node holds the API key; this node has no credential of its own.

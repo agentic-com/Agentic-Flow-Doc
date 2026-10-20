@@ -9,6 +9,7 @@ worksIn: [extension]
 node:
   id: extension/ui/delete-elements
   family: inpage
+  agentTool: true
 ---
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
@@ -32,7 +33,7 @@ The incoming item is passed on unchanged, so the workflow can continue.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Elements","type":"List","required":true,"description":"List of DOM elements to delete from the opened web page."}]} />
+<AwfParamTable rows={[{"name":"Elements","type":"List","required":true,"description":"List of DOM elements to delete from the opened web page."},{"name":"Tool name","type":"Text","description":"What the model calls it."},{"name":"When to use it","type":"Long text","description":"One sentence the model reads to decide when to call this tool."},{"name":"Ask before a call","type":"Choice","description":"When the agent must ask you before this tool runs. Options: Every call, Only calls that change things, Skip trusted sites, Ask me anywhere, even when I’m away."},{"name":"Trusted sites","type":"Tags","description":"Added here when you tick “Always allow on this site”."}]} />
 {/* AUTO:settings:end */}
 
 Add one entry per thing to remove. In each **Target Element**, click the crosshair button and click the element on the page, or type a CSS selector. A selector that matches many elements, such as `.ad-slot`, removes them all.
@@ -40,7 +41,9 @@ Add one entry per thing to remove. In each **Target Element**, click the crossha
 ## Outputs
 
 {/* AUTO:outputs:start */}
-<AwfOutputPorts ports={[{"name":"Output"}]} />
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Tools** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
 {/* AUTO:outputs:end */}
 
 The incoming item, unchanged.

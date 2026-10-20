@@ -1,8 +1,8 @@
 ---
-title: "Extract Part Of A Date"
+title: "Get part of a date"
 description: "Extract a part of a date"
 sidebar:
-  label: "Extract Part Of A Date"
+  label: "Get part of a date"
 kind: node
 section: nodes
 worksIn: [extension, web]
@@ -13,6 +13,8 @@ node:
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+*Formerly **Extract Part Of A Date**. The step was renamed in AWFlow 1.0; searching for the old name still finds it.*
 
 Pull one number out of a date, such as its year, day of the month or hour.
 
@@ -40,7 +42,7 @@ To turn a date into readable text, use [Format Date](/nodes/builtin/datatransfor
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Date to extract part from","type":"Date and time","required":true,"description":"The date to extract part from."},{"name":"Part of date to extract","type":"Choice","required":true,"description":"The part of the date to extract. Month counts from 1 (January); week is the ISO week of the year. Options: year, month, week, day, hour, minute, second."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
+<AwfParamTable rows={[{"name":"Date to extract part from","type":"Date and time","required":true,"description":"The date to extract part from."},{"name":"Part of date to extract","type":"Choice","required":true,"description":"The part of the date to extract. Month counts from 1 (January); week is the ISO week of the year. Options: year, month, week, day, hour, minute, second."},{"name":"Output field name","type":"Text","required":true,"description":"The name of the output field."},{"name":"Options","type":"Group","description":"The options for this step."},{"name":"Options › Include input fields","type":"Toggle","default":"Off","description":"Whether to include the input fields in the output."}]} />
 {/* AUTO:settings:end */}
 
 **Date to extract part from** accepts a picked date or an expression such as `{{ $input.publishedAt }}`. ISO dates (`2026-03-01T09:30:00Z`) work best.

@@ -1,0 +1,91 @@
+---
+title: "New feed item"
+description: "Start the workflow when a blog or RSS/Atom feed has a new item"
+sidebar:
+  label: "New feed item"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/rss-feed-trigger
+  family: trigger
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Start the workflow when a blog, a news site or any RSS/Atom feed publishes a new item. No connection needed.
+
+:::note[A polling trigger]
+It checks for new items on a timer while the workflow is **On**, in the browser extension. Read [Polling triggers](/concepts/flow/polling-triggers/) for the first check, test events and what happens when a check fails.
+:::
+
+## What it does
+
+Every **Check every** minutes, the trigger reads the **Feed URL** and starts one run with the items it hasn't seen yet. An item is recognised by its id (`guid`), or its link when the feed has no id.
+
+A check that finds nothing new starts no run. Press **Run** to fetch a test event: the latest items, without moving the trigger's position.
+
+## When to use it
+
+- Post new articles from a blog to Slack or Discord.
+- Save new podcast episodes to a reading list.
+- Summarise each new post of a news feed with AI.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Feed URL","type":"URL","required":true,"description":"An RSS or Atom address."},{"name":"Check every","type":"Number","default":"5","description":"At least 1 minute, only while the workflow is On."},{"name":"On the first check","type":"Choice","default":"Skip what’s already there","description":"Options: Skip what’s already there, Start with the latest."},{"name":"How many to start with","type":"Number","default":"3","description":"For “Start with the latest” and Fetch test event (1–20)."}]} />
+{/* AUTO:settings:end */}
+
+Paste the feed address in **Feed URL**, for example `https://blog.example.com/feed.xml`. Most blogs show it as an RSS icon or at `/feed` or `/rss`.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"title","type":"Text"},{"name":"link","type":"Text"},{"name":"guid","type":"Text"},{"name":"isoDate","type":"Text"},{"name":"pubDate","type":"Text"},{"name":"content","type":"Text"},{"name":"contentSnippet","type":"Text"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "title": "…",
+    "link": "…",
+    "guid": "…",
+    "isoDate": "…",
+    "pubDate": "…",
+    "content": "…",
+    "contentSnippet": "…"
+  }
+]
+```
+{/* AUTO:outputs:end */}
+
+One item per feed item, with its title, link, publication date and content as the feed provides them.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. New feed item on a blog feed, **Check every** 30 minutes.
+2. [Summarization Chain](/nodes/builtin/ai/aiagents/summarizationchainnode/) summarises `{{ $input.content }}`.
+3. [Discord](/nodes/builtin/integration/discord/) posts the title, link and summary.
+
+## Common issues
+
+- **Nothing ever runs**: with **Skip what's already there**, only items published after you turned the workflow On start runs. Press **Run** to fetch a test event and check the feed works.
+- **The feed can't be read**: open the address in a tab; it must show XML, not a web page.
+
+## Related nodes
+
+- [Polling triggers](/concepts/flow/polling-triggers/): how every "New …" trigger checks.
+- [RSS Feed Read](/nodes/builtin/core/rss-feed-read/): read a feed once, on demand.
+- [Schedule Trigger](/nodes/builtin/trigger/schedule/): run at fixed times instead.

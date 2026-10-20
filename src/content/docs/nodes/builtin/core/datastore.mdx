@@ -9,18 +9,13 @@ worksIn: [extension, web]
 node:
   id: builtin/core/datastore
   family: core
+  agentTool: true
 ---
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
 Remember values from one run of a workflow to the next.
-
-## Try it
-
-{/* AUTO:tryit:start */}
-<AwfFlowPreview src="/examples/price-on-page-watch.awf" />
-{/* AUTO:tryit:end */}
 
 ## What it does
 
@@ -49,7 +44,7 @@ To remove duplicates across runs without building it yourself, [Remove Duplicate
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Get","description":"What to do to the store. Options: Get, Set, Delete, Increment, List keys, Clear all."},{"name":"Scope","type":"Choice","default":"This workflow only","description":"Which keys this node can see. Options: This workflow only, Shared with all workflows."},{"name":"Key","type":"Text","description":"Name of the value to store or read."},{"name":"Value","type":"Value","description":"The value to store. Used by Set."},{"name":"Value Format","type":"Choice","default":"Text","description":"How to read text typed into Value. Options: Text, Number, True / false, JSON."},{"name":"Increment By","type":"Number","default":"1","description":"How much to add. Use a negative number to count down."}]} />
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Get","description":"What to do to the store. Options: Get, Set, Delete, Increment, List keys, Clear all."},{"name":"Scope","type":"Choice","default":"This workflow only","description":"Which keys this step can see. Options: This workflow only, Shared with all workflows."},{"name":"Key","type":"Text","description":"Name of the value to store or read."},{"name":"Value","type":"Value","description":"The value to store. Used by Set."},{"name":"Value Format","type":"Choice","default":"Text","description":"How to read text typed into Value. Options: Text, Number, True / false, JSON."},{"name":"Increment By","type":"Number","default":"1","description":"How much to add. Use a negative number to count down."},{"name":"Tool name","type":"Text","description":"What the model calls it."},{"name":"When to use it","type":"Long text","description":"One sentence the model reads to decide when to call this tool."},{"name":"Ask before a call","type":"Choice","description":"When the agent must ask you before this tool runs. Options: Every call, Only calls that change things, Skip trusted sites, Ask me anywhere, even when I’m away."},{"name":"Trusted sites","type":"Tags","description":"Added here when you tick “Always allow on this site”."}]} />
 {/* AUTO:settings:end */}
 
 - **Key** is needed by every operation except **List keys** and **Clear all**. Up to 512 characters.
@@ -59,7 +54,9 @@ To remove duplicates across runs without building it yourself, [Remove Duplicate
 ## Outputs
 
 {/* AUTO:outputs:start */}
-<AwfOutputPorts ports={[{"name":"Output"}]} />
+This node has no output port. It plugs into a slot on another node instead of passing items along.
+
+- **Tools** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
 {/* AUTO:outputs:end */}
 
 The output depends on the operation:
@@ -100,12 +97,6 @@ Get notified only when an API returns a new latest item:
 - **"Value "…" is not a number. Change the value, or the value format."** **Value Format** is *Number* (or *True / false*, or *JSON*) but the typed text does not match. Fix the text or pick *Text*.
 - **"This store already holds 500 keys, the maximum allowed."** or a byte-limit message. Delete keys you no longer need, from the **Stored data** tab or with **Delete**.
 - **An imported or copied workflow does not see the old keys.** Keys in *This workflow only* belong to the original workflow. Use the shared scope for values several workflows must read.
-
-## Recipes with this node
-
-{/* AUTO:recipes:start */}
-<AwfRecipeCard title={"Get an alert when a price on a page drops"} href="/recipes/monitor-pages/price-drop-alert/" level={"intermediate"} minutes={8} setup={"none"} />
-{/* AUTO:recipes:end */}
 
 ## Related nodes
 

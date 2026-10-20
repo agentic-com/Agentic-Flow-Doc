@@ -54,12 +54,13 @@ Fill **Text** with an expression such as `{{ $input.text }}`. Write **Categories
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"category","type":"Any","description":"The chosen category"},{"name":"scores","type":"Key-value pairs","description":"Every label's score, on-device"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"category","type":"Any","description":"The chosen category"},{"name":"scores","type":"Key-value pairs","description":"Every label's score, on-device"},{"name":"usedFallback","type":"Text"}]} />
 
 ```json title="Shape of an output item"
 {
   "category": null,
-  "scores": {}
+  "scores": {},
+  "usedFallback": "…"
 }
 ```
 {/* AUTO:outputs:end */}
@@ -69,7 +70,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local classifier","description":"One node.","required":true}]} />
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local classifier","description":"One node.","required":true},{"name":"Fallback","type":"chat model","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 Connect a chat model, which holds its own API key, or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) with a zero-shot model to classify on-device with your own categories.

@@ -43,7 +43,7 @@ Only remote servers reached over the web work. Servers that run as a local progr
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Server URL","type":"Text","required":true,"description":"The remote MCP server URL (Streamable HTTP/SSE endpoint) to connect to."},{"name":"Authentication","type":"Credential","description":"The credential to send as the Authorization header on every request."},{"name":"Allowed Tools","type":"List","description":"If set, only remote tools with these names are exposed to the model. Leave empty to expose every tool the server advertises."}]} />
+<AwfParamTable rows={[{"name":"Server URL","type":"Text","required":true,"description":"The remote MCP server URL (Streamable HTTP/SSE endpoint) to connect to."},{"name":"Authentication","type":"Credential","description":"The credential to send as the Authorization header on every request."},{"name":"Allowed Tools","type":"List","description":"If set, only remote tools with these names are exposed to the model. Leave empty to expose every tool the server advertises."},{"name":"Ask before a call","type":"Choice","description":"When the agent must ask you before this tool runs. Options: Every call, Only calls that change things, Skip trusted sites, Ask me anywhere, even when I’m away."},{"name":"Trusted sites","type":"Tags","description":"Added here when you tick “Always allow on this site”."}]} />
 {/* AUTO:settings:end */}
 
 - **Server URL** is the full endpoint the server's provider gives you, for example `https://mcp.example.com/mcp`.

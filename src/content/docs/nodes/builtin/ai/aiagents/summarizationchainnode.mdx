@@ -53,11 +53,12 @@ Fill **Text** with an expression such as `{{ $input.text }}`. **Style** is free 
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"summary","type":"Any","description":"The model reply; the parsed result when an output parser is connected"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"summary","type":"Any","description":"The model reply; the parsed result when an output parser is connected"},{"name":"usedFallback","type":"Text"}]} />
 
 ```json title="Shape of an output item"
 {
-  "summary": null
+  "summary": null,
+  "usedFallback": "…"
 }
 ```
 {/* AUTO:outputs:end */}
@@ -67,7 +68,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true}]} />
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Fallback","type":"chat model","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 Connect a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/) or an on-device [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/). The model node holds the API key; Summarization has no credential of its own.
