@@ -17,6 +17,12 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 
 Turn the tables and bullet lists on the active tab into rows of data you can filter, sort and save.
 
+## Try it
+
+{/* AUTO:tryit:start */}
+<AwfFlowPreview src="/examples/table-to-csv.awf" />
+{/* AUTO:tryit:end */}
+
 ## What it does
 
 Get Structured Data finds the tables and lists you point at with **DOM Selector** and returns one item per table or list found. You can select a table or list itself, a container that holds several, or a cell or list entry inside one (its table or list is used).
@@ -42,7 +48,7 @@ Cells and entries are read as plain text, with extra spaces removed. Tables or l
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group","description":"Structured extraction options."},{"name":"Options › Mode","type":"Choice","default":"Auto","description":"Choose what to extract. Options: Auto, Table, List."},{"name":"Options › List Format","type":"Choice","default":"Text","description":"How list items are represented. Options: Text, Key–value list."},{"name":"Options › Table first row is header","type":"Toggle","default":"On","description":"Use first table row as headers when no thead is present."},{"name":"Tool name","type":"Text","description":"What the model calls it."},{"name":"When to use it","type":"Long text","description":"One sentence the model reads to decide when to call this tool."},{"name":"Ask before a call","type":"Choice","description":"When the agent must ask you before this tool runs. Options: Every call, Only calls that change things, Skip trusted sites, Ask me anywhere, even when I’m away."},{"name":"Trusted sites","type":"Tags","description":"Added here when you tick “Always allow on this site”."}]} />
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group","description":"Structured extraction options."},{"name":"Options › Mode","type":"Choice","default":"Auto","description":"Choose what to extract. Options: Auto, Table, List."},{"name":"Options › List Format","type":"Choice","default":"Text","description":"How list items are represented. Options: Text, Key–value list."},{"name":"Options › Table first row is header","type":"Toggle","default":"On","description":"Use first table row as headers when no thead is present."}]} />
 {/* AUTO:settings:end */}
 
 **DOM Selector**: click the crosshair button in the field and click any cell of the table (or any entry of the list); you do not need to hit the table's edge. To read everything in an area, pick the container instead, or type a selector such as `main` or `table`.
@@ -50,9 +56,21 @@ Cells and entries are read as plain text, with extra spaces removed. Tables or l
 ## Outputs
 
 {/* AUTO:outputs:start */}
-This node has no output port. It plugs into a slot on another node instead of passing items along.
+<AwfOutputPorts ports={[{"name":"Output"}]} />
 
-- **Tools** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"sourceType","type":"Choice"},{"name":"selector","type":"Text"},{"name":"items","type":"List of entries","description":"One item per row or list entry"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "sourceType": "…",
+    "selector": "…",
+    "items": []
+  }
+]
+```
 {/* AUTO:outputs:end */}
 
 `sourceType` is `table` or `list`. The rows are inside `items`. To get one workflow item per row, follow with [Split Out](/nodes/builtin/datatransformation/splitout/) on `items`.
@@ -76,6 +94,12 @@ None. This node needs no connection and has no slots for other nodes.
 - **The first data row is used as headers.** The table has no header row and **Table first row is header** is on. Turn it off; columns are then named `col_1`, `col_2`…
 - **Menus and footers show up as lists.** In **Auto** or **List** mode on a large container, every list is read. Select the exact table or list, or use **Table** mode.
 - **The node fails outside the extension.** This node runs in the browser extension; install it or run the workflow from the extension.
+
+## Recipes with this node
+
+{/* AUTO:recipes:start */}
+<AwfRecipeCard title={"Copy any table on a page as CSV"} href="/recipes/extract-data/table-to-csv/" level={"beginner"} minutes={3} setup={"none"} />
+{/* AUTO:recipes:end */}
 
 ## Related nodes
 
