@@ -57,7 +57,18 @@ Three product links go through Get All Text from Link, then Summarization summar
 | `{{ $('Split Out').url }}` in a step **further down** | Empty: that step's whole output is a list, and a list has no `url` field. |
 | `{{ $('Split Out').1.url }}` | `url` of the second item of that list (counting starts at 0), whatever item is being processed. |
 
-In a step's settings, the input panel shows the same split: steps under **Direct inputs** give you the matching item, steps under **Relatives** give you their whole output.
+To read a whole list on purpose, write `$('Split Out').all()`, `.first()` or `.last()`. When you tap a value of an earlier step that has several items, the reference names the item (`$('X')[2].url`) and an amber **Uses item 3** note says so.
+
+### Two lists into one step
+
+When a step receives **two lists** (from two steps linked into it):
+
+- in workflows with the **new behaviour**, items are **paired by position**: item 1 with item 1, item 2 with item 2. The step runs as many times as the longer list, with a warning when the counts differ. `$('Step').field` reads the paired item.
+- in **Classic** workflows (made before AWFlow 1.0), the step runs for **every combination**: 3 items and 4 items give 12 runs (a hint says so).
+
+To get every combination on purpose, use [Merge](/nodes/builtin/flow/merge/). See [Workflow behaviour versions](/app/workflows/behaviour-versions/).
+
+A step that receives **no items** is skipped in the new behaviour (it ran with nothing in Classic).
 
 ## Three ways to keep values together
 
