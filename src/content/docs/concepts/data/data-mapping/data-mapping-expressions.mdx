@@ -11,7 +11,7 @@ import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 import { CompareCards, ItemsPlayground } from "@components/awflow";
 
 :::note[In 20 seconds]
-An expression is text between double curly braces, like `{{ $input.title }}`, that AWFlow replaces with a value while the node runs. It runs once for every item, so the same setting can produce a different value for each one. Use `$input` for the incoming item, `$('Step name')` for another step, and `$run` for a variable set earlier in the run.
+An expression is text between double curly braces, like `{{ $input.title }}`, that AWFlow replaces with a value while the node runs. It runs once for every item, so the same setting can produce a different value for each one. Use `$input` for the incoming item, `$('Step name')` for another step, `$vars` for your [variables](/app/variables/), and `$run` for a value set earlier in the run.
 :::
 
 ## See it happen
@@ -43,21 +43,39 @@ Edit Fields receives two orders and builds two fields from expressions. Each exp
   caption={'name = {{ upper(trim($input.first)) + " " + $input.last }} · size = {{ $input.total > 100 ? "big order" : "small order" }}'}
 />
 
-## The three things you can read
+## What you can read
 
 | Write | Reads | Example |
 | --- | --- | --- |
-| `$input` | The item this node is working on | `{{ $input.title }}`, `{{ $input.metadata.description }}`, `{{ $input.0.name }}` |
-| `$('Step name')` | The output of another step, by its label | `{{ $('Get Page Metadata').title }}` |
-| `$run` | A variable stored earlier in this run by [Set Variable](/nodes/builtin/flow/setvariable/) | `{{ $run.cursor }}`, `{{ $run.page.next }}` |
+| `$input` | The item this step is working on | `{{ $input.title }}`, `{{ $input.metadata.description }}`, `{{ $input.items[0].name }}` |
+| `$('Step name')` | The output of another step, by its name | `{{ $('Get Page Metadata').title }}` |
+| `$vars` | A [variable](/app/variables/) you set on the Variables page | `{{ $vars.BASE_URL }}` |
+| `$run` | A value stored earlier in this run by [Set Variable](/nodes/builtin/flow/setvariable/) | `{{ $run.cursor }}` |
+| `$now`, `$today` | The date and time the step started, today's date | `{{ $today }}` |
+| `$itemIndex` | Which item the step is working on, from 0 | `{{ $itemIndex + 1 }}` |
+| `$execution`, `$workflow` | This run (`id`, `mode`) and this workflow (`id`, `name`) | `{{ $workflow.name }}` |
 
-- **Paths** use dots, including for list positions: `$input.items.0.name` is the `name` of the first entry (counting starts at 0).
-- **Step names** must match the node label exactly, spaces and capitals included. Renaming the step breaks the reference.
-- **`$('…')` and items:** a step directly connected to this one gives the matching item; a step further back gives its whole output. See [Item linking](/concepts/data/item-linking/).
-- **Missing values** in `$input` and `$('…')` become empty text, so a typo doesn't stop the run. Check **Preview from last run** under the field.
-- **`$run` is strict:** reading a variable that hasn't been set yet **fails the step** with an error that names it and lists the variables set so far. Read a variable only in steps that run after the Set Variable node. When a read might come first, the canvas warns you; see [reading a variable before it is set](/concepts/flow/execution-order/#reading-a-run-variable-before-it-is-set).
+- **Paths** use dots, or brackets for names with spaces, dashes, dots or symbols: `$input["First name"]`, `$input.rows[0]["Order #"]`. Counting starts at 0: `$input.items.0.name` and `$input.items[0].name` are the same.
+- **Step names** go in single or double quotes: `$('Get todos')` or `$("Bob's sheet")`. They must match the step's name exactly. When two steps share a name, the run log warns you and the first one is used: give them different names.
+- Only the data's **own fields** are read: `$input.constructor` or `$input.__proto__` give nothing.
+- **`$('…')` and items:** a step directly before this one gives the matching item; `.all()`, `.first()` and `.last()` read its whole list. See [Item linking](/concepts/data/item-linking/).
+- **`$vars` and `$run` are strict:** reading a variable nobody set **fails the step** with an error that names it, never an empty value. `$vars` values are read once when the run starts.
 
-You rarely type `$input` yourself: drag a field from the **Input** panel and the expression is written for you. See [Mapping in the UI](/concepts/data/data-mapping/data-mapping-ui/).
+You rarely type `$input` yourself: tap a value in the **Input** pane or in **Use data**, or drag it, and the expression is written for you. See [Mapping in the UI](/concepts/data/data-mapping/data-mapping-ui/).
+
+## Typing an expression
+
+A field is either **Fixed** (the text is used as written) or **Expression**. Switch with the field's **⋯** menu (**Edit as expression** / **Use a fixed value**), or the **Fixed | Expression** switch next to the label on a wide screen.
+
+- Typing `{{` adds the closing `}}` with the cursor in between; typing `}` steps over it.
+- Inside `{{ }}`, **suggestions** list the steps before this one (nearest first), their fields (from the last run, or marked *expected* before any run), your variables and the functions, each with a short description.
+- Under the field, a **preview** line shows the result at the current item ("→ Ada Lovelace · item 1 of 3"). It wraps to three lines with **Show all**.
+- A problem is **underlined** where it is (amber for a warning, red for an error) and explained in the preview line, with a fix when there's an obvious one: *No step called "Get todo". Did you mean "Get todos"?* **Replace**.
+- In a **Fixed** field, text that looks like a reference shows *This looks like a data reference* with **Show as expression** and **Use data…**.
+
+### The full-screen editor
+
+Press **Expand** next to an expression field, or <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd>, to open the expression editor: the data, your expression and its result side by side (one tab each in the side panel). Step through the items to see the result for each; **Check all items** works the expression out for up to 500 items and lists the ones with problems.
 
 ## Text around values
 
@@ -99,21 +117,148 @@ Title: {{ $input.title }}
 
 ## Helper functions
 
-| Text | Numbers | Lists and general |
-| --- | --- | --- |
-| `upper(s)` `lower(s)` `trim(s)` | `round(n)` `floor(n)` `ceil(n)` `abs(n)` | `length(x)` |
-| `replace(s, find, with)` | `min(a, b, …)` `max(a, b, …)` | `includes(list, value)` |
-| `split(s, sep)` `slice(s, start, end)` | `number(x)` | `join(list, sep)` `slice(list, start, end)` |
-| `str(x)` | | `default(value, fallback)` |
+Expressions are **sandboxed**: only the functions below exist. There are no variables of your own, no method calls like `.toUpperCase()`, and no access to anything outside the values you reference. Every function is safe: a wrong argument gives an explained problem, not a crash.
 
 ```txt title="Expression"
 {{ upper(trim($input.name)) }}
 {{ join($input.tags, ", ") }}
+{{ formatDate($now, "EEEE d MMMM", "en", "Europe/Paris") }}
+{{ addDays($today, 7) }}
 {{ default($input.title, "Untitled") }}
-{{ length($input.items) > 0 ? "has items" : "empty" }}
 ```
 
-Expressions are **sandboxed**: only these functions exist. There are no variables of your own, no method calls like `.toUpperCase()`, and no access to anything outside the values you reference.
+Dates are ISO text (`2026-10-20T09:00:00Z`); a plain `YYYY-MM-DD` stays a calendar day. `$now` and `$today` are frozen when the step starts, so every item of one step sees the same time.
+
+#### Text
+
+| Function | What it does | Example | Result |
+| --- | --- | --- | --- |
+| `upper(text)` | The text in capital letters. | `upper("hello")` | `HELLO` |
+| `lower(text)` | The text in small letters. | `lower("Hello")` | `hello` |
+| `trim(text)` | The text without spaces or line breaks at either end. | `trim("  hi  ")` | `hi` |
+| `length(textOrList)` | How many characters a text has, or how many items a list has. | `length("hello")` | `5` |
+| `includes(textOrList, value)` | Yes when the text contains the value, or the list holds it. | `includes("hello world", "world")` | `true` |
+| `replace(text, find, replaceWith)` | The text with every occurrence of find replaced. | `replace("a-b-c", "-", " ")` | `a b c` |
+| `slice(textOrList, start, end?)` | The part from position start up to (not including) end. Counting starts at 0. | `slice("hello", 1, 3)` | `el` |
+| `split(text, separator)` | The text cut into a list at each separator. | `split("a,b,c", ",")` | `a,b,c` |
+| `join(list, separator)` | The items of a list as one text, with the separator between them. | `join(["a", "b"], " + ")` | `a + b` |
+| `str(value)` | The value as text. | `str(42)` | `42` |
+| `toTitleCase(text)` | Each word starting with a capital letter. | `toTitleCase("ada lovelace")` | `Ada Lovelace` |
+| `toSnakeCase(text)` | The words in small letters joined with underscores. | `toSnakeCase("First Name")` | `first_name` |
+| `slugify(text)` | A web-address-friendly version: small letters, no accents, words joined with dashes. | `slugify("Crème Brûlée Recipe!")` | `creme-brulee-recipe` |
+| `stripTags(html)` | The text of an HTML snippet without its tags. | `stripTags("<p>Hello <b>you</b></p>")` | `Hello you` |
+| `stripMarkdown(markdown)` | The text of a Markdown snippet without its formatting marks. | `stripMarkdown("**Bold** and [a link](https://example.com)")` | `Bold and a link` |
+| `urlEncode(text)` | The text made safe to put inside a web address. | `urlEncode("a b&c")` | `a%20b%26c` |
+| `urlDecode(text)` | The reverse of urlEncode. | `urlDecode("a%20b%26c")` | `a b&c` |
+| `base64Encode(text)` | The text encoded as Base64 (UTF-8). | `base64Encode("hi")` | `aGk=` |
+| `base64Decode(base64)` | The text a Base64 value holds (UTF-8). | `base64Decode("aGk=")` | `hi` |
+| `padStart(text, length, fill?)` | The text made at least length characters long by adding fill (a space by default) in front. | `padStart(7, 3, "0")` | `007` |
+
+#### Numbers
+
+| Function | What it does | Example | Result |
+| --- | --- | --- | --- |
+| `round(number)` | The number rounded to the nearest whole number. | `round(2.6)` | `3` |
+| `floor(number)` | The number rounded down. | `floor(2.6)` | `2` |
+| `ceil(number)` | The number rounded up. | `ceil(2.1)` | `3` |
+| `abs(number)` | The number without its minus sign. | `abs(-4)` | `4` |
+| `min(a, b, …)` | The smallest of the numbers. | `min(3, 1, 2)` | `1` |
+| `max(a, b, …)` | The largest of the numbers. | `max(3, 1, 2)` | `3` |
+| `number(value)` | The value as a number (NaN when it is not one; see toNumber for a fallback). | `number("5") * 2` | `10` |
+
+#### Dates
+
+| Function | What it does | Example | Result |
+| --- | --- | --- | --- |
+| `now()` | The current date and time (ISO 8601). Same as $now within one step run. | `now()` | `2026-10-19T09:30:00.000Z` |
+| `today()` | Today's date (YYYY-MM-DD), in the browser's time zone. | `today()` | `2026-10-19` |
+| `date(value)` | A date from text (ISO 8601 or YYYY-MM-DD) or a timestamp in milliseconds, as ISO 8601. | `date(0)` | `1970-01-01T00:00:00.000Z` |
+| `addDays(date, days)` | The date moved by a number of days (use a negative number to go back). | `addDays("2026-10-19", 1)` | `2026-10-20` |
+| `addHours(date, hours)` | The date moved by a number of hours. | `addHours("2026-10-19T08:00:00Z", 2)` | `2026-10-19T10:00:00.000Z` |
+| `addMinutes(date, minutes)` | The date moved by a number of minutes. | `addMinutes("2026-10-19T08:00:00Z", 90)` | `2026-10-19T09:30:00.000Z` |
+| `addMonths(date, months)` | The date moved by calendar months; the day is kept or clamped to the end of the month. | `addMonths("2026-01-31", 1)` | `2026-02-28` |
+| `diffDays(from, to)` | Whole days from the first date to the second (negative when the second is earlier). | `diffDays("2026-10-01", "2026-10-19")` | `18` |
+| `diff(from, to, unit)` | Whole units from the first date to the second. Units: year, month, week, day, hour, minute, second, millisecond. | `diff("2026-01-01", "2026-10-19", "month")` | `9` |
+| `formatDate(date, pattern, locale?, timeZone?)` | The date written with a pattern: yyyy year, MM month, MMM/MMMM month name, dd day, EEE/EEEE weekday, HH hours, mm minutes, ss seconds, a am/pm. Text in single quotes is kept. | `formatDate("2026-10-19", "EEEE d MMMM yyyy")` | `Monday 19 October 2026` |
+| `startOf(date, unit)` | The first moment of the day, week (Monday), month or year the date falls in. | `startOf("2026-10-19", "month")` | `2026-10-01` |
+| `endOf(date, unit)` | The last moment (or last day) of the day, week (Sunday), month or year the date falls in. | `endOf("2026-02-10", "month")` | `2026-02-28` |
+| `isWeekend(date)` | Yes when the date is a Saturday or a Sunday. | `isWeekend("2026-10-18")` | `true` |
+| `weekNumber(date)` | The ISO week of the year (weeks start on Monday). | `weekNumber("2026-10-19")` | `43` |
+
+#### Check and convert
+
+| Function | What it does | Example | Result |
+| --- | --- | --- | --- |
+| `isEmail(text)` | Yes when the text is one email address. | `isEmail("ada@example.com")` | `true` |
+| `isUrl(text)` | Yes when the text is one http or https web address. | `isUrl("https://awflow.io")` | `true` |
+| `isNumber(value)` | Yes when the value is a number, or text that is exactly a number. | `isNumber("12.5")` | `true` |
+| `isEmpty(value)` | Yes for empty text (or only spaces), an empty list, an empty object, or nothing. | `isEmpty("  ")` | `true` |
+| `extractEmail(text)` | The first email address found in the text, or empty. | `extractEmail("Write to ada@example.com today")` | `ada@example.com` |
+| `extractUrl(text)` | The first http or https web address found in the text, or empty. | `extractUrl("See https://awflow.io/docs.")` | `https://awflow.io/docs` |
+| `toNumber(value, fallback?)` | The value as a number, or the fallback (empty by default) when it is not one. | `toNumber("abc", 0)` | `0` |
+| `toBoolean(value)` | The value as yes/no: "false", "0", "no", "off" and empty text are false. | `toBoolean("no")` | `false` |
+| `parseJson(text, fallback?)` | The value a JSON text holds. Text that is not valid JSON is an error, or gives the fallback when one is passed. | `get(parseJson("{\"a\": 1}"), "a")` | `1` |
+| `json(value)` | The value written as JSON text. | `json(["a", 1])` | `["a",1]` |
+
+#### Lists and objects
+
+| Function | What it does | Example | Result |
+| --- | --- | --- | --- |
+| `sum(list)` | The numbers of a list added up (text that is a number counts). | `sum([1, 2, 3])` | `6` |
+| `avg(list)` | The average of the numbers of a list. | `avg([1, 2, 3])` | `2` |
+| `unique(list)` | The list without repeated items (the first of each is kept). | `unique([1, 2, 1])` | `1,2` |
+| `compact(list)` | The list without empty items (empty text, nothing). | `compact(["a", "", "b"])` | `a,b` |
+| `flatten(list)` | Lists inside the list spread into one list. | `length(flatten([[1, 2], [3]]))` | `3` |
+| `chunk(list, size)` | The list cut into lists of size items. | `length(chunk([1, 2, 3, 4, 5], 2))` | `3` |
+| `first(list)` | The first item of a list (empty for an empty list). | `first(["a", "b"])` | `a` |
+| `last(list)` | The last item of a list (empty for an empty list). | `last(["a", "b"])` | `b` |
+| `pluck(list, "field")` | One field read from each object of a list. | `sum(pluck($input.items, "price"))` | `42` |
+| `sortBy(list, "field"?)` | The list sorted by a field of each object (or by the items themselves), smallest first. | `sortBy([3, 1, 2])` | `1,2,3` |
+| `keys(object)` | The field names of an object. | `keys($input)` | `name,email` |
+| `values(object)` | The field values of an object. | `values($input)` | `Ada,ada@example.com` |
+| `get(objectOrList, "path", fallback?)` | The value at a path such as "a.b[0]" or "rows[0][\"Order #\"]", or the fallback. | `get($input, "address.city")` | `London` |
+
+#### Fallbacks
+
+| Function | What it does | Example | Result |
+| --- | --- | --- | --- |
+| `default(value, fallback)` | The value, or the fallback when the value is empty. | `default("", "n/a")` | `n/a` |
+| `coalesce(value, fallback)` | Same as default. | `coalesce("", "n/a")` | `n/a` |
+| `ifEmpty(value, fallback)` | The value, or the fallback when it is empty text, an empty list, an empty object or nothing. | `ifEmpty([], "none")` | `none` |
+
+#### References
+
+| Write | What it is |
+| --- | --- |
+| `$input` | The item this step is working on (from the step before it). |
+| `$('…')` | The output of an earlier step, by its name. |
+| `$run.` | A value a Set Variable step stored earlier in this run. (only while a workflow runs; the preview shows a stand-in) |
+| `$vars.` | Your workflow variables, set on the Variables page. |
+| `$now` | The date and time this step started (ISO 8601). |
+| `$today` | Today's date (YYYY-MM-DD). |
+| `$itemIndex` | Which item this step is working on, counting from 0. |
+| `$execution.id` | The id of this run, as shown in Runs. (only while a workflow runs; the preview shows a stand-in) |
+| `$execution.mode` | How this run started: manual, trigger or evaluation. (only while a workflow runs; the preview shows a stand-in) |
+| `$workflow.id` | This workflow's id. |
+| `$workflow.name` | This workflow's name. |
+
+
+## What an expression gives back
+
+- In a field that holds **only** one `{{ … }}`, the value keeps its type in workflows with the [new behaviour](/app/workflows/behaviour-versions/): a number stays a number, a list a list, yes/no a boolean. In a text field, or with text around it, lists and objects become JSON text.
+- Number and yes/no fields accept a mapped value: `"42"` becomes `42`, and `"yes"`, `"true"`, `"on"` or `"1"` become *true* (`"no"`, `"false"`, `"off"`, `"0"` or empty become *false*).
+- A list of texts mapped into a text field keeps real line breaks inside its items.
+- `"5" + 1` gives `"51"` (text joined), and `"5" * 2` gives `10`: the preview warns about the first and suggests `number(…)`.
+- `{{ }}` text that isn't an expression (a Mustache or Handlebars template, an f-string) is kept exactly as written, braces included, with one warning in the run log. A `{{ }}` may span several lines.
+- Code fields ([JavaScript Code](/nodes/builtin/core/javascript-code/), [Python Code](/nodes/builtin/core/code/)) never replace `{{ }}`: read data with `item` / `items` there.
+
+### When an expression can't be worked out
+
+In workflows with the **new behaviour**, an expression that can't be worked out (an unknown step, a typo in a function, a syntax error) **stops the step** with an error that names the field and the item, so **On error** and Try / Catch apply. In **Classic** workflows its text is kept and a warning is logged. A path that simply doesn't exist on the item stays empty in both.
+
+### Coming from n8n?
+
+AWFlow recognises n8n-style references and offers the AWFlow way, never changing your text by itself: `$json.x` → `$input.x`, `$('X').item.json.y` → `$('X').y`, `$node["X"].json.y` → `$('X').y`, and `$items()` / `$item`.
 
 ## Expression, Edit Fields or Code?
 
@@ -141,7 +286,7 @@ Expressions are **sandboxed**: only these functions exist. There are no variable
       href: "/concepts/data/code/",
       when: "The logic needs loops, grouping or parsing.",
       example: "Count orders per customer.",
-      meta: "Python",
+      meta: "JavaScript or Python",
     },
   ]}
 />
@@ -149,30 +294,37 @@ Expressions are **sandboxed**: only these functions exist. There are no variable
 ## You'll notice this when…
 
 <details>
-<summary>The result shows expression text, like $('Get Metadata').title, instead of a value</summary>
+<summary>The field is underlined and the preview says "No step called …"</summary>
 
-AWFlow couldn't work the expression out, so it left the text as it was rather than failing the step. The usual cause is a `$('…')` name that differs from the node label. Copy the label from the canvas, or drag the field from the **Input** panel instead.
+The `$('…')` name doesn't match any step before this one. Press **Replace** to use the suggested name, or tap the value in the **Input** pane instead of typing it.
 
 </details>
 
 <details>
 <summary>The value is empty</summary>
 
-The path doesn't exist on this item. Open the previous step's **Output** tab and compare: maybe the value is nested (`$input.data.title`), or the step output one item holding a list (`$input.links.0`).
+The path doesn't exist on this item. Open the previous step's **Output** and compare: maybe the value is nested (`$input.data.title`), or a name has spaces and needs brackets (`$input["First name"]`).
 
 </details>
 
 <details>
-<summary>The step fails with "Variable … has not been set at this point in the run"</summary>
+<summary>The step fails with "… has not been set at this point in the run"</summary>
 
-A `$run` variable is read before the [Set Variable](/nodes/builtin/flow/setvariable/) step that writes it, for example from a parallel branch. Connect the reading step after the Set Variable step.
+A `$run` value is read before the [Set Variable](/nodes/builtin/flow/setvariable/) step that writes it, or a `$vars` name isn't set on the [Variables](/app/variables/) page (the step then offers **Add NAME**).
 
 </details>
 
 <details>
-<summary>An expression with .toUpperCase() comes out as plain text</summary>
+<summary>An expression with .toUpperCase() doesn't work</summary>
 
-Methods and outside functions aren't available, so the expression can't be worked out and its text is kept as is. Use the helper functions above, such as `upper(…)`, or move the logic to the [Code](/nodes/builtin/core/code/) node.
+Methods aren't available. Use the helper functions above, such as `upper(…)`, or move the logic to a [JavaScript Code](/nodes/builtin/core/javascript-code/) step.
+
+</details>
+
+<details>
+<summary>A step shows an amber badge after a run</summary>
+
+The run reported expression warnings for this step ("Ran with 2 warnings"). Hover the badge, or open the step: the fields concerned are underlined.
 
 </details>
 

@@ -24,16 +24,16 @@ async function cleanList(s: Session) {
 const row = (s: Session, name: string) => s.page.getByRole('row').filter({ hasText: name }).first();
 async function selectRows(s: Session, n: number) {
 	for (let i = 1; i <= n; i++) await s.page.getByRole('row').nth(i).getByRole('checkbox').click({ timeout: T });
-	await s.page.getByRole('button', { name: 'Deactivate' }).waitFor({ timeout: T });
+	await s.page.getByRole('button', { name: 'Turn off' }).waitFor({ timeout: T });
 }
-/** Opens the Executions tab of Hash Text (3 saved runs). */
+/** Opens the Runs tab of Hash Text (3 saved runs). */
 async function executions(s: Session) {
 	await fresh(s);
 	await s.savedRuns('hash-text', 3);
 	await s.page.goto('about:blank');
 	await s.go(await s.workflow('hash-text'));
-	await s.page.getByRole('tab', { name: 'Executions' }).click({ timeout: T });
-	await s.page.getByText('Success').first().waitFor({ timeout: T });
+	await s.page.getByRole('tab', { name: 'Runs' }).click({ timeout: T });
+	await s.page.getByText('Done', { exact: true }).first().waitFor({ timeout: T });
 }
 /** A fresh page load: no dialog, popover or Executions tab left by an earlier shot (editor() only navigates when the route differs). */
 async function fresh(s: Session) {
@@ -76,12 +76,12 @@ export const shots: ShotDef[] = [
 		name: 'canvas',
 		page: 'app/workflows/create',
 		route: '#/app/workflows/<id>',
-		alt: 'The workflow editor with the Hash Text example: a sticky note explaining it, then five connected steps (Run now, Your text, SHA-256, SHA-512, Show the hashes). The toolbar with Editor, Logs and Executions tabs is at the top, the Test Workflow button at the top right, and zoom controls at the bottom left.',
+		alt: 'The workflow editor with the Hash Text example: a sticky note explaining it, then five connected steps (Run now, Your text, SHA-256, SHA-512, Show the hashes). The Editor, Logs and Runs tabs are at the top, the Run button at the top right, and zoom controls at the bottom left.',
 		css: NO_MINIMAP,
 		hotspots: [
 			{ id: 'add-step', label: 'Add a step (node)', locate: (p) => p.locator('#canvas-add-step') },
-			{ id: 'editor', label: 'Editor, Logs and Executions tabs', locate: (p) => p.getByRole('tablist').first() },
-			{ id: 'test-workflow', label: 'Test Workflow: run it now', locate: btn('Test Workflow') },
+			{ id: 'editor', label: 'Editor, Logs and Runs tabs', locate: (p) => p.getByRole('tablist').first() },
+			{ id: 'test-workflow', label: 'Run: run it now', locate: (p) => p.getByRole('button', { name: /^Run( workflow)?$/ }).first() },
 			{ id: 'step', label: 'A step (node); drag from its handle to connect', locate: (p) => p.locator('.svelte-flow__node[data-id="sha256"]') }
 		],
 		prepare: async (s) => {
@@ -117,18 +117,18 @@ export const shots: ShotDef[] = [
 	{
 		name: 'run-history',
 		page: 'app/workflows/run-history',
-		route: '#/app/workflows/<id> (Executions tab)',
-		alt: "The Executions tab of the Hash Text workflow: a table of saved runs, each with a Success status, when it started, its duration, where it ran (Local) and its metadata, with a filter bar above.",
+		route: '#/app/workflows/<id> (Runs tab)',
+		alt: "The Runs tab of the Hash Text workflow: All, Automatic and Manual chips with their counts, a Filter button, and a table of saved runs, each marked Done with how it started, when, its duration and where it ran (Local).",
 		hotspots: [
-			{ id: 'executions-tab', label: 'Executions tab', locate: (p) => p.getByRole('tab', { name: 'Executions' }) },
-			{ id: 'filter-runs', label: 'Filter runs', locate: btn('Filter') },
-			{ id: 'saved-run-its-status', label: 'A saved run and its status', locate: (p) => p.getByText('Success').first() }
+			{ id: 'runs-tab', label: 'Runs tab', locate: (p) => p.getByRole('tab', { name: 'Runs' }) },
+			{ id: 'filter-runs', label: 'Filter runs', locate: btn(/^Filter/) },
+			{ id: 'saved-run-its-status', label: 'A saved run and its status', locate: (p) => p.getByText('Done', { exact: true }).first() }
 		],
 		prepare: async (s) => {
 			await s.savedRuns('hash-text', 3);
 			await s.go(await s.workflow('hash-text'));
-			await s.page.getByRole('tab', { name: 'Executions' }).click({ timeout: T });
-			await s.page.getByText('Success').first().waitFor({ timeout: T });
+			await s.page.getByRole('tab', { name: 'Runs' }).click({ timeout: T });
+			await s.page.getByText('Done', { exact: true }).first().waitFor({ timeout: T });
 			await s.page.waitForTimeout(500);
 		}
 	},
@@ -362,40 +362,41 @@ export const shots: ShotDef[] = [
 	{
 		name: 'run-filter',
 		page: 'app/workflows/run-history',
-		route: '#/app/workflows/<id> (Executions › Filter)',
-		alt: 'The Executions tab of the Hash Text workflow with the Filter panel open: Status set to Success, Execution date range (Pick a date) and a Reset button, over a list of three successful runs.',
+		route: '#/app/workflows/<id> (Runs › Filter)',
+		alt: 'The Runs tab of the Hash Text workflow with the Filter panel open: Status set to Done, Run date range (Pick a date) and a Reset button, over a list of three finished runs.',
 		spots: [
-			{ id: 'status', label: 'Status', locator: (p) => p.locator(POP).getByRole('button', { name: /Select a status|Success/ }) },
-			{ id: 'date-range', label: 'Execution date range', locator: (p) => p.locator(POP).getByRole('button', { name: /Pick a date/ }) },
+			{ id: 'status', label: 'Status', locator: (p) => p.locator(POP).getByRole('button', { name: /Select a status|Done/ }) },
+			{ id: 'date-range', label: 'Run date range', locator: (p) => p.locator(POP).getByRole('button', { name: /Pick a date/ }) },
 			{ id: 'reset', label: 'Reset', locator: (p) => p.locator(POP).getByRole('button', { name: 'Reset' }) }
 		],
 		prepare: async (s) => {
 			await executions(s);
 			const page = s.page;
 			await page.getByRole('button', { name: /^Filter/ }).click({ timeout: T });
-			await page.getByText('Filter the executions.').waitFor({ timeout: T });
+			await page.getByText('Filter the runs.').waitFor({ timeout: T });
 			await page.locator(POP).getByRole('button', { name: 'Select a status' }).click({ timeout: T });
-			await page.getByRole('option', { name: 'Success' }).click({ timeout: T });
+			await page.getByRole('option', { name: 'Done', exact: true }).click({ timeout: T });
 			await page.waitForTimeout(500);
 		}
 	},
 	{
 		name: 'run-detail',
 		page: 'app/workflows/run-history',
-		route: '#/app/workflows/<id> (Executions › a run)',
-		alt: 'The Executions tab of the Hash Text workflow with a run\'s details open on the right: its Success status and run id, when it started, its duration and where it ran, Graph and Logs tabs, Open in editor, and a read-only copy of the workflow as it ran.',
+		route: '#/app/workflows/<id> (Runs › a run)',
+		alt: 'The Runs tab of the Hash Text workflow with All, Automatic and Manual chips, three Done runs started Manually, and the first run open on the right: Done · Manual, when it started, its duration, where it ran and its run id; Steps, Graph and Logs tabs with Debug in editor; the Steps tab lists the five steps with their item counts and says No step data for this run, with Change what\'s saved.',
 		spots: [
 			{ id: 'run-row', label: 'The run you opened', locator: (p) => p.getByRole('row').nth(1) },
 			{ id: 'graph-tab', label: 'Graph: the workflow as it was when it ran', locator: (p) => p.getByRole('tab', { name: 'Graph' }) },
 			{ id: 'logs-tab', label: 'Logs: every line the run wrote', locator: (p) => p.getByRole('tab', { name: 'Logs', exact: true }).last() },
-			{ id: 'open-in-editor', label: 'Open in editor', locator: (p) => p.getByRole('button', { name: 'Open in editor' }).last() }
+			{ id: 'steps-tab', label: 'Steps: each step of the run', locator: (p) => p.getByRole('tab', { name: 'Steps' }) },
+			{ id: 'debug-in-editor', label: 'Debug in editor', locator: (p) => p.getByRole('button', { name: /Debug in editor/ }).last() }
 		],
 		prepare: async (s) => {
 			await executions(s);
 			const page = s.page;
 			await page.keyboard.press('Escape');
 			await page.getByRole('row').nth(1).click({ timeout: T });
-			await page.getByRole('tab', { name: 'Graph' }).waitFor({ timeout: T });
+			await page.getByRole('tab', { name: 'Steps' }).waitFor({ timeout: T });
 			await page.waitForTimeout(1200);
 			// The read-only graph opens its Story panel over the detail: collapse it.
 			const collapse = page.getByRole('button', { name: 'Collapse panel' }).filter({ visible: true });
@@ -406,11 +407,11 @@ export const shots: ShotDef[] = [
 	{
 		name: 'last-run',
 		page: 'app/workflows/executions/run-from-the-canvas',
-		route: '#/app/workflows/<id> (after Test Workflow)',
+		route: '#/app/workflows/<id> (after Run)',
 		alt: 'The Hash Text workflow after a test run: every step has a green check and each connection shows 1 Item; the Last run tab of the panel on the right says It worked, 5 steps ran successfully, with a Run again button.',
 		css: NO_MINIMAP,
 		spots: [
-			{ id: 'test-workflow', label: 'Test Workflow', locator: btn('Test Workflow') },
+			{ id: 'test-workflow', label: 'Run', locator: (p) => p.getByRole('button', { name: /^Run( workflow)?$/ }).first() },
 			{ id: 'last-run', label: 'Last run: what happened, in plain words', locator: (p) => p.getByText('It worked').first() },
 			{ id: 'run-again', label: 'Run again', locator: (p) => p.getByRole('button', { name: 'Run again' }).first() },
 			{ id: 'step-output', label: 'A step and its output count', locator: (p) => p.locator('.svelte-flow__node[data-id="sha512"]') }

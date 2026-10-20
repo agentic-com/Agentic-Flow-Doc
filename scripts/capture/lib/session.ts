@@ -95,7 +95,7 @@ export class Session {
 	async testRun(name: string) {
 		await this.editor(name);
 		const page = this.page;
-		await page.getByRole('button', { name: 'Test Workflow' }).first().click({ timeout: T });
+		await page.getByRole('button', { name: /^Run( workflow)?$/ }).first().click({ timeout: T });
 		await page.getByText('It worked').first().waitFor({ timeout: T });
 	}
 

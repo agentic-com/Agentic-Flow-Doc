@@ -42,33 +42,36 @@ Get Page Metadata returns one item with the page's `url`, `title`, `canonicalUrl
   caption="Illustration of a run. Drag a field, then check the preview under the setting."
 />
 
-## Drag a value into a field
+## Tap a value into a field
 
-Run the workflow (or the steps before this one) so they have data to show, then double-click the node to open its settings. On a narrow window, open the **Input** / **Output** pane from the dialog's footer.
+Run the workflow (or the steps before this one) so they have data to show, then double-click the step to open its settings. On a wide screen, **Input** is the left column; in the side panel, pick **Input** in the **Input · Setup · Output** switch.
 
 <GuidedShot
   shot="data-mapping"
   steps={[
-    { spot: 'input-tab', title: 'Open the Input tab', body: 'It lists the data this node can read.' },
-    { spot: 'fields-from-previous-step', title: 'Find the value', body: '**$input** is the whole data this node receives; its fields are listed under **$input fields** when exactly one step feeds this node.' },
-    { spot: 'earlier-step-its-fields', title: 'Or pick it from another step', body: '**Direct inputs** are the steps connected straight to this node, **Relatives** the steps further back. Expand one to see its fields.' },
-    { spot: 'expression-drag-creates', title: 'Drag the field into the setting', body: 'AWFlow inserts the matching expression, here `$input.text`.' },
-    { spot: 'preview-last-run', title: 'Check the preview', check: '**Preview from last run** under the field shows the value it would get.' },
+    { spot: 'input-data', title: 'The data this step receives', body: 'The item from the step before, as a table (or **JSON** / **Structure**). Use the item stepper when there are several.' },
+    { spot: 'earlier-steps', title: 'Or a step further back', body: 'Open an earlier step to see its fields.' },
+    { spot: 'variables', title: 'Or a variable', body: 'Your [variables](/app/variables/), and **New variable…** to add one here.' },
+    { spot: 'mapped-field', title: 'Tap a field, then a value', body: 'Tap the field to fill first (an amber **Inserting into** bar names it), then the value: the reference is inserted where the cursor is, shown as a pill such as **SHA-256 › text**. Dragging works too.' },
+    { spot: 'preview', title: 'Check the preview', check: 'the line under the field shows the value it gets, at the current item.' },
   ]}
 />
 
-A step that hasn't run yet shows **Run this step to see its data** instead of fields. Click it to run that step on its own.
+**Use data** (the chip under a focused field in the side panel, or **Use data…** in the field's **⋯** menu) opens the same picker for that field: the previous step's fields with an item stepper, earlier steps, your variables, and the fields a step *promises* (marked **expected**) with a **Run** button when it hasn't run yet.
 
-## What the drag writes
+In [Edit Fields](/nodes/builtin/datatransformation/editfields/), **Add all fields from previous step** adds one row per field, and tapping a value adds a row for it.
 
-| You drag… | The field gets… |
+## What gets written
+
+| You pick… | The field gets… |
 | --- | --- |
-| **$input** | `{{ $input }}`, the whole incoming data |
-| A field under **$input fields** | `{{ $input.title }}` |
+| A field of the step right before | `{{ $input.title }}` |
 | A nested field | `{{ $input.metadata.description }}` (a dot path) |
-| A field of a step under **Direct inputs** or **Relatives** | `{{ $('Get Page Metadata').title }}`, using the step's label |
+| A field whose name has spaces or symbols | `{{ $input["First name"] }}` |
+| A field of an earlier step | `{{ $('Get Page Metadata').title }}`, using the step's name. When that step has several items, the reference names the item (`$('X')[2].title`) and an amber **Uses item 3** note says so. |
+| A variable | `{{ $vars.BASE_URL }}` |
 
-Prefer `$input` when the value comes from the step right before. A `$('…')` reference breaks if you rename that step, and a reference to a step further back returns its whole output rather than the matching item (see [Item linking](/concepts/data/item-linking/)).
+Prefer the step right before when you can: a `$('…')` reference names a step, so check it after you rename one (the preview warns you if the name no longer matches). See [Item linking](/concepts/data/item-linking/).
 
 You can mix mapped values with your own text in one field: `Summary of {{ $input.title }}`.
 
@@ -78,7 +81,7 @@ You can mix mapped values with your own text in one field: `Summary of {{ $input
   label="Ways to fill a setting"
   cards={[
     {
-      title: "Drag from Input",
+      title: "Tap or drag from Input",
       icon: "mouse",
       when: "The value exists as is in an earlier step.",
       example: "The page title into a message.",
@@ -106,30 +109,30 @@ You can mix mapped values with your own text in one field: `Summary of {{ $input
 ## You'll notice this when…
 
 <details>
-<summary>The Input panel shows no fields, only a Run button</summary>
+<summary>The Input pane shows no values, only a Run button</summary>
 
-The steps before this one haven't run yet, so there's no data to show. Click **Run this step to see its data**, or run the whole workflow once.
-
-</details>
-
-<details>
-<summary>There's no "$input fields" list</summary>
-
-The list appears only when exactly one step with data feeds this node. With several incoming steps, drag fields from **Direct inputs** instead.
+The steps before this one haven't run yet. Press **Run** there (or run the whole workflow once). Before any run, the fields a step promises are listed as **expected**, so you can already map them.
 
 </details>
 
 <details>
-<summary>The preview says "Run once to see a preview"</summary>
+<summary>The preview says "No step called …"</summary>
 
-The field holds an expression, but the steps it reads from have no data from a previous run. Run the workflow once and open the settings again.
+The `$('…')` name doesn't match a step before this one, often after a rename. Press **Replace** to use the suggested name.
+
+</details>
+
+<details>
+<summary>A Fixed field says "This looks like a data reference"</summary>
+
+You typed `{{ … }}` in a field set to **Fixed**. It is filled in at run time either way; **Show as expression** shows it as a pill with a preview.
 
 </details>
 
 <details>
 <summary>A mapped field is empty during the run</summary>
 
-The field isn't on the item, or it's nested deeper than you mapped. Open the previous step's **Output** tab and compare the path with your expression. Missing values become empty text rather than an error.
+The field isn't on that item, or it's nested deeper than you mapped. Compare the path with the previous step's **Output**. Missing paths stay empty rather than failing the step.
 
 </details>
 

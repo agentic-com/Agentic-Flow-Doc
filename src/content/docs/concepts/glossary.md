@@ -108,7 +108,7 @@ One execution of a workflow, from the trigger to the last step. Past runs appear
 
 #### Run variable
 
-A value stored during a run by the Set Variable node and read later as `{{ $run.name }}`. See [Mapping with expressions](/concepts/data/data-mapping/data-mapping-expressions/#the-three-things-you-can-read).
+A value stored during a run by the Set Variable node and read later as `{{ $run.name }}`. See [Mapping with expressions](/concepts/data/data-mapping/data-mapping-expressions/#what-you-can-read).
 
 #### Slot
 

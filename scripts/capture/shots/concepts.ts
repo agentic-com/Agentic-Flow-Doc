@@ -10,25 +10,22 @@ export const shots: ShotDef[] = [
 		name: 'data-mapping',
 		page: 'concepts/data/data-mapping/data-mapping-ui',
 		route: '#/app/workflows/<id>',
-		alt: "Mapping data in the SHA-512 step: the Input panel on the left is expanded to show the fields of $input and of the earlier SHA-256 step, ready to drag into a field; the Text field on the right already holds the expression $input.text, with the value from the last run previewed under it.",
-		hotspots: [
-			{ id: 'fields-from-previous-step', label: 'Fields from the previous step: drag one into a field', locate: btn('$input fields', true) },
-			{ id: 'earlier-step-its-fields', label: 'An earlier step and its fields', locate: btn('SHA-256', true) },
-			{ id: 'expression-drag-creates', label: 'The expression the drag creates', locate: (p) => p.getByRole('dialog').getByText('$input.text').first() },
-			{ id: 'fixed-value-expression', label: 'Fixed value or Expression', locate: (p) => p.getByRole('dialog').getByText('Expression', { exact: true }).first() }
-		],
+		alt: "Mapping data in the SHA-512 step after a run: on the left the Input pane shows the item from SHA-256 as a table (text and sha256), then Earlier steps and Variables with New variable…; in the middle the Text field is in Expression mode and holds the pill SHA-256 › text, with the preview → The quick brown fox jumps over the lazy dog (item 1 of 1) under it; on the right the step's Output.",
 		spots: [
-			{ id: 'input-tab', label: 'Input tab', locator: (p) => panel(p).getByRole('button', { name: 'Input', exact: true }).or(panel(p).getByRole('tab', { name: 'Input', exact: true })) },
-			{ id: 'preview-last-run', label: 'Preview from last run', locator: (p) => panel(p).getByText(/Preview from last run/).first() }
+			{ id: 'input-data', label: 'The data this step receives, from the previous step', locator: (p) => panel(p).getByText(/^Input\s*·/i).first() },
+			{ id: 'earlier-steps', label: 'Earlier steps', locator: (p) => panel(p).getByText(/^Earlier steps$/i).first() },
+			{ id: 'variables', label: 'Your variables', locator: (p) => panel(p).getByText(/^Variables$/i).first() },
+			{ id: 'mode-switch', label: 'Fixed or Expression', locator: (p) => panel(p).getByText('Expression', { exact: true }).first() },
+			{ id: 'mapped-field', label: 'A mapped field, shown as a pill', locator: (p) => panel(p).getByText(/SHA-256\s*›\s*text/).first() },
+			{ id: 'preview', label: 'The value it gets, at this item', locator: (p) => panel(p).getByText(/\(item 1 of 1\)/).first() }
 		],
 		prepare: async (s) => {
+			await s.page.goto('about:blank');
 			await s.testRun('hash-text');
 			const page = s.page;
 			await page.locator('.svelte-flow__node[data-id="sha512"]').dblclick({ timeout: T });
-			// The panel reopens on the tab used last: mapping happens on Parameters.
-			await panel(page).getByRole('tab', { name: 'Parameters' }).first().click({ timeout: T });
-			await page.getByRole('button', { name: '$input fields', exact: true }).filter({ visible: true }).first().click({ timeout: T });
-			await page.getByRole('button', { name: 'SHA-256', exact: true }).filter({ visible: true }).first().click({ timeout: T });
+			await panel(page).getByRole('tab', { name: 'Setup' }).first().click({ timeout: T });
+			await panel(page).getByText(/\(item 1 of 1\)/).first().waitFor({ timeout: T });
 			await page.waitForTimeout(800);
 		}
 	},
