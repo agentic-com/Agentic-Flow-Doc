@@ -28,6 +28,10 @@ Basic LLM Chain sends **Prompt** to the chat model connected to its **Model** sl
 
 You must connect a chat model, for example [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/), [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/) or an on-device [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) model. Optionally connect an output parser to get structured data back instead of plain text.
 
+### Fallback model
+
+Connect a second chat model to **Fallback**. If the main model fails before writing anything with an error worth retrying elsewhere (429, 401/402/403, 5xx or a network error), the same call goes to the fallback; the run log names the switch and the output gets `usedFallback: true`.
+
 ## When to use it
 
 - Rewrite, translate, classify or summarise text from earlier nodes.

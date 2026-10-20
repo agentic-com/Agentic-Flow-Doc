@@ -1,6 +1,6 @@
 ---
-title: Edit a credential
-description: "Rotate a token, rename a credential, sign in again, or move it between this browser and your account."
+title: Edit a connection
+description: "Rotate a token, rename a connection, test it, sign in again, or move it between this browser and your account."
 kind: guide
 section: app
 sidebar:
@@ -10,29 +10,33 @@ sidebar:
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 import { GuidedShot } from '@components/awflow';
 
-Edit a credential when a token expires or is replaced, a password changes, or you want a clearer name. Every node and workflow that uses it picks up the change: you don't re-select it anywhere.
+Edit a connection when a token expires or is replaced, a password changes, or you want a clearer name. Every node and workflow that uses it picks up the change: you don't re-select it anywhere.
 
-## Edit a credential
+## Edit a connection
 
-Open **Credentials** in the sidebar. On the credential's row, open the **⋯** menu and click **Open**: the **Edit Credential** form opens. Hover or tap a step to find it on the screen.
+Open **Connections** in the sidebar. On the connection's row, open the **⋯** menu and click **Open**: the **Edit connection** form opens. Hover or tap a step to find it on the screen.
 
 <GuidedShot
   shot="credentials-edit"
   steps={[
     { spot: 'name-description', title: 'Rename it', body: 'Change the **Name** you pick it by in nodes.' },
-    { spot: 'description', title: 'Update the description', body: 'Optional: what the credential is for.' },
+    { spot: 'description', title: 'Update the description', body: 'Optional: what the connection is for.' },
     { spot: 'secret-fields', title: 'Replace the secret', body: 'Paste the new token (here **Bearer Token**), or change **Username** and **Password** or the **Client ID**. For a Google or Microsoft 365 credential, click **Check connection** again: it signs in fresh, so newly added permissions are granted.' },
-    { spot: 'update-credential', title: 'Click Update Credential', check: 'every node and workflow that uses the credential now uses the new values.' },
+    { spot: 'update-credential', title: 'Save it', check: 'every step and workflow that uses the connection now uses the new values.' },
   ]}
 />
+
+## Test it
+
+Each connection shows its status from the last test: **Connected as …**, **Not working** (the key was refused) or **Missing permission**, with when it was last tested. **Test** runs the check again; saving the form tests it too. For a Google or Microsoft 365 connection, **Check connection** shows the account without asking you to consent again.
 
 ## Move it between this browser and your account
 
 In the same **⋯** menu, **Move to cloud** stores the credential encrypted on your AWFlow account, so you can use it on your other devices. **Move to local** brings it back into this browser only. See [Local or cloud](/app/account/local-vs-cloud/).
 
-## Delete a credential
+## Delete a connection
 
-Choose **Delete** in the **⋯** menu and confirm. Workflows that used it stop at that step until you pick another credential.
+Choose **Delete** in the **⋯** menu. The confirmation lists the workflows that use it ("Checking which workflows use it…"): their steps stop working until you add a new connection. This can't be undone.
 
 ## If it still fails after editing
 
@@ -43,6 +47,6 @@ Choose **Delete** in the **⋯** menu and confirm. Workflows that used it stop a
 ## Related
 
 <CardGrid>
-  <LinkCard title="Create a credential" href="/app/connections/create/" />
+  <LinkCard title="Add a connection" href="/app/connections/create/" />
   <LinkCard title="All connections" href="/app/connections/" />
 </CardGrid>

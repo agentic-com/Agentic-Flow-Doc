@@ -12,13 +12,12 @@ import { Badge, Callout, Screenshot } from '@components/awflow';
 import credentialsNewLight from '@assets/screenshots/credentials-new.light.webp';
 import credentialsNewDark from '@assets/screenshots/credentials-new.dark.webp';
 
-A **connection** (a *credential* in the app) is a saved key, token or sign-in that lets a node or an agent act in another service. You create it once in **Credentials**, then pick it in any node that needs it. Each page below takes you from zero to a working connection.
+A **connection** (called a *credential* in earlier versions) is a saved key, token or sign-in that lets a step or an agent act in another service. You add it once on the **Connections** page (or right from a step), then pick it in any step that needs it. Each page below takes you from zero to a working connection.
 
 <Screenshot
   src={credentialsNewLight}
   srcDark={credentialsNewDark}
-  alt="The New Credential dialog over the Credentials page: an Integration App / Service picker, Name and Description fields, an Auth Type menu set to Basic Auth with Username and Password fields, a note that the secret is saved locally and encrypted in this browser, and the Create Credential button."
-  hotspots={[{ x: 50, y: 19.6, label: 'Pick the app or service' }, { x: 50, y: 30.2, label: 'Name it so you can find it in nodes' }, { x: 50, y: 51.6, label: 'Auth type decides which fields you fill' }, { x: 50, y: 74.7, label: 'Where the secret is stored' }]}
+  alt="The New connection form over the Connections page: the Integration App / Service picker, Name (Weather API) and Description, Type set to Bearer token with its Bearer Token field, a note that it is saved locally in this browser, and the Cancel and Add connection buttons."
 />
 
 ## AI models
@@ -88,17 +87,17 @@ For APIs without a dedicated node.
 - **Ollama** on your computer: Aria and agents find running models by themselves, and the [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/) node only needs its address.
 - **Browser steps** (read a page, click, fill a form, take a screenshot) use the tabs you are already signed in to.
 
-<Callout type="credential" title="Where your tokens live" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+<Callout type="credential" title="Where your tokens live" href="/app/privacy-and-data/#connections-and-secrets" linkLabel="Privacy & your data">
 
 Each credential is stored **locally** (encrypted in this browser, optionally behind your [secret vault](/app/account/secret-vault/) passphrase) or **in the cloud** (encrypted on your AWFlow account). Calls go from your browser straight to the service. Workflow exports and shared workflows never include your secrets.
 
 </Callout>
 
-## Manage your credentials
+## Manage your connections
 
 <CardGrid>
-  <LinkCard title="Create a credential" href="/app/connections/create/" description="From the Credentials page or from a node." />
-  <LinkCard title="Edit a credential" href="/app/connections/edit/" description="Rotate a token, rename, re-check a sign-in." />
+  <LinkCard title="Add a connection" href="/app/connections/create/" description="From the Connections page or from a step." />
+  <LinkCard title="Edit a connection" href="/app/connections/edit/" description="Rotate a token, rename, test it, see who uses it." />
   <LinkCard title="Create your OAuth client" href="/app/connections/oauth-client/" description="Once, for Google and Microsoft 365." />
-  <LinkCard title="Find a credential" href="/app/connections/filters/" description="Search, filter and sort the list." />
+  <LinkCard title="Find a connection" href="/app/connections/filters/" description="Search, filter and sort the list." />
 </CardGrid>

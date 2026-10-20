@@ -107,22 +107,27 @@ export const shots: ShotDef[] = [
 	{
 		name: 'credentials-new',
 		page: 'app/connections/create',
-		route: '#/app/credentials',
-		alt: 'The New Credential dialog over the Credentials page: an Integration App / Service picker, Name and Description fields, an Auth Type menu set to Basic Auth with Username and Password fields, a note that the secret is saved locally and encrypted in this browser, and the Create Credential button.',
-		hotspots: [
-			{ id: 'app', label: 'Pick the app or service', locate: (p) => p.getByRole('dialog').getByRole('combobox').first() },
-			{ id: 'name', label: 'Name it so you can find it in nodes', locate: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Name', exact: true }) },
-			{ id: 'auth-type', label: 'Auth type decides which fields you fill', locate: (p) => p.getByRole('dialog').getByRole('button', { name: 'Auth Type' }) },
-			{ id: 'storage', label: 'Where the secret is stored', locate: (p) => p.getByRole('dialog').getByText('Saved locally in this browser') }
-		],
+		route: '#/app/credentials?new=1',
+		alt: 'The New connection form over the Connections page: the Integration App / Service picker, Name (Weather API) and Description, Type set to Bearer token with its Bearer Token field, a note that it is saved locally in this browser, and the Cancel and Add connection buttons.',
 		spots: [
-			{ id: 'fields', label: 'The fields of the chosen auth type (here Username and Password)', locator: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Username' }) },
-			{ id: 'create', label: 'Create Credential', locator: (p) => p.getByRole('dialog').getByRole('button', { name: 'Create Credential' }) }
+			{ id: 'app', label: 'Pick the app or service', locator: (p) => p.getByRole('dialog').getByRole('combobox').first() },
+			{ id: 'name', label: 'Name it so you can find it in steps', locator: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Name', exact: true }) },
+			{ id: 'auth-type', label: 'Type: how the service signs in', locator: (p) => p.getByRole('dialog').getByRole('button', { name: 'Type' }) },
+			{ id: 'fields', label: 'The fields of that type (here the token)', locator: (p) => p.getByRole('dialog').getByRole('textbox', { name: /Bearer Token/i }) },
+			{ id: 'storage', label: 'Where it is saved', locator: (p) => p.getByRole('dialog').getByText('Saved locally in this browser') },
+			{ id: 'create', label: 'Add connection', locator: (p) => p.getByRole('dialog').getByRole('button', { name: /^(Add connection|Save and test|Save connection)$/ }).last() }
 		],
 		prepare: async (s) => {
+			await s.page.goto('about:blank');
 			await s.go('#/app/credentials');
-			await s.page.getByRole('button', { name: 'Add Credential' }).first().click({ timeout: T });
-			await s.page.getByRole('dialog').getByText('New Credential').first().waitFor({ timeout: T });
+			await s.page.getByRole('button', { name: /Add connection/ }).first().click({ timeout: T });
+			const d = s.page.getByRole('dialog');
+			await d.getByRole('textbox', { name: 'Name', exact: true }).click({ timeout: T });
+			await d.getByRole('textbox', { name: 'Name', exact: true }).fill('Weather API');
+			await d.getByRole('button', { name: 'Type' }).click({ timeout: T });
+			await s.page.getByRole('option', { name: 'Bearer token' }).first().click({ timeout: T });
+			await s.page.getByRole('dialog').getByRole('textbox', { name: /Bearer Token/i }).waitFor({ timeout: T });
+			await s.page.waitForTimeout(600);
 		}
 	},
 	{

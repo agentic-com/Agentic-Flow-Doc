@@ -21,12 +21,20 @@ Turn one of your workflows into a tool an AI agent can call, so the agent can ha
 
 Workflow as Tool is a tool for an agent, not a step in the flow. It has no output port: you connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/).
 
-The agent sees a tool with your **Tool Name** and **Tool Description**. When it calls it, it can pass one text value, `input`. The selected **Workflow** runs in the background with `{ input: "..." }` as its starting data, and what it produces goes back to the model as text:
+The agent sees a tool with your **Tool Name** and **Tool Description**. When it calls it, it passes values to the selected **Workflow**, which runs in the background, and what the workflow produces goes back to the model as text:
 
-- A lambda workflow returns what its [Lambda Output](/nodes/builtin/lambda/lambdaoutput/) node produced.
+- **Version 2** (new steps): list up to 10 **Arguments**, each with a name, a type (text, number, yes/no or JSON), a description the model reads, and whether it's required. The agent passes them by name; the workflow receives them as its starting data, for example `{ "email": "…", "limit": 5 }`.
+- **Steps saved before 1.0** pass one text value, `input`: the workflow starts with `{ input: "..." }`. **Update** in the step's header moves to typed arguments.
+
+The run then works like this:
+
+- A [reusable workflow](/nodes/builtin/lambda/lambdaworkflow/) returns what its [Return to caller](/nodes/builtin/lambda/lambdaoutput/) step produced.
 - A workflow that starts with a trigger returns the output of its last steps (the ones that feed nothing else). With several last steps, their outputs are grouped by node label.
 - If a step fails, the agent is told which step and why.
 - A workflow that pauses for an approval or a wait can't finish inside a tool call: the pause is dropped and the agent is told.
+- **Stop** stops the called workflow too: it stops between steps, its running step is cancelled, and its run is recorded as canceled.
+
+**Ask before running** decides when you are asked before the workflow runs: **When it can send, delete or pay** (only if the workflow, or one it calls, sends messages, deletes data or makes payments), **Always** or **Never**. Without a choice, interactive runs ask when it can send, delete or pay. The setting is cleared when you publish the workflow.
 
 ## When to use it
 

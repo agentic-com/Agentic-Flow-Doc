@@ -31,6 +31,10 @@ Text Classifier reads **Text** and returns the best matching category from **Cat
 
 The node has one output. To send each category down its own path, follow it with a [Switch](/nodes/builtin/flow/switch/).
 
+### Fallback model
+
+Connect a second chat model to **Fallback**. If the main model fails before writing anything with an error worth retrying elsewhere (429, 401/402/403, 5xx or a network error), the same call goes to the fallback; the run log names the switch and the output gets `usedFallback: true`.
+
 ## When to use it
 
 - Sort support requests into `billing, technical, sales` and route each to the right team.

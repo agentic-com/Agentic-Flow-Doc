@@ -20,11 +20,9 @@ An AI agent that can call tools (search, calculate, browse, call APIs) step by s
 
 Tools Agent sends **Prompt** to the chat model on **Model**, together with the tools connected to **Tools**. The model decides which tool to call and with what; the agent runs it, sends the result back, and repeats until the model gives a final answer or **Max iterations** is reached.
 
-Some tools only read or compute. Others take real actions on your behalf, and those are **gated**: the model can call them, but each call pauses for your approval before it runs. You approve or reject each action in **Runs**. This is automatic and cannot be turned off; see [Action Approval](/concepts/ai/action-approval/). The gated tools are:
+Some tools only read or compute. Others take real actions on your behalf, and those can ask for your approval before they run. Each tool step has **Ask before a call** (*Every call*, *Only calls that change things*, *Skip trusted sites*, *Ask me anywhere, even when I'm away*); calls that delete or send as you always ask. When nobody is there to answer (a scheduled run), the run waits in **Runs** instead of failing. See [Steps as AI tools](/concepts/ai/steps-as-tools/) and [Action approval](/concepts/ai/action-approval/).
 
-- [Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/): click, fill, type, select, submit or navigate on the active page.
-- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/): send HTTP requests to APIs.
-- [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/): call the tools of a remote MCP server.
+Tools you can connect include the dedicated tools ([HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/), [MCP Client Tool](/nodes/builtin/ai/aidependencies/tools/mcp-client/), [Workflow Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/), Calculator, Web Search…), the [Browser](/nodes/builtin/ai/aidependencies/tools/browser/) block, and app and page steps used as tools (Slack, Gmail, Google Sheets, Notion…). Add them from the agent's **Building blocks** at the top of **Setup**. What tools return from outside (pages, API answers) reaches the model fenced as data.
 
 While it runs:
 
@@ -32,7 +30,17 @@ While it runs:
 - **Stop** interrupts the agent mid-reply: the model call and any running tool are cancelled, and the log says *Agent stopped before it finished*.
 - When the model asks for a tool in a malformed way, the error is sent back to the model so it can correct the call, instead of failing the node.
 
-With a chat memory on **Memory**, the agent has a conversation: it loads the earlier messages as chat history, saves the prompt as a `user` message, and saves the reply as an `assistant` message (a structured reply from an output parser is saved as JSON text). This is how a [Chat Trigger](/nodes/builtin/trigger/chat/) gets its replies: connect the **same** memory to the trigger and to this agent.
+### Fallback model
+
+Connect a second chat model to **Fallback**. When the main model fails before writing anything with an error worth retrying elsewhere (rate limit 429, payment or key problems 401/402/403, a 5xx, a network error), the same call goes to the fallback. The run log names the switch, and the output gets `usedFallback: true`.
+
+### Structured answers (version 2)
+
+With an output parser and a model that can use tools, new Tools Agent steps get the answer back as a tool call with typed fields, checked against the parser's schema. A wrong answer is asked again once; then the step fails and lists the missing fields. Models that can't use tools still read the answer from the text. Steps saved before 1.0 keep reading the text.
+
+### Memory
+
+With a chat memory on **Memory**, the agent has a conversation: it loads the earlier messages as chat history, saves the prompt as a `user` message, and saves the reply as an `assistant` message (a structured reply from an output parser is saved as JSON text). With a [Chat Trigger](/nodes/builtin/trigger/chat/), the agent's answer streams into the chat as the reply; a Chat Trigger saved before 1.0 needs the **same** memory connected to the trigger and to this agent.
 
 ## When to use it
 
@@ -110,7 +118,7 @@ Ask "What is the population of Lyon divided by 12?" and watch the run log: the a
 ## Common issues
 
 - **"This agent requires that the bind_tools() method be implemented on the input model".** The connected chat model cannot call tools. Use a cloud model, or Transformers Chat or Web LLM on-device, and check that it is connected to **Model**.
-- **The run pauses and nothing happens.** A gated tool (Browser, HTTP Request, MCP Client) is waiting for your approval. Open **Runs** and approve or reject the action.
+- **The run pauses and nothing happens.** A tool is waiting for your approval. Open **Runs** and approve or reject the action.
 - **"Agent reached its max iterations and answered with what it had".** The agent needed more tool calls. Raise **Max iterations**, or make the prompt and **System message** more precise so it needs fewer steps.
 - **The agent never uses a tool.** Say in **System message** when each tool should be used. Small models often skip tools; try a more capable model.
 - **"Model not found".** The connected model node is not set up: open it and choose a model and its credential.

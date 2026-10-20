@@ -93,6 +93,11 @@ Google Sheets connects by signing in to your Google account (OAuth). You first c
 
 ## Common issues
 
+- **The column list doesn't load.** The message under the field says why: *reconnect* (401/403, the connection lost access), *not found* (404, a wrong spreadsheet or worksheet) or *too many requests* (429). Press **Retry** after fixing it.
+- **Pick the spreadsheet by link.** The **Spreadsheet** field offers **From list** (search your Drive), **By URL** (paste the sheet's link; AWFlow reads the ID from it, even from a mapped link) and **By ID**.
+- **Numbers or dates are written as text.** Set **Treat values as** to *Typed by a person* to let Google Sheets interpret them; *Exact text* keeps them as typed.
+- **Run a workflow for each new row**: use the [New row](/nodes/builtin/trigger/google-sheets-trigger/) trigger.
+
 - **The output has `success: false` and "Unable to parse range: …".** **Range** is not valid A1 notation, or names a tab that does not exist. Check the tab name, and quote it if it has spaces: `'My data'!A1:C`.
 - **Values land in the wrong columns.** Row 1 has no headers, or different ones from the **Data** fields, so values are written in field order. Add or fix the headers, then pick the worksheet again so **Data** shows the new columns.
 - **The spreadsheet list is empty or misses files.** The Google Drive API is not enabled for your OAuth client, or the file is not among the 10 returned. Enable the API, or pick the spreadsheet by mapping its id.

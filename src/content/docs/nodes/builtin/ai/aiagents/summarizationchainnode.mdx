@@ -30,6 +30,10 @@ Summarization sends **Text** to the chat model connected to **Model**, asking fo
 
 The whole text is sent in one request, so it must fit the model's context window.
 
+### Fallback model
+
+Connect a second chat model to **Fallback**. If the main model fails before writing anything with an error worth retrying elsewhere (429, 401/402/403, 5xx or a network error), the same call goes to the fallback; the run log names the switch and the output gets `usedFallback: true`.
+
 ## When to use it
 
 - Summarise an article or a long page before you read it.

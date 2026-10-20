@@ -84,6 +84,10 @@ Use a GitHub **personal access token**. A fine-grained token is safest: on GitHu
 
 ## Common issues
 
+- **The issue list also returns pull requests.** That's how GitHub's issue list works. Turn off **Include pull requests** to keep only issues (GitHub applies the **Limit** before that, so fewer items can come back).
+- **Only 30 items come back.** Raise **Limit** (up to 5,000; above 100 several pages are fetched), or turn on **Return all**.
+- **Watch for new issues instead of listing them**: use the [New issue or pull request](/nodes/builtin/trigger/github-trigger/) trigger.
+
 - **"GitHub API Error: Bad credentials".** The token is wrong, expired or revoked. Create a new one and update the credential.
 - **"GitHub API Error: Not Found" on a repository you can see.** The token does not include that repository, or lacks the permission for this operation. Edit the token on GitHub.
 - **"GitHub API Error: rate limit exceeded".** You made too many requests in the last hour. Wait, or run the workflow less often.
