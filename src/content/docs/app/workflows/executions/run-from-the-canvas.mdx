@@ -1,41 +1,40 @@
 ---
 title: Run from the canvas
-description: "Test a whole workflow or a single step on the canvas while you build it, follow the run, stop it, and read what went wrong."
+description: "Run a whole workflow or a single step on the canvas while you build it, follow the run, stop it, and read what went wrong."
 sidebar:
   order: 1
 section: app
 ---
 
 import { StepCard, StepShot } from "@components/awflow";
+import { Kbd } from 'starlight-kbd/components';
 
-When you’re building a workflow, you usually want to test it as you go.
+While you build a workflow, run it as you go. There are two ways:
 
-AWFlow gives you two ways to do that:
-
-- **Run the whole workflow** (end-to-end)
-- **Run one step** (and only what’s needed before it)
+- **Run** the whole workflow, from its trigger to the end.
+- **Run step**: one step, and only the steps it needs before it.
 
 ```mermaid
 flowchart LR
-  Page["Target page"] --> Full["Test Workflow"]
-  Page --> Step["Test step"]
-  Full --> All["Run every connected node"]
-  Step --> Needed["Run only required upstream nodes"]
-  All --> Logs["Inspect outputs and logs"]
+  Page["Target page"] --> Full["Run"]
+  Page --> Step["Run step"]
+  Full --> All["Every linked step"]
+  Step --> Needed["Only the steps it needs"]
+  All --> Logs["Read outputs and logs"]
   Needed --> Logs
   class Page awf-trigger
   class Full,Step awf-flow
   class Logs awf-ok
 ```
 
+Every run is recorded in [Runs](/app/workflows/run-history/), even when you haven't saved your changes yet: the run then shows **Ran unsaved changes** and keeps a copy of what ran.
+
 ---
 
-## Run the whole workflow (full run)
+## Run the whole workflow
 
-Use this when you want to see the complete result from start to finish.
-
-<StepCard n={1} title="Click Test Workflow">
-  Open the page you want the workflow to work on, then, on the canvas, click **Test Workflow**. The workflow runs step by step, and the button turns into **Running… 2 of 4 | Stop** so you can see how far it got.
+<StepCard n={1} title="Press Run">
+  Open the page you want the workflow to work on, then press **Run** (the play button) on the canvas, or <Kbd mac="Cmd+Enter" windows="Ctrl+Enter" />. The button turns into **Running… 2 of 4 | Stop** so you can see how far it got.
 
   <StepShot shot="last-run" spot="test-workflow" n={1} />
 </StepCard>
@@ -47,65 +46,66 @@ Use this when you want to see the complete result from start to finish.
 </StepCard>
 
 <StepCard n={3} title="Check each step">
-  Each step that ran has a green check, and each connection shows how many items passed along it. Double-click a step to see its input and output.
+  Each step that ran has a green check, and each link shows how many items passed along it. Double-click a step to see its input and output.
 
   <StepShot shot="last-run" spot="step-output" n={3} />
 </StepCard>
 
+A workflow with a [form trigger](/nodes/builtin/trigger/form-trigger/) opens its form when you press **Run**. A [polling trigger](/concepts/flow/polling-triggers/) fetches a test event (the latest items) instead of waiting for new ones.
+
 ### One run at a time
 
-While a run is in progress, every other way to start one — **Test Workflow**, a node's play button, **Test step**, **Run again**, **Run once to test** — is disabled, with a tooltip saying why. Two runs at once would mix their outputs and logs.
-
-You can keep editing during a run. Your changes don't affect the run in progress, and they stay marked as unsaved until you save.
+While a run is in progress, every other way to start one (**Run**, a step's play button, **Run step**, **Run again**) is disabled, with a tooltip saying why. You can keep editing during a run: your changes don't affect it.
 
 ### Stop a run
 
-Click **Stop** on the running button. The step that is already running finishes; nothing after it starts. The run is recorded as canceled, and the **Last run** tab shows how many steps ran before it stopped.
+Press **Stop**. The step that is already running finishes (code and AI steps stop at once); nothing after it starts. The run is recorded as **Canceled**.
 
 ### When a run fails
 
-The **Last run** tab explains the failure in plain words instead of showing the raw error:
+The **Last run** tab explains the failure in plain words instead of the raw error:
 
-- **What happened**, e.g. *"Get weather couldn't reach the service."*
-- **Why it probably happened** — a network problem or a site that blocks requests from the browser, a refused key (401 / 403), a rate limit (429, with a countdown when the service says how long to wait), a used-up quota, a missing connection or a field that needs attention.
-- **Try this** — a few concrete things to do, and a button to open the step's settings, reconnect it or run again.
-- **Show technical details** — the step, time, run id, the error the step reported and its input, with **Copy details** for a bug report.
+- **What happened**, for example *"Get weather couldn't reach the service."*
+- **Why it probably happened**: a network problem or a site that blocks requests from the browser, a refused key (401 / 403), a rate limit (429, with a countdown when the service says how long to wait), a used-up quota, a missing connection, or a field that needs attention.
+- **Try this**: concrete things to do, with a button to open the step's settings (on the right field), reconnect it, run again, or **Fix with Aria**.
+- **Details**: the step, time, run id, the error the step reported and its input, with **Copy details** for a bug report (it warns you before copying, as details can contain data).
 
-You get a single notification for a failed run, and only when the panel isn't on screen (for example when the run was started from the workflow list or the tab was in the background). Testing a single step still shows a short notification when it fails.
+Under the explanation, **Did this explain the problem?** asks for a thumbs up or down, to improve these messages.
+
+You get one notification for a failed run, only when the panel isn't on screen. While a step's settings are open, its failure shows in its **Output** instead of a notification.
 
 ---
 
-## Run one step (partial run)
+## Run one step
 
-Use this when you’re adjusting one node and want fast feedback.
-
-When you run a step, AWFlow will also run any steps *before it* that are required to provide input.
+When you run a step, AWFlow also runs the steps before it that it needs for its input.
 
 <StepCard n={1} title="Open the step's settings">
-  Double-click the step you want to test.
+  Double-click the step.
 
   <StepShot shot="canvas" spot="step" n={1} />
 </StepCard>
 
-<StepCard n={2} title="Click Test step" check="the Output side of the panel shows what the step returned.">
-  <StepShot shot="node-settings" spot="test-step" n={2} />
+<StepCard n={2} title="Press Run step" check="the Output of the step shows what it returned.">
+  The button is in the header of the step's settings.
 </StepCard>
 
-You can also right-click a step and choose **Test Step**.
+You can also right-click a step and choose **Run step**. If the step isn't linked to anything before it, or a required field is empty, it doesn't start and says why. To keep part of the workflow from running while you test, [disable those steps](/app/workflows/components/nodes/#disable-a-step).
 
-If you don’t want parts of the workflow to run while testing, temporarily disable those nodes.
+To retry a step with the data of an earlier run, open that run in **Runs** and use **Debug in editor**: see [Debug a run in the editor](/app/workflows/run-history/#debug-a-run-in-the-editor).
 
 ---
 
 ## Manual and automatic runs
 
-- A **manual run** is one you start yourself: from the canvas, the [workflow list](/app/workflows/executions/run-from-the-workflow-list/) or the [right-click menu](/app/workflows/executions/run-from-the-right-click-menu/).
-- An **automatic run** starts from a trigger, such as a schedule or a page load. The workflow must be **Active**. See [Automatic runs with triggers](/app/workflows/create/#automatic-runs-with-triggers).
-- A run that reaches a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) node pauses until someone approves, rejects or cancels it in the **Executions** panel.
+- A **manual** run is one you start yourself: from the canvas, the [workflow list](/app/workflows/executions/run-from-the-workflow-list/) or the [right-click menu](/app/workflows/executions/run-from-the-right-click-menu/).
+- An **automatic** run starts from a trigger, such as a schedule or a page load. The workflow must be **On**. A workflow whose only trigger is **When I press Run** shows **Runs when you press Run** instead of the On/Off switch.
+- A run that reaches a [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) step pauses until someone approves, rejects or cancels it in **Runs**.
 
 ## Related
 
+- [Runs](/app/workflows/run-history/)
+- [Keyboard shortcuts](/app/workflows/keyboard-shortcuts/)
 - [Workflow lifecycle](/concepts/flow/workflow-lifecycle/)
 - [Execution order](/concepts/flow/execution-order/)
-- [Troubleshooting guide](/app/troubleshooting/)
-- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/)
+- [Troubleshooting](/app/troubleshooting/)

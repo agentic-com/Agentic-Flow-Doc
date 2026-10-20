@@ -35,28 +35,27 @@ export const shots: ShotDef[] = [
 	{
 		name: 'node-settings-retry',
 		page: 'concepts/flow/error-handling',
-		route: '#/app/workflows/<id> (SHA-512 settings, Settings tab)',
-		alt: 'The Settings tab of the SHA-512 step in the Hash Text example: Always Output Data and Continue On Fail are off; under Retry, Allow Retry is on and shows Max. Tries and Wait Between Tries (ms) (empty, so the defaults apply), Backoff set to fixed and Retry condition set to always.',
+		route: '#/app/workflows/<id> (SHA-512 settings, Advanced tab)',
+		alt: "The Advanced tab of the SHA-512 step in the Hash Text example: On error with Stop the run selected (Continue with an empty result and Send to an error output below it), Try again automatically ticked with Retries, Wait (seconds), Wait pattern and Which errors, and Pass an empty item when there's no result.",
 		spots: [
-			{ id: 'settings-tab', label: 'Settings tab', locator: (p) => panel(p).getByRole('tab', { name: 'Settings' }) },
-			{ id: 'allow-retry', label: 'Allow Retry', locator: (p) => panel(p).getByText('Allow Retry', { exact: true }) },
-			{ id: 'max-tries', label: 'Max. Tries', locator: (p) => panel(p).getByText('Max. Tries', { exact: true }) },
-			{ id: 'wait-between-tries', label: 'Wait Between Tries (ms)', locator: (p) => panel(p).getByText('Wait Between Tries (ms)', { exact: true }) },
-			{ id: 'backoff', label: 'Backoff', locator: (p) => panel(p).getByText('Backoff', { exact: true }) },
-			{ id: 'retry-condition', label: 'Retry condition', locator: (p) => panel(p).getByText('Retry condition', { exact: true }) },
-			{ id: 'continue-on-fail', label: 'Continue On Fail', locator: (p) => panel(p).getByText('Continue On Fail', { exact: true }) },
-			{ id: 'always-output-data', label: 'Always Output Data', locator: (p) => panel(p).getByText('Always Output Data', { exact: true }) }
+			{ id: 'advanced-tab', label: 'Advanced tab', locator: (p) => panel(p).getByRole('tab', { name: /Advanced/ }) },
+			{ id: 'on-error', label: 'On error', locator: (p) => panel(p).getByText('On error', { exact: true }) },
+			{ id: 'try-again', label: 'Try again automatically', locator: (p) => panel(p).getByText('Try again automatically', { exact: true }) },
+			{ id: 'retries', label: 'Retries', locator: (p) => panel(p).getByText('Retries', { exact: true }) },
+			{ id: 'wait', label: 'Wait (seconds)', locator: (p) => panel(p).getByText('Wait (seconds)', { exact: true }) },
+			{ id: 'wait-pattern', label: 'Wait pattern', locator: (p) => panel(p).getByText('Wait pattern', { exact: true }) },
+			{ id: 'which-errors', label: 'Which errors', locator: (p) => panel(p).getByText('Which errors', { exact: true }) },
+			{ id: 'empty-item', label: "Pass an empty item when there's no result", locator: (p) => panel(p).getByText(/Pass an empty item when there/) }
 		],
 		prepare: async (s) => {
 			await s.editor('hash-text');
 			const page = s.page;
 			await page.locator('.svelte-flow__node[data-id="sha512"]').dblclick({ timeout: T });
-			await panel(page).getByRole('tab', { name: 'Settings' }).first().click({ timeout: T });
-			await panel(page).getByText('Allow Retry', { exact: true }).waitFor({ timeout: T });
-			// Switches in order: Always Output Data, Continue On Fail, Allow Retry.
-			const retry = panel(page).getByRole('switch').nth(2);
+			await panel(page).getByRole('tab', { name: /Advanced/ }).first().click({ timeout: T });
+			await panel(page).getByText('Try again automatically', { exact: true }).waitFor({ timeout: T });
+			const retry = panel(page).getByRole('checkbox').first();
 			if ((await retry.getAttribute('aria-checked')) !== 'true') await retry.click({ timeout: T });
-			await panel(page).getByText('Retry condition', { exact: true }).waitFor({ timeout: T });
+			await panel(page).getByText('Which errors', { exact: true }).waitFor({ timeout: T });
 			await page.waitForTimeout(800);
 		}
 	}

@@ -161,6 +161,8 @@ export const NAV_LABELS: Record<string, { fr: string; de: string; 'zh-CN': strin
 	"Dev": { fr: "Développement", de: "Entwicklung", 'zh-CN': "开发" },
 	"Other": { fr: "Autres", de: "Weitere", 'zh-CN': "其他" },
 
+	// From the app glossary seed (docs/ux/glossary.md).
+	"Runs": { fr: "Exécutions", de: "Ausführungen", 'zh-CN': "运行记录" },
 	// TODO(i18n): Road to 1.0 pages, English until the docs are translated.
 	"Workflow settings": { fr: "Workflow settings", de: "Workflow settings", 'zh-CN': "Workflow settings" },
 	"Keyboard shortcuts": { fr: "Keyboard shortcuts", de: "Keyboard shortcuts", 'zh-CN': "Keyboard shortcuts" },

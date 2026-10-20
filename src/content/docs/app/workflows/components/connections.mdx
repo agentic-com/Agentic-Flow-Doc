@@ -1,55 +1,52 @@
 ---
-title: Connections
-description: "Learn how to connect nodes in your workflow — routing data between steps in AWFlow."
+title: Links
+description: "Link steps together: what runs next and what data is passed along. Add, insert, remove and read the links between steps."
 sidebar:
   order: 2
+  label: Links
 section: app
 ---
 
 import { GuidedShot } from "@components/awflow";
 
-Connections are the lines between nodes.
+**Links** are the lines between steps. They say what runs next, and which data goes along. (Before AWFlow 1.0 they were called *connections*; that word now means the accounts you [connect](/app/connections/) to apps.)
 
-They tell the workflow what to run next, and what data to pass along.
-
----
-
-## Create a connection
+## Link two steps
 
 <GuidedShot
   shot="canvas-connection"
   steps={[
-    { spot: 'output-port', title: 'Drag from the output port', body: 'The small dot on the right side of a step.' },
-    { spot: 'input-port', title: 'Drop on the input port of the next step', body: 'The dot on its left side.' },
-    { spot: 'connection', title: 'The connection is made', body: 'After a run, it shows how many items passed along it.', check: 'a line joins the two steps.' },
+    { spot: 'output-port', title: 'Drag from the output', body: 'The small dot on the right side of a step.' },
+    { spot: 'input-port', title: 'Drop on the input of the next step', body: 'The dot on its left side.' },
+    { spot: 'connection', title: 'The link is made', body: 'After a run, it shows how many items passed along it.', check: 'a line joins the two steps.' },
   ]}
 />
 
-Tip: if you drop on an empty area, the "Add node" panel may open so you can insert a new step there.
+Drop on an empty spot instead, and the step picker opens: the step you pick is added there, already linked. Clicking the **+** on a step's output does the same.
 
----
+## Remove a link or insert a step
 
-## Remove a connection or insert a step
+Hover a link (or focus it with the keyboard): two buttons appear in its middle. **Delete link** (the bin) removes it; **Add a step here** (the **+**) inserts a new step between the two, and moves the steps after it to the right when there isn't room.
 
-Hover over a connection: two buttons appear in its middle. **Delete connection** (the bin) removes it; **Add a step here** (the +) inserts a new step between the two.
+## Steps with several outputs
 
----
+[If](/nodes/builtin/flow/if/), [Route by value](/nodes/builtin/flow/switch/) and other branching steps have one output per branch, each with a **name** (the branch or rule). A link attaches to that named output:
 
-## Named outputs on branching nodes
+- **Reordering** branches or rules keeps every link pointing where it was.
+- **Renaming** an output removes the link that left it, and the canvas tells you, rather than leaving it pointing at a branch that no longer exists.
 
-Branching nodes — [If](/nodes/builtin/flow/if/) and [Switch](/nodes/builtin/flow/switch/) — expose more than one output port, and each port has a **name** (the branch or rule it routes to). When you connect a branch, the edge attaches to that specific named port.
+Each link carries only the items of its own output: the step on If's **false** branch gets the items that failed the condition, never the others.
 
-Because an edge binds to the port **name** rather than its position:
+A step whose **On error** is **Send to an error output** gets a red **Error** output: link it to handle failed items (see [Error handling](/concepts/flow/error-handling/#send-failed-items-to-an-error-output)).
 
-- **Reordering** branches or rules keeps every edge pointing where it was. Moving a rule up or down does not rewire anything.
-- **Renaming** an output disconnects the edge that left it. The canvas removes the now-dangling edge and tells you it did so, rather than silently leaving it pointing at a branch that no longer exists.
+## Read the links
 
----
+- After a run, each link shows how many items passed along it.
+- Links of a [disabled step](/app/workflows/components/nodes/#disable-a-step) are dashed.
+- Screen readers announce a link as "Connection from *Get issues* to *If* (true branch)".
 
-## Best practices and tips
+## Tips
 
-- Keep the flow easy to read (left to right works well).
-- After you connect nodes, test step by step to make sure the output looks right.
-- Use nodes like **Edit Fields** or **If** to clean or filter data before sending it to the next step.
-
-If you’re unfamiliar with how node output and input data is structured, refer to [Data concepts](/concepts/data/) for a deeper explanation.
+- Keep the flow readable, left to right. **Tidy up** (<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd>) lays it out for you.
+- After you link a new step, run it with **Run step** to check its input.
+- If a step says **This step has no input**, it isn't linked to anything before it. See [Troubleshooting links](/app/troubleshooting/workflow-connections/).

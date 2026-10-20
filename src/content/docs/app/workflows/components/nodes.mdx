@@ -1,217 +1,162 @@
 ---
-title: Nodes
-description: "Understand and use nodes — the building blocks of browser workflows in AWFlow."
+title: Steps
+description: "Add, set up, run and organise the steps of a workflow: the step picker, step settings, Ready to run, error handling, disabling a step and reading its output."
 sidebar:
   order: 1
+  label: Steps
 section: app
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
+import { Kbd } from 'starlight-kbd/components';
 
-Nodes are the steps in your workflow.
+A workflow is a chain of **steps**. Each step does one thing: read the page, call an app, change the data, decide where to go next, ask an AI model. (The [node reference](/nodes/) uses the technical word *node* for the same thing.)
 
-Each node does one thing, like extracting text from a page, clicking a button, or formatting data.
+A **trigger** is the step that decides when the workflow starts. Every other step runs after it, following the links between steps.
 
----
-
-## Types of Nodes
+## Kinds of steps
 
 ```mermaid
 graph TB
-  WorkflowNodes[Nodes] --> Browser[Browser Nodes]
-  WorkflowNodes --> Processing[Processing / Built‑In Nodes]
-  WorkflowNodes --> AI[AI Nodes]
-  WorkflowNodes --> Logic[Flow & Logic Nodes]
-  class Browser awf-io
-  class Processing awf-data
-  class AI awf-ai
+  Steps[Steps] --> Page[Act on the page]
+  Steps --> Apps[Use an app]
+  Steps --> Data[Change the data]
+  Steps --> Logic[Logic]
+  Steps --> Web[Web & code]
+  Steps --> AI[AI]
+  class Page awf-io
+  class Apps awf-io
+  class Data awf-data
   class Logic awf-flow
+  class Web awf-data
+  class AI awf-ai
 ```
 
-- **Browser nodes** — work with the page you’re on (extract text/HTML, click, scroll, fill forms)
-- **Built‑in nodes** — transform data, call APIs, work with files, etc.
-- **AI nodes** — summarize, classify, or analyze content
-- **Logic nodes** — choose different paths (If), wait, handle errors
+The step picker groups steps by what they do: **Act on the page**, **Use an app**, **Change the data**, **Logic**, **Web & code**, **AI** and **Your reusable workflows**. Browse them all in the [node reference](/nodes/).
 
-You can browse all available node types in the [Node Reference](/nodes/) or by category:
+### Where a step runs
 
-- [Browser extension nodes](/nodes/extension/)
-- [Built-in integration / transformation nodes](/nodes/builtin/)
-- [AI nodes and dependencies](/nodes/builtin/ai/)
-- [Control / flow logic nodes](/concepts/flow/)
+Some steps show a small marker in the picker and on the canvas:
 
----
+- **Cloud**: the step sends your data to the AWFlow service to do its work. It needs an account and an internet connection.
+- **External API**: the step calls an app's API (Slack, Notion…) straight from your browser. It needs an account with that app and an internet connection.
+- **Extension**: the step runs in the AWFlow browser extension (page steps, polling triggers). It doesn't work in the web app.
+- **No marker**: the step runs entirely in your browser.
 
-## Node runtime markers
+## Add a step
 
-Some nodes show a small icon in the node list and on the canvas that tells you **where the node runs** and what it needs:
+- **After a step**: click the **+** on its right. The picker asks **What happens next?** and suggests likely next steps. The new step is linked for you and comes into view.
+- **Drop a wire**: drag from a step's output (or an AI step's model, tool or memory slot) and let go on an empty spot. The picker opens for that output, and the new step lands where you let go.
+- **On a link**: hover a link between two steps and click **+** to insert a step there. Steps after it move right to make room.
+- **From the keyboard**: select a step and press <Kbd mac="N" windows="N" />. See [Keyboard shortcuts](/app/workflows/keyboard-shortcuts/).
+- **On an empty canvas**: **Add trigger** asks **What should start this workflow?**, or **Describe it to Aria**, or **Start from a template**.
 
-- **☁️ Cloud** — the node sends your data to the AWFlow backend to do its work (for example the Google integration nodes). It needs a connected account and an internet connection.
-- **🌐 External API** — the node calls a third-party service's API directly from your browser (for example Airtable, Notion, Slack). It sends data to that service and needs an account and internet connection.
-- **🧩 Extension** — the node runs inside the AWFlow browser extension (the in-page action nodes). It needs the extension installed.
-- **No marker** — the node runs entirely in your browser (data transforms, code, and similar). No account or network required.
+If you add an action to a workflow with no trigger, a **When I press Run** trigger is added and linked for you (one **Undo** removes both).
 
-Use these markers to see at a glance which steps in a workflow leave your device or require the extension.
+Search the picker by name or by what you want ("send email", "split"): results show as one list, ranked by how often people use each step. With fewer than three results, **Can't find it?** offers to **Ask Aria to build it**, **Use HTTP Request** for any API, or **Request it** on the [request board](/app/request-board/).
 
----
+New steps get plain names ("HTTP Request", then "HTTP Request 2", or "Gmail: Send message"). Rename a step by clicking its title in its settings, or with <Kbd mac="F2" windows="F2" />.
 
-## Adding a Node
+## Set up a step
 
-### In a new (empty) workflow
+Double-click a step (or select it and press <Kbd mac="Enter" windows="Enter" />) to open its settings.
 
-1. Click **Add first step**.
-2. Use the Node Library panel to search or browse nodes.
-3. Click a node (e.g. **Get Selected Text**, **Get All Links**).
-4. The node appears on the canvas, ready for configuration.
+The header shows the step's icon, its name, one line on what it does, **How it works** (more detail) and **Add a note** (a note for whoever reads the workflow later).
 
-### In an existing workflow
+- **Setup** holds the fields. The connection comes first, then the required fields, then the main ones; the rest sit under **More options (N)**, which opens by itself when one of them is set or has a problem.
+- **Advanced** holds what happens on errors, retries and empty results (see below). A dot on the tab means something differs from the default.
 
-1. Hover between two nodes or at a free connector point.
-2. Click **Add node**.
-3. Pick a node from the panel.
-4. Connect it to previous and next nodes.
+On a wide screen, **Input**, **Setup** and **Output** sit side by side in three columns you can resize. In the side panel, an **Input · Setup · Output** switch shows one at a time.
 
-Common workflows often chain patterns like:
+### Fields
 
-- **Extract → Analyze → Output**
-- **Get Links → Filter → Visit & Process**
-- **Click / Scroll → Extract → Condition / Branch**
+Every field has the same parts: the label (with **Optional** when it is), a help line, the control, and one status line (an error, the preview of an expression, or **Default: …** when the field is empty and a default will be used).
 
----
+The **⋯** menu next to a label offers **Edit as expression** / **Use a fixed value**, **Copy expression**, **Reset to default** and **Ask Aria about this field**. To put data from an earlier step in a field, see [Mapping data](/concepts/data/data-mapping/data-mapping-ui/).
 
-## Node Controls & Actions
+At the top of **Setup**, an issue bar lists what is still missing ("2 things left: Channel, Message"). Tap a chip to jump to that field.
 
-Hover or right-click a node to see common actions:
+### Connections inside the step
 
-- **Execute Step** — run that node immediately
-- **Deactivate** — temporarily disable (without deleting)
-- **Delete** — remove the node
-- **Open / Configure** — adjust parameters
-- **Rename**, **Duplicate**, **Copy**, **Clear**, **Pin** — help manage and organize your workflow
-- **Node Notes** — add documentation visible on the canvas
+A step that uses an app has a **Connection** field. It lists only that app's connections, with **Connected as …** from the last test. With no connection yet, **Connect Slack** opens the form in a sheet over the step: when you save it, it is picked, tested and ready. See [Connections](/app/connections/).
 
----
+### Building blocks of AI steps
 
-## Behavior of Browser Nodes
+AI steps (Tools Agent and friends) list their **Building blocks** at the top of **Setup**: the model (required), memory, knowledge, an output parser and their tools. **+ Add a model** or **+ Add a tool** opens the picker for that slot; **Open** jumps into the block's own settings. A model or tool step can't be run alone: run the agent that uses it.
 
-Browser nodes behave a little differently because they depend on the page:
+## Ready to run
 
-- They operate on the **current page state**, extracting real-time content
-- They respect browser security rules, cross-origin limits, and sandboxing
-- They are optimized for browser memory and performance
-- They can be configured (timeouts, retries, “always output”, etc.)
-- They may fail if page structure changes or if content is not present
+Before a run, **Ready to run** (on the canvas) lists what still needs you: connections to make, fields to fill, [variables](/app/variables/) to set, models to add. Steps that need setup carry a badge on the canvas.
 
----
+- Hover or focus a row to ring its steps on the canvas.
+- **Connect** a group ("Connect Google Sheets · used in 3 steps") once: the account you pick goes to every step of the group that has none yet.
+- **Fill**, **Connect** and **Add** open the step on the right field.
 
-## Node Settings & Options
+The **Workflow doctor** block below lists deeper problems: a loop without an exit, a branch that goes nowhere, a secret typed into a field, a step that doesn't work in the web app. Warnings can be ignored per workflow.
 
-Under a node’s **Settings** tab, you’ll find options that control its behavior and reliability:
+## Run a step
 
-- **Always Output Data** — ensure the node emits an (empty) result even if nothing is found
-- **Execute Once** — run only once per workflow run
-- **Retry On Fail** — retry browser operations when they fail
-- **On Error**:
-  - Stop Workflow
-  - Continue
-  - Continue (passing error info downstream)
+**Run step** (in the settings header) runs the steps it needs and then this one, and opens its **Output**. If the step isn't linked to anything before it, or a required field is empty, it doesn't start and tells you why, with **Add a step before** or **Fix**.
 
-Browser nodes may have extra settings:
+After a run:
 
-- Page wait / load time
-- Element timeouts
-- Retry delays
-- Notes and descriptions — helpful for documenting what each node does
+- If you were typing in a field, only the **Last run** bar shows ("Last run: 12 items · 0.4 s · View output"), so you aren't interrupted.
+- When a run fails on a field, the bar offers **Fix**, which jumps to it.
+- **Settings changed since this result · Run again** shows when you edit after a run.
 
----
+Chips at the top of **Input** (the steps before) and under **Output** (the steps after) open those steps in place.
 
-## Data Flow & Node Outputs
+## Read the output
 
-Nodes pass data to the next node.
+**Output** shows the step's items as a **Table** (search, pages of 50, drag the column edges), **JSON** or **Structure**; in the side panel, items show as cards. Before any run, **Expected** shows the fields the step promises, so you can map them in the next step.
 
-Most of the time, the data is shown as JSON in the output panel.
+- When a step ran several times in one run (in a loop), a **Run 3 of 12** stepper picks the run to show. Expressions always use the latest.
+- **Hints** above the output explain something worth knowing ("Ran 12 times: every combination of 3 from A and 4 from B", "Limit of 100 items reached"). **Don't show again** hides one hint for that step.
 
-- A node can emit zero, one, or many items
-- Fields in the items can be manipulated via expressions (e.g. `{{ $json.text.length }}`)
-- Use nodes like **Edit Fields** to create or reshape output fields
+## Step status on the canvas
 
-If you want more insight into how data moves between nodes, see [Data Structure](/concepts/data/data-structure/) and [Item Linking](/concepts/data/item-linking/).
+Each step shows one status badge, the most important first: **Needs setup**, **Failed**, a data warning (amber: the run reported expression warnings), **Disabled**, then **Ran**. Hover or focus it to see every state and what fixes it. A step inside a loop shows how many times it ran (**×12**). A step whose newer version is available shows **Update available** (see [Step versions](/app/workflows/step-versions/)).
 
-### Actual and expected output
+## When a step fails
 
-Every node declares the shape of the data it outputs. The **Output** tab of a node's settings shows
-two views:
+Under **Advanced**, **On error** chooses what happens when the step fails (after any retries):
 
-- **Expected** — what this node will output with its current configuration, before you run it. Use
-  it to write expressions for the next node without a test run.
-  - **Example** shows sample JSON with placeholder values (not real data).
-  - **Structure** lists every field with its type, and marks it as required or optional. Expand objects
-    and lists to see what they contain. "Additional fields" means the node may output more fields than
-    those listed; a note tells you when the node also passes on the fields of the item it received.
-- **Actual** — the data the node really output in its last run. It opens automatically after a run.
+- **Stop the run** (default).
+- **Continue with an empty result**: the error is logged and the step passes one empty item on.
+- **Send to an error output**: each failed item goes down a red **Error** output, with `{ error: { message, name }, input, itemIndex }`, while the other items carry on. See [Error handling](/concepts/flow/error-handling/#send-failed-items-to-an-error-output).
 
-Some nodes cannot describe their output in advance:
+**Try again automatically** retries a failed step: **Retries** (how many more tries), **Wait (seconds)**, **Wait pattern** (**Same each time** or **Longer each time**) and **Which errors** (**Any error**, **Temporary only**, or **When the message matches**). Steps that call the network and were added by Aria or a template retry twice by default.
 
-- **Finish configuring this node** — the output depends on a choice you haven't made yet, such as the
-  operation of an integration. Choose it in **Parameters** and the preview appears.
-- **No valid content** — the output is whatever an external service or your own code returns (for
-  example **Custom API** or **Code**), so there is nothing fixed to preview. Run the node to see it.
-- **This node does not emit workflow output** — the node gives a capability to another node (for
-  example a chat model connected to an agent) or always stops the run.
+**Pass an empty item when there's no result** makes the step hand on one empty item when it finds nothing, so the next steps still run.
 
-When a node outputs data that doesn't match its declared shape, the step fails with **Output
-validation failed**. The Actual view lists the field at fault, the type that was expected and the
-value that was received; **Compare with expected structure** opens the Expected view next to it. The
-failure behaves like any other step error: **Retry**, **Continue on fail** and **Try / Catch** all
-apply.
+A failed step stops **its own branch**. Branches that don't depend on it keep running. A step joining several branches needs all of them; [Join branches](/nodes/builtin/flow/funnel/) runs as soon as any branch that didn't fail reaches it. The run is reported as **Failed**, with the first failed step as its cause.
 
-### When a step fails
+## Disable a step
 
-A step that fails, with no **Try** guarding it, stops **its own branch**: the steps after it don't run.
-Branches that don't depend on it keep running, so a node wired in parallel next to a failing step
-(for example a **Display Markdown** next to a **Copy to clipboard**) still runs.
+Select a step and press <Kbd mac="D" windows="D" /> (or the power button in its toolbar, or its menu) to **disable** it without deleting it. A disabled step is greyed and struck through, with dashed links:
 
-- A step that joins several branches needs all of them, so it doesn't run if one of them failed. A
-  **Funnel** still runs as soon as any branch that didn't fail reaches it.
-- The run is still reported as **failed**, with the first step that failed as its cause, and any
-  error workflow runs once.
+- in a run it does nothing and passes its input straight on (a router passes everything to its first output, a loop leaves by Done);
+- a disabled trigger doesn't start the workflow.
 
----
+Turning a workflow On, or publishing it, warns you when it has disabled steps.
 
-## What’s next?
+## Copy, paste, tidy
+
+- **Copy steps** / **Paste steps** (<Kbd mac="Cmd+C" windows="Ctrl+C" /> / <Kbd mac="Cmd+V" windows="Ctrl+V" />) work across workflows and windows. Connections and secrets are removed from the copy, and references to renamed steps are fixed.
+- **Duplicate** (<Kbd mac="Cmd+D" windows="Ctrl+D" />) copies in place.
+- **Tidy up** lays the canvas (or the selection) out left to right, one lane per branch, AI blocks under their agent. One **Undo** restores your layout.
+- On a wide canvas, steps show as larger tiles with a subtitle (the operation, "Every day at 09:00"). **Compact steps** in the controls' **More** menu keeps them small.
+
+## What's next?
 
 <CardGrid>
-  <Card
-    title="Using Browser Nodes"
-    icon="seti:svg"
-  >
-    Explore all nodes that let you interact with web pages (click, extract, scroll, etc.).
-
-    [Go  →](/nodes/extension/)
-
+  <Card title="Mapping data" icon="seti:json">
+    Use data from earlier steps in a field. [Go →](/concepts/data/data-mapping/data-mapping-ui/)
   </Card>
-
-<Card
-title="Built-In / Integration Nodes"
-icon="seti:svg"
-
->
-
-Discover nodes for data transformations, HTTP calls, file operations, and more.
-
-    [Go  →](/nodes/builtin/)
-
+  <Card title="Runs" icon="list-format">
+    See what happened in a past run. [Go →](/app/workflows/run-history/)
   </Card>
-
-<Card
-title="Flow & Logic Nodes"
-icon="seti:svg"
-
->
-
-Understand how to build branching, loops, and conditional logic in workflows.
-
-    [Go  →](/concepts/flow/)
-
+  <Card title="Node reference" icon="puzzle">
+    Every step, its settings and outputs. [Go →](/nodes/)
   </Card>
 </CardGrid>

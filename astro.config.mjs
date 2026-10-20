@@ -379,7 +379,7 @@ export default defineConfig({
                 { ...nav("Tags"), link: "app/workflows/tags" },
                 { ...nav("Filter the list"), link: "app/workflows/filters" },
                 { ...nav("Manage the list"), link: "app/workflows/manage-list" },
-                { ...nav("Run history"), link: "app/workflows/run-history" },
+                { ...nav("Runs"), link: "app/workflows/run-history" },
                 { ...nav("Workflow settings"), link: "app/workflows/settings" },
                 { ...nav("Keyboard shortcuts"), link: "app/workflows/keyboard-shortcuts" },
                 { ...nav("Test runs"), link: "app/workflows/test-runs" },
