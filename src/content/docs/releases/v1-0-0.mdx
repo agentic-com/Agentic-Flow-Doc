@@ -1,0 +1,58 @@
+---
+title: "AWFlow 1.0 — workflows that tell you what happened, and never change under you"
+description: "What's new in AWFlow 1.0: every run recorded and debuggable, plain-word steps, step and behaviour versions that keep saved workflows unchanged, JavaScript Code, forms, polling triggers, test runs, variables, backups and more."
+sidebar:
+  label: v1.0.0
+  order: 0.8
+  badge:
+    text: New
+    variant: tip
+section: releases
+kind: release
+---
+
+import { ReleaseChanges } from '@components/awflow';
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import { getRelease } from '../../../data/releases';
+
+AWFlow 1.0 is the result of the **Road to 1.0** program: a long pass over everything you touch when you build, run and fix a workflow. The goal was simple: a workflow should do what it says, tell you what happened, and keep doing it after an update.
+
+## What's new in 1.0
+
+<CardGrid>
+  <LinkCard title="Runs you can debug" href="/app/workflows/run-history/" description="Every run recorded, Debug in editor, Run again, logs as a tree." />
+  <LinkCard title="Nothing changes under you" href="/app/workflows/behaviour-versions/" description="Step versions and behaviour versions keep saved workflows exactly as they were." />
+  <LinkCard title="New steps" href="/nodes/builtin/core/javascript-code/" description="JavaScript Code, Summarize items, forms, polling triggers, evaluations." />
+  <LinkCard title="Safer by default" href="/app/settings/health/" description="Health, backups, connections locked to their sites, fenced AI inputs." />
+</CardGrid>
+
+## What changed
+
+<ReleaseChanges release={getRelease('1.0.0')} level={3} meta />
+
+## In detail
+
+### One word per thing
+
+The app now uses one plain word for each thing, everywhere: a workflow is made of **steps** (the node reference keeps the word *node*), you press **Run** (and **Run step** for one step), past runs are under **Runs**, a workflow is **On** or **Off**, and the accounts you link are **Connections**. Steps and triggers have plain names too: *When I press Run*, *If*, *Route by value*, *Join branches*, *Keyboard shortcut*, *Test helper*… The old names still work in search. See the [glossary](/concepts/glossary/).
+
+### Your saved workflows keep working
+
+AWFlow 1.0 changes how some steps and some workflow rules behave, but **never for a workflow you already have**:
+
+- each saved step keeps its **version**, and shows **Update available** when a newer one exists ([Step versions](/app/workflows/step-versions/));
+- each workflow keeps its **behaviour** (Classic for workflows made before 1.0), and you can preview and upgrade it when you want ([Workflow behaviour versions](/app/workflows/behaviour-versions/)).
+
+What you may still notice is listed in [Breaking changes](/releases/breaking-changes/#v100).
+
+### Build faster
+
+Map data by tapping a value, get suggestions and a live preview while typing an expression, open a full-screen expression editor, add steps from the keyboard, paste steps between workflows, tidy the canvas in one click, and keep values you reuse as [variables](/app/variables/). Step settings put the required fields first and say what the default is.
+
+### Run, debug, measure
+
+[Runs](/app/workflows/run-history/) records every run, keeps the data of failed runs, and lets you **Debug in editor** or **Run again**. [Test runs](/app/workflows/test-runs/) score an AI workflow on a dataset. [Insights](/app/insights/) show how often your workflows run, fail and save you time.
+
+### Keep your data safe
+
+[Health](/app/settings/health/) checks your setup, [backups](/app/settings/storage/#backups) keep an encrypted copy of everything on this device, drafts survive closing the panel, and two windows can no longer overwrite each other's changes. See also [Updating AWFlow](/app/updating-awflow/).

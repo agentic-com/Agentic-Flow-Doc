@@ -4,11 +4,15 @@ description: "Short definitions of the words used across the AWFlow docs, each l
 section: concepts
 ---
 
-Each term links to the page that explains it in full.
+Each term links to the page that explains it in full. The app uses one plain word for each thing (step, Run, Runs, On/Off, Connections); the docs' node reference keeps the technical word *node*.
 
 #### Agent
 
 An AI node that decides what to do next: call a tool, read the result, and try again until it has an answer. Compare with a [chain](#chain). See [Agents and tools](/concepts/ai/ai-agents/). For agents you chat with, see [Agents in the chat](/app/chat-and-agents/agents/).
+
+#### Behaviour version
+
+How a whole workflow handles items and expressions: **Classic** for workflows made before AWFlow 1.0, **New** for workflows made since. A workflow keeps its behaviour until you upgrade it. See [Workflow behaviour versions](/app/workflows/behaviour-versions/).
 
 #### Branch
 
@@ -22,13 +26,17 @@ The editor where you add nodes and connect them into a workflow. See [Nodes](/ap
 
 An AI node that sends your input to the model once and returns the answer, with no tools. Basic LLM Chain, Summarization and Text Classifier are chains. See [Agents and tools](/concepts/ai/ai-agents/#which-ai-node-to-use).
 
+#### Connection
+
+A saved login, API key or token that lets a step use an outside service (called a *credential* before AWFlow 1.0). Add it once on the Connections page or from a step, then pick it in any step. See [Add a connection](/app/connections/create/). The lines between steps are called [links](#link).
+
 #### Content Security Policy (CSP)
 
 Rules a website sets that can block some actions from browser extensions on that site. See [Browser context](/concepts/flow/browser-context/).
 
 #### Credential
 
-A saved login, API key or token that lets a node use an outside service. Credentials are stored with AWFlow and picked in a node's settings. See [Create credentials](/app/connections/create/).
+The earlier name of a [connection](#connection), still used in the node reference.
 
 #### Embedding
 
@@ -68,11 +76,15 @@ A collection of your documents (files, web pages, tabs, text) cut into passages 
 
 #### Lambda workflow
 
-A workflow built to be reused as a single step inside other workflows. See [Lambda workflows](/concepts/flow/lambdaworkflows/).
+Now called a **reusable workflow** in the app. A workflow built to be reused as a single step inside other workflows. See [Lambda workflows](/concepts/flow/lambdaworkflows/).
 
 #### Large language model (LLM)
 
 A model trained on a lot of text that reads and writes language. In AWFlow, you connect one to an AI node as its model. See [Models and where they run](/concepts/ai/model-dependencies/).
+
+#### Link
+
+A line between two steps: it says what runs next and carries the items of one output. See [Links](/app/workflows/components/connections/).
 
 #### Loop
 
@@ -88,11 +100,19 @@ The conversation so far, kept by a Chat Memory node so an agent can follow up on
 
 #### Node
 
-One step in a workflow, such as Get All Text, IF or Summarization. See [Nodes](/app/workflows/components/nodes/) and the [node reference](/nodes/).
+The technical word for a [step](#step), used in the [node reference](/nodes/).
+
+#### On / Off
+
+A workflow that is **On** runs by itself when its trigger fires; **Off**, it only runs when you press Run (called *active* / *inactive* before AWFlow 1.0). See [Manage the list](/app/workflows/manage-list/#turn-a-workflow-on-or-off).
 
 #### Output parser
 
 A node you plug into an AI node so its answer comes out as fields or a list instead of free text. See [Prompting and outputs](/concepts/ai/prompting-and-outputs/).
+
+#### Polling trigger
+
+A trigger that checks an app on a timer for something new (an email, a row, an issue) and starts one run with what it finds. See [Polling triggers](/concepts/flow/polling-triggers/).
 
 #### Project
 
@@ -104,7 +124,7 @@ Searching your documents first and giving the best passages to the model with th
 
 #### Run
 
-One execution of a workflow, from the trigger to the last step. Past runs appear in the run history. See [Workflow lifecycle](/concepts/flow/workflow-lifecycle/) and [Run history](/app/workflows/run-history/).
+One execution of a workflow, from the trigger to the last step. **Run** is also the button that starts one, and **Runs** lists the past ones (called *Executions* before AWFlow 1.0). See [Workflow lifecycle](/concepts/flow/workflow-lifecycle/) and [Runs](/app/workflows/run-history/).
 
 #### Run variable
 
@@ -114,9 +134,21 @@ A value stored during a run by the Set Variable node and read later as `{{ $run.
 
 A connection point on an AI node where you plug in a model, memory, knowledge, tools or an output parser. See [Models and where they run](/concepts/ai/model-dependencies/).
 
+#### Step
+
+One thing a workflow does, such as Get All Text, If or HTTP Request. The node reference calls steps *nodes*. See [Steps](/app/workflows/components/nodes/).
+
+#### Step version
+
+The version of a step's behaviour. A saved step keeps its version; **Update step** moves it to the newest. See [Step versions](/app/workflows/step-versions/).
+
 #### Template
 
 A ready-made workflow you can copy and adapt, for example from the Marketplace. See [Publishing](/app/workflows/publishing/).
+
+#### Test run
+
+An evaluation: the workflow runs once per row of a test dataset and each answer is scored. Not the same as a plain Run. See [Test runs](/app/workflows/test-runs/).
 
 #### Tool
 
@@ -125,6 +157,10 @@ A node an agent can choose to call, such as Web Search, Wikipedia or Browser. Se
 #### Trigger
 
 The node that starts a workflow: a hotkey, a schedule, a page load, a chat message and so on. See [Workflow lifecycle](/concepts/flow/workflow-lifecycle/).
+
+#### Variable
+
+A named value you set once on the Variables page and read in any step as `{{ $vars.NAME }}`. Not the same as a [run variable](#run-variable). See [Variables](/app/variables/).
 
 #### Vector store
 

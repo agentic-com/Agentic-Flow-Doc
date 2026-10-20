@@ -13,6 +13,27 @@ release listed here: nothing was removed without an automatic upgrade. This page
 lists the changes in **behaviour** you may notice, and what to do about them.
 For everything else in a release, read its [release notes](/releases/).
 
+## v1.0.0
+
+[Release notes](/releases/v1-0-0/)
+
+Saved workflows keep their step versions and their **Classic** behaviour, so most of what changed in 1.0 only applies to new steps and new workflows. A few fixes change what existing workflows do:
+
+- **If's false branch gets the right items.** When If received several items, a step on its **false** branch used to get the **true** branch's items. Each link now carries only its own output's items. If a workflow relied on the old result, check the steps after If.
+- **Failed runs are Failed.** A run that failed used to be recorded as *Canceled*. It is now **Failed** (Canceled only means someone stopped it), so [Error Trigger](/nodes/builtin/trigger/errortrigger/) workflows now see these failures.
+- **Every run is recorded.** Runs you start in the editor, and single steps, now appear in [Runs](/app/workflows/run-history/) (Manual), even before you save. Turn off **Keep Manual runs** in [Workflow settings](/app/workflows/settings/#run-history) if you don't want them.
+- **XOR in conditions means "exactly one".** It used to behave like OR (AND in Switch). A run-log warning marks the workflows that use it.
+- **Filter and Loop with no conditions fail** with a clear message instead of keeping or dropping everything.
+- **Merge matches keys on raw values**: text stays text (*starts with* and *contains* now work), `1` matches `"1"`, and each key row uses its own AND/OR.
+- **`{{ }}` text that isn't an expression is kept**, braces included, instead of being half-replaced. References are resolved in one pass, so a value that *contains* `$input.x` is no longer evaluated.
+- **References read own fields only**: `$input.constructor` and similar now give nothing, and helper functions can no longer reach object internals.
+- **HTTP Request follows redirects in the browser** (up to 5 by default; there was no working redirect before), and **Autodetect** now really parses JSON. **Max redirects** defaults to 5 and there is no default time limit.
+- **Schedule seconds rules run at most every 30 seconds** (the browser's floor, now explicit), and rules with an out-of-range hour or minute are no longer scheduled: they show in Ready to run.
+- **Split in Batches says when its 1,000-pass limit cut it short**, and can fail instead (**Fail if the pass limit is reached**).
+- **Two Google or Microsoft connections no longer share one sign-in.** Each connection may ask you to sign in once more.
+- **Steps were renamed** in the app (*When Started* → *When I press Run*, *IF* → *If*, *Switch* → *Route by value*, *Funnel* → *Join branches*, *Lambda Input/Output* → *Workflow inputs / Return to caller*…). Saved steps keep their own names; search finds both.
+- **Executions is now Runs**, and the **Activity** page is part of **Workflows › Runs**; old links redirect.
+
 ## v0.8.2
 
 [Release notes](/releases/v0-8-2/)
