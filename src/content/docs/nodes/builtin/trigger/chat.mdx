@@ -32,7 +32,7 @@ Because the conversation lives in the memory, it also shows on the [Memory page]
 
 **Where you can chat:**
 
-- **On the canvas.** **Test Workflow** opens the chat when the Chat Trigger is the only trigger. You can also pick it in the trigger picker or press the node's **Test step** button.
+- **On the canvas.** **Run** opens the chat when the Chat Trigger is the only trigger. You can also pick it in the trigger picker or press the node's **Run step** button.
 - **On web pages (extension).** When the workflow is activated, a chat bubble appears on pages matching **URL Patterns**. If several chat workflows match, the bubble lets you pick one. You can also right-click and choose **Open chat**. The run still happens in the AWFlow app tab, and the page's `url`, `title` and `tabId` are passed to the trigger.
 
 ## When to use it
@@ -98,7 +98,7 @@ Workflows built with the older Local Memory, Persistent Chat Memory or Window Bu
 2. Add a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) with **Conversation** storage and connect it to the trigger's **Memory** slot.
 3. Add a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) after the trigger, connect a chat model, and connect the **same** Chat Memory to its memory slot.
 4. Set the agent's prompt to `{{ $input.chatInput }}`.
-5. Click **Test Workflow** and start chatting.
+5. Press **Run** and start chatting.
 
 ## Common issues
 
@@ -108,7 +108,7 @@ Workflows built with the older Local Memory, Persistent Chat Memory or Window Bu
 - **The chat forgets earlier messages.** The memory uses **This run only** or a key written as an expression. Use **Conversation** storage or a fixed key.
 - **Each message shows twice, or several replies appear.** Every agent connected to the same memory saves its own copy. Use one agent per conversation.
 - **On a web page, the "thinking" indicator never stops.** The run failed before a reply was saved. Press stop, then check the run in the execution history. Stop only resets the chat window; a run that is still going keeps going.
-- **No chat bubble on a page.** Activate the workflow and check that a **URL Patterns** entry matches the page.
+- **No chat bubble on a page.** Turn the workflow On and check that a **URL Patterns** entry matches the page.
 
 ## Related nodes
 

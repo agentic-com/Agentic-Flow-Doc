@@ -102,11 +102,11 @@ Summarize selected text on any page:
 1. Add **Context Menu** with **Menu Contexts** set to **Selection**.
 2. Add [Summarize](/nodes/builtin/ai/localai/summarize/) with **Text** `{{ $input.selectionText }}` and **Length** **Short**.
 3. Add [Browser Notification](/nodes/extension/browsernotification/) with **Title** `Summary` and **Message** `{{ $input.summary }}`.
-4. Activate the workflow, select a paragraph on a page, right-click, and choose the workflow's name.
+4. Turn the workflow On, select a paragraph on a page, right-click, and choose the workflow's name.
 
 ## Common issues
 
-- **The workflow is not in the right-click menu.** Activate the workflow, then right-click and choose **Get / Refresh Workflows** so the menu picks up your changes. Also check that you right-clicked on the right kind of content: with only **Page** selected, the entry does not show on selected text or links.
+- **The workflow is not in the right-click menu.** Turn the workflow On, then right-click and choose **Get / Refresh Workflows** so the menu picks up your changes. Also check that you right-clicked on the right kind of content: with only **Page** selected, the entry does not show on selected text or links.
 - **The entry shows, but clicking it does nothing.** What you clicked did not match this trigger's contexts or patterns (the menu can show the entry more broadly than each trigger allows when a workflow has several Context Menu triggers). Check **Menu Contexts** and both pattern lists.
 - **`selectionText` is empty.** **Selection** is not in **Menu Contexts**, or you right-clicked outside the selected text.
 - **It does not work in the web app.** This node runs in the browser extension; install it and activate the workflow there.

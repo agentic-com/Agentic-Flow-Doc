@@ -26,13 +26,41 @@ Call any web address or API and use the response in the next steps.
 
 ## What it does
 
-Http Request sends one request (GET, POST, PUT, DELETE, PATCH, OPTIONS or HEAD) to **URL**, with the headers, query parameters and body you set, and returns what the server sends back.
+HTTP Request sends a request (GET, POST, PUT, DELETE, PATCH, OPTIONS or HEAD) to **URL**, with the headers, query parameters and body you set, and returns what the server sends back.
 
-- **Authentication** adds an `Authorization` header from a saved credential, so API keys stay out of the workflow.
-- **Query Params** are added to the URL for you.
+- **Authentication** takes a saved [connection](/app/connections/): a bearer token, basic auth, or an **API key** sent in a header or in the query. The key stays out of the workflow. A connection locked to its **Allowed sites** is never sent anywhere else, not even after a redirect.
+- **Query Params** are added to the URL for you, merged with any query already in it.
 - **Body** is sent as JSON, as a URL-encoded form or as multipart form data, depending on **Body Content Type**.
-- Redirects are followed (up to **Max redirects**) unless you turn that off.
-- The response is read as JSON, text or a file. **Response format** set to *autodetect* decides from the server's content type.
+- Redirects are followed by the browser (up to **Max redirects**, 5 by default) unless you turn **Follow redirects** off; the final address is checked again before the response is used.
+- There is no time limit unless you set **Timeout**.
+- The response is read as JSON, text or a file. **Response format** set to *Autodetect* (or left empty) decides from the server's content type; *File* returns the body as a file under `$binary.data`.
+
+### What the step returns
+
+New HTTP Request steps (version 2) choose under **Return**:
+
+- **One item per entry when the response is a list** (default): a JSON list becomes one item per entry, so the next steps work on each entry. An object or a text stays one item; an empty list gives no items.
+- **One item per entry of a list inside the response**: set **Path to items**, for example `data.items`.
+- **The whole response as one item**: `{ data }`, as older steps did.
+
+Steps saved before AWFlow 1.0 keep returning `{ data }`. **Update** in the step's header switches them to version 2 while keeping *The whole response as one item*; if the last output was a list, the step suggests **Split into items**.
+
+### Paste cURL
+
+**Paste cURL** in the step's header turns a `curl` command (copied from API docs or the browser's network tools, bash or Windows style) into the step's settings: method, URL, query, headers and body. A token, password or API key in the command becomes **one connection draft**, never a value in the step; save it and it is picked in the step. Unsupported options are listed as warnings.
+
+### Fetch every page
+
+**Options › Pagination** fetches more pages with the same setup:
+
+- **Find the next page in**: a next link (in the `Link` header or a field of the body), a page or offset number you add to the query or the body (**Parameter**, **Start at**, **Add each time**), or a cursor (**Field with the next cursor**).
+- **Stop when**: there is no next page, the list is empty, a **Status codes that stop** answer comes, or a **Stop expression** is true.
+- **Return**: one item per entry from every page (default), one item per page, or everything in one item. **Path to the list** says where the entries are.
+- **Max pages** is 10 by default (at most 100); **Wait between pages** slows it down. When the limit cuts it short, a hint and the run log say so.
+
+### Errors as data
+
+By default a 4xx or 5xx answer fails the step, and the error shows the status, the status text and the start of the body. Turn on **Options › Response › Never error** to get the whole answer instead (`status`, `statusText`, `headers`, `url`, `data`) and decide yourself with an [If](/nodes/builtin/flow/if/). Network errors and timeouts still fail. With **Try again automatically**, a 429 or 503 with `Retry-After` is waited out (up to 5 minutes).
 
 A file response (an image, a PDF, a download) arrives as binary data under the `data` key, ready for file uploads such as Slack **File → Upload**, Google Drive **File → Create** or Gmail attachments.
 
@@ -60,7 +88,7 @@ For apps that have their own node, such as [Slack](/nodes/builtin/integration/sl
 <AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
-By default the item is `{ data }`, the response body. Turn on **Include response header and status** to also get `status`, `statusText`, `headers` and the final `url` after redirects.
+With **The whole response as one item**, the item is `{ data }`, the response body. Turn on **Include response header and status** to also get `status`, `statusText`, `headers` and the final `url` after redirects.
 
 ## Dependencies and credentials
 
@@ -68,12 +96,12 @@ By default the item is `{ data }`, the response body. Turn on **Include response
 - **Authentication** (connection): optional. See [Create a connection](/app/connections/).
 {/* AUTO:deps:end */}
 
-Choose a credential of the type your API expects, for example a bearer token or basic auth. See [Create a credential](/app/connections/create/).
+Choose a connection of the kind your API expects: bearer token, basic auth (an empty password works, for keys like Stripe's), or an API key in a header or the query. The field lists every non-sign-in connection with its kind and sites. See [Add a connection](/app/connections/create/).
 
 ## Example workflow
 
 1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on a link.
-2. Http Request, **POST** to your webhook URL, **Body Content Type** `application/json`, with a body field `url` = `{{ $input.linkUrl }}`.
+2. HTTP Request, **POST** to your webhook URL, **Body Content Type** `application/json`, with a body field `url` = `{{ $input.linkUrl }}`.
 3. [Browser Notification](/nodes/extension/browsernotification/): "Sent".
 
 ## Common issues
@@ -81,9 +109,12 @@ Choose a credential of the type your API expects, for example a bearer token or 
 - **"Response status: 401" or "403".** The credential is missing, wrong or lacks permission. Check the **Authentication** field and the key's rights.
 - **"Response status: 404".** Check the URL and the query parameters.
 - **"URL validation failed".** The URL is malformed or not allowed. Use a full `https://` address.
-- **"Maximum redirects exceeded".** The site redirects in a loop, or more times than **Max redirects** allows.
+- **"Redirect blocked: …"**. The request was redirected to an address that isn't allowed (or, with a connection locked to its sites, to another site).
+- **Redirects off**: with **Follow redirects** off (or **Max redirects** 0), a redirect fails with a clear message.
 - **It works in the extension but fails in the web app.** Some sites refuse requests sent from another website (a browser rule called CORS). Run the workflow from the extension.
-- **The request times out.** Raise **Timeout (ms)** under **Options**; the default is 10 seconds.
+- **The request times out.** Set or raise **Options › Timeout**. Without one, the request waits as long as the server does.
+- **"Response is not valid JSON"**. The server said JSON but sent something else; set **Response format** to *Text* to see it.
+- **The next step runs once per entry when you expected one item.** The step splits lists (version 2). Choose **The whole response as one item** under **Return**.
 
 ## Related nodes
 

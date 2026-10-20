@@ -1,6 +1,6 @@
 ---
 title: "Python Code"
-description: "Run custom python code"
+description: "Run your own Python code on the incoming items, in a sandbox in the browser"
 sidebar:
   label: "Python Code"
 kind: node
@@ -16,16 +16,38 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 
 *Formerly **Code**. The step was renamed in AWFlow 1.0; searching for the old name still finds it.*
 
-Run your own Python code on the incoming data when no other node does what you need.
+Run your own Python code on the incoming items when no other step does what you need. For JavaScript, use [JavaScript Code](/nodes/builtin/core/javascript-code/), which starts faster.
 
 ## What it does
 
-Code runs the Python in **Code to Execute** and passes on the value of its **last line**. The language is Python only (Python 3 with its standard library, running in the browser). There is no JavaScript mode.
+Python Code runs your Python (Python 3 with its standard library, in the browser) and passes on the value of its **last line**. Anything you `print()` appears in the run's activity log. The code runs in an isolated sandbox: no network, no access to the page or your stored data, and a 30-second time limit. The first run after a pause takes a few seconds while Python starts.
 
-- The incoming data is available as a variable named `input`.
-- The value of the final expression becomes the output, under `result`.
-- Anything you `print()` appears in the run's activity log, which helps with debugging.
-- Each run starts from a clean slate in an isolated sandbox: no network, no access to the page or your stored data, and a 30-second time limit. The first run after a pause takes a couple of seconds while Python starts.
+Code is never searched for `{{ }}`: `f"{{name}}"` and `{{ $input.x }}` reach Python exactly as written (the editor warns *Looks like an expression: use items instead*).
+
+### Python Code version 2 (new steps in AWFlow 1.0)
+
+Pick how it runs with **Run**:
+
+- **Once for all items** (default): one interpreter for the whole list, so 50 items take seconds, not minutes. `items` is the list of items (dicts), `input` the first item. The last line must be a **list**: each element becomes one item.
+- **Once for each item**: `input` is the current item and `item_index` its position. A dict result **is** the new item; any other value becomes `{ "result": value }`.
+
+Both modes also get `workflow` and `execution` dicts (ids, name, run mode).
+
+```python title="Once for all items"
+# items is a list of dicts; the last line is the output
+[{**i, "total": i["qty"] * i["price"]} for i in items]
+```
+
+```python title="Once for each item"
+# input is the current item; the last line is the new item
+{**input, "total": input["qty"] * input["price"]}
+```
+
+Errors name the line and the item: `Line 4, item 3: KeyError: 'email'`. The full traceback stays in the activity log. A run that's too long stops with `Stopped after 30 s (time limit)`.
+
+### Steps saved before AWFlow 1.0
+
+They run once per item, `{{ }}` in the code is replaced before it runs, and the value comes out under `result`. The sections below describe them. **Update** in the step's header moves to version 2 and sets **Once for each item**, so the same code gives the same items.
 
 ## When to use it
 
@@ -33,7 +55,7 @@ Code runs the Python in **Code to Execute** and passes on the value of its **las
 - Reshape a complex structure: regroup a list, merge fields, count values.
 - Parse an unusual format with Python's standard library (`re`, `json`, `csv`, `datetime`, `statistics`).
 
-For simple field changes, [Edit Fields](/nodes/builtin/datatransformation/editfields/) or [Math](/nodes/builtin/datatransformation/math/) need no code. To call an API, use [Http Request](/nodes/builtin/core/http-request/).
+For simple field changes, [Edit Fields](/nodes/builtin/datatransformation/editfields/) or [Math](/nodes/builtin/datatransformation/math/) need no code. To call an API, use [HTTP Request](/nodes/builtin/core/http-request/). For counts and sums per group, [Summarize items](/nodes/builtin/datatransformation/summarize/) needs no code.
 
 ## Inputs and settings
 
@@ -41,7 +63,7 @@ For simple field changes, [Edit Fields](/nodes/builtin/datatransformation/editfi
 <AwfParamTable rows={[{"name":"Code to run","type":"Code","required":true,"description":"The code runs in the context of this step."}]} />
 {/* AUTO:settings:end */}
 
-### Reading `input`
+### Reading `input` (steps saved before 1.0)
 
 `input` is a normal Python value (a dict, a list or a single value), the same data that `{{ $input }}` holds in other nodes. Its shape depends on how many nodes are connected:
 
@@ -84,7 +106,7 @@ words = input.get("selectionText", "").split()
 <AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
-Read the returned value downstream with `{{ $input.result }}`, or a field of it with `{{ $input.result.words }}`. The value travels as JSON: dicts become objects, sets become lists, integers too large for JSON become text, and values with no JSON form (such as class instances) are returned as their text form.
+Version 2 returns your items as they are. In steps saved before 1.0, read the returned value downstream with `{{ $input.result }}`, or a field of it with `{{ $input.result.words }}`. The value travels as JSON: dicts become objects, sets become lists, integers too large for JSON become text, and values with no JSON form (such as class instances) are returned as their text form.
 
 ## Dependencies and credentials
 
@@ -97,13 +119,14 @@ None. This node needs no connection and has no slots for other nodes.
 Count the words in text you select on a page:
 
 1. [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger, **Menu Contexts** `Selection`.
-2. Code with the snippet from **Returning a value** above.
-3. [Browser Notification](/nodes/extension/browsernotification/), **Title** `Word count`, **Message** `{{ $input.result.words }} words, longest: {{ $input.result.longest }}`.
+2. Python Code, **Once for each item**, ending with `{**input, "words": len(input.get("selectionText", "").split())}`.
+3. [Browser Notification](/nodes/extension/browsernotification/), **Title** `Word count`, **Message** `{{ $input.words }} words`.
 
 ## Common issues
 
-- **"Network access is disabled in the Code node sandbox. Use an HTTP Request node to call APIs."** The code tried to fetch something. Fetch it with [Http Request](/nodes/builtin/core/http-request/) before the Code node and read the response from `input`.
-- **"Code execution timed out after 30000ms".** The code ran longer than 30 seconds (start-up included), often an endless loop. Simplify it or split the work across items.
+- **"Network access is disabled in the Code node sandbox. Use an HTTP Request node to call APIs."** The code tried to fetch something. Fetch it with [HTTP Request](/nodes/builtin/core/http-request/) before this step and read the response from `input`.
+- **"Stopped after 30 s (time limit)"**. The code ran longer than 30 seconds (start-up included), often an endless loop. Simplify it or split the work across items.
+- **"Once for all items" code must end with a list.** End with a list, for example `items` or a list comprehension.
 - **`result` is `null`.** The last line is an assignment, a `print()` or `None`. End with the value itself, for example `out` on its own line.
 - **`ModuleNotFoundError`.** Only the Python standard library is available; packages such as `numpy` or `requests` cannot be installed.
 - **`KeyError` on `input[...]`.** The field is not there, or several nodes are connected and `input` is keyed by node label. Use `print(input)` to see its shape in the activity log.
@@ -111,6 +134,7 @@ Count the words in text you select on a page:
 ## Related nodes
 
 - [Edit Fields](/nodes/builtin/datatransformation/editfields/): set or rename fields without code.
-- [Http Request](/nodes/builtin/core/http-request/): call APIs, which the Code node cannot do.
+- [JavaScript Code](/nodes/builtin/core/javascript-code/): the same in JavaScript.
+- [HTTP Request](/nodes/builtin/core/http-request/): call APIs, which code steps cannot do.
 - [JSON](/nodes/builtin/datatransformation/json/): reshape JSON without code.
-- [Debug](/nodes/builtin/core/debug/): inspect the data between steps.
+- [Test helper](/nodes/builtin/core/debug/): make sample data while you build.

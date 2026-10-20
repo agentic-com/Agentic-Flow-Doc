@@ -29,7 +29,7 @@ MCP Client Tool is a tool provider for an agent, not a step in the flow. It has 
 
 When the agent starts, the node connects to **Server URL**, asks the server which tools it offers, and hands each one to the agent as a separate tool, with the server's own name, description and arguments. One MCP Client Tool node can therefore add many tools at once. **Allowed Tools** narrows that list.
 
-Every call is approved first. An approval row appears in the **Executions** pane, for example "call MCP tool search on mcp.example.com". It names the tool and server only, never the arguments or your credential. A rejected call never runs, and the model is told you declined. If nobody answers within 2 minutes, the call is rejected.
+Every call is approved first. An approval row appears in **Runs**, for example "call MCP tool search on mcp.example.com". It names the tool and server only, never the arguments or your credential. A rejected call never runs, and the model is told you declined. If nobody answers within 2 minutes, the call is rejected.
 
 If the server can't be reached, rejects the credential or fails to list its tools, this node adds no tools and logs the error, while the agent's other tools keep working.
 
@@ -72,7 +72,7 @@ If the server needs a key, the provider gives you an API key or access token; sa
 1. [Get Selected Text](/nodes/extension/getselectedtext/) reads a question you highlighted, with **Output field name** `text`.
 2. MCP Client Tool with **Server URL** `https://mcp.example.com/mcp`, your token in **Authentication**, and **Allowed Tools** set to `search`.
 3. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Search our docs and answer: {{ $input.text }}`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and the MCP Client Tool connected to **Tools**.
-4. Run it and approve "call MCP tool search on mcp.example.com" in the **Executions** pane. [Display Markdown](/nodes/extension/displaymarkdown/) then shows `{{ $input.response }}`.
+4. Run it and approve "call MCP tool search on mcp.example.com" in **Runs**. [Display Markdown](/nodes/extension/displaymarkdown/) then shows `{{ $input.response }}`.
 
 ## Common issues
 

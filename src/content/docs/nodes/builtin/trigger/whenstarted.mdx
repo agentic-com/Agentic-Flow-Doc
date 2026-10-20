@@ -26,11 +26,11 @@ Start a workflow by hand, whenever you choose to run it.
 
 ## What it does
 
-When Started waits for nothing. The workflow runs when you click **Test Workflow** in the designer, run it from the workflow list, or press the trigger's own run button. The trigger has no settings and passes `{ "started": true }` to the next node.
+When Started waits for nothing. The workflow runs when you press **Run** in the designer, run it from the workflow list, or press the trigger's own run button. The trigger has no settings and passes `{ "started": true }` to the next node.
 
 A workflow whose only trigger is When Started also appears in the browser's right-click menu (under **Personal Workflows**), so you can run it on the page you are looking at.
 
-If a workflow has several triggers, clicking **Test Workflow** asks you which one to start from. Only the branch after the chosen trigger runs.
+If a workflow has several triggers, pressing **Run** asks you which one to start from. Only the branch after the chosen trigger runs.
 
 ## When to use it
 
@@ -77,7 +77,7 @@ Save the text of the current page:
 1. Add **When Started**.
 2. Add [Get All Text](/nodes/extension/getalltext/) with **Output field name** `text` to read the page you have open.
 3. Add [Data Store](/nodes/builtin/core/datastore/) with **Operation** set to **Set**, **Key** `last-page-text` and **Value** `{{ $input.text }}`.
-4. Open the page you want, then click **Test Workflow**.
+4. Open the page you want, then press **Run**.
 
 ## Common issues
 

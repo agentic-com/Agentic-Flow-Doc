@@ -20,10 +20,10 @@ Generate sample data, add a short pause, or force an error while you build and t
 
 ## What it does
 
-Debug does one of three things, chosen with **Mode**:
+Test helper does one of three things (it doesn't log anything: it was called Debug before AWFlow 1.0), chosen with **Mode**:
 
 - **Generate** emits predictable sample data in the **Shape** you pick. It ignores the incoming data.
-- **Delay** waits **Delay (ms)** milliseconds, then passes the incoming data through unchanged.
+- **Delay** waits **Delay** (in seconds), then passes the incoming data through unchanged.
 - **Throw** fails on purpose with **Error message**.
 
 It never touches the network, your credentials or your stored data.
@@ -33,7 +33,7 @@ It never touches the network, your credentials or your stored data.
 - Feed a node sample data so you can test it before connecting a real source.
 - Check how a step copes with a long text or a deeply nested object.
 - Slow a step down to watch the run, or space out two actions.
-- Fail on purpose to test [Try / Catch](/nodes/builtin/flow/try/), retries or **Continue On Fail**.
+- Fail on purpose to test [Try / Catch](/nodes/builtin/flow/try/), retries or **On error** settings.
 
 For waits longer than a few seconds, or that must survive closing the tab, use [Wait](/nodes/builtin/flow/wait/).
 
@@ -78,7 +78,7 @@ Once the catch branch works, replace Debug with the real step.
 
 ## Common issues
 
-- **The run stops with "Debug node threw on demand".** That is Throw mode doing its job. Switch **Mode** back, or handle the error with [Try / Catch](/nodes/builtin/flow/try/) or **Continue On Fail** in the node's settings.
+- **The run stops with "Debug node threw on demand".** That is Throw mode doing its job. Switch **Mode** back, or handle the error with [Try / Catch](/nodes/builtin/flow/try/) or **On error › Continue with an empty result** in the node's settings.
 - **Count, Length or Depth seems ignored.** Each only applies to its own **Shape**.
 - **The delay is lost when you close the tab.** Delay is a plain in-run timer. Use [Wait](/nodes/builtin/flow/wait/) for waits that must survive a closed tab.
 - **The data from the previous node is gone.** Generate replaces it with sample data. Only Delay passes data through.

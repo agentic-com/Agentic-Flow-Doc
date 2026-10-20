@@ -26,7 +26,7 @@ Pause a run until a person approves or rejects it, then continue down the matchi
 
 Wait For Approval stops the run at this step and asks a question, the **Prompt**. When someone answers, the items that were waiting leave through **Approved** or **Rejected**, unchanged.
 
-- The question appears on the paused run in the **Executions** pane. In the browser extension, an Approve / Reject card is also dropped onto the page you are looking at, when that page allows it.
+- The question appears on the paused run in **Runs**. In the browser extension, an Approve / Reject card is also dropped onto the page you are looking at, when that page allows it.
 - You are told a run is waiting: a "waiting for you" count in the top bar, a sound (a chime when the app is open, the desktop notification's own sound otherwise) and, in the extension when the app is not in front, a desktop notification you can click to jump to the run.
 - The run waits until someone answers. It does not time out, and it is kept if you close the browser. Cancelling the paused run stops it without sending items to either port.
 - Fed several items, the node pauses **once** and one answer routes all of them together. For one decision per item, put the node inside a [Loop](/nodes/builtin/flow/loop/) or [Split in Batches](/nodes/builtin/flow/splitinbatches/).
@@ -72,8 +72,8 @@ Review an AI-written summary before posting it:
 
 ## Common issues
 
-- **The run stays "waiting".** Nobody has answered yet. Open the **Executions** pane and approve, reject or cancel it.
-- **No card appears on the page.** The card only appears on normal web pages (`http` or `https`), and only in the extension. Browser settings pages, the extension store and the AWFlow app tab can't show it; answer from the **Executions** pane or the desktop notification.
+- **The run stays "waiting".** Nobody has answered yet. Open **Runs** and approve, reject or cancel it.
+- **No card appears on the page.** The card only appears on normal web pages (`http` or `https`), and only in the extension. Browser settings pages, the extension store and the AWFlow app tab can't show it; answer from **Runs** or the desktop notification.
 - **One answer approved every item.** That is expected: the node pauses once per run. Put it inside a [Loop](/nodes/builtin/flow/loop/) for one decision per item.
 
 ## Recipes with this node

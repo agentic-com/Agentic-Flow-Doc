@@ -20,7 +20,7 @@ Join two lists of items into one, pairing items that match.
 
 Merge has two inputs. It waits for both, then pairs each item from the first input (A) with the items from the second input (B) that satisfy your **Match Keys**, and combines each pair into one item.
 
-Each match key compares a field on the A side with a field on the B side, with an operator (for example **Is Equal To**). Several keys can be linked with AND or OR. With no match keys, every A item pairs with every B item.
+Each match key compares a field on the A side with a field on the B side, with an operator (for example **Is Equal To**). Several keys can be linked with AND or OR; each key row uses its own AND / OR (with several keys and OR, the run log reminds you how they combine). Keys are compared on their raw values: text stays text, so *starts with* and *contains* work, and numbers match their text (`1` and `"1"`). A missing nested path counts as empty. With no match keys, every A item pairs with every B item.
 
 When both items have a field with the same name but different values, the result keeps both, renamed `left-<field>` and `right-<field>`. Fields with equal values are kept once.
 
@@ -67,6 +67,8 @@ None. This node needs no connection and has no slots for other nodes.
 4. Every customer comes out once per matching order, or once on their own when they have no order.
 
 ## Common issues
+
+- **One input received nothing.** Merge treats it as an empty side, so each mode gives its natural result (a join that keeps only matches gives nothing), and the run log names the input that got no data.
 
 - **Nothing comes out.** In Inner Join mode no pair matched. Check that both fields hold the same kind of value (for example both lower-case emails) and that the field names are spelled as they appear in the data.
 - **Many more items than expected.** One A item matched several B items, and each pair becomes an item. Remove duplicates on B first, or add another match key.

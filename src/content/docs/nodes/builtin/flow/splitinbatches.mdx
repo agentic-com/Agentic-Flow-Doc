@@ -47,6 +47,14 @@ Most nodes already run once per item, so you don't need Split in Batches just to
 
 Set **Items** to an expression that returns a list, for example `{{ $input.data.contacts }}` after an Http Request. If your data arrives as many separate items, gather them into one list first with [Aggregate](/nodes/builtin/datatransformation/aggregate/).
 
+### Collect results
+
+Turn on **Collect results** to get, on **Done**, everything that came back through **Loop Back** during the passes, in order, as `results` (one entry per item, or per pass). Without it, **Done** only carries the last data, as before. Up to 10,000 entries (about 2 MB) are kept; beyond that the list is cut, `resultsTruncated` is set and the run log warns you. Nested loops each keep their own results.
+
+### Fail if the pass limit is reached
+
+The node stops after 1,000 passes. When that happens before every item was processed, it says so (a warning, and `stoppedEarly`, `processed` and `total` on each pass). Turn on **Fail if the pass limit is reached** to make it fail the step instead, so a cut-short run can't pass for a complete one.
+
 ## Outputs
 
 {/* AUTO:outputs:start */}

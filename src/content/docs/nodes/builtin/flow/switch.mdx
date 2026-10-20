@@ -26,7 +26,7 @@ Send each item down one of several named branches, with a fallback branch for th
 
 ## What it does
 
-Switch has one output per rule you add, named after the rule, plus a fallback output for items that match no rule. [IF](/nodes/builtin/flow/if/) gives you two branches; Switch gives you as many as you need, without nesting IF nodes.
+Switch has one output per rule you add, named after the rule, plus a fallback output for items that match no rule. [If](/nodes/builtin/flow/if/) gives you two branches; Switch gives you as many as you need, without nesting IF nodes.
 
 There are two ways to pick the branch, set with **Mode**:
 
@@ -35,13 +35,24 @@ There are two ways to pick the branch, set with **Mode**:
 
 Items that match nothing go to the fallback branch (**Anything else** by default). Turn off **Add A Fallback Branch** and they are dropped instead. Set **On Multiple Matches** to **Every match** to send an item to every branch it matches.
 
+### Conditions in AWFlow 1.0
+
+New Route by value steps (version 2) build conditions as cards, one rule per card:
+
+- **Match all** or **Match any** applies to a whole group of rules, and **Add group** nests a group inside another, so "A and (B or C)" is easy to read. AND / OR between cards is shown for you.
+- Operators have plain names, grouped by type: *is equal to*, *contains*, *matches pattern (advanced)*, *length is…* and so on. Lists and objects are compared by their content.
+- **Options › Type check**: **Loose** converts values when it can (with a warning), **Strict** fails the step and names the rule and the item when a value has the wrong type. **Ignore case** compares texts without caring about capitals (an **Aa ignored** chip shows it).
+- An empty date or number never counts as a date or as 0: the rule is false and the run log says why. An invalid pattern or date fails with "Condition N: …".
+
+Steps saved before 1.0 keep their rows, read **top to bottom** with each row's own AND/OR. **Update** in the step's header converts them to groups with exactly the same meaning. **XOR** means "exactly one of the two" (it used to behave like OR); it is only offered on rows that already use it.
+
 ## When to use it
 
 - Route items to **Billing**, **Bug** or **Other** depending on words in their title (Rules mode).
 - Split a list by a status or category field whose values are the branch names (Expression mode).
 - Handle three or more cases where you would otherwise chain IF nodes.
 
-For two branches, [IF](/nodes/builtin/flow/if/) is simpler. To drop non-matching items, use [Filter](/nodes/builtin/flow/filter/).
+For two branches, [If](/nodes/builtin/flow/if/) is simpler. To drop non-matching items, use [Filter](/nodes/builtin/flow/filter/).
 
 ## Inputs and settings
 
@@ -87,7 +98,7 @@ Handle support tickets by status:
 
 ## Related nodes
 
-- [IF](/nodes/builtin/flow/if/): two branches, true or false.
+- [If](/nodes/builtin/flow/if/): two branches, true or false.
 - [Filter](/nodes/builtin/flow/filter/): keep only matching items.
 - [Funnel](/nodes/builtin/flow/funnel/): bring the branches back together afterwards.
 - [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/): let an AI model pick the category first.

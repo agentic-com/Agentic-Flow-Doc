@@ -39,7 +39,7 @@ flowchart TD
 | Symptom | Likely cause | Where to look |
 | --- | --- | --- |
 | Clicking run does nothing, or the button is disabled | Another run is in progress, or something still needs setup | Hover the button for the reason; open **Ready to run?** |
-| An automatic workflow never runs | The workflow isn't **Active**, or the trigger's settings don't match | [Automatic runs with triggers](/app/workflows/create/#automatic-runs-with-triggers) |
+| An automatic workflow never runs | The workflow isn't **On**, or the trigger's settings don't match | [Automatic runs with triggers](/app/workflows/create/#automatic-runs-with-triggers) |
 | A step fails | Missing connection, refused API key, rate limit, network problem | The **Last run** tab, then [Error handling](/concepts/flow/error-handling/) |
 | A click or fill step does nothing | The element isn't there yet, or the site blocks the extension | [Permissions & security](/app/troubleshooting/permissions-security/), [Wait For Element](/nodes/extension/ui/wait-for-element/) |
 | Extraction returns empty or partial data | The page wasn't loaded, the content is in a frame, or the selector is wrong | [Data extraction](/app/troubleshooting/data-extraction/) |
@@ -61,7 +61,7 @@ Then click any node on the canvas to see what it received and what it returned. 
 
 ## Narrow it down
 
-1. **Test one step at a time.** Click a node and choose **Test step**. AWFlow runs only what that step needs. See [Run from the canvas](/app/workflows/executions/run-from-the-canvas/).
+1. **Test one step at a time.** Click a node and choose **Run step**. AWFlow runs only what that step needs. See [Run from the canvas](/app/workflows/executions/run-from-the-canvas/).
 2. **Check each step's output.** Follow the data from the first step to the one that fails.
 3. **Reduce the data.** Add a [Limit](/nodes/builtin/datatransformation/limit/) node to test with a few items, then remove it.
 4. **Simplify.** Disable the steps you don't need while testing.
@@ -82,7 +82,7 @@ Then click any node on the canvas to see what it received and what it returned. 
 
 - Wait for the page or element before acting on it.
 - Extract only the part of the page you need.
-- Turn on **Retry** for steps that call online services, and **Continue On Fail** for steps that may fail without harm. See [Error handling](/concepts/flow/error-handling/).
+- Turn on **Try again automatically** for steps that call online services, and **On error › Continue with an empty result** for steps that may fail without harm. See [Error handling](/concepts/flow/error-handling/).
 - Test with a few different pages and inputs before you activate a workflow.
 
 ## Still stuck?

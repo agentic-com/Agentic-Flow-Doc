@@ -20,7 +20,18 @@ Keep only the items that match your conditions and drop the rest.
 
 Filter checks its **Conditions** once for every item that arrives. Items that match leave through the **Kept** port, unchanged. Items that don't match are dropped: they go nowhere, and the steps after Filter never see them.
 
-Conditions work like the ones in [IF](/nodes/builtin/flow/if/): each compares a value (usually an expression such as `{{ $input.price }}`) with another value, using an operator for the type you pick (**String**, **Number**, **Date-Time**, **Boolean**, **Array** or **Object**). Link several conditions with **AND** or **OR**. They are read from top to bottom, one after the other, with no grouping: `A AND B OR C` means "(A and B), or C".
+Conditions work like the ones in [If](/nodes/builtin/flow/if/): each compares a value (usually an expression such as `{{ $input.price }}`) with another value, using an operator for the type you pick (**String**, **Number**, **Date-Time**, **Boolean**, **Array** or **Object**). Link several conditions with **AND** or **OR**. In steps saved before 1.0 they are read from top to bottom, one after the other, with no grouping: `A AND B OR C` means "(A and B), or C". New steps use groups (see below).
+
+### Conditions in AWFlow 1.0
+
+New Filter steps (version 2) build conditions as cards, one rule per card:
+
+- **Match all** or **Match any** applies to a whole group of rules, and **Add group** nests a group inside another, so "A and (B or C)" is easy to read. AND / OR between cards is shown for you.
+- Operators have plain names, grouped by type: *is equal to*, *contains*, *matches pattern (advanced)*, *length is…* and so on. Lists and objects are compared by their content.
+- **Options › Type check**: **Loose** converts values when it can (with a warning), **Strict** fails the step and names the rule and the item when a value has the wrong type. **Ignore case** compares texts without caring about capitals (an **Aa ignored** chip shows it).
+- An empty date or number never counts as a date or as 0: the rule is false and the run log says why. An invalid pattern or date fails with "Condition N: …".
+
+Steps saved before 1.0 keep their rows, read **top to bottom** with each row's own AND/OR. **Update** in the step's header converts them to groups with exactly the same meaning. **XOR** means "exactly one of the two" (it used to behave like OR); it is only offered on rows that already use it.
 
 ## When to use it
 
@@ -28,7 +39,7 @@ Conditions work like the ones in [IF](/nodes/builtin/flow/if/): each compares a 
 - Remove empty rows from a CSV before saving them.
 - Keep only the links that point to a given domain.
 
-To send the non-matching items somewhere else instead of dropping them, use [IF](/nodes/builtin/flow/if/). To keep the first few items whatever their content, use [Limit](/nodes/builtin/datatransformation/limit/).
+To send the non-matching items somewhere else instead of dropping them, use [If](/nodes/builtin/flow/if/). To keep the first few items whatever their content, use [Limit](/nodes/builtin/datatransformation/limit/).
 
 ## Inputs and settings
 
@@ -78,9 +89,11 @@ Keep only the PDF links of a page:
 - **Items you expected to drop still pass.** Check the **AND** / **OR** links. Because conditions are read top to bottom without grouping, one **OR** near the end can let everything through.
 - **Every item is dropped when comparing text.** Text comparisons are exact; check for extra spaces or a different capitalisation in the incoming value.
 
+- **The Filter fails before it starts.** A Filter needs at least one condition: with none, it fails with a clear message instead of keeping or dropping everything.
+
 ## Related nodes
 
-- [IF](/nodes/builtin/flow/if/): route non-matching items to a second branch instead of dropping them.
+- [If](/nodes/builtin/flow/if/): route non-matching items to a second branch instead of dropping them.
 - [Switch](/nodes/builtin/flow/switch/): send items to one of several branches.
 - [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): drop repeated items.
 - [Limit](/nodes/builtin/datatransformation/limit/): keep only the first items.

@@ -29,7 +29,7 @@ HTTP Request Tool is a tool for an agent, not a step in the flow. It has no outp
 
 The model chooses the method (GET, POST, PUT, DELETE, PATCH, OPTIONS or HEAD), the URL, optional headers and an optional body. A JSON object body is sent as JSON; any other body is wrapped and sent as `{"raw": "..."}`. The request is sent the same way as the [Http Request](/nodes/builtin/core/http-request/) node, with the **Authentication** credential you chose added.
 
-Before anything is sent, an approval row appears in the **Executions** pane, for example "send a POST request to api.example.com". It shows the method and host only, never headers, body or credential. You approve or reject. A rejected request is never sent, and the model is told you declined. If nobody answers within 2 minutes, the request is rejected.
+Before anything is sent, an approval row appears in **Runs**, for example "send a POST request to api.example.com". It shows the method and host only, never headers, body or credential. You approve or reject. A rejected request is never sent, and the model is told you declined. If nobody answers within 2 minutes, the request is rejected.
 
 ## When to use it
 
@@ -69,12 +69,12 @@ Use the same kinds of credential as the Http Request node, for example a Bearer 
 
 1. [Get Selected Text](/nodes/extension/getselectedtext/) reads an order number you highlighted, with **Output field name** `text`.
 2. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Find the status of order {{ $input.text }} with GET https://api.example-shop.com/orders/ID`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and HTTP Request Tool connected to **Tools** with your shop's Bearer token in **Authentication**.
-3. Run it and approve "send a GET request to api.example-shop.com" in the **Executions** pane.
+3. Run it and approve "send a GET request to api.example-shop.com" in **Runs**.
 4. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`.
 
 ## Common issues
 
-- **The request is never sent.** It is waiting for your approval in the **Executions** pane, or it was rejected after 2 minutes without an answer.
+- **The request is never sent.** It is waiting for your approval in **Runs**, or it was rejected after 2 minutes without an answer.
 - **"Action denied: invalid or blocked URL".** Only `http` and `https` addresses on public hosts are allowed. `localhost`, private network addresses and cloud metadata addresses are refused.
 - **The API answers 401 or 403.** Set **Authentication**, or check that the token is still valid and has access to that endpoint.
 - **The model calls the wrong URL.** Give it the exact base URL and endpoint paths in the **Prompt**.

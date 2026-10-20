@@ -20,7 +20,7 @@ An AI agent that can call tools (search, calculate, browse, call APIs) step by s
 
 Tools Agent sends **Prompt** to the chat model on **Model**, together with the tools connected to **Tools**. The model decides which tool to call and with what; the agent runs it, sends the result back, and repeats until the model gives a final answer or **Max iterations** is reached.
 
-Some tools only read or compute. Others take real actions on your behalf, and those are **gated**: the model can call them, but each call pauses for your approval before it runs. You approve or reject each action in the **Executions** pane. This is automatic and cannot be turned off; see [Action Approval](/concepts/ai/action-approval/). The gated tools are:
+Some tools only read or compute. Others take real actions on your behalf, and those are **gated**: the model can call them, but each call pauses for your approval before it runs. You approve or reject each action in **Runs**. This is automatic and cannot be turned off; see [Action Approval](/concepts/ai/action-approval/). The gated tools are:
 
 - [Browser Tool](/nodes/builtin/ai/aidependencies/tools/browser/): click, fill, type, select, submit or navigate on the active page.
 - [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/): send HTTP requests to APIs.
@@ -110,7 +110,7 @@ Ask "What is the population of Lyon divided by 12?" and watch the run log: the a
 ## Common issues
 
 - **"This agent requires that the bind_tools() method be implemented on the input model".** The connected chat model cannot call tools. Use a cloud model, or Transformers Chat or Web LLM on-device, and check that it is connected to **Model**.
-- **The run pauses and nothing happens.** A gated tool (Browser, HTTP Request, MCP Client) is waiting for your approval. Open the **Executions** pane and approve or reject the action.
+- **The run pauses and nothing happens.** A gated tool (Browser, HTTP Request, MCP Client) is waiting for your approval. Open **Runs** and approve or reject the action.
 - **"Agent reached its max iterations and answered with what it had".** The agent needed more tool calls. Raise **Max iterations**, or make the prompt and **System message** more precise so it needs fewer steps.
 - **The agent never uses a tool.** Say in **System message** when each tool should be used. Small models often skip tools; try a more capable model.
 - **"Model not found".** The connected model node is not set up: open it and choose a model and its credential.
