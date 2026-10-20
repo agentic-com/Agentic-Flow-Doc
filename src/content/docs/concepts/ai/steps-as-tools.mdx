@@ -1,0 +1,60 @@
+---
+title: Steps as AI tools
+description: Give an agent your app steps (Slack, Gmail, Sheets, Notion…) and browser steps as tools, let the model fill some fields, and decide when it must ask you first.
+sidebar:
+  badge:
+    text: New
+    variant: tip
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+An AI agent gets things done through its **tools**. Besides the dedicated tools (HTTP Request Tool, Calculator, Web Search…), many ordinary steps can be given to an agent as a tool: it then decides when to call them, and with what.
+
+## Which steps can be tools
+
+| Kind | Steps |
+| --- | --- |
+| Apps | Slack, Gmail, Google Sheets, Notion, Linear, GitHub, Todoist, Data Store, Telegram, Google Calendar |
+| Browser steps (extension only) | Get All Text, Get Structured Data, Get Selected Text, Screenshot Page, Form Fill, Act on the page, Tab Control, Delete Elements |
+
+In the step picker they appear under **Tools · Apps** when you add a tool to an agent. The [Browser](/nodes/builtin/ai/aidependencies/tools/browser/) block gives an agent a whole browser in one go.
+
+## Add one to an agent
+
+<Steps>
+
+1. Open the agent (a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)): its **Building blocks** are at the top of **Setup**.
+2. Press **+ Add a tool** and pick, for example, **Slack**.
+3. Set it up like the normal step: the connection, the operation (**Send message**), the fields.
+4. Give it a **Tool name** and one sentence for **When to use it**: the model reads it to decide when to call the tool.
+5. For each field the model should fill, choose **Let the model decide** in the field's label row. The field becomes a dashed **The model decides** box; write in it what the model should put there ("The channel the user asked for, like #sales").
+
+</Steps>
+
+Fields you fill yourself stay fixed: the model can't change them. On each call, the model's values are put into the "model decides" fields and the step runs as usual, with the same connection, limits and Stop.
+
+In the expression view a "model decides" field shows as `{{ $fromAI(...) }}`. It only works in a step used as a tool: the workflow doctor flags it anywhere else.
+
+## When the agent must ask you
+
+Each tool step has **Ask before a call**:
+
+| Choice | The agent asks… |
+| --- | --- |
+| **Every call** | before every call. Saved and installed workflows without this setting behave this way. |
+| **Only calls that change things** (default for a tool you add by hand) | only for calls that write. Reads (GET, list, search) run by themselves. |
+| **Skip trusted sites** | except for calls to the **Trusted sites** listed below. Ticking **Always allow on this site** on an approval card adds a site. |
+| **Ask me anywhere, even when I'm away** | and the run waits for you, up to 24 hours, even in a scheduled or background run. Answer from Runs or a notification. |
+
+Whatever the choice, calls that **delete** or **send as you** (send, post, create, reply, publish, invite…) always ask.
+
+When a call needs an answer and nobody is there (a scheduled run), the run **waits** instead of being refused: it shows in [Runs](/app/workflows/run-history/) as waiting. Approving continues the agent where it stopped; rejecting tells the model the call was declined. **Ask before a call** and **Trusted sites** are cleared when you publish the workflow: whoever installs it decides for themselves.
+
+## Safety
+
+- Results that come from outside (web pages, API answers, files) reach the model **fenced as data**, so instructions hidden in them are not followed.
+- After the agent has read untrusted content in a turn, it asks before navigating to a new site or sending a long or random-looking value.
+- A derived tool inherits what the step may touch (its sites and connections), shown in the workflow's touches panel.
+
+See [Action approval](/concepts/ai/action-approval/) and [Tool selection](/concepts/ai/tool-selection/).

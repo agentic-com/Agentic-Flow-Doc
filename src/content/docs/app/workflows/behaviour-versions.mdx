@@ -1,0 +1,50 @@
+---
+title: Workflow behaviour versions
+description: Classic and new behaviour — how a workflow handles items and expressions, what changed in AWFlow 1.0, and how to preview and upgrade an older workflow.
+sidebar:
+  badge:
+    text: New
+    variant: tip
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+Some rules apply to a whole workflow rather than one step: what happens when a step gets no items, how two lists are combined, what an expression gives back. AWFlow 1.0 improves these rules. To keep every existing workflow working exactly as before, each workflow records **which behaviour it was made with**.
+
+- **New behaviour**: every workflow you create in AWFlow 1.0 (blank, from the wizard, or built by Aria).
+- **Classic behaviour**: workflows made before 1.0. They keep it until you choose to upgrade.
+- Imported, installed and template workflows keep the behaviour of the file they came from. A duplicate keeps the original's.
+
+The behaviour is saved with each version of the workflow, so restoring an old version, a published version or a paused run uses the behaviour it was made with. See which one a workflow uses in [Workflow settings](/app/workflows/settings/) › **Engine**.
+
+## What the new behaviour changes
+
+| Rule | Classic | New |
+| --- | --- | --- |
+| A step that receives **no items** | runs anyway, with nothing | is skipped (the canvas says why). A step joining several branches runs when any branch brings items. **Pass an empty item when there's no result** still hands on one empty item. |
+| A step fed **two lists** | runs for every combination (3 × 4 = 12 runs) | pairs items by position (4 runs, with a warning when the counts differ). Use [Merge](/nodes/builtin/flow/merge/) › All combinations to get every combination on purpose. |
+| A step's output | sometimes one item, sometimes a list | always a list, one item per result. `$('Step').field` reads the paired item; `.all()`, `.first()`, `.last()` read the list. |
+| A field that is only `{{ … }}` | becomes text | keeps the value's type: a number stays a number, a list a list, yes/no a boolean. |
+| An expression that can't be worked out (unknown step, typo, syntax) | the text is used as is | the step stops with an error that names the field and the item, so **On error** and Try/Catch apply. |
+
+The details of each rule are in [Item linking](/concepts/data/item-linking/) and [Expressions](/concepts/data/data-mapping/data-mapping-expressions/).
+
+## Upgrade an older workflow
+
+<Steps>
+
+1. Open the workflow, then the canvas **⋯** menu › **Upgrade workflow behaviour…** (or **Workflow settings** › **Engine** › **See what changes with the new behaviour…**).
+2. Read the findings: one plain sentence per place the new rules change something, for example "*Send email* will not run when *Get leads* finds nothing" or "*Total* → Amount `{{ $input.price }}` will keep its type (a number) instead of becoming text".
+3. If the workflow ran before, AWFlow replays its **last run** with both behaviours and shows the steps whose output differs (with the first difference). Only steps without side effects really run; the others reuse their recorded output. Nothing is sent.
+4. Optionally tick the step updates offered at the same time (see [Step versions](/app/workflows/step-versions/)).
+5. Press **Upgrade**. AWFlow saves **one new version** with the new behaviour.
+
+</Steps>
+
+To go back, open [History](/app/workflows/history/) and restore the previous version.
+
+Only the author can upgrade: the option is greyed out on a workflow you installed from the marketplace.
+
+## Publishing and older AWFlow versions
+
+A workflow with the new behaviour needs AWFlow 1.0 or later. Someone on an older AWFlow who opens it is told it was *made with a newer AWFlow*; it doesn't run, and it isn't changed.

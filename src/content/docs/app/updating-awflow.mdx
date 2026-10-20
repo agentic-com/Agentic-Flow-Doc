@@ -1,0 +1,54 @@
+---
+title: "Updating AWFlow"
+description: "How AWFlow updates, what the update card on Home tells you before and after an update, and what the update banners mean."
+kind: guide
+section: app
+sidebar:
+  badge:
+    text: New
+    variant: tip
+---
+
+The browser updates the AWFlow extension by itself, usually within a day of a release. AWFlow 1.0 tells you, before and after, whether an update touches your workflows, and keeps your data safe while it upgrades.
+
+## The update card on Home
+
+When an update is waiting, or has just been installed, and one of **your own** workflows uses a step that changes in it, a card appears on **Home**:
+
+- **AWFlow 1.x is ready**: the new version is downloaded and waits for the browser to apply it. The card says how many of your workflows use a step that changes.
+- **Updated to AWFlow 1.x**: the update is installed, and some of your workflows use a step that changed.
+
+From the card:
+
+- **Review** lists the workflows and, for each, the steps concerned. **Open** opens a workflow with those steps ringed on the canvas. Nothing is modified.
+- **Update now** applies the waiting version at once (the app reloads).
+- **Release notes** opens the [release notes](/releases/) of that version.
+- **Later** hides the card until the next version.
+
+Updating never changes your saved workflows: steps keep their [version](/app/workflows/step-versions/) and workflows their [behaviour](/app/workflows/behaviour-versions/) until you choose to update them.
+
+## "AWFlow needs an update"
+
+If AWFlow is too old to talk to your account, a banner says **AWFlow needs an update to keep syncing. Your local workflows keep working.** Cloud saves and syncing stop until you update; everything kept on this device works as usual. Press **Update AWFlow**, or update the extension from your browser's extensions page.
+
+## Your saved data after an update
+
+An update can change how AWFlow stores your data on this device. Before it changes anything, AWFlow keeps a backup of what it is about to change. If the change can't be finished:
+
+- **We couldn't update your saved data. Nothing was lost.** Saving is paused until the update works; you can still open and read everything. Use **Try again**, or **Export my data** to keep a copy.
+
+If you open your data with an **older** AWFlow than the one that last saved it (for example after rolling back the extension), a banner says **This data was saved by a newer AWFlow. Update AWFlow to edit it.** You can open and read everything, but changes and run history aren't saved until you update.
+
+## When a step is switched off remotely
+
+Rarely, a step can be switched off for everyone while a serious problem is fixed. A workflow that reaches it stops at that step with a plain message, before it does anything. Your workflow is not changed: the step runs again as soon as it is switched back on.
+
+## What AWFlow sends with each request
+
+Every call from the app to the AWFlow service carries a short header with the AWFlow version, whether you use the extension or the web app, and the browser name, for example `1.0.0/ext/chrome`. It lets the service warn old versions and keep them working. It contains nothing about you or your workflows. See [Privacy and your data](/app/privacy-and-data/).
+
+## Related
+
+- [Release notes](/releases/): what changed in each version.
+- [Breaking changes](/releases/breaking-changes/): what to check after an update.
+- [Install AWFlow](/get-started/install/): browsers and stores.

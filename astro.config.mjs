@@ -380,6 +380,11 @@ export default defineConfig({
                 { ...nav("Filter the list"), link: "app/workflows/filters" },
                 { ...nav("Manage the list"), link: "app/workflows/manage-list" },
                 { ...nav("Run history"), link: "app/workflows/run-history" },
+                { ...nav("Workflow settings"), link: "app/workflows/settings" },
+                { ...nav("Keyboard shortcuts"), link: "app/workflows/keyboard-shortcuts" },
+                { ...nav("Test runs"), link: "app/workflows/test-runs" },
+                { ...nav("Step versions"), link: "app/workflows/step-versions" },
+                { ...nav("Behaviour versions"), link: "app/workflows/behaviour-versions" },
                 {
                   ...nav("Components"),
                   collapsed: true,
@@ -498,6 +503,8 @@ export default defineConfig({
               items: [
                 { ...nav("Assistant Notch"), link: "app/assistant-notch" },
                 { ...nav("Data store"), link: "app/data-store" },
+                { ...nav("Variables"), link: "app/variables" },
+                { ...nav("Insights"), link: "app/insights" },
                 { ...nav("Activity"), link: "app/activity" },
                 { ...nav("Notifications"), link: "app/notifications" },
                 { ...nav("Newsletter"), link: "app/newsletter" },
@@ -515,6 +522,7 @@ export default defineConfig({
               items: [{ autogenerate: { directory: "app/account" } }],
             },
             { ...nav("Privacy & your data"), link: "app/privacy-and-data" },
+            { ...nav("Updating AWFlow"), link: "app/updating-awflow" },
             { ...nav("FAQ"), link: "app/faq" },
             {
               ...nav("Troubleshooting"),

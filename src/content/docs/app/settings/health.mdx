@@ -1,0 +1,43 @@
+---
+title: Health
+description: "Is my setup safe? Settings › Health checks your connections, backups, storage, failing schedules and site access, and fixes what it finds in one click."
+sidebar:
+  badge:
+    text: New
+    variant: tip
+---
+
+**In the app:** **Settings › Health**
+
+**Health** answers one question: *is my setup safe?* Every check runs when you open the page, on this device, in a few seconds. Nothing is sent anywhere.
+
+## What it checks
+
+| Check | What it looks for | The fix it offers |
+| --- | --- | --- |
+| Connections without a passphrase | Connections kept on this device that aren't protected by the [secret vault](/app/account/secret-vault/) | **Set up a passphrase** |
+| Keys pasted into steps | An API key typed in plain text into a step's settings | **Open the step**, then move the key to a [connection](/app/connections/) |
+| Browser may delete data | The browser hasn't promised to keep AWFlow's data when space runs low | **Protect my data** |
+| No recent backup | No [backup](/app/settings/storage/#backups) in the last 30 days | **Back up now** |
+| Workflows failing on their own | A scheduled workflow that failed its last 5 runs | **Open the last failed run**, or **Turn off** |
+| Storage almost full | AWFlow uses 85 % or more of the space your browser allows | **Open Storage** |
+| Withdrawn marketplace workflows | A workflow you installed was withdrawn from the marketplace; it no longer runs | **Open the workflow** |
+| Active workflows with disabled steps | A workflow that is On has [disabled steps](/app/workflows/components/nodes/#disable-a-step), which background runs skip | **Open the workflow** |
+| Very large workflows | A workflow with so many steps it may open slowly | **Open the workflow** |
+| Site access nothing uses | AWFlow can read pages on a site no workflow needs any more (extension only) | **Remove access** |
+
+## How results are shown
+
+Findings are grouped by importance: **Critical**, **Worth a look** and **For your information**, each with a plain sentence and links to the items concerned. Checks that passed fold into one row at the end. A check that takes too long says **Couldn't check** instead of guessing.
+
+Fixes that change something (**Turn off**, **Remove access**) ask first and name exactly what they will do. After a fix, the check runs again.
+
+## Where you see it
+
+When something critical is found, a dot appears on **Settings** and Home shows a **Critical · Health** chip with the count. Results are kept for 10 minutes, then checked again.
+
+## Related
+
+- [Storage](/app/settings/storage/): space used, backups and protection.
+- [Site access](/app/settings/access/): the sites AWFlow may read.
+- [Privacy and your data](/app/privacy-and-data/).

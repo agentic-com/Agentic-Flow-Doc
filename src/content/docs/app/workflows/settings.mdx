@@ -1,0 +1,48 @@
+---
+title: Workflow settings
+description: The choices that apply to a whole workflow — schedule timezone, how much run data to keep, who is told when it fails, time saved and the engine behaviour.
+sidebar:
+  badge:
+    text: New
+    variant: tip
+---
+
+**In the app:** canvas **⋯** › **Workflow settings**, or the **⋯** menu of a row in **Workflows**
+
+Step settings change one step. **Workflow settings** gather the choices that apply to the whole workflow. On a wide screen they open in a side sheet; in the side panel they take the full width.
+
+Changes apply to the canvas at once and mark the workflow as unsaved: press **Save** to keep them. One **Undo** reverts everything you changed in the sheet.
+
+## Running
+
+**Timezone for schedules**: the timezone every [Schedule](/nodes/builtin/trigger/schedule/) rule of this workflow uses, unless a rule sets its own. **Not set** means your browser's timezone, as before. When you pick a zone, the sheet tells you when the schedules will fire ("Schedules will fire at 09:00 in Europe/Paris").
+
+When you install a workflow from the marketplace or a template, the author's timezone is dropped: your schedules run in your time.
+
+## Run history
+
+**Save step data** decides what a run keeps of each step's input and output, so you can open a past run later and see the data:
+
+| Choice | What is kept |
+| --- | --- |
+| **Only for failed runs** (default) | The data of runs that failed or sent items to an error output. Enough to see what went wrong. |
+| **For all runs** | The data of every run. Uses more space. |
+| **Status and timings only** | No data: each step's status, timing and item counts. |
+
+Each input or output is capped (64 KB), long loops keep their first and last passes, files are replaced by a marker, and values that look like secrets are blanked.
+
+**Keep Manual runs**: whether runs you start with **Run** in the editor are kept in [Runs](/app/workflows/run-history/).
+
+## When this fails
+
+Lists the workflows whose [Error Trigger](/nodes/builtin/trigger/errortrigger/) watches this one, with a badge when they are Off. **Create an error workflow** makes a new workflow, Off, with an Error Trigger already set to watch this one: add what should happen (a notification, a message) and turn it On.
+
+## Value
+
+**Minutes saved per run**: how much time one run saves you. It feeds **Time saved** on [Home and Insights](/app/insights/). **Use N min** suggests about 1 minute per step.
+
+## Engine
+
+Shows whether the workflow runs with the **Classic behaviour** (how it has always run) or the **New behaviour** (the current way steps handle items and expressions). On a Classic workflow, **See what changes with the new behaviour…** opens the upgrade preview. See [Workflow behaviour versions](/app/workflows/behaviour-versions/).
+
+Only the author can upgrade: the button is greyed out on an installed copy.
