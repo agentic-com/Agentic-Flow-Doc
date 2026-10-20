@@ -6,12 +6,18 @@ sidebar:
     text: New
     variant: tip
 ---
+import wfsLight from '@assets/screenshots/workflow-settings.light.webp';
+import wfsDark from '@assets/screenshots/workflow-settings.dark.webp';
+import { Screenshot } from '@components/awflow';
 
 **In the app:** canvas **⋯** › **Workflow settings**, or the **⋯** menu of a row in **Workflows**
 
 Step settings change one step. **Workflow settings** gather the choices that apply to the whole workflow. On a wide screen they open in a side sheet; in the side panel they take the full width.
 
 Changes apply to the canvas at once and mark the workflow as unsaved: press **Save** to keep them. One **Undo** reverts everything you changed in the sheet.
+
+<Screenshot src={wfsLight} srcDark={wfsDark} alt="The Workflow settings sheet of Hash Text at side-panel width: Running with Timezone for schedules (Europe/Paris · your browser); Run history with Save step data (Only for failed runs selected, For all runs, Never) and Keep Manual runs switched on; When this fails with Create an error workflow; Value with Minutes saved per run; and Done." width={400} />
+
 
 ## Running
 
@@ -27,7 +33,7 @@ When you install a workflow from the marketplace or a template, the author's tim
 | --- | --- |
 | **Only for failed runs** (default) | The data of runs that failed or sent items to an error output. Enough to see what went wrong. |
 | **For all runs** | The data of every run. Uses more space. |
-| **Status and timings only** | No data: each step's status, timing and item counts. |
+| **Never** | Status and timings only: each step's status, timing and item counts, no data. |
 
 Each input or output is capped (64 KB), long loops keep their first and last passes, files are replaced by a marker, and values that look like secrets are blanked.
 

@@ -11,7 +11,7 @@ sidebar:
 ---
 
 import { Steps } from "@astrojs/starlight/components";
-import { Badge, Callout } from "@components/awflow";
+import { Badge, Callout, GuidedShot } from "@components/awflow";
 
 <Badge variant="no-setup" text="Free" />
 
@@ -34,6 +34,16 @@ Variables are visible to anyone who edits your workflows, and they aren't encryp
 5. Press **Save**.
 
 </Steps>
+
+<GuidedShot
+  shot="variables-new"
+  steps={[
+    { spot: 'name', title: 'Name', body: 'Letters, numbers and `_`, up to 50.' },
+    { spot: 'value', title: 'Value', body: 'Up to 2,000 characters. Never a key or a password.' },
+    { spot: 'description', title: 'Description', body: 'Optional: shown to whoever imports a workflow that needs it.' },
+    { spot: 'save', title: 'Save', check: 'the variable is listed on the Variables page.' },
+  ]}
+/>
 
 You can keep up to 200 variables. A value that looks like a known key format (an OpenAI or GitHub key, for example) is refused, with **Store as a connection**. A name like `API_KEY`, or a value that looks secret, shows a warning and needs **Save anyway**.
 

@@ -16,12 +16,13 @@ import { shots as concepts } from './concepts.ts';
 import { shots as recipes } from './recipes.ts';
 import { shots as publishing } from './publishing.ts';
 import { shots as admin } from './admin.ts';
+import { shots as road } from './road.ts';
 
 export { Session } from '../lib/session.ts';
 export type { ShotDef, SpotDef } from './define.ts';
 export { spotsOf } from './define.ts';
 
-export const SHOTS: ShotDef[] = [...app, ...ai, ...workflows, ...connections, ...settings, ...account, ...getStarted, ...concepts, ...recipes, ...publishing, ...admin];
+export const SHOTS: ShotDef[] = [...app, ...ai, ...workflows, ...connections, ...settings, ...account, ...getStarted, ...concepts, ...recipes, ...publishing, ...admin, ...road];
 
 const names = new Set<string>();
 for (const s of SHOTS) {
