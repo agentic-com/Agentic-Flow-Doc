@@ -32,6 +32,9 @@ Saved workflows keep their step versions and their **Classic** behaviour, so mos
 - **Split in Batches says when its 1,000-pass limit cut it short**, and can fail instead (**Fail if the pass limit is reached**).
 - **Two Google or Microsoft connections no longer share one sign-in.** Each connection may ask you to sign in once more.
 - **Steps were renamed** in the app (*When Started* → *When I press Run*, *IF* → *If*, *Switch* → *Route by value*, *Funnel* → *Join branches*, *Lambda Input/Output* → *Workflow inputs / Return to caller*…). Saved steps keep their own names; search finds both.
+- **A step fed several lists, one of them empty** (Classic behaviour) no longer loses the other inputs: the empty list is read as `[]` in each combination. Two or more lists making 100+ combinations log a warning suggesting Merge.
+- **Stop really stops.** Stop and time limits cancel the step in flight; a run you stop is **Canceled** even if its steps are set to continue on error.
+- **Paused runs continue on the version they started on**, not on your latest edits; your changes apply to the next runs.
 - **Executions is now Runs**, and the **Activity** page is part of **Workflows › Runs**; old links redirect.
 
 ## v0.8.2

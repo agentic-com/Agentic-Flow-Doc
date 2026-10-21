@@ -18,7 +18,7 @@ Call any web API that publishes an OpenAPI (Swagger) description: paste the spec
 
 {/* AUTO:callout:start */}
 <AwfCallout type="credential" title={"Can use a Custom API connection"} href="/app/connections/" linkLabel={"Create a connection"}>
-  Optional: pick a saved connection in the **Credential** field when the service needs one.
+  Optional: pick a saved connection in the **Connection** field when the service needs one.
 </AwfCallout>
 {/* AUTO:callout:end */}
 
@@ -44,7 +44,7 @@ Limits:
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Credential","type":"Credential","description":"Optional. A credential matching the API’s security scheme: Bearer Token for bearer / API-key schemes, Basic Auth for basic."},{"name":"OpenAPI spec URL","type":"URL","required":true,"description":"URL of a public OpenAPI (Swagger) JSON document. Grant access, then pick an operation."},{"name":"Operation","type":"Choice (loaded from your account)","required":true,"description":"Choose an operation from the spec."},{"name":"Parameters","type":"Field list","description":"Fields generated from the selected operation (path, query, header and body)."}]} />
+<AwfParamTable rows={[{"name":"Connection","type":"Credential","description":"Optional. A connection matching the API’s security scheme: Bearer Token for bearer / API-key schemes, Basic Auth for basic."},{"name":"OpenAPI spec URL","type":"URL","required":true,"description":"URL of a public OpenAPI (Swagger) JSON document. Grant access, then pick an operation."},{"name":"Operation","type":"Choice (loaded from your account)","required":true,"description":"Choose an operation from the spec."},{"name":"Parameters","type":"Field list","description":"Fields generated from the selected operation (path, query, header and body)."}]} />
 {/* AUTO:settings:end */}
 
 - **OpenAPI spec URL** must point at the JSON document itself (often ending in `openapi.json` or `swagger.json`), not at the human-readable documentation page. Click **Grant access** next to the field: it allows both loading the spec and calling the API on that site. You can review it later in **Settings → Site access**; see [Permissions and security](/app/troubleshooting/permissions-security/).
@@ -61,7 +61,7 @@ The output is the API's response: parsed JSON when the API returns JSON, otherwi
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection): optional. See [Create a connection](/app/connections/).
+- **Connection** (connection): optional. See [Create a connection](/app/connections/).
 {/* AUTO:deps:end */}
 
 Leave **Credential** empty for public APIs. Otherwise, pick the credential type that matches the API's security, as described in the spec:

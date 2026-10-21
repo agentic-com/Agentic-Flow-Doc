@@ -57,6 +57,10 @@ Search the picker by name or by what you want ("send email", "split"): results s
 
 New steps get plain names ("HTTP Request", then "HTTP Request 2", or "Gmail: Send message"). Rename a step by clicking its title in its settings, or with <Kbd mac="F2" windows="F2" />.
 
+Renaming is safe: every reference to the step in other fields (`$('Old name')`) is rewritten to the new name, in one undo step. A toast says *Renamed to "…"* and how many references in how many steps now use it, with **Undo**. A name another step already has is refused, and leaving the field keeps the old name.
+
+When you **Save**, AWFlow checks for fields that name a step that doesn't exist (for example after deleting one). A sheet lists each one (*Step › Field* and the expression), with **Open** to fix it, **Save anyway** or **Review**; those steps show **Needs setup**. [Health](/app/settings/health/) lists such fields across all your workflows.
+
 ## Set up a step
 
 Double-click a step (or select it and press <Kbd mac="Enter" windows="Enter" />) to open its settings.
@@ -130,6 +134,12 @@ Under **Advanced**, **On error** chooses what happens when the step fails (after
 **Try again automatically** retries a failed step: **Retries** (how many more tries), **Wait (seconds)**, **Wait pattern** (**Same each time** or **Longer each time**) and **Which errors** (**Any error**, **Temporary only**, or **When the message matches**). Steps that call the network and were added by Aria or a template retry twice by default.
 
 **Pass an empty item when there's no result** makes the step hand on one empty item when it finds nothing, so the next steps still run.
+
+**Time limit** (off by default): stop the step if it takes longer than the number of **seconds** you set. It counts as a normal failure, so **On error** and **Try again automatically** apply.
+
+**Items at the same time** (1 by default; 2, 4 or 8): steps that can safely work on several items side by side (HTTP Request, AI steps, most app steps) can process items in parallel. Results keep their order. If one item fails, the step fails as before: earlier items are kept, the later ones are dropped. Steps that act on a page always work on one item at a time, and say so.
+
+A run can also be limited as a whole, and told to wait in line: see [Workflow settings › Run limits](/app/workflows/settings/#run-limits).
 
 A failed step stops **its own branch**. Branches that don't depend on it keep running. A step joining several branches needs all of them; [Join branches](/nodes/builtin/flow/funnel/) runs as soon as any branch that didn't fail reaches it. The run is reported as **Failed**, with the first failed step as its cause.
 

@@ -47,7 +47,8 @@ Edit Fields receives two orders and builds two fields from expressions. Each exp
 
 | Write | Reads | Example |
 | --- | --- | --- |
-| `$input` | The item this step is working on | `{{ $input.title }}`, `{{ $input.metadata.description }}`, `{{ $input.items[0].name }}` |
+| `$input` or `$json` | The item this step is working on (`$json` is the same as `$input`) | `{{ $input.title }}`, `{{ $json.metadata.description }}`, `{{ $input.items[0].name }}` |
+| `$('Step name').item` | The item of that step the current item came from | `{{ $('Get contacts').item.email }}` |
 | `$('Step name')` | The output of another step, by its name | `{{ $('Get Page Metadata').title }}` |
 | `$vars` | A [variable](/app/variables/) you set on the Variables page | `{{ $vars.BASE_URL }}` |
 | `$run` | A value stored earlier in this run by [Set Variable](/nodes/builtin/flow/setvariable/) | `{{ $run.cursor }}` |
@@ -58,7 +59,8 @@ Edit Fields receives two orders and builds two fields from expressions. Each exp
 - **Paths** use dots, or brackets for names with spaces, dashes, dots or symbols: `$input["First name"]`, `$input.rows[0]["Order #"]`. Counting starts at 0: `$input.items.0.name` and `$input.items[0].name` are the same.
 - **Step names** go in single or double quotes: `$('Get todos')` or `$("Bob's sheet")`. They must match the step's name exactly. When two steps share a name, the run log warns you and the first one is used: give them different names.
 - Only the data's **own fields** are read: `$input.constructor` or `$input.__proto__` give nothing.
-- **`$('…')` and items:** a step directly before this one gives the matching item; `.all()`, `.first()` and `.last()` read its whole list. See [Item linking](/concepts/data/item-linking/).
+- **`$('…')` and items:** a step directly before this one gives the matching item; `.item` follows the item back through the steps in between; `.all()`, `.first()` and `.last()` read its whole list. See [Item linking](/concepts/data/item-linking/).
+- **Renaming a step** rewrites every `$('Old name')` that reads it, so references don't break.
 - **`$vars` and `$run` are strict:** reading a variable nobody set **fails the step** with an error that names it, never an empty value. `$vars` values are read once when the run starts.
 
 You rarely type `$input` yourself: tap a value in the **Input** pane or in **Use data**, or drag it, and the expression is written for you. See [Mapping in the UI](/concepts/data/data-mapping/data-mapping-ui/).
@@ -258,7 +260,7 @@ In workflows with the **new behaviour**, an expression that can't be worked out 
 
 ### Coming from n8n?
 
-AWFlow recognises n8n-style references and offers the AWFlow way, never changing your text by itself: `$json.x` → `$input.x`, `$('X').item.json.y` → `$('X').y`, `$node["X"].json.y` → `$('X').y`, and `$items()` / `$item`.
+`$json` works as in n8n (it is the current item). AWFlow recognises the other n8n-style references and offers the AWFlow way, never changing your text by itself: `$('X').item.json.y` → `$('X').item.y`, `$node["X"].json.y` → `$('X').y`, and `$items()` / `$item`.
 
 ## Expression, Edit Fields or Code?
 

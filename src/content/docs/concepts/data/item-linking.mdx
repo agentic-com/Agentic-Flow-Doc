@@ -55,7 +55,14 @@ Three product links go through Get All Text from Link, then Summarization summar
 | `{{ $input.url }}` | `url` of item 2, the item this run received. |
 | `{{ $('Get All Text from Link').url }}` in a step **directly connected** to it | `url` of the item from that step used in this run. |
 | `{{ $('Split Out').url }}` in a step **further down** | Empty: that step's whole output is a list, and a list has no `url` field. |
+| `{{ $('Split Out').item.url }}` | `url` of the item of *Split Out* that item 2 came from. |
 | `{{ $('Split Out').1.url }}` | `url` of the second item of that list (counting starts at 0), whatever item is being processed. |
+
+### Follow an item back: `.item`
+
+`$('Get contacts').item.email` reads **the item of *Get contacts* that the current item came from**, even several steps back: AWFlow remembers which input item each output item was made from and follows that chain. Use it when a step further back produced the value you need for *this* item (for example the contact's email, after a step that fetched its orders). When the chain isn't known, it reads the item at the same position, else the first one. A step whose data really has a field called `item` keeps reading that field.
+
+`$json` is another name for the current item, like `$input`: `{{ $json.title }}` and `{{ $input.title }}` read the same.
 
 To read a whole list on purpose, write `$('Split Out').all()`, `.first()` or `.last()`. When you tap a value of an earlier step that has several items, the reference names the item (`$('X')[2].url`) and an amber **Uses item 3** note says so.
 

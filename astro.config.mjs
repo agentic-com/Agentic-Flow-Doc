@@ -383,6 +383,8 @@ export default defineConfig({
                 { ...nav("Workflow settings"), link: "app/workflows/settings" },
                 { ...nav("Keyboard shortcuts"), link: "app/workflows/keyboard-shortcuts" },
                 { ...nav("Test runs"), link: "app/workflows/test-runs" },
+                { ...nav("Kept results"), link: "app/workflows/kept-results" },
+                { ...nav("Run from here"), link: "app/workflows/run-from-here" },
                 { ...nav("Step versions"), link: "app/workflows/step-versions" },
                 { ...nav("Behaviour versions"), link: "app/workflows/behaviour-versions" },
                 {

@@ -34,6 +34,20 @@ When both items have a field with the same name but different values, the result
 | **Left Outer Join** | Same result as Left Join. |
 | **Right Outer Join** | Same result as Right Join. |
 
+### More modes (version 2)
+
+New Merge steps (version 2) add three modes that don't use match keys (**Match Keys** only shows for the join modes, still the default):
+
+| Mode | Result |
+| --- | --- |
+| **Append** | Every item of the first input, then every item of the second. |
+| **Combine by position** | Item 1 with item 1, item 2 with item 2, and so on. With **Keep unpaired items**, the extra items of the longer input are kept on their own. |
+| **Every combination** | Each item of the first input with each item of the second (3 × 4 items give 12). |
+
+Merge steps saved before AWFlow 0.9 keep merging exactly as before; **Update** in the step's header keeps their mode and keys.
+
+When a step that isn't a Merge receives two or more lists making 100 or more combinations, the run log suggests a Merge instead.
+
 ## When to use it
 
 - Add details from one source to another: contacts from a sheet plus their latest orders from an API, matched on email.

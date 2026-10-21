@@ -70,7 +70,7 @@ In [Edit Fields](/nodes/builtin/datatransformation/editfields/), **Add all field
 | A field of the step right before | `{{ $input.title }}` |
 | A nested field | `{{ $input.metadata.description }}` (a dot path) |
 | A field whose name has spaces or symbols | `{{ $input["First name"] }}` |
-| A field of an earlier step | `{{ $('Get Page Metadata').title }}`, using the step's name. When that step has several items, the reference names the item (`$('X')[2].title`) and an amber **Uses item 3** note says so. |
+| A field of an earlier step | `{{ $('Get Page Metadata').title }}`, using the step's name. When that step has several items, the reference names the item (`$('X')[2].title`) and an amber **Uses item 3** note says so. To follow the current item back to that step instead, type `.item` after the step: `$('X').item.title` (see [Item linking](/concepts/data/item-linking/)). |
 | A variable | `{{ $vars.BASE_URL }}` |
 
 Prefer the step right before when you can: a `$('…')` reference names a step, so check it after you rename one (the preview warns you if the name no longer matches). See [Item linking](/concepts/data/item-linking/).

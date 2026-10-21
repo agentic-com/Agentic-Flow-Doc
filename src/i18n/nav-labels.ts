@@ -172,4 +172,6 @@ export const NAV_LABELS: Record<string, { fr: string; de: string; 'zh-CN': strin
 	"Variables": { fr: "Variables", de: "Variables", 'zh-CN': "Variables" },
 	"Insights": { fr: "Insights", de: "Insights", 'zh-CN': "Insights" },
 	"Updating AWFlow": { fr: "Updating AWFlow", de: "Updating AWFlow", 'zh-CN': "Updating AWFlow" },
+	"Kept results": { fr: "Kept results", de: "Kept results", 'zh-CN': "Kept results" },
+	"Run from here": { fr: "Run from here", de: "Run from here", 'zh-CN': "Run from here" },
 };

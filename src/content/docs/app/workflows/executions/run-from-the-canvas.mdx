@@ -59,7 +59,7 @@ While a run is in progress, every other way to start one (**Run**, a step's play
 
 ### Stop a run
 
-Press **Stop**. The step that is already running finishes (code and AI steps stop at once); nothing after it starts. The run is recorded as **Canceled**.
+Press **Stop**. The step running now is canceled at once (a request in flight is aborted) and nothing after it starts. The run is recorded as **Canceled**. Runs started by triggers can be stopped from [Runs](/app/workflows/run-history/#stop-a-run).
 
 ### When a run fails
 
@@ -92,7 +92,7 @@ When you run a step, AWFlow also runs the steps before it that it needs for its 
 
 You can also right-click a step and choose **Run step**. If the step isn't linked to anything before it, or a required field is empty, it doesn't start and says why. To keep part of the workflow from running while you test, [disable those steps](/app/workflows/components/nodes/#disable-a-step).
 
-To retry a step with the data of an earlier run, open that run in **Runs** and use **Debug in editor**: see [Debug a run in the editor](/app/workflows/run-history/#debug-a-run-in-the-editor).
+To run a step and everything after it on what earlier steps already produced, use [Run from here](/app/workflows/run-from-here/); to skip a slow or costly step in editor runs, [keep its result](/app/workflows/kept-results/). To retry a step with the data of an earlier run, open that run in **Runs** and use **Debug in editor**: see [Debug a run in the editor](/app/workflows/run-history/#debug-a-run-in-the-editor).
 
 ---
 

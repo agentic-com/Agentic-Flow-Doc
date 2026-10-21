@@ -25,6 +25,17 @@ Changes apply to the canvas at once and mark the workflow as unsaved: press **Sa
 
 When you install a workflow from the marketplace or a template, the author's timezone is dropped: your schedules run in your time.
 
+## Run limits
+
+**Longest a run may take**: *No limit* by default. When set, a run that takes longer stops and ends as **Timed out** (the step running then is canceled). A run that pauses and goes on later gets the full time again when it continues.
+
+**If it starts while already running** decides what happens when a trigger fires while a run of this workflow is still going:
+
+- **Run side by side** (default): each trigger starts its own run.
+- **Wait in line**: runs go one after another, in order. **Runs at the same time** (1 to 5) lets a few go together. Waiting runs show as **Queued** in [Runs](/app/workflows/run-history/), where you can cancel them.
+
+Whatever you choose, AWFlow runs at most **10 background runs at once** to protect your browser; the others wait. A trigger that fires while the app can't take it (for example the AWFlow tab is closed) waits in line and is retried; it is dropped after 24 hours.
+
 ## Run history
 
 **Save step data** decides what a run keeps of each step's input and output, so you can open a past run later and see the data:
