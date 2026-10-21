@@ -14,7 +14,7 @@ node:
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-*Formerly **Switch**. The step was renamed in AWFlow 1.0; searching for the old name still finds it.*
+*Formerly **Switch**. The step was renamed in AWFlow 0.9; searching for the old name still finds it.*
 
 Send each item down one of several named branches, with a fallback branch for the rest.
 
@@ -35,7 +35,7 @@ There are two ways to pick the branch, set with **Mode**:
 
 Items that match nothing go to the fallback branch (**Anything else** by default). Turn off **Add A Fallback Branch** and they are dropped instead. Set **On Multiple Matches** to **Every match** to send an item to every branch it matches.
 
-### Conditions in AWFlow 1.0
+### Conditions in AWFlow 0.9
 
 New Route by value steps (version 2) build conditions as cards, one rule per card:
 
@@ -44,7 +44,7 @@ New Route by value steps (version 2) build conditions as cards, one rule per car
 - **Options › Type check**: **Loose** converts values when it can (with a warning), **Strict** fails the step and names the rule and the item when a value has the wrong type. **Ignore case** compares texts without caring about capitals (an **Aa ignored** chip shows it).
 - An empty date or number never counts as a date or as 0: the rule is false and the run log says why. An invalid pattern or date fails with "Condition N: …".
 
-Steps saved before 1.0 keep their rows, read **top to bottom** with each row's own AND/OR. **Update** in the step's header converts them to groups with exactly the same meaning. **XOR** means "exactly one of the two" (it used to behave like OR); it is only offered on rows that already use it.
+Steps saved before 0.9 keep their rows, read **top to bottom** with each row's own AND/OR. **Update** in the step's header converts them to groups with exactly the same meaning. **XOR** means "exactly one of the two" (it used to behave like OR); it is only offered on rows that already use it.
 
 ## When to use it
 

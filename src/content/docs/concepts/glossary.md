@@ -12,7 +12,7 @@ An AI node that decides what to do next: call a tool, read the result, and try a
 
 #### Behaviour version
 
-How a whole workflow handles items and expressions: **Classic** for workflows made before AWFlow 1.0, **New** for workflows made since. A workflow keeps its behaviour until you upgrade it. See [Workflow behaviour versions](/app/workflows/behaviour-versions/).
+How a whole workflow handles items and expressions: **Classic** for workflows made before AWFlow 0.9, **New** for workflows made since. A workflow keeps its behaviour until you upgrade it. See [Workflow behaviour versions](/app/workflows/behaviour-versions/).
 
 #### Branch
 
@@ -28,7 +28,7 @@ An AI node that sends your input to the model once and returns the answer, with 
 
 #### Connection
 
-A saved login, API key or token that lets a step use an outside service (called a *credential* before AWFlow 1.0). Add it once on the Connections page or from a step, then pick it in any step. See [Add a connection](/app/connections/create/). The lines between steps are called [links](#link).
+A saved login, API key or token that lets a step use an outside service (called a *credential* before AWFlow 0.9). Add it once on the Connections page or from a step, then pick it in any step. See [Add a connection](/app/connections/create/). The lines between steps are called [links](#link).
 
 #### Content Security Policy (CSP)
 
@@ -104,7 +104,7 @@ The technical word for a [step](#step), used in the [node reference](/nodes/).
 
 #### On / Off
 
-A workflow that is **On** runs by itself when its trigger fires; **Off**, it only runs when you press Run (called *active* / *inactive* before AWFlow 1.0). See [Manage the list](/app/workflows/manage-list/#turn-a-workflow-on-or-off).
+A workflow that is **On** runs by itself when its trigger fires; **Off**, it only runs when you press Run (called *active* / *inactive* before AWFlow 0.9). See [Manage the list](/app/workflows/manage-list/#turn-a-workflow-on-or-off).
 
 #### Output parser
 
@@ -124,7 +124,7 @@ Searching your documents first and giving the best passages to the model with th
 
 #### Run
 
-One execution of a workflow, from the trigger to the last step. **Run** is also the button that starts one, and **Runs** lists the past ones (called *Executions* before AWFlow 1.0). See [Workflow lifecycle](/concepts/flow/workflow-lifecycle/) and [Runs](/app/workflows/run-history/).
+One execution of a workflow, from the trigger to the last step. **Run** is also the button that starts one, and **Runs** lists the past ones (called *Executions* before AWFlow 0.9). See [Workflow lifecycle](/concepts/flow/workflow-lifecycle/) and [Runs](/app/workflows/run-history/).
 
 #### Run variable
 

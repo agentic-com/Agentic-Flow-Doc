@@ -54,7 +54,7 @@ This also applies to the agent's other skills, based on what a tool really does 
 
 Web pages sometimes contain text written to manipulate AI agents ("ignore your instructions and…"). Page text is always treated as **content, never as instructions** — and so is everything else an agent gets from outside: web search results, MCP tools, workflows and teammates' answers. The step list marks these results *Page text treated as data*. When a page looks like it is trying to instruct the agent, the step list shows *Instructions in the page were ignored*, and the rules still apply to everything the agent does next.
 
-Since AWFlow 1.0 the defence goes further:
+Since AWFlow 0.9 the defence goes further:
 
 - Everything read from a page (its title, address, element names, values and text) is wrapped in one fence that the page can't close, and error messages from outside tools are fenced too.
 - **The turn is tainted** once the agent has read untrusted content. From then on, going to a site it hasn't read this turn (and that isn't on its *only* list), or a navigation or search carrying a long or random-looking value (a way to smuggle data out), **asks you first**: *Asked after reading untrusted content*. Such asks never offer "always".

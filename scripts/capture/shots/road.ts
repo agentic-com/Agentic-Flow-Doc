@@ -1,4 +1,4 @@
-/** Shots for the pages added with AWFlow 1.0 (Road to 1.0), captured at side-panel width. */
+/** Shots for the pages added with AWFlow 0.9 (Road to 1.0), captured at side-panel width. */
 import { type ShotDef } from './define.ts';
 
 const T = 15_000;

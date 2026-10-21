@@ -36,11 +36,11 @@ Connect a second chat model to **Fallback**. When the main model fails before wr
 
 ### Structured answers (version 2)
 
-With an output parser and a model that can use tools, new Tools Agent steps get the answer back as a tool call with typed fields, checked against the parser's schema. A wrong answer is asked again once; then the step fails and lists the missing fields. Models that can't use tools still read the answer from the text. Steps saved before 1.0 keep reading the text.
+With an output parser and a model that can use tools, new Tools Agent steps get the answer back as a tool call with typed fields, checked against the parser's schema. A wrong answer is asked again once; then the step fails and lists the missing fields. Models that can't use tools still read the answer from the text. Steps saved before 0.9 keep reading the text.
 
 ### Memory
 
-With a chat memory on **Memory**, the agent has a conversation: it loads the earlier messages as chat history, saves the prompt as a `user` message, and saves the reply as an `assistant` message (a structured reply from an output parser is saved as JSON text). With a [Chat Trigger](/nodes/builtin/trigger/chat/), the agent's answer streams into the chat as the reply; a Chat Trigger saved before 1.0 needs the **same** memory connected to the trigger and to this agent.
+With a chat memory on **Memory**, the agent has a conversation: it loads the earlier messages as chat history, saves the prompt as a `user` message, and saves the reply as an `assistant` message (a structured reply from an output parser is saved as JSON text). With a [Chat Trigger](/nodes/builtin/trigger/chat/), the agent's answer streams into the chat as the reply; a Chat Trigger saved before 0.9 needs the **same** memory connected to the trigger and to this agent.
 
 ## When to use it
 

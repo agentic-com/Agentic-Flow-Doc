@@ -20,9 +20,9 @@ Keep only the items that match your conditions and drop the rest.
 
 Filter checks its **Conditions** once for every item that arrives. Items that match leave through the **Kept** port, unchanged. Items that don't match are dropped: they go nowhere, and the steps after Filter never see them.
 
-Conditions work like the ones in [If](/nodes/builtin/flow/if/): each compares a value (usually an expression such as `{{ $input.price }}`) with another value, using an operator for the type you pick (**String**, **Number**, **Date-Time**, **Boolean**, **Array** or **Object**). Link several conditions with **AND** or **OR**. In steps saved before 1.0 they are read from top to bottom, one after the other, with no grouping: `A AND B OR C` means "(A and B), or C". New steps use groups (see below).
+Conditions work like the ones in [If](/nodes/builtin/flow/if/): each compares a value (usually an expression such as `{{ $input.price }}`) with another value, using an operator for the type you pick (**String**, **Number**, **Date-Time**, **Boolean**, **Array** or **Object**). Link several conditions with **AND** or **OR**. In steps saved before 0.9 they are read from top to bottom, one after the other, with no grouping: `A AND B OR C` means "(A and B), or C". New steps use groups (see below).
 
-### Conditions in AWFlow 1.0
+### Conditions in AWFlow 0.9
 
 New Filter steps (version 2) build conditions as cards, one rule per card:
 
@@ -31,7 +31,7 @@ New Filter steps (version 2) build conditions as cards, one rule per card:
 - **Options › Type check**: **Loose** converts values when it can (with a warning), **Strict** fails the step and names the rule and the item when a value has the wrong type. **Ignore case** compares texts without caring about capitals (an **Aa ignored** chip shows it).
 - An empty date or number never counts as a date or as 0: the rule is false and the run log says why. An invalid pattern or date fails with "Condition N: …".
 
-Steps saved before 1.0 keep their rows, read **top to bottom** with each row's own AND/OR. **Update** in the step's header converts them to groups with exactly the same meaning. **XOR** means "exactly one of the two" (it used to behave like OR); it is only offered on rows that already use it.
+Steps saved before 0.9 keep their rows, read **top to bottom** with each row's own AND/OR. **Update** in the step's header converts them to groups with exactly the same meaning. **XOR** means "exactly one of the two" (it used to behave like OR); it is only offered on rows that already use it.
 
 ## When to use it
 

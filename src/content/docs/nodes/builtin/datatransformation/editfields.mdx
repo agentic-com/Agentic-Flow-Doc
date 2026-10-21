@@ -26,7 +26,7 @@ Add, set or reshape fields: each with a name, a type and a value. Keep the other
 
 Edit Fields sets the fields you define in **Fields**. Each field has a name, a type (*String*, *Number*, *Boolean*, *Date-Time*, *Array* or *Object*) and a value. Values can be fixed text or expressions that read the incoming data. The step runs once per incoming item, so ten items in give ten edited items out.
 
-### Version 2 (new steps in AWFlow 1.0)
+### Version 2 (new steps in AWFlow 0.9)
 
 - **Keep other input fields**: **None** (only your fields), **All** (every input field, plus yours), **Only these…** or **All except…** (pick in **Fields to keep**).
 - **Dots make nested fields**: a name like `customer.email` builds `{ "customer": { "email": … } }`, and `items[0].name` builds a list.
@@ -34,7 +34,7 @@ Edit Fields sets the fields you define in **Fields**. Each field has a name, a t
 - **If a value doesn't fit its type**: **Stop the step** (naming the field and the item), **Keep the text** (with a warning in the run log), or **As older steps** (text in a number field becomes 0).
 - **Add all fields from previous step** adds one row per incoming field; tapping a value in the Input pane adds a row for it.
 
-### Steps saved before AWFlow 1.0
+### Steps saved before AWFlow 0.9
 
 They output only the fields you list: incoming fields are **not** kept. To keep one, add it with an expression such as `{{ $input.title }}`. **Update** in the step's header moves to version 2 while keeping literal names (a dot stays a dot) and the old conversions.
 
@@ -51,7 +51,7 @@ They output only the fields you list: incoming fields are **not** kept. To keep 
 <AwfParamTable rows={[{"name":"Fields","type":"Key-value pairs","required":true}]} />
 {/* AUTO:settings:end */}
 
-How each type treats the value (with **As older steps**, and in steps saved before 1.0):
+How each type treats the value (with **As older steps**, and in steps saved before 0.9):
 
 | Type | Accepts | Otherwise |
 | --- | --- | --- |

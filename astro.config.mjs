@@ -612,7 +612,7 @@ export default defineConfig({
           { id: "concepts", label: "Concepts", link: "/concepts/", topic: "/concepts/", color: "#0F766E" },
           { id: "releases", label: "Releases", link: "/releases/", topic: "/releases/", color: "#6D28D9" },
         ],
-        version: { label: "v1.0.0", href: "/releases/" },
+        version: { label: "v0.9.0", href: "/releases/" },
         install: {
           label: "Install free",
           href: CHROME_WEB_STORE_URL,

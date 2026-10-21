@@ -24,7 +24,7 @@ Workflow as Tool is a tool for an agent, not a step in the flow. It has no outpu
 The agent sees a tool with your **Tool Name** and **Tool Description**. When it calls it, it passes values to the selected **Workflow**, which runs in the background, and what the workflow produces goes back to the model as text:
 
 - **Version 2** (new steps): list up to 10 **Arguments**, each with a name, a type (text, number, yes/no or JSON), a description the model reads, and whether it's required. The agent passes them by name; the workflow receives them as its starting data, for example `{ "email": "…", "limit": 5 }`.
-- **Steps saved before 1.0** pass one text value, `input`: the workflow starts with `{ input: "..." }`. **Update** in the step's header moves to typed arguments.
+- **Steps saved before 0.9** pass one text value, `input`: the workflow starts with `{ input: "..." }`. **Update** in the step's header moves to typed arguments.
 
 The run then works like this:
 

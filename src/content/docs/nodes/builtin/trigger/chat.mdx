@@ -24,10 +24,10 @@ The Chat Trigger opens a chat window. Each message you send starts one run of th
 
 ### Who replies
 
-In AWFlow 1.0 the run has a **reply channel** back to the chat. The reply comes from the **reply step**: a [Respond to Chat](/nodes/builtin/flow/respond-to-chat/) step, or else the last AI step on the trigger's path. It **streams** into the chat as it is written, and tool calls show as short chips. **Stop** stops the run; the part of the reply already written is kept and marked as stopped.
+In AWFlow 0.9 the run has a **reply channel** back to the chat. The reply comes from the **reply step**: a [Respond to Chat](/nodes/builtin/flow/respond-to-chat/) step, or else the last AI step on the trigger's path. It **streams** into the chat as it is written, and tool calls show as short chips. **Stop** stops the run; the part of the reply already written is kept and marked as stopped.
 
 - **New Chat Triggers (version 2)** don't need a Chat Memory. Without one, the chat keeps the session's messages until it is closed. Connect a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) to keep the conversation for later (and to see it on the [Memory page](/app/memory/overview/)).
-- **Chat Triggers saved before 1.0** keep needing a Chat Memory, shared with the agent that answers: the agent saves both messages there and the chat window reads them back. **Update** in the step's header moves to version 2.
+- **Chat Triggers saved before 0.9** keep needing a Chat Memory, shared with the agent that answers: the agent saves both messages there and the chat window reads them back. **Update** in the step's header moves to version 2.
 
 ### Show in Aria
 

@@ -69,10 +69,10 @@ const CHROME_AND_WEB = ['Chrome', 'Web app'];
 
 export const RELEASES: Release[] = [
 	{
-		version: '1.0.0',
+		version: '0.9.0',
 		date: '2026-10-21',
 		browsers: CHROME_AND_WEB,
-		headline: 'AWFlow 1.0 — workflows that tell you what happened, and never change under you',
+		headline: 'AWFlow 0.9 — workflows that tell you what happened, and never change under you',
 		summary:
 			'Every run is recorded and can be debugged in the editor or run again, steps speak in plain words, new step versions and behaviour versions keep your saved workflows exactly as they were, and new steps (JavaScript Code, Summarize items, forms, polling triggers, evaluations) cover more jobs.',
 		teaser: 'Runs you can debug · plain-word steps · versioned steps · JavaScript Code · forms · polling triggers · test runs · variables · backups.',

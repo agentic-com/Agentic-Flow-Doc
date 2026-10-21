@@ -14,7 +14,7 @@ node:
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-*Formerly **Code**. The step was renamed in AWFlow 1.0; searching for the old name still finds it.*
+*Formerly **Code**. The step was renamed in AWFlow 0.9; searching for the old name still finds it.*
 
 Run your own Python code on the incoming items when no other step does what you need. For JavaScript, use [JavaScript Code](/nodes/builtin/core/javascript-code/), which starts faster.
 
@@ -24,7 +24,7 @@ Python Code runs your Python (Python 3 with its standard library, in the browser
 
 Code is never searched for `{{ }}`: `f"{{name}}"` and `{{ $input.x }}` reach Python exactly as written (the editor warns *Looks like an expression: use items instead*).
 
-### Python Code version 2 (new steps in AWFlow 1.0)
+### Python Code version 2 (new steps in AWFlow 0.9)
 
 Pick how it runs with **Run**:
 
@@ -45,7 +45,7 @@ Both modes also get `workflow` and `execution` dicts (ids, name, run mode).
 
 Errors name the line and the item: `Line 4, item 3: KeyError: 'email'`. The full traceback stays in the activity log. A run that's too long stops with `Stopped after 30 s (time limit)`.
 
-### Steps saved before AWFlow 1.0
+### Steps saved before AWFlow 0.9
 
 They run once per item, `{{ }}` in the code is replaced before it runs, and the value comes out under `result`. The sections below describe them. **Update** in the step's header moves to version 2 and sets **Once for each item**, so the same code gives the same items.
 
@@ -63,7 +63,7 @@ For simple field changes, [Edit Fields](/nodes/builtin/datatransformation/editfi
 <AwfParamTable rows={[{"name":"Code to run","type":"Code","required":true,"description":"The code runs in the context of this step."}]} />
 {/* AUTO:settings:end */}
 
-### Reading `input` (steps saved before 1.0)
+### Reading `input` (steps saved before 0.9)
 
 `input` is a normal Python value (a dict, a list or a single value), the same data that `{{ $input }}` holds in other nodes. Its shape depends on how many nodes are connected:
 
@@ -106,7 +106,7 @@ words = input.get("selectionText", "").split()
 <AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
-Version 2 returns your items as they are. In steps saved before 1.0, read the returned value downstream with `{{ $input.result }}`, or a field of it with `{{ $input.result.words }}`. The value travels as JSON: dicts become objects, sets become lists, integers too large for JSON become text, and values with no JSON form (such as class instances) are returned as their text form.
+Version 2 returns your items as they are. In steps saved before 0.9, read the returned value downstream with `{{ $input.result }}`, or a field of it with `{{ $input.result.words }}`. The value travels as JSON: dicts become objects, sets become lists, integers too large for JSON become text, and values with no JSON form (such as class instances) are returned as their text form.
 
 ## Dependencies and credentials
 
