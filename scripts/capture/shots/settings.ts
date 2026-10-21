@@ -343,7 +343,7 @@ export const shots: ShotDef[] = [
 			const page = s.page;
 			await safeModeOn(s);
 			await apiCallsWorkflow(s);
-			await page.getByRole('button', { name: 'Test Workflow' }).first().click({ timeout: T });
+			await page.getByRole('button', { name: /^Run( workflow)?$/ }).first().click({ timeout: T });
 			await page.getByRole('alertdialog').waitFor({ timeout: T });
 			await page.waitForTimeout(600);
 		}
@@ -386,22 +386,21 @@ export const shots: ShotDef[] = [
 		page: 'app/help/help',
 		route: '#/app/workflows (sidebar › Help)',
 		viewport: { width: 1440, height: 1000 },
-		alt: 'The app sidebar with the Help section open: How to use, Nodes, AI concepts, Video tutorials, Community, YouTube channel, Report a bug, Request a feature, Roadmap and Email us, each opening in a new tab.',
+		alt: 'The Help popover opened from the sidebar: an Ask Aria about AWFlow box, What\'s new with the latest releases, Feedback with Send feedback and Request a step or integration, Learn & community links, and links to report a bug or request a feature on GitHub.',
 		spots: [
-			{ id: 'help', label: 'Help: open its list', locator: (p) => p.getByRole('link', { name: 'Help', exact: true }) },
-			{ id: 'community', label: 'Community', locator: (p) => p.getByRole('link', { name: 'Community', exact: true }) },
-			{ id: 'report-bug', label: 'Report a bug', locator: (p) => p.getByRole('link', { name: 'Report a bug' }) },
-			{ id: 'request-feature', label: 'Request a feature and Roadmap', locator: (p) => p.getByRole('link', { name: 'Request a feature' }) },
-			{ id: 'email-us', label: 'Email us', locator: (p) => p.getByRole('link', { name: 'Email us' }) }
+			{ id: 'help', label: 'Help in the sidebar', locator: (p) => p.getByRole('button', { name: /^Help/ }).first() },
+			{ id: 'ask-aria', label: 'Ask Aria about AWFlow', locator: (p) => p.getByRole('textbox', { name: 'Ask Aria about AWFlow' }) },
+			{ id: 'send-feedback', label: 'Send feedback', locator: (p) => p.getByRole('button', { name: /Send feedback/ }) },
+			{ id: 'request-step', label: 'Request a step or integration', locator: (p) => p.getByRole('button', { name: /Request a step or integration/ }) },
+			{ id: 'report-bug', label: 'Report a bug on GitHub', locator: (p) => p.getByRole('link', { name: 'Report a bug on GitHub' }) }
 		],
 		prepare: async (s) => {
 			const page = s.page;
+			await page.goto('about:blank');
 			await s.go('#/app/workflows');
-			const help = page.getByRole('listitem').filter({ has: page.getByRole('link', { name: 'Help', exact: true }) }).getByRole('button', { name: 'Toggle' });
-			await help.waitFor({ timeout: T });
-			if (!(await page.getByRole('link', { name: 'Email us' }).count())) await help.click({ timeout: T });
-			await page.getByRole('link', { name: 'Email us' }).evaluate((el) => el.scrollIntoView({ block: 'end' }));
-			await page.waitForTimeout(600);
+			await page.getByRole('button', { name: /^Help/ }).first().click({ timeout: T });
+			await page.getByRole('textbox', { name: 'Ask Aria about AWFlow' }).waitFor({ timeout: T });
+			await page.waitForTimeout(800);
 		}
 	},
 ];

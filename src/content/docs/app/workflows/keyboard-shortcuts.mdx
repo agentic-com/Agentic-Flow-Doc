@@ -1,0 +1,92 @@
+---
+title: Keyboard shortcuts
+description: Every keyboard shortcut of the workflow editor, the step picker and the step settings, and how to open the shortcut sheet in the app.
+sidebar:
+  badge:
+    text: New
+    variant: tip
+---
+import kbdLight from '@assets/screenshots/keyboard-shortcuts.light.webp';
+import kbdDark from '@assets/screenshots/keyboard-shortcuts.dark.webp';
+import { Screenshot } from '@components/awflow';
+
+import { Kbd } from 'starlight-kbd/components';
+
+Build a workflow without leaving the keyboard. Press <Kbd mac="?" windows="?" /> on the canvas to see the same list in the app, or open the canvas **⋯** menu › **Keyboard shortcuts**.
+
+<Screenshot src={kbdLight} srcDark={kbdDark} alt="The Keyboard shortcuts sheet at side-panel width: Canvas (Add a step N, Run the workflow ⌘ Enter, Select all, Add sticky note, Tidy up, Fit view · 100 %, Save · Undo · Redo), Selected step (move with the arrows, Open settings Enter, Rename F2, Disable · Enable D, Copy · Paste · Duplicate, Delete), Step picker keys, and All shortcuts in the docs." width={400} />
+
+
+:::note[When single keys work]
+Single-key shortcuts (<Kbd mac="N" windows="N" />, <Kbd mac="D" windows="D" />, the arrows…) never fire while you type in a field, in the code editor or in Aria's message box, nor while a dialog is open. Save works everywhere. On a read-only canvas (an archived workflow, an old version) only Save, Fit view, Zoom to 100 % and the shortcut sheet work.
+:::
+
+## Build
+
+| Action | Shortcut |
+| --- | --- |
+| Add a step (after the selected one) | <Kbd mac="N" windows="N" />, or <Kbd mac="Tab" windows="Tab" /> when the canvas has focus |
+| Add a sticky note at the centre | <Kbd mac="Shift+S" windows="Shift+S" /> |
+| Tidy up the canvas (or the selection) | <Kbd mac="Shift+Option+T" windows="Shift+Alt+T" /> |
+| Run the workflow | <Kbd mac="Cmd+Enter" windows="Ctrl+Enter" /> |
+| Save | <Kbd mac="Cmd+S" windows="Ctrl+S" /> |
+| Undo | <Kbd mac="Cmd+Z" windows="Ctrl+Z" /> |
+| Redo | <Kbd mac="Cmd+Shift+Z" windows="Ctrl+Shift+Z" /> or <Kbd mac="Cmd+Y" windows="Ctrl+Y" /> |
+| Select all | <Kbd mac="Cmd+A" windows="Ctrl+A" /> |
+
+## The selected step
+
+| Action | Shortcut |
+| --- | --- |
+| Open its settings | <Kbd mac="Enter" windows="Enter" /> |
+| [Run from here](/app/workflows/run-from-here/) | <Kbd mac="Cmd+Shift+Enter" windows="Ctrl+Shift+Enter" /> |
+| Rename it in place | <Kbd mac="F2" windows="F2" /> |
+| Disable or enable it | <Kbd mac="D" windows="D" /> |
+| Duplicate | <Kbd mac="Cmd+D" windows="Ctrl+D" /> |
+| Copy | <Kbd mac="Cmd+C" windows="Ctrl+C" /> |
+| Paste | <Kbd mac="Cmd+V" windows="Ctrl+V" /> |
+| Delete | <Kbd mac="Delete" windows="Delete" /> or <Kbd mac="Backspace" windows="Backspace" /> |
+| Go to the next / previous step | <Kbd mac="→" windows="→" /> / <Kbd mac="←" windows="←" /> |
+| Go to the step above / below | <Kbd mac="↑" windows="↑" /> / <Kbd mac="↓" windows="↓" /> |
+
+The arrows follow the links between steps, then move between steps side by side. The selected step gets a focus ring and stays in view.
+
+Copy also puts the steps on your system clipboard, so you can paste them into another workflow, even in another window. Connections, secrets and personal fields are removed from the copy. Pasting the text of an `.awf` file asks whether to paste its steps here or import it as a new workflow.
+
+## View
+
+| Action | Shortcut |
+| --- | --- |
+| Fit the workflow in view | <Kbd mac="1" windows="1" /> |
+| Zoom to 100 % | <Kbd mac="0" windows="0" /> |
+| Show the shortcut sheet | <Kbd mac="?" windows="?" /> |
+
+## Step picker
+
+| Action | Shortcut |
+| --- | --- |
+| Move through the results | <Kbd mac="↑" windows="↑" /> / <Kbd mac="↓" windows="↓" /> |
+| Add the highlighted step | <Kbd mac="Enter" windows="Enter" /> |
+| Clear the search, then close | <Kbd mac="Esc" windows="Esc" /> |
+
+The search box has focus when the picker opens, and the first result is highlighted, so typing a name and pressing Enter adds it.
+
+## Step settings and fields
+
+| Action | Shortcut |
+| --- | --- |
+| Open the full-screen expression editor (in an expression field) | <Kbd mac="Cmd+Shift+E" windows="Ctrl+Shift+E" /> |
+| Move a condition or field card up / down | <Kbd mac="Option+↑" windows="Alt+↑" /> / <Kbd mac="Option+↓" windows="Alt+↓" /> |
+| Rename the step (in the settings header) | <Kbd mac="F2" windows="F2" />, then <Kbd mac="Enter" windows="Enter" /> to save or <Kbd mac="Esc" windows="Esc" /> to cancel |
+
+## Anywhere in the app
+
+| Action | Shortcut |
+| --- | --- |
+| Search and commands | <Kbd mac="Cmd+K" windows="Ctrl+K" /> |
+
+The command palette finds workflows, chats, agents, knowledge bases and connections by name, runs actions such as **New workflow** or **Add connection**, lists your recent pages, and ends every search with **Ask Aria: …**.
+
+## Screen readers
+
+The canvas is one stop in the tab order. Steps are announced with their name, kind, operation and status ("Get issues, GitHub, List, failed"), and links as "Connection from A to B". Tab order follows the flow: triggers first, then each step after the one that feeds it. Turn on **Settings › Preferences › Announce run progress** to hear when a run starts, how it progresses and how it ends.

@@ -31,6 +31,10 @@ Text Classifier reads **Text** and returns the best matching category from **Cat
 
 The node has one output. To send each category down its own path, follow it with a [Switch](/nodes/builtin/flow/switch/).
 
+### Fallback model
+
+Connect a second chat model to **Fallback**. If the main model fails before writing anything with an error worth retrying elsewhere (429, 401/402/403, 5xx or a network error), the same call goes to the fallback; the run log names the switch and the output gets `usedFallback: true`.
+
 ## When to use it
 
 - Sort support requests into `billing, technical, sales` and route each to the right team.
@@ -42,7 +46,7 @@ To label tone only, use [Sentiment Analysis](/nodes/builtin/ai/aiagents/sentimen
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to classify."},{"name":"Categories","type":"Long text","required":true,"description":"Comma-separated category names to classify the text into."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to classify."},{"name":"Categories","type":"Long text","required":true,"description":"Comma-separated category names to classify the text into."},{"name":"Options","type":"Group","description":"The options for the step."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Text** with an expression such as `{{ $input.text }}`. Write **Categories** as a comma-separated list, for example `billing, technical, sales`. Short, clearly different names give the most reliable results. Use **System message** to describe a category when its name alone is ambiguous, such as `"sales" means questions about buying or pricing.`
@@ -54,12 +58,13 @@ Fill **Text** with an expression such as `{{ $input.text }}`. Write **Categories
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"category","type":"Any","description":"The chosen category"},{"name":"scores","type":"Key-value pairs","description":"Every label's score, on-device"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"category","type":"Any","description":"The chosen category"},{"name":"scores","type":"Key-value pairs","description":"Every label's score, on-device"},{"name":"usedFallback","type":"Text"}]} />
 
 ```json title="Shape of an output item"
 {
   "category": null,
-  "scores": {}
+  "scores": {},
+  "usedFallback": "…"
 }
 ```
 {/* AUTO:outputs:end */}
@@ -69,7 +74,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local classifier","description":"One node.","required":true}]} />
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local classifier","description":"One node.","required":true},{"name":"Fallback","type":"chat model","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 Connect a chat model, which holds its own API key, or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) with a zero-shot model to classify on-device with your own categories.

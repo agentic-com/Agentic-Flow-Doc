@@ -17,8 +17,8 @@ The side panel starts narrow (about 320–450px), and you can drag its left edge
 <Screenshot
   src={sidePanelLight}
   srcDark={sidePanelDark}
-  alt="The AWFlow app at side-panel width (400 px) on the Assistant page: a compact header with the sidebar button and search, a row with chat history, the Aria agent switcher, new chat and chat settings, the greeting, the message box with Chat and Build modes, context meter and model picker, and suggestion cards stacked in one column."
-  hotspots={[{ x: 7, y: 3.3, label: 'Sidebar button: opens the full navigation' }, { x: 50, y: 36, label: 'Message box: ask Aria anything' }, { x: 60.6, y: 41.1, label: 'Chat or Build mode' }, { x: 67.2, y: 46, label: 'Model picker' }]}
+  alt="The AWFlow app at side-panel width (400 px) on the Aria page: a header with the page name and search, a row with chat history, the Aria switcher, new chat and chat settings, Aria's greeting, the message box with Chat and Build modes, context meter and model picker, suggestion cards in one column, and the bottom bar with Home, Aria, Workflows, Marketplace and More."
+  hotspots={[{ x: 93, y: 3.3, label: 'Search and commands' }, { x: 50, y: 41.9, label: 'Message box: ask Aria anything' }, { x: 60.6, y: 46.7, label: 'Chat or Build mode' }, { x: 67.2, y: 51.6, label: 'Model picker' }, { x: 50, y: 96.7, label: 'Bottom bar: Home, Aria, Workflows, Marketplace, More' }]}
 />
 
 <aside>
@@ -34,19 +34,29 @@ The side panel starts narrow (about 320–450px), and you can drag its left edge
 
 To fit the panel, the app rearranges itself instead of cutting things off:
 
-- **Header.** It shows the name of the page you're on, a **search** icon (it opens the same search as <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd>), and notifications. The sidebar button (top left) opens the full navigation.
-- **Lists** (workflows, credentials, knowledge bases, [memory](/app/memory/overview/), published workflows). Each item is a compact two-line row with its status and a **⋯** menu. The **New** button is always visible next to the tabs.
-- **Forms** (new credential, new knowledge base…). They open as a full-height sheet, with the Save/Create button pinned to the bottom.
+- **Bottom bar.** On the main pages, a bar at the bottom takes you to **Home**, **Aria**, **Workflows**, **Marketplace** and **More** (the full navigation). It hides inside a workflow, in an open chat and while the on-screen keyboard is up.
+- **Header.** It shows the name of the page you're on (the same name as in the navigation), a **search** icon (the same search as <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd>), and the inbox (notifications and runs waiting for you, with one count). On pages deeper in, **‹** goes back to the page you came from.
+- **Toasts and bars** stack above the bottom bar and the step sheet's buttons, never on top of them.
+- **Lists** (workflows, connections, knowledge bases, [memory](/app/memory/overview/), published workflows). Each item is a compact two-line row with its status and a **⋯** menu. The **New** button is always visible next to the tabs.
+- **Forms** (new connection, new knowledge base…). They open as a full-height sheet, with the Save/Create button pinned to the bottom.
 - **Workflow canvas.**
   - The **Editor / Logs / Runs** switch gets its own row under the header.
   - The canvas tools sit in a single vertical rail.
-  - **Add a node** opens as a sheet from the bottom.
-  - Node settings open as a full-height sheet.
+  - The step picker opens as a sheet from the bottom.
+  - Step settings open as a full-height sheet, with an **Input · Setup · Output** switch that shows one pane at a time.
+  - The Aria dock opens as a full-width sheet with **Back to canvas**.
   - The minimap is hidden until the panel is wide enough.
 - **Runs.** Tap a run in the list to open its details, and use **‹ Runs** to go back.
 - **Settings.** **Settings** shows a list of sections with their current state (for example "Usage stats on"). Tap one to open it, and use **‹ Settings** to go back.
-- **Assistant.** Your chat history opens as a drawer from the history icon.
+- **Aria.** Your chat history opens as a drawer from the history icon.
+- **Agents.** **Try it**, **Test a rule** and **Recent runs** open from a button at the bottom, in a sheet that keeps your test chat when you close it.
 - **Marketplace.** On a workflow's page, the **Install** button stays pinned at the bottom of the panel while you read about it.
+
+## Open in full tab
+
+In the extension, the **Open in full tab** button in the header (or the canvas **⋯** menu) opens the same page in an AWFlow tab, reusing one if it's already open; unsaved canvas changes come along. From the tab, **Dock to side panel** brings you back.
+
+The app also remembers where you were: closing the panel and opening it again brings back the last page, an unsaved canvas (with **Restore** / **Discard**), its zoom and the step you had open.
 
 ## Making it wider
 

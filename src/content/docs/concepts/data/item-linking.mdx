@@ -55,9 +55,27 @@ Three product links go through Get All Text from Link, then Summarization summar
 | `{{ $input.url }}` | `url` of item 2, the item this run received. |
 | `{{ $('Get All Text from Link').url }}` in a step **directly connected** to it | `url` of the item from that step used in this run. |
 | `{{ $('Split Out').url }}` in a step **further down** | Empty: that step's whole output is a list, and a list has no `url` field. |
+| `{{ $('Split Out').item.url }}` | `url` of the item of *Split Out* that item 2 came from. |
 | `{{ $('Split Out').1.url }}` | `url` of the second item of that list (counting starts at 0), whatever item is being processed. |
 
-In a step's settings, the input panel shows the same split: steps under **Direct inputs** give you the matching item, steps under **Relatives** give you their whole output.
+### Follow an item back: `.item`
+
+`$('Get contacts').item.email` reads **the item of *Get contacts* that the current item came from**, even several steps back: AWFlow remembers which input item each output item was made from and follows that chain. Use it when a step further back produced the value you need for *this* item (for example the contact's email, after a step that fetched its orders). When the chain isn't known, it reads the item at the same position, else the first one. A step whose data really has a field called `item` keeps reading that field.
+
+`$json` is another name for the current item, like `$input`: `{{ $json.title }}` and `{{ $input.title }}` read the same.
+
+To read a whole list on purpose, write `$('Split Out').all()`, `.first()` or `.last()`. When you tap a value of an earlier step, the reference reads its matching item (`$('X').item.url`); tap the pill to switch to **First item** or **All items, as a list** (see [Map data in the UI](/concepts/data/data-mapping/data-mapping-ui/#what-gets-written)). When no item matches, an amber note says the item at the same position is used.
+
+### Two lists into one step
+
+When a step receives **two lists** (from two steps linked into it):
+
+- in workflows with the **new behaviour**, items are **paired by position**: item 1 with item 1, item 2 with item 2. The step runs as many times as the longer list, with a warning when the counts differ. `$('Step').field` reads the paired item.
+- in **Classic** workflows (made before AWFlow 0.9), the step runs for **every combination**: 3 items and 4 items give 12 runs (a hint says so).
+
+To get every combination on purpose, use [Merge](/nodes/builtin/flow/merge/). See [Workflow behaviour versions](/app/workflows/behaviour-versions/).
+
+A step that receives **no items** is skipped in the new behaviour (it ran with nothing in Classic).
 
 ## Three ways to keep values together
 

@@ -1,8 +1,8 @@
 ---
-title: "Page Load"
+title: "When a page loads"
 description: "Run the flow when a matching browser tab finishes loading."
 sidebar:
-  label: "Page Load"
+  label: "When a page loads"
 kind: node
 section: nodes
 worksIn: [extension]
@@ -13,6 +13,8 @@ node:
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+*Formerly **Page Load**. The step was renamed in AWFlow 0.9; searching for the old name still finds it.*
 
 Run a workflow every time a page whose address matches your patterns finishes loading.
 
@@ -82,7 +84,7 @@ Keep a list of the GitHub pull requests you open:
 1. Add **Page Load** with **URL Patterns** `https://github.com/*/pull/*`.
 2. Add [Data Store](/nodes/builtin/core/datastore/) with **Operation** **Set**, **Key** `last-pr` and **Value** `{{ $input.url }}`.
 3. Add [Browser Notification](/nodes/extension/browsernotification/) with **Title** `PR opened` and **Message** `{{ $('Page Load').title }}`.
-4. Activate the workflow and open a pull request.
+4. Turn the workflow On and open a pull request.
 
 ## Common issues
 

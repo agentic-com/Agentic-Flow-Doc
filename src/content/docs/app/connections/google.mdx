@@ -25,6 +25,10 @@ Looking for Gemini models? That is an API key, not a sign-in: see [Connect Googl
 - A Google account (personal or Google Workspace).
 - Access to the [Google Cloud Console](https://console.cloud.google.com/) to create a free OAuth client (once, about 5 minutes).
 
+### Several accounts
+
+You can add one connection per account (a work and a personal Google account, for example). Since AWFlow 0.9 each connection keeps its own sign-in: a step always acts as the account of the connection it uses. Connections made before 0.9 may ask you to sign in once more.
+
 ## Used by
 
 - [Gmail](/nodes/builtin/integration/gmail/)
@@ -39,19 +43,19 @@ This is the only method: Google signs you in and gives the token to your browser
 <Steps>
 
 1. **Create your OAuth client** in the Google Cloud Console: a project, the API you need enabled (Gmail API, Google Drive API, Google Calendar API, or **both** Google Sheets API and Google Drive API for Sheets), the consent screen with your account as a test user, and an OAuth client ID of type **Web application** with AWFlow's redirect URI. [Full steps with links](/app/connections/oauth-client/#google).
-2. **Fill the credential in AWFlow.** Open **Credentials** and click **Add Credential**, then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap the Google app in the list, then fill the rest.
+2. **Fill the credential in AWFlow.** Open **Connections** and click **Add connection**, then fill the **New connection** form. In the browser side panel the form comes in two steps: tap the Google app in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-google"
      steps={[
-       { spot: 'app', title: 'Pick the Google app', body: 'Under **Integration App / Service**, pick **Gmail**, **Google Drive**, **Google Sheets** or **Google Calendar**. There is no **Auth Type** menu: Google uses **OAuth2**.' },
+       { spot: 'app', title: 'Pick the Google app', body: 'Under **Integration App / Service**, pick **Gmail**, **Google Drive**, **Google Sheets** or **Google Calendar**. There is no **Type** menu: Google uses **OAuth2**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Gmail – work*. A **Description** is optional.' },
        { spot: 'oauth-guide', title: 'Copy the redirect URI', body: "Open **Create your Google OAuth client**: it shows your install's redirect URI with a **Copy** button. Add it under **Authorized redirect URIs** in your OAuth client if you haven't yet." },
        { spot: 'client-id', title: 'Paste the Client ID', body: 'Copy it from your Google OAuth client.' },
        { spot: 'client-secret', title: 'Paste the Client Secret', body: 'In **Client Secret (optional)**: a **Web application** client needs it; a **Desktop app** client has none.' },
        { spot: 'check-connection', title: 'Click Check connection', body: "Approve the Google window. While your consent screen is in **Testing**, Google may warn *Google hasn't verified this app*: click **Continue** in that Google window." },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in Google nodes.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Save it', check: 'the credential is listed on the Credentials page, ready to pick in Google nodes.' },
      ]}
    />
 
@@ -67,14 +71,14 @@ After **Check connection**, AWFlow shows **Connection successful** and the link 
 
 ## Where your token lives
 
-<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#connections-and-secrets" linkLabel="Privacy & your data">
 
 The **Client ID and Secret** are saved in the credential. The **access and refresh tokens** Google returns are kept in this browser's storage and never synced to your account, so each browser signs in once.
 
 The credential itself is stored where you choose:
 
-- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
-- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+- **On this device**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **In your account (cloud)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
 
 When a step runs, your browser sends it only to accounts.google.com and oauth2.googleapis.com (sign-in) and gmail.googleapis.com, sheets.googleapis.com and www.googleapis.com (the APIs). AWFlow's servers never relay the call.
 

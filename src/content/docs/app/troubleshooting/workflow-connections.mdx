@@ -1,6 +1,6 @@
 ---
-title: Workflow Connections
-description: Fix issues where workflow nodes are not connected correctly or data does not flow as expected.
+title: Links between steps
+description: Fix issues where steps are not linked correctly or data does not flow as expected.
 section: app
 ---
 
@@ -20,7 +20,25 @@ No programming knowledge is required.
 
 ---
 
-## How Workflow Connections Work
+
+## "This step has no input"
+
+You pressed **Run step** on a step that isn't linked to anything before it. AWFlow doesn't start the run and says **This step has no input. Connect a step before it.**, with **Add a step before**.
+
+- Link the output of the previous step to this step's input (drag from the dot on the right of one step to the dot on the left of the other).
+- Or, if this step should start the workflow, add a trigger before it.
+
+## A step was skipped with "no items"
+
+In workflows with the [new behaviour](/app/workflows/behaviour-versions/), a step that receives **no items** doesn't run, and the canvas says why when you hover it. The step before found nothing: open its output. To run the next steps anyway, turn on **Pass an empty item when there's no result** in the earlier step's **Advanced** tab.
+
+## The false branch gets the wrong items
+
+Before AWFlow 0.9, a step on [If](/nodes/builtin/flow/if/)'s **false** branch could receive the **true** branch's items when If got several items. This is fixed: each link now carries only its own output's items. If an older workflow relied on the wrong behaviour, check the steps after If.
+
+---
+
+## How links work
 
 A workflow is a sequence of **nodes connected together**.
 
@@ -151,8 +169,8 @@ See:
 <Screenshot
   src={canvasLight}
   srcDark={canvasDark}
-  alt="The workflow editor with the Hash Text example: a sticky note explaining it, then five connected steps (Run now, Your text, SHA-256, SHA-512, Show the hashes). The toolbar with Editor, Logs and Executions tabs is at the top, the Test Workflow button at the top right, and zoom controls at the bottom left."
-  hotspots={[{ x: 19.8, y: 9.6, label: 'Add a step (node)' }, { x: 58.9, y: 9.4, label: 'Editor, Logs and Executions tabs' }, { x: 86.9, y: 9.8, label: 'Test Workflow: run it now' }, { x: 61.6, y: 64.9, label: 'A step (node); drag from its handle to connect' }]}
+  alt="The workflow editor with the Hash Text example: a sticky note explaining it, then five connected steps (Run now, Your text, SHA-256, SHA-512, Show the hashes). The Editor, Logs and Runs tabs are at the top, the Run button at the top right, and zoom controls at the bottom left."
+  hotspots={[{ x: 19.8, y: 9.6, label: 'Add a step (node)' }, { x: 58.9, y: 9.4, label: 'Editor, Logs and Runs tabs' }, { x: 88.9, y: 9.8, label: 'Run: run it now' }, { x: 61.3, y: 63.8, label: 'A step (node); drag from its handle to connect' }]}
 />
 
 ---

@@ -28,6 +28,10 @@ Information Extractor sends **Text** to the chat model connected to its **Model*
 
 Without an output parser, `extracted` is the model's reply as text. Connect a [Structured Output Parser](/nodes/builtin/ai/aidependencies/outputparser/structuredoutputparser/) to the **Output Parser** slot to get a real object whose fields you can use in later nodes.
 
+### Fallback model
+
+Connect a second chat model to **Fallback**. If the main model fails before writing anything with an error worth retrying elsewhere (429, 401/402/403, 5xx or a network error), the same call goes to the fallback; the run log names the switch and the output gets `usedFallback: true`.
+
 ## When to use it
 
 - Read an invoice or order email and pull out the customer, date and total.
@@ -39,7 +43,7 @@ To rewrite or answer freely, use [Basic LLM Chain](/nodes/builtin/ai/aiagents/ba
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to extract information from."},{"name":"What to extract","type":"Long text","required":true,"description":"Describe the fields to extract, or connect an Output Parser."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to extract information from."},{"name":"What to extract","type":"Long text","required":true,"description":"Describe the fields to extract, or connect an Output Parser."},{"name":"Options","type":"Group","description":"The options for the step."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Text** with an expression such as `{{ $input.text }}`.
@@ -55,11 +59,12 @@ Use **System message** under **Options** for extra rules, such as `Leave a field
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"extracted","type":"Any","description":"The data the model extracted"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"extracted","type":"Any","description":"The data the model extracted"},{"name":"usedFallback","type":"Text"}]} />
 
 ```json title="Shape of an output item"
 {
-  "extracted": null
+  "extracted": null,
+  "usedFallback": "…"
 }
 ```
 {/* AUTO:outputs:end */}
@@ -69,7 +74,7 @@ With a Structured Output Parser connected, read single fields downstream with ex
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."},{"name":"Fallback","type":"chat model","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 - **Model**: a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) or [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/). The model node holds the API key; this node has no credential of its own.

@@ -9,6 +9,7 @@ worksIn: [extension, web]
 node:
   id: builtin/integration/telegram
   family: integration
+  agentTool: true
 ---
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
@@ -18,7 +19,7 @@ Send a message, a photo or a file to a Telegram chat through your own bot, a sim
 
 {/* AUTO:callout:start */}
 <AwfCallout type="credential" title={"Needs a Telegram connection"} href="/app/connections/telegram/" linkLabel={"Connect Telegram"}>
-  Pick a saved connection in the **Credential** field, or create one from there. It signs in with a Bearer Token.
+  Pick a saved connection in the **Connection** field, or create one from there. It signs in with a Bearer Token.
 </AwfCallout>
 {/* AUTO:callout:end */}
 
@@ -46,7 +47,7 @@ For Slack or Discord channels, use [Slack](/nodes/builtin/integration/slack/) or
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfOperationTabs hydrate="visible" pick={"Resource and Operation"} common={[{"name":"Credential","type":"Credential","required":true,"description":"The Telegram bot token (from @BotFather). It is the whole credential and grants full control of the bot — keep it secret."}]} groups={[{"label":"Message","options":[{"label":"Send message","rows":[{"name":"Chat ID","type":"Text","required":true,"description":"The target chat: a numeric chat ID, or a channel username like @mychannel."},{"name":"Text","type":"Text","required":true,"description":"The message text."},{"name":"Formatting","type":"Choice","description":"How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML."}]},{"label":"Send photo","rows":[{"name":"Chat ID","type":"Text","required":true,"description":"The target chat: a numeric chat ID, or a channel username like @mychannel."},{"name":"Photo","type":"Text","required":true,"description":"An image URL, a Telegram file_id, or a base64 data URL (e.g. from Screenshot Page)."},{"name":"Caption","type":"Text","description":"Optional caption shown under the photo/document."},{"name":"Formatting","type":"Choice","description":"How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML."}]},{"label":"Send document","rows":[{"name":"Chat ID","type":"Text","required":true,"description":"The target chat: a numeric chat ID, or a channel username like @mychannel."},{"name":"Document","type":"Text","required":true,"description":"A file URL, a Telegram file_id, or a base64 data URL."},{"name":"Caption","type":"Text","description":"Optional caption shown under the photo/document."},{"name":"Formatting","type":"Choice","description":"How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML."}]}]}]} />
+<AwfOperationTabs hydrate="visible" pick={"Resource and Operation"} common={[{"name":"Connection","type":"Credential","required":true,"description":"The Telegram bot token (from @BotFather). It is all the connection needs, and it grants full control of the bot — keep it secret."}]} groups={[{"label":"Message","options":[{"label":"Send message","rows":[{"name":"Chat ID","type":"Text","required":true,"description":"The target chat: a numeric chat ID, or a channel username like @mychannel."},{"name":"Text","type":"Text","required":true,"description":"The message text."},{"name":"Formatting","type":"Choice","description":"How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML."}]},{"label":"Send photo","rows":[{"name":"Chat ID","type":"Text","required":true,"description":"The target chat: a numeric chat ID, or a channel username like @mychannel."},{"name":"Photo","type":"Text","required":true,"description":"An image URL, a Telegram file_id, or a base64 data URL (e.g. from Screenshot Page)."},{"name":"Caption","type":"Text","description":"Optional caption shown under the photo/document."},{"name":"Formatting","type":"Choice","description":"How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML."}]},{"label":"Send document","rows":[{"name":"Chat ID","type":"Text","required":true,"description":"The target chat: a numeric chat ID, or a channel username like @mychannel."},{"name":"Document","type":"Text","required":true,"description":"A file URL, a Telegram file_id, or a base64 data URL."},{"name":"Caption","type":"Text","description":"Optional caption shown under the photo/document."},{"name":"Formatting","type":"Choice","description":"How to interpret formatting in the text/caption. Options: None, Markdown, MarkdownV2, HTML."}]}]}]} />
 
 <AwfCallout type="tip" title="Need an operation that isn't listed?" href="/nodes/builtin/core/http-request/" linkLabel="Use HTTP Request">
   Call the Telegram API yourself with the HTTP Request node, and pick the same connection in its **Credential** field.
@@ -67,7 +68,7 @@ The output is the message Telegram created: its `message_id`, the `chat` it went
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-- **Credential** (connection, Bearer Token): required. See [Connect Telegram](/app/connections/telegram/).
+- **Connection** (connection, Bearer Token): required. See [Connect Telegram](/app/connections/telegram/).
 {/* AUTO:deps:end */}
 
 The credential is your bot's token, saved as a Bearer Token credential:

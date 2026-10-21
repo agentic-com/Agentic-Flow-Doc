@@ -65,16 +65,16 @@ import { Badge, Callout, GuidedShot } from '@components/awflow';
 
    Drop the scopes you won't use. The `user` scope is only for **Message › Search**.
 2. **Install it and copy the token.** Click **Install to Workspace** and allow. In **OAuth & Permissions**, copy the **Bot User OAuth Token** (it starts with `xoxb-`).
-3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Slack** in the list, then fill the rest.
+3. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in a step's **Connection** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **Slack** in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-slack"
      steps={[
-       { spot: 'app', title: 'Pick Slack', body: 'Under **Integration App / Service**, pick **Slack**. There is no **Auth Type** menu: Slack uses a **Bearer Token**.' },
+       { spot: 'app', title: 'Pick Slack', body: 'Under **Integration App / Service**, pick **Slack**. There is no **Type** menu: Slack uses a **Bearer Token**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Slack – AWFlow bot*. A **Description** is optional.' },
        { spot: 'token', title: 'Paste the token', body: 'Paste the `xoxb-` token into **Bearer Token**.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -84,7 +84,7 @@ import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Callout type="tip" title="Check it's connected">
 
-In a **Slack** node, pick the credential: the **Channel** list fills with your channels. Then run **Channel › Get many** with **Test step**.
+In a **Slack** node, pick the credential: the **Channel** list fills with your channels. Then run **Channel › Get many** with **Run step**.
 
 </Callout>
 
@@ -95,16 +95,16 @@ In a **Slack** node, pick the credential: the **Channel** list fills with your c
 
 1. **Use the same app** (the manifest above already asks for `search:read` as a user scope), or add **User Token Scopes** under **OAuth & Permissions**.
 2. **Reinstall the app** to the workspace, then copy the **User OAuth Token** (it starts with `xoxp-`).
-3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Slack** in the list, then fill the rest.
+3. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in a step's **Connection** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **Slack** in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-slack"
      steps={[
-       { spot: 'app', title: 'Pick Slack', body: 'Under **Integration App / Service**, pick **Slack**. There is no **Auth Type** menu: Slack uses a **Bearer Token**.' },
+       { spot: 'app', title: 'Pick Slack', body: 'Under **Integration App / Service**, pick **Slack**. There is no **Type** menu: Slack uses a **Bearer Token**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Slack – me (search)*. A **Description** is optional.' },
        { spot: 'token', title: 'Paste the token', body: 'Paste the `xoxp-` token into **Bearer Token**.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -121,12 +121,12 @@ Run **Message › Search** with a word you know is in a channel: matching messag
 
 ## Where your token lives
 
-<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#connections-and-secrets" linkLabel="Privacy & your data">
 
 The credential is stored where you choose when you create it:
 
-- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
-- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+- **On this device**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **In your account (cloud)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
 
 When a step runs, your browser sends it only to `slack.com` and `files.slack.com`. AWFlow's servers never relay the call.
 

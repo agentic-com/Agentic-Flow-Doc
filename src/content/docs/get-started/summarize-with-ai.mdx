@@ -41,8 +41,8 @@ AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **mod
 
 ## Steps
 
-<StepCard n={1} title="Start a workflow that reads the page" check="When Started → Get All Text is on a new canvas.">
-  Create a new **Blank canvas** workflow named `Summarise this page`, as in [lesson 2](/get-started/first-workflow/). Add the **When Started** trigger, then click its **+** and add **Get All Text**. Set **Output field name** to `text`.
+<StepCard n={1} title="Start a workflow that reads the page" check="When I press Run → Get All Text is on a new canvas.">
+  Create a new **Blank canvas** workflow named `Summarise this page`, as in [lesson 2](/get-started/first-workflow/). Add the **When I press Run** trigger, then click its **+** and add **Get All Text**. Set **Output field name** to `text`.
 
   <StepShot shot="create-workflow" spot="blank-canvas" n={1} />
 </StepCard>
@@ -63,7 +63,7 @@ AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **mod
       In Firefox, some graphics setups can't run Web LLM; the model then shows **Not supported here**. Use **Transformers Chat** instead.
     </div>
     <div slot="apikey">
-      Pick **Chat OpenAI**, **Chat Anthropic** or **Chat Google**. In **Authentication**, click **+ Add Credential**, paste your API key from the provider's website, and click **Create Credential**. Then choose a model. The key is stored in AWFlow and sent only to that provider. See [Create credentials](/app/connections/create/).
+      Pick **Chat OpenAI**, **Chat Anthropic** or **Chat Google**. In **Authentication**, click **Connect**, paste your API key from the provider's website, and click **Save and test** (or **Add connection**). Then choose a model. The key is stored in AWFlow and sent only to that provider. See [Create credentials](/app/connections/create/).
 
       This path costs a little per run, billed by the provider, and the page text is sent to them.
     </div>
@@ -102,7 +102,7 @@ AI in a workflow takes two nodes: a **chain** that holds the prompt, and a **mod
 </StepCard>
 
 <StepCard n={6} title="Run it on an article" check="Basic LLM Chain → Output → Actual shows a response with three bullets about the article.">
-  Switch to the tab with the article, then back to the panel, and click **Test Workflow**. The first on-device run waits for the model download (progress shows in the node's run log); later runs take a few seconds. Click **Save** when it works.
+  Switch to the tab with the article, then back to the panel, and press **Run**. The first on-device run waits for the model download (progress shows in the node's run log); later runs take a few seconds. Click **Save** when it works.
 
   <StepShot shot="llm-chain" spot="run" n={6} />
 </StepCard>

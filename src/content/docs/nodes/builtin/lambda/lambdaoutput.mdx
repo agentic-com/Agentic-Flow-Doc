@@ -1,8 +1,8 @@
 ---
-title: "Lambda Output"
+title: "Return to caller"
 description: "Define the outputs for the lambda workflow."
 sidebar:
-  label: "Lambda Output"
+  label: "Return to caller"
 kind: node
 section: nodes
 worksIn: [extension, web]
@@ -13,6 +13,8 @@ node:
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+*Formerly **Lambda Output**. The step was renamed in AWFlow 0.9; searching for the old name still finds it.*
 
 Lambda Output is the end point of a lambda workflow: it sets the values the workflow hands back to whoever called it.
 
@@ -64,7 +66,7 @@ A lambda workflow that counts the words in a text:
 - **A number output comes back as `0`.** The value is not a number (for example `"12 items"`), so it falls back to `0`. Make the expression return only the number.
 - **A true/false output is always true.** Any value that is not already a real true/false (including the text `"false"`) becomes true. Make the earlier step return a real true/false, or use a string output.
 - **An object or array output fails or comes back empty.** Text must be valid JSON to become an object or array. An invalid array becomes `[]`; an invalid object stops the run with "Failed to parse object".
-- **There is no Test Workflow button on the canvas.** The lambda workflow is missing its Lambda Input or Lambda Output. Use the **Add Lambda Output** button in the top right.
+- **There is no Run button on the canvas.** The lambda workflow is missing its Lambda Input or Lambda Output. Use the **Add Lambda Output** button in the top right.
 
 ## Related nodes
 

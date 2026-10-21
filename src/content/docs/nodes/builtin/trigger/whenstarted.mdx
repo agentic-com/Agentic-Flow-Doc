@@ -1,8 +1,8 @@
 ---
-title: "When Started"
+title: "When I press Run"
 description: "Run the flow on clicking the start button. Good for getting started quickly."
 sidebar:
-  label: "When Started"
+  label: "When I press Run"
 kind: node
 section: nodes
 worksIn: [extension, web]
@@ -14,6 +14,8 @@ node:
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
+*Formerly **When Started**. The step was renamed in AWFlow 0.9; searching for the old name still finds it.*
+
 Start a workflow by hand, whenever you choose to run it.
 
 ## Try it
@@ -24,11 +26,13 @@ Start a workflow by hand, whenever you choose to run it.
 
 ## What it does
 
-When Started waits for nothing. The workflow runs when you click **Test Workflow** in the designer, run it from the workflow list, or press the trigger's own run button. The trigger has no settings and passes `{ "started": true }` to the next node.
+When I press Run waits for nothing. The workflow runs when you press **Run** in the editor, run it from the workflow list, or press the trigger's own run button. The trigger has no settings and passes `{ "started": true }` to the next node.
 
-A workflow whose only trigger is When Started also appears in the browser's right-click menu (under **Personal Workflows**), so you can run it on the page you are looking at.
+A workflow whose only trigger is When I press Run shows **Runs when you press Run** instead of the On/Off switch. It also appears in the browser's right-click menu (under **Personal Workflows**), so you can run it on the page you are looking at.
 
-If a workflow has several triggers, clicking **Test Workflow** asks you which one to start from. Only the branch after the chosen trigger runs.
+If a workflow has several triggers, pressing **Run** asks you which one to start from. Only the branch after the chosen trigger runs.
+
+If you add an action to an empty workflow, a When I press Run trigger is added and linked for you.
 
 ## When to use it
 
@@ -75,7 +79,7 @@ Save the text of the current page:
 1. Add **When Started**.
 2. Add [Get All Text](/nodes/extension/getalltext/) with **Output field name** `text` to read the page you have open.
 3. Add [Data Store](/nodes/builtin/core/datastore/) with **Operation** set to **Set**, **Key** `last-page-text` and **Value** `{{ $input.text }}`.
-4. Open the page you want, then click **Test Workflow**.
+4. Open the page you want, then press **Run**.
 
 ## Common issues
 

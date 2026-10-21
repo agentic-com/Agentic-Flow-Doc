@@ -28,6 +28,10 @@ Basic LLM Chain sends **Prompt** to the chat model connected to its **Model** sl
 
 You must connect a chat model, for example [OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/), [Ollama](/nodes/builtin/ai/aidependencies/llm/ollama/) or an on-device [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/) model. Optionally connect an output parser to get structured data back instead of plain text.
 
+### Fallback model
+
+Connect a second chat model to **Fallback**. If the main model fails before writing anything with an error worth retrying elsewhere (429, 401/402/403, 5xx or a network error), the same call goes to the fallback; the run log names the switch and the output gets `usedFallback: true`.
+
 ## When to use it
 
 - Rewrite, translate, classify or summarise text from earlier nodes.
@@ -39,7 +43,7 @@ When the model must call tools or take actions, use [Tools Agent](/nodes/builtin
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Prompt","type":"Text","required":true},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
+<AwfParamTable rows={[{"name":"Prompt","type":"Text","required":true},{"name":"Options","type":"Group","description":"The options for the step."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Use expressions in **Prompt** to include data, for example `Write a one-line summary of: {{ $input.text }}`. Add a **System message** under **Options** to set tone or rules ("Answer in French", "Reply in under 50 words").
@@ -51,11 +55,12 @@ Use expressions in **Prompt** to include data, for example `Write a one-line sum
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"response","type":"Any","description":"The model reply; the parsed result when an output parser is connected"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"response","type":"Any","description":"The model reply; the parsed result when an output parser is connected"},{"name":"usedFallback","type":"Text"}]} />
 
 ```json title="Shape of an output item"
 {
-  "response": null
+  "response": null,
+  "usedFallback": "…"
 }
 ```
 {/* AUTO:outputs:end */}
@@ -65,7 +70,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."}]} />
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Output Parser","type":"output parser","description":"One node."},{"name":"Fallback","type":"chat model","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 The node has no credential of its own. The connected model holds the API key or connection.

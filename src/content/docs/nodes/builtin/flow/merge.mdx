@@ -20,7 +20,7 @@ Join two lists of items into one, pairing items that match.
 
 Merge has two inputs. It waits for both, then pairs each item from the first input (A) with the items from the second input (B) that satisfy your **Match Keys**, and combines each pair into one item.
 
-Each match key compares a field on the A side with a field on the B side, with an operator (for example **Is Equal To**). Several keys can be linked with AND or OR. With no match keys, every A item pairs with every B item.
+Each match key compares a field on the A side with a field on the B side, with an operator (for example **Is Equal To**). Several keys can be linked with AND or OR; each key row uses its own AND / OR (with several keys and OR, the run log reminds you how they combine). Keys are compared on their raw values: text stays text, so *starts with* and *contains* work, and numbers match their text (`1` and `"1"`). A missing nested path counts as empty. With no match keys, every A item pairs with every B item.
 
 When both items have a field with the same name but different values, the result keeps both, renamed `left-<field>` and `right-<field>`. Fields with equal values are kept once.
 
@@ -33,6 +33,20 @@ When both items have a field with the same name but different values, the result
 | **Right Join** | Every B item: merged with its matches, or on its own when it has none. |
 | **Left Outer Join** | Same result as Left Join. |
 | **Right Outer Join** | Same result as Right Join. |
+
+### More modes (version 2)
+
+New Merge steps (version 2) add three modes that don't use match keys (**Match Keys** only shows for the join modes, still the default):
+
+| Mode | Result |
+| --- | --- |
+| **Append** | Every item of the first input, then every item of the second. |
+| **Combine by position** | Item 1 with item 1, item 2 with item 2, and so on. With **Keep unpaired items**, the extra items of the longer input are kept on their own. |
+| **Every combination** | Each item of the first input with each item of the second (3 × 4 items give 12). |
+
+Merge steps saved before AWFlow 0.9 keep merging exactly as before; **Update** in the step's header keeps their mode and keys.
+
+When a step that isn't a Merge receives two or more lists making 100 or more combinations, the run log suggests a Merge instead.
 
 ## When to use it
 
@@ -66,7 +80,13 @@ None. This node needs no connection and has no slots for other nodes.
 3. Merge in **Left Join** mode, with the match key A `email` **Is Equal To** B `customerEmail`.
 4. Every customer comes out once per matching order, or once on their own when they have no order.
 
+## Empty settings
+
+In workflows with the [new behaviour](/app/workflows/behaviour-versions/), a Merge step whose mode or match keys are left empty uses their defaults instead of failing. Classic workflows keep failing as before.
+
 ## Common issues
+
+- **One input received nothing.** Merge treats it as an empty side, so each mode gives its natural result (a join that keeps only matches gives nothing), and the run log names the input that got no data.
 
 - **Nothing comes out.** In Inner Join mode no pair matched. Check that both fields hold the same kind of value (for example both lower-case emails) and that the field names are spelled as they appear in the data.
 - **Many more items than expected.** One A item matched several B items, and each pair becomes an item. Remove duplicates on B first, or add another match key.

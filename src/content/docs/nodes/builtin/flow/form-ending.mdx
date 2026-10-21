@@ -1,0 +1,72 @@
+---
+title: "Form ending"
+description: "Show a closing message, open a page or close the form at the end"
+sidebar:
+  label: "Form ending"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/form-ending
+  family: flow
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Decide what the person sees after the last page of a form: a thank-you message, a web page, or nothing (the form closes).
+
+## What it does
+
+Form ending tells the open form what to show, then passes its input on unchanged. It does not pause the run, so steps after it still run.
+
+- **Show a message**: a **Title** and a **Text**, for example "Thanks, it's filed" and "We'll email you."
+- **Open a page**: opens the **Page** in a new tab. Only `https://` links are accepted.
+- **Close the form**: the form window or sheet closes.
+
+Without a Form ending, the form shows **Done** when the run finishes, or **Something went wrong** when it fails.
+
+## When to use it
+
+- At the end of a [When a form is submitted](/nodes/builtin/trigger/form-trigger/) workflow, after the steps that file the request.
+- After the last [In-Page Form](/nodes/builtin/flow/in-page-form/) of a multi-page form.
+- On each branch of a form workflow, with a different message per outcome ("Approved" / "We need more details").
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"At the end","type":"Choice","default":"Show a message","description":"Options: Show a message, Open a page, Close the form."},{"name":"Title","type":"Text"},{"name":"Text","type":"Long text"},{"name":"Page","type":"Text","description":"Opens in a new tab (https only)."}]} />
+{/* AUTO:settings:end */}
+
+Map answers into the message: `Thanks {{ $('When a form is submitted').name }}, we got it.`
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+The items it received, unchanged.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. [When a form is submitted](/nodes/builtin/trigger/form-trigger/) asks for an email and a question.
+2. [Notion](/nodes/builtin/integration/notion/) adds a page to a requests database.
+3. Form ending, **Show a message**: "Thanks, it's filed".
+
+## Common issues
+
+- **"The page must be an https:// link."**: **Open a page** only accepts `https://` addresses.
+- **The message never shows**: the run failed before reaching this step. Open **Runs** to see where.
+
+## Related nodes
+
+- [When a form is submitted](/nodes/builtin/trigger/form-trigger/): page 1 of the form.
+- [In-Page Form](/nodes/builtin/flow/in-page-form/): more pages.

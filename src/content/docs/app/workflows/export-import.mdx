@@ -7,12 +7,12 @@ section: app
 import { Aside } from "@astrojs/starlight/components";
 import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
-A workflow is saved as a **`.awf` file**: a small JSON text file with its steps, connections and notes.
+A workflow is saved as a **`.awf` file**: a small JSON text file with its steps, the links between them, its notes and its settings.
 
 - **Export** a workflow to back it up or share it.
 - **Import** a `.awf` file (or a link to one) to use a workflow you downloaded or got from a teammate.
 
-Your credentials (keys, tokens, sign-ins) are never part of the file.
+Your connections (keys, tokens, sign-ins) and the values of your [variables](/app/variables/) are never part of the file.
 
 ---
 
@@ -32,9 +32,16 @@ In the editor, the **⋮** at the top right has the same **Export** item. To exp
 
 If AWFlow finds a secret typed into a step (an API key pasted in a field, for example), it tells you before downloading and offers to export the workflow **with the secrets removed**.
 
+The file lists the [variables](/app/variables/) the workflow reads (`$vars.NAME`), with their descriptions but **never their values**, so whoever imports it knows what to set.
+
 ### Copy and paste steps
 
-To share only a few steps, select them on the canvas and press <kbd>Ctrl</kbd> <kbd>C</kbd> (<kbd>⌘</kbd> <kbd>C</kbd> on a Mac), then press <kbd>Ctrl</kbd> <kbd>V</kbd> (<kbd>⌘</kbd> <kbd>V</kbd>) in another workflow.
+To share only a few steps, select them on the canvas and press <kbd>Ctrl</kbd> <kbd>C</kbd> (<kbd>⌘</kbd> <kbd>C</kbd> on a Mac), or **Copy steps** in the menu, then press <kbd>Ctrl</kbd> <kbd>V</kbd> (<kbd>⌘</kbd> <kbd>V</kbd>) in another workflow, even in another window.
+
+- The copy goes through your system clipboard, cleaned first: no connections, no values reset on publish, no secret-looking values ("1 secret-looking value was removed").
+- Pasted steps land at the cursor in one undo step. Steps whose names already exist get a new name, and the `$('…')` references to them are fixed. Anything they need shows in **Ready to run**.
+- Paste the **text of an `.awf` file** and AWFlow asks: **Paste N steps into this workflow** or **Import as a new workflow**.
+- Paste a **link** to a workflow from an allowed site, and AWFlow offers to import it.
 
 ---
 
@@ -60,7 +67,11 @@ An import always creates a **new** workflow; it never changes one you already ha
   <StepShot shot="import-details" spot="create-open" n={3} zoom={44} />
 </StepCard>
 
-After the import, review the steps, especially the ones that use a credential: pick your own credential where one is needed, then [test it](/app/workflows/executions/run-from-the-canvas/).
+After the import, open **Ready to run**: connect your own accounts (one **Connect** per app connects every step that uses it), set the [variables](/app/variables/) it lists as **Set NAME**, then [run it](/app/workflows/executions/run-from-the-canvas/).
+
+If two steps in the file share a name, the later one is renamed ("HTTP Request 2"); references to the name keep reading the first one, as before.
+
+If the file can't be imported, the message says why in plain words ("Couldn't import: …"): for example the file isn't a workflow (`.awf` or `.json`), or the address didn't return one. A file made with a newer AWFlow, with steps or behaviour this version doesn't know, is refused or shown as *made with a newer AWFlow* (see [Updating AWFlow](/app/updating-awflow/)).
 
 ### From the editor
 

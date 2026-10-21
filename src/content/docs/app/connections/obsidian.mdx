@@ -29,16 +29,16 @@ import { Badge, Callout, GuidedShot } from '@components/awflow';
 1. **Install the plugin.** In Obsidian, open **Settings › Community plugins**, browse for **Local REST API**, install it and enable it.
 2. **Turn on the HTTP server.** In the plugin's settings, enable the non-encrypted (HTTP) server on port `27123`. The HTTPS port `27124` uses a self-signed certificate that the browser rejects.
 3. **Copy the API key** from the plugin's settings.
-4. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Obsidian** in the list, then fill the rest.
+4. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in a step's **Connection** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **Obsidian** in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-obsidian"
      steps={[
-       { spot: 'app', title: 'Pick Obsidian', body: 'Under **Integration App / Service**, pick **Obsidian**. There is no **Auth Type** menu: Obsidian uses a **Bearer Token**.' },
+       { spot: 'app', title: 'Pick Obsidian', body: 'Under **Integration App / Service**, pick **Obsidian**. There is no **Type** menu: Obsidian uses a **Bearer Token**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Obsidian – vault*. A **Description** is optional.' },
        { spot: 'token', title: 'Paste the key', body: 'Paste the key into **Bearer Token**.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -52,12 +52,12 @@ Run **Search vault** with a word from one of your notes: the note comes back.
 
 ## Where your token lives
 
-<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#connections-and-secrets" linkLabel="Privacy & your data">
 
 The credential is stored where you choose when you create it:
 
-- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
-- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+- **On this device**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **In your account (cloud)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
 
 When a step runs, your browser sends it only to your own computer (`http://127.0.0.1:27123` by default). AWFlow's servers never relay the call.
 

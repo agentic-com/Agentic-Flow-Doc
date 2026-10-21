@@ -18,6 +18,10 @@ import { Badge, Callout, GuidedShot } from '@components/awflow';
 - Access to the [Azure portal](https://portal.azure.com/) to register an app (free). Work accounts may need an admin to approve the permissions.
 - The AWFlow browser extension. These steps run in the extension (the web app hands them to it).
 
+### Several accounts
+
+You can add one connection per account (a work and a personal Google account, for example). Since AWFlow 0.9 each connection keeps its own sign-in: a step always acts as the account of the connection it uses. Connections made before 0.9 may ask you to sign in once more.
+
 ## Used by
 
 - [Microsoft 365](/nodes/builtin/integration/microsoft-graph/)
@@ -31,18 +35,18 @@ This is the only method. Microsoft 365 uses a public client: only the Applicatio
 1. **Register an app** in the Azure portal's [App registrations](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade): **New registration**, any name, **Accounts in any organizational directory and personal Microsoft accounts**.
 2. **Add the redirect URI** as a **Single-page application**. Copy it from the credential form in AWFlow (step 4 shows where), then click **Register**.
 3. **Add permissions.** In **API permissions › Add a permission › Microsoft Graph › Delegated permissions**, add `offline_access`, `Mail.ReadWrite`, `Mail.Send`, `Files.ReadWrite`, `Calendars.ReadWrite` and `Tasks.ReadWrite`.
-4. **Fill the credential in AWFlow.** Open **Credentials** and click **Add Credential**, then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Microsoft 365** in the list, then fill the rest.
+4. **Fill the credential in AWFlow.** Open **Connections** and click **Add connection**, then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **Microsoft 365** in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-microsoft-365"
      steps={[
-       { spot: 'app', title: 'Pick Microsoft 365', body: 'Under **Integration App / Service**, pick **Microsoft 365**. There is no **Auth Type** menu: Microsoft 365 uses **OAuth2**.' },
+       { spot: 'app', title: 'Pick Microsoft 365', body: 'Under **Integration App / Service**, pick **Microsoft 365**. There is no **Type** menu: Microsoft 365 uses **OAuth2**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Microsoft 365 – work*. A **Description** is optional.' },
        { spot: 'oauth-guide', title: 'Copy the redirect URI', body: 'Open **Create your Microsoft OAuth client**: it shows your redirect URI with a **Copy** button, for step 2.' },
        { spot: 'client-id', title: 'Paste the Application (client) ID', body: "From the app's **Overview** page, into **Client ID**. There is no secret field." },
        { spot: 'check-connection', title: 'Click Check connection', body: 'Sign in to Microsoft and accept the permissions.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in Microsoft 365 nodes.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Save it', check: 'the credential is listed on the Credentials page, ready to pick in Microsoft 365 nodes.' },
      ]}
    />
 
@@ -56,14 +60,14 @@ This is the only method. Microsoft 365 uses a public client: only the Applicatio
 
 ## Where your token lives
 
-<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#connections-and-secrets" linkLabel="Privacy & your data">
 
 Only the **Application (client) ID** is saved in the credential. The tokens Microsoft returns are kept in this browser's storage and never synced to your account.
 
 The credential itself is stored where you choose:
 
-- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
-- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+- **On this device**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **In your account (cloud)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
 
 When a step runs, your browser sends it only to login.microsoftonline.com (sign-in) and graph.microsoft.com (the API). AWFlow's servers never relay the call.
 

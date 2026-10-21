@@ -55,7 +55,7 @@ Agents that act through the Browser, HTTP Request or MCP Client tools always ask
 
 Models fail sometimes: a rate limit, a refused API key, an answer in the wrong format.
 
-- Turn on **Retry** in the AI node's settings for temporary failures, and **Continue On Fail** when the run should go on without the answer. See [Error handling](/concepts/flow/error-handling/).
+- Turn on **Try again automatically** in the AI node's settings for temporary failures, and **On error › Continue with an empty result** when the run should go on without the answer. See [Error handling](/concepts/flow/error-handling/).
 - Wrap risky steps in a [Try](/nodes/builtin/flow/try/) node to route a failure instead of ending the run.
 - Use an [Auto-fixing Output Parser](/nodes/builtin/ai/aidependencies/outputparser/autofixingoutputparser/) when a later step needs a strict format.
 - Add an [Error Trigger](/nodes/builtin/trigger/errortrigger/) workflow to be told when a workflow fails.

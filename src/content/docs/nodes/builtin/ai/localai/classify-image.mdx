@@ -32,7 +32,7 @@ To find several objects and where they are, use [Detect Objects](/nodes/builtin/
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"Any installed image-classification model, across engines."},{"name":"Image","type":"Media","description":"Image URL, data URL, or $binary from a previous node."},{"name":"Confidence threshold","type":"Number","default":"0.1","description":"Drop predictions below this score."},{"name":"Top-K results","type":"Number","default":"5"}]} />
+<AwfParamTable rows={[{"name":"Model","type":"Model picker","description":"Any installed image-classification model, across engines."},{"name":"Image","type":"Media","description":"Image URL, data URL, or $binary from a previous step."},{"name":"Confidence threshold","type":"Number","default":"0.1","description":"Drop predictions below this score."},{"name":"Top-K results","type":"Number","default":"5"}]} />
 {/* AUTO:settings:end */}
 
 **Image** has four tabs. **From input** takes an expression that points to an image from an earlier node, such as `{{ $input.dataUrl }}` after [Screenshot Page](/nodes/extension/screenshotpage/) or `{{ $binary }}` for an attached file. **URL** takes a web address. **Upload** and **Base64** store a fixed image with the node, handy for trying a model.

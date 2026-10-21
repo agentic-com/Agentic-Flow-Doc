@@ -1,0 +1,105 @@
+---
+title: "JavaScript Code"
+description: "Transform items with a few lines of JavaScript, in a sandbox with no network"
+sidebar:
+  label: "JavaScript Code"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/core/javascript-code
+  family: core
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Write a small JavaScript transform when no other step does what you need. It starts fast and runs in a sandbox: no network, no page access, no timers.
+
+## What it does
+
+JavaScript Code runs your code in QuickJS, a small JavaScript engine compiled to WebAssembly, inside its own worker for each run of the step. The engine loads the first time the step runs.
+
+Pick how it runs with **Run**:
+
+- **Once for each item** (the default): `item` is the current item and `$itemIndex` its position (from 0). Return the new item. Each item gets a fresh engine, so nothing leaks from one item to the next.
+- **Once for all items**: `items` is the whole list. Return the new list; each element becomes one item.
+
+Both modes also get `$workflow` (`id`, `name`) and `$execution` (`id`, `mode`). The data you read is frozen JSON: change a copy (`{ ...item }`), not the original. Async code works: a returned promise is awaited.
+
+What comes out:
+
+- An object is the item. Any other value becomes `{ result: value }`. Returning nothing gives an empty item.
+- In **Once for all items**, the code must return a list, or the step fails with `"Once for all items" code must return a list`.
+
+`console.log()` lines go to the run's activity log (the first 200; after that, one line says the rest are hidden). `console.warn()` and `console.error()` show as warnings and errors.
+
+:::note[`{{ }}` is not replaced in code]
+The code field is sent to the engine exactly as you wrote it. Read data with `item` or `items`, never with `{{ $input.x }}`.
+:::
+
+## When to use it
+
+- A calculation or a reshaping that would take several steps otherwise.
+- Filtering or sorting with a rule that is easier to write than to click.
+- When you know JavaScript better than Python. [Python Code](/nodes/builtin/core/code/) does the same job in Python, but starts slower.
+
+For counts, sums and averages per group, try [Summarize items](/nodes/builtin/datatransformation/summarize/) first: no code needed.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Run","type":"Choice","default":"Once for each item","description":"Options: Once for each item, Once for all items."},{"name":"Code","type":"Code","required":true,"description":"Read data with item / items. {{ }} isn’t replaced in code."},{"name":"Time limit","type":"Number","description":"Default 10 s, up to 60 s."},{"name":"Memory limit (MB)","type":"Number","description":"Default 64 MB, up to 256 MB."}]} />
+{/* AUTO:settings:end */}
+
+```js title="Once for each item"
+// item is the current item; return the new one
+return { ...item, total: item.qty * item.price };
+```
+
+```js title="Once for all items"
+// items is every item; return the new list
+return items.filter((i) => i.active).map((i) => ({ name: i.name }));
+```
+
+Limits:
+
+- **Time limit**: 10 seconds by default, up to 60 seconds. A run that goes over stops with `Stopped after 10 s (time limit).`
+- **Memory limit**: 64 MB by default, up to 256 MB. Going over stops with `Used more than 64 MB (memory limit).`
+- **Stop** in the app ends the code at once.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+The items your code returned, one per object.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+The sandbox has no `fetch`, `XMLHttpRequest`, `WebSocket`, timers or imports. To call an API, put an [HTTP Request](/nodes/builtin/core/http-request/) step before or after this one.
+
+## Example workflow
+
+1. [HTTP Request](/nodes/builtin/core/http-request/) fetches a list of orders (one item per order).
+2. JavaScript Code, **Once for each item**: `return { ...item, total: item.qty * item.price };`
+3. [Summarize items](/nodes/builtin/datatransformation/summarize/) sums `total` per `region`.
+
+## Common issues
+
+- **`Line 3, item 2: TypeError: …`**: the error names the line of your code and the item (counted from 1). Open the step's Input to see that item.
+- **`'fetch' is not defined`**: the sandbox has no network. Use HTTP Request for calls.
+- **The output still shows `{{ … }}`**: expressions are not replaced in code. Read the value from `item`.
+- **"Once for all items" fails**: return a list, for example `return items;`.
+
+## Related nodes
+
+- [Python Code](/nodes/builtin/core/code/): the same idea in Python.
+- [Summarize items](/nodes/builtin/datatransformation/summarize/): totals and counts per group, no code.
+- [Edit Fields](/nodes/builtin/datatransformation/editfields/): add, rename or set fields without code.

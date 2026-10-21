@@ -38,16 +38,16 @@ The secret depends on the **Resource** you use. Create one credential for each a
 <Steps>
 
 1. **Create the webhook.** In Discord, open the channel's **Edit Channel › Integrations › Webhooks**, click **New Webhook** and **Copy Webhook URL**.
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Discord** in the list, then fill the rest.
+2. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in a step's **Connection** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **Discord** in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-discord"
      steps={[
-       { spot: 'app', title: 'Pick Discord', body: 'Under **Integration App / Service**, pick **Discord**. There is no **Auth Type** menu: Discord uses a **Bearer Token**.' },
+       { spot: 'app', title: 'Pick Discord', body: 'Under **Integration App / Service**, pick **Discord**. There is no **Type** menu: Discord uses a **Bearer Token**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Discord – #alerts webhook*. A **Description** is optional.' },
        { spot: 'token', title: 'Paste the webhook URL', body: 'Paste the full webhook URL into **Bearer Token**.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -67,16 +67,16 @@ Run **Webhook › Send** with the content *Hello from AWFlow*: the message appea
 1. **Create a bot.** In the [Discord Developer Portal](https://discord.com/developers/applications), click **New Application**, open **Bot** and click **Reset Token**. Copy the token.
 2. **Allow message text** if you read messages: on the **Bot** page, turn on **Message Content Intent**.
 3. **Invite the bot.** In **OAuth2 › URL Generator**, tick `bot`, then **View Channels**, **Read Message History** and **Add Reactions**. Open the generated URL and add the bot to your server.
-4. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Discord** in the list, then fill the rest.
+4. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in a step's **Connection** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **Discord** in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-discord"
      steps={[
-       { spot: 'app', title: 'Pick Discord', body: 'Under **Integration App / Service**, pick **Discord**. There is no **Auth Type** menu: Discord uses a **Bearer Token**.' },
+       { spot: 'app', title: 'Pick Discord', body: 'Under **Integration App / Service**, pick **Discord**. There is no **Type** menu: Discord uses a **Bearer Token**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Discord – reader bot*. A **Description** is optional.' },
        { spot: 'token', title: 'Paste the token', body: 'Paste the bot token into **Bearer Token**.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -93,12 +93,12 @@ Run **Channel › List** with your server's ID: its channels come back.
 
 ## Where your token lives
 
-<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#connections-and-secrets" linkLabel="Privacy & your data">
 
 The credential is stored where you choose when you create it:
 
-- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
-- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+- **On this device**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **In your account (cloud)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
 
 When a step runs, your browser sends it only to `discord.com`. AWFlow's servers never relay the call.
 

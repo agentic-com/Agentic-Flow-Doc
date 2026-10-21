@@ -30,6 +30,10 @@ Summarization sends **Text** to the chat model connected to **Model**, asking fo
 
 The whole text is sent in one request, so it must fit the model's context window.
 
+### Fallback model
+
+Connect a second chat model to **Fallback**. If the main model fails before writing anything with an error worth retrying elsewhere (429, 401/402/403, 5xx or a network error), the same call goes to the fallback; the run log names the switch and the output gets `usedFallback: true`.
+
 ## When to use it
 
 - Summarise an article or a long page before you read it.
@@ -41,7 +45,7 @@ To summarise on-device without a model node, use [Summarize](/nodes/builtin/ai/l
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to summarize."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Max words","type":"Number","description":"The approximate maximum number of words the summary should contain."},{"name":"Options › Style","type":"Text","description":"The style of the summary, e.g. \"bullet points\", \"one paragraph\", \"formal\"."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to summarize."},{"name":"Options","type":"Group","description":"The options for the step."},{"name":"Options › Max words","type":"Number","description":"The approximate maximum number of words the summary should contain."},{"name":"Options › Style","type":"Text","description":"The style of the summary, e.g. \"bullet points\", \"one paragraph\", \"formal\"."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Text** with an expression such as `{{ $input.text }}`. **Style** is free text: `bullet points`, `one paragraph`, `formal`, `for a ten-year-old`. Use **System message** for other rules, such as `Write in French.`
@@ -53,11 +57,12 @@ Fill **Text** with an expression such as `{{ $input.text }}`. **Style** is free 
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"summary","type":"Any","description":"The model reply; the parsed result when an output parser is connected"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"summary","type":"Any","description":"The model reply; the parsed result when an output parser is connected"},{"name":"usedFallback","type":"Text"}]} />
 
 ```json title="Shape of an output item"
 {
-  "summary": null
+  "summary": null,
+  "usedFallback": "…"
 }
 ```
 {/* AUTO:outputs:end */}
@@ -67,7 +72,7 @@ Each output item has these fields:
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true}]} />
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model","description":"One node.","required":true},{"name":"Fallback","type":"chat model","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 Connect a chat model such as [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/), [Chat Anthropic](/nodes/builtin/ai/aidependencies/llm/anthropic/) or an on-device [Web LLM](/nodes/builtin/ai/aidependencies/llm/wbellm/). The model node holds the API key; Summarization has no credential of its own.

@@ -9,6 +9,7 @@ worksIn: [extension, web]
 node:
   id: builtin/core/datastore
   family: core
+  agentTool: true
 ---
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
@@ -49,7 +50,7 @@ To remove duplicates across runs without building it yourself, [Remove Duplicate
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Get","description":"What to do to the store. Options: Get, Set, Delete, Increment, List keys, Clear all."},{"name":"Scope","type":"Choice","default":"This workflow only","description":"Which keys this node can see. Options: This workflow only, Shared with all workflows."},{"name":"Key","type":"Text","description":"Name of the value to store or read."},{"name":"Value","type":"Value","description":"The value to store. Used by Set."},{"name":"Value Format","type":"Choice","default":"Text","description":"How to read text typed into Value. Options: Text, Number, True / false, JSON."},{"name":"Increment By","type":"Number","default":"1","description":"How much to add. Use a negative number to count down."}]} />
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Get","description":"What to do to the store. Options: Get, Set, Delete, Increment, List keys, Clear all."},{"name":"Scope","type":"Choice","default":"This workflow only","description":"Which keys this step can see. Options: This workflow only, Shared with all workflows."},{"name":"Key","type":"Text","description":"Name of the value to store or read."},{"name":"Value","type":"Value","description":"The value to store. Used by Set."},{"name":"Value Format","type":"Choice","default":"Text","description":"How to read text typed into Value. Options: Text, Number, True / false, JSON."},{"name":"Increment By","type":"Number","default":"1","description":"How much to add. Use a negative number to count down."}]} />
 {/* AUTO:settings:end */}
 
 - **Key** is needed by every operation except **List keys** and **Clear all**. Up to 512 characters.

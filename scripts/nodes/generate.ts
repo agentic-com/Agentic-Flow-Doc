@@ -106,7 +106,34 @@ function recipesFor(n: NodeDoc, recipes: Recipe[]): RenderContext['recipes'] {
 }
 
 const app = findApp();
-const nodes = await extractNodes(app);
+/**
+ * Steps usable as AI tools (#1458) get a derived `<registryId>:tool` entry with the same doc page.
+ * Fold it into its base entry (one page per step, marked as an agent tool) so pages aren't written twice.
+ */
+function foldToolVariants(list: NodeDoc[]): NodeDoc[] {
+	const byId = new Map(list.filter((n) => !n.registryId.endsWith(':tool')).map((n) => [n.id, n]));
+	const folded = list.filter((n) => {
+		if (!n.registryId.endsWith(':tool')) return true;
+		const base = byId.get(n.id);
+		if (!base) return true;
+		base.agentTool = true;
+		return false;
+	});
+	// Two different steps sharing one page (the Browser block replaced the Browser Tool): the newest one owns it.
+	const newest = new Map<string, NodeDoc>();
+	const since = (n: NodeDoc) => (n.since ?? '0').split('.').map(Number);
+	const newer = (a: NodeDoc, b: NodeDoc) => {
+		const [x, y] = [since(a), since(b)];
+		for (let i = 0; i < 3; i++) if ((x[i] ?? 0) !== (y[i] ?? 0)) return (x[i] ?? 0) > (y[i] ?? 0);
+		return false;
+	};
+	for (const n of folded) {
+		const seen = newest.get(n.id);
+		if (!seen || newer(n, seen)) newest.set(n.id, n);
+	}
+	return folded.filter((n) => newest.get(n.id) === n);
+}
+const nodes = foldToolVariants(await extractNodes(app));
 const json = JSON.stringify(nodes, null, '\t') + '\n';
 
 const problems: string[] = [];

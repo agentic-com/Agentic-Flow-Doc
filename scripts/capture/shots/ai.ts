@@ -152,7 +152,7 @@ export const shots: ShotDef[] = [
 		hotspots: [
 			{ id: 'storage-header', label: 'Storage header: space used, by engine', locate: text(/of \d+(\.\d+)? GB/) },
 			{ id: 'tasks', label: 'Tasks', locate: text('BROWSE BY TASK') },
-			{ id: 'search-engine-filter', label: 'Search and engine filter', locate: (p) => p.getByRole('textbox', { name: 'Filter models…' }) },
+			{ id: 'search-engine-filter', label: 'Search models, Filters and Sort by', locate: (p) => p.getByRole('searchbox', { name: /Search models/ }).or(p.getByRole('textbox', { name: /Search models/ })).first() },
 			{ id: 'model-card', label: 'A model card: size, device fit and install state', locate: (p) => p.getByText('Llama 3.2 1B Instruct').first() }
 		],
 		prepare: async (s) => {

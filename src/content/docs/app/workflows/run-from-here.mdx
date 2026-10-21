@@ -1,0 +1,51 @@
+---
+title: Run from here
+description: Run one step and everything after it, reusing what the earlier steps already produced, without running the whole workflow again.
+sidebar:
+  badge:
+    text: New
+    variant: tip
+---
+
+import { Kbd } from 'starlight-kbd/components';
+import { GuidedShot } from '@components/awflow';
+
+When you fix a step in the middle of a workflow, you don't need to start again from the trigger. **Run from here** runs the step you pick **and the steps after it**, using what the earlier steps already produced.
+
+## Start it
+
+- **Run from here** in the step's menu, or in its right-click menu on the canvas.
+- In the step's settings, the arrow next to **Run step** (**Run step ▾**) › **Run from here**.
+- Select the step and press <Kbd mac="Cmd+Shift+Enter" windows="Ctrl+Shift+Enter" />.
+
+<GuidedShot
+  shot="run-from-here"
+  steps={[
+    { spot: 'more-ways', title: 'Open the arrow next to Run step', body: 'In the settings of the step to start from.' },
+    { spot: 'run-from-here', title: 'Run from here', body: 'Runs this step and the steps after it, on the earlier steps\' results.' },
+  ]}
+/>
+
+The run bar reads, for example, *Running from Count open issues · step 2 of 3*.
+
+## Where the earlier data comes from
+
+Each step that leads into what runs uses, in this order:
+
+1. its [kept result](/app/workflows/kept-results/), if it has one;
+2. else its last result from this editor session;
+3. else its data from the last saved run (when the workflow keeps step data, see [Workflow settings](/app/workflows/settings/#run-history)).
+
+Those steps show a **Data from a past run** badge, and the **Last run** panel says which earlier results were used. A normal **Run** clears the badges.
+
+If an earlier step has no result at all, AWFlow asks **Run from …?**: run that step first (recommended), or **Run from here anyway** (the step then receives no items).
+
+## In Runs
+
+A run started this way is recorded like a manual run, shown as **From a step · Count open issues** in [Runs](/app/workflows/run-history/).
+
+## Related
+
+- [Kept results](/app/workflows/kept-results/)
+- [Debug a run in the editor](/app/workflows/run-history/#debug-a-run-in-the-editor): run a step with the data of a past run.
+- [Keyboard shortcuts](/app/workflows/keyboard-shortcuts/)

@@ -1,6 +1,6 @@
 ---
 title: Processing data with code
-description: "When a mapping isn't enough, reshape items with Python in the Code node."
+description: "When a mapping isn't enough, reshape items with JavaScript or Python in a code step."
 sidebar:
   order: 3
 section: concepts
@@ -10,48 +10,45 @@ kind: concept
 import { CardGrid, LinkCard } from "@astrojs/starlight/components";
 
 :::note[In 20 seconds]
-The [Code](/nodes/builtin/core/code/) node runs Python in your browser. The incoming data is in a variable called `input`, and the value of the **last line** becomes the output, under `result`. Like most nodes, it runs once per incoming item. Reach for it when the same change would take several nodes.
+Two code steps run in your browser, in a sandbox: [JavaScript Code](/nodes/builtin/core/javascript-code/) (fast to start) and [Python Code](/nodes/builtin/core/code/). Pick **Once for each item** (`item` in JavaScript, `input` in Python) or **Once for all items** (`items`), and return the new item or the new list. `{{ }}` is never replaced inside code. Reach for code when the same change would take several steps.
 :::
 
 ## When code is the right tool
 
-Most changes need no code: drag a field, write an [expression](/concepts/data/data-mapping/data-mapping-expressions/), or use [Edit Fields](/nodes/builtin/datatransformation/editfields/). Use the Code node when you need to:
+Most changes need no code: tap a field into a setting, write an [expression](/concepts/data/data-mapping/data-mapping-expressions/), use [Edit Fields](/nodes/builtin/datatransformation/editfields/), or [Summarize items](/nodes/builtin/datatransformation/summarize/) for totals per group. Use a code step when you need to:
 
-- regroup or count values, for example orders per customer;
-- parse an unusual format with Python's standard library (`re`, `json`, `csv`, `datetime`);
-- combine several fields with logic that doesn't fit in one expression.
-
-## Read the input, return a value
-
-```python title="Code to Execute"
-words = input.get("text", "").split()
-{
-    "words": len(words),
-    "longest": max(words, key=len) if words else "",
-}
-```
-
-- `input` is a normal Python value: a dict, a list or a single value.
-- The last line, on its own, is what the node passes on. An assignment on the last line returns nothing.
-- The next step reads it as `{{ $input.result.words }}`.
-- `print()` writes to the run's activity log, which helps when you debug.
-
-With several steps connected to the Code node, `input` is a dict keyed by each step's label, such as `input["Get Selected Text"]["selection"]`.
+- reshape items with logic that doesn't fit in one expression;
+- parse an unusual format (Python's standard library has `re`, `json`, `csv`, `datetime`);
+- filter or sort with a rule that is easier to write than to click.
 
 ## One item, or the whole list?
 
-When the previous step outputs several items, the Code node runs **once per item** and `input` is one item. To work on the whole list at once (to total it or group it), put [Aggregate](/nodes/builtin/datatransformation/aggregate/) in front of the Code node. It then receives one item that holds the list.
+| Run | JavaScript | Python | Return |
+| --- | --- | --- | --- |
+| **Once for each item** | `item`, `$itemIndex` | `input`, `item_index` | the new item (an object / dict) |
+| **Once for all items** | `items` | `items` (and `input`, the first item) | the new list: each element becomes an item |
 
-```python title="Code to Execute, after Aggregate (Put Output In Field: orders)"
-totals = {}
-for order in input["orders"]:
-    totals[order["customer"]] = totals.get(order["customer"], 0) + order["amount"]
-totals
+```js title="JavaScript Code · Once for all items"
+const totals = {};
+for (const o of items) totals[o.customer] = (totals[o.customer] ?? 0) + o.amount;
+return Object.entries(totals).map(([customer, total]) => ({ customer, total }));
 ```
+
+```python title="Python Code · Once for each item"
+words = input.get("text", "").split()
+{**input, "words": len(words)}
+```
+
+- JavaScript returns with `return`; Python passes on the value of its **last line** (an assignment on the last line returns nothing).
+- Both also get the workflow and the run (`$workflow`, `$execution` in JavaScript; `workflow`, `execution` in Python).
+- `console.log()` and `print()` write to the run's activity log.
+- Errors name the line and the item: `Line 4, item 3: KeyError: 'email'`.
+
+Python Code steps saved before AWFlow 0.9 run once per item and return their value under `result`; see [Python Code](/nodes/builtin/core/code/#steps-saved-before-awflow-09).
 
 ## Limits
 
-Each run starts clean in an isolated sandbox: no network, no access to the page or your stored data, and a 30-second time limit. The first run after a pause takes a couple of seconds while Python starts. To call an API, use [Http Request](/nodes/builtin/core/http-request/) before or after the Code node.
+Code runs in an isolated sandbox: no network, no timers or imports, no access to the page or your stored data. JavaScript has a 10-second limit by default (up to 60) and 64 MB of memory (up to 256); Python has a 30-second limit and takes a few seconds to start after a pause. To call an API, use [HTTP Request](/nodes/builtin/core/http-request/) before or after the code step.
 
 ## You'll notice this when…
 

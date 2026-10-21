@@ -42,10 +42,18 @@ Most nodes already run once per item, so you don't need Split in Batches just to
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Items","type":"Value","required":true,"description":"The list to split into batches."},{"name":"Batch size","type":"Number","default":"1","description":"How many items to emit per pass."}]} />
+<AwfParamTable rows={[{"name":"Items","type":"Value","required":true,"description":"The list to split into batches."},{"name":"Batch size","type":"Number","default":"1","description":"How many items to emit per pass."},{"name":"Collect results","type":"Toggle","default":"Off","description":"Output everything that came back through Loop Back, in order, on Done."},{"name":"One entry per item","type":"Toggle","default":"On","description":"Used with Collect results: a pass that returns a list adds its items one by one. Off: one entry per pass."},{"name":"Fail if the pass limit is reached","type":"Toggle","default":"Off","description":"Fail the step when 1,000 passes end the split before every item was processed."}]} />
 {/* AUTO:settings:end */}
 
 Set **Items** to an expression that returns a list, for example `{{ $input.data.contacts }}` after an Http Request. If your data arrives as many separate items, gather them into one list first with [Aggregate](/nodes/builtin/datatransformation/aggregate/).
+
+### Collect results
+
+Turn on **Collect results** to get, on **Done**, everything that came back through **Loop Back** during the passes, in order, as `results` (one entry per item, or per pass). Without it, **Done** only carries the last data, as before. Up to 10,000 entries (about 2 MB) are kept; beyond that the list is cut, `resultsTruncated` is set and the run log warns you. Nested loops each keep their own results.
+
+### Fail if the pass limit is reached
+
+The node stops after 1,000 passes. When that happens before every item was processed, it says so (a warning, and `stoppedEarly`, `processed` and `total` on each pass). Turn on **Fail if the pass limit is reached** to make it fail the step instead, so a cut-short run can't pass for a complete one.
 
 ## Outputs
 
@@ -54,7 +62,7 @@ Set **Items** to an expression that returns a list, for example `{{ $input.data.
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"done","type":"True/false","description":"True once every item has been emitted"},{"name":"batch","type":"List","description":"The items of this pass"},{"name":"batchIndex","type":"Number"},{"name":"isLast","type":"True/false"},{"name":"items","type":"List","description":"Every item being split"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"done","type":"True/false","description":"True once every item has been emitted"},{"name":"batch","type":"List","description":"The items of this pass"},{"name":"batchIndex","type":"Number"},{"name":"isLast","type":"True/false"},{"name":"items","type":"List","description":"Every item being split"},{"name":"processed","type":"Number","description":"How many items have been emitted so far"},{"name":"total","type":"Number","description":"How many items there are to split"},{"name":"stoppedEarly","type":"True/false","description":"True on the Done pass when the pass limit stopped the split before the end"},{"name":"results","type":"List","description":"With Collect results: what came back through Loop Back on every pass"},{"name":"resultsTruncated","type":"True/false","description":"True when Collect results stopped at its limit"}]} />
 
 ```json title="Shape of an output item"
 {
@@ -62,7 +70,12 @@ Each output item has these fields:
   "batch": [],
   "batchIndex": 0,
   "isLast": true,
-  "items": []
+  "items": [],
+  "processed": 0,
+  "total": 0,
+  "stoppedEarly": true,
+  "results": [],
+  "resultsTruncated": true
 }
 ```
 {/* AUTO:outputs:end */}

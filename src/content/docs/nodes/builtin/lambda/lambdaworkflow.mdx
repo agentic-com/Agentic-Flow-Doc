@@ -41,7 +41,7 @@ One output port. It carries the values from the lambda workflow's Lambda Output,
 
 ## Pausing inside a sub-workflow
 
-A lambda workflow can contain a step that pauses, such as [Wait For Approval](/nodes/builtin/flow/wait-for-approval/), [In-Page Form](/nodes/builtin/flow/in-page-form/), a long [Wait](/nodes/builtin/flow/wait/) or [Poll Until](/nodes/builtin/flow/polluntil/). The whole run then pauses: the sub-workflow waits (you see it in the Executions pane), and the outer workflow waits at this node. When the sub-workflow finishes, its output flows into this node and the outer workflow continues.
+A lambda workflow can contain a step that pauses, such as [Wait For Approval](/nodes/builtin/flow/wait-for-approval/), [In-Page Form](/nodes/builtin/flow/in-page-form/), a long [Wait](/nodes/builtin/flow/wait/) or [Poll Until](/nodes/builtin/flow/polluntil/). The whole run then pauses: the sub-workflow waits (you see it in Runs), and the outer workflow waits at this node. When the sub-workflow finishes, its output flows into this node and the outer workflow continues.
 
 This only works through the Lambda Workflow node. A lambda workflow used through [Workflow as Tool](/nodes/builtin/ai/aidependencies/tools/workflow-tool/) cannot pause mid-run: the run fails instead.
 

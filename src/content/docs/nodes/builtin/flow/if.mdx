@@ -1,8 +1,8 @@
 ---
-title: "IF"
+title: "If"
 description: "Route items to different branches based on conditions"
 sidebar:
-  label: "IF"
+  label: "If"
 kind: node
 section: nodes
 worksIn: [extension, web]
@@ -13,6 +13,8 @@ node:
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+*Formerly **IF**. The step was renamed in AWFlow 0.9; searching for the old name still finds it.*
 
 Send each item down a **True** or a **False** branch, depending on conditions you set.
 
@@ -26,7 +28,18 @@ Send each item down a **True** or a **False** branch, depending on conditions yo
 
 IF checks its conditions for every item that arrives. When they hold, the item leaves through the **True** port; otherwise it leaves through **False**. The item itself is not changed.
 
-Each condition compares a value (usually an expression such as `{{ $input.price }}`) with another value, using an operator that fits the type you pick: **String**, **Number**, **Date-Time**, **Boolean**, **Array** or **Object** (for example **Contains**, **Is Equal To** or **Is Not Empty**). With several conditions, link them with **AND** (all must hold) or **OR** (any one is enough).
+Each condition compares a value (usually an expression such as `{{ $input.price }}`) with another value, using an operator that fits the type you pick: **String**, **Number**, **Date-Time**, **Boolean**, **Array** or **Object** (for example **Contains**, **Is Equal To** or **Is Not Empty**). With several conditions, choose **Match all** (all must hold) or **Match any** (any one is enough).
+
+### Conditions in AWFlow 0.9
+
+New If steps (version 2) build conditions as cards, one rule per card:
+
+- **Match all** or **Match any** applies to a whole group of rules, and **Add group** nests a group inside another, so "A and (B or C)" is easy to read. AND / OR between cards is shown for you.
+- Operators have plain names, grouped by type: *is equal to*, *contains*, *matches pattern (advanced)*, *length is…* and so on. Lists and objects are compared by their content.
+- **Options › Type check**: **Loose** converts values when it can (with a warning), **Strict** fails the step and names the rule and the item when a value has the wrong type. **Ignore case** compares texts without caring about capitals (an **Aa ignored** chip shows it).
+- An empty date or number never counts as a date or as 0: the rule is false and the run log says why. An invalid pattern or date fails with "Condition N: …".
+
+Steps saved before 0.9 keep their rows, read **top to bottom** with each row's own AND/OR. **Update** in the step's header converts them to groups with exactly the same meaning. **XOR** means "exactly one of the two" (it used to behave like OR); it is only offered on rows that already use it.
 
 ## When to use it
 
@@ -60,6 +73,8 @@ Each output item has these fields:
 {/* AUTO:outputs:end */}
 
 Port **True** is the top one and **False** the bottom one. Connect either or both.
+
+Each output carries only its own items: the step on **False** gets the items that failed, never the true ones.
 
 ## Dependencies and credentials
 

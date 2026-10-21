@@ -1,0 +1,81 @@
+---
+title: "Evaluation"
+description: "Score a test run: set its outputs and metrics, or route around side effects"
+sidebar:
+  label: "Evaluation"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/evaluation
+  family: flow
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Record what the workflow produced for a test case and how good it was. In a normal run this step does nothing and passes items on.
+
+## What it does
+
+During a [Test run](/app/workflows/test-runs/) (started from an [Evaluation Trigger](/nodes/builtin/trigger/evaluation/)), the **Operation** decides what the step does:
+
+- **Set metrics**: score this case. Add one card per metric, each with a **Name** and a **Metric**:
+  - **Exact match**: **Actual** equals **Expected** (optionally **Case-sensitive**).
+  - **Contains**: **Actual** contains **Expected**.
+  - **Similar text**: how close two texts are, from 0 to 1; it passes at the **Pass at (0–1)** threshold.
+  - **Category**: the predicted label equals the expected one.
+  - **Tools used**: the agent called the **Expected tools** (read from **Agent steps**, for example `{{ $("Agent").steps }}`).
+  - **Correctness (AI judge, 1–5)**: a **Judge model** reads the answer and **What a good answer does**, and gives a score from 1 to 5. The answer is fenced, so instructions inside it are not followed.
+  - **Custom number**: any number you compute.
+- **Set outputs**: keep named values the workflow produced (the answer, the category), shown in each case of the test run.
+- **Is it an evaluation?**: routes items to **Evaluating** during a test run and to **Normal** otherwise. Put emails, posts and other side effects on **Normal** so test runs don't send anything.
+
+Outside a test run, **Set metrics** and **Set outputs** pass the items through unchanged.
+
+## When to use it
+
+- At the end of an AI workflow, to score its answer against the expected one.
+- Before a step with side effects, to skip it during test runs.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Operation","type":"Choice","default":"Set metrics","description":"Options: Set metrics, Set outputs, Is it an evaluation?."},{"name":"Outputs","type":"List of entries"},{"name":"Outputs (each entry) › Name","type":"Text","required":true},{"name":"Outputs (each entry) › Value","type":"Value"},{"name":"Metrics","type":"List of entries"},{"name":"Metrics (each entry) › Name","type":"Text","required":true},{"name":"Metrics (each entry) › Metric","type":"Choice","default":"Exact match","description":"Options: Exact match, Contains, Similar text, Category, Tools used, Correctness (AI judge, 1–5), Custom number."},{"name":"Metrics (each entry) › Expected","type":"Value"},{"name":"Metrics (each entry) › Actual","type":"Value"},{"name":"Metrics (each entry) › Expected tools","type":"Tags"},{"name":"Metrics (each entry) › Agent steps","type":"Value"},{"name":"Metrics (each entry) › What a good answer does","type":"Long text"},{"name":"Metrics (each entry) › Pass at (0–1)","type":"Number"},{"name":"Metrics (each entry) › Case-sensitive","type":"Toggle"}]} />
+{/* AUTO:settings:end */}
+
+The AI judge needs a chat model connected to the step's **Judge model** slot. The other metrics need no model.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+More ports appear as you add them in the settings (one per rule).
+{/* AUTO:outputs:end */}
+
+**Set metrics** and **Set outputs** pass their input on. **Is it an evaluation?** has two outputs: **Evaluating** and **Normal**.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Judge model","type":"chat model","description":"One node."}]} />
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) with `question` and `expected` columns.
+2. [Basic LLM Chain](/nodes/builtin/ai/aiagents/basicllmchainnode/) answers the question.
+3. Evaluation, **Is it an evaluation?**: **Normal** goes to [Gmail](/nodes/builtin/integration/gmail/), **Evaluating** goes on to step 4.
+4. Evaluation, **Set metrics**: **Contains** with **Actual** `{{ $input.text }}` and **Expected** `{{ $('Evaluation Trigger').expected }}`.
+
+## Common issues
+
+- **Every case fails**: check that **Actual** reads the field the AI step really returns. Open one case of the test run, then **Open run**.
+- **The judge scores vary**: use a stronger judge model, and describe a good answer precisely.
+
+## Related nodes
+
+- [Evaluation Trigger](/nodes/builtin/trigger/evaluation/): the test rows.
+- [Guardrails](/nodes/builtin/ai/aiagents/guardrails/): check inputs and answers in normal runs.

@@ -1,6 +1,6 @@
 ---
-title: Create a credential
-description: "Save a key, token or sign-in once in Credentials, then pick it in any node that needs it."
+title: Add a connection
+description: "Save a key, token or sign-in once on the Connections page or right from a step, test it, and pick it in any step that needs it."
 kind: guide
 section: app
 sidebar:
@@ -10,7 +10,7 @@ sidebar:
 import { LinkCard, CardGrid } from '@astrojs/starlight/components';
 import { Callout, GuidedShot } from '@components/awflow';
 
-A **credential** is a saved key, token or sign-in that lets a node act in another service: an API key for OpenAI, a Slack bot token, a Google sign-in. You create it once, then pick it in any node. When you share or export a workflow, your credentials stay behind.
+A **connection** (a *credential* in earlier versions) is a saved key, token or sign-in that lets a step act in another service: an API key, a Slack bot token, a Google sign-in. You add it once, then pick it in any step. When you share or export a workflow, your connections stay behind.
 
 <Callout type="tip" title="Looking for one app?" href="/app/connections/" linkLabel="All connections">
 
@@ -18,34 +18,44 @@ Each service has its own page with the exact steps, the permissions to grant and
 
 </Callout>
 
-## From the Credentials page
+## From the Connections page
 
-Open **Credentials** in the sidebar and click **Add Credential**. Everything else happens in the **New Credential** form: hover or tap a step to find it on the screen. In the browser side panel (or any narrow window) the form comes in two steps: first a list of apps, where tapping one moves on (or **Continue** keeps **Simple Credential**), then the rest of the form.
+Open **Connections** in the sidebar (under **Your data**) and press **Add connection**. Everything else happens in the **New connection** form. In the side panel the form comes in two steps: first the list of apps, then the rest.
 
 <GuidedShot
   shot="credentials-new"
   steps={[
-    { spot: 'app', title: 'Pick the app or service', body: 'Under **Integration App / Service**, pick the app the credential is for, for example **Slack** or **Gmail**. For an AI provider or any other API, pick **Simple Credential**.' },
-    { spot: 'name', title: 'Name it', body: "Give it a **Name** you'll recognise in nodes (service, account and purpose, for example *Slack – marketing bot*) and, if you like, a **Description**." },
-    { spot: 'auth-type', title: 'Check the auth type', body: 'For an app it is set for you. For a simple credential, choose it: see **Auth types** below.' },
-    { spot: 'fields', title: 'Fill its fields', body: 'The fields follow the auth type: here **Username** and **Password**. For **OAuth2** (Google, Microsoft 365), click **Check connection** and sign in.' },
-    { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)**. Without an account it is saved locally in this browser, as here.' },
-    { spot: 'create', title: 'Click Create Credential', check: 'the new credential is listed on the Credentials page, ready to pick in nodes.' },
+    { spot: 'app', title: 'Pick the app or service', body: 'Under **Integration App / Service**, pick the app the connection is for, for example **Slack** or **Gmail**. For any other API, leave it empty and choose the **Type** below.' },
+    { spot: 'name', title: 'Name it', body: "A **Name** you'll recognise in steps (service, account and purpose, for example *Slack – marketing bot*), and if you like a **Description**." },
+    { spot: 'auth-type', title: 'Check the type', body: 'For an app it is set for you. Otherwise choose how the API signs in: see **Types** below.' },
+    { spot: 'fields', title: 'Fill its fields', body: 'The fields follow the type: here the **Bearer Token**. For **Sign in with the app (OAuth2)** (Google, Microsoft 365), click **Check connection** and sign in.' },
+    { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose this device or your account (cloud). Without an account it is saved in this browser, as here.' },
+    { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
   ]}
 />
 
-## From a node
+For an app, saving also **tests** it (**Save and test**): AWFlow makes one read-only request (for example "who am I" on GitHub or Slack) and shows **Connected as …** with the account name, or **Not working** / **Missing permission** with the reason. The account name stays on this device.
 
-In a node's **Credential** (or **Authentication**) field, open the list and click **+ Add Credential**. The same form opens. When you save, the new credential is in the list, ready to pick.
+## From a step
 
-## Auth types
+A step that needs an app has a **Connection** field that lists only that app's connections. With none yet, press **Connect Slack** (or the app's name): the form opens in a sheet over the step, with the app already chosen. When you save, the connection is picked in the step and tested. With exactly one connection for the app, a new step picks it for you.
 
-| Auth Type | Fields | Use it for |
+In **Ready to run**, **Connect** on a group ("Connect Google Sheets · used in 3 steps") connects every step of the group at once.
+
+Pasting a `curl` command into an [HTTP Request](/nodes/builtin/core/http-request/) step (**Paste cURL**) turns the key it contains into a connection draft, ready to save.
+
+## Types
+
+| Type | Fields | Use it for |
 | --- | --- | --- |
-| **Bearer Token** | Bearer Token | Most app tokens and API keys (Slack, Notion, GitHub…). Paste only the token: AWFlow adds `Bearer`. |
-| **Basic Auth** | Username, Password | Services that take two values, such as Trello (API key + token) or Pushover. |
-| **JWT** | JWT | A value sent exactly as typed. Use it for AI provider API keys in workflow nodes. |
-| **OAuth2** | Client ID, Client Secret (optional) | Google (Gmail, Drive, Sheets, Calendar) and Microsoft 365, with [your own OAuth client](/app/connections/oauth-client/). |
+| **Bearer token** | Bearer Token | Most app tokens and API keys (Slack, Notion, GitHub…). Paste only the token: AWFlow adds `Bearer`. |
+| **Basic (username + password)** | Username, Password | Services that take two values, such as Trello (API key + token) or Pushover. An empty password is fine, for keys like Stripe's. |
+| **API key in a header** | Header name, Key | APIs whose docs ask for a header such as `X-API-Key`. The form previews what each request will send. |
+| **API key in the URL** | Parameter name, Key | APIs that take the key in the address, such as `?api_key=…`. |
+| **JWT** | JWT | A value sent exactly as typed. |
+| **Sign in with the app (OAuth2)** | Client ID, Client Secret (optional) | Google (Gmail, Drive, Sheets, Calendar) and Microsoft 365, with [your own OAuth client](/app/connections/oauth-client/). |
+
+The two **API key** types are rolling out: they are offered for connections kept on this device, and for cloud connections once your account has them. A saved connection keeps its type.
 
 <Callout type="info" title="Client Secret">
 
@@ -53,22 +63,29 @@ Microsoft 365 is a **public client**: it has no secret, so the field is hidden a
 
 </Callout>
 
-## Where credentials are stored
+## Allowed sites
 
-- **Local (this browser only)**: encrypted in this browser. The key sits on the same device, which guards against casual inspection. Turn on the [local secret vault](/app/account/secret-vault/) to lock local credentials with a passphrase.
-- **Cloud (synced to your account)**: stored encrypted on your AWFlow account, so you can use them on your other devices.
+A connection can say **where its key may be sent**. **Allowed sites** lists the sites (for example `api.github.com`, or `*.example.com`). AWFlow then refuses to send the key anywhere else, even if a step points elsewhere, and never follows a redirect with it to another site. A new app connection starts with its app's sites; empty means any site.
 
-If you use AWFlow without an account, credentials are always local. See [Privacy & your data](/app/privacy-and-data/#credentials-and-secrets).
+On the Connections page, a connection without sites shows **Any site** and can offer **Lock to** a site from the sites your workflows actually call.
+
+## Where connections are stored
+
+- **On this device**: encrypted in this browser. The key sits on the same device, which guards against casual inspection. Turn on the [local secret vault](/app/account/secret-vault/) to lock local connections with a passphrase.
+- **In your account (cloud)**: stored encrypted on your AWFlow account, so you can use them on your other devices.
+
+If you use AWFlow without an account, connections are always kept on this device. See [Privacy & your data](/app/privacy-and-data/#connections-and-secrets).
 
 ## Tips
 
-- Create **one credential per account and purpose**, and reuse it across workflows. Updating it updates every workflow that uses it.
+- Create **one connection per account and purpose**, and reuse it across workflows. Updating it updates every workflow that uses it.
 - Give a token **only the permissions** your workflow needs. Each connection page lists them per operation.
-- Never paste a secret into a node's normal fields: those travel with the workflow when you share it.
+- Never paste a secret into a step's normal fields: those travel with the workflow when you share it. [Health](/app/settings/health/) finds keys pasted into steps.
+- Two Google (or Microsoft) connections for two accounts work side by side: each keeps its own sign-in.
 
 ## Next steps
 
 <CardGrid>
   <LinkCard title="All connections" href="/app/connections/" description="Step-by-step pages per service." />
-  <LinkCard title="Edit a credential" href="/app/connections/edit/" />
+  <LinkCard title="Edit a connection" href="/app/connections/edit/" />
 </CardGrid>

@@ -1,0 +1,101 @@
+---
+title: "Summarize items"
+description: "Totals, counts and lists per group, like a spreadsheet pivot table"
+sidebar:
+  label: "Summarize items"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/datatransformation/summarize
+  family: data
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Group your items by one or more fields, then count, add up, average or list values in each group. It is the pivot table of a spreadsheet, as a step.
+
+:::note[Not the AI summary]
+This step does arithmetic on items. To summarise a text with AI, use [Summarize (on-device)](/nodes/builtin/ai/localai/summarize/) or the [Summarization Chain](/nodes/builtin/ai/aiagents/summarizationchainnode/).
+:::
+
+## What it does
+
+Summarize items receives every item at once.
+
+- **Group by**: one or more fields (dot paths such as `customer.country`). Leave it empty for one summary of all items.
+- **Summaries**: one card per calculation. Each card has a **Calculation**, a **Field** and an optional **Output name**:
+
+| Calculation | What it gives | Default output name |
+| --- | --- | --- |
+| Count items | How many items are in the group (no field needed) | `count` |
+| Count unique | How many different values the field has | `count_unique_email` |
+| Sum | The total of the field | `sum_price` |
+| Average | The mean of the field | `avg_price` |
+| Min / Max | The smallest / largest value (ISO dates compare as dates) | `min_price` / `max_price` |
+| Join as text | The values joined with a **Separator** (default `, `) | `joined_name` |
+| Collect as a list | Every value, as a list | `list_name` |
+
+Groups appear in the order their first item arrived. Values are compared exactly: `1` and `"1"` are two different groups. Values that are not numbers are skipped by Sum and Average, with one warning that names the field and the items, for example `3 values in "price" weren't numbers and were skipped (items 4, 9, 12).` After a run, the step shows how many groups it made.
+
+## When to use it
+
+- Sales per region, tickets per status, emails per sender.
+- One total line at the end of a list (leave **Group by** empty).
+- Before a chart or a report step, to turn many rows into a few.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Group by","type":"Tags","description":"Leave empty for one summary of all items."},{"name":"Summaries","type":"List of entries","default":"[{\"op\":\"count\"}]"},{"name":"Summaries (each entry) › Calculation","type":"Choice","default":"Count items","description":"Options: Count items, Count unique, Sum, Average, Min, Max, Join as text, Collect as a list."},{"name":"Summaries (each entry) › Field","type":"Text","description":"Dot path, e.g. price or customer.email. Count without a field counts items."},{"name":"Summaries (each entry) › Output name","type":"Text","description":"Defaults to e.g. sum_price, count, count_unique_email."},{"name":"Summaries (each entry) › Separator","type":"Text"},{"name":"Output","type":"Choice","default":"One item per group","description":"Options: One item per group, One item with all groups."},{"name":"Options","type":"Group"},{"name":"Options › Skip empty values","type":"Toggle","default":"On"},{"name":"Options › When a field is missing","type":"Choice","default":"Ignore the item for that summary","description":"Options: Ignore the item for that summary, Stop the step."}]} />
+{/* AUTO:settings:end */}
+
+Set **Output** to choose the shape:
+
+- **One item per group** (default): each group is an item with its group fields and its summaries.
+- **One item with all groups**: a single item `{ groups: [...] }`, handy for one message or one row.
+
+Under **Options**, **Skip empty values** (on by default) leaves empty values out, and **When a field is missing** either ignores that item for the summary or stops the step.
+
+Because the step knows its output fields from the settings, the next step's data picker shows them before you run anything.
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+{/* AUTO:outputs:end */}
+
+```json title="Group by region · Sum of price · Count items"
+[
+  { "region": "EU", "sum_price": 1250, "count": 12 },
+  { "region": "US", "sum_price": 980, "count": 9 }
+]
+```
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+None.
+
+## Example workflow
+
+1. [HTTP Request](/nodes/builtin/core/http-request/) gets the to-dos of a project, one item each.
+2. [Filter](/nodes/builtin/flow/filter/) keeps the completed ones.
+3. Summarize items, **Group by** `userId`, **Count items**: how many each person finished.
+
+## Common issues
+
+- **One group per item**: the **Group by** field is different on every item (an id or a date with time). Group by a coarser field.
+- **The sum is lower than expected**: some values are text such as `"12,50"`. Check the warning in the run log, and fix the values with [Edit Fields](/nodes/builtin/datatransformation/editfields/) first.
+- **A field is missing in the output**: give the card a **Field**; only **Count items** works without one.
+
+## Related nodes
+
+- [Aggregate](/nodes/builtin/datatransformation/aggregate/): gather fields from all items into lists, without grouping.
+- [Remove Duplicates](/nodes/builtin/datatransformation/removeduplicates/): keep one item per value.
+- [JavaScript Code](/nodes/builtin/core/javascript-code/): any other calculation.

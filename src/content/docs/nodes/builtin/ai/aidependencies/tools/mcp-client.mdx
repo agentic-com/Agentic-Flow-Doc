@@ -29,7 +29,7 @@ MCP Client Tool is a tool provider for an agent, not a step in the flow. It has 
 
 When the agent starts, the node connects to **Server URL**, asks the server which tools it offers, and hands each one to the agent as a separate tool, with the server's own name, description and arguments. One MCP Client Tool node can therefore add many tools at once. **Allowed Tools** narrows that list.
 
-Every call is approved first. An approval row appears in the **Executions** pane, for example "call MCP tool search on mcp.example.com". It names the tool and server only, never the arguments or your credential. A rejected call never runs, and the model is told you declined. If nobody answers within 2 minutes, the call is rejected.
+Every call is approved first. An approval row appears in **Runs**, for example "call MCP tool search on mcp.example.com". It names the tool and server only, never the arguments or your credential. A rejected call never runs, and the model is told you declined. If nobody answers within 2 minutes, the call is rejected.
 
 If the server can't be reached, rejects the credential or fails to list its tools, this node adds no tools and logs the error, while the agent's other tools keep working.
 
@@ -43,7 +43,7 @@ Only remote servers reached over the web work. Servers that run as a local progr
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Server URL","type":"Text","required":true,"description":"The remote MCP server URL (Streamable HTTP/SSE endpoint) to connect to."},{"name":"Authentication","type":"Credential","description":"The credential to send as the Authorization header on every request."},{"name":"Allowed Tools","type":"List","description":"If set, only remote tools with these names are exposed to the model. Leave empty to expose every tool the server advertises."}]} />
+<AwfParamTable rows={[{"name":"Server URL","type":"Text","required":true,"description":"The remote MCP server URL (Streamable HTTP/SSE endpoint) to connect to."},{"name":"Authentication","type":"Credential","description":"The connection to send as the Authorization header on every request."},{"name":"Allowed Tools","type":"List","description":"If set, only remote tools with these names are exposed to the model. Leave empty to expose every tool the server advertises."},{"name":"Ask before a call","type":"Choice","description":"When the agent must ask you before this tool runs. Options: Every call, Only calls that change things, Skip trusted sites, Ask me anywhere, even when I’m away."},{"name":"Trusted sites","type":"Tags","description":"Added here when you tick “Always allow on this site”."}]} />
 {/* AUTO:settings:end */}
 
 - **Server URL** is the full endpoint the server's provider gives you, for example `https://mcp.example.com/mcp`.
@@ -72,7 +72,7 @@ If the server needs a key, the provider gives you an API key or access token; sa
 1. [Get Selected Text](/nodes/extension/getselectedtext/) reads a question you highlighted, with **Output field name** `text`.
 2. MCP Client Tool with **Server URL** `https://mcp.example.com/mcp`, your token in **Authentication**, and **Allowed Tools** set to `search`.
 3. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Search our docs and answer: {{ $input.text }}`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and the MCP Client Tool connected to **Tools**.
-4. Run it and approve "call MCP tool search on mcp.example.com" in the **Executions** pane. [Display Markdown](/nodes/extension/displaymarkdown/) then shows `{{ $input.response }}`.
+4. Run it and approve "call MCP tool search on mcp.example.com" in **Runs**. [Display Markdown](/nodes/extension/displaymarkdown/) then shows `{{ $input.response }}`.
 
 ## Common issues
 
