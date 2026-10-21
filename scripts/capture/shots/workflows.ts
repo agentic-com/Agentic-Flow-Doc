@@ -17,7 +17,7 @@ async function cleanList(s: Session) {
 	await page.getByRole('button', { name: 'Add Workflow' }).first().waitFor({ timeout: T });
 	const reset = page.getByRole('button', { name: 'Reset', exact: true });
 	if (await reset.count()) await reset.first().click({ timeout: T });
-	const search = page.getByRole('textbox', { name: 'Filter...' });
+	const search = page.getByRole('searchbox', { name: 'Search workflows' }).first();
 	if (await search.count()) await search.first().fill('');
 	await page.getByText(/JSON Prettify/).first().waitFor({ timeout: T });
 }
@@ -61,7 +61,7 @@ export const shots: ShotDef[] = [
 		alt: 'The Workflows page, My Workflows tab: four workflows (JSON Prettify & Repair, Hash Text, Color Converter, JWT Decoder) with their tags, active status, Local storage badge, Not published state and dates, above the Status, Storage, Published, Needs setup and Tags filters.',
 		hotspots: [
 			{ id: 'add-workflow', label: 'Add Workflow: create, import or describe one', locate: btn('Add Workflow') },
-			{ id: 'filters', label: 'Filters', locate: (p) => p.getByRole('textbox', { name: 'Filter...' }) },
+			{ id: 'filters', label: 'Filters', locate: (p) => p.getByRole('searchbox', { name: 'Search workflows' }).first() },
 			{ id: 'row-menu', label: 'Row menu: open, run, duplicate, export, delete', locate: (p) => p.getByRole('row').nth(1).getByRole('button', { name: 'Open menu' }) }
 		],
 		prepare: async (s) => {
@@ -208,7 +208,7 @@ export const shots: ShotDef[] = [
 		route: '#/app/workflows (Tags filter)',
 		alt: 'The Workflows page with the Tags filter open: crypto is ticked, so the Tags button shows 1, a Reset button has appeared next to the filters, and the list shows only Hash Text (1 of 4 match filters).',
 		spots: [
-			{ id: 'search', label: 'Search by name', locator: (p) => p.getByRole('textbox', { name: 'Filter...' }) },
+			{ id: 'search', label: 'Search by name', locator: (p) => p.getByRole('searchbox', { name: 'Search workflows' }).first() },
 			{ id: 'filter-button', label: 'A filter, with the number of values picked', locator: (p) => p.getByRole('button', { name: /^Tags/ }).first() },
 			{ id: 'filter-value', label: 'Tick one or more values', locator: (p) => p.getByRole('option', { name: 'crypto' }) },
 			{ id: 'reset', label: 'Reset: clear every filter', locator: (p) => p.getByRole('button', { name: 'Reset', exact: true }) }
@@ -470,7 +470,7 @@ export const shots: ShotDef[] = [
 		css: NO_MINIMAP,
 		spots: [
 			{ id: 'step', label: 'The step you right-clicked', locator: (p) => p.locator('.svelte-flow__node[data-id="sha256"]') },
-			{ id: 'edit-note', label: 'Edit note (Annotate this step on a step without one)', locator: (p) => p.getByRole('menuitem', { name: /Edit note|Annotate this step/ }) }
+			{ id: 'edit-note', label: 'Edit note (Annotate this step on a step without one)', locator: (p) => p.getByRole('menuitem', { name: /Edit note|Add a note|Annotate this step/ }) }
 		],
 		prepare: async (s) => {
 			await canvas(s, 'hash-text');
@@ -478,7 +478,7 @@ export const shots: ShotDef[] = [
 			await page.getByRole('button', { name: /^Zoom in$/i }).click({ timeout: T });
 			await page.waitForTimeout(400);
 			await (page.locator('.svelte-flow__node[data-id="sha256"]') as unknown as { click(o: { button: 'right'; timeout: number }): Promise<void> }).click({ button: 'right', timeout: T });
-			await page.getByRole('menuitem', { name: /Edit note|Annotate this step/ }).waitFor({ timeout: T });
+			await page.getByRole('menuitem', { name: /Edit note|Add a note|Annotate this step/ }).waitFor({ timeout: T });
 			await page.waitForTimeout(1200);
 		}
 	},
@@ -495,7 +495,7 @@ export const shots: ShotDef[] = [
 		prepare: async (s) => {
 			// Continues from node-context-menu when it ran just before; otherwise opens the menu itself.
 			const page = s.page;
-			const item = page.getByRole('menuitem', { name: /Edit note|Annotate this step/ });
+			const item = page.getByRole('menuitem', { name: /Edit note|Add a note|Annotate this step/ });
 			if (!(await item.count())) {
 				await canvas(s, 'hash-text');
 				await (page.locator('.svelte-flow__node[data-id="sha256"]') as unknown as { click(o: { button: 'right'; timeout: number }): Promise<void> }).click({ button: 'right', timeout: T });

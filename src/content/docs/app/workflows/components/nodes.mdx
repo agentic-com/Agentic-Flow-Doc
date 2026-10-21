@@ -74,6 +74,8 @@ Every field has the same parts: the label (with **Optional** when it is), a help
 
 The **⋯** menu next to a label offers **Edit as expression** / **Use a fixed value**, **Copy expression**, **Reset to default** and **Ask Aria about this field**. To put data from an earlier step in a field, see [Mapping data](/concepts/data/data-mapping/data-mapping-ui/).
 
+In name/value cards (Edit Fields, HTTP headers, query and body), a card left on the default type follows what you type: `42` becomes a number, `[…]` a list, `{…}` an object, `true` a yes/no. A chip shows the type (**abc**, **123**, **✓**, **{ }**, **[ ]**); choose another one from the card's **⋯** menu.
+
 At the top of **Setup**, an issue bar lists what is still missing ("2 things left: Channel, Message"). Tap a chip to jump to that field.
 
 ### Connections inside the step
@@ -82,7 +84,7 @@ A step that uses an app has a **Connection** field. It lists only that app's con
 
 ### Building blocks of AI steps
 
-AI steps (Tools Agent and friends) list their **Building blocks** at the top of **Setup**: the model (required), memory, knowledge, an output parser and their tools. **+ Add a model** or **+ Add a tool** opens the picker for that slot; **Open** jumps into the block's own settings. A model or tool step can't be run alone: run the agent that uses it.
+AI steps (Tools Agent and friends) list their **Building blocks** at the top of **Setup**: the model (required), memory, knowledge, an output parser and their tools. **+ Add a model** or **+ Add a tool** opens the picker for that slot; **Open** jumps into the block's own settings. **Change** opens the picker for that slot: the block you pick takes the old one's place in one undo step (the old one is removed, or only unlinked when another step still uses it); closing the picker changes nothing. A model or tool step can't be run alone: run the agent that uses it.
 
 ## Ready to run
 
@@ -108,9 +110,9 @@ Chips at the top of **Input** (the steps before) and under **Output** (the steps
 
 ## Read the output
 
-**Output** shows the step's items as a **Table** (search, pages of 50, drag the column edges), **JSON** or **Structure**; in the side panel, items show as cards. Before any run, **Expected** shows the fields the step promises, so you can map them in the next step.
+**Output** shows the step's items as a **Table** (search, pages of 50, drag the column edges), **Raw (JSON)** or **Structure**; in the side panel, items show as cards. Before any run, **Expected** shows the fields the step promises, so you can map them in the next step.
 
-- When a step ran several times in one run (in a loop), a **Run 3 of 12** stepper picks the run to show. Expressions always use the latest.
+- When a step ran several times in one run (in a loop), a **Run 3 of 12** stepper picks the run to show. The **Input** follows it (*Input follows run 3 too*, with **Unlink**), showing what the earlier steps passed in that pass. Expressions always use the latest run.
 - **Hints** above the output explain something worth knowing ("Ran 12 times: every combination of 3 from A and 4 from B", "Limit of 100 items reached"). **Don't show again** hides one hint for that step.
 
 ## Step status on the canvas

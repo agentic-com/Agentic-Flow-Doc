@@ -95,5 +95,22 @@ export const shots: ShotDef[] = [
 			await page.getByText('Save step data').first().waitFor({ timeout: T });
 			await page.waitForTimeout(600);
 		}
+	},
+	{
+		name: 'workflow-info',
+		page: 'app/workflows/create',
+		route: '#/app/workflows/<id> (workflow name › Workflow info)',
+		alt: 'The Workflow info popover opened from the workflow name in the canvas header: Status with the On/Off switch (or Runs when you press Run), the version with History, the behaviour, where it is stored, its folder, and when it was created, with Workflow settings at the bottom.',
+		spots: [
+			{ id: 'name', label: 'The workflow name: opens Workflow info', locator: (p) => p.getByRole('button', { name: /workflow info$/ }).first() },
+			{ id: 'settings', label: 'Workflow settings', locator: (p) => p.getByRole('button', { name: /Workflow settings/ }).last() }
+		],
+		prepare: async (s) => {
+			await s.page.goto('about:blank');
+			await s.editor('hash-text');
+			await s.page.getByRole('button', { name: /workflow info$/ }).first().click({ timeout: T });
+			await s.page.getByText(/^Created/).first().waitFor({ timeout: T });
+			await s.page.waitForTimeout(600);
+		}
 	}
 ];

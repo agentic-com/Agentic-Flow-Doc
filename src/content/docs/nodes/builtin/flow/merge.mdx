@@ -66,6 +66,10 @@ None. This node needs no connection and has no slots for other nodes.
 3. Merge in **Left Join** mode, with the match key A `email` **Is Equal To** B `customerEmail`.
 4. Every customer comes out once per matching order, or once on their own when they have no order.
 
+## Empty settings
+
+In workflows with the [new behaviour](/app/workflows/behaviour-versions/), a Merge step whose mode or match keys are left empty uses their defaults instead of failing. Classic workflows keep failing as before.
+
 ## Common issues
 
 - **One input received nothing.** Merge treats it as an empty side, so each mode gives its natural result (a join that keeps only matches gives nothing), and the run log names the input that got no data.

@@ -25,6 +25,7 @@ The behaviour is saved with each version of the workflow, so restoring an old ve
 | A step fed **two lists** | runs for every combination (3 × 4 = 12 runs) | pairs items by position (4 runs, with a warning when the counts differ). Use [Merge](/nodes/builtin/flow/merge/) › All combinations to get every combination on purpose. |
 | A step's output | sometimes one item, sometimes a list | always a list, one item per result. `$('Step').field` reads the paired item; `.all()`, `.first()`, `.last()` read the list. |
 | A field that is only `{{ … }}` | becomes text | keeps the value's type: a number stays a number, a list a list, yes/no a boolean. |
+| A required setting left empty that has a default (Merge's mode and match keys, Wait's unit) | the step fails validation | the default is used |
 | An expression that can't be worked out (unknown step, typo, syntax) | the text is used as is | the step stops with an error that names the field and the item, so **On error** and Try/Catch apply. |
 
 The details of each rule are in [Item linking](/concepts/data/item-linking/) and [Expressions](/concepts/data/data-mapping/data-mapping-expressions/).

@@ -35,7 +35,7 @@ import { Badge, Callout, GuidedShot } from '@components/awflow';
        { spot: 'app', title: 'Pick Notion', body: 'Under **Integration App / Service**, pick **Notion**. There is no **Type** menu: Notion uses a **Bearer Token**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Notion – team wiki*. A **Description** is optional.' },
        { spot: 'token', title: 'Paste the secret', body: 'Paste the secret into **Bearer Token**.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
        { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
@@ -56,8 +56,8 @@ In a **Notion** node, choose **Database › Get many**: the databases you shared
 
 The credential is stored where you choose when you create it:
 
-- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
-- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+- **On this device**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **In your account (cloud)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
 
 When a step runs, your browser sends it only to `api.notion.com`. AWFlow's servers never relay the call.
 

@@ -7848,12 +7848,36 @@
 				"description": "Content-Type to use to send body parameters"
 			},
 			{
+				"key": "bodyMode",
+				"label": "Write the body as",
+				"type": "Choice",
+				"required": false,
+				"group": "Body",
+				"options": [
+					{
+						"value": "fields",
+						"label": "Fields"
+					},
+					{
+						"value": "rawJson",
+						"label": "Raw JSON"
+					}
+				]
+			},
+			{
 				"key": "bodyContent",
 				"label": "Body",
 				"type": "Key-value pairs",
 				"required": false,
 				"group": "Body",
 				"description": "The body to send with the request"
+			},
+			{
+				"key": "rawJson",
+				"label": "JSON body",
+				"type": "Code",
+				"required": false,
+				"group": "Body"
 			},
 			{
 				"key": "options",
@@ -24226,7 +24250,14 @@
 		],
 		"runtime": "client",
 		"since": "0.9.0",
-		"credentials": [],
+		"credentials": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"authType": "OAuth2",
+				"required": false
+			}
+		],
 		"dependencies": [],
 		"settings": [
 			{
@@ -24280,6 +24311,26 @@
 				"type": "Long text",
 				"required": false,
 				"description": "Paste the rows, with a header line"
+			},
+			{
+				"key": "credential",
+				"label": "Connection",
+				"type": "Credential",
+				"required": false
+			},
+			{
+				"key": "spreadsheetId",
+				"label": "Spreadsheet",
+				"type": "One of several shapes",
+				"required": false,
+				"description": "Paste its link or ID."
+			},
+			{
+				"key": "worksheetId",
+				"label": "Worksheet ID",
+				"type": "Text",
+				"required": false,
+				"description": "The gid in the link; empty = the first sheet."
 			},
 			{
 				"key": "limit",
@@ -24641,6 +24692,13 @@
 				"type": "Number",
 				"required": false,
 				"group": "Pages (each entry) › Fields (each entry)"
+			},
+			{
+				"key": "giveUpAfter",
+				"label": "Give up after (hours)",
+				"type": "Number",
+				"required": false,
+				"description": "Then the run ends as “Form not completed”. Empty: it waits until you cancel it."
 			}
 		],
 		"inputs": 1,

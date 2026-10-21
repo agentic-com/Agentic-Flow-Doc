@@ -6,6 +6,10 @@ section: concepts
 
 Each term links to the page that explains it in full. The app uses one plain word for each thing (step, Run, Runs, On/Off, Connections); the docs' node reference keeps the technical word *node*.
 
+#### Add a note
+
+Write a note on a step so whoever reads the workflow later understands it (called *Annotate this step* before 0.9; *Explain this step* drafts it with AI). Notes show on the canvas and in the workflow's story. See [Notes & story](/app/workflows/narration/).
+
 #### Agent
 
 An AI node that decides what to do next: call a tool, read the result, and try again until it has an answer. Compare with a [chain](#chain). See [Agents and tools](/concepts/ai/ai-agents/). For agents you chat with, see [Agents in the chat](/app/chat-and-agents/agents/).
@@ -62,6 +66,10 @@ When a model states something that sounds right but isn't supported by its input
 
 A node that reads or changes the web page in your active tab: get its text, click a button, fill a form. In-page nodes need the browser extension. See [Browser context](/concepts/flow/browser-context/).
 
+#### Installed
+
+A workflow you installed from the Marketplace (called *downloaded* before 0.9). Listed under **Workflows › Installed**. See [Manage the list](/app/workflows/manage-list/).
+
 #### Item
 
 One record passed between nodes, made of named fields, like a row in a table. A node receives a list of items and usually runs once per item. See [Items](/concepts/data/data-structure/).
@@ -94,6 +102,10 @@ A part of a workflow that repeats, built with the Loop or Split in Batches node.
 
 Putting a value from an earlier step into a node's setting, usually by dragging it from the Input panel. See [Mapping in the UI](/concepts/data/data-mapping/data-mapping-ui/).
 
+#### Marketplace page
+
+The page of a shared workflow on the Marketplace, with its description, steps and setup (called a *listing* before 0.9, a word admin screens still use). See [Publishing](/app/workflows/publishing/).
+
 #### Memory
 
 The conversation so far, kept by a Chat Memory node so an agent can follow up on earlier messages. See [Memory and context](/concepts/ai/memory-context/).
@@ -105,6 +117,10 @@ The technical word for a [step](#step), used in the [node reference](/nodes/).
 #### On / Off
 
 A workflow that is **On** runs by itself when its trigger fires; **Off**, it only runs when you press Run (called *active* / *inactive* before AWFlow 0.9). See [Manage the list](/app/workflows/manage-list/#turn-a-workflow-on-or-off).
+
+#### On this device / In your account
+
+Where a workflow, connection or variable is stored: **On this device** (in this browser only) or **In your account (cloud)** (with your AWFlow account). Called *Local* and *Cloud* before 0.9. See [Local or cloud](/app/account/local-vs-cloud/).
 
 #### Output parser
 
@@ -121,6 +137,10 @@ A folder for chats in the assistant. Every conversation in a project shares its 
 #### RAG (retrieval-augmented generation)
 
 Searching your documents first and giving the best passages to the model with the question, so the answer comes from your sources. See [RAG](/concepts/ai/rag/).
+
+#### Raw (JSON)
+
+The view of a step's data, or of a field, as JSON text (the tab was called *JSON* before 0.9). See [Steps](/app/workflows/components/nodes/#read-the-output).
 
 #### Run
 

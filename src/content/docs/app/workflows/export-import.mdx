@@ -69,6 +69,8 @@ An import always creates a **new** workflow; it never changes one you already ha
 
 After the import, open **Ready to run**: connect your own accounts (one **Connect** per app connects every step that uses it), set the [variables](/app/variables/) it lists as **Set NAME**, then [run it](/app/workflows/executions/run-from-the-canvas/).
 
+If two steps in the file share a name, the later one is renamed ("HTTP Request 2"); references to the name keep reading the first one, as before.
+
 If the file can't be imported, the message says why in plain words ("Couldn't import: …"): for example the file isn't a workflow (`.awf` or `.json`), or the address didn't return one. A file made with a newer AWFlow, with steps or behaviour this version doesn't know, is refused or shown as *made with a newer AWFlow* (see [Updating AWFlow](/app/updating-awflow/)).
 
 ### From the editor

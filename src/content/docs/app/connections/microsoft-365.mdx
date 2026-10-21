@@ -45,7 +45,7 @@ This is the only method. Microsoft 365 uses a public client: only the Applicatio
        { spot: 'oauth-guide', title: 'Copy the redirect URI', body: 'Open **Create your Microsoft OAuth client**: it shows your redirect URI with a **Copy** button, for step 2.' },
        { spot: 'client-id', title: 'Paste the Application (client) ID', body: "From the app's **Overview** page, into **Client ID**. There is no secret field." },
        { spot: 'check-connection', title: 'Click Check connection', body: 'Sign in to Microsoft and accept the permissions.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
        { spot: 'create', title: 'Save it', check: 'the credential is listed on the Credentials page, ready to pick in Microsoft 365 nodes.' },
      ]}
    />
@@ -66,8 +66,8 @@ Only the **Application (client) ID** is saved in the credential. The tokens Micr
 
 The credential itself is stored where you choose:
 
-- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
-- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+- **On this device**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **In your account (cloud)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
 
 When a step runs, your browser sends it only to login.microsoftonline.com (sign-in) and graph.microsoft.com (the API). AWFlow's servers never relay the call.
 

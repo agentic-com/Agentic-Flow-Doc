@@ -90,7 +90,7 @@ Click a row, or use its **⋮** menu › **Open**. A panel opens beside the list
   ]}
 />
 
-- **Logs** is a tree: one row per step with the items in and out and its duration, loop steps as "×24 runs", and under AI steps each model call with its tokens and each tool call. Search it, or show only **Errors** or **AI**. The plain log is one tap away.
+- **Logs** is a tree: one row per step with the items in and out and its duration, loop steps as "×24 runs", and under AI steps each model call with its tokens and each tool call. Each call names the building block that made it ("Model call · gpt-4o-mini", the tool, the memory or knowledge base); **Open** in its sheet jumps to that step. Steps that looked at a page show the page drawing (see [Browser control & safety](/app/chat-and-agents/browser-control/#what-you-see-of-a-page)). Search it, or show only **Errors** or **AI**. The plain log is one tap away.
 - **Steps** lists each step with the **Input** and **Output** it had in that run, when the workflow saves step data. By default, AWFlow saves step data only for **failed runs**; change it in [Workflow settings](/app/workflows/settings/#run-history) (**Change what's saved** links there). Passwords and keys are never saved.
 - A run of a version that was deleted since keeps its logs; the graph then says **No workflow snapshot**.
 
@@ -102,7 +102,7 @@ Click a row, or use its **⋮** menu › **Open**. A panel opens beside the list
 - the failed step opens on its error;
 - steps you changed since show a **changed** chip; new steps have no data.
 
-A blue banner offers **Run again with this data** (the same trigger data, after a confirmation if steps have side effects), **Open the run** and **Clear**. Fix the failing step, then run it with **Run step**: it uses the data of the run, without running the steps before it again.
+A blue banner offers **Run again with this data** (the same trigger data, after a confirmation if steps have side effects), **Open the run** and **Clear**. A step whose earlier steps carry that data says *Input loaded from the 03:02 run · Clear* above its buttons. Fix the failing step, then run it with **Run step**: it uses the data of the run, without running the steps before it again.
 
 The run data is only shown: it is never saved into the workflow, and **Clear** or a full run removes it. If the run used an older version of the workflow, AWFlow asks whether to use its data on the current version or open the version that ran in [History](/app/workflows/history/).
 
@@ -114,6 +114,10 @@ On a failed or canceled run, **Run again ▾** offers:
 - **Use the version that ran**: exactly what ran then (not available once that version was removed).
 
 Both start from the trigger data the run saved. A confirmation lists the steps that will run again: steps like *Send email* or *Create row* would repeat. To restart from the failed step only, use **Debug in editor**. The new run shows **Retry of 14:02**, and the old one **Retried → Done**.
+
+## Add a run to a test dataset
+
+On a run of a workflow that has an [Evaluation Trigger](/nodes/builtin/trigger/evaluation/), **Add this run's input to the test dataset** adds what started that run as one more test case (in the trigger's Data Store list, created if needed; up to 500 rows). See [Test runs](/app/workflows/test-runs/).
 
 ## Fix with Aria
 

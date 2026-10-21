@@ -63,7 +63,7 @@ Lock a connection to the API's site with **Allowed sites** so its key is never s
        { spot: 'name', title: 'Name it', body: 'For example *Acme API – read only*. A **Description** is optional.' },
        { spot: 'auth-type', title: 'Set Type to Bearer Token', body: 'Open **Type** and choose **Bearer token**.' },
        { spot: 'token', title: 'Paste the key', body: 'Paste the key into **Bearer Token**, without the word `Bearer`.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
        { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
@@ -93,7 +93,7 @@ Click **Run step** on the node: the response comes back with status 200 instead 
        { spot: 'auth-type', title: 'Set Type to Basic Auth', body: 'Open **Type** and choose **Basic (username + password)**.' },
        { spot: 'username', title: 'Fill Username', body: 'Type the **Username** the API gave you.' },
        { spot: 'password', title: 'Fill Password', body: 'Type the matching **Password**.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
        { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
@@ -122,7 +122,7 @@ Click **Run step**: the response comes back without a 401.
        { spot: 'name', title: 'Name it', body: 'For example *Acme API – token scheme*. A **Description** is optional.' },
        { spot: 'auth-type', title: 'Set Type to JWT', body: 'Open **Type** and choose **JWT**.' },
        { spot: 'token', title: 'Paste the header value', body: 'Paste the full header value (for example `Token abc123`) into **JWT**, exactly as copied.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
        { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
@@ -150,8 +150,8 @@ Click **Run step**: the response comes back without a 401.
 
 The credential is stored where you choose when you create it:
 
-- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
-- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+- **On this device**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **In your account (cloud)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
 
 When a step runs, your browser sends it only to only the address you call in the node. AWFlow's servers never relay the call.
 

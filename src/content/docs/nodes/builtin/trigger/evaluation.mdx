@@ -17,6 +17,12 @@ import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:impor
 
 Hold the test rows of an evaluation. **Test runs** starts the workflow here, once per row, to measure how well it answers.
 
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use an Evaluation Trigger connection"} href="/app/connections/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Connection** field when the service needs one. It signs in with an OAuth2.
+</AwfCallout>
+{/* AUTO:callout:end */}
+
 ## What it does
 
 The Evaluation Trigger never starts a normal run: pressing **Run** ignores it, and it doesn't run on a schedule or any other trigger. Only **Run evaluation** in the canvas **⋯** menu › **Test runs** uses it. Each row becomes one run, and the row's columns are this trigger's output.
@@ -28,9 +34,9 @@ Rows come from:
 
 **Up to** caps the rows per evaluation run (50 by default, at most 500).
 
-:::note
-**Google Sheets** appears in **Rows from**, but it isn't available yet: pick Data Store or CSV.
-:::
+- **Google Sheets**: a sheet read with the step's Google connection (the spreadsheet's link or ID, and the worksheet's gid). The first row names the columns; each non-empty row below is a case.
+
+To add a real run as a case, open it in [Runs](/app/workflows/run-history/#add-a-run-to-a-test-dataset) and use **Add this run's input to the test dataset** (Data Store lists only, not a key prefix).
 
 ## When to use it
 
@@ -42,7 +48,7 @@ See [Test runs](/app/workflows/test-runs/) for the whole method.
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Rows from","type":"Choice","default":"Data Store","description":"Options: Data Store, CSV, Google Sheets."},{"name":"Dataset","type":"Text","description":"A Data Store key holding a list of rows, or a key prefix (one row per key, end it with *)."},{"name":"Whose keys","type":"Choice","default":"This workflow","description":"Options: This workflow, All workflows."},{"name":"CSV","type":"Long text","description":"Paste the rows, with a header line."},{"name":"Up to","type":"Number","default":"50","description":"Rows per evaluation run (at most 500)."}]} />
+<AwfParamTable rows={[{"name":"Rows from","type":"Choice","default":"Data Store","description":"Options: Data Store, CSV, Google Sheets."},{"name":"Dataset","type":"Text","description":"A Data Store key holding a list of rows, or a key prefix (one row per key, end it with *)."},{"name":"Whose keys","type":"Choice","default":"This workflow","description":"Options: This workflow, All workflows."},{"name":"CSV","type":"Long text","description":"Paste the rows, with a header line."},{"name":"Connection","type":"Credential"},{"name":"Spreadsheet","type":"One of several shapes","description":"Paste its link or ID."},{"name":"Worksheet ID","type":"Text","description":"The gid in the link; empty = the first sheet."},{"name":"Up to","type":"Number","default":"50","description":"Rows per evaluation run (at most 500)."}]} />
 {/* AUTO:settings:end */}
 
 Put the expected answer in a column of the dataset (for example `expected`), so an [Evaluation](/nodes/builtin/flow/evaluation/) step can compare it with what the workflow produced.
@@ -74,7 +80,7 @@ The row's columns, plus `_evalRow` (the row number, from 0).
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-None. This node needs no connection and has no slots for other nodes.
+- **Connection** (connection, OAuth2): optional. See [Create a connection](/app/connections/).
 {/* AUTO:deps:end */}
 
 ## Example workflow

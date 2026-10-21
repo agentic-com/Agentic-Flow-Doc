@@ -34,6 +34,8 @@ In the step picker they appear under **Tools · Apps** when you add a tool to an
 
 Fields you fill yourself stay fixed: the model can't change them. On each call, the model's values are put into the "model decides" fields and the step runs as usual, with the same connection, limits and Stop.
 
+Under the fields, **The model sees** shows the one call the model is offered, for example `post_to_slack(channel: text, text: text)`: the tool name and every "model decides" field with its type (optional ones marked `?`), any conflict between them, and when the call asks you first.
+
 In the expression view a "model decides" field shows as `{{ $fromAI(...) }}`. It only works in a step used as a tool: the workflow doctor flags it anywhere else.
 
 ## When the agent must ask you

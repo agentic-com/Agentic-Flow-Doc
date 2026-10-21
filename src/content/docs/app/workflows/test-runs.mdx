@@ -15,7 +15,7 @@ An AI workflow can look fine on the three examples you tried, then fail on the f
 
 ## What you need
 
-1. An [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) in the workflow, holding the test rows: a Data Store list, a Data Store key prefix, or pasted CSV (up to 500 rows). It sits next to the workflow's normal trigger and never starts a normal run.
+1. An [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) in the workflow, holding the test rows: a Data Store list, a Data Store key prefix, pasted CSV, or a Google Sheet (up to 500 rows). You can grow the dataset from real runs: **Add this run's input to the test dataset** on a run in [Runs](/app/workflows/run-history/#add-a-run-to-a-test-dataset). It sits next to the workflow's normal trigger and never starts a normal run.
 2. At least one [Evaluation](/nodes/builtin/flow/evaluation/) step set to **Set metrics**, that scores each answer: exact match, contains, similar text, category, tools used, an AI judge from 1 to 5, or your own number.
 3. Optional: an Evaluation step set to **Is it an evaluation?** before emails, posts and other side effects, so test runs skip them.
 

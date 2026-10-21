@@ -5,7 +5,7 @@ section: app
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
-import { Screenshot } from '@components/awflow';
+import { GuidedShot, Screenshot } from '@components/awflow';
 import canvasLight from '@assets/screenshots/canvas.light.webp';
 import canvasDark from '@assets/screenshots/canvas.dark.webp';
 
@@ -122,13 +122,23 @@ The status next to **Save** tells you where you stand: **Saved**, **Unsaved chan
 
 If you try to leave the canvas with unsaved changes, you're asked whether to **Save & leave**, **Leave without saving** or **Stay**.
 
-Unsaved changes are also kept as a **draft** on this device, so closing the panel or the tab doesn't lose them: when you open the workflow again, a bar offers **Restore** or **Discard**. If the workflow was saved meanwhile in another window, the bar says so. Two windows editing the same workflow can't overwrite each other: saving over a newer version asks you to **Reload** or **Keep mine**, and a canvas without edits reloads by itself when the workflow changes elsewhere.
+Unsaved changes are also kept as a **draft** on this device, so closing the panel or the tab doesn't lose them: when you open the workflow again, a bar offers **Restore** or **Discard**. If the workflow was saved meanwhile in another window, the bar says so. When the same workflow is open in another window, the canvas shows **Also open in another window**. Cloud workflows are also re-checked every minute while you look at them. Two windows editing the same workflow can't overwrite each other: saving over a newer version asks you to **Reload** or **Keep mine**, and a canvas without edits reloads by itself when the workflow changes elsewhere.
 
 | Shortcut | Action |
 | --- | --- |
 | <kbd>⌘</kbd> <kbd>S</kbd> / <kbd>Ctrl</kbd> <kbd>S</kbd> | Save |
 | <kbd>⌘</kbd> <kbd>Z</kbd> / <kbd>Ctrl</kbd> <kbd>Z</kbd> | Undo |
 | <kbd>⇧</kbd> <kbd>⌘</kbd> <kbd>Z</kbd> / <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>Z</kbd> or <kbd>Ctrl</kbd> <kbd>Y</kbd> | Redo |
+
+**Workflow info**: click the workflow's name in the canvas header to see its status (with the same On/Off switch), its version (with **History**), its behaviour (with **Preview upgrade** on a Classic workflow), where it is stored (with **Change**), its folder (with **Move**), when it was created and last saved, and a link to **Workflow settings**.
+
+<GuidedShot
+  shot="workflow-info"
+  steps={[
+    { spot: 'name', title: 'Click the workflow name', body: 'In the canvas header.' },
+    { spot: 'settings', title: 'Workflow settings', body: 'Everything that applies to the whole workflow.' },
+  ]}
+/>
 
 Every other shortcut is on [Keyboard shortcuts](/app/workflows/keyboard-shortcuts/), or press <kbd>?</kbd> on the canvas.
 
