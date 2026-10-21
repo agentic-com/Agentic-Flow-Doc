@@ -44,9 +44,9 @@ export const shots: ShotDef[] = [
 		name: 'notch-enable',
 		page: 'app/assistant-notch',
 		route: '#/app/settings/notch',
-		alt: 'Settings › Assistant Notch: the settings sections on the left with Assistant Notch selected, and the Show the assistant bubble on web pages switch, which is off.',
+		alt: 'Settings › Aria on web pages: the settings sections on the left with Aria on web pages selected, and the Show the assistant bubble on web pages switch, which is off.',
 		spots: [
-			{ id: 'notch-section', label: 'Assistant Notch', locator: (p) => p.getByRole('navigation', { name: 'Settings sections' }).getByRole('link', { name: 'Assistant Notch' }) },
+			{ id: 'notch-section', label: 'Aria on web pages', locator: (p) => p.getByRole('navigation', { name: 'Settings sections' }).getByRole('link', { name: /Aria on web pages/ }) },
 			{ id: 'show-bubble', label: 'Show the assistant bubble on web pages', locator: (p) => p.getByRole('switch', { name: 'Show the assistant bubble on web pages' }) }
 		],
 		prepare: async (s) => {

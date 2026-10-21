@@ -7,6 +7,7 @@ section: app
 ---
 
 import { Steps } from '@astrojs/starlight/components';
+import { GuidedShot } from '@components/awflow';
 
 AWFlow keeps a new **version** of a workflow each time you save it, or when Aria applies a change, or when you restore an older version. **History** lists them so you can see what changed and go back.
 
@@ -17,6 +18,14 @@ History is about **versions** of the workflow (a different step, other settings)
 ## Open History
 
 In the editor, click the **History** button (the clock icon next to **Save**). A full-height sheet opens: *Every saved version of this workflow.*
+
+<GuidedShot
+  shot="version-history"
+  steps={[
+    { spot: 'version-history', title: 'Open History', body: 'The clock button next to **Save**.' },
+    { spot: 'current', title: 'Find the version you want', body: 'Newest first; **Current** marks the one the canvas is based on.' },
+  ]}
+/>
 
 Versions are grouped **Today**, **Yesterday** and **Earlier**. Each row shows:
 

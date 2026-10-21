@@ -25,16 +25,16 @@ export const shots: ShotDef[] = [
 		name: 'welcome',
 		page: 'app/account/welcome',
 		route: '#/app/welcome',
-		alt: "The welcome page in a local workspace: a Local · no account needed badge, the headline Press Run. Watch a workflow do its thing., the Run “Start here” button (about 5 seconds), and three other ways in: Start from a template, Describe it to the AI and the 2-minute tutorial, with Skip to the app below.",
+		alt: "The welcome page in a local workspace: a Local · no account needed badge, the headline Press Run. Watch a workflow do its thing., the Run it button (about 5 seconds), and three other ways in: Start from a template, Describe it to the AI and the 2-minute tutorial, with Skip to the app below.",
 		hotspots: [
 			{ id: 'local-workspace', label: 'Local workspace: no account needed', locate: text('Local · no account needed') },
-			{ id: 'run-start-here', label: 'Run “Start here”', locate: btn('Run “Start here”') },
+			{ id: 'run-start-here', label: 'Run it: runs “Start here”', locate: btn('Run it', true) },
 			{ id: 'other-ways', label: 'Other ways in: template, describe it, tutorial', locate: btn(/Start from a template/) },
 			{ id: 'skip-app', label: 'Skip to the app', locate: btn('Skip to the app') }
 		],
 		prepare: async (s) => {
 			await s.go('#/app/welcome');
-			await s.page.getByRole('button', { name: 'Run “Start here”' }).waitFor({ timeout: T });
+			await s.page.getByRole('button', { name: 'Run it', exact: true }).waitFor({ timeout: T });
 			await s.page.waitForTimeout(800);
 		}
 	},
@@ -141,22 +141,22 @@ export const shots: ShotDef[] = [
 	{
 		name: 'notifications',
 		page: 'app/notifications',
-		route: '#/app/notifications (bell open)',
+		route: '#/app/notifications (inbox open)',
 		signedIn: true,
 		note: SIGNED_IN,
-		alt: 'The Notifications page of a fictional signed-in account with the bell open at the top right: three unread notifications (a listing is live, a new 5-star review, someone is using the workflow) and two read ones (a requested workflow shipped, a report was acted on), with Mark all read and See all in the bell and Mark all read on the page.',
+		alt: 'The Notifications page of a fictional signed-in account with the inbox open at the top right: three unread notifications (a listing is live, a new 5-star review, someone is using the workflow) and two read ones (a requested workflow shipped, a report was acted on), with Mark all read and See all in the bell and Mark all read on the page.',
 		spots: [
-			{ id: 'bell', label: 'The bell and its unread count', locator: (p) => p.getByRole('button', { name: 'Notifications' }) },
+			{ id: 'bell', label: 'The inbox and its count', locator: (p) => p.getByRole('button', { name: /^Inbox/ }) },
 			{ id: 'mark-all-read', label: 'Mark all read', locator: (p) => p.getByRole('button', { name: 'Mark all read' }).last() },
-			{ id: 'see-all', label: 'See all', locator: (p) => p.getByRole('link', { name: 'See all' }) },
-			{ id: 'unread', label: 'An unread notification', locator: (p) => p.getByRole('main').getByRole('button', { name: /is live/ }) }
+			{ id: 'see-all', label: 'See all', locator: (p) => p.getByRole('button', { name: 'See all notifications' }) },
+			{ id: 'unread', label: 'An unread notification', locator: (p) => p.getByRole('button', { name: /is live/ }).last() }
 		],
 		prepare: async (s) => {
 			await fresh(s, '#/app/notifications');
 			const page = s.page;
-			await page.getByRole('main').getByRole('button', { name: /is live/ }).waitFor({ timeout: T });
-			await page.getByRole('button', { name: 'Notifications' }).click({ timeout: T });
-			await page.getByRole('link', { name: 'See all' }).waitFor({ timeout: T });
+			await page.getByRole('button', { name: /is live/ }).last().waitFor({ timeout: T });
+			await page.getByRole('button', { name: /^Inbox/ }).click({ timeout: T });
+			await page.getByRole('button', { name: 'See all notifications' }).waitFor({ timeout: T });
 			await page.waitForTimeout(500);
 		}
 	},

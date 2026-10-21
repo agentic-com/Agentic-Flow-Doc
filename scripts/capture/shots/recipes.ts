@@ -295,7 +295,7 @@ async function canvas(s: Session, awf: string) {
 		await collapse.first().click({ timeout: T });
 		await collapse.first().waitFor({ state: 'hidden', timeout: T });
 	}
-	await page.getByRole('button', { name: 'Fit View' }).first().click({ timeout: T });
+	await page.getByRole('button', { name: /^(Fit View|Fit the workflow on screen)$/ }).first().click({ timeout: T });
 	await page.waitForTimeout(600);
 }
 
@@ -306,9 +306,8 @@ const field = (label: string): Locate => (p) =>
 		.getByRole('dialog')
 		.filter({ visible: true })
 		.last()
-		.getByRole('group')
-		.filter({ has: p.getByRole('button', { name: 'Ask AI about this field' }) })
-		.filter({ hasText: new RegExp(`^\\s*${esc(label)}(?![A-Za-z])`) })
+		.locator('[data-field-path]')
+		.filter({ has: p.getByRole('button', { name: `Options for ${label}`, exact: true }) })
 		.last();
 const node = (id: string): Locate => (p) => p.locator(`.svelte-flow__node[data-id="${id}"]`);
 
@@ -350,12 +349,12 @@ function recipeShots(r: Recipe): ShotDef[] {
 			name: `recipe-${r.key}-canvas`,
 			page: r.page,
 			route: '#/app/workflows/<id>',
-			alt: `The workflow editor with the ${r.name} recipe: sticky notes and the steps ${steps}, linked left to right. The top bar shows the Workflow active switch and Save; Test Workflow is above the canvas.`,
+			alt: `The workflow editor with the ${r.name} recipe: sticky notes and the steps ${steps}, linked left to right. The top bar shows the On/Off switch and Save; Run is above the canvas.`,
 			css: NO_MINIMAP + NO_TOASTS,
 			spots: [
 				...r.nodes.map((n): SpotDef => ({ id: n.id, label: n.label, locator: node(n.id) })),
-				{ id: 'test-workflow', label: 'Test Workflow', locator: (p) => p.getByRole('button', { name: 'Test Workflow', exact: true }) },
-				{ id: 'active', label: 'Workflow active switch', locator: (p) => p.getByRole('switch', { name: 'Workflow active' }) },
+				{ id: 'test-workflow', label: 'Run', locator: (p) => p.getByRole('button', { name: /^Run( workflow)?$/ }) },
+				{ id: 'active', label: 'The On/Off switch, or Runs when you press Run', locator: (p) => p.getByRole('switch', { name: /^Workflow (on|off)$/ }).or(p.locator('span', { hasText: /^Runs when you press Run$/ }).filter({ visible: true })).first() },
 				{ id: 'save', label: 'Save', locator: (p) => p.getByRole('button', { name: 'Save', exact: true }) }
 			],
 			prepare: async (s) => canvas(s, r.awf)
@@ -373,8 +372,12 @@ function recipeShots(r: Recipe): ShotDef[] {
 				await canvas(s, r.awf);
 				const page = s.page;
 				await page.locator(`.svelte-flow__node[data-id="${panel.node}"]`).dblclick({ timeout: T });
-				await page.getByRole('dialog').getByRole('tab', { name: 'Parameters' }).waitFor({ timeout: T });
+				await page.getByRole('dialog').getByRole('tab', { name: 'Setup' }).waitFor({ timeout: T });
 				await page.waitForTimeout(800);
+				// Fields past the required ones sit under More options (N): open it.
+				const more = page.getByRole('dialog').filter({ visible: true }).last().getByRole('button', { name: /^More options/ });
+				if ((await more.count()) && (await more.first().getAttribute('aria-expanded')) !== 'true') await more.first().click({ timeout: T });
+				await page.waitForTimeout(400);
 				// Bring the fields into view; the first one wins when they don't all fit.
 				for (const x of [...panel.fields].reverse()) await field(x.field)(page).scrollIntoViewIfNeeded({ timeout: T });
 				await page.waitForTimeout(400);

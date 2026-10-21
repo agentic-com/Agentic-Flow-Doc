@@ -36,16 +36,16 @@ import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 1. **Create the token.** On GitHub, open **Settings › Developer settings › Personal access tokens › Fine-grained tokens** and click **Generate new token**.
 2. **Limit it.** Pick the **Resource owner**, choose **Only select repositories**, set an expiration, and grant the permissions in the table below. Click **Generate token** and copy it (it starts with `github_pat_`).
-3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **GitHub** in the list, then fill the rest.
+3. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in a step's **Connection** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **GitHub** in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-github"
      steps={[
-       { spot: 'app', title: 'Pick GitHub', body: 'Under **Integration App / Service**, pick **GitHub**. There is no **Auth Type** menu: GitHub uses a **Bearer Token**.' },
+       { spot: 'app', title: 'Pick GitHub', body: 'Under **Integration App / Service**, pick **GitHub**. There is no **Type** menu: GitHub uses a **Bearer Token**.' },
        { spot: 'name', title: 'Name it', body: 'For example *GitHub – my repos*. A **Description** is optional.' },
-       { spot: 'token', title: 'Paste the token', body: 'Paste the token into **Bearer Token**.' },
+       { spot: 'token', title: 'Paste the token', body: 'Paste the token into the token field.' },
        { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -63,16 +63,16 @@ Run **Repository › List** in a **GitHub** node: the repositories the token can
 <Steps>
 
 1. **Create the token** under **Personal access tokens › Tokens (classic)**, with the `repo` scope (or `public_repo` for public repositories only). Copy it (it starts with `ghp_`).
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **GitHub** in the list, then fill the rest.
+2. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in a step's **Connection** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **GitHub** in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-github"
      steps={[
-       { spot: 'app', title: 'Pick GitHub', body: 'Under **Integration App / Service**, pick **GitHub**. There is no **Auth Type** menu: GitHub uses a **Bearer Token**.' },
+       { spot: 'app', title: 'Pick GitHub', body: 'Under **Integration App / Service**, pick **GitHub**. There is no **Type** menu: GitHub uses a **Bearer Token**.' },
        { spot: 'name', title: 'Name it', body: 'For example *GitHub – classic*. A **Description** is optional.' },
-       { spot: 'token', title: 'Paste the token', body: 'Paste the token into **Bearer Token**.' },
+       { spot: 'token', title: 'Paste the token', body: 'Paste the token into the token field.' },
        { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 

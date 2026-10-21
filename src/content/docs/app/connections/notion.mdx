@@ -27,16 +27,16 @@ import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 1. **Create the integration.** Open [notion.so/my-integrations](https://www.notion.so/my-integrations) (**Settings › Connections › Develop or manage integrations**), click **New integration**, pick your workspace and keep the type **Internal**.
 2. **Copy the secret.** On the integration's page, copy the **Internal Integration Secret**.
-3. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in a node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Notion** in the list, then fill the rest.
+3. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in a step's **Connection** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **Notion** in the list, then fill the rest.
 
    <GuidedShot
      shot="credentials-notion"
      steps={[
-       { spot: 'app', title: 'Pick Notion', body: 'Under **Integration App / Service**, pick **Notion**. There is no **Auth Type** menu: Notion uses a **Bearer Token**.' },
+       { spot: 'app', title: 'Pick Notion', body: 'Under **Integration App / Service**, pick **Notion**. There is no **Type** menu: Notion uses a **Bearer Token**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Notion – team wiki*. A **Description** is optional.' },
        { spot: 'token', title: 'Paste the secret', body: 'Paste the secret into **Bearer Token**.' },
        { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 

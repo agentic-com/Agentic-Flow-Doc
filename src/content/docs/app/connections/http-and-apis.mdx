@@ -12,14 +12,18 @@ import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Badge variant="neutral" text="≈ 2 min" /> <Badge variant="extension" /> <Badge variant="web" /> <Badge variant="neutral" text="Bearer Token" /> <Badge variant="neutral" text="Basic Auth" /> <Badge variant="neutral" text="JWT" />
 
-These nodes take any credential. The **Auth Type** decides what AWFlow sends in the `Authorization` header:
+These steps take any connection. The **Type** decides what AWFlow sends in the `Authorization` header:
 
-| Auth Type | Fields | Sent as |
+| Type | Fields | Sent as |
 | --- | --- | --- |
-| **Bearer Token** | Bearer Token | `Authorization: Bearer <token>` |
-| **Basic Auth** | Username, Password | `Authorization: Basic <base64 of username:password>` |
+| **Bearer token** | Bearer Token | `Authorization: Bearer <token>` |
+| **Basic (username + password)** | Username, Password | `Authorization: Basic <base64 of username:password>` (an empty password is fine) |
+| **API key in a header** | Header name, Key | `<Header name>: <key>`, for example `X-API-Key: …` |
+| **API key in the URL** | Parameter name, Key | `?<parameter>=<key>` added to every request |
 | **JWT** | JWT | `Authorization: <value>`, exactly as typed. Use it for schemes like `Token abc123`. |
-| **OAuth2** | Client ID, Client Secret | Only for Google and Microsoft 365. See [Connect Google](/app/connections/google/). |
+| **Sign in with the app (OAuth2)** | Client ID, Client Secret | Only for Google and Microsoft 365. See [Connect Google](/app/connections/google/). |
+
+Lock a connection to the API's site with **Allowed sites** so its key is never sent anywhere else. Or paste the API's `curl` example into [HTTP Request](/nodes/builtin/core/http-request/) with **Paste cURL**: the key becomes a connection draft.
 
 ## Before you start
 
@@ -50,17 +54,17 @@ These nodes take any credential. The **Auth Type** decides what AWFlow sends in 
 <Steps>
 
 1. **Create a key** in the service's developer settings.
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+2. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in the step's **Authentication** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **API key or password** (or click **Continue**), then fill the rest.
 
    <GuidedShot
      shot="credentials-simple-bearer"
      steps={[
-       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'app', title: 'Leave the app empty', body: 'Leave **Integration App / Service** on **Select an integration...**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Acme API – read only*. A **Description** is optional.' },
-       { spot: 'auth-type', title: 'Set Auth Type to Bearer Token', body: 'Open **Auth Type** and choose **Bearer Token**.' },
+       { spot: 'auth-type', title: 'Set Type to Bearer Token', body: 'Open **Type** and choose **Bearer token**.' },
        { spot: 'token', title: 'Paste the key', body: 'Paste the key into **Bearer Token**, without the word `Bearer`.' },
        { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -79,18 +83,18 @@ Click **Run step** on the node: the response comes back with status 200 instead 
 
 <Steps>
 
-1. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+1. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in the step's **Authentication** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **API key or password** (or click **Continue**), then fill the rest.
 
    <GuidedShot
      shot="credentials-simple-basic"
      steps={[
-       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'app', title: 'Leave the app empty', body: 'Leave **Integration App / Service** on **Select an integration...**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Acme API – basic*. A **Description** is optional.' },
-       { spot: 'auth-type', title: 'Set Auth Type to Basic Auth', body: 'Open **Auth Type** and choose **Basic Auth**.' },
+       { spot: 'auth-type', title: 'Set Type to Basic Auth', body: 'Open **Type** and choose **Basic (username + password)**.' },
        { spot: 'username', title: 'Fill Username', body: 'Type the **Username** the API gave you.' },
        { spot: 'password', title: 'Fill Password', body: 'Type the matching **Password**.' },
        { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -109,17 +113,17 @@ Click **Run step**: the response comes back without a 401.
 
 <Steps>
 
-1. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Authentication** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+1. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in the step's **Authentication** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **API key or password** (or click **Continue**), then fill the rest.
 
    <GuidedShot
      shot="credentials-simple-jwt"
      steps={[
-       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'app', title: 'Leave the app empty', body: 'Leave **Integration App / Service** on **Select an integration...**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Acme API – token scheme*. A **Description** is optional.' },
-       { spot: 'auth-type', title: 'Set Auth Type to JWT', body: 'Open **Auth Type** and choose **JWT**.' },
+       { spot: 'auth-type', title: 'Set Type to JWT', body: 'Open **Type** and choose **JWT**.' },
        { spot: 'token', title: 'Paste the header value', body: 'Paste the full header value (for example `Token abc123`) into **JWT**, exactly as copied.' },
        { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -155,7 +159,7 @@ When a step runs, your browser sends it only to only the address you call in the
 
 ## Common issues
 
-- **401 Unauthorized.** The Auth Type doesn't match what the API expects: Bearer for `Authorization: Bearer`, Basic Auth for username and password, JWT for any other scheme.
+- **401 Unauthorized.** The connection's **Type** doesn't match what the API expects: Bearer for `Authorization: Bearer`, Basic Auth for username and password, JWT for any other scheme.
 - **The API says the key is malformed.** You pasted `Bearer …` into a Bearer Token credential. Paste only the key: AWFlow adds the word.
 - **403 Forbidden.** The key is valid but lacks access to this endpoint. Check its permissions in the service.
 - **The MCP server shows as unavailable.** The server URL is wrong or the credential was deleted. Pick it again next to the server.
