@@ -70,8 +70,17 @@ In [Edit Fields](/nodes/builtin/datatransformation/editfields/), **Add all field
 | A field of the step right before | `{{ $input.title }}` |
 | A nested field | `{{ $input.metadata.description }}` (a dot path) |
 | A field whose name has spaces or symbols | `{{ $input["First name"] }}` |
-| A field of an earlier step | `{{ $('Get Page Metadata').title }}`, using the step's name. When that step has several items, the reference names the item (`$('X')[2].title`) and an amber **Uses item 3** note says so. To follow the current item back to that step instead, type `.item` after the step: `$('X').item.title` (see [Item linking](/concepts/data/item-linking/)). |
+| A field of an earlier step | `{{ $('Get Page Metadata').item.title }}`, using the step's name: the **matching item**, the item of that step the current item came from (see [Item linking](/concepts/data/item-linking/)). |
 | A variable | `{{ $vars.BASE_URL }}` |
+
+The pill of an earlier step carries a small tag saying which of its items it reads: **matching**, **first**, **list**, **last** or **item 3**. Tap the pill to switch (*Which Get Page Metadata item?*):
+
+- **Matching item**: `$('X').item.title`, the item the current one came from.
+- **First item**: `$('X').first().title`.
+- **All items, as a list**: every item's `title`, as a list.
+- **Edit as expression** opens the reference as text.
+
+The preview under the field names the item it read (*item 2 of 3 · matching Get Page Metadata item 2*). When AWFlow can't tell which item the current one came from (for example a step on the way combined the items into one), an amber note says so (*No matching item: … Using the Get Page Metadata item at the same position (2)*), and the run reads the item at the same position.
 
 Prefer the step right before when you can: a `$('…')` reference names a step, so check it after you rename one (the preview warns you if the name no longer matches). See [Item linking](/concepts/data/item-linking/).
 

@@ -64,7 +64,7 @@ Three product links go through Get All Text from Link, then Summarization summar
 
 `$json` is another name for the current item, like `$input`: `{{ $json.title }}` and `{{ $input.title }}` read the same.
 
-To read a whole list on purpose, write `$('Split Out').all()`, `.first()` or `.last()`. When you tap a value of an earlier step that has several items, the reference names the item (`$('X')[2].url`) and an amber **Uses item 3** note says so.
+To read a whole list on purpose, write `$('Split Out').all()`, `.first()` or `.last()`. When you tap a value of an earlier step, the reference reads its matching item (`$('X').item.url`); tap the pill to switch to **First item** or **All items, as a list** (see [Map data in the UI](/concepts/data/data-mapping/data-mapping-ui/#what-gets-written)). When no item matches, an amber note says the item at the same position is used.
 
 ### Two lists into one step
 

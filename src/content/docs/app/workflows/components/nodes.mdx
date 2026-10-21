@@ -60,6 +60,15 @@ New steps get plain names ("HTTP Request", then "HTTP Request 2", or "Gmail: Sen
 
 Renaming is safe: every reference to the step in other fields (`$('Old name')`) is rewritten to the new name, in one undo step. A toast says *Renamed to "…"* and how many references in how many steps now use it, with **Undo**. A name another step already has is refused, and leaving the field keeps the old name.
 
+<GuidedShot
+  shot="rename-toast"
+  steps={[
+    { spot: 'title', title: 'Rename the step', body: 'Click its title in its settings, type the new name, press Enter.' },
+    { spot: 'toast', title: 'Renamed to …', body: 'How many references in how many steps now use the new name.' },
+    { spot: 'undo', title: 'Undo', body: 'Puts the old name and the old references back, in one step.' },
+  ]}
+/>
+
 When you **Save**, AWFlow checks for fields that name a step that doesn't exist (for example after deleting one). A sheet lists each one (*Step › Field* and the expression), with **Open** to fix it, **Save anyway** or **Review**; those steps show **Needs setup**. [Health](/app/settings/health/) lists such fields across all your workflows.
 
 <GuidedShot
