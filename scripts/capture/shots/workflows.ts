@@ -388,6 +388,7 @@ export const shots: ShotDef[] = [
 			{ id: 'graph-tab', label: 'Graph: the workflow as it was when it ran', locator: (p) => p.getByRole('tab', { name: 'Graph' }) },
 			{ id: 'logs-tab', label: 'Logs: every line the run wrote', locator: (p) => p.getByRole('tab', { name: 'Logs', exact: true }).last() },
 			{ id: 'steps-tab', label: 'Steps: each step of the run', locator: (p) => p.getByRole('tab', { name: 'Steps' }) },
+			{ id: 'timeline-tab', label: 'Timeline: every step on one time axis', locator: (p) => p.getByRole('tab', { name: 'Timeline' }) },
 			{ id: 'debug-in-editor', label: 'Debug in editor', locator: (p) => p.getByRole('button', { name: /Debug in editor/ }).last() }
 		],
 		prepare: async (s) => {
@@ -401,6 +402,25 @@ export const shots: ShotDef[] = [
 			const collapse = page.getByRole('button', { name: 'Collapse panel' }).filter({ visible: true });
 			if (await collapse.count()) await collapse.first().click({ timeout: T });
 			await page.waitForTimeout(600);
+		}
+	},
+	{
+		name: 'run-timeline',
+		page: 'app/workflows/run-history',
+		route: '#/app/workflows/<id> (Runs › a run › Timeline)',
+		alt: 'The Timeline of a Hash Text run: every step on one time axis with its duration, and the picked step’s input and output beside it.',
+		spots: [
+			{ id: 'timeline-tab', label: 'Timeline', locator: (p) => p.getByRole('tab', { name: 'Timeline' }) },
+			{ id: 'bar', label: 'A step and its duration', locator: (p) => p.getByRole('tabpanel', { name: 'Timeline' }).getByRole('button', { name: /SHA-256/ }).first() }
+		],
+		prepare: async (s) => {
+			await executions(s);
+			const page = s.page;
+			await page.keyboard.press('Escape');
+			await page.getByRole('row').nth(1).click({ timeout: T });
+			await page.getByRole('tab', { name: 'Timeline' }).click({ timeout: T });
+			await page.getByRole('tabpanel', { name: 'Timeline' }).getByRole('button', { name: /SHA-256/ }).first().waitFor({ timeout: T });
+			await page.waitForTimeout(800);
 		}
 	},
 	{

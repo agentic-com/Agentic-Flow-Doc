@@ -79,6 +79,11 @@ export class Session {
 			await page.waitForTimeout(300);
 		}
 		if (new URL(page.url()).hash !== route) await this.go(route);
+		// The previous shot may have left the workflow on its Runs or Logs tab.
+		const editorTab = page.getByRole('tab', { name: 'Editor', exact: true });
+		if ((await editorTab.count()) && (await editorTab.first().getAttribute('aria-selected')) !== 'true') {
+			await editorTab.first().click({ timeout: T });
+		}
 		await page.locator('.svelte-flow__node').first().waitFor({ timeout: T });
 		if (!this.madeMine.has(name)) {
 			await page.getByRole('button', { name: 'Make it mine' }).first().click({ timeout: T });

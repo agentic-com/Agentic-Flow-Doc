@@ -23,7 +23,7 @@ export const shots: ShotDef[] = [
 			await s.page.goto('about:blank');
 			await s.testRun('hash-text');
 			const page = s.page;
-			await page.locator('.svelte-flow__node[data-id="sha512"]').dblclick({ timeout: T });
+			await page.locator('.svelte-flow__node[data-id="sha512"]').filter({ visible: true }).first().dblclick({ timeout: T });
 			await panel(page).getByRole('tab', { name: 'Setup' }).first().click({ timeout: T });
 			await panel(page).getByText(/\(item 1 of 1\)/).first().waitFor({ timeout: T });
 			await page.waitForTimeout(800);
@@ -42,12 +42,13 @@ export const shots: ShotDef[] = [
 			{ id: 'wait', label: 'Wait (seconds)', locator: (p) => panel(p).getByText('Wait (seconds)', { exact: true }) },
 			{ id: 'wait-pattern', label: 'Wait pattern', locator: (p) => panel(p).getByText('Wait pattern', { exact: true }) },
 			{ id: 'which-errors', label: 'Which errors', locator: (p) => panel(p).getByText('Which errors', { exact: true }) },
-			{ id: 'empty-item', label: "Pass an empty item when there's no result", locator: (p) => panel(p).getByText(/Pass an empty item when there/) }
+			{ id: 'empty-item', label: "Pass an empty item when there's no result", locator: (p) => panel(p).getByText(/Pass an empty item when there/) },
+			{ id: 'time-limit', label: 'Time limit', locator: (p) => panel(p).getByText('Time limit', { exact: true }).first() }
 		],
 		prepare: async (s) => {
 			await s.editor('hash-text');
 			const page = s.page;
-			await page.locator('.svelte-flow__node[data-id="sha512"]').dblclick({ timeout: T });
+			await page.locator('.svelte-flow__node[data-id="sha512"]').filter({ visible: true }).first().dblclick({ timeout: T });
 			await panel(page).getByRole('tab', { name: /Advanced/ }).first().click({ timeout: T });
 			await panel(page).getByText('Try again automatically', { exact: true }).waitFor({ timeout: T });
 			const retry = panel(page).getByRole('checkbox').first();

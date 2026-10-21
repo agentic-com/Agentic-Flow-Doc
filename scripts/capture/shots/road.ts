@@ -85,14 +85,17 @@ export const shots: ShotDef[] = [
 		route: '#/app/workflows/<id> (⋯ › Workflow settings)',
 		viewport: PANEL,
 		alt: 'The Workflow settings sheet of Hash Text at side-panel width: Running with Timezone for schedules (Europe/Paris · your browser); Run history with Save step data (Only for failed runs selected, For all runs, Never) and Keep Manual runs switched on; When this fails with Create an error workflow; Value with Minutes saved per run; and Done.',
-		spots: [],
+		spots: [
+			{ id: 'run-limits', label: 'Longest a run may take', locator: (p) => p.getByText('Longest a run may take', { exact: true }).first() },
+			{ id: 'queue', label: 'If it starts while already running', locator: (p) => p.getByText(/Run side by side/).first() }
+		],
 		prepare: async (s) => {
 			await s.page.goto('about:blank');
 			await openAtPanel(s, 'hash-text');
 			const page = s.page;
 			await page.getByRole('button', { name: 'Open menu', exact: true }).first().click({ timeout: T });
 			await page.getByRole('menuitem', { name: 'Workflow settings' }).click({ timeout: T });
-			await page.getByText('Save step data').first().waitFor({ timeout: T });
+			await page.getByText('Longest a run may take').first().waitFor({ timeout: T });
 			await page.waitForTimeout(600);
 		}
 	},
