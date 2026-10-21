@@ -9,6 +9,7 @@ section: app
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 import { Kbd } from 'starlight-kbd/components';
+import { GuidedShot } from "@components/awflow";
 
 A workflow is a chain of **steps**. Each step does one thing: read the page, call an app, change the data, decide where to go next, ask an AI model. (The [node reference](/nodes/) uses the technical word *node* for the same thing.)
 
@@ -60,6 +61,14 @@ New steps get plain names ("HTTP Request", then "HTTP Request 2", or "Gmail: Sen
 Renaming is safe: every reference to the step in other fields (`$('Old name')`) is rewritten to the new name, in one undo step. A toast says *Renamed to "…"* and how many references in how many steps now use it, with **Undo**. A name another step already has is refused, and leaving the field keeps the old name.
 
 When you **Save**, AWFlow checks for fields that name a step that doesn't exist (for example after deleting one). A sheet lists each one (*Step › Field* and the expression), with **Open** to fix it, **Save anyway** or **Review**; those steps show **Needs setup**. [Health](/app/settings/health/) lists such fields across all your workflows.
+
+<GuidedShot
+  shot="missing-step-check"
+  steps={[
+    { spot: 'field', title: 'The field that points nowhere', body: 'The step and field, with the expression. **Open** goes to it.' },
+    { spot: 'save-anyway', title: 'Save anyway', body: 'Saves as is: the run sees the missing value as empty.' },
+  ]}
+/>
 
 ## Set up a step
 

@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Steps } from "@astrojs/starlight/components";
+import { GuidedShot } from "@components/awflow";
 
 While you build, you run the same workflow many times. A step that is slow, costs money (an AI call), or does something you don't want to repeat (send an email) doesn't have to run every time: **keep its result**, and your runs from the editor reuse it.
 
@@ -21,9 +22,25 @@ While you build, you run the same workflow many times. A step that is slow, cost
 
 </Steps>
 
+<GuidedShot
+  shot="keep-result"
+  steps={[
+    { spot: 'keep', title: 'Keep this result', body: 'Under the step\'s **Output**, after it ran once.' },
+  ]}
+/>
+
 From now on, **runs you start in the editor** (**Run**, **Run step**, [Run from here](/app/workflows/run-from-here/)) don't run that step: they hand on its kept result and route on as after a real run. The run log says *Used the kept result (24 items)*.
 
 ## Change or stop keeping
+
+<GuidedShot
+  shot="kept-result"
+  steps={[
+    { spot: 'banner', title: 'Kept result', body: 'When it was kept and how many items. Runs from the editor use it instead of running the step.' },
+    { spot: 'edit-result', title: 'Edit result', body: 'Change the kept items as JSON.' },
+    { spot: 'stop-keeping', title: 'Stop keeping', body: 'The step runs again in every run.' },
+  ]}
+/>
 
 - **Edit result** opens the kept result as JSON; it is checked when you save.
 - **Stop keeping** goes back to running the step.
