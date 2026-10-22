@@ -99,7 +99,7 @@ const RECIPES: Recipe[] = [
 			{ node: 'trigger-context-menu', alt: 'The settings of the Right-click a selection trigger (Context Menu): Menu Contexts set to Selection, and empty Document URL Patterns and Target URL Patterns lists with Add buttons.', fields: [f('document-url-patterns', 'Document URL Patterns')] },
 			{ node: 'extract', alt: 'The settings of the Draft a task title step: the Text field, What to extract, and Options.', fields: [f('what-to-extract', 'What to extract')] },
 			{ node: 'local-model', alt: 'The settings of the Local AI model step (Web LLM): the Model menu still reads “Choose a model…”, with Options under it.', fields: [f('model', 'Model', 'The Model menu')] },
-			{ node: 'create-task', alt: 'The settings of the Create the Todoist task step: an empty Credential menu, then Resource Task, Operation Create, Content, Description, Source URL, Project ID, Due (natural language), Priority and Labels.', fields: [f('credential', 'Credential', 'The Credential menu (a Todoist connection)'), f('project-id', 'Project ID'), f('due', 'Due (natural language)')] }
+			{ node: 'create-task', alt: 'The settings of the Create the Todoist task step: an empty Connection field with Connect, then Resource Task, Operation Create, Content, Description, Source URL, Project ID, Due (natural language), Priority and Labels.', fields: [f('credential', 'Connection', 'The Connection field (a Todoist connection)'), f('project-id', 'Project ID'), f('due', 'Due (natural language)')] }
 		]
 	},
 	{
@@ -130,7 +130,7 @@ const RECIPES: Recipe[] = [
 		],
 		panels: [
 			{ node: 'trigger-context-menu', alt: 'The settings of the Right-click a page trigger (Context Menu): Menu Contexts set to Page, and empty Document URL Patterns and Target URL Patterns lists with Add buttons.', fields: [f('menu-contexts', 'Menu Contexts')] },
-			{ node: 'save-airtable', alt: 'The settings of the Add a record to Airtable step: an empty Credential menu, then Resource Record, Operation create, Base and Table (which cannot load items without a credential) and Fields.', fields: [f('credential', 'Credential', 'The Credential menu (an Airtable connection)'), f('base', 'Base'), f('table', 'Table'), f('fields', 'Fields')] }
+			{ node: 'save-airtable', alt: 'The settings of the Add a record to Airtable step: an empty Connection field with Connect, then Resource Record, Operation create, Base and Table (which cannot load items without a credential) and Fields.', fields: [f('credential', 'Connection', 'The Connection field (an Airtable connection)'), f('base', 'Base'), f('table', 'Table'), f('fields', 'Fields')] }
 		]
 	},
 	{
@@ -176,7 +176,7 @@ const RECIPES: Recipe[] = [
 		],
 		panels: [
 			{ node: 'trigger-element-change', alt: 'The settings of the Watch the job list trigger (Element Change): an empty CSS Selectors list with Add, Fire when Content changes, Match text, Debounce (ms) and URL Patterns.', fields: [f('css-selectors', 'CSS Selectors', 'The CSS Selectors list'), f('fire-when', 'Fire when', 'The Fire when menu'), f('url-patterns', 'URL Patterns', 'The URL Patterns list')] },
-			{ node: 'send-push', alt: 'The settings of the Send a push notification step: an empty Credential menu, then Provider, Topic, Message, Title, Priority, Tags, Click URL and Server.', fields: [f('credential', 'Credential', 'The Credential menu'), f('topic', 'Topic'), f('message', 'Message')] }
+			{ node: 'send-push', alt: 'The settings of the Send a push notification step: an empty Connection field with Connect, then Provider, Topic, Message, Title, Priority, Tags, Click URL and Server.', fields: [f('credential', 'Connection', 'The Connection field'), f('topic', 'Topic'), f('message', 'Message')] }
 		]
 	},
 	{

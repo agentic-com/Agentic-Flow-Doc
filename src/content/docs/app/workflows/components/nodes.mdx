@@ -90,6 +90,8 @@ The header shows the step's icon, its name, one line on what it does, **How it w
 
 On a wide screen, **Input**, **Setup** and **Output** sit side by side in three columns you can resize. In the side panel, an **Input · Setup · Output** switch shows one at a time.
 
+In the side panel, **Minimise the step sheet** (left of the docs button) folds it into a small bar over the canvas: the step's icon and name, the pane and field you were on, **Run step** and **Open**. Tap another step to move the bar to it; **Open** brings the sheet back on the same pane.
+
 ### Fields
 
 Every field has the same parts: the label (with **Optional** when it is), a help line, the control, and one status line (an error, the preview of an expression, or **Default: …** when the field is empty and a default will be used).
@@ -99,6 +101,8 @@ The **⋯** menu next to a label offers **Edit as expression** / **Use a fixed v
 In name/value cards (Edit Fields, HTTP headers, query and body), a card left on the default type follows what you type: `42` becomes a number, `[…]` a list, `{…}` an object, `true` a yes/no. A chip shows the type (**abc**, **123**, **✓**, **{ }**, **[ ]**); choose another one from the card's **⋯** menu.
 
 At the top of **Setup**, an issue bar lists what is still missing ("2 things left: Channel, Message"). Tap a chip to jump to that field.
+
+Fields that take field names of the input (Edit Fields **Fields to keep**, Remove Duplicates and Compare Datasets **Fields**) suggest the input's fields as you type, with their type and a sample value (the ones already added are dimmed). A name the input doesn't have gets an amber line with the closest field; when the step before hasn't run yet, a grey line says so. You can still type any name.
 
 ### Connections inside the step
 
@@ -127,6 +131,14 @@ After a run:
 - If you were typing in a field, only the **Last run** bar shows ("Last run: 12 items · 0.4 s · View output"), so you aren't interrupted.
 - When a run fails on a field, the bar offers **Fix**, which jumps to it.
 - **Settings changed since this result · Run again** shows when you edit after a run.
+
+### Test with one item
+
+When the step gets several items, the arrow next to **Run step** (**Run step ▾**) offers **Run this step with…**: **All 24 items** or **Only item 3**, the item shown in the **Input** pane, each with how many calls it makes. Testing with one item is quicker and cheaper while you tune a step (an AI prompt, an HTTP call).
+
+A one-item test is marked in blue in the **Output** (*Tested with item 3 only*: the other items didn't run, and the steps after this one see 1 item until you run all), with **Run all 24**, and in the **Last run** bar (*Last run: item 3 of 24 only*). Any full run clears it.
+
+To pick the item, use the item stepper in the **Input** pane (*Item 3 of 24*): it opens a list that finds an item by any of its values (**Find an item**).
 
 Chips at the top of **Input** (the steps before) and under **Output** (the steps after) open those steps in place.
 

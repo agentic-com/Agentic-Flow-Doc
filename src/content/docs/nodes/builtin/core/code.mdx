@@ -22,6 +22,8 @@ Run your own Python code on the incoming items when no other step does what you 
 
 Python Code runs your Python (Python 3 with its standard library, in the browser) and passes on the value of its **last line**. Anything you `print()` appears in the run's activity log. The code runs in an isolated sandbox: no network, no access to the page or your stored data, and a 30-second time limit. The first run after a pause takes a few seconds while Python starts.
 
+At the top of **Setup**, a green card says what the step can reach: **What it touches: nothing outside this step**. No internet (use [HTTP Request](/nodes/builtin/core/http-request/) for calls), no web pages, tabs or your files, no connections or stored data, and how long it may run (*Stops after …*), with **Change limits** (the step's **Time limit**). In **Ready to run** and on a Marketplace listing, the step shows as a calm grey *Runs code in a sandbox* row, not a warning.
+
 Code is never searched for `{{ }}`: `f"{{name}}"` and `{{ $input.x }}` reach Python exactly as written (the editor warns *Looks like an expression: use items instead*).
 
 ### Python Code version 2 (new steps in AWFlow 0.9)

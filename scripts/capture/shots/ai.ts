@@ -528,8 +528,31 @@ export const shots: ShotDef[] = [
 			await closeOverlays(s);
 			await s.assistant();
 			await s.page.getByRole('button', { name: 'New chat' }).first().click({ timeout: T });
+			// New chat asks who to talk to (#24): Enter starts Aria, who is preselected.
+			const picker = s.page.getByRole('dialog', { name: 'New chat' });
+			if (await picker.waitFor({ timeout: 3000 }).then(() => true, () => false)) {
+				await s.page.keyboard.press('Enter');
+				await picker.waitFor({ state: 'hidden', timeout: T });
+			}
 			await s.page.getByRole('textbox', { name: 'Ask Aria anything…' }).waitFor({ timeout: T });
 			await s.page.waitForTimeout(800);
+		}
+	},
+	{
+		name: 'new-chat-picker',
+		page: 'app/chat-and-agents/chat',
+		route: '#/app/assistant (New chat)',
+		alt: 'The New chat dialog: Who do you want to talk to?, a search box for agents, teams and workflow chats, and Aria first and preselected (Enter), Builds and fixes workflows, answers questions.',
+		spots: [
+			{ id: 'search', label: 'Search agents, teams and workflow chats', locator: (p) => p.getByRole('dialog', { name: 'New chat' }).getByRole('combobox') },
+			{ id: 'aria', label: 'Aria, preselected', locator: (p) => p.getByRole('dialog', { name: 'New chat' }).getByRole('option', { name: /^Aria/ }) }
+		],
+		prepare: async (s) => {
+			await closeOverlays(s);
+			await s.assistant();
+			await s.page.getByRole('button', { name: 'New chat' }).first().click({ timeout: T });
+			await s.page.getByRole('dialog', { name: 'New chat' }).waitFor({ timeout: T });
+			await s.page.waitForTimeout(600);
 		}
 	},
 	{

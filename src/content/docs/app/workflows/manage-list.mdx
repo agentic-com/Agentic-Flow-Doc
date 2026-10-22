@@ -26,19 +26,25 @@ import { StepCard, StepShot } from '@components/awflow';
 - Narrow the list with the filter chips: **Status** (*On* / *Off*), **Storage** (*Local* / *Cloud*), **Published**, **Needs setup** and **Tags**. See [Filter the list](/app/workflows/filters/).
 - **Columns** shows or hides columns; click a header to sort.
 
-Your search, filters and sort are kept in the page address, so a link or the back button brings them back, and they are remembered when you reopen the panel. **While you search, results come from every folder**, not only the one you have open. If nothing matches, **Clear** empties the search.
+Your search, filters and sort are kept in the page address, so a link or the back button brings them back, and they are remembered when you reopen the panel. **While you search, results come from every folder**, not only the one you have open, and folder names match too. Each result says where it lives: a **Folder** column on a wide screen, the folder path on the narrow cards. A chip narrows it: **Everywhere**, or **In** the folder you have open. If nothing matches, **Clear** empties the search.
+
+The app-wide search (<kbd>Ctrl</kbd> <kbd>K</kbd>, <kbd>⌘</kbd> <kbd>K</kbd> on a Mac) also lists workflows from every folder with their path, then the matching folders.
 
 The list refreshes by itself when a workflow is saved or deleted in another AWFlow window.
 
 A **Needs setup** badge next to a name means the workflow is missing something before it can run, such as a connection. Open it and look at **Ready to run**.
 
+### The last run of each workflow
+
+Each row's second line starts with the **last run**: a dot in the run's status colour, the word and when (*Failed · 2 h ago*), or *Not run yet*. Tap the dot to see that run in one line (the step that failed and its error, or what it waits for), with **Open run** and **All runs**. On a wide screen, the **Last run** column sorts failed and waiting workflows first.
+
 ## Folders
 
 Group workflows in **folders**, up to 3 levels deep, on this device and in your account.
 
-- On a wide screen, the folder tree sits on the left with a count per folder; drag rows onto a folder to move them. **Hide folders** collapses it.
-- In the side panel, folders appear first in the list, and **‹** goes back up.
-- **New folder** creates one in the current folder; a folder's menu offers **Rename** and **Delete folder**. Deleting a folder moves its workflows up one level; it never deletes them.
+- The sub-folders of the folder you have open are **rows of the list**, always first whatever the sort. Tap one to open it; **‹** goes back up. Select folder rows like workflows to **Move** or **Delete** them.
+- On a wide screen, the folder tree also sits on the left with a count per folder; drag rows onto a folder to move them. **Hide folders** collapses it.
+- **New folder** creates one in the current folder; a folder's **⋯** menu offers **Rename** and **Delete folder**. Deleting a folder moves what it holds (folders and workflows) up one level; it never deletes a workflow.
 - **Move to folder…** (row menu or bulk) opens a picker with **New folder**.
 - A new workflow is created in the folder you have open. The editor's header shows the folder path.
 
@@ -65,6 +71,8 @@ On **Mine**:
 - **Publish to the marketplace** (or **Release** for a new version). See [Publishing](/app/workflows/publishing/).
 - **Export** downloads it as a file. See [Export & import](/app/workflows/export-import/).
 - **Archive** (see below) and **Delete…**.
+
+To change an installed workflow, make it yours: **Make a copy** in its [Workflow info](/app/workflows/create/#workflow-info) popover.
 
 On **Installed**: **Open**, **Run**, **Export**, **Update to v…** when a newer version exists, **Checkout a version**, **Reset permissions** (it asks for site and app access again next time) and **Remove**. Their status column says when the author released an update, stopped sharing it, or AWFlow is reviewing or removed it.
 
