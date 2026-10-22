@@ -10,7 +10,7 @@ lesson:
 sidebar:
   label: "3 · Résumer une page avec l'IA"
 i18n:
-  source: "1607d7a56ef3750b3fd81f4ea99a20a226d724b2"
+  source: "09546b2d30a2e960b433b2eeedc103a0b1140e48"
 ---
 
 import { Aside } from "@astrojs/starlight/components";
@@ -43,8 +43,8 @@ L'IA dans un workflow demande deux nœuds : une **chaîne** qui contient le pro
 
 ## Étapes
 
-<StepCard n={1} title="Démarrer un workflow qui lit la page" check="Au démarrage → Obtenir tout le texte est sur un nouveau canevas.">
-  Créez un nouveau workflow **Blank canvas** nommé `Summarise this page`, comme dans la [leçon 2](/get-started/first-workflow/). Ajoutez le déclencheur **Au démarrage**, puis cliquez sur son **+** et ajoutez **Obtenir tout le texte**. Définissez **Nom du champ de sortie** sur `text`.
+<StepCard n={1} title="Démarrer un workflow qui lit la page" check="Quand j'appuie sur Lancer → Obtenir tout le texte est sur un nouveau canevas.">
+  Créez un nouveau workflow **Blank canvas** nommé `Summarise this page`, comme dans la [leçon 2](/get-started/first-workflow/). Ajoutez le déclencheur **Quand j'appuie sur Lancer**, puis cliquez sur son **+** et ajoutez **Obtenir tout le texte**. Définissez **Nom du champ de sortie** sur `text`.
 
   <StepShot shot="create-workflow" spot="blank-canvas" n={1} />
 </StepCard>
@@ -65,7 +65,7 @@ L'IA dans un workflow demande deux nœuds : une **chaîne** qui contient le pro
       Dans Firefox, certaines configurations graphiques ne peuvent pas exécuter Web LLM ; le modèle affiche alors **Non pris en charge ici**. Utilisez plutôt **Conversation Transformers**.
     </div>
     <div slot="apikey">
-      Choisissez **Chat OpenAI**, **Chat Anthropic** ou **Chat Google**. Dans **Authentification**, cliquez sur **+ Add Credential**, collez votre clé d'API depuis le site web du fournisseur, puis cliquez sur **Create Credential**. Choisissez ensuite un modèle. La clé est stockée dans AWFlow et envoyée uniquement à ce fournisseur. Voir [Créer des identifiants](/app/connections/create/).
+      Choisissez **Chat OpenAI**, **Chat Anthropic** ou **Chat Google**. Dans **Authentification**, cliquez sur **Connecter**, collez votre clé d'API depuis le site web du fournisseur, puis cliquez sur **Enregistrer et tester** (ou **Ajouter une connexion**). Choisissez ensuite un modèle. La clé est stockée dans AWFlow et envoyée uniquement à ce fournisseur. Voir [Créer des identifiants](/app/connections/create/).
 
       Cette option coûte un peu à chaque exécution, facturé par le fournisseur, et le texte de la page lui est envoyé.
     </div>
@@ -104,7 +104,7 @@ L'IA dans un workflow demande deux nœuds : une **chaîne** qui contient le pro
 </StepCard>
 
 <StepCard n={6} title="L'exécuter sur un article" check="Chaîne LLM basique → Output → Actual affiche une réponse avec trois points clés sur l'article.">
-  Passez à l'onglet de l'article, puis revenez au panneau et cliquez sur **Tester le workflow**. La première exécution sur l'appareil attend le téléchargement du modèle (la progression s'affiche dans le journal d'exécution du nœud) ; les suivantes prennent quelques secondes. Cliquez sur **Enregistrer** quand tout fonctionne.
+  Passez à l'onglet de l'article, puis revenez au panneau et appuyez sur **Exécuter**. La première exécution sur l'appareil attend le téléchargement du modèle (la progression s'affiche dans le journal d'exécution du nœud) ; les suivantes prennent quelques secondes. Cliquez sur **Enregistrer** quand tout fonctionne.
 
   <StepShot shot="llm-chain" spot="run" n={6} />
 </StepCard>
