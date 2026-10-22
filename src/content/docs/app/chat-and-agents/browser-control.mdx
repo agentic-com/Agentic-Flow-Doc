@@ -6,6 +6,8 @@ sidebar:
 section: app
 ---
 
+import { GuidedShot } from "@components/awflow";
+
 With the **Browser control** skill, an agent can open pages, read them, click, type, choose options and scroll — using the logins you already have in this browser. These safeguards are enforced **in code, around every action**, so a page or a prompt can't talk an agent out of them.
 
 ## Its own tab group
@@ -58,7 +60,27 @@ Web pages sometimes contain text written to manipulate AI agents ("ignore your i
 
 ### What you see of a page
 
-When an agent (or Aria) **looks** at a page, its timeline shows a small drawing of the page's **structure**: boxes where the buttons, links and fields are, with their short references. It is **not a screenshot**: it holds labels only, never the values typed in fields, and a private field is drawn as a solid *Hidden field*. After a click, type or select, the drawing rings the element acted on. Tap a drawing to open it: the address, the time, *Page structure, not a screenshot*, **Show element refs**, previous / next, **Open page** and **Copy element list**. **Show on the page** (or **Open page and show refs** when no tab has that address) draws the reference badges over the real elements in that tab and rings the one acted on, with a dark **Hide refs** pill (<kbd>Esc</kbd> also hides them). It only reads: nothing is clicked. Elements that can't be found again are listed in amber, never placed on a guess. It works only on sites AWFlow may already read. The drawings are kept with the run's step data on this device only.
+When an agent (or Aria) **looks** at a page, its timeline shows a small drawing of the page's **structure**: boxes where the buttons, links and fields are, with their short references. It is **not a screenshot**: it holds labels only, never the values typed in fields, and a private field is drawn as a solid *Hidden field*. After a click, type or select, the drawing rings the element acted on. Tap a drawing to open it: the address, the time, *Page structure, not a screenshot*, **Show element refs**, previous / next, **Open page** and **Copy element list**. The drawings are kept with the run's step data on this device only.
+
+<GuidedShot
+  shot="look-sheet"
+  steps={[
+    { spot: 'address', title: 'The page it read', body: 'Its address, the time of the Look and how many elements it found.' },
+    { spot: 'refs', title: 'Show element refs', body: 'Turns the short references (e1, e2…) on the drawing on or off.' },
+    { spot: 'show', title: 'Show on the page', body: 'Draws the same references over the real page. It reads **Open page and show refs** when no tab has that address.' },
+  ]}
+/>
+
+The refs show on the real page only when you ask. **Show on the page** brings that tab forward, draws the reference badges over its real elements and rings the one acted on, with a dark **Hide refs** pill (<kbd>Esc</kbd> also hides them). It only reads: nothing is clicked. Elements that can't be found again are listed in amber, never placed on a guess. It works only on sites AWFlow may already read.
+
+<GuidedShot
+  shot="look-refs-on-page"
+  steps={[
+    { spot: 'badge', title: 'Badges on the real elements', body: 'Each element the agent saw carries its reference, so you can tell which button it meant.' },
+    { spot: 'pill', title: 'Refs from Look', body: 'Says which Look the badges come from.' },
+    { spot: 'hide', title: 'Hide refs', body: 'Removes the badges. **Esc** does the same.' },
+  ]}
+/>
 
 **Private fields are never read.** Password fields, card numbers, security codes, IBANs, one-time codes and similar fields keep their label and kind, never their value, in everything AWFlow reads from a page (Look, Get forms schema, Get element data, Get accessibility tree). The model sees *private (value hidden)*, and approval cards mask what is typed into them.
 

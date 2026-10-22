@@ -340,6 +340,29 @@ const SHOTS: Record<string, Def> = {
 			list: { label: 'Chats for this page', box: { x: 67.6, y: 53.0, w: 26.5, h: 13.4 } },
 			'not-shown': { label: 'Not shown', box: { x: 67.6, y: 67.3, w: 26.5, h: 5.0 } }
 		}
+	},
+	// Look's Show on the page (board J33): e2e/specs/ext/doc-states.spec.ts, a scripted Aria (e2e only).
+	'look-sheet': {
+		source: 'u1-look-sheet-1280',
+		page: 'app/chat-and-agents/browser-control',
+		route: '#/app/assistant (a Look under Aria’s reply › its drawing)',
+		alt: 'The Look sheet for 127.0.0.1:4310/flights.html, 10 elements: Page structure, not a screenshot, the drawing of the page with refs e1 to e9 (links, the From and Date fields, Search and three Hold seat buttons), Show element refs on, the legend, then Open page, Show on the page and Copy element list.',
+		spots: {
+			address: { label: 'The page Look read' },
+			refs: { label: 'Show element refs' },
+			show: { label: 'Show on the page' }
+		}
+	},
+	'look-refs-on-page': {
+		source: 'u2-look-refs-on-page-1280',
+		page: 'app/chat-and-agents/browser-control',
+		route: 'the tab Aria looked at (after Show on the page)',
+		alt: 'The flights page itself with AWFlow’s ref badges e1 to e9 drawn over its links, fields and buttons (each Hold seat has its own), and a dark pill at the bottom: AWFlow · refs from Look at 04:10 PM, Hide refs.',
+		spots: {
+			badge: { label: 'A ref badge on the real button' },
+			pill: { label: 'refs from Look' },
+			hide: { label: 'Hide refs' }
+		}
 	}
 };
 const [dirArg, commit = 'unknown', onlyArg] = process.argv.slice(2);
