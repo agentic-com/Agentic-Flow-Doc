@@ -121,7 +121,11 @@ With **On error** set to **Send to an error output**, the step gets a red **Erro
 
 The normal output runs only if at least one item worked, and the Error output only if one failed; an unused side is skipped like an untaken If branch. The run is recorded as **Done with errors**, and the canvas shows an amber "2 failed → Error" badge on the step; its **Output** switches between **Success** and **Error**.
 
-Some failures still stop the step: you pressed Stop, or you refused a permission. An Error output with nothing linked to it fails the step as before.
+Some failures still stop the step: you pressed Stop, or you refused a permission.
+
+An Error output with nothing linked to it stops the run at the step when an item fails, as before, but AWFlow now says so. The output reads *Error · not connected*, and the step's **Advanced** tab says *Nothing is connected to Error yet*, with **Add a step to Error** or **Stop the run instead**. **Add a step to Error** opens the step picker on that output, with a few suggestions for failed items (each gets its error and the input it had), or **Another step…**. A run that stopped this way says *nothing is connected to its Error output*, with **Connect a step** (see [Runs](/app/workflows/run-history/#when-nothing-is-connected-to-the-error-output)).
+
+To run only the failed items again once you fixed the cause, use **Run again** on them in the run (see [Run failed items again](/app/workflows/run-history/#run-failed-items-again)).
 
 ## Catch a failure with Try / Catch
 

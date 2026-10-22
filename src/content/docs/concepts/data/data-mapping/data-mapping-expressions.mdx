@@ -72,8 +72,12 @@ A field is either **Fixed** (the text is used as written) or **Expression**. Swi
 - Typing `{{` adds the closing `}}` with the cursor in between; typing `}` steps over it.
 - Inside `{{ }}`, **suggestions** list the steps before this one (nearest first), their fields (from the last run, or marked *expected* before any run), your variables and the functions, each with a short description.
 - Under the field, a **preview** line shows the result at the current item ("→ Ada Lovelace · item 1 of 3"). It wraps to three lines with **Show all**.
-- A problem is **underlined** where it is (amber for a warning, red for an error) and explained in the preview line, with a fix when there's an obvious one: *No step called "Get todo". Did you mean "Get todos"?* **Replace**.
-- In a **Fixed** field, text that looks like a reference shows *This looks like a data reference* with **Show as expression** and **Use data…**.
+- A problem is **underlined** where it is (amber for a warning, red for an error), and an amber line under the field names the cause, with a fix when there's an obvious one:
+  - *This couldn't be worked out: there's no step called "Get todo".* **Replace with "Get todos"**;
+  - *Get issues ran, but its items have no field "titel".* **Replace with title**;
+  - *This step's input has no field "titel".*;
+  - *Get issues hasn't run yet, so there's nothing to preview.* **Run Get issues**.
+- In a **Fixed** field, text you type that looks like a reference shows *This looks like a data reference* with **Show as expression** and **Use data…**. A Fixed field that already holds `{{ }}` says so in amber (runs still work it out as an expression), with **Switch to expression** and **Why?**. Switching only changes how the field is shown; the value stays as it is.
 
 ### The full-screen editor
 

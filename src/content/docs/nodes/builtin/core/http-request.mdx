@@ -62,6 +62,8 @@ Under **Body**, **Write the body as** offers **Fields** (one row per field, the 
 - **Return**: one item per entry from every page (default), one item per page, or everything in one item. **Path to the list** says where the entries are.
 - **Max pages** is 10 by default (at most 100); **Wait between pages** slows it down. When the limit cuts it short, a hint and the run log say so.
 
+Under the settings, a line says what it will do: *Will fetch up to 10 pages. Stops sooner when there's no next link.* For page numbers it spells out the values it sends (*offset = 0, 100, 200 … 900*); for a cursor, what keeps it going. After a run it adds how many entries each page had (*Up to 10 pages, about 1,000 items (the last run got 100 per page)*). When a run stops at **Max pages** while more pages exist, the **Output** shows an amber note (*Stopped at 10 pages, the limit*) with **Raise to 25**, and the **Last run** bar says *more exist*, with **Raise**.
+
 ### Errors as data
 
 By default a 4xx or 5xx answer fails the step, and the error shows the status, the status text and the start of the body. Turn on **Options › Response › Never error** to get the whole answer instead (`status`, `statusText`, `headers`, `url`, `data`) and decide yourself with an [If](/nodes/builtin/flow/if/). Network errors and timeouts still fail. With **Try again automatically**, a 429 or 503 with `Retry-After` is waited out (up to 5 minutes).

@@ -24,7 +24,7 @@ One of the paths a run can take after a node such as IF or Switch. Each branch s
 
 #### Canvas
 
-The editor where you add nodes and connect them into a workflow. See [Nodes](/app/workflows/components/nodes/) and [Connections between nodes](/app/workflows/components/connections/).
+The editor where you add nodes and connect them into a workflow. See [Nodes](/app/workflows/components/nodes/) and [Links](/app/workflows/components/connections/).
 
 #### Chain
 

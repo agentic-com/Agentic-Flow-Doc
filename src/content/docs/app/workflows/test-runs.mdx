@@ -13,6 +13,16 @@ An AI workflow can look fine on the three examples you tried, then fail on the f
 
 (Test runs are sometimes called *evaluations*. A plain **Run** of a workflow is something else: see [Run from the canvas](/app/workflows/executions/run-from-the-canvas/).)
 
+## Set up test runs in three steps
+
+When the workflow has no Evaluation Trigger yet, **Test runs** explains what it does and offers **Set up test runs**:
+
+1. **Test cases**: a **Google Sheet** (pick a Google connection, then paste the sheet's link; the first row is the column names), a **Data Store key** (a key with a list, or keys starting with a prefix), or **Paste CSV** with a header line. A preview shows the first rows and the count (up to 500 per test run).
+2. **In and out**: the **column that goes in** (and what it becomes for the workflow), the **column with a good answer**, and the **step to compare with** (and its field).
+3. **Score**: how to score each answer (**Score with**), the judge model for an AI judge, and **Pass at** (between 0 and 1).
+
+**Add to workflow** adds an [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) before the step and an [Evaluation](/nodes/builtin/flow/evaluation/) step after it, linked, with an *Added* pill; the toast offers **Run now**. Normal runs skip both: they only run from Test runs. Each test run reads the rows again, so you can keep editing the sheet. You can also add the two steps yourself, as below.
+
 ## What you need
 
 1. An [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) in the workflow, holding the test rows: a Data Store list, a Data Store key prefix, pasted CSV, or a Google Sheet (up to 500 rows). You can grow the dataset from real runs: **Add this run's input to the test dataset** on a run in [Runs](/app/workflows/run-history/#add-a-run-to-a-test-dataset). It sits next to the workflow's normal trigger and never starts a normal run.

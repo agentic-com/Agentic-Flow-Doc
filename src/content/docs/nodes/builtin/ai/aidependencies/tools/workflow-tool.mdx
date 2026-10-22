@@ -36,6 +36,8 @@ The run then works like this:
 
 **Ask before running** decides when you are asked before the workflow runs: **When it can send, delete or pay** (only if the workflow, or one it calls, sends messages, deletes data or makes payments), **Always** or **Never**. Without a choice, interactive runs ask when it can send, delete or pay. The setting is cleared when you publish the workflow.
 
+The three choices are cards. The recommended one says why for the workflow you picked (*Recommended. Asks here, because Send invoice sends messages and pays.*, or *… doesn't send, delete or pay, so it runs without asking.*). Under them, **What Send invoice can do** lists what AWFlow found in the workflow, including the workflows it calls (*Sends messages · Gmail*, *Pays · Stripe*). **Never** on a workflow that can act shows an amber note: it runs without asking, and the run log notes every call made this way. On a schedule or a background trigger nobody can answer live: a call that needs your ok waits in [Runs](/app/workflows/run-history/#runs-that-need-you) until you answer. When the agent asks, the approval card says why (*Asked because of "Always"*).
+
 ## When to use it
 
 - You already have a workflow that does one job well (look up a customer, format a report, save a note) and want an agent to use it when needed.

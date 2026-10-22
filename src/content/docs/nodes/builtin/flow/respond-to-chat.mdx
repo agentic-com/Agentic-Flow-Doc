@@ -30,6 +30,10 @@ With **Add to chat memory** on (the default), the message is also stored in the 
 
 When no chat is open for the run (it was started another way), the message is only stored in the chat memory and the run log says so.
 
+### When the message streams
+
+In an open chat, the message **streams** (words appear as they are written, with *Draft reply is writing…*) only when it is exactly the reply of the AI step linked straight to this step, for example `{{ $('Draft reply').response }}` or `{{ $input.response }}`. Otherwise it is **sent whole** once it is ready: when a step in between (Guardrails, Edit Fields…) can change the text, or when the message is more than one AI step's reply. The step's settings say which (*Streams into the open chat as Draft reply writes.*, or *Sent whole: …* with the reason). Nothing else changes: the run and the stored message are the same either way.
+
 ## When to use it
 
 - A fixed reply: "Got it, your ticket is #1234."

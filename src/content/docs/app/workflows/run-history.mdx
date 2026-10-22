@@ -170,7 +170,8 @@ Click a row, or use its **⋮** menu › **Open**. A panel opens beside the list
   />
 
 - **Logs** lists the run's lines with their time, level, step (and item) and message: filter them by level (**All levels**), by step (**All steps**) or by words (**Search logs**). Long runs keep the last 5,000 lines; errors and warnings are always kept. In the editor's **Logs** tab, the same run shows as a tree: one row per step with the items in and out and its duration, loop steps as "×24 runs", and under AI steps each model call with its tokens and each tool call. Each call names the building block that made it ("Model call · gpt-4o-mini", the tool, the memory or knowledge base); **Open** in its sheet jumps to that step. Steps that looked at a page show the page drawing (see [Browser control & safety](/app/chat-and-agents/browser-control/#what-you-see-of-a-page)). Search it, or show only **Errors** or **AI**. The plain log is one tap away.
-- **Steps** lists each step with the **Input** and **Output** it had in that run, when the workflow saves step data. By default, AWFlow saves step data only for **failed runs**; change it in [Workflow settings](/app/workflows/settings/#run-history) (**Change what's saved** links there). Passwords and keys are never saved.
+- **Steps** lists each step with the **Input** and **Output** it had in that run, when the workflow saves step data. By default, AWFlow saves step data only for **failed runs**; change it in [Workflow settings](/app/workflows/settings/#run-history) (**Change what's saved** links there). Passwords and keys are never saved. On a failed run, a line above the steps says what the workflow saves (*Step data saved: Only for failed runs*), with **Change**: it opens the workflow's **Run history** setting, ringed, and its header takes you back to the run. For an installed workflow the author set it (*set by the author*), and **Make a copy** gives you a copy whose settings you can change.
+- In **Steps**, the step that failed opens on the same fix card as in the editor: what happened, the likely cause, what to try, **Fix with Aria** and **Open the step**. It is built from the error kept with the run, so it shows even when the run kept no step data. For example, a step that couldn't use its connection because your [vault](/app/account/secret-vault/) was locked says *Unlock your vault in Connections, then run again.* The hints the run noted for a step (*0 items*, *ran once per item*…) show under its row too.
 - **Graph** stays as the last tab.
 - A **Timed out** run names the step past its time limit, with **Change** (see [Timed out runs](#timed-out-runs)).
 - A run of a version that was deleted since keeps its logs; the graph then says **No workflow snapshot**.
@@ -195,6 +196,28 @@ On a failed or canceled run, **Run again ▾** offers:
 - **Use the version that ran**: exactly what ran then (not available once that version was removed).
 
 Both start from the trigger data the run saved. A confirmation lists the steps that will run again: steps like *Send email* or *Create row* would repeat. To restart from the failed step only, use **Debug in editor**. The new run shows **Retry of 14:02**, and the old one **Retried → Done**.
+
+## Run failed items again
+
+When some items of a step failed (they went to its **Error** output, or one stopped the run), you don't have to run the whole workflow again. In the run's **Steps** tab, the step lists its failed items (*Went to Error · 3 items*, *37 done · 3 failed*), each with its error:
+
+- **Run again** on an item runs that item only.
+- **Run the 3 failed items again** runs all of them, in one new run.
+
+A dialog asks first (*Run item 4 again?*). It shows the item's input in this run, and lets you pick what to **Run it on**:
+
+- **The workflow as it is now** (default): includes what you changed since the run, for example the fix.
+- **The version it ran on**: exactly as it ran then.
+
+Only the failed step and the steps after it run again, for those items only. The steps before it don't run again: their results for that item in this run are used, as with [Run from here](/app/workflows/run-from-here/). The items that went through aren't touched. An HTTP Request step that [sends an idempotency key](/nodes/builtin/core/http-request/#send-an-idempotency-key) sends the same key as the failed attempt, so the service can ignore a request it already took.
+
+The retry is a new run, shown in **Runs** with a **Retry** chip (*Retry of 09:00 · item 4*). A toast says how it went (*Item 4 went through*, or *Item 4 failed again*). The original run keeps its status and gets a *1 of 3 retried* badge; each retried item says *Retried 09:41 · Done*, with **View retry**.
+
+A run that didn't keep its step data can't run its items again from here (*This run didn't keep its data*): see [Save step data](/app/workflows/settings/#run-history).
+
+### When nothing is connected to the Error output
+
+A step set to **Send to an error output** with no step linked to **Error** stops the run when an item fails: the failed item has nowhere to go. The run says so (*Create invoice failed, but nothing is connected to its Error output*), keeps the error, and offers **Connect a step** (it opens the workflow) and **Run it again**. On the canvas, the step's **Error** output reads *Error · not connected*; its **Advanced** settings say *Nothing is connected to Error yet*, with **Add a step to Error** or **Stop the run instead**. See [Send failed items to an error output](/concepts/flow/error-handling/#send-failed-items-to-an-error-output).
 
 ## Add a run to a test dataset
 

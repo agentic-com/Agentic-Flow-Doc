@@ -21,6 +21,8 @@ Write a small JavaScript transform when no other step does what you need. It sta
 
 JavaScript Code runs your code in QuickJS, a small JavaScript engine compiled to WebAssembly, inside its own worker for each run of the step. The engine loads the first time the step runs.
 
+At the top of **Setup**, a green card says what the step can reach: **What it touches: nothing outside this step**. No internet (use [HTTP Request](/nodes/builtin/core/http-request/) for calls), no web pages, tabs or your files, no connections or stored data, and how long it may run (*Stops after …*), with **Change limits** (the step's **Time limit**). In **Ready to run** and on a Marketplace listing, the step shows as a calm grey *Runs code in a sandbox* row, not a warning.
+
 Pick how it runs with **Run**:
 
 - **Once for each item** (the default): `item` is the current item and `$itemIndex` its position (from 0). Return the new item. Each item gets a fresh engine, so nothing leaks from one item to the next.
