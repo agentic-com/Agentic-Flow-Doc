@@ -204,10 +204,27 @@ When some items of a step failed (they went to its **Error** output, or one stop
 - **Run again** on an item runs that item only.
 - **Run the 3 failed items again** runs all of them, in one new run.
 
+<GuidedShot
+  shot="run-failed-items"
+  steps={[
+    { spot: 'heading', title: 'The failed items', body: 'How many went to **Error**, and how many went through.' },
+    { spot: 'item', title: 'Run again', body: 'Runs this one item again.' },
+    { spot: 'all', title: 'Run the 3 failed items again', body: 'Runs all of them, in one new run.' },
+  ]}
+/>
+
 A dialog asks first (*Run item 4 again?*). It shows the item's input in this run, and lets you pick what to **Run it on**:
 
 - **The workflow as it is now** (default): includes what you changed since the run, for example the fix.
 - **The version it ran on**: exactly as it ran then.
+
+<GuidedShot
+  shot="run-failed-items-retry"
+  steps={[
+    { spot: 'version', title: 'Run it on', body: 'The workflow as it is now, or the version it ran on.' },
+    { spot: 'run-again', title: 'Run again', body: 'Starts the new run, for the failed items only.' },
+  ]}
+/>
 
 Only the failed step and the steps after it run again, for those items only. The steps before it don't run again: their results for that item in this run are used, as with [Run from here](/app/workflows/run-from-here/). The items that went through aren't touched. An HTTP Request step that [sends an idempotency key](/nodes/builtin/core/http-request/#send-an-idempotency-key) sends the same key as the failed attempt, so the service can ignore a request it already took.
 

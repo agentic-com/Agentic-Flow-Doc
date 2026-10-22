@@ -66,6 +66,48 @@ const CATEGORIES = [
 	workflowCount
 }));
 
+/** Notices from AWFlow (`/config/client`), sent while the `notices` switch is on. */
+const NOTICES = [
+	{ id: 'docs-maintenance', level: 'warning', message: 'Planned maintenance on Sunday, 06:00–07:00 UTC: sign-in and the Marketplace may be slow.' },
+	{ id: 'docs-test-runs', level: 'info', message: 'New: Test runs check that a workflow still answers well after a change.', url: 'https://docs.awflow.io/app/workflows/test-runs/' }
+];
+
+/** A workflow installed from the marketplace by Alex Doe: JSON Prettify by a fictional author, v2 installed, v3 approved. */
+function installedFixture(fixturesDir: string) {
+	const awf = JSON.parse(readFileSync(join(fixturesDir, 'json-prettify.awf'), 'utf8')) as { name: string; description: string; tags: string[]; nodes: Json[]; edges: Json[] };
+	const workflowId = 'wf_docs_json_prettify';
+	const graph = { id: 'wg_docs_json_prettify_2', workflowId, nodes: awf.nodes, edges: awf.edges, createdDate: T0 - 20 * 86_400_000 };
+	const download = {
+		id: 'dl_docs_json_prettify',
+		publishedWorkflowId: 'pw_docs_json_prettify',
+		version: 2,
+		latestVersion: 3,
+		latestNote: 'Keeps the key order of the original and shows the error line when the JSON is invalid.',
+		nodesInputs: null,
+		permissionManifest: null,
+		requiredInputs: [],
+		listingStatus: 'approved',
+		workflow: {
+			id: workflowId,
+			name: awf.name,
+			description: awf.description,
+			userId: 'usr_docs_sam',
+			activeGraph: graph.id,
+			status: 'active',
+			type: 'triggered',
+			visibility: 'public',
+			tags: awf.tags,
+			installedFrom: null,
+			permissionManifest: null,
+			basedOn: { listingId: 'pw_docs_json_prettify', name: awf.name, author: 'Sam Lee' },
+			createdDate: T0 - 30 * 86_400_000,
+			lastModified: T0 - 20 * 86_400_000
+		},
+		graph
+	};
+	return { workflowId, download };
+}
+
 /** Per-browser-context state: what the wizard saved so far. */
 export function createFakeApi(fixturesDir: string, origin: string) {
 	const awf = JSON.parse(readFileSync(join(fixturesDir, `${CLOUD_FIXTURE}.awf`), 'utf8')) as {
@@ -96,9 +138,12 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 	/**
 	 * Capture-only switches, set by a shot's prepare with `POST /__docs/state` (see shots/admin.ts):
 	 * `role` turns Alex Doe into an admin for the admin screens; `newsletterPrompt` lets the
-	 * "Stay in the loop" card show. Both are off by default so other shots stay unchanged.
+	 * "Stay in the loop" card show; `installed` adds one workflow installed from the marketplace
+	 * (an older version, a newer one approved); `notices` makes `/config/client` send two notices
+	 * from AWFlow. All are off by default so other shots stay unchanged.
 	 */
-	const state = { role: 'user', newsletterPrompt: false, newsletter: 'subscribed' as string };
+	const state = { role: 'user', newsletterPrompt: false, newsletter: 'subscribed' as string, installed: false, notices: false };
+	const installed = installedFixture(fixturesDir);
 	const admin = createAdminFixtures(fixturesDir, user);
 	const NOW = Date.now();
 	const notifications = [
@@ -189,7 +234,12 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 		if (path === '/me/counts') return [200, { workflows: 1, credentials: 0 }];
 		if (path === '/me/subscription')
 			return [200, { id: 'sub_docs', userId: USER_ID, planId: 'free', billingCycle: 'monthly', status: 'active', startDate: T0, endDate: null }];
-		if (path === '/published-workflows/downloads') return [200, []];
+		if (path === '/published-workflows/downloads') return [200, state.installed ? [installed.download] : []];
+		if (state.installed && path === `/published-workflows/downloads/${installed.workflowId}`) return [200, installed.download];
+		if (state.installed && path === `/published-workflows/downloads/${installed.workflowId}/versions`) return [200, [1, 2, 3]];
+		if (state.installed && path === `/executions/workflow/${installed.workflowId}`) return [200, []];
+		if (path === '/config/client')
+			return [200, { notices: state.notices ? NOTICES : [], flags: {}, killSwitch: { nodes: [], integrations: [] } }];
 		if (path === '/published-workflows/revocations') return [200, { revoked: [], updatedAt: T0 }];
 		if (path === '/me/plan' || path === '/plans/free') return [200, PLANS[0]];
 		if (path === '/plans') return [200, PLANS];

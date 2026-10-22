@@ -60,6 +60,15 @@ A **backup** is one encrypted file (`.awbk`) with everything kept on this device
    AWFlow never stores a passphrase: without it, the file can't be opened. Anyone with the file and the passphrase can open it, and changing your vault passphrase later doesn't change old backups.
 3. Press **Create backup** (or **Unlock and back up**). The file downloads.
 
+<GuidedShot
+  shot="backup-vault"
+  steps={[
+    { spot: 'vault', title: 'Use my vault passphrase', body: 'Nothing new to remember.' },
+    { spot: 'passphrase', title: 'Vault passphrase', body: 'Only when the vault is locked: it unlocks it for this session too.' },
+    { spot: 'create', title: 'Unlock and back up', body: 'Or **Create backup** when the vault is unlocked. The file downloads.' },
+  ]}
+/>
+
 With the vault passphrase, the vault keeps only a key made from it, which can't be read back, for as long as the vault is unlocked; each backup makes its own key from it. The file never holds your vault key.
 
 The backup holds:

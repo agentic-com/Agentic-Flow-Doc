@@ -8,6 +8,7 @@ sidebar:
 ---
 
 import { Steps } from "@astrojs/starlight/components";
+import { StepCard, StepShot } from "@components/awflow";
 
 An AI workflow can look fine on the three examples you tried, then fail on the fourth. **Test runs** run your workflow on a whole list of test cases and score every answer, so you can see the pass rate, and see what changes when you switch model or rewrite a prompt.
 
@@ -17,9 +18,23 @@ An AI workflow can look fine on the three examples you tried, then fail on the f
 
 When the workflow has no Evaluation Trigger yet, **Test runs** explains what it does and offers **Set up test runs**:
 
-1. **Test cases**: a **Google Sheet** (pick a Google connection, then paste the sheet's link; the first row is the column names), a **Data Store key** (a key with a list, or keys starting with a prefix), or **Paste CSV** with a header line. A preview shows the first rows and the count (up to 500 per test run).
-2. **In and out**: the **column that goes in** (and what it becomes for the workflow), the **column with a good answer**, and the **step to compare with** (and its field).
-3. **Score**: how to score each answer (**Score with**), the judge model for an AI judge, and **Pass at** (between 0 and 1).
+<StepCard n={1} title="Test cases">
+  A **Google Sheet** (pick a Google connection, then paste the sheet's link; the first row is the column names), a **Data Store key** (a key with a list, or keys starting with a prefix), or **Paste CSV** with a header line. A preview shows the first rows and the count (up to 500 per test run).
+
+  <StepShot shot="test-runs-cases" spot="source" n={1} zoom={44} />
+</StepCard>
+
+<StepCard n={2} title="In and out">
+  The **column that goes in** (and what it becomes for the workflow), the **column with a good answer**, and the **step to compare with** (and its field).
+
+  <StepShot shot="test-runs-in-out" spot="expected" n={2} zoom={44} />
+</StepCard>
+
+<StepCard n={3} title="Score">
+  How to score each answer (**Score with**), the judge model for an AI judge, and **Pass at** (between 0 and 1).
+
+  <StepShot shot="test-runs-score" spot="add" n={3} zoom={44} />
+</StepCard>
 
 **Add to workflow** adds an [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) before the step and an [Evaluation](/nodes/builtin/flow/evaluation/) step after it, linked, with an *Added* pill; the toast offers **Run now**. Normal runs skip both: they only run from Test runs. Each test run reads the rows again, so you can keep editing the sheet. You can also add the two steps yourself, as below.
 

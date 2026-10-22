@@ -15,6 +15,8 @@ node:
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
+import GuidedShot from '@components/awflow/GuidedShot.astro';
+
 Build a form in the workflow. When it is filled in and sent, the answers start a run.
 
 ## What it does
@@ -49,7 +51,23 @@ Each field has a **name** (the key in the output), a **label**, a **type** and o
 
 **Give up after** ends a form run that nobody finishes. It shows once the form has 2 or more pages (a one-page form never waits): pick **Never** (it waits until you cancel it), **1 hour**, **1 day**, **1 week** or **Custom…** (in hours, at most 30 days). New form triggers start at 1 day. The deadline counts from the start of the run and covers every page; when it passes, the run ends as **Canceled** with *Form not completed · gave up after 1 day*.
 
+<GuidedShot
+  shot="form-give-up"
+  steps={[
+    { spot: 'field', title: 'Give up after', body: 'Shows once the form has 2 or more pages.' },
+    { spot: 'day', title: 'Pick how long', body: '**Never**, **1 hour**, **1 day**, **1 week** or **Custom…**' },
+  ]}
+/>
+
 While a form run waits on a later page, its row in [Runs](/app/workflows/run-history/) says where it is and when it gives up (*Form · on page 2 of 3 · gives up in 22 h*), with **Cancel**.
+
+<GuidedShot
+  shot="form-waiting-run"
+  steps={[
+    { spot: 'line', title: 'Where the form is', body: 'The page it waits on, and when it gives up.' },
+    { spot: 'cancel', title: 'Cancel', body: 'Ends the run now.' },
+  ]}
+/>
 
 You can also open a form without the editor: in the right-click menu, form workflows end with **…** and open their form instead of running at once, and the [notch](/app/assistant-notch/#whats-in-the-panel) has a **Forms** block. The form opens in the side panel when it is open, else in a small window.
 
