@@ -55,4 +55,31 @@ export const shots: ShotDef[] = [
 			await s.page.waitForTimeout(500);
 		}
 	},
+	{
+		name: 'request-board',
+		page: 'app/request-board',
+		route: '#/app/marketplace/requests',
+		signedIn: true,
+		note: 'Signed in as a fictional account (Alex Doe): the app is the real production build; the requests on the board come from the fake API in scripts/capture/lib/fakeApi.ts.',
+		alt: 'The Request board, signed in as a fictional account: What the community wants built, with the Request a workflow button, this week\'s numbers (12 requests, 140 votes, 3 shipped this month, 1 in review), and three lanes: Most wanted (four requests with their votes, Join +1 buttons and one marked Joined), Building now (one in review with its estimated ship date, one with no ETA yet) and Shipped (two requests with Open the workflow links). Request board is selected under Marketplace in the sidebar.',
+		spots: [
+			{ id: 'sidebar-link', label: 'Request board, under Marketplace', locator: (p) => p.getByRole('link', { name: 'Request board' }).first() },
+			{ id: 'request-workflow', label: 'Request a workflow', locator: btn('Request a workflow') },
+			{ id: 'most-wanted', label: 'Most wanted', locator: (p) => p.getByRole('heading', { name: /Most wanted/ }) },
+			{ id: 'building-now', label: 'Building now', locator: (p) => p.getByRole('heading', { name: /Building now/ }) },
+			{ id: 'shipped', label: 'Shipped', locator: (p) => p.getByRole('heading', { name: /Shipped/ }) },
+			{ id: 'join', label: 'Join +1: vote for a request', locator: btn('Join +1') }
+		],
+		prepare: async (s) => {
+			await s.page.goto('about:blank');
+			await s.go('#/app/marketplace/requests');
+			const page = s.page;
+			await page.getByRole('button', { name: 'Join +1' }).first().waitFor({ timeout: 15_000 });
+			// Unfold Marketplace in the sidebar so the Request board entry shows.
+			const link = page.getByRole('link', { name: 'Request board' });
+			if (!(await link.count())) await page.getByRole('button', { name: 'Marketplace' }).first().click({ timeout: 15_000 });
+			await link.first().waitFor({ timeout: 15_000 });
+			await page.waitForTimeout(800);
+		}
+	}
 ];

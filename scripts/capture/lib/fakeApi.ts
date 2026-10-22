@@ -117,6 +117,33 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 		const [max_workflows, max_workflow_versions, max_workflow_nodes, max_executions, max_credentials] = l as (number | null)[];
 		return { id, name, description, priceMonthly, priceYearly, isPopular, highlights: [], limits: { max_workflows, max_workflow_versions, max_workflow_nodes, max_executions, max_credentials } };
 	});
+	/** Request board: fictional community requests (requesters use example names). */
+	const DAY = 86_400_000;
+	const wanted = (id: string, title: string, description: string, voteCount: number, status: string, days: number, o: Json = {}) => ({
+		id,
+		title,
+		description,
+		category: null,
+		requester: { id: `usr_docs_${id}`, name: 'Mei Lin', image: null, verified: false },
+		voteCount,
+		hasVoted: false,
+		status,
+		createdDate: NOW - days * DAY,
+		etaDate: null as number | null,
+		lastModified: NOW - days * DAY,
+		fulfilledPublishedWorkflowId: null as string | null,
+		...o
+	});
+	const board = [
+		wanted('wr_2', 'Summarise YouTube video transcripts', 'Open a video, get the key points and timestamps as a short list.', 37, 'open', 15),
+		wanted('wr_3', 'Export a LinkedIn profile to a Google Sheet', 'One row per profile: name, headline, company and location.', 29, 'open', 11, { hasVoted: true }),
+		wanted('wr_6', 'Translate the selected text in place', 'Select a paragraph, pick a language, and replace it with the translation.', 14, 'open', 5),
+		wanted('wr_9', 'Daily digest of new GitHub issues', 'Every morning, list the issues opened since yesterday in my repositories.', 8, 'open', 2),
+		wanted('wr_1', 'Save the current page to Notion', 'Title, link, a short summary and tags, added to a Notion database.', 48, 'building', 20, { etaDate: NOW + 12 * DAY }),
+		wanted('wr_10', 'Fill expense reports from receipts', 'Read a receipt photo and fill the expense form fields.', 19, 'building', 9),
+		wanted('wr_5', 'Price-drop alert for any product page', 'Check a product page every day and notify me when the price goes down.', 21, 'fulfilled', 40, { fulfilledPublishedWorkflowId: 'pw_docs_price', lastModified: NOW - 3 * DAY }),
+		wanted('wr_11', 'Copy a table from any page to CSV', 'Pick a table on the page and download it as a CSV file.', 16, 'fulfilled', 60, { fulfilledPublishedWorkflowId: 'pw_docs_csv', lastModified: NOW - 12 * DAY })
+	];
 	const assets = new Map<string, { type: string; data: Buffer }>();
 	const unknown = new Set<string>();
 
@@ -239,6 +266,12 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 			return [200, { ok: true }];
 		}
 		if (path === '/workflow-categories' && method === 'POST') return [200, { ...CATEGORIES[0], ...body, id: `Workflow_Category:${body.slug}`, workflowCount: 0 }];
+		// The public request board (one lane per call, most-voted first).
+		if (path === '/wanted-flows/stats') return [200, { requestsThisWeek: 12, votesThisWeek: 140, shippedThisMonth: 3, inReviewNow: 1 }];
+		if (path === '/wanted-flows' && method === 'GET') {
+			const lane = q.get('status');
+			return [200, board.filter((r) => !lane || r.status === lane).sort((a, b) => b.voteCount - a.voteCount)];
+		}
 		return null;
 	}
 
