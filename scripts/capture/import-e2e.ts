@@ -257,6 +257,16 @@ const SHOTS: Record<string, Def> = {
 			line: { label: 'Most often at Fetch orders' }
 		}
 	},
+	'replace-step-banner': {
+		source: 'o1-replace-step-banner-1280',
+		page: 'app/workflows/step-versions',
+		route: '#/app/workflows/<id> (a workflow with a deprecated step)',
+		alt: 'The editor of E2E Page digest: under the header and the Editor, Logs and Runs tabs, an amber banner says Read page is deprecated, Use Get Page HTML instead, with a Replace step button. The canvas starts below it.',
+		spots: {
+			banner: { label: 'Read page is deprecated' },
+			replace: { label: 'Replace step' }
+		}
+	},
 	'replace-step-confirm': {
 		source: 'o2-replace-step-confirm-1280',
 		page: 'app/workflows/step-versions',
