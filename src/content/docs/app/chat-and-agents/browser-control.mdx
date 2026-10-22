@@ -36,6 +36,8 @@ Clicks that commit something — *Reserve*, *Book*, *Confirm*, *Send*, *Buy* —
 
 When an agent asks, a card shows what it wants to do, **exactly what will be sent** — the values as the tool will use them, such as the recipient and subject of an email or the inputs a workflow gets, with secrets masked — and which rule asked: **Allow once**, **Always on this site** (or **Always allow**), or **Deny**. A denied action is skipped and the agent continues without it.
 
+When the ask shows on the web page itself (a run you started from the right-click menu, for example), the card names who asks and counts down to a deny (*Denies in 0:45*). It shows the full address, with a long or encoded query **highlighted** and its length (*The address carries 312 characters of data*), and why it asks.
+
 Once you answer, the card leaves a **receipt** under the reply — *Allowed once by you*, *Always on this site*, *Denied* or *You took over* — with the time, so you can see later what you approved.
 
 ## Locked actions
@@ -56,7 +58,7 @@ Web pages sometimes contain text written to manipulate AI agents ("ignore your i
 
 ### What you see of a page
 
-When an agent (or Aria) **looks** at a page, its timeline shows a small drawing of the page's **structure**: boxes where the buttons, links and fields are, with their short references. It is **not a screenshot**: it holds labels only, never the values typed in fields, and a private field is drawn as a solid *Hidden field*. After a click, type or select, the drawing rings the element acted on. Tap a drawing to open it: the address, the time, *Page structure, not a screenshot*, **Show element refs**, previous / next, **Open page** and **Copy element list**. The drawings are kept with the run's step data on this device only.
+When an agent (or Aria) **looks** at a page, its timeline shows a small drawing of the page's **structure**: boxes where the buttons, links and fields are, with their short references. It is **not a screenshot**: it holds labels only, never the values typed in fields, and a private field is drawn as a solid *Hidden field*. After a click, type or select, the drawing rings the element acted on. Tap a drawing to open it: the address, the time, *Page structure, not a screenshot*, **Show element refs**, previous / next, **Open page** and **Copy element list**. **Show on the page** (or **Open page and show refs** when no tab has that address) draws the reference badges over the real elements in that tab and rings the one acted on, with a dark **Hide refs** pill (<kbd>Esc</kbd> also hides them). It only reads: nothing is clicked. Elements that can't be found again are listed in amber, never placed on a guess. It works only on sites AWFlow may already read. The drawings are kept with the run's step data on this device only.
 
 **Private fields are never read.** Password fields, card numbers, security codes, IBANs, one-time codes and similar fields keep their label and kind, never their value, in everything AWFlow reads from a page (Look, Get forms schema, Get element data, Get accessibility tree). The model sees *private (value hidden)*, and approval cards mask what is typed into them.
 
@@ -64,7 +66,7 @@ Since AWFlow 0.9 the defence goes further:
 
 - Everything read from a page (its title, address, element names, values and text) is wrapped in one fence that the page can't close, and error messages from outside tools are fenced too.
 - **The turn is tainted** once the agent has read untrusted content. From then on, going to a site it hasn't read this turn (and that isn't on its *only* list), or a navigation or search carrying a long or random-looking value (a way to smuggle data out), **asks you first**: *Asked after reading untrusted content*. Such asks never offer "always".
-- In a team thread, one taint covers the whole turn, whichever member read the page.
+- In a team thread, one taint covers the whole turn, whichever member read the page. The thread shows where it happened: the reply gets an amber *This turn read a web page · risky calls now ask* line, the side panel a **This turn** block (each untrusted read: site, member, time), and handoffs made after it say *Carries the page read*. An approval card says why it asks (*Asked because Researcher read acme-shop.com in this thread. Always allow is off for this call.*), with **Show that message**. It clears with your next message.
 - The same rules protect agents inside workflows: tool results from web pages, HTTP, MCP and called workflows are fenced, and [Guardrails](/nodes/builtin/ai/aiagents/guardrails/) judges text without following it.
 
 ## Tips
