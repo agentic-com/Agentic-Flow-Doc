@@ -1,6 +1,6 @@
 ---
 title: "Storage settings"
-description: "See how much browser space AWFlow uses, protect it from clean-up, and clear old conversations automatically"
+description: "See how much browser space AWFlow uses, protect it from clean-up, back up everything to an encrypted file, and clear old conversations automatically"
 kind: guide
 section: app
 sidebar:
@@ -30,7 +30,7 @@ A bar shows the space used out of what your browser allows, split into:
 - **Local models**
 - **Memory** (with how much it grew this week)
 - **Knowledge bases**
-- **Workflows & run history**
+- **Workflows & run history**, including the step data kept with runs (see [Workflow settings](/app/workflows/settings/#run-history)). **Step data by workflow** lists it per workflow, biggest first, each with **Change** (its run history setting; *set by the author* for an installed workflow)
 - **Other**: app cache, settings and browser overhead
 
 Click **Manage** next to a category to open its page.
@@ -44,6 +44,65 @@ The browser decides whether to agree. It often does once you use AWFlow more, or
 <Aside type="caution">
 Even protected data is removed if you clear the browser's site data or uninstall the extension. Export what matters first, for example with **Export memory** or [workflow export](/app/workflows/export-import/).
 </Aside>
+
+
+## Backups
+
+A **backup** is one encrypted file (`.awbk`) with everything kept on this device, that you control. Use it to move to another computer, or to recover if the browser loses its data.
+
+### Back up now
+
+1. In **Settings › Storage › Backups**, press **Back up now**.
+2. Pick the passphrase that protects the file:
+   - **Use my vault passphrase** (offered first when you have a [secret vault](/app/account/secret-vault/)): the one that protects your connections, nothing new to remember. If the vault is unlocked, there is nothing to type (*Vault unlocked: ready*); if it is locked, type the vault passphrase once: it unlocks the vault for this session too.
+   - **Choose a different one**: type a passphrase twice.
+
+   AWFlow never stores a passphrase: without it, the file can't be opened. Anyone with the file and the passphrase can open it, and changing your vault passphrase later doesn't change old backups.
+3. Press **Create backup** (or **Unlock and back up**). The file downloads.
+
+<GuidedShot
+  shot="backup-vault"
+  steps={[
+    { spot: 'vault', title: 'Use my vault passphrase', body: 'Nothing new to remember.' },
+    { spot: 'passphrase', title: 'Vault passphrase', body: 'Only when the vault is locked: it unlocks it for this session too.' },
+    { spot: 'create', title: 'Unlock and back up', body: 'Or **Create backup** when the vault is unlocked. The file downloads.' },
+  ]}
+/>
+
+With the vault passphrase, the vault keeps only a key made from it, which can't be read back, for as long as the vault is unlocked; each backup makes its own key from it. The file never holds your vault key.
+
+The backup holds:
+
+- **Workflows**, with their active version, tags and folders;
+- **Connections**, re-encrypted with your passphrase;
+- your settings and **Data Store collections**.
+
+Not included: memory and knowledge bases. They have their own export (see [Memory](/app/memory/export-import/) and [Knowledge bases](/app/knowledge-bases/export-import-backup/)).
+
+**Last backup** shows when you last made one, and whether it worked.
+
+### Backup schedule
+
+- **Off**.
+- **Remind me weekly**: AWFlow reminds you once a week ("Time for your weekly backup"); one click backs up.
+- **Back up weekly to a folder**: pick a folder once; AWFlow writes a backup there every week and keeps the last 4 files. Only in browsers that let a page write to a folder (Chrome, Edge). With **Same as your vault** as the passphrase, the weekly backup runs by itself while the vault is unlocked (*· ran by itself*); while it is locked, the card and the reminder say *Backup due · your vault is locked*, with **Unlock and back up**. With **Your own, typed each time**, your passphrase is asked when a backup is ready to finish.
+
+When a backup is due, the reminder shows in the app. In the extension it also reaches you when AWFlow is closed: the first time you use the browser after it is due, a system notification says *Time for your weekly backup*, with **Back up now** (it opens Storage with the backup sheet) and **Tomorrow** (it waits a day). One per week. The Backups card has **Send a test notification**, and says when your computer blocks the browser's notifications (*How to allow them*); then reminders show only while AWFlow is open. The web app shows the reminder only while it is open.
+
+### Restore from a file
+
+1. Press **Restore from a file…** and pick the `.awbk` file.
+2. Type its passphrase. A wrong passphrase imports nothing. A backup made with the vault passphrase says so (*This backup used your vault passphrase of 12 Oct*).
+3. Check the counts, then choose:
+   - **Add as copies**: nothing here is overwritten.
+   - **Replace items with the same id**: items already here are replaced.
+4. Press **Restore**.
+
+Restored workflows are **Off** until you switch them on. Every workflow is checked like an imported `.awf` file.
+
+### Protect your data after the first save
+
+The first time you save a workflow on this device, if the browser hasn't promised to keep AWFlow's data, a card offers **Keep your work safe on this device**: **Protect my data** asks the browser (the same as **Keep my data** above). **Not now** hides it for 30 days. If the browser says no, the card offers **Set up backups**.
 
 ## Clean-up
 

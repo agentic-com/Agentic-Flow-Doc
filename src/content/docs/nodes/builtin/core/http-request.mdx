@@ -1,8 +1,8 @@
 ---
-title: "Http Request"
+title: "HTTP Request"
 description: "Makes a HTTP request and returns the response data"
 sidebar:
-  label: "Http Request"
+  label: "HTTP Request"
 kind: node
 section: nodes
 worksIn: [extension, web]
@@ -14,25 +14,82 @@ node:
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
+import GuidedShot from '@components/awflow/GuidedShot.astro';
+
+*Formerly **Http Request**. The step was renamed in AWFlow 0.9; searching for the old name still finds it.*
+
 Call any web address or API and use the response in the next steps.
 
 {/* AUTO:callout:start */}
-<AwfCallout type="credential" title={"Can use a Http Request connection"} href="/app/connections/" linkLabel={"Create a connection"}>
+<AwfCallout type="credential" title={"Can use a HTTP Request connection"} href="/app/connections/" linkLabel={"Create a connection"}>
   Optional: pick a saved connection in the **Authentication** field when the service needs one.
 </AwfCallout>
 {/* AUTO:callout:end */}
 
 ## What it does
 
-Http Request sends one request (GET, POST, PUT, DELETE, PATCH, OPTIONS or HEAD) to **URL**, with the headers, query parameters and body you set, and returns what the server sends back.
+HTTP Request sends a request (GET, POST, PUT, DELETE, PATCH, OPTIONS or HEAD) to **URL**, with the headers, query parameters and body you set, and returns what the server sends back.
 
-- **Authentication** adds an `Authorization` header from a saved credential, so API keys stay out of the workflow.
-- **Query Params** are added to the URL for you.
+- **Authentication** takes a saved [connection](/app/connections/): a bearer token, basic auth, or an **API key** sent in a header or in the query. The key stays out of the workflow. A connection locked to its **Allowed sites** is never sent anywhere else, not even after a redirect.
+- **Query Params** are added to the URL for you, merged with any query already in it.
 - **Body** is sent as JSON, as a URL-encoded form or as multipart form data, depending on **Body Content Type**.
-- Redirects are followed (up to **Max redirects**) unless you turn that off.
-- The response is read as JSON, text or a file. **Response format** set to *autodetect* decides from the server's content type.
+- Redirects are followed by the browser (up to **Max redirects**, 5 by default) unless you turn **Follow redirects** off; the final address is checked again before the response is used.
+- There is no time limit unless you set **Timeout**.
+- The response is read as JSON, text or a file. **Response format** set to *Autodetect* (or left empty) decides from the server's content type; *File* returns the body as a file under `$binary.data`.
+
+### What the step returns
+
+New HTTP Request steps (version 2) choose under **Return**:
+
+- **One item per entry when the response is a list** (default): a JSON list becomes one item per entry, so the next steps work on each entry. An object or a text stays one item; an empty list gives no items.
+- **One item per entry of a list inside the response**: set **Path to items**, for example `data.items`.
+- **The whole response as one item**: `{ data }`, as older steps did.
+
+Steps saved before AWFlow 0.9 keep returning `{ data }`. **Update** in the step's header switches them to version 2 while keeping *The whole response as one item*; if the last output was a list, the step suggests **Split into items**.
+
+### Raw JSON body
+
+Under **Body**, **Write the body as** offers **Fields** (one row per field, the default) or **Raw JSON**: the whole body as JSON text, sent with `Content-Type: application/json`. `{{ }}` works inside and is filled in JSON-aware: a mapped text lands quoted and escaped (a quote or a line break can't break the JSON), numbers stay numbers. Text that isn't valid JSON fails the step with a plain message.
+
+### Paste cURL
+
+**Paste cURL** in the step's header turns a `curl` command (copied from API docs or the browser's network tools, bash or Windows style) into the step's settings: method, URL, query, headers and body. A token, password or API key in the command becomes **one connection draft**, never a value in the step; save it and it is picked in the step. Unsupported options are listed as warnings.
+
+### Fetch every page
+
+**Options › Pagination** fetches more pages with the same setup:
+
+- **Find the next page in**: a next link (in the `Link` header or a field of the body), a page or offset number you add to the query or the body (**Parameter**, **Start at**, **Add each time**), or a cursor (**Field with the next cursor**).
+- **Stop when**: there is no next page, the list is empty, a **Status codes that stop** answer comes, or a **Stop expression** is true.
+- **Return**: one item per entry from every page (default), one item per page, or everything in one item. **Path to the list** says where the entries are.
+- **Max pages** is 10 by default (at most 100); **Wait between pages** slows it down. When the limit cuts it short, a hint and the run log say so.
+
+Under the settings, a line says what it will do: *Will fetch up to 10 pages. Stops sooner when there's no next link.* For page numbers it spells out the values it sends (*offset = 0, 100, 200 … 900*); for a cursor, what keeps it going. After a run it adds how many entries each page had (*Up to 10 pages, about 1,000 items (the last run got 100 per page)*). When a run stops at **Max pages** while more pages exist, the **Output** shows an amber note (*Stopped at 10 pages, the limit*) with **Raise to 25**, and the **Last run** bar says *more exist*, with **Raise**.
+
+<GuidedShot
+  shot="http-pagination"
+  steps={[
+    { spot: 'line', title: 'What it will do', body: 'The values it sends, when it stops, and what the last run got per page.' },
+    { spot: 'notice', title: 'Stopped at the limit', body: 'More pages exist than **Max pages** allows.' },
+    { spot: 'raise', title: 'Raise to 25', body: 'Raises **Max pages**; run the step again to get the rest.' },
+  ]}
+/>
+
+### Errors as data
+
+By default a 4xx or 5xx answer fails the step, and the error shows the status, the status text and the start of the body. Turn on **Options › Response › Never error** to get the whole answer instead (`status`, `statusText`, `headers`, `url`, `data`) and decide yourself with an [If](/nodes/builtin/flow/if/). Network errors and timeouts still fail. With **Try again automatically**, a 429 or 503 with `Retry-After` is waited out (up to 5 minutes).
 
 A file response (an image, a PDF, a download) arrives as binary data under the `data` key, ready for file uploads such as Slack **File → Upload**, Google Drive **File → Create** or Gmail attachments.
+
+### Send an idempotency key
+
+Some services (payments such as Stripe, Adyen or PayPal) can ignore a request they already received, if it carries the same idempotency key. That way a retry never charges twice. In the step's **Advanced** tab, turn on **Send an idempotency key**. It is off by default, and nothing is sent until you turn it on.
+
+- **Header name**: `Idempotency-Key` by default, which most services use. Change it if your service expects another header. The key replaces a header of the same name that you set on the step.
+- **Value sent**: one key per run, step and item (shown as `run_… · Charge card · item 1`). It stays the same when the step tries again (**Try again automatically**) and when a paused run continues. A new run gets a new key.
+- With [pagination](#fetch-every-page), only the first page's request carries the key. The later pages go without it.
+
+When a retry sends the request again, the run log says *Item 1: sent again with the same idempotency key.*
 
 ## When to use it
 
@@ -45,7 +102,11 @@ For apps that have their own node, such as [Slack](/nodes/builtin/integration/sl
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Method","type":"Choice","default":"GET","description":"The request method to use. Options: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD."},{"name":"URL","type":"URL","required":true,"description":"Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters."},{"name":"Authentication","type":"Credential","description":"The authentication to use to make the request."},{"name":"Headers","type":"Key-value pairs","description":"The headers to send with the request."},{"name":"Query Params","type":"Key-value pairs","description":"The query params to send with the request."},{"name":"Body","type":"Group","description":"The body to send with the request."},{"name":"Body › Body Content Type","type":"Choice","default":"application/json","description":"Content-Type to use to send body parameters. Options: application/json, application/x-www-form-urlencoded, multipart/form-data."},{"name":"Body › Body","type":"Key-value pairs","description":"The body to send with the request."},{"name":"Options","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects › Follow redirects","type":"Toggle","default":"On","description":"Follow redirects."},{"name":"Options › Redirects › Max redirects","type":"Number","default":"10","description":"The maximum number of redirects to follow."},{"name":"Options › Response","type":"Group","description":"The options for the response."},{"name":"Options › Response › Include response header and status","type":"Toggle","default":"Off","description":"Whether to return the full response (headers and response status code) data instead of only the body."},{"name":"Options › Response › Response format","type":"Choice","default":"autodetect","description":"The format in which the data gets returned from the URL. Options: autodetect, json, text, file."},{"name":"Options › Timeout (ms)","type":"Number","default":"10000","description":"Time in ms to wait for the server to send response headers (and start the response body) before aborting the request."}]} />
+<AwfParamTable rows={[{"name":"Method","type":"Choice","default":"GET","description":"The request method to use. Options: GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD."},{"name":"URL","type":"URL","required":true,"description":"The address to call, e.g. https://api.example.com/items."},{"name":"Authentication","type":"Credential","description":"The authentication to use to make the request."},{"name":"Headers","type":"Key-value pairs","description":"The headers to send with the request."},{"name":"Query Params","type":"Key-value pairs","description":"The query params to send with the request."},{"name":"Body","type":"Group","description":"The body to send with the request."},{"name":"Body › Body Content Type","type":"Choice","default":"application/json","description":"Content-Type to use to send body parameters. Options: application/json, application/x-www-form-urlencoded, multipart/form-data."},{"name":"Body › Write the body as","type":"Choice","description":"Options: Fields, Raw JSON."},{"name":"Body › Body","type":"Key-value pairs","description":"The body to send with the request."},{"name":"Body › JSON body","type":"Code"},{"name":"Options","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects","type":"Group","description":"The options to send with the request."},{"name":"Options › Redirects › Follow redirects","type":"Toggle","default":"On","description":"When the address points somewhere else, go there instead."},{"name":"Options › Redirects › Max redirects","type":"Number","default":"20","description":"Browsers follow up to 20 redirects; 0 turns following off."},{"name":"Options › Response","type":"Group","description":"The options for the response."},{"name":"Options › Response › Include response header and status","type":"Toggle","default":"Off","description":"Whether to return the full response (headers and response status code) data instead of only the body."},{"name":"Options › Response › Never error","type":"Toggle","default":"Off","description":"Return 4xx and 5xx answers as normal output with status, headers and body. Offline, blocked, CORS and timeouts still fail: there’s no answer to return."},{"name":"Options › Response › Response format","type":"Choice","default":"autodetect","description":"The format in which the data gets returned from the URL. Options: autodetect, json, text, file."},{"name":"Options › Pagination","type":"One of several shapes","description":"Follow the next link, a page number or a cursor and fetch every page."},{"name":"Options › Timeout","type":"Number","description":"How long to wait for the server to start answering before giving up. Leave empty to wait as long as it takes."}]} />
+
+**Pagination** changes shape with its **How pages work** choice:
+
+<AwfOperationTabs hydrate="visible" pick={"How pages work"} groups={[{"options":[{"label":"Next link","rows":[{"name":"Find the next page in","type":"Choice","description":"Options: Link header (rel=\"next\"), A field in the reply."},{"name":"Field with the next link","type":"Text"},{"name":"Stop when","type":"Choice","description":"Options: There’s no next page, The list is empty, The reply has one of these status codes, An expression is true."},{"name":"Status codes that stop","type":"List"},{"name":"Stop expression","type":"Text","description":"Stops when true, e.g. $response.body.has_more === false. Read the page as $response.body, $response.headers, $response.status and $page."},{"name":"Path to the list","type":"Text","description":"Where the entries are in each page."},{"name":"Return","type":"Choice","default":"One item per entry, from every page","description":"Options: One item per entry, from every page, One item per page, Everything in one item."},{"name":"Max pages","type":"Number","default":"10"},{"name":"Wait between pages","type":"Number"}]},{"label":"Page number","rows":[{"name":"Parameter","type":"Text"},{"name":"Send it in","type":"Choice","description":"Options: Query, Body (JSON)."},{"name":"Start at","type":"Number"},{"name":"Add each time","type":"Number","description":"Offset APIs: the page size."},{"name":"Stop when","type":"Choice","description":"Options: There’s no next page, The list is empty, The reply has one of these status codes, An expression is true."},{"name":"Status codes that stop","type":"List"},{"name":"Stop expression","type":"Text","description":"Stops when true, e.g. $response.body.has_more === false. Read the page as $response.body, $response.headers, $response.status and $page."},{"name":"Path to the list","type":"Text","description":"Where the entries are in each page."},{"name":"Return","type":"Choice","default":"One item per entry, from every page","description":"Options: One item per entry, from every page, One item per page, Everything in one item."},{"name":"Max pages","type":"Number","default":"10"},{"name":"Wait between pages","type":"Number"}]},{"label":"Cursor","rows":[{"name":"Field with the next cursor","type":"Text"},{"name":"Parameter","type":"Text"},{"name":"Send it in","type":"Choice","description":"Options: Query, Body (JSON)."},{"name":"Stop when","type":"Choice","description":"Options: There’s no next page, The list is empty, The reply has one of these status codes, An expression is true."},{"name":"Status codes that stop","type":"List"},{"name":"Stop expression","type":"Text","description":"Stops when true, e.g. $response.body.has_more === false. Read the page as $response.body, $response.headers, $response.status and $page."},{"name":"Path to the list","type":"Text","description":"Where the entries are in each page."},{"name":"Return","type":"Choice","default":"One item per entry, from every page","description":"Options: One item per entry, from every page, One item per page, Everything in one item."},{"name":"Max pages","type":"Number","default":"10"},{"name":"Wait between pages","type":"Number"}]}]}]} />
 {/* AUTO:settings:end */}
 
 ## Outputs
@@ -54,7 +115,7 @@ For apps that have their own node, such as [Slack](/nodes/builtin/integration/sl
 <AwfOutputPorts ports={[{"name":"Output"}]} />
 {/* AUTO:outputs:end */}
 
-By default the item is `{ data }`, the response body. Turn on **Include response header and status** to also get `status`, `statusText`, `headers` and the final `url` after redirects.
+With **The whole response as one item**, the item is `{ data }`, the response body. Turn on **Include response header and status** to also get `status`, `statusText`, `headers` and the final `url` after redirects.
 
 ## Dependencies and credentials
 
@@ -62,12 +123,12 @@ By default the item is `{ data }`, the response body. Turn on **Include response
 - **Authentication** (connection): optional. See [Create a connection](/app/connections/).
 {/* AUTO:deps:end */}
 
-Choose a credential of the type your API expects, for example a bearer token or basic auth. See [Create a credential](/app/connections/create/).
+Choose a connection of the kind your API expects: bearer token, basic auth (an empty password works, for keys like Stripe's), or an API key in a header or the query. The field lists every non-sign-in connection with its kind and sites. See [Add a connection](/app/connections/create/).
 
 ## Example workflow
 
 1. A [Context Menu](/nodes/builtin/trigger/contextmenu/) trigger on a link.
-2. Http Request, **POST** to your webhook URL, **Body Content Type** `application/json`, with a body field `url` = `{{ $input.linkUrl }}`.
+2. HTTP Request, **POST** to your webhook URL, **Body Content Type** `application/json`, with a body field `url` = `{{ $input.linkUrl }}`.
 3. [Browser Notification](/nodes/extension/browsernotification/): "Sent".
 
 ## Common issues
@@ -75,9 +136,12 @@ Choose a credential of the type your API expects, for example a bearer token or 
 - **"Response status: 401" or "403".** The credential is missing, wrong or lacks permission. Check the **Authentication** field and the key's rights.
 - **"Response status: 404".** Check the URL and the query parameters.
 - **"URL validation failed".** The URL is malformed or not allowed. Use a full `https://` address.
-- **"Maximum redirects exceeded".** The site redirects in a loop, or more times than **Max redirects** allows.
+- **"Redirect blocked: …"**. The request was redirected to an address that isn't allowed (or, with a connection locked to its sites, to another site).
+- **Redirects off**: with **Follow redirects** off (or **Max redirects** 0), a redirect fails with a clear message.
 - **It works in the extension but fails in the web app.** Some sites refuse requests sent from another website (a browser rule called CORS). Run the workflow from the extension.
-- **The request times out.** Raise **Timeout (ms)** under **Options**; the default is 10 seconds.
+- **The request times out.** Set or raise **Options › Timeout**. Without one, the request waits as long as the server does.
+- **"Response is not valid JSON"**. The server said JSON but sent something else; set **Response format** to *Text* to see it.
+- **The next step runs once per entry when you expected one item.** The step splits lists (version 2). Choose **The whole response as one item** under **Return**.
 
 ## Related nodes
 

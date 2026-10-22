@@ -22,18 +22,25 @@ Turn a workflow into a chatbot: every message you send runs the workflow once.
 
 The Chat Trigger opens a chat window. Each message you send starts one run of the workflow, from this trigger only, with your text in `chatInput`.
 
-The trigger never writes a reply itself. A downstream agent that uses the **same Chat Memory** as the trigger does:
+### Who replies
 
-1. The agent saves your message to the memory.
-2. It reads the earlier conversation, calls the model (and any tools), and saves its reply to the same memory.
-3. The chat window re-reads the conversation from the memory and shows both messages. On the canvas this is immediate; on a web page the chat checks every 1.5 seconds, so the reply can take a moment to appear.
+In AWFlow 0.9 the run has a **reply channel** back to the chat. The reply comes from the **reply step**: a [Respond to Chat](/nodes/builtin/flow/respond-to-chat/) step, or else the last AI step on the trigger's path. It **streams** into the chat as it is written, and tool calls show as short chips. **Stop** stops the run; the part of the reply already written is kept and marked as stopped.
 
-Because the conversation lives in the memory, it also shows on the [Memory page](/app/memory/overview/), and other workflows using the same conversation see the same messages.
+- **New Chat Triggers (version 2)** don't need a Chat Memory. Without one, the chat keeps the session's messages until it is closed. Connect a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) to keep the conversation for later (and to see it on the [Memory page](/app/memory/overview/)).
+- **Chat Triggers saved before 0.9** keep needing a Chat Memory, shared with the agent that answers: the agent saves both messages there and the chat window reads them back. **Update** in the step's header moves to version 2.
+
+### Show in Aria
+
+Turn on **Show in Aria** (with a one-line **Description**) and, once the workflow is **On**, it appears in Aria's list next to your agents, with a workflow badge, and in **@mentions**. A workflow chat in Aria is a chat with its own thread: each message runs the saved workflow from this trigger, with the active tab's address and title. Each reply shows *Ran N steps · time · View run*. If the workflow is Off, the chat offers **Turn it on**. Typing `@support-bot …` in any Aria chat runs that workflow for one message and posts its reply. See [Chat with Aria](/app/chat-and-agents/chat/).
+
+### Attachments
+
+Under **Attachments** (off by default), let people send **files** (choose the **File types** and the **Largest file (MB)**) and **the page you are on** (the tab, with or without the selected text). Files reach the run under `$binary` (`file0`, `file1`…) with a `files` summary; the page arrives as `page` (`url`, `title`, `text`, `selection`), marked as untrusted content for AI steps. Attachments work in the canvas chat and in Aria workflow chats.
 
 **Where you can chat:**
 
-- **On the canvas.** **Test Workflow** opens the chat when the Chat Trigger is the only trigger. You can also pick it in the trigger picker or press the node's **Test step** button.
-- **On web pages (extension).** When the workflow is activated, a chat bubble appears on pages matching **URL Patterns**. If several chat workflows match, the bubble lets you pick one. You can also right-click and choose **Open chat**. The run still happens in the AWFlow app tab, and the page's `url`, `title` and `tabId` are passed to the trigger.
+- **On the canvas.** **Run** opens the chat when the Chat Trigger is the only trigger. You can also pick it in the trigger picker or press the node's **Run step** button.
+- **On web pages (extension).** When the workflow is **On**, a chat bubble appears on pages matching **URL Patterns**. If several chat workflows match, the bubble lets you pick one. You can also right-click and choose **Open chat**. The run still happens in the AWFlow app tab, and the page's `url`, `title` and `tabId` are passed to the trigger.
 
 ## When to use it
 
@@ -41,12 +48,12 @@ Because the conversation lives in the memory, it also shows on the [Memory page]
 - Put a helper on specific websites, for example your internal tools, using **URL Patterns**.
 - Give an agent a running conversation, so each message builds on the earlier ones.
 
-For a one-off question without a chat window, start the agent from [When Started](/nodes/builtin/trigger/whenstarted/) or [Context Menu](/nodes/builtin/trigger/contextmenu/) instead.
+For a one-off question without a chat window, start the agent from [When I press Run](/nodes/builtin/trigger/whenstarted/) or [From the right-click menu](/nodes/builtin/trigger/contextmenu/) instead.
 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Assistant name","type":"Text","default":"Assistant"},{"name":"Icon","type":"Text","description":"Emoji or image URL shown in the chat header."},{"name":"Greeting","type":"Long text","default":"How can I help you today?"},{"name":"Input placeholder","type":"Text","default":"Type a message…"},{"name":"Starter prompts","type":"Tags","description":"Suggested prompts shown before the conversation begins."},{"name":"Allow clearing the conversation","type":"Toggle","default":"On"},{"name":"URL Patterns","type":"Tags","default":"[\"<all_urls>\"]"}]} />
+<AwfParamTable rows={[{"name":"Assistant name","type":"Text","default":"Assistant"},{"name":"Icon","type":"Text","description":"Emoji or image URL shown in the chat header."},{"name":"Greeting","type":"Long text","default":"How can I help you today?"},{"name":"Input placeholder","type":"Text","default":"Type a message…"},{"name":"Starter prompts","type":"Tags","description":"Suggested prompts shown before the conversation begins."},{"name":"Allow clearing the conversation","type":"Toggle","default":"On"},{"name":"Show in Aria","type":"Toggle","description":"Chat with this workflow from Aria, next to your agents (while it is on)."},{"name":"Attachments","type":"Group","description":"What people can send with a message."},{"name":"Attachments › Accept files","type":"Toggle","default":"Off"},{"name":"Attachments › File types","type":"Tags","default":"[\"image/*\",\"application/pdf\",\"text/csv\",\"text/plain\",\"application/json\"]"},{"name":"Attachments › Largest file (MB)","type":"Number","default":"10"},{"name":"Attachments › The page you are on","type":"Choice","default":"Off","description":"Options: Off, This tab, This tab and the selection."},{"name":"Description","type":"Text","description":"One line under its name in Aria."},{"name":"URL Patterns","type":"Tags","default":"[\"<all_urls>\"]"}]} />
 {/* AUTO:settings:end */}
 
 **Assistant name**, **Icon**, **Greeting**, **Input placeholder** and **Starter prompts** only change how the chat window looks. **URL Patterns** decides on which pages the chat bubble shows (`<all_urls>` means every page); it uses the form `https://*.example.com/*`.
@@ -58,7 +65,7 @@ For a one-off question without a chat window, start the agent from [When Started
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"chat\""},{"name":"triggeredAt","type":"Text"},{"name":"chatInput","type":"Text","description":"The message the user sent"},{"name":"sessionId","type":"Text","description":"The connected Chat Memory conversation"},{"name":"url","type":"Text"},{"name":"title","type":"Text"},{"name":"tabId","type":"Number"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"triggerType","type":"Always \"chat\""},{"name":"triggeredAt","type":"Text"},{"name":"chatInput","type":"Text","description":"The message the user sent"},{"name":"sessionId","type":"Text","description":"The connected Chat Memory conversation"},{"name":"url","type":"Text"},{"name":"title","type":"Text"},{"name":"tabId","type":"Number"},{"name":"$binary","type":"Key-value pairs"},{"name":"files","type":"List of entries","description":"The files sent with the message"},{"name":"page","type":"Object","description":"The page the user shared, its text fenced as untrusted data"}]} />
 
 ```json title="Shape of an output item"
 {
@@ -68,7 +75,10 @@ Each output item has these fields:
   "sessionId": "…",
   "url": "…",
   "title": "…",
-  "tabId": 0
+  "tabId": 0,
+  "$binary": {},
+  "files": [],
+  "page": {}
 }
 ```
 {/* AUTO:outputs:end */}
@@ -95,7 +105,7 @@ Workflows built with the older Local Memory, Persistent Chat Memory or Window Bu
 2. Add a [Chat Memory](/nodes/builtin/ai/aidependencies/chatmemories/chatmemory/) with **Conversation** storage and connect it to the trigger's **Memory** slot.
 3. Add a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) after the trigger, connect a chat model, and connect the **same** Chat Memory to its memory slot.
 4. Set the agent's prompt to `{{ $input.chatInput }}`.
-5. Click **Test Workflow** and start chatting.
+5. Press **Run** and start chatting.
 
 ## Common issues
 
@@ -105,7 +115,7 @@ Workflows built with the older Local Memory, Persistent Chat Memory or Window Bu
 - **The chat forgets earlier messages.** The memory uses **This run only** or a key written as an expression. Use **Conversation** storage or a fixed key.
 - **Each message shows twice, or several replies appear.** Every agent connected to the same memory saves its own copy. Use one agent per conversation.
 - **On a web page, the "thinking" indicator never stops.** The run failed before a reply was saved. Press stop, then check the run in the execution history. Stop only resets the chat window; a run that is still going keeps going.
-- **No chat bubble on a page.** Activate the workflow and check that a **URL Patterns** entry matches the page.
+- **No chat bubble on a page.** Turn the workflow On and check that a **URL Patterns** entry matches the page.
 
 ## Related nodes
 

@@ -1,0 +1,75 @@
+---
+title: Test runs
+description: Measure how well an AI workflow answers — run it once per test case, score each answer, and compare two test runs before you change the model or the prompt.
+sidebar:
+  badge:
+    text: New
+    variant: tip
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import { StepCard, StepShot } from "@components/awflow";
+
+An AI workflow can look fine on the three examples you tried, then fail on the fourth. **Test runs** run your workflow on a whole list of test cases and score every answer, so you can see the pass rate, and see what changes when you switch model or rewrite a prompt.
+
+(Test runs are sometimes called *evaluations*. A plain **Run** of a workflow is something else: see [Run from the canvas](/app/workflows/executions/run-from-the-canvas/).)
+
+## Set up test runs in three steps
+
+When the workflow has no Evaluation Trigger yet, **Test runs** explains what it does and offers **Set up test runs**:
+
+<StepCard n={1} title="Test cases">
+  A **Google Sheet** (pick a Google connection, then paste the sheet's link; the first row is the column names), a **Data Store key** (a key with a list, or keys starting with a prefix), or **Paste CSV** with a header line. A preview shows the first rows and the count (up to 500 per test run).
+
+  <StepShot shot="test-runs-cases" spot="source" n={1} zoom={44} />
+</StepCard>
+
+<StepCard n={2} title="In and out">
+  The **column that goes in** (and what it becomes for the workflow), the **column with a good answer**, and the **step to compare with** (and its field).
+
+  <StepShot shot="test-runs-in-out" spot="expected" n={2} zoom={44} />
+</StepCard>
+
+<StepCard n={3} title="Score">
+  How to score each answer (**Score with**), the judge model for an AI judge, and **Pass at** (between 0 and 1).
+
+  <StepShot shot="test-runs-score" spot="add" n={3} zoom={44} />
+</StepCard>
+
+**Add to workflow** adds an [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) before the step and an [Evaluation](/nodes/builtin/flow/evaluation/) step after it, linked, with an *Added* pill; the toast offers **Run now**. Normal runs skip both: they only run from Test runs. Each test run reads the rows again, so you can keep editing the sheet. You can also add the two steps yourself, as below.
+
+## What you need
+
+1. An [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) in the workflow, holding the test rows: a Data Store list, a Data Store key prefix, pasted CSV, or a Google Sheet (up to 500 rows). You can grow the dataset from real runs: **Add this run's input to the test dataset** on a run in [Runs](/app/workflows/run-history/#add-a-run-to-a-test-dataset). It sits next to the workflow's normal trigger and never starts a normal run.
+2. At least one [Evaluation](/nodes/builtin/flow/evaluation/) step set to **Set metrics**, that scores each answer: exact match, contains, similar text, category, tools used, an AI judge from 1 to 5, or your own number.
+3. Optional: an Evaluation step set to **Is it an evaluation?** before emails, posts and other side effects, so test runs skip them.
+
+## Run an evaluation
+
+<Steps>
+
+1. Save the workflow. Test runs always run the **saved** version.
+2. Open the canvas **⋯** menu › **Test runs**.
+3. Press **Run evaluation**. AWFlow runs the workflow once per test row, one after the other. **Stop** ends it early.
+4. When it finishes, the run appears in the list with its **pass rate**, the **judge average** (with an AI judge), the **tokens** used and the **typical time** per case.
+
+</Steps>
+
+Open a test run to see each case: its inputs, the outputs you kept with **Set outputs**, and each metric. **Failed** shows only the cases that failed; **Open run** opens the full run of that case in [Runs](/app/workflows/run-history/).
+
+## Compare two test runs
+
+Pick two test runs to **Compare**. You see, per metric, how it changed, and the cases that changed, **regressions first** (cases that passed before and fail now, *Pass → Fail*).
+
+A good routine: run an evaluation, change one thing (the model, the prompt, a setting), save, run it again, compare.
+
+## Good to know
+
+- Test runs are kept **on this device**, the last 20 per workflow. Delete one with its **×**.
+- Each case is a real run, marked as an evaluation. Runs hides them unless you turn on **Show evaluation runs**.
+- AI judges and AI steps use your models and their tokens, like any run.
+
+## Related
+
+- [Evaluation & testing](/concepts/ai/evaluation-testing/): why and what to measure.
+- [Evaluation Trigger](/nodes/builtin/trigger/evaluation/) and [Evaluation](/nodes/builtin/flow/evaluation/).

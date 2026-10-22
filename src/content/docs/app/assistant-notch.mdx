@@ -19,7 +19,7 @@ Open **Settings** in the sidebar, then:
 <GuidedShot
   shot="notch-enable"
   steps={[
-    { spot: 'notch-section', title: 'Open Assistant Notch', body: 'In the settings sections.' },
+    { spot: 'notch-section', title: 'Open Aria on web pages', body: 'In the settings sections (called Assistant Notch before 0.9).' },
     { spot: 'show-bubble', title: 'Turn the bubble on (or off)', body: '**Show the assistant bubble on web pages**.', check: 'the notch appears on the next web page you open (extension only).' },
   ]}
 />
@@ -51,7 +51,8 @@ When collapsed (not expanded), the notch can take one of four shapes. Switch bet
 
 Opening the notch expands it into a panel made up of **blocks**. The available blocks are:
 
-- **On this page** — workflows that have a trigger matching the current page's URL.
+- **On this page** — workflows that have a trigger matching the current page's URL. It shows 3 chats; **All N chats for this page** opens a picker inside the notch that searches names and folders (<kbd>Enter</kbd> opens the chat). Each row shows its folder and a star to pin or unpin it. Workflows that are Off or archived, and chats whose sites don't include this page, are never listed, and a line says so.
+- **Forms** — your workflows that start with a [Form trigger](/nodes/builtin/trigger/form-trigger/). Pick one to open its form: in the side panel when it is open, else in a small window.
 - **Pinned workflows** — workflows you've pinned for quick access, regardless of the current page.
 - **Quick actions** — shortcuts for:
   - Open in Side Panel
@@ -63,7 +64,29 @@ Opening the notch expands it into a panel made up of **blocks**. The available b
 
 A **Recent** block also appears in the block list with a **Soon** label. It is off and does nothing yet.
 
+<GuidedShot
+  shot="notch-panel"
+  steps={[
+    { spot: 'handle', title: 'The notch', body: 'Click it to open the panel.' },
+    { spot: 'all-chats', title: 'All 4 chats for this page', body: 'Opens the chat picker.' },
+    { spot: 'forms', title: 'Forms', body: 'Your form workflows; pick one to open its form.' },
+  ]}
+/>
+
+**All N chats for this page** opens the chat picker:
+
+<GuidedShot
+  shot="notch-chat-picker"
+  steps={[
+    { spot: 'search', title: 'Search', body: 'Finds chats by name and folder; **Enter** opens one.' },
+    { spot: 'list', title: 'Chats for this page', body: 'Each with a star to pin or unpin it.' },
+    { spot: 'not-shown', title: 'Not shown', body: 'Says which chats are never listed here.' },
+  ]}
+/>
+
 ### Asking Aria from the notch
+
+When Aria proposes a plan in the notch, you can move it to the side panel: **Open in the side panel** (the expand button in the notch header while a plan waits) hands the chat, the plan and the answers you gave so far to the side panel, where a new chat starts *From the notch on* that site. The notch keeps a short card with **Bring it back** and **Show the panel**. Only one copy is built: once it is built in the side panel, the notch says *Built in the side panel*.
 
 Answers in the notch stream in as they are written and show the tools Aria uses as steps. If a reply fails, an error card says what went wrong, with **Try again** and **Open in full chat**. Long pages are shortened to fit small on-device models. See [How quick answers behave](/app/chat-and-agents/entry-points/#how-quick-answers-behave).
 

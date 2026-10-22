@@ -43,7 +43,7 @@ import { Badge, Callout, GuidedShot } from '@components/awflow';
 
 <Callout type="tip" title="Check it's connected">
 
-Click **Test step**: the notification arrives on your phone.
+Click **Run step**: the notification arrives on your phone.
 
 </Callout>
 
@@ -53,17 +53,17 @@ Click **Test step**: the notification arrives on your phone.
 <Steps>
 
 1. **Create an access token** on your ntfy server (`ntfy token add <user>`) or in your ntfy.sh account settings. Copy it (it starts with `tk_`).
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+2. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in the node's **Credential** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **API key or password** (or click **Continue**), then fill the rest.
 
    <GuidedShot
      shot="credentials-simple-bearer"
      steps={[
-       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'app', title: 'Leave the app empty', body: 'Leave **Integration App / Service** on **Select an integration...**.' },
        { spot: 'name', title: 'Name it', body: 'For example *ntfy – my server*. A **Description** is optional.' },
-       { spot: 'auth-type', title: 'Set Auth Type to Bearer Token', body: 'Open **Auth Type** and choose **Bearer Token**.' },
+       { spot: 'auth-type', title: 'Set Type to Bearer Token', body: 'Open **Type** and choose **Bearer token**.' },
        { spot: 'token', title: 'Paste the token', body: 'Paste the token into **Bearer Token**, exactly as copied.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -73,7 +73,7 @@ Click **Test step**: the notification arrives on your phone.
 
 <Callout type="tip" title="Check it's connected">
 
-Click **Test step**: the notification arrives on your phone.
+Click **Run step**: the notification arrives on your phone.
 
 </Callout>
 
@@ -83,18 +83,18 @@ Click **Test step**: the notification arrives on your phone.
 <Steps>
 
 1. **Create an application** at [pushover.net](https://pushover.net) to get an **API Token/Key**, and copy your **User Key** from your dashboard.
-2. **Save it in AWFlow.** Open **Credentials** and click **Add Credential** (or **+ Add Credential** in the node's **Credential** field), then fill the **New Credential** form. In the browser side panel the form comes in two steps: tap **Simple Credential** (or click **Continue**), then fill the rest.
+2. **Save it in AWFlow.** Open **Connections** and click **Add connection** (or **Connect** in the node's **Credential** field), then fill the **New connection** form. In the browser side panel the form comes in two steps: tap **API key or password** (or click **Continue**), then fill the rest.
 
    <GuidedShot
      shot="credentials-simple-basic"
      steps={[
-       { spot: 'app', title: 'Keep it a simple credential', body: 'Leave **Integration App / Service** on **Select an integration...**, or pick **Simple Credential** at the top of its list.' },
+       { spot: 'app', title: 'Leave the app empty', body: 'Leave **Integration App / Service** on **Select an integration...**.' },
        { spot: 'name', title: 'Name it', body: 'For example *Pushover – phone*. A **Description** is optional.' },
-       { spot: 'auth-type', title: 'Set Auth Type to Basic Auth', body: 'Open **Auth Type** and choose **Basic Auth**.' },
+       { spot: 'auth-type', title: 'Set Type to Basic Auth', body: 'Open **Type** and choose **Basic (username + password)**.' },
        { spot: 'username', title: 'Paste the application token', body: 'Put the application token in **Username**.' },
        { spot: 'password', title: 'Paste your user key', body: 'Put your user key in **Password**.' },
-       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **Local (this browser only)** or **Cloud (synced to your account)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
-       { spot: 'create', title: 'Click Create Credential', check: 'the credential is listed on the Credentials page, ready to pick in nodes.' },
+       { spot: 'storage', title: 'Check where it is saved', body: 'Signed in, choose **On this device** or **In your account (cloud)** under **Storage location**. Without an account it is saved locally in this browser, as here.' },
+       { spot: 'create', title: 'Save it', check: 'the connection is listed on the Connections page, ready to pick in steps.' },
      ]}
    />
 
@@ -102,7 +102,7 @@ Click **Test step**: the notification arrives on your phone.
 
 <Callout type="tip" title="Check it's connected">
 
-Click **Test step**: the notification arrives on your phone.
+Click **Run step**: the notification arrives on your phone.
 
 </Callout>
 
@@ -111,12 +111,12 @@ Click **Test step**: the notification arrives on your phone.
 
 ## Where your token lives
 
-<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#credentials-and-secrets" linkLabel="Privacy & your data">
+<Callout type="credential" title="Where your token lives" href="/app/privacy-and-data/#connections-and-secrets" linkLabel="Privacy & your data">
 
 The credential is stored where you choose when you create it:
 
-- **Local (this browser only)**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
-- **Cloud (synced to your account)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
+- **On this device**: encrypted in this browser. The encryption key is kept on the same device, so turn on the [local secret vault](/app/account/secret-vault/) to lock it with a passphrase only you know.
+- **In your account (cloud)**: sent over an encrypted connection and stored encrypted on AWFlow's server, so it works on your other devices.
 
 When a step runs, your browser sends it only to ntfy.sh or your ntfy server and `api.pushover.net`. AWFlow's servers never relay the call.
 

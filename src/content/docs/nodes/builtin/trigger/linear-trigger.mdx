@@ -1,0 +1,89 @@
+---
+title: "New Linear issue"
+description: "Start the workflow when an issue is created in Linear"
+sidebar:
+  label: "New Linear issue"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/linear-trigger
+  family: trigger
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Start the workflow when an issue is created in Linear, in every team or in one.
+
+:::note[A polling trigger]
+It checks for new items on a timer while the workflow is **On**, in the browser extension. Read [Polling triggers](/concepts/flow/polling-triggers/) for the first check, test events and what happens when a check fails.
+:::
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Needs a New Linear issue connection"} href="/app/connections/" linkLabel={"Create a connection"}>
+  Pick a saved connection in the **Connection** field, or create one from there. It signs in with a Bearer Token.
+</AwfCallout>
+{/* AUTO:callout:end */}
+
+## What it does
+
+Every **Check every** minutes, the trigger reads the latest issues and starts one run with the new ones. Fill **Team key** (for example `ENG`) to watch one team; leave it empty for every team.
+
+A check that finds nothing new starts no run. Press **Run** to fetch a test event: the latest items, without moving the trigger's position.
+
+## When to use it
+
+- Announce new issues in a chat channel.
+- Copy new issues to another tool.
+- Ask AI to suggest a priority for each new issue.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Connection","type":"Credential","required":true},{"name":"Team key","type":"Text","description":"Empty = every team."},{"name":"Check every","type":"Number","default":"5","description":"At least 1 minute, only while the workflow is On."},{"name":"On the first check","type":"Choice","default":"Skip what’s already there","description":"Options: Skip what’s already there, Start with the latest."},{"name":"How many to start with","type":"Number","default":"3","description":"For “Start with the latest” and Fetch test event (1–20)."}]} />
+{/* AUTO:settings:end */}
+
+The **Team key** is the short prefix of the team's issue ids (`ENG-123` → `ENG`).
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each run returns a list of items with these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"id","type":"Text"}]} />
+
+```json title="Shape of an output item"
+[
+  {
+    "id": "…"
+  }
+]
+```
+{/* AUTO:outputs:end */}
+
+One item per new issue, as Linear returns it.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Connection** (connection, Bearer Token): required. See [Create a connection](/app/connections/).
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. New Linear issue, **Team key** `SUP`.
+2. [Discord](/nodes/builtin/integration/discord/) posts the issue title and link.
+
+## Common issues
+
+- **Nothing runs for one team**: check the **Team key** matches the prefix of its issues.
+
+## Related nodes
+
+- [Polling triggers](/concepts/flow/polling-triggers/): how every "New …" trigger checks.
+- [Linear](/nodes/builtin/integration/linear/): create and update issues.
+- [Schedule Trigger](/nodes/builtin/trigger/schedule/): run at fixed times instead.

@@ -18,13 +18,24 @@ Ask a chat model whether a piece of text follows your rules, then send the data 
 
 ## What it does
 
-Guardrails sends **Text** to the chat model connected to its **Model** slot, together with your **Policy**. The model must answer with a short verdict: passed or not, and a reason.
+New Guardrails steps (version 2) run **quick checks** first, with no AI and no network, then an optional **AI policy**:
 
-The node then routes the data:
+- **Personal data**: emails, phone numbers, IBANs, card numbers (checked with the Luhn rule), IPv4 addresses, and postal addresses (best effort).
+- **Secrets**: API keys and tokens, *balanced* or *strict*.
+- **Links**: only allowed sites and schemes, and no passwords inside URLs.
+- **Patterns** and **keywords** of your own.
+- **AI policy** (optional): the chat model in the **Model** slot judges the text against your policy and answers with `{ flagged, confidence, reason }`. The step fails the text at or above the **threshold**. The text is sent fenced, with the instruction to judge it and never follow it, so a text can't talk the model into passing it. An answer that can't be read **fails closed**.
 
-- When the text complies, the data goes out of **Pass**.
-- When it does not comply, it goes out of **Fail**.
-- When the model's answer cannot be read as a verdict (extra commentary, broken JSON), the node **fails closed**: the data goes out of **Fail**. A guardrail never lets text through by accident.
+The **Operation** decides what happens:
+
+- **Check**: the data goes out of **Pass**, or out of **Fail** at the first finding, with what was found.
+- **Clean up the text**: findings are replaced with `[EMAIL]`, `[SECRET]`, `[URL]` or your label, and the cleaned text goes out of one **Output**. The AI policy, if on, only ever sees the cleaned text.
+
+The model is only needed for the AI policy.
+
+### Steps saved before AWFlow 0.9
+
+They send the **Text** and your **Policy** to the model, which answers passed or not, with a reason: **Pass** or **Fail**, failing closed. **Update** in the step's header turns your policy into the AI policy check (failing above 0.7 confidence) and leaves the quick checks off, so results stay the same until you turn some on.
 
 ## When to use it
 
@@ -32,7 +43,7 @@ The node then routes the data:
 - Screen text a user typed or selected before it reaches another AI step.
 - Stop a workflow when scraped content is off topic or unsafe.
 
-To sort text into more than two groups, use [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/). For a plain rule that needs no AI (a word is present, a number is above a limit), use [IF](/nodes/builtin/flow/if/).
+To sort text into more than two groups, use [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/). For a plain rule that needs no AI (a word is present, a number is above a limit), use [If](/nodes/builtin/flow/if/).
 
 ## Inputs and settings
 

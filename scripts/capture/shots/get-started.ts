@@ -19,7 +19,7 @@ async function closePanels(page: Page) {
 		await page.keyboard.press('Escape');
 		await page.waitForTimeout(300);
 	}
-	const picker = page.getByText('Choose a node', { exact: true }).filter({ visible: true });
+	const picker = page.getByRole('searchbox', { name: /Search steps/ }).filter({ visible: true });
 	for (let i = 0; i < 2 && (await picker.count()); i++) {
 		await page.keyboard.press('Escape');
 		await page.waitForTimeout(300);
@@ -77,7 +77,7 @@ async function blankWorkflow(s: Session): Promise<string> {
 		const d = page.getByRole('dialog');
 		await d.getByRole('button', { name: /Blank canvas/ }).click({ timeout: T });
 		await d.getByRole('button', { name: 'Continue' }).click({ timeout: T });
-		await d.getByRole('button', { name: /Triggered/ }).first().click({ timeout: T });
+		await d.getByRole('button', { name: /Runs on its own|Triggered/ }).first().click({ timeout: T });
 		await d.getByRole('button', { name: 'Continue' }).click({ timeout: T });
 		await d.getByRole('textbox', { name: 'Name' }).fill('My first workflow');
 		await d.getByRole('button', { name: 'Create & open' }).click({ timeout: T });
@@ -85,7 +85,7 @@ async function blankWorkflow(s: Session): Promise<string> {
 		st.blank = new URL(page.url()).hash;
 	}
 	if (new URL(page.url()).hash !== st.blank) await s.go(st.blank);
-	await page.getByRole('button', { name: 'Add Trigger' }).first().waitFor({ timeout: T });
+	await page.getByRole('button', { name: /^Add (a )?trigger$/i }).first().waitFor({ timeout: T });
 	return st.blank;
 }
 
@@ -96,7 +96,7 @@ async function tidyCanvas(page: Page) {
 		await collapse.first().click({ timeout: T });
 		await collapse.first().waitFor({ state: 'hidden', timeout: T });
 	}
-	await page.getByRole('button', { name: 'Fit View' }).first().click({ timeout: T });
+	await page.getByRole('button', { name: /^(Fit View|Fit the workflow on screen)$/ }).first().click({ timeout: T });
 	await page.waitForTimeout(500);
 }
 
@@ -107,7 +107,7 @@ async function searchNode(page: Page, query: string) {
 	// The picker reopens on the last category it showed: go back to the search over every node.
 	const back = page.getByRole('button', { name: 'Back', exact: true }).filter({ visible: true });
 	if (await back.count()) await back.first().click({ timeout: T });
-	await page.getByRole('textbox', { name: 'Type to search a node...' }).filter({ visible: true }).first().fill(query);
+	await page.getByRole('searchbox', { name: /Search steps|Search triggers|Type to search/ }).filter({ visible: true }).first().fill(query);
 	await page.waitForTimeout(800);
 }
 
@@ -117,18 +117,18 @@ async function openAddedNode(page: Page, query: string, result: RegExp, label: R
 	const node = page.locator('.svelte-flow__node').filter({ hasText: label });
 	if (!(await node.count())) {
 		await searchNode(page, query);
-		await page.getByRole('button', { name: result }).first().click({ timeout: T });
+		await page.getByRole('option', { name: result }).first().click({ timeout: T });
 		await page.waitForTimeout(1000);
 		await closePanels(page);
 	}
-	await page.getByRole('button', { name: 'Fit View' }).first().click({ timeout: T });
+	await page.getByRole('button', { name: /^(Fit View|Fit the workflow on screen)$/ }).first().click({ timeout: T });
 	await page.waitForTimeout(500);
 	await node.first().dblclick({ timeout: T });
 	await page.getByRole('dialog').filter({ visible: true }).first().waitFor({ timeout: T });
 	await page.waitForTimeout(800);
 }
 
-const searchBox = (p: Page) => p.getByRole('textbox', { name: 'Type to search a node...' }).filter({ visible: true }).last();
+const searchBox = (p: Page) => p.getByRole('searchbox', { name: /Search steps|Search triggers|Type to search/ }).filter({ visible: true }).last();
 const inPanel = (p: Page) => p.getByRole('dialog').filter({ visible: true }).last();
 
 export const shots: ShotDef[] = [
@@ -186,7 +186,7 @@ export const shots: ShotDef[] = [
 		],
 		spots: [
 			{ id: 'get-all-text', label: 'Get All Text, after When Started', locator: (p) => p.locator('.svelte-flow__node[data-id="get-text"]') },
-			{ id: 'run', label: 'Test Workflow', locator: (p) => p.getByRole('button', { name: 'Test Workflow', exact: true }) }
+			{ id: 'run', label: 'Test Workflow', locator: (p) => p.getByRole('button', { name: /^Run( workflow)?$/ }) }
 		],
 		prepare: async (s) => {
 			await s.editor('summarize-page-llm-chain');
@@ -196,7 +196,7 @@ export const shots: ShotDef[] = [
 				await collapse.first().click({ timeout: T });
 				await collapse.first().waitFor({ state: 'hidden', timeout: T });
 			}
-			await page.getByRole('button', { name: 'Fit View' }).first().click({ timeout: T });
+			await page.getByRole('button', { name: /^(Fit View|Fit the workflow on screen)$/ }).first().click({ timeout: T });
 			await page.waitForTimeout(500);
 		}
 	},
@@ -221,11 +221,11 @@ export const shots: ShotDef[] = [
 		route: '#/app (400 px wide)',
 		viewport: { width: 400, height: 860 },
 		alt: 'The AWFlow app at side-panel width (400 px) on its Home page, in a new local workspace: a compact header with the sidebar button and search, a Your first workflow card with Run “Start here”, Describe it and Blank workflow, and Popular templates below.',
-		spots: [{ id: 'sidebar-button', label: 'The AWFlow app in the side panel: the sidebar button opens Workflows, Assistant and the rest', locator: (p) => p.getByRole('button', { name: 'Toggle sidebar' }) }],
+		spots: [{ id: 'sidebar-button', label: 'The AWFlow app in the side panel: the bottom bar, with More for the full navigation', locator: (p) => p.getByRole('button', { name: 'More', exact: true }).last() }],
 		prepare: async (s) => {
 			await closePanels(s.page);
 			await s.go('#/app');
-			await s.page.getByRole('button', { name: 'Toggle sidebar' }).first().waitFor({ timeout: T });
+			await s.page.getByRole('button', { name: 'More', exact: true }).last().waitFor({ timeout: T });
 			await s.page.waitForTimeout(1200);
 		}
 	},
@@ -236,14 +236,14 @@ export const shots: ShotDef[] = [
 		alt: 'A new, empty workflow named My first workflow. Add Trigger opened the Trigger panel on the right; “when” is typed in its search box and the only result is When Started, “Run the flow on clicking the start button”.',
 		spots: [
 			{ id: 'search', label: 'Search box of the Trigger panel', locator: searchBox },
-			{ id: 'when-started', label: 'When Started', locator: (p) => p.getByRole('button', { name: /^When Started/ }) }
+			{ id: 'when-started', label: 'When I press Run', locator: (p) => p.getByRole('option', { name: /^When I press Run/ }).filter({ visible: true }).first() }
 		],
 		prepare: async (s) => {
 			await blankWorkflow(s);
 			const page = s.page;
-			await page.getByRole('button', { name: 'Add Trigger' }).first().click({ timeout: T });
-			await searchBox(page).fill('when');
-			await page.getByRole('button', { name: /^When Started/ }).filter({ visible: true }).first().waitFor({ timeout: T });
+			await page.getByRole('button', { name: /^Add (a )?trigger$/i }).first().click({ timeout: T });
+			await searchBox(page).fill('press run');
+			await page.getByRole('option', { name: /^When I press Run/ }).filter({ visible: true }).first().waitFor({ timeout: T });
 			await page.waitForTimeout(600);
 		}
 	},
@@ -256,7 +256,7 @@ export const shots: ShotDef[] = [
 		spots: [
 			{ id: 'get-selected-text', label: 'Get Selected Text, after When Started', locator: (p) => p.locator('.svelte-flow__node[data-id="get-selection"]') },
 			{ id: 'edit-fields', label: 'Edit Fields, after Get Selected Text', locator: (p) => p.locator('.svelte-flow__node[data-id="report"]') },
-			{ id: 'test-workflow', label: 'Test Workflow', locator: (p) => p.getByRole('button', { name: 'Test Workflow', exact: true }) },
+			{ id: 'test-workflow', label: 'Test Workflow', locator: (p) => p.getByRole('button', { name: /^Run( workflow)?$/ }) },
 			{ id: 'save', label: 'Save', locator: (p) => p.getByRole('banner').getByRole('button', { name: 'Save', exact: true }) }
 		],
 		prepare: async (s) => {
@@ -272,7 +272,7 @@ export const shots: ShotDef[] = [
 		css: NO_MINIMAP,
 		spots: [
 			{ id: 'output-field-name', label: 'Output field name, set to text', locator: (p) => inPanel(p).getByText(/^Output field name/).first() },
-			{ id: 'output-tab', label: 'Output tab: what the step produced on the last run', locator: (p) => inPanel(p).getByRole('button', { name: 'Output', exact: true }).or(inPanel(p).getByRole('tab', { name: 'Output', exact: true })) }
+			{ id: 'output-tab', label: 'Output: what the step produced on the last run', locator: (p) => inPanel(p).getByRole('tab', { name: /Actual/ }).first() }
 		],
 		prepare: async (s) => {
 			await example(s, 'first-workflow');
@@ -309,26 +309,26 @@ export const shots: ShotDef[] = [
 		spots: [
 			{ id: 'add-step', label: 'Add a step', locator: (p) => p.getByRole('button', { name: 'Add a step' }) },
 			{ id: 'search', label: 'Search box of the node picker', locator: searchBox },
-			{ id: 'hotkey', label: 'Hotkey', locator: (p) => p.getByRole('button', { name: /^Hotkey Run the flow/ }) }
+			{ id: 'hotkey', label: 'Keyboard shortcut', locator: (p) => p.getByRole('option', { name: /^Keyboard shortcut/ }).filter({ visible: true }).first() }
 		],
 		prepare: async (s) => {
 			await s.editor('summarize-page-llm-chain');
 			await closePanels(s.page);
 			await tidyCanvas(s.page);
-			await searchNode(s.page, 'Hotkey');
+			await searchNode(s.page, 'Keyboard shortcut');
 		}
 	},
 	{
 		name: 'gs-hotkey-slot',
 		page: 'get-started/first-automation',
 		route: '#/app/workflows/<id> (Hotkey settings)',
-		alt: 'The settings panel of a Hotkey trigger just added to the workflow (its label is still the generated hotkeyTrigger name): an Instruction card about assigning the key combination at chrome://extensions/shortcuts, and Hotkey Slot set to run-workflow-1.',
+		alt: 'The settings of a Keyboard shortcut trigger just added to the workflow: the Setup tab with Hotkey Slot set to Hotkey slot 1 and a note to assign the key combination at chrome://extensions/shortcuts, and the Expected output on the right.',
 		css: NO_MINIMAP,
-		spots: [{ id: 'hotkey-slot', label: 'Hotkey Slot, set to the first slot', locator: (p) => inPanel(p).getByText('run-workflow-1') }],
+		spots: [{ id: 'hotkey-slot', label: 'Hotkey Slot, set to Hotkey slot 1', locator: (p) => inPanel(p).getByRole('button', { name: 'Hotkey Slot', exact: true }) }],
 		prepare: async (s) => {
 			await s.editor('summarize-page-llm-chain');
-			await openAddedNode(s.page, 'Hotkey', /^Hotkey Run the flow/, /hotkeyTrigger-\d/);
-			await inPanel(s.page).getByText('run-workflow-1').waitFor({ timeout: T });
+			await openAddedNode(s.page, 'Keyboard shortcut', /^Keyboard shortcut/, /Keyboard shortcut/);
+			await inPanel(s.page).getByRole('button', { name: 'Hotkey Slot', exact: true }).waitFor({ timeout: T });
 		}
 	},
 	{
@@ -339,7 +339,7 @@ export const shots: ShotDef[] = [
 		css: NO_MINIMAP,
 		spots: [
 			{ id: 'save', label: 'Save', locator: (p) => p.getByRole('banner').getByRole('button', { name: 'Save', exact: true }) },
-			{ id: 'active-switch', label: 'The active switch next to the workflow’s name', locator: (p) => p.getByRole('switch', { name: 'Workflow active' }) }
+			{ id: 'active-switch', label: 'The On/Off switch next to the workflow’s name', locator: (p) => p.getByRole('switch', { name: /^Workflow (on|off)$/ }) }
 		],
 		prepare: async (s) => {
 			await s.editor('summarize-page-hotkey');
@@ -355,7 +355,7 @@ export const shots: ShotDef[] = [
 		css: NO_MINIMAP,
 		spots: [
 			{ id: 'add-step', label: 'Add a step', locator: (p) => p.getByRole('button', { name: 'Add a step' }) },
-			{ id: 'schedule', label: 'Schedule', locator: (p) => p.getByRole('button', { name: /^Schedule Run the flow/ }) }
+			{ id: 'schedule', label: 'Schedule', locator: (p) => p.getByRole('option', { name: /^Schedule/ }).filter({ visible: true }).first() }
 		],
 		prepare: async (s) => {
 			await s.editor('summarize-page-llm-chain');
@@ -371,15 +371,15 @@ export const shots: ShotDef[] = [
 		alt: 'The settings panel of a Schedule trigger just added to the workflow: under Rules, one rule added with Add, with the Trigger Interval, Days Between Triggers, Trigger at Hour and Trigger at Minute fields still empty.',
 		css: NO_MINIMAP,
 		spots: [
-			{ id: 'trigger-interval', label: 'Trigger Interval', locator: (p) => inPanel(p).getByText('Trigger Interval', { exact: true }) },
+			{ id: 'trigger-interval', label: 'Run every', locator: (p) => inPanel(p).getByText('Run every', { exact: true }) },
 			{ id: 'add-rule', label: 'Add a rule', locator: (p) => inPanel(p).getByRole('button', { name: 'Add', exact: true }) }
 		],
 		prepare: async (s) => {
 			await s.editor('summarize-page-llm-chain');
-			await openAddedNode(s.page, 'Schedule', /^Schedule Run the flow/, /schedule-\d/);
+			await openAddedNode(s.page, 'Schedule', /^Schedule/, /Schedule/);
 			const panel = inPanel(s.page);
-			if (!(await panel.getByText('Trigger Interval', { exact: true }).count())) await panel.getByRole('button', { name: 'Add', exact: true }).click({ timeout: T });
-			await panel.getByText('Trigger Interval', { exact: true }).waitFor({ timeout: T });
+			if (!(await panel.getByText('Run every', { exact: true }).count())) await panel.getByRole('button', { name: 'Add', exact: true }).click({ timeout: T });
+			await panel.getByText('Run every', { exact: true }).waitFor({ timeout: T });
 			await s.page.waitForTimeout(600);
 		}
 	},
@@ -414,12 +414,12 @@ export const shots: ShotDef[] = [
 		route: '#/app/workflows/<id> (Add a step)',
 		alt: 'The node picker opened from Add a step, shown on the workflow from lesson 2 (When Started, Get Selected Text, Edit Fields): “IF” is typed in the search box and IF, “Route items to different branches based on conditions”, is listed under Action.',
 		css: NO_MINIMAP,
-		spots: [{ id: 'if', label: 'IF', locator: (p) => p.getByRole('button', { name: /^IF Route items/ }) }],
+		spots: [{ id: 'if', label: 'If', locator: (p) => p.getByRole('option', { name: /^If\b/ }).filter({ visible: true }).first() }],
 		prepare: async (s) => {
 			await example(s, 'first-workflow');
 			await tidyCanvas(s.page);
 			await searchNode(s.page, 'IF');
-			await s.page.getByRole('button', { name: /^IF Route items/ }).filter({ visible: true }).first().waitFor({ timeout: T });
+			await s.page.getByRole('option', { name: /^If\b/ }).filter({ visible: true }).first().waitFor({ timeout: T });
 		}
 	}
 ];

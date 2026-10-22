@@ -9,6 +9,7 @@ worksIn: [extension]
 node:
   id: extension/getstructureddata
   family: inpage
+  agentTool: true
 ---
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
@@ -47,7 +48,7 @@ Cells and entries are read as plain text, with extra spaces removed. Tables or l
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group","description":"Structured extraction options."},{"name":"Options › Mode","type":"Choice","default":"Auto","description":"Choose what to extract. Options: Auto, Table, List."},{"name":"Options › List Format","type":"Choice","default":"Text","description":"How list items are represented. Options: Text, Key/Value."},{"name":"Options › Table first row is header","type":"Toggle","default":"On","description":"Use first table row as headers when no thead is present."}]} />
+<AwfParamTable rows={[{"name":"DOM Selector","type":"Page element","required":true,"description":"The selector of the DOM element to interact with."},{"name":"Options","type":"Group","description":"Structured extraction options."},{"name":"Options › Mode","type":"Choice","default":"Auto","description":"Choose what to extract. Options: Auto, Table, List."},{"name":"Options › List Format","type":"Choice","default":"Text","description":"How list items are represented. Options: Text, Key–value list."},{"name":"Options › Table first row is header","type":"Toggle","default":"On","description":"Use first table row as headers when no thead is present."}]} />
 {/* AUTO:settings:end */}
 
 **DOM Selector**: click the crosshair button in the field and click any cell of the table (or any entry of the list); you do not need to hit the table's edge. To read everything in an area, pick the container instead, or type a selector such as `main` or `table`.

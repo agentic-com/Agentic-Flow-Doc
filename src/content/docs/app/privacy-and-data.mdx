@@ -22,7 +22,9 @@ AWFlow keeps data in two places:
 | --- | --- |
 | Workflows and their versions | This browser, or your account if you save them to the cloud |
 | Credentials | This browser, or your account if you save them to the cloud |
-| Run history (status, timing, log lines) | Same place as the workflow |
+| Run history (status, timing, log lines, and step data per the workflow's settings) | Same place as the workflow. A cloud run that can't be saved (offline, outage) waits on this device, then is sent |
+| [Variables](/app/variables/) | Same place as the workflow that uses them |
+| [Backups](/app/settings/storage/#backups) | A file you download, encrypted with your passphrase |
 | Chats and conversations | This browser only |
 | Agents, teams and projects | This browser only |
 | Agent memory and facts | This browser only |
@@ -41,11 +43,14 @@ There is no background sync between devices. Items saved to the cloud are loaded
 
 To move items between local and cloud, use **Move to cloud** / **Move to local**. See [Local or cloud](/app/account/local-vs-cloud/#bring-your-local-work-to-your-account).
 
-## Credentials and secrets
+## Connections and secrets
 
 - **Local credentials** are encrypted in the browser. By default the key is stored on the same device, which guards against casual inspection. Turn on the [local secret vault](/app/account/secret-vault/) to lock them with a passphrase only you know.
 - **Cloud credentials** are sent to AWFlow over an encrypted connection and stored encrypted on the server. The server holds that key, so it can decrypt them to give them back to you. If you want secrets that never leave your device, keep those credentials local.
-- **Workflow export** checks for secrets written into a workflow and offers to strip them before the file is saved.
+- **Workflow export**, **Copy steps** and publishing leave out connections and values that look like secrets.
+- A connection can be **locked to its sites** (**Allowed sites**): AWFlow then refuses to send its key anywhere else, even if a step asks.
+- **Step data** kept with runs never includes passwords or keys: values that look secret are blanked before they are saved.
+- [Variables](/app/variables/) are not encrypted: keep keys in connections. The Variables page refuses values that look like a known key.
 
 ## AI: on your device or with a provider
 
@@ -63,6 +68,7 @@ AWFlow collects **anonymous** usage statistics and crash reports to improve the 
 - Each event is tied to a **random install ID**, not to you or your account. You can reset it.
 - Never sent: workflow names, steps or data, credentials, page URLs, search text, your email or name.
 - Error reports contain the error message and technical trace, with emails, URLs, quoted text and long tokens removed.
+- Crash reports are grouped by cause and kept 90 days. Only AWFlow's admins can read them ([Crash reports](/app/admin/errors/)).
 - Statistics go only to AWFlow's own server. There are no third-party analytics, advertising IDs or tracking cookies.
 - The switches apply whether you're signed in or not. On Firefox, nothing is sent until you also allow Firefox's data-collection permission.
 
@@ -71,6 +77,15 @@ AWFlow collects **anonymous** usage statistics and crash reports to improve the 
 - **Your workflows' own requests**: when a workflow calls an API, a website, an integration or a webhook, the data goes where that step points. [Safe mode](/app/settings/security/) lets you approve each website.
 - **Marketplace**: browsing, installing, reviews, reports and requests talk to AWFlow's server. Before an installed workflow runs, the app checks a public list of workflows removed for safety.
 - **Newsletter**: if you subscribe, your email is used to send it. Every email has an unsubscribe link.
+- **Version header**: every call to AWFlow's service says which AWFlow version, surface (extension or web app) and browser family you use, for example `0.9.0/ext/chrome`. It holds no id and no data about you. See [Updating AWFlow](/app/updating-awflow/).
+- **Remote settings**: the app reads a small settings file from AWFlow's service (cached 10 minutes, the last copy is used offline) for notices, feature switches and, rarely, to switch a broken step off.
+- **Private fields on pages** (passwords, card numbers, security codes…) are never read by any step or agent: only their label and kind.
+- **Fix with Aria** and **Ask Aria about this field** send the error and the step's settings (connections as names only) to your AI model only when you click; a sample of the data is sent only if you switch it on.
+- **Feedback** from **Help › Send feedback** sends your message and, if you tick it, the app version and the page you were on (never workflow content or secrets).
+
+## Working offline
+
+Without an internet connection, everything kept on this device keeps working: local workflows, on-device AI, knowledge bases and memory. A banner tells you when AWFlow can't reach its service; cloud saves, the marketplace and sign-in resume when you're back online.
 
 ## Browser permissions and why
 

@@ -1,8 +1,8 @@
 ---
-title: "Browser Tool"
-description: "Let an agent act on the live page — click, fill, type, select, submit, navigate — with an approval gate on every action."
+title: "Browser"
+description: "Give an agent a browser: look at, read and use web pages, within the sites and actions you allow."
 sidebar:
-  label: "Browser Tool"
+  label: "Browser"
 kind: node
 section: nodes
 worksIn: [extension]
@@ -10,36 +10,47 @@ node:
   id: builtin/ai/aidependencies/tools/browser
   family: ai
   agentTool: true
+  since: "0.9.0"
 ---
 
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
-Let an AI agent click, fill, type, select, submit or navigate on the active tab, with your approval before every action.
+Give an AI agent a browser. The **Browser** block lets an agent open pages, look at them and read them, and, when you allow it, click, type and pick options. One block, your rules.
 
 ## What it does
 
-Browser Tool is a tool for an agent, not a step in the flow. It has no output port: you connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/), and the agent's model can then call it while it works on its prompt.
+Browser is a building block for an agent, not a step in the flow. Connect it to the **Tools** slot of a [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) (from the agent's **Building blocks**, **+ Add a tool**). The agent then uses the same browser engine as Aria: **Look** returns the page's elements, each with a short reference, and actions name an element by its reference, not by a CSS selector.
 
-Each call names one action (`click`, `fill`, `type`, `select`, `submit` or `navigate`) and a target: a CSS selector for page actions, a URL for `navigate`. **Fill** clears the field first, then types the value; **type** adds text without clearing.
+What the agent may do depends on **What it can do**:
 
-Before anything happens, an approval row appears in the **Executions** pane describing the action, for example "click #unsubscribe on example.com". It names the action and target, never the value being typed, so passwords and personal data stay hidden. You approve or reject. A rejected action never runs, and the model is told you declined so it can continue without it. If nobody answers within 2 minutes, the action is rejected.
+- **Read only** (default): open a page, look at it, scroll and read. Nothing on the page changes.
+- **Read + act**: also click, type and pick options. Choose which in **Act** (all three when empty).
+
+The rules that keep it safe:
+
+- **Allowed sites**: the agent opens and acts only on these sites. Opening a new site asks you first; **Always allow** adds it to the list. Acting on a site that isn't allowed is refused.
+- **Acting after reading asks**: once the agent has read a page in this run, an action asks you first, even on an allowed site. Page text could contain instructions meant to hijack the agent.
+- **Submitting always asks**: a click that submits a form, or Enter in a form, always asks.
+- Page content reaches the model fenced as data, so instructions inside a page are not followed as commands.
+- **Ask before a call** sets when the agent asks you for the other actions (see [Action approval](/concepts/ai/action-approval/)).
+
+Browser works in the extension only. In the web app, the agent is told the browser isn't available and answers without it.
 
 ## When to use it
 
-- Let an agent work through a page for you: fill a form, click through a flow, submit a request, with you confirming each step.
-- The page is already open in the tab the workflow runs against.
-- The model should decide which element to act on, based on what it read.
+- An agent that researches: open a few pages, read them, and summarise.
+- An agent that works through a page for you (fill a form, pick options), with you confirming the risky moments.
 
-For fixed, planned page actions, use the regular page action nodes instead: they don't need a model or an approval for each step.
+For a fixed, planned sequence of page actions, use the regular page steps instead: they need no model and no approval.
 
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-This node has no settings.
+<AwfParamTable rows={[{"name":"What it can do","type":"Choice","default":"Read only","description":"Options: Read only, Read + act."},{"name":"Act","type":"Multiple choice","description":"What it may do on a page (with Read + act). Options: click, type, select."},{"name":"Ask before a call","type":"Choice","description":"When the agent must ask you before this tool runs. Options: Every call, Only calls that change things, Skip trusted sites, Ask me anywhere, even when I’m away."},{"name":"Allowed sites","type":"Tags","description":"The agent opens and acts only on these. “Always allow” on a new site adds it here."}]} />
 {/* AUTO:settings:end */}
 
-There is nothing to configure. The model picks the action, the selector, the value and the URL on each call. Give it page structure to work with: pass the page's text or structured data into the agent's **Prompt** so it can choose the right selectors.
+**Allowed sites** is cleared when you publish the workflow: whoever installs it picks their own sites.
 
 ## Outputs
 
@@ -49,7 +60,7 @@ This node has no output port. It plugs into a slot on another node instead of pa
 - **Tools** slot of [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/)
 {/* AUTO:outputs:end */}
 
-What each action did goes back to the model, not to the next node. The agent's own output shows the result: its `response`, and the list of tool calls it made in `steps`.
+What each action did goes back to the model, not to the next step. The agent's own output shows the result: its `response`, and the tools it called in `steps`.
 
 ## Dependencies and credentials
 
@@ -59,22 +70,22 @@ None. This node needs no connection and has no slots for other nodes.
 
 ## Example workflow
 
-1. [Get Structured Data](/nodes/extension/getstructureddata/) reads the newsletter settings page you have open.
-2. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with **Prompt** `Unsubscribe me from all marketing emails on this page. Page data: {{ $input }}`, a [Chat OpenAI](/nodes/builtin/ai/aidependencies/llm/openai/) model in **Model**, and Browser Tool connected to **Tools**.
-3. Run the workflow. When the agent wants to click or fill, approve each row in the **Executions** pane. Once you trust the sequence, choose **Approve all remaining for this run**.
-4. [Display Markdown](/nodes/extension/displaymarkdown/) shows `{{ $input.response }}`, the agent's summary of what it did.
+1. [Keyboard shortcut](/nodes/builtin/trigger/hotkey/) starts the workflow on the page you are reading.
+2. [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/) with "Find the pricing page of this site and list the plans", a chat model, and Browser (**Read only**, **Allowed sites** set to the site) in **Tools**.
+3. [Show data](/nodes/extension/displayobject/) shows `{{ $input.response }}`.
 
 ## Common issues
 
-- **Nothing happens on the page.** The action is waiting for your approval in the **Executions** pane, or it was rejected after 2 minutes without an answer.
-- **The agent says "The user denied this action".** You (or the timeout) rejected it. Run again and approve the step.
-- **"Action denied: invalid or blocked URL".** `navigate` only accepts `http` and `https` addresses on public hosts; local, private and `javascript:` or `file:` addresses are refused.
-- **"Action denied: no selector was provided".** The model asked for a page action without saying which element. Ask it in the **Prompt** to name the element with a CSS selector.
-- **The action runs but nothing changes.** The selector matched nothing, or the page had not finished loading. This node acts through the browser extension, so run the workflow from the extension, on the right tab.
+- **"Action denied: … is not one of the allowed sites."**: add the site to **Allowed sites**, or approve it with **Always allow** when the agent asks to open it.
+- **The agent waits**: an action is asking for your approval. Approve or reject it in the run.
+- **"The browser is not available here"**: the workflow ran in the web app. Run it from the extension.
+
+## The older Browser Tool
+
+Workflows made before AWFlow 0.9 may use **Browser Tool**, which acts on the active tab with CSS selectors (`click`, `fill`, `type`, `select`, `submit`, `navigate`) and asks according to its **Ask before a call** setting. It keeps working. For new agents, use the Browser block.
 
 ## Related nodes
 
-- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): the agent this tool plugs into.
-- [HTTP Request Tool](/nodes/builtin/ai/aidependencies/tools/http-request/): let the agent call an API instead of using the page.
-- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/): a planned approval step you place in the flow yourself.
-- [Action Approval](/concepts/ai/action-approval/): how the approval gate protects you.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): the agent this block plugs into.
+- [Steps as AI tools](/concepts/ai/steps-as-tools/): give an agent your app steps too.
+- [Browser control & safety](/app/chat-and-agents/browser-control/): the same rules in Aria.

@@ -10,7 +10,7 @@ lesson:
 sidebar:
   label: "4 · Votre première automatisation"
 i18n:
-  source: "a7f7fe4d99b837d4ffb0a4843927e4e40ec7b27f"
+  source: "9c5ddf7655ff9b917a8bb6590901654b90c5e602"
 ---
 
 import { Tabs, TabItem, Aside } from "@astrojs/starlight/components";
@@ -25,14 +25,14 @@ import { StepCard, StepShot, LessonProgress, LessonDone } from "@components/awfl
   onDevice
   youWill={[
     "Ajouter un déclencheur qui se lance tout seul",
-    "Activer le workflow",
+    "Mettre le workflow sur Activé",
     "Le lancer sans ouvrir le canevas",
     "Retrouver l'exécution dans l'onglet Exécutions",
   ]}
   before={["Le workflow « Summarise this page » de la leçon 3, enregistré", "L'extension AWFlow (Raccourci clavier et Planification ne s'exécutent pas dans l'application web)"]}
 />
 
-Jusqu'ici, vous démarriez les workflows avec **Tester le workflow**. Une automatisation démarre toute seule : quand vous appuyez sur un raccourci, à une heure donnée, quand une page se charge, ou depuis le menu du clic droit. Ces déclencheurs n'écoutent que lorsque le workflow est **actif**.
+Jusqu'ici, vous démarriez les workflows avec **Exécuter**. Une automatisation démarre toute seule : quand vous appuyez sur un raccourci, à une heure donnée, quand une page se charge, ou depuis le menu du clic droit. Ces déclencheurs n'écoutent que lorsque le workflow est **Activé**.
 
 ## Ajouter le déclencheur
 
@@ -74,26 +74,26 @@ Jusqu'ici, vous démarriez les workflows avec **Tester le workflow**. Une automa
 </TabItem>
 </Tabs>
 
-## Activer et lancer
+## Le mettre sur Activé et le lancer
 
-<StepCard n={3} title="Enregistrer et activer" check="l'interrupteur de l'en-tête du canevas indique Actif.">
-  Cliquez sur **Enregistrer**. Vérifiez ensuite l'interrupteur à côté du nom du workflow dans l'en-tête du canevas : il doit indiquer **Actif**. S'il indique **Inactif**, activez-le. Vous pouvez aussi choisir **Activer** dans le menu **⋯** du workflow, dans la liste Workflows.
+<StepCard n={3} title="Enregistrer et mettre sur Activé" check="l'interrupteur de l'en-tête du canevas indique Activé.">
+  Cliquez sur **Enregistrer**. Vérifiez ensuite l'interrupteur à côté du nom du workflow dans l'en-tête du canevas : il doit indiquer **Activé**. S'il indique **Désactivé**, activez-le. Vous pouvez aussi utiliser l'interrupteur de sa ligne dans la liste Workflows.
 
   <StepShot shot="gs-activate" spot="active-switch" n={3} zoom={40} />
 </StepCard>
 
 <StepCard n={4} title="Le déclencher" check="le Page summary avec trois points clés apparaît, sans toucher au canevas.">
-  Passez à un onglet contenant un article et appuyez sur votre raccourci. (Avec une planification, attendez le prochain intervalle.) Vous pouvez d'abord fermer le canevas : les workflows actifs s'exécutent en arrière-plan.
+  Passez à un onglet contenant un article et appuyez sur votre raccourci. (Avec une planification, attendez le prochain intervalle.) Vous pouvez d'abord fermer le canevas : les workflows activés s'exécutent en arrière-plan.
 </StepCard>
 
-<StepCard n={5} title="Consulter ses exécutions" check="la ligne la plus récente indique Success, démarrée il y a quelques secondes.">
-  Ouvrez le workflow et cliquez sur l'onglet **Exécutions** en haut (il porte le même nom dans un panneau étroit). Chaque exécution est listée avec son statut, son heure de début et sa durée. Cliquez sur une exécution pour voir ce que chaque étape a produit. Voir [Historique des exécutions](/app/workflows/run-history/).
+<StepCard n={5} title="Consulter ses exécutions" check="la ligne la plus récente indique Terminé, démarrée il y a quelques secondes.">
+  Ouvrez le workflow et cliquez sur l'onglet **Exécutions** en haut. Chaque exécution est listée avec son statut, son heure de début et sa durée. Cliquez sur une exécution pour voir ce que chaque étape a produit. Voir [Exécutions](/app/workflows/run-history/).
 
-  <StepShot shot="run-history" spot="executions-tab" n={5} />
+  <StepShot shot="run-history" spot="runs-tab" n={5} />
 </StepCard>
 
 <Aside type="caution" title="Rien ne se passe ?">
-Vérifiez trois choses : le workflow est **actif**, l'emplacement du nœud correspond à la ligne que vous avez définie dans la page des raccourcis du navigateur, et vous êtes dans l'extension de navigateur, pas dans l'application web. Plus de détails dans [Dépannage du raccourci clavier](/nodes/builtin/trigger/hotkey/#common-issues).
+Vérifiez trois choses : le workflow est **Activé**, l'emplacement du nœud correspond à la ligne que vous avez définie dans la page des raccourcis du navigateur, et vous êtes dans l'extension de navigateur, pas dans l'application web. Plus de détails dans [Dépannage du raccourci clavier](/nodes/builtin/trigger/hotkey/#common-issues).
 </Aside>
 
 ## Autres façons de démarrer un workflow

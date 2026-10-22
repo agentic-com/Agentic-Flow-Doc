@@ -99,7 +99,7 @@ const RECIPES: Recipe[] = [
 			{ node: 'trigger-context-menu', alt: 'The settings of the Right-click a selection trigger (Context Menu): Menu Contexts set to Selection, and empty Document URL Patterns and Target URL Patterns lists with Add buttons.', fields: [f('document-url-patterns', 'Document URL Patterns')] },
 			{ node: 'extract', alt: 'The settings of the Draft a task title step: the Text field, What to extract, and Options.', fields: [f('what-to-extract', 'What to extract')] },
 			{ node: 'local-model', alt: 'The settings of the Local AI model step (Web LLM): the Model menu still reads “Choose a model…”, with Options under it.', fields: [f('model', 'Model', 'The Model menu')] },
-			{ node: 'create-task', alt: 'The settings of the Create the Todoist task step: an empty Credential menu, then Resource Task, Operation Create, Content, Description, Source URL, Project ID, Due (natural language), Priority and Labels.', fields: [f('credential', 'Credential', 'The Credential menu (a Todoist connection)'), f('project-id', 'Project ID'), f('due', 'Due (natural language)')] }
+			{ node: 'create-task', alt: 'The settings of the Create the Todoist task step: an empty Connection field with Connect, then Resource Task, Operation Create, Content, Description, Source URL, Project ID, Due (natural language), Priority and Labels.', fields: [f('credential', 'Connection', 'The Connection field (a Todoist connection)'), f('project-id', 'Project ID'), f('due', 'Due (natural language)')] }
 		]
 	},
 	{
@@ -130,7 +130,7 @@ const RECIPES: Recipe[] = [
 		],
 		panels: [
 			{ node: 'trigger-context-menu', alt: 'The settings of the Right-click a page trigger (Context Menu): Menu Contexts set to Page, and empty Document URL Patterns and Target URL Patterns lists with Add buttons.', fields: [f('menu-contexts', 'Menu Contexts')] },
-			{ node: 'save-airtable', alt: 'The settings of the Add a record to Airtable step: an empty Credential menu, then Resource Record, Operation create, Base and Table (which cannot load items without a credential) and Fields.', fields: [f('credential', 'Credential', 'The Credential menu (an Airtable connection)'), f('base', 'Base'), f('table', 'Table'), f('fields', 'Fields')] }
+			{ node: 'save-airtable', alt: 'The settings of the Add a record to Airtable step: an empty Connection field with Connect, then Resource Record, Operation create, Base and Table (which cannot load items without a credential) and Fields.', fields: [f('credential', 'Connection', 'The Connection field (an Airtable connection)'), f('base', 'Base'), f('table', 'Table'), f('fields', 'Fields')] }
 		]
 	},
 	{
@@ -176,7 +176,7 @@ const RECIPES: Recipe[] = [
 		],
 		panels: [
 			{ node: 'trigger-element-change', alt: 'The settings of the Watch the job list trigger (Element Change): an empty CSS Selectors list with Add, Fire when Content changes, Match text, Debounce (ms) and URL Patterns.', fields: [f('css-selectors', 'CSS Selectors', 'The CSS Selectors list'), f('fire-when', 'Fire when', 'The Fire when menu'), f('url-patterns', 'URL Patterns', 'The URL Patterns list')] },
-			{ node: 'send-push', alt: 'The settings of the Send a push notification step: an empty Credential menu, then Provider, Topic, Message, Title, Priority, Tags, Click URL and Server.', fields: [f('credential', 'Credential', 'The Credential menu'), f('topic', 'Topic'), f('message', 'Message')] }
+			{ node: 'send-push', alt: 'The settings of the Send a push notification step: an empty Connection field with Connect, then Provider, Topic, Message, Title, Priority, Tags, Click URL and Server.', fields: [f('credential', 'Connection', 'The Connection field'), f('topic', 'Topic'), f('message', 'Message')] }
 		]
 	},
 	{
@@ -295,7 +295,7 @@ async function canvas(s: Session, awf: string) {
 		await collapse.first().click({ timeout: T });
 		await collapse.first().waitFor({ state: 'hidden', timeout: T });
 	}
-	await page.getByRole('button', { name: 'Fit View' }).first().click({ timeout: T });
+	await page.getByRole('button', { name: /^(Fit View|Fit the workflow on screen)$/ }).first().click({ timeout: T });
 	await page.waitForTimeout(600);
 }
 
@@ -306,9 +306,8 @@ const field = (label: string): Locate => (p) =>
 		.getByRole('dialog')
 		.filter({ visible: true })
 		.last()
-		.getByRole('group')
-		.filter({ has: p.getByRole('button', { name: 'Ask AI about this field' }) })
-		.filter({ hasText: new RegExp(`^\\s*${esc(label)}(?![A-Za-z])`) })
+		.locator('[data-field-path]')
+		.filter({ has: p.getByRole('button', { name: `Options for ${label}`, exact: true }) })
 		.last();
 const node = (id: string): Locate => (p) => p.locator(`.svelte-flow__node[data-id="${id}"]`);
 
@@ -350,12 +349,12 @@ function recipeShots(r: Recipe): ShotDef[] {
 			name: `recipe-${r.key}-canvas`,
 			page: r.page,
 			route: '#/app/workflows/<id>',
-			alt: `The workflow editor with the ${r.name} recipe: sticky notes and the steps ${steps}, linked left to right. The top bar shows the Workflow active switch and Save; Test Workflow is above the canvas.`,
+			alt: `The workflow editor with the ${r.name} recipe: sticky notes and the steps ${steps}, linked left to right. The top bar shows the On/Off switch and Save; Run is above the canvas.`,
 			css: NO_MINIMAP + NO_TOASTS,
 			spots: [
 				...r.nodes.map((n): SpotDef => ({ id: n.id, label: n.label, locator: node(n.id) })),
-				{ id: 'test-workflow', label: 'Test Workflow', locator: (p) => p.getByRole('button', { name: 'Test Workflow', exact: true }) },
-				{ id: 'active', label: 'Workflow active switch', locator: (p) => p.getByRole('switch', { name: 'Workflow active' }) },
+				{ id: 'test-workflow', label: 'Run', locator: (p) => p.getByRole('button', { name: /^Run( workflow)?$/ }) },
+				{ id: 'active', label: 'The On/Off switch, or Runs when you press Run', locator: (p) => p.getByRole('switch', { name: /^Workflow (on|off)$/ }).or(p.locator('span', { hasText: /^Runs when you press Run$/ }).filter({ visible: true })).first() },
 				{ id: 'save', label: 'Save', locator: (p) => p.getByRole('button', { name: 'Save', exact: true }) }
 			],
 			prepare: async (s) => canvas(s, r.awf)
@@ -373,8 +372,12 @@ function recipeShots(r: Recipe): ShotDef[] {
 				await canvas(s, r.awf);
 				const page = s.page;
 				await page.locator(`.svelte-flow__node[data-id="${panel.node}"]`).dblclick({ timeout: T });
-				await page.getByRole('dialog').getByRole('tab', { name: 'Parameters' }).waitFor({ timeout: T });
+				await page.getByRole('dialog').getByRole('tab', { name: 'Setup' }).waitFor({ timeout: T });
 				await page.waitForTimeout(800);
+				// Fields past the required ones sit under More options (N): open it.
+				const more = page.getByRole('dialog').filter({ visible: true }).last().getByRole('button', { name: /^More options/ });
+				if ((await more.count()) && (await more.first().getAttribute('aria-expanded')) !== 'true') await more.first().click({ timeout: T });
+				await page.waitForTimeout(400);
 				// Bring the fields into view; the first one wins when they don't all fit.
 				for (const x of [...panel.fields].reverse()) await field(x.field)(page).scrollIntoViewIfNeeded({ timeout: T });
 				await page.waitForTimeout(400);

@@ -36,6 +36,12 @@ Make sure your workflow meets these key conditions:
 
 ---
 
+### Versions and what installers get
+
+Someone who installs your workflow gets it exactly as you published it: each step keeps its [version](/app/workflows/step-versions/), and the workflow keeps its [behaviour](/app/workflows/behaviour-versions/), so it behaves for them as it did for you. A workflow that uses new behaviour or new steps needs a recent AWFlow; older ones are told it was *made with a newer AWFlow*.
+
+When you publish, AWFlow clears what belongs to you: connections, values marked to reset (such as a conversation picked in Chat Memory), **Ask before a call** and trusted sites of AI tools, allowed sites of the Browser block, and your schedule timezone. The [variables](/app/variables/) your workflow reads are listed (names and descriptions, never values) so installers know what to set. Disabled steps are flagged before you publish.
+
 ## How to publish
 
 Only **cloud** workflows can be published, so you need to be signed in. Each **Next** saves the step to your draft, so you can close the wizard and pick up where you left off.
@@ -226,7 +232,18 @@ Once approved, your listing can surface in a few places on the Marketplace:
 
 ## Using shared workflows
 
-- Open a listing in the Marketplace and click **Install**. Before anything is installed you see everything the workflow can do — the pages it reads or changes, the sites it reaches, and the connections it uses — and you confirm it once.
+- Open a listing in the Marketplace and click **Install**. Before anything is installed you see everything the workflow can do (*Made by* the author): the pages it reads or changes, the sites it reaches (named, or *To sites it finds while it runs*), and the connections it uses (*You pick yours after installing; none of the author's come with it*). **Before it runs** says it asks the first time it uses each site and each connection (you can tick **Always allow**), and lists the fields the author left blank that need you. You confirm it once. Sandboxed code shows as a calm grey *Runs code in a sandbox* row, not a warning.
+
+<GuidedShot
+  shot="install-consent"
+  steps={[
+    { spot: 'can', title: 'Once installed, it can', body: 'The sites it reaches, the pages it reads or changes, the code it runs.' },
+    { spot: 'before', title: 'Before it runs', body: 'It asks the first time it uses each site and each connection.' },
+    { spot: 'understand', title: 'Confirm once', body: 'Tick that you understand what it can do.' },
+    { spot: 'install', title: 'Install', body: 'Adds the workflow.' },
+  ]}
+/>
+
 - The listing shows **How it works** — a read-only preview of the steps (a list of steps in the side panel) — plus the apps it **works with** and how many setup steps it needs, so you know before installing.
 - Prefer an editable copy? Click **Use as a template instead**. The copy keeps the access you approved; if you change it so it needs more, choose **Make it mine** to take responsibility for it — after that it runs freely, the author's updates no longer apply, and the credit ("Based on …") stays.
 - If a workflow needs a newer AWFlow extension, the button says **Needs extension vX+**; update the extension first.

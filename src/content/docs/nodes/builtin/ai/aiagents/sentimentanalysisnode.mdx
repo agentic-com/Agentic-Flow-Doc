@@ -25,6 +25,10 @@ Sentiment Analysis reads **Text** and returns one label in `sentiment`. What you
 
 Older workflows saved with the former **Engine** setting on *On-device* and nothing connected to **Model** keep running their chosen on-device model. To change one, connect a Local Classifier.
 
+### Fallback model
+
+Connect a second chat model to **Fallback**. If the main model fails before writing anything with an error worth retrying elsewhere (429, 401/402/403, 5xx or a network error), the same call goes to the fallback; the run log names the switch and the output gets `usedFallback: true`.
+
 ## When to use it
 
 - Route negative reviews or support messages to a person, and the rest to an automatic reply.
@@ -36,7 +40,7 @@ To sort text by topic rather than tone, use [Text Classifier](/nodes/builtin/ai/
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to analyze the sentiment of."},{"name":"Options","type":"Group","description":"The options for the node."},{"name":"Options › Custom categories","type":"Long text","description":"Comma-separated list of custom sentiment categories to use instead of positive/negative/neutral."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
+<AwfParamTable rows={[{"name":"Text","type":"Long text","required":true,"description":"The text to analyze the sentiment of."},{"name":"Options","type":"Group","description":"The options for the step."},{"name":"Options › Custom categories","type":"Long text","description":"Comma-separated list of custom sentiment categories to use instead of positive/negative/neutral."},{"name":"Options › System message","type":"Long text","description":"The system message to use."}]} />
 {/* AUTO:settings:end */}
 
 Fill **Text** with an expression such as `{{ $input.text }}`. Write **Custom categories** as a comma-separated list, for example `angry, satisfied, confused`. Keep them short and clearly different from each other.
@@ -48,14 +52,15 @@ Fill **Text** with an expression such as `{{ $input.text }}`. Write **Custom cat
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"sentiment","type":"Any","description":"The sentiment label"},{"name":"score","type":"Number"},{"name":"scores","type":"Key-value pairs"},{"name":"predictions","type":"Any"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"sentiment","type":"Any","description":"The sentiment label"},{"name":"score","type":"Number"},{"name":"scores","type":"Key-value pairs"},{"name":"predictions","type":"Any"},{"name":"usedFallback","type":"Text"}]} />
 
 ```json title="Shape of an output item"
 {
   "sentiment": null,
   "score": 0,
   "scores": {},
-  "predictions": null
+  "predictions": null,
+  "usedFallback": "…"
 }
 ```
 {/* AUTO:outputs:end */}
@@ -69,7 +74,7 @@ Branch on the label with an [IF](/nodes/builtin/flow/if/) or [Switch](/nodes/bui
 ## Dependencies and credentials
 
 {/* AUTO:deps:start */}
-<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local classifier","description":"One node.","required":true}]} />
+<AwfParamTable nameLabel="Slot" typeLabel="Accepts" descriptionLabel="Connections" rows={[{"name":"Model","type":"chat model, local classifier","description":"One node.","required":true},{"name":"Fallback","type":"chat model","description":"One node."}]} />
 {/* AUTO:deps:end */}
 
 Connect a chat model, which holds its own API key, or a [Local Classifier](/nodes/builtin/ai/aidependencies/llm/localclassifier/) to run on-device. The Local Classifier needs an installed model: install one from its picker or the [Local AI](/app/local-models/) page.

@@ -26,7 +26,7 @@ In the browser extension, a small recording card also appears on the web page yo
 2. While recording, a waveform and timer show; recording stops on its own at the maximum length. Use **Cancel**, **Restart** or **Stop**.
 3. Play the clip back, then **Send & continue run**, or **Re-record**.
 
-Like the other pausing steps, the run is kept while it waits and you are told it needs you (a "waiting for you" count, a sound, a desktop notification). Closing the window or the card doesn't cancel the run; it keeps waiting until you send a recording or cancel the run in the **Executions** pane. The node pauses once for everything that reaches it, not once per item.
+Like the other pausing steps, the run is kept while it waits and you are told it needs you (a count on the inbox icon, a sound, a desktop notification). Closing the window or the card doesn't cancel the run; it keeps waiting until you send a recording or cancel the run in **Runs**. The node pauses once for everything that reaches it, not once per item.
 
 ## When to use it
 
@@ -39,7 +39,7 @@ For typed input, use [In-Page Form](/nodes/builtin/flow/in-page-form/).
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Prompt","type":"Text","default":"Record audio"},{"name":"Max length (seconds)","type":"Number","default":"60"}]} />
+<AwfParamTable rows={[{"name":"Prompt","type":"Text","default":"Record audio"},{"name":"Max length","type":"Number","default":"60"}]} />
 {/* AUTO:settings:end */}
 
 **Prompt** is the instruction shown above the record button, for example `Dictate your reply`. **Max length (seconds)** caps the clip; recording stops automatically when it is reached.
@@ -81,8 +81,8 @@ Dictate a task:
 ## Common issues
 
 - **The page card says the microphone is blocked or missing.** The card runs inside the website, so the browser asks for that site's microphone permission. Allow it in the site settings, plug in a microphone, or record from the window in the app instead.
-- **No card appears on the page.** The card only shows on normal web pages (`http` or `https`) in the extension. Record from the app window or open the paused run from the **Executions** pane.
-- **The run is still waiting after I closed the window.** Closing doesn't cancel. Record and send, or cancel the run in the **Executions** pane.
+- **No card appears on the page.** The card only shows on normal web pages (`http` or `https`) in the extension. Record from the app window or open the paused run from **Runs**.
+- **The run is still waiting after I closed the window.** Closing doesn't cancel. Record and send, or cancel the run in **Runs**.
 
 ## Related nodes
 

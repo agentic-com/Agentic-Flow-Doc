@@ -33,6 +33,16 @@
 				"accepts": [
 					"outputParser"
 				]
+			},
+			{
+				"name": "fallbackModel",
+				"label": "Fallback",
+				"required": false,
+				"multiple": false,
+				"accepts": [
+					"model"
+				],
+				"max": 1
 			}
 		],
 		"settings": [
@@ -47,7 +57,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for the step"
 			},
 			{
 				"key": "systemMessage",
@@ -72,6 +82,10 @@
 				"name": "response",
 				"type": "Any",
 				"description": "The model reply; the parsed result when an output parser is connected"
+			},
+			{
+				"name": "usedFallback",
+				"type": "Text"
 			}
 		],
 		"outputShape": "object"
@@ -131,14 +145,7 @@
 					"label": "Fail"
 				}
 			]
-		},
-		"outputFields": [
-			{
-				"name": "routed",
-				"type": "Object"
-			}
-		],
-		"outputShape": "object"
+		}
 	},
 	{
 		"id": "builtin/ai/aiagents/indexernode",
@@ -287,6 +294,16 @@
 				"accepts": [
 					"outputParser"
 				]
+			},
+			{
+				"name": "fallbackModel",
+				"label": "Fallback",
+				"required": false,
+				"multiple": false,
+				"accepts": [
+					"model"
+				],
+				"max": 1
 			}
 		],
 		"settings": [
@@ -309,7 +326,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for the step"
 			},
 			{
 				"key": "systemMessage",
@@ -334,6 +351,10 @@
 				"name": "extracted",
 				"type": "Any",
 				"description": "The data the model extracted"
+			},
+			{
+				"name": "usedFallback",
+				"type": "Text"
 			}
 		],
 		"outputShape": "object"
@@ -383,6 +404,16 @@
 				"accepts": [
 					"outputParser"
 				]
+			},
+			{
+				"name": "fallbackModel",
+				"label": "Fallback",
+				"required": false,
+				"multiple": false,
+				"accepts": [
+					"model"
+				],
+				"max": 1
 			}
 		],
 		"settings": [
@@ -397,7 +428,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for the step"
 			},
 			{
 				"key": "systemMessage",
@@ -432,7 +463,7 @@
 				"required": false,
 				"group": "Options",
 				"default": false,
-				"description": "If enabled, the node fails when knowledge retrieval errors instead of answering without context"
+				"description": "If enabled, the step fails when knowledge retrieval errors instead of answering without context"
 			},
 			{
 				"key": "searchType",
@@ -506,7 +537,7 @@
 						"label": "Answer without it"
 					}
 				],
-				"description": "A knowledge base marked \"Device only\" is never sent to a cloud model. Choose what the node does when its model is a cloud model."
+				"description": "A knowledge base marked \"Device only\" is never sent to a cloud model. Choose what the step does when its model is a cloud model."
 			}
 		],
 		"inputs": 1,
@@ -540,6 +571,10 @@
 				"name": "sources",
 				"type": "List of entries",
 				"description": "The knowledge base sources used for the answer"
+			},
+			{
+				"name": "usedFallback",
+				"type": "Text"
 			}
 		],
 		"outputShape": "object"
@@ -612,7 +647,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for the step"
 			},
 			{
 				"key": "systemMessage",
@@ -647,7 +682,7 @@
 				"required": false,
 				"group": "Options",
 				"default": false,
-				"description": "If enabled, the node fails when knowledge retrieval errors instead of answering without context"
+				"description": "If enabled, the step fails when knowledge retrieval errors instead of answering without context"
 			},
 			{
 				"key": "searchType",
@@ -721,7 +756,7 @@
 						"label": "Answer without it"
 					}
 				],
-				"description": "A knowledge base marked \"Device only\" is never sent to a cloud model. Choose what the node does when its model is a cloud model."
+				"description": "A knowledge base marked \"Device only\" is never sent to a cloud model. Choose what the step does when its model is a cloud model."
 			}
 		],
 		"inputs": 1,
@@ -843,6 +878,16 @@
 					"localClassifier"
 				],
 				"max": 1
+			},
+			{
+				"name": "fallbackModel",
+				"label": "Fallback",
+				"required": false,
+				"multiple": false,
+				"accepts": [
+					"model"
+				],
+				"max": 1
 			}
 		],
 		"settings": [
@@ -858,7 +903,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for the step"
 			},
 			{
 				"key": "categories",
@@ -903,6 +948,10 @@
 			{
 				"name": "predictions",
 				"type": "Any"
+			},
+			{
+				"name": "usedFallback",
+				"type": "Text"
 			}
 		],
 		"outputShape": "object"
@@ -932,6 +981,16 @@
 					"model"
 				],
 				"max": 1
+			},
+			{
+				"name": "fallbackModel",
+				"label": "Fallback",
+				"required": false,
+				"multiple": false,
+				"accepts": [
+					"model"
+				],
+				"max": 1
 			}
 		],
 		"settings": [
@@ -947,7 +1006,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for the step"
 			},
 			{
 				"key": "maxWords",
@@ -988,6 +1047,10 @@
 				"name": "summary",
 				"type": "Any",
 				"description": "The model reply; the parsed result when an output parser is connected"
+			},
+			{
+				"name": "usedFallback",
+				"type": "Text"
 			}
 		],
 		"outputShape": "object"
@@ -1018,6 +1081,16 @@
 					"localClassifier"
 				],
 				"max": 1
+			},
+			{
+				"name": "fallbackModel",
+				"label": "Fallback",
+				"required": false,
+				"multiple": false,
+				"accepts": [
+					"model"
+				],
+				"max": 1
 			}
 		],
 		"settings": [
@@ -1040,7 +1113,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for the step"
 			},
 			{
 				"key": "systemMessage",
@@ -1070,6 +1143,10 @@
 				"name": "scores",
 				"type": "Key-value pairs",
 				"description": "Every label's score, on-device"
+			},
+			{
+				"name": "usedFallback",
+				"type": "Text"
 			}
 		],
 		"outputShape": "object"
@@ -1082,7 +1159,7 @@
 		"family": "ai",
 		"category": "popular",
 		"nodeType": "agent",
-		"description": "Generate an action plan and execute it. Can use external tools.",
+		"description": "Generate an action plan and carry it out. Can use external tools.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -1137,21 +1214,32 @@
 				"accepts": [
 					"outputParser"
 				]
+			},
+			{
+				"name": "fallbackModel",
+				"label": "Fallback",
+				"required": false,
+				"multiple": false,
+				"accepts": [
+					"model"
+				],
+				"max": 1
 			}
 		],
 		"settings": [
 			{
 				"key": "prompt",
-				"label": "Prompt",
-				"type": "Text",
-				"required": true
+				"label": "What should the agent do?",
+				"type": "Long text",
+				"required": true,
+				"description": "Use data from earlier steps with Use data."
 			},
 			{
 				"key": "options",
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for the step"
 			},
 			{
 				"key": "systemMessage",
@@ -1195,7 +1283,7 @@
 				"required": false,
 				"group": "Options",
 				"default": false,
-				"description": "If enabled, the node fails when knowledge retrieval errors instead of answering without context"
+				"description": "If enabled, the step fails when knowledge retrieval errors instead of answering without context"
 			},
 			{
 				"key": "knowledgeAccess",
@@ -1292,7 +1380,7 @@
 						"label": "Answer without it"
 					}
 				],
-				"description": "A knowledge base marked \"Device only\" is never sent to a cloud model. Choose what the node does when its model is a cloud model."
+				"description": "A knowledge base marked \"Device only\" is never sent to a cloud model. Choose what the step does when its model is a cloud model."
 			}
 		],
 		"inputs": 1,
@@ -1324,6 +1412,10 @@
 				"name": "sources",
 				"type": "List of entries",
 				"description": "The knowledge base sources used for the answer"
+			},
+			{
+				"name": "usedFallback",
+				"type": "Text"
 			}
 		],
 		"outputShape": "object"
@@ -1372,7 +1464,7 @@
 							"label": "Conversation",
 							"type": "Memory picker",
 							"required": false,
-							"description": "The saved conversation to use. Leave empty to give this node its own conversation in this workflow."
+							"description": "The saved conversation to use. Leave empty to give this step its own conversation in this workflow."
 						},
 						{
 							"key": "summarize",
@@ -1413,7 +1505,7 @@
 							"label": "Conversation",
 							"type": "Memory picker",
 							"required": false,
-							"description": "The saved conversation to use. Leave empty to give this node its own conversation in this workflow."
+							"description": "The saved conversation to use. Leave empty to give this step its own conversation in this workflow."
 						},
 						{
 							"key": "lastN",
@@ -2250,14 +2342,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -2270,6 +2377,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -2280,9 +2392,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -2290,9 +2412,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -2408,14 +2540,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -2428,6 +2575,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -2438,9 +2590,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -2448,9 +2610,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -2611,14 +2783,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -2631,6 +2818,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -2641,9 +2833,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -2651,9 +2853,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -2764,14 +2976,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -2784,6 +3011,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -2794,9 +3026,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -2804,9 +3046,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -2900,14 +3152,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -2920,6 +3187,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -2930,9 +3202,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -2940,9 +3222,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -3123,14 +3415,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -3143,6 +3450,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -3153,9 +3465,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -3163,9 +3485,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -3246,14 +3578,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -3266,6 +3613,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -3276,9 +3628,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -3286,9 +3648,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -3382,14 +3754,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -3402,6 +3789,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -3412,9 +3804,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -3422,9 +3824,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -3518,14 +3930,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -3538,6 +3965,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -3548,9 +3980,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -3558,9 +4000,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -3633,14 +4085,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -3653,6 +4120,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -3663,9 +4135,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -3673,9 +4155,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -3740,14 +4232,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -3760,6 +4267,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -3770,9 +4282,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -3780,9 +4302,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -3876,14 +4408,29 @@
 		"outputShape": "value",
 		"plugsInto": [
 			{
+				"node": "Evaluation",
+				"nodeId": "builtin/flow/evaluation",
+				"slot": "Judge model"
+			},
+			{
 				"node": "Tools Agent",
 				"nodeId": "builtin/ai/aiagents/toolsagentnode",
 				"slot": "Model"
 			},
 			{
+				"node": "Tools Agent",
+				"nodeId": "builtin/ai/aiagents/toolsagentnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Q&A Agent",
 				"nodeId": "builtin/ai/aiagents/qanode",
 				"slot": "Model"
+			},
+			{
+				"node": "Q&A Agent",
+				"nodeId": "builtin/ai/aiagents/qanode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "RAG Agent",
@@ -3896,6 +4443,11 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Basic LLM Chain",
+				"nodeId": "builtin/ai/aiagents/basicllmchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Indexer",
 				"nodeId": "builtin/ai/aiagents/indexernode",
 				"slot": "Model"
@@ -3906,9 +4458,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Text Classifier",
+				"nodeId": "builtin/ai/aiagents/textclassifiernode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Sentiment Analysis",
 				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
 				"slot": "Model"
+			},
+			{
+				"node": "Sentiment Analysis",
+				"nodeId": "builtin/ai/aiagents/sentimentanalysisnode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Summarization",
@@ -3916,9 +4478,19 @@
 				"slot": "Model"
 			},
 			{
+				"node": "Summarization",
+				"nodeId": "builtin/ai/aiagents/summarizationchainnode",
+				"slot": "Fallback"
+			},
+			{
 				"node": "Information Extractor",
 				"nodeId": "builtin/ai/aiagents/informationextractornode",
 				"slot": "Model"
+			},
+			{
+				"node": "Information Extractor",
+				"nodeId": "builtin/ai/aiagents/informationextractornode",
+				"slot": "Fallback"
 			},
 			{
 				"node": "Guardrails",
@@ -4329,22 +4901,94 @@
 	{
 		"id": "builtin/ai/aidependencies/tools/browser",
 		"docLink": "/nodes/builtin/ai/aidependencies/tools/browser/",
-		"registryId": "af-base-node:dependency:browser-tool",
-		"name": "Browser Tool",
+		"registryId": "af-base-node:dependency:browser-block",
+		"name": "Browser",
 		"family": "ai",
 		"category": "tools",
 		"nodeType": "dependency",
-		"description": "Lets the model click/fill/type/select/submit on the active page or navigate it. Each call requires user approval.",
+		"description": "Look at, read and use web pages. One block, your rules.",
 		"worksIn": [
 			"extension"
 		],
 		"runtime": "extension",
+		"since": "0.9.0",
 		"isDependency": true,
 		"dependencyType": "tools",
 		"agentTool": true,
 		"credentials": [],
 		"dependencies": [],
-		"settings": [],
+		"settings": [
+			{
+				"key": "scope",
+				"label": "What it can do",
+				"type": "Choice",
+				"required": false,
+				"default": "read",
+				"options": [
+					{
+						"value": "read",
+						"label": "Read only"
+					},
+					{
+						"value": "act",
+						"label": "Read + act"
+					}
+				]
+			},
+			{
+				"key": "actAbilities",
+				"label": "Act",
+				"type": "Multiple choice",
+				"required": false,
+				"options": [
+					{
+						"value": "click",
+						"label": "click"
+					},
+					{
+						"value": "type",
+						"label": "type"
+					},
+					{
+						"value": "select",
+						"label": "select"
+					}
+				],
+				"description": "What it may do on a page (with Read + act)"
+			},
+			{
+				"key": "approval",
+				"label": "Ask before a call",
+				"type": "Choice",
+				"required": false,
+				"options": [
+					{
+						"value": "always",
+						"label": "Every call"
+					},
+					{
+						"value": "sideEffects",
+						"label": "Only calls that change things"
+					},
+					{
+						"value": "trustedHosts",
+						"label": "Skip trusted sites"
+					},
+					{
+						"value": "channel",
+						"label": "Ask me anywhere, even when I’m away"
+					}
+				],
+				"description": "When the agent must ask you before this tool runs."
+			},
+			{
+				"key": "trustedHosts",
+				"label": "Allowed sites",
+				"type": "Tags",
+				"required": false,
+				"description": "The agent opens and acts only on these. “Always allow” on a new site adds it here."
+			}
+		],
 		"inputs": 1,
 		"outputs": {
 			"ports": []
@@ -4399,7 +5043,7 @@
 		"family": "ai",
 		"category": "tools",
 		"nodeType": "dependency",
-		"description": "Lets the model send HTTP requests. Each call requires user approval.",
+		"description": "Lets the model send HTTP requests. You choose which calls need your approval.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -4423,6 +5067,38 @@
 				"type": "Credential",
 				"required": false,
 				"description": "The authentication to use for requests made by this tool"
+			},
+			{
+				"key": "approval",
+				"label": "Ask before a call",
+				"type": "Choice",
+				"required": false,
+				"options": [
+					{
+						"value": "always",
+						"label": "Every call"
+					},
+					{
+						"value": "sideEffects",
+						"label": "Only calls that change things"
+					},
+					{
+						"value": "trustedHosts",
+						"label": "Skip trusted sites"
+					},
+					{
+						"value": "channel",
+						"label": "Ask me anywhere, even when I’m away"
+					}
+				],
+				"description": "When the agent must ask you before this tool runs."
+			},
+			{
+				"key": "trustedHosts",
+				"label": "Trusted sites",
+				"type": "Tags",
+				"required": false,
+				"description": "Added here when you tick “Always allow on this site”."
 			}
 		],
 		"inputs": 1,
@@ -4446,7 +5122,7 @@
 		"family": "ai",
 		"category": "tools",
 		"nodeType": "dependency",
-		"description": "Connects to a remote MCP server and lets the model call its tools. Each call requires user approval.",
+		"description": "Connects to a remote MCP server and lets the model call its tools. You choose which calls need your approval.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -4476,7 +5152,7 @@
 				"label": "Authentication",
 				"type": "Credential",
 				"required": false,
-				"description": "The credential to send as the Authorization header on every request"
+				"description": "The connection to send as the Authorization header on every request"
 			},
 			{
 				"key": "allowList",
@@ -4484,6 +5160,38 @@
 				"type": "List",
 				"required": false,
 				"description": "If set, only remote tools with these names are exposed to the model. Leave empty to expose every tool the server advertises."
+			},
+			{
+				"key": "approval",
+				"label": "Ask before a call",
+				"type": "Choice",
+				"required": false,
+				"options": [
+					{
+						"value": "always",
+						"label": "Every call"
+					},
+					{
+						"value": "sideEffects",
+						"label": "Only calls that change things"
+					},
+					{
+						"value": "trustedHosts",
+						"label": "Skip trusted sites"
+					},
+					{
+						"value": "channel",
+						"label": "Ask me anywhere, even when I’m away"
+					}
+				],
+				"description": "When the agent must ask you before this tool runs."
+			},
+			{
+				"key": "trustedHosts",
+				"label": "Trusted sites",
+				"type": "Tags",
+				"required": false,
+				"description": "Added here when you tick “Always allow on this site”."
 			}
 		],
 		"inputs": 1,
@@ -4684,6 +5392,27 @@
 				"required": false,
 				"default": "Runs a workflow and returns its output.",
 				"description": "Describes to the agent what this tool does and when to call it"
+			},
+			{
+				"key": "approval",
+				"label": "Ask before running",
+				"type": "Choice",
+				"required": false,
+				"options": [
+					{
+						"value": "whenSideEffects",
+						"label": "When it can send, delete or pay"
+					},
+					{
+						"value": "always",
+						"label": "Always"
+					},
+					{
+						"value": "never",
+						"label": "Never"
+					}
+				],
+				"description": "When the agent must ask you before it runs the workflow. On a schedule or a background trigger, a call that needs your ok waits in Runs until you answer."
 			}
 		],
 		"inputs": 1,
@@ -4801,7 +5530,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "visibleOnly",
@@ -4870,7 +5599,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "mimeType",
@@ -4953,7 +5682,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "headers",
@@ -5151,7 +5880,7 @@
 				"type": "Media",
 				"required": false,
 				"default": "",
-				"description": "Image URL, data URL, or $binary from a previous node"
+				"description": "Image URL, data URL, or $binary from a previous step"
 			}
 		],
 		"inputs": 1,
@@ -5202,7 +5931,7 @@
 				"type": "Media",
 				"required": false,
 				"default": "",
-				"description": "Image URL, data URL, or $binary from a previous node"
+				"description": "Image URL, data URL, or $binary from a previous step"
 			},
 			{
 				"key": "threshold",
@@ -5362,7 +6091,7 @@
 				"type": "Media",
 				"required": false,
 				"default": "",
-				"description": "Image URL, data URL, or $binary from a previous node"
+				"description": "Image URL, data URL, or $binary from a previous step"
 			},
 			{
 				"key": "threshold",
@@ -5692,7 +6421,7 @@
 				"type": "Media",
 				"required": false,
 				"default": "",
-				"description": "Audio URL, data URL, $binary from Record Audio / a file node, or a clip recorded here"
+				"description": "Audio URL, data URL, $binary from Record Audio / a file step, or a clip recorded here"
 			}
 		],
 		"inputs": 1,
@@ -5767,7 +6496,7 @@
 					},
 					{
 						"value": "ben_Beng",
-						"label": "Bengali"
+						"label": "Bangla"
 					},
 					{
 						"value": "bul_Cyrl",
@@ -5779,11 +6508,11 @@
 					},
 					{
 						"value": "zho_Hans",
-						"label": "Chinese (Simplified)"
+						"label": "Chinese, Simplified"
 					},
 					{
 						"value": "zho_Hant",
-						"label": "Chinese (Traditional)"
+						"label": "Chinese, Traditional"
 					},
 					{
 						"value": "hrv_Latn",
@@ -5895,7 +6624,7 @@
 					},
 					{
 						"value": "nob_Latn",
-						"label": "Norwegian (Bokmål)"
+						"label": "Norwegian"
 					},
 					{
 						"value": "pes_Arab",
@@ -6013,7 +6742,7 @@
 					},
 					{
 						"value": "ben_Beng",
-						"label": "Bengali"
+						"label": "Bangla"
 					},
 					{
 						"value": "bul_Cyrl",
@@ -6025,11 +6754,11 @@
 					},
 					{
 						"value": "zho_Hans",
-						"label": "Chinese (Simplified)"
+						"label": "Chinese, Simplified"
 					},
 					{
 						"value": "zho_Hant",
-						"label": "Chinese (Traditional)"
+						"label": "Chinese, Traditional"
 					},
 					{
 						"value": "hrv_Latn",
@@ -6141,7 +6870,7 @@
 					},
 					{
 						"value": "nob_Latn",
-						"label": "Norwegian (Bokmål)"
+						"label": "Norwegian"
 					},
 					{
 						"value": "pes_Arab",
@@ -6277,11 +7006,11 @@
 		"id": "builtin/core/code",
 		"docLink": "/nodes/builtin/core/code/",
 		"registryId": "af-base-node:basic:code",
-		"name": "Code",
+		"name": "Python Code",
 		"family": "core",
 		"category": "dataTransformation",
 		"nodeType": "basic",
-		"description": "Run custom python code",
+		"description": "Pyodide · slower to start",
 		"worksIn": [
 			"extension",
 			"web"
@@ -6292,10 +7021,10 @@
 		"settings": [
 			{
 				"key": "code",
-				"label": "Code to Execute",
+				"label": "Code to run",
 				"type": "Code",
 				"required": true,
-				"description": "The code will be executed in the context of the node."
+				"description": "The code runs in the context of this step."
 			}
 		],
 		"inputs": 1,
@@ -6306,15 +7035,7 @@
 					"label": "Output"
 				}
 			]
-		},
-		"outputFields": [
-			{
-				"name": "result",
-				"type": "Any",
-				"description": "What the code returned; null when it returned nothing"
-			}
-		],
-		"outputShape": "object"
+		}
 	},
 	{
 		"id": "builtin/core/datastore",
@@ -6383,7 +7104,7 @@
 						"label": "Shared with all workflows"
 					}
 				],
-				"description": "Which keys this node can see"
+				"description": "Which keys this step can see"
 			},
 			{
 				"key": "key",
@@ -6443,17 +7164,18 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/core/debug",
 		"docLink": "/nodes/builtin/core/debug/",
 		"registryId": "af-base-node:basic:debug",
-		"name": "Debug",
+		"name": "Test helper",
 		"family": "core",
 		"category": "other",
 		"nodeType": "basic",
-		"description": "Generate sample data, delay, or throw on demand",
+		"description": "Make sample data, wait, or fail on purpose while you build.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -6482,7 +7204,7 @@
 						"label": "Throw"
 					}
 				],
-				"description": "What this node does when it runs"
+				"description": "What this step does when it runs"
 			},
 			{
 				"key": "shape",
@@ -6536,7 +7258,7 @@
 			},
 			{
 				"key": "delayMs",
-				"label": "Delay (ms)",
+				"label": "Delay",
 				"type": "Number",
 				"required": false,
 				"default": 1000,
@@ -6547,7 +7269,7 @@
 				"label": "Error message",
 				"type": "Long text",
 				"required": false,
-				"default": "Debug node threw on demand",
+				"default": "Test helper threw on demand",
 				"description": "Used by Throw: the error message to raise"
 			}
 		],
@@ -6638,11 +7360,11 @@
 		"id": "builtin/core/execution-data",
 		"docLink": "/nodes/builtin/core/execution-data/",
 		"registryId": "af-base-node:basic:executionData",
-		"name": "Execution Data",
+		"name": "Run details",
 		"family": "core",
 		"category": "Storage",
 		"nodeType": "basic",
-		"description": "Read this run’s id, trigger and timing, or attach searchable metadata to it",
+		"description": "The id, start time and trigger of this run, or searchable notes on it.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -6740,7 +7462,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "headers",
@@ -6814,7 +7536,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "headers",
@@ -6888,7 +7610,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "headers",
@@ -6922,11 +7644,11 @@
 		"id": "builtin/core/getlinksfromlink",
 		"docLink": "/nodes/builtin/core/getlinksfromlink/",
 		"registryId": "af-base-node:basic:getLinksFromLinkNode",
-		"name": "Get Links from Link",
+		"name": "Get links from a page URL",
 		"family": "core",
 		"category": "Retrieve Content from URL",
 		"nodeType": "basic",
-		"description": "Get the Links content of a page from a given URL",
+		"description": "Open a page by its address and get its links.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -6976,7 +7698,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "headers",
@@ -7010,7 +7732,7 @@
 		"id": "builtin/core/http-request",
 		"docLink": "/nodes/builtin/core/http-request/",
 		"registryId": "af-base-node:basic:httpRequest",
-		"name": "Http Request",
+		"name": "HTTP Request",
 		"family": "core",
 		"category": "dataTransformation",
 		"nodeType": "basic",
@@ -7072,7 +7794,7 @@
 				"label": "URL",
 				"type": "URL",
 				"required": true,
-				"description": "Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters."
+				"description": "The address to call, e.g. https://api.example.com/items"
 			},
 			{
 				"key": "authentication",
@@ -7126,12 +7848,36 @@
 				"description": "Content-Type to use to send body parameters"
 			},
 			{
+				"key": "bodyMode",
+				"label": "Write the body as",
+				"type": "Choice",
+				"required": false,
+				"group": "Body",
+				"options": [
+					{
+						"value": "fields",
+						"label": "Fields"
+					},
+					{
+						"value": "rawJson",
+						"label": "Raw JSON"
+					}
+				]
+			},
+			{
 				"key": "bodyContent",
 				"label": "Body",
 				"type": "Key-value pairs",
 				"required": false,
 				"group": "Body",
 				"description": "The body to send with the request"
+			},
+			{
+				"key": "rawJson",
+				"label": "JSON body",
+				"type": "Code",
+				"required": false,
+				"group": "Body"
 			},
 			{
 				"key": "options",
@@ -7155,7 +7901,7 @@
 				"required": false,
 				"group": "Options › Redirects",
 				"default": true,
-				"description": "Follow redirects"
+				"description": "When the address points somewhere else, go there instead."
 			},
 			{
 				"key": "maxRedirects",
@@ -7163,8 +7909,8 @@
 				"type": "Number",
 				"required": false,
 				"group": "Options › Redirects",
-				"default": 10,
-				"description": "The maximum number of redirects to follow"
+				"default": 20,
+				"description": "Browsers follow up to 20 redirects; 0 turns following off"
 			},
 			{
 				"key": "response",
@@ -7182,6 +7928,15 @@
 				"group": "Options › Response",
 				"default": false,
 				"description": "Whether to return the full response (headers and response status code) data instead of only the body"
+			},
+			{
+				"key": "neverError",
+				"label": "Never error",
+				"type": "Toggle",
+				"required": false,
+				"group": "Options › Response",
+				"default": false,
+				"description": "Return 4xx and 5xx answers as normal output with status, headers and body. Offline, blocked, CORS and timeouts still fail: there’s no answer to return."
 			},
 			{
 				"key": "responseFormat",
@@ -7211,13 +7966,377 @@
 				"description": "The format in which the data gets returned from the URL"
 			},
 			{
+				"key": "pagination",
+				"label": "Pagination",
+				"type": "One of several shapes",
+				"required": false,
+				"group": "Options",
+				"description": "Follow the next link, a page number or a cursor and fetch every page.",
+				"variants": [
+					{
+						"when": [
+							{
+								"key": "mode",
+								"label": "How pages work",
+								"value": "nextUrl",
+								"valueLabel": "Next link"
+							}
+						],
+						"fields": [
+							{
+								"key": "nextUrlFrom",
+								"label": "Find the next page in",
+								"type": "Choice",
+								"required": false,
+								"options": [
+									{
+										"value": "linkHeader",
+										"label": "Link header (rel=\"next\")"
+									},
+									{
+										"value": "bodyPath",
+										"label": "A field in the reply"
+									}
+								]
+							},
+							{
+								"key": "nextUrlPath",
+								"label": "Field with the next link",
+								"type": "Text",
+								"required": false
+							},
+							{
+								"key": "stopWhen",
+								"label": "Stop when",
+								"type": "Choice",
+								"required": false,
+								"options": [
+									{
+										"value": "noNext",
+										"label": "There’s no next page"
+									},
+									{
+										"value": "emptyList",
+										"label": "The list is empty"
+									},
+									{
+										"value": "statusCodes",
+										"label": "The reply has one of these status codes"
+									},
+									{
+										"value": "expression",
+										"label": "An expression is true"
+									}
+								]
+							},
+							{
+								"key": "stopStatusCodes",
+								"label": "Status codes that stop",
+								"type": "List",
+								"required": false
+							},
+							{
+								"key": "stopExpression",
+								"label": "Stop expression",
+								"type": "Text",
+								"required": false,
+								"description": "Stops when true, e.g. $response.body.has_more === false. Read the page as $response.body, $response.headers, $response.status and $page."
+							},
+							{
+								"key": "itemsPath",
+								"label": "Path to the list",
+								"type": "Text",
+								"required": false,
+								"description": "Where the entries are in each page"
+							},
+							{
+								"key": "output",
+								"label": "Return",
+								"type": "Choice",
+								"required": false,
+								"default": "perItem",
+								"options": [
+									{
+										"value": "perItem",
+										"label": "One item per entry, from every page"
+									},
+									{
+										"value": "perPage",
+										"label": "One item per page"
+									},
+									{
+										"value": "merged",
+										"label": "Everything in one item"
+									}
+								]
+							},
+							{
+								"key": "maxPages",
+								"label": "Max pages",
+								"type": "Number",
+								"required": false,
+								"default": 10
+							},
+							{
+								"key": "intervalMs",
+								"label": "Wait between pages",
+								"type": "Number",
+								"required": false
+							}
+						]
+					},
+					{
+						"when": [
+							{
+								"key": "mode",
+								"label": "How pages work",
+								"value": "pageParam",
+								"valueLabel": "Page number"
+							}
+						],
+						"fields": [
+							{
+								"key": "paramName",
+								"label": "Parameter",
+								"type": "Text",
+								"required": false
+							},
+							{
+								"key": "in",
+								"label": "Send it in",
+								"type": "Choice",
+								"required": false,
+								"options": [
+									{
+										"value": "query",
+										"label": "Query"
+									},
+									{
+										"value": "body",
+										"label": "Body (JSON)"
+									}
+								]
+							},
+							{
+								"key": "start",
+								"label": "Start at",
+								"type": "Number",
+								"required": false
+							},
+							{
+								"key": "step",
+								"label": "Add each time",
+								"type": "Number",
+								"required": false,
+								"description": "Offset APIs: the page size"
+							},
+							{
+								"key": "stopWhen",
+								"label": "Stop when",
+								"type": "Choice",
+								"required": false,
+								"options": [
+									{
+										"value": "noNext",
+										"label": "There’s no next page"
+									},
+									{
+										"value": "emptyList",
+										"label": "The list is empty"
+									},
+									{
+										"value": "statusCodes",
+										"label": "The reply has one of these status codes"
+									},
+									{
+										"value": "expression",
+										"label": "An expression is true"
+									}
+								]
+							},
+							{
+								"key": "stopStatusCodes",
+								"label": "Status codes that stop",
+								"type": "List",
+								"required": false
+							},
+							{
+								"key": "stopExpression",
+								"label": "Stop expression",
+								"type": "Text",
+								"required": false,
+								"description": "Stops when true, e.g. $response.body.has_more === false. Read the page as $response.body, $response.headers, $response.status and $page."
+							},
+							{
+								"key": "itemsPath",
+								"label": "Path to the list",
+								"type": "Text",
+								"required": false,
+								"description": "Where the entries are in each page"
+							},
+							{
+								"key": "output",
+								"label": "Return",
+								"type": "Choice",
+								"required": false,
+								"default": "perItem",
+								"options": [
+									{
+										"value": "perItem",
+										"label": "One item per entry, from every page"
+									},
+									{
+										"value": "perPage",
+										"label": "One item per page"
+									},
+									{
+										"value": "merged",
+										"label": "Everything in one item"
+									}
+								]
+							},
+							{
+								"key": "maxPages",
+								"label": "Max pages",
+								"type": "Number",
+								"required": false,
+								"default": 10
+							},
+							{
+								"key": "intervalMs",
+								"label": "Wait between pages",
+								"type": "Number",
+								"required": false
+							}
+						]
+					},
+					{
+						"when": [
+							{
+								"key": "mode",
+								"label": "How pages work",
+								"value": "cursor",
+								"valueLabel": "Cursor"
+							}
+						],
+						"fields": [
+							{
+								"key": "cursorPath",
+								"label": "Field with the next cursor",
+								"type": "Text",
+								"required": false
+							},
+							{
+								"key": "paramName",
+								"label": "Parameter",
+								"type": "Text",
+								"required": false
+							},
+							{
+								"key": "in",
+								"label": "Send it in",
+								"type": "Choice",
+								"required": false,
+								"options": [
+									{
+										"value": "query",
+										"label": "Query"
+									},
+									{
+										"value": "body",
+										"label": "Body (JSON)"
+									}
+								]
+							},
+							{
+								"key": "stopWhen",
+								"label": "Stop when",
+								"type": "Choice",
+								"required": false,
+								"options": [
+									{
+										"value": "noNext",
+										"label": "There’s no next page"
+									},
+									{
+										"value": "emptyList",
+										"label": "The list is empty"
+									},
+									{
+										"value": "statusCodes",
+										"label": "The reply has one of these status codes"
+									},
+									{
+										"value": "expression",
+										"label": "An expression is true"
+									}
+								]
+							},
+							{
+								"key": "stopStatusCodes",
+								"label": "Status codes that stop",
+								"type": "List",
+								"required": false
+							},
+							{
+								"key": "stopExpression",
+								"label": "Stop expression",
+								"type": "Text",
+								"required": false,
+								"description": "Stops when true, e.g. $response.body.has_more === false. Read the page as $response.body, $response.headers, $response.status and $page."
+							},
+							{
+								"key": "itemsPath",
+								"label": "Path to the list",
+								"type": "Text",
+								"required": false,
+								"description": "Where the entries are in each page"
+							},
+							{
+								"key": "output",
+								"label": "Return",
+								"type": "Choice",
+								"required": false,
+								"default": "perItem",
+								"options": [
+									{
+										"value": "perItem",
+										"label": "One item per entry, from every page"
+									},
+									{
+										"value": "perPage",
+										"label": "One item per page"
+									},
+									{
+										"value": "merged",
+										"label": "Everything in one item"
+									}
+								]
+							},
+							{
+								"key": "maxPages",
+								"label": "Max pages",
+								"type": "Number",
+								"required": false,
+								"default": 10
+							},
+							{
+								"key": "intervalMs",
+								"label": "Wait between pages",
+								"type": "Number",
+								"required": false
+							}
+						]
+					}
+				]
+			},
+			{
 				"key": "timeout",
-				"label": "Timeout (ms)",
+				"label": "Timeout",
 				"type": "Number",
 				"required": false,
 				"group": "Options",
-				"default": 10000,
-				"description": "Time in ms to wait for the server to send response headers (and start the response body) before aborting the request"
+				"description": "How long to wait for the server to start answering before giving up. Leave empty to wait as long as it takes."
 			}
 		],
 		"inputs": 1,
@@ -7229,6 +8348,74 @@
 				}
 			]
 		}
+	},
+	{
+		"id": "builtin/core/javascript-code",
+		"docLink": "/nodes/builtin/core/javascript-code/",
+		"registryId": "af-base-node:basic:javascriptCode",
+		"name": "JavaScript Code",
+		"family": "core",
+		"category": "dataTransformation",
+		"nodeType": "basic",
+		"description": "Sandboxed, no network · fast",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "client",
+		"since": "0.9.0",
+		"credentials": [],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "mode",
+				"label": "Run",
+				"type": "Choice",
+				"required": false,
+				"default": "eachItem",
+				"options": [
+					{
+						"value": "eachItem",
+						"label": "Once for each item"
+					},
+					{
+						"value": "allItems",
+						"label": "Once for all items"
+					}
+				]
+			},
+			{
+				"key": "code",
+				"label": "Code",
+				"type": "Code",
+				"required": true,
+				"description": "Read data with item / items. {{ }} isn’t replaced in code."
+			},
+			{
+				"key": "timeoutMs",
+				"label": "Time limit",
+				"type": "Number",
+				"required": false,
+				"description": "Default 10 s, up to 60 s."
+			},
+			{
+				"key": "memoryMb",
+				"label": "Memory limit (MB)",
+				"type": "Number",
+				"required": false,
+				"description": "Default 64 MB, up to 256 MB."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputShape": "list"
 	},
 	{
 		"id": "builtin/core/rss-feed-read",
@@ -7258,7 +8445,7 @@
 				"label": "URL",
 				"type": "Text",
 				"required": true,
-				"description": "Security: Ensure the URL is from a trusted source. Avoid including sensitive data in URL parameters."
+				"description": "The feed address, e.g. https://example.com/feed.xml"
 			},
 			{
 				"key": "authentication",
@@ -7295,12 +8482,11 @@
 				"type": "Number",
 				"required": false,
 				"group": "Options › Redirects",
-				"default": 10,
 				"description": "The maximum number of redirects to follow"
 			},
 			{
 				"key": "timeout",
-				"label": "Timeout (ms)",
+				"label": "Timeout",
 				"type": "Number",
 				"required": false,
 				"group": "Options",
@@ -7313,7 +8499,7 @@
 				"type": "Toggle",
 				"required": false,
 				"group": "Options",
-				"default": false,
+				"default": true,
 				"description": "Whether to reject unauthorized requests"
 			}
 		],
@@ -7700,7 +8886,7 @@
 				"label": "HMAC Key",
 				"type": "Credential",
 				"required": false,
-				"description": "Credential holding the secret key, for HMAC"
+				"description": "Connection holding the secret key, for HMAC"
 			},
 			{
 				"key": "value",
@@ -8004,7 +9190,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -8030,11 +9216,11 @@
 		"id": "builtin/datatransformation/datetime/extractpartofadate",
 		"docLink": "/nodes/builtin/datatransformation/datetime/extractpartofadate/",
 		"registryId": "af-base-node:basic:extractPartOfADate",
-		"name": "Extract Part Of A Date",
+		"name": "Get part of a date",
 		"family": "data",
 		"category": "DateTime",
 		"nodeType": "basic",
-		"description": "Extract a part of a date",
+		"description": "The year, month, day or hour of a date.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -8099,7 +9285,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -8202,7 +9388,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -8253,7 +9439,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -8359,7 +9545,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -8467,7 +9653,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -8573,7 +9759,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -8617,7 +9803,7 @@
 				"label": "FieldPath",
 				"type": "Text",
 				"required": true,
-				"description": "The path to the field to pick from the input object (without the node's name or id) that contains the url to download"
+				"description": "The path to the field to pick from the input object (without the step's name or id) that contains the url to download"
 			},
 			{
 				"key": "fileType",
@@ -8710,7 +9896,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for the step"
 			},
 			{
 				"key": "returnInputFields",
@@ -9070,7 +10256,7 @@
 				"type": "Long text",
 				"required": false,
 				"default": "",
-				"description": "The HTML to extract from, usually bound from a previous node"
+				"description": "The HTML to extract from, usually bound from a previous step"
 			},
 			{
 				"key": "mode",
@@ -9805,7 +10991,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -9849,7 +11035,7 @@
 				"label": "FieldPath",
 				"type": "Text",
 				"required": true,
-				"description": "The path to the field to pick from the input object (without the node's name or id)"
+				"description": "The path to the field to pick from the input object (without the step's name or id)"
 			},
 			{
 				"key": "outputFieldName",
@@ -10060,7 +11246,7 @@
 				"type": "Toggle",
 				"required": false,
 				"default": false,
-				"description": "Skip items this node has already emitted on an earlier run"
+				"description": "Skip items this step has already emitted on an earlier run"
 			},
 			{
 				"key": "historyBound",
@@ -10434,7 +11620,7 @@
 				"label": "Field To Split Out",
 				"type": "Text",
 				"required": true,
-				"description": "The path to the array field to split out (without the node name or id)"
+				"description": "The path to the array field to split out (without the step name or id)"
 			},
 			{
 				"key": "outputFieldName",
@@ -10450,6 +11636,167 @@
 				"required": false,
 				"default": false,
 				"description": "Whether to carry the remaining input fields onto each output item"
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		}
+	},
+	{
+		"id": "builtin/datatransformation/summarize",
+		"docLink": "/nodes/builtin/datatransformation/summarize/",
+		"registryId": "af-base-node:basic:summarizeItems",
+		"name": "Summarize items",
+		"family": "data",
+		"category": "Combine Items",
+		"nodeType": "basic",
+		"description": "Totals, counts and lists per group, like a pivot table",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "client",
+		"since": "0.9.0",
+		"credentials": [],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "groupBy",
+				"label": "Group by",
+				"type": "Tags",
+				"required": false,
+				"description": "Leave empty for one summary of all items."
+			},
+			{
+				"key": "aggregations",
+				"label": "Summaries",
+				"type": "List of entries",
+				"required": false,
+				"default": [
+					{
+						"op": "count"
+					}
+				]
+			},
+			{
+				"key": "op",
+				"label": "Calculation",
+				"type": "Choice",
+				"required": false,
+				"group": "Summaries (each entry)",
+				"default": "count",
+				"options": [
+					{
+						"value": "count",
+						"label": "Count items"
+					},
+					{
+						"value": "countUnique",
+						"label": "Count unique"
+					},
+					{
+						"value": "sum",
+						"label": "Sum"
+					},
+					{
+						"value": "avg",
+						"label": "Average"
+					},
+					{
+						"value": "min",
+						"label": "Min"
+					},
+					{
+						"value": "max",
+						"label": "Max"
+					},
+					{
+						"value": "concatenate",
+						"label": "Join as text"
+					},
+					{
+						"value": "collect",
+						"label": "Collect as a list"
+					}
+				]
+			},
+			{
+				"key": "field",
+				"label": "Field",
+				"type": "Text",
+				"required": false,
+				"group": "Summaries (each entry)",
+				"description": "Dot path, e.g. price or customer.email. Count without a field counts items."
+			},
+			{
+				"key": "outputName",
+				"label": "Output name",
+				"type": "Text",
+				"required": false,
+				"group": "Summaries (each entry)",
+				"description": "Defaults to e.g. sum_price, count, count_unique_email"
+			},
+			{
+				"key": "separator",
+				"label": "Separator",
+				"type": "Text",
+				"required": false,
+				"group": "Summaries (each entry)"
+			},
+			{
+				"key": "output",
+				"label": "Output",
+				"type": "Choice",
+				"required": false,
+				"default": "itemPerGroup",
+				"options": [
+					{
+						"value": "itemPerGroup",
+						"label": "One item per group"
+					},
+					{
+						"value": "singleItem",
+						"label": "One item with all groups"
+					}
+				]
+			},
+			{
+				"key": "options",
+				"label": "Options",
+				"type": "Group",
+				"required": false
+			},
+			{
+				"key": "skipEmpty",
+				"label": "Skip empty values",
+				"type": "Toggle",
+				"required": false,
+				"group": "Options",
+				"default": true
+			},
+			{
+				"key": "missingField",
+				"label": "When a field is missing",
+				"type": "Choice",
+				"required": false,
+				"group": "Options",
+				"default": "ignore",
+				"options": [
+					{
+						"value": "ignore",
+						"label": "Ignore the item for that summary"
+					},
+					{
+						"value": "fail",
+						"label": "Stop the step"
+					}
+				]
 			}
 		],
 		"inputs": 1,
@@ -11231,12 +12578,194 @@
 		"outputShape": "object"
 	},
 	{
+		"id": "builtin/flow/evaluation",
+		"docLink": "/nodes/builtin/flow/evaluation/",
+		"registryId": "af-base-node:basic:evaluation",
+		"name": "Evaluation",
+		"family": "flow",
+		"category": "flow",
+		"nodeType": "basic",
+		"description": "Score a test run: set its outputs and metrics, or route around side effects.",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "client",
+		"since": "0.9.0",
+		"credentials": [],
+		"dependencies": [
+			{
+				"name": "model",
+				"label": "Judge model",
+				"required": false,
+				"multiple": false,
+				"accepts": [
+					"model"
+				],
+				"max": 1
+			}
+		],
+		"settings": [
+			{
+				"key": "operation",
+				"label": "Operation",
+				"type": "Choice",
+				"required": false,
+				"default": "setMetrics",
+				"options": [
+					{
+						"value": "setMetrics",
+						"label": "Set metrics"
+					},
+					{
+						"value": "setOutputs",
+						"label": "Set outputs"
+					},
+					{
+						"value": "isEvaluating",
+						"label": "Is it an evaluation?"
+					}
+				]
+			},
+			{
+				"key": "outputs",
+				"label": "Outputs",
+				"type": "List of entries",
+				"required": false
+			},
+			{
+				"key": "name",
+				"label": "Name",
+				"type": "Text",
+				"required": true,
+				"group": "Outputs (each entry)"
+			},
+			{
+				"key": "value",
+				"label": "Value",
+				"type": "Value",
+				"required": false,
+				"group": "Outputs (each entry)"
+			},
+			{
+				"key": "metrics",
+				"label": "Metrics",
+				"type": "List of entries",
+				"required": false
+			},
+			{
+				"key": "name",
+				"label": "Name",
+				"type": "Text",
+				"required": true,
+				"group": "Metrics (each entry)"
+			},
+			{
+				"key": "kind",
+				"label": "Metric",
+				"type": "Choice",
+				"required": false,
+				"group": "Metrics (each entry)",
+				"default": "exactMatch",
+				"options": [
+					{
+						"value": "exactMatch",
+						"label": "Exact match"
+					},
+					{
+						"value": "contains",
+						"label": "Contains"
+					},
+					{
+						"value": "similarity",
+						"label": "Similar text"
+					},
+					{
+						"value": "categorisation",
+						"label": "Category"
+					},
+					{
+						"value": "toolsUsed",
+						"label": "Tools used"
+					},
+					{
+						"value": "llmJudge",
+						"label": "Correctness (AI judge, 1–5)"
+					},
+					{
+						"value": "custom",
+						"label": "Custom number"
+					}
+				]
+			},
+			{
+				"key": "expected",
+				"label": "Expected",
+				"type": "Value",
+				"required": false,
+				"group": "Metrics (each entry)"
+			},
+			{
+				"key": "actual",
+				"label": "Actual",
+				"type": "Value",
+				"required": false,
+				"group": "Metrics (each entry)"
+			},
+			{
+				"key": "expectedTools",
+				"label": "Expected tools",
+				"type": "Tags",
+				"required": false,
+				"group": "Metrics (each entry)"
+			},
+			{
+				"key": "steps",
+				"label": "Agent steps",
+				"type": "Value",
+				"required": false,
+				"group": "Metrics (each entry)"
+			},
+			{
+				"key": "rubric",
+				"label": "What a good answer does",
+				"type": "Long text",
+				"required": false,
+				"group": "Metrics (each entry)"
+			},
+			{
+				"key": "threshold",
+				"label": "Pass at (0–1)",
+				"type": "Number",
+				"required": false,
+				"group": "Metrics (each entry)"
+			},
+			{
+				"key": "caseSensitive",
+				"label": "Case-sensitive",
+				"type": "Toggle",
+				"required": false,
+				"group": "Metrics (each entry)"
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			],
+			"dynamic": true
+		}
+	},
+	{
 		"id": "builtin/flow/filter",
 		"docLink": "/nodes/builtin/flow/filter/",
 		"registryId": "af-base-node:filter:filter",
 		"name": "Filter",
 		"family": "flow",
-		"category": "flow",
+		"category": "Add or remove items",
 		"nodeType": "filter",
 		"description": "Accept items matching the conditions",
 		"worksIn": [
@@ -11279,14 +12808,84 @@
 		"outputShape": "object"
 	},
 	{
+		"id": "builtin/flow/form-ending",
+		"docLink": "/nodes/builtin/flow/form-ending/",
+		"registryId": "af-base-node:basic:formEnding",
+		"name": "Form ending",
+		"family": "flow",
+		"category": "flow",
+		"nodeType": "basic",
+		"description": "Show a closing message, open a page or close the form at the end.",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "client",
+		"since": "0.9.0",
+		"credentials": [],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "mode",
+				"label": "At the end",
+				"type": "Choice",
+				"required": false,
+				"default": "message",
+				"options": [
+					{
+						"value": "message",
+						"label": "Show a message"
+					},
+					{
+						"value": "redirect",
+						"label": "Open a page"
+					},
+					{
+						"value": "close",
+						"label": "Close the form"
+					}
+				]
+			},
+			{
+				"key": "title",
+				"label": "Title",
+				"type": "Text",
+				"required": false
+			},
+			{
+				"key": "text",
+				"label": "Text",
+				"type": "Long text",
+				"required": false
+			},
+			{
+				"key": "url",
+				"label": "Page",
+				"type": "Text",
+				"required": false,
+				"description": "Opens in a new tab (https only)."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputShape": "list"
+	},
+	{
 		"id": "builtin/flow/funnel",
 		"docLink": "/nodes/builtin/flow/funnel/",
 		"registryId": "af-base-node:funnel:funnel",
-		"name": "Funnel",
+		"name": "Join branches",
 		"family": "flow",
 		"category": "other",
 		"nodeType": "funnel",
-		"description": "Continues whenever any one of its incoming branches completes. Use it to converge multiple triggers (or parallel branches) into a single shared downstream chain.",
+		"description": "Carry on as soon as either branch arrives.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -11378,11 +12977,11 @@
 		"id": "builtin/flow/if",
 		"docLink": "/nodes/builtin/flow/if/",
 		"registryId": "af-base-node:if:if",
-		"name": "IF",
+		"name": "If",
 		"family": "flow",
 		"category": "flow",
 		"nodeType": "if",
-		"description": "Route items to different branches based on conditions",
+		"description": "Go one way when something is true, another when not.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -11540,7 +13139,7 @@
 		"family": "flow",
 		"category": "flow",
 		"nodeType": "loop",
-		"description": "Execute a set of actions repeatedly based on conditions",
+		"description": "Run a set of steps repeatedly based on conditions",
 		"worksIn": [
 			"extension",
 			"web"
@@ -11563,6 +13162,22 @@
 				"type": "Conditions",
 				"required": true,
 				"description": "The conditions to evaluate"
+			},
+			{
+				"key": "collectResults",
+				"label": "Collect results",
+				"type": "Toggle",
+				"required": false,
+				"default": false,
+				"description": "Output everything that came back through Loop Back, in order, on Done."
+			},
+			{
+				"key": "flattenResults",
+				"label": "One entry per item",
+				"type": "Toggle",
+				"required": false,
+				"default": true,
+				"description": "Used with Collect results: a pass that returns a list adds its items one by one. Off: one entry per pass."
 			}
 		],
 		"inputs": 2,
@@ -11592,6 +13207,21 @@
 				"name": "inData",
 				"type": "Any",
 				"description": "The incoming data, unchanged"
+			},
+			{
+				"name": "stoppedEarly",
+				"type": "True/false",
+				"description": "True when Max Iterations ended the loop while its condition still held"
+			},
+			{
+				"name": "results",
+				"type": "List",
+				"description": "With Collect results: what came back through Loop Back on every pass"
+			},
+			{
+				"name": "resultsTruncated",
+				"type": "True/false",
+				"description": "True when Collect results stopped at its limit"
 			}
 		],
 		"outputShape": "object"
@@ -11602,7 +13232,7 @@
 		"registryId": "af-base-node:basic:merge",
 		"name": "Merge",
 		"family": "flow",
-		"category": "flow",
+		"category": "Combine Items",
 		"nodeType": "basic",
 		"description": "Merge multiple streams into one",
 		"worksIn": [
@@ -11666,11 +13296,11 @@
 		"id": "builtin/flow/nooperation",
 		"docLink": "/nodes/builtin/flow/nooperation/",
 		"registryId": "af-base-node:basic:noOp",
-		"name": "No Operation",
+		"name": "Do nothing",
 		"family": "flow",
 		"category": "other",
 		"nodeType": "basic",
-		"description": "Pass data through unchanged",
+		"description": "A placeholder that passes items through.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -11879,7 +13509,7 @@
 			},
 			{
 				"key": "maxSeconds",
-				"label": "Max length (seconds)",
+				"label": "Max length",
 				"type": "Number",
 				"required": false,
 				"default": 60
@@ -11902,6 +13532,80 @@
 			{
 				"name": "$binary",
 				"type": "Key-value pairs"
+			}
+		],
+		"outputShape": "object"
+	},
+	{
+		"id": "builtin/flow/respond-to-chat",
+		"docLink": "/nodes/builtin/flow/respond-to-chat/",
+		"registryId": "af-base-node:basic:respondToChat",
+		"name": "Respond to Chat",
+		"family": "flow",
+		"category": "other",
+		"nodeType": "basic",
+		"description": "Send a message to the chat that started the run",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "client",
+		"since": "0.9.0",
+		"credentials": [],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "message",
+				"label": "Message",
+				"type": "Long text",
+				"required": false,
+				"default": ""
+			},
+			{
+				"key": "mode",
+				"label": "After sending",
+				"type": "Choice",
+				"required": false,
+				"default": "send",
+				"options": [
+					{
+						"value": "send",
+						"label": "Carry on"
+					},
+					{
+						"value": "sendAndWait",
+						"label": "Wait for the reply"
+					}
+				]
+			},
+			{
+				"key": "appendToMemory",
+				"label": "Add to chat memory",
+				"type": "Toggle",
+				"required": false,
+				"default": true,
+				"description": "Also store the message in the Chat Memory connected to the Chat Trigger."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputFields": [
+			{
+				"name": "message",
+				"type": "Text",
+				"description": "The message sent to the chat"
+			},
+			{
+				"name": "chatInput",
+				"type": "Text",
+				"description": "The user’s answer (Wait for the reply)"
 			}
 		],
 		"outputShape": "object"
@@ -11970,7 +13674,7 @@
 				"type": "Toggle",
 				"required": false,
 				"default": true,
-				"description": "Emit the incoming item unchanged, so this node can sit inline"
+				"description": "Emit the incoming item unchanged, so this step can sit inline"
 			}
 		],
 		"inputs": 1,
@@ -12014,6 +13718,30 @@
 				"required": false,
 				"default": 1,
 				"description": "How many items to emit per pass"
+			},
+			{
+				"key": "collectResults",
+				"label": "Collect results",
+				"type": "Toggle",
+				"required": false,
+				"default": false,
+				"description": "Output everything that came back through Loop Back, in order, on Done."
+			},
+			{
+				"key": "flattenResults",
+				"label": "One entry per item",
+				"type": "Toggle",
+				"required": false,
+				"default": true,
+				"description": "Used with Collect results: a pass that returns a list adds its items one by one. Off: one entry per pass."
+			},
+			{
+				"key": "failWhenLimitReached",
+				"label": "Fail if the pass limit is reached",
+				"type": "Toggle",
+				"required": false,
+				"default": false,
+				"description": "Fail the step when 1,000 passes end the split before every item was processed."
 			}
 		],
 		"inputs": 2,
@@ -12052,6 +13780,31 @@
 				"name": "items",
 				"type": "List",
 				"description": "Every item being split"
+			},
+			{
+				"name": "processed",
+				"type": "Number",
+				"description": "How many items have been emitted so far"
+			},
+			{
+				"name": "total",
+				"type": "Number",
+				"description": "How many items there are to split"
+			},
+			{
+				"name": "stoppedEarly",
+				"type": "True/false",
+				"description": "True on the Done pass when the pass limit stopped the split before the end"
+			},
+			{
+				"name": "results",
+				"type": "List",
+				"description": "With Collect results: what came back through Loop Back on every pass"
+			},
+			{
+				"name": "resultsTruncated",
+				"type": "True/false",
+				"description": "True when Collect results stopped at its limit"
 			}
 		],
 		"outputShape": "object"
@@ -12090,11 +13843,11 @@
 		"id": "builtin/flow/switch",
 		"docLink": "/nodes/builtin/flow/switch/",
 		"registryId": "af-base-node:basic:switch",
-		"name": "Switch",
+		"name": "Route by value",
 		"family": "flow",
 		"category": "flow",
 		"nodeType": "basic",
-		"description": "Route items to any number of named branches",
+		"description": "Send each item down the path that matches its value.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -12370,7 +14123,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -12379,10 +14132,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Credential to use to make the request"
+				"description": "The connection to use for the request"
 			}
 		],
 		"variants": {
@@ -12710,7 +14463,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -12719,7 +14472,7 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
 				"description": "An Attio API key (Workspace settings → Developers → Access tokens). It is account-wide — it can read and write everything your workspace permits. Keep it secret."
@@ -13016,7 +14769,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -13025,10 +14778,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "A Baserow database token or a NocoDB API token, stored as a Bearer Token credential. Keep it secret — it grants access to your tables."
+				"description": "A Baserow database token or a NocoDB API token, stored as a Bearer Token connection. Keep it secret — it grants access to your tables."
 			}
 		],
 		"variants": {
@@ -13492,7 +15245,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"required": false
 			}
 		],
@@ -13500,10 +15253,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": false,
-				"description": "Optional. A credential matching the API’s security scheme: Bearer Token for bearer / API-key schemes, Basic Auth for basic."
+				"description": "Optional. A connection matching the API’s security scheme: Bearer Token for bearer / API-key schemes, Basic Auth for basic."
 			},
 			{
 				"key": "specUrl",
@@ -13554,7 +15307,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -13563,10 +15316,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Discord credential. For Webhook operations store the webhook URL (it is a secret — anyone with it can post to that channel); for Channel/Message operations store a bot token."
+				"description": "The Discord connection. For Webhook operations store the webhook URL (it is a secret — anyone with it can post to that channel); for Channel/Message operations store a bot token."
 			}
 		],
 		"variants": {
@@ -13859,7 +15612,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -13868,10 +15621,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Credential to use to make the request"
+				"description": "The connection to use for the request"
 			}
 		],
 		"variants": {
@@ -14170,7 +15923,23 @@
 							"type": "Number",
 							"required": false,
 							"default": 30,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
+						},
+						{
+							"key": "includePullRequests",
+							"label": "Include pull requests",
+							"type": "Toggle",
+							"required": false,
+							"default": true,
+							"description": "GitHub's issue list also returns pull requests. Turn this off to keep only issues. The limit is applied by GitHub before filtering, so fewer items can come back."
 						}
 					]
 				},
@@ -14309,7 +16078,15 @@
 							"type": "Number",
 							"required": false,
 							"default": 30,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				},
@@ -14469,7 +16246,15 @@
 							"type": "Number",
 							"required": false,
 							"default": 30,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				},
@@ -14527,7 +16312,15 @@
 							"type": "Number",
 							"required": false,
 							"default": 30,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				},
@@ -14560,7 +16353,7 @@
 							"type": "Number",
 							"required": false,
 							"default": 30,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
 						}
 					]
 				},
@@ -14632,7 +16425,15 @@
 							"type": "Number",
 							"required": false,
 							"default": 30,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				}
@@ -14736,7 +16537,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/integration/gmail",
@@ -14755,7 +16557,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "OAuth2",
 				"required": true
 			}
@@ -14764,10 +16566,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Credential to use to make request"
+				"description": "The connection to use for the request"
 			}
 		],
 		"variants": {
@@ -15186,7 +16988,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/integration/google-calendar",
@@ -15205,7 +17008,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "OAuth2",
 				"required": true
 			}
@@ -15214,10 +17017,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Credential to use to make request"
+				"description": "The connection to use for the request"
 			}
 		],
 		"variants": {
@@ -15659,7 +17462,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/integration/google-drive",
@@ -15678,7 +17482,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "OAuth2",
 				"required": true
 			}
@@ -15687,10 +17491,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Credential to use to make request"
+				"description": "The connection to use for the request"
 			}
 		],
 		"variants": {
@@ -16103,7 +17907,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "OAuth2",
 				"required": true
 			}
@@ -16112,10 +17916,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Credential to use to make request"
+				"description": "The connection to use for the request"
 			}
 		],
 		"variants": {
@@ -16157,7 +17961,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						}
@@ -16241,7 +18045,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						}
@@ -16266,7 +18070,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16298,7 +18102,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						}
@@ -16323,7 +18127,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16355,7 +18159,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16405,7 +18209,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16437,7 +18241,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16476,7 +18280,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16508,7 +18312,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16547,7 +18351,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16567,20 +18371,20 @@
 						},
 						{
 							"key": "valueInputOption",
-							"label": "Value Input Option",
+							"label": "Treat values as",
 							"type": "Choice",
 							"required": true,
 							"options": [
 								{
 									"value": "USER_ENTERED",
-									"label": "User Entered"
+									"label": "Typed by a person"
 								},
 								{
 									"value": "RAW",
-									"label": "Raw"
+									"label": "Exact text"
 								}
 							],
-							"description": "How to interpret input values"
+							"description": "How Google Sheets reads what you send."
 						},
 						{
 							"key": "includeValuesInResponse",
@@ -16609,7 +18413,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16636,20 +18440,20 @@
 						},
 						{
 							"key": "valueInputOption",
-							"label": "Value Input Option",
+							"label": "Treat values as",
 							"type": "Choice",
 							"required": true,
 							"options": [
 								{
 									"value": "USER_ENTERED",
-									"label": "User Entered"
+									"label": "Typed by a person"
 								},
 								{
 									"value": "RAW",
-									"label": "Raw"
+									"label": "Exact text"
 								}
 							],
-							"description": "How to interpret input values"
+							"description": "How Google Sheets reads what you send."
 						},
 						{
 							"key": "includeValuesInResponse",
@@ -16678,7 +18482,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16698,20 +18502,20 @@
 						},
 						{
 							"key": "valueInputOption",
-							"label": "Value Input Option",
+							"label": "Treat values as",
 							"type": "Choice",
 							"required": true,
 							"options": [
 								{
 									"value": "USER_ENTERED",
-									"label": "User Entered"
+									"label": "Typed by a person"
 								},
 								{
 									"value": "RAW",
-									"label": "Raw"
+									"label": "Exact text"
 								}
 							],
-							"description": "How to interpret input values"
+							"description": "How Google Sheets reads what you send."
 						},
 						{
 							"key": "includeValuesInResponse",
@@ -16740,7 +18544,7 @@
 						{
 							"key": "spreadsheetId",
 							"label": "Spreadsheet",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The spreadsheet to work with"
 						},
@@ -16767,20 +18571,20 @@
 						},
 						{
 							"key": "valueInputOption",
-							"label": "Value Input Option",
+							"label": "Treat values as",
 							"type": "Choice",
 							"required": true,
 							"options": [
 								{
 									"value": "USER_ENTERED",
-									"label": "User Entered"
+									"label": "Typed by a person"
 								},
 								{
 									"value": "RAW",
-									"label": "Raw"
+									"label": "Exact text"
 								}
 							],
-							"description": "How to interpret input values"
+							"description": "How Google Sheets reads what you send."
 						},
 						{
 							"key": "includeValuesInResponse",
@@ -16884,7 +18688,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/integration/hubspot",
@@ -16902,7 +18707,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -16911,7 +18716,7 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
 				"description": "A HubSpot Private App token (Settings → Integrations → Private Apps). It is account-wide but scope-limited — grant only the scopes you need: crm.objects.contacts.read/write, crm.objects.companies.read/write, and crm.objects.deals.read. Keep it secret."
@@ -17342,7 +19147,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -17351,7 +19156,7 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
 				"description": "A Linear personal API key (Settings → Security & access → Personal API keys). It is scoped to your whole workspace, so choose the workspace deliberately."
@@ -17564,7 +19369,15 @@
 							"type": "Number",
 							"required": false,
 							"default": 50,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				},
@@ -17622,7 +19435,15 @@
 							"type": "Number",
 							"required": false,
 							"default": 50,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				},
@@ -17648,7 +19469,15 @@
 							"type": "Number",
 							"required": false,
 							"default": 50,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				}
@@ -17716,7 +19545,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/integration/microsoft-graph",
@@ -17734,7 +19564,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "OAuth2",
 				"required": true
 			}
@@ -17743,10 +19573,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "Sign in with Microsoft. Register a public client (auth-code + PKCE) with delegated permissions; the credential only needs the Application (client) ID."
+				"description": "Sign in with Microsoft. Register a public client (auth-code + PKCE) with delegated permissions; the connection only needs the Application (client) ID."
 			}
 		],
 		"variants": {
@@ -17900,7 +19730,15 @@
 							"type": "Number",
 							"required": false,
 							"default": 10,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				},
@@ -18140,7 +19978,15 @@
 							"type": "Number",
 							"required": false,
 							"default": 10,
-							"description": "Number of results to return (1-100)"
+							"description": "Number of results to return (1–5 000; above 100 several pages are fetched)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				},
@@ -18313,7 +20159,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -18322,10 +20168,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Credential to use to make the request"
+				"description": "The connection to use for the request"
 			}
 		],
 		"variants": {
@@ -18353,6 +20199,14 @@
 							"type": "Text",
 							"required": false,
 							"description": "Search query to filter databases"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results."
 						}
 					]
 				},
@@ -18375,7 +20229,7 @@
 						{
 							"key": "databaseId",
 							"label": "Database",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The Notion database to work with"
 						}
@@ -18400,7 +20254,7 @@
 						{
 							"key": "databaseId",
 							"label": "Database",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The Notion database to work with"
 						},
@@ -18432,7 +20286,7 @@
 						{
 							"key": "pageId",
 							"label": "Page",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The Notion page to work with"
 						}
@@ -18457,7 +20311,7 @@
 						{
 							"key": "pageId",
 							"label": "Page",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The Notion page to work with"
 						},
@@ -18489,7 +20343,7 @@
 						{
 							"key": "pageId",
 							"label": "Page",
-							"type": "Choice (loaded from your account)",
+							"type": "One of several shapes",
 							"required": true,
 							"description": "The Notion page to work with"
 						}
@@ -18525,6 +20379,14 @@
 							"required": false,
 							"default": 100,
 							"description": "Number of results to return (1-100)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results."
 						}
 					]
 				},
@@ -18814,7 +20676,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/integration/obsidian",
@@ -18832,7 +20695,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -18841,10 +20704,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The API key from the Obsidian \"Local REST API\" plugin settings, stored as a Bearer Token credential. Everything stays on your machine — nothing leaves for a cloud service."
+				"description": "The API key from the Obsidian \"Local REST API\" plugin settings, stored as a Bearer Token connection. Everything stays on your machine — nothing leaves for a cloud service."
 			}
 		],
 		"variants": {
@@ -19032,7 +20895,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -19041,7 +20904,7 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
 				"description": "A Pipedrive API token (Settings → Personal preferences → API). It is account-wide — it acts with your full user access. Keep it secret."
@@ -19303,7 +21166,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"required": false
 			}
 		],
@@ -19311,10 +21174,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": false,
-				"description": "Optional. ntfy public topics need none. For a protected ntfy server use a Bearer Token; for Pushover use a Basic Auth credential with the application token in Username and your user key in Password."
+				"description": "Optional. ntfy public topics need none. For a protected ntfy server use a Bearer Token; for Pushover use a Basic Auth connection with the application token in Username and your user key in Password."
 			}
 		],
 		"variants": {
@@ -19497,7 +21360,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -19506,7 +21369,7 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
 				"description": "A Raindrop test token (App settings → your app → Test token) or an OAuth token. It grants access to your Raindrop account — keep it secret."
@@ -19550,7 +21413,7 @@
 							"label": "Excerpt",
 							"type": "Text",
 							"required": false,
-							"description": "A short description — pair with an LLM node to summarise the page"
+							"description": "A short description — pair with an LLM step to summarise the page"
 						},
 						{
 							"key": "tags",
@@ -19617,7 +21480,7 @@
 							"label": "Excerpt",
 							"type": "Text",
 							"required": false,
-							"description": "A short description — pair with an LLM node to summarise the page"
+							"description": "A short description — pair with an LLM step to summarise the page"
 						},
 						{
 							"key": "tags",
@@ -19784,7 +21647,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -19793,7 +21656,7 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
 				"description": "A Readwise access token (readwise.io/access_token). One account-wide token works for both Readwise (highlights) and Reader (articles) — keep it secret."
@@ -19979,7 +21842,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -19988,10 +21851,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Credential to use to make the request"
+				"description": "The connection to use for the request"
 			}
 		],
 		"variants": {
@@ -20020,6 +21883,14 @@
 							"required": false,
 							"default": 100,
 							"description": "Number of results to return (1-1000)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				},
@@ -20073,17 +21944,17 @@
 						},
 						{
 							"key": "text",
-							"label": "Text",
-							"type": "Text",
+							"label": "Message",
+							"type": "Long text",
 							"required": true,
-							"description": "The message text"
+							"description": "What to post."
 						},
 						{
 							"key": "threadTs",
-							"label": "Thread Timestamp",
+							"label": "Reply in a thread",
 							"type": "Text",
 							"required": false,
-							"description": "The thread timestamp to reply to"
+							"description": "The ID of the message to reply to. Leave empty to post a new message."
 						},
 						{
 							"key": "blocks",
@@ -20180,10 +22051,10 @@
 						},
 						{
 							"key": "text",
-							"label": "Text",
-							"type": "Text",
+							"label": "Message",
+							"type": "Long text",
 							"required": true,
-							"description": "The message text"
+							"description": "What to post."
 						},
 						{
 							"key": "blocks",
@@ -20289,6 +22160,14 @@
 							"required": false,
 							"default": 100,
 							"description": "Number of results to return (1-1000)"
+						},
+						{
+							"key": "returnAll",
+							"label": "Return all",
+							"type": "Toggle",
+							"required": false,
+							"default": false,
+							"description": "Fetch every page, up to 5 000 results. Limit is ignored."
 						}
 					]
 				},
@@ -20339,7 +22218,7 @@
 							"type": "Text",
 							"required": false,
 							"default": "data",
-							"description": "The logical `$binary` key on the incoming item to send as the file (defaults to 'data'). Fed automatically from an upstream node that produces a binary (e.g. HTTP Request, Screenshot)."
+							"description": "The logical `$binary` key on the incoming item to send as the file (defaults to 'data'). Fed automatically from an upstream step that produces a binary (e.g. HTTP Request, Screenshot)."
 						},
 						{
 							"key": "file",
@@ -20364,10 +22243,10 @@
 						},
 						{
 							"key": "threadTs",
-							"label": "Thread Timestamp",
+							"label": "Reply in a thread",
 							"type": "Text",
 							"required": false,
-							"description": "The thread timestamp to reply to"
+							"description": "The ID of the message to reply to. Leave empty to post a new message."
 						},
 						{
 							"key": "title",
@@ -20483,7 +22362,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/integration/supabase",
@@ -20501,7 +22381,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -20510,10 +22390,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "Your Supabase project’s anon (public) key, stored as a Bearer Token credential. Do NOT use the service_role key — it bypasses Row Level Security and is rejected. Access is enforced by your RLS policies."
+				"description": "Your Supabase project’s anon (public) key, stored as a Bearer Token connection. Do NOT use the service_role key — it bypasses Row Level Security and is rejected. Access is enforced by your RLS policies."
 			}
 		],
 		"variants": {
@@ -20805,7 +22685,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -20814,10 +22694,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "The Telegram bot token (from @BotFather). It is the whole credential and grants full control of the bot — keep it secret."
+				"description": "The Telegram bot token (from @BotFather). It is all the connection needs, and it grants full control of the bot — keep it secret."
 			}
 		],
 		"variants": {
@@ -21038,7 +22918,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/integration/todoist",
@@ -21056,7 +22937,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Bearer Token",
 				"required": true
 			}
@@ -21065,7 +22946,7 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
 				"description": "A Todoist personal API token (Settings → Integrations → Developer). It grants full access to your Todoist account — keep it secret."
@@ -21375,7 +23256,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "builtin/integration/trello",
@@ -21393,7 +23275,7 @@
 		"credentials": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"authType": "Basic Auth",
 				"required": true
 			}
@@ -21402,10 +23284,10 @@
 		"settings": [
 			{
 				"key": "credential",
-				"label": "Credential",
+				"label": "Connection",
 				"type": "Credential",
 				"required": true,
-				"description": "A Trello API key + token, stored as a Basic Auth credential: put the API key in Username and the token in Password. Get both from https://trello.com/app-key (the token is generated from that page). Keep them secret."
+				"description": "Your Trello connection: an API key and a token. Get both from https://trello.com/app-key (the token is generated from that page). Keep them secret."
 			}
 		],
 		"variants": {
@@ -21686,11 +23568,11 @@
 		"id": "builtin/lambda/lambdainput",
 		"docLink": "/nodes/builtin/lambda/lambdainput/",
 		"registryId": "af-base-node:input:lambdaInput",
-		"name": "Lambda Input",
+		"name": "Workflow inputs",
 		"family": "lambda",
 		"category": "definition",
 		"nodeType": "input",
-		"description": "Define the inputs for the lambda workflow.",
+		"description": "What a reusable workflow receives when another workflow runs it.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -21721,11 +23603,11 @@
 		"id": "builtin/lambda/lambdaoutput",
 		"docLink": "/nodes/builtin/lambda/lambdaoutput/",
 		"registryId": "af-base-node:output:lambdaOutput",
-		"name": "Lambda Output",
+		"name": "Return to caller",
 		"family": "lambda",
 		"category": "definition",
 		"nodeType": "output",
-		"description": "Define the outputs for the lambda workflow.",
+		"description": "What a reusable workflow hands back to the workflow that ran it.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -21756,11 +23638,11 @@
 		"id": "builtin/trigger/browserstartup",
 		"docLink": "/nodes/builtin/trigger/browserstartup/",
 		"registryId": "af-base-node:trigger:browserStartup",
-		"name": "Browser Startup",
+		"name": "When the browser starts",
 		"family": "trigger",
 		"category": "browser",
 		"nodeType": "trigger",
-		"description": "Run the flow when the browser starts.",
+		"description": "Starts once each time the browser opens.",
 		"worksIn": [
 			"extension"
 		],
@@ -21868,6 +23750,79 @@
 				"default": true
 			},
 			{
+				"key": "showInAria",
+				"label": "Show in Aria",
+				"type": "Toggle",
+				"required": false,
+				"description": "Chat with this workflow from Aria, next to your agents (while it is on)."
+			},
+			{
+				"key": "attachments",
+				"label": "Attachments",
+				"type": "Group",
+				"required": false,
+				"description": "What people can send with a message"
+			},
+			{
+				"key": "files",
+				"label": "Accept files",
+				"type": "Toggle",
+				"required": false,
+				"group": "Attachments",
+				"default": false
+			},
+			{
+				"key": "types",
+				"label": "File types",
+				"type": "Tags",
+				"required": false,
+				"group": "Attachments",
+				"default": [
+					"image/*",
+					"application/pdf",
+					"text/csv",
+					"text/plain",
+					"application/json"
+				]
+			},
+			{
+				"key": "maxMb",
+				"label": "Largest file (MB)",
+				"type": "Number",
+				"required": false,
+				"group": "Attachments",
+				"default": 10
+			},
+			{
+				"key": "page",
+				"label": "The page you are on",
+				"type": "Choice",
+				"required": false,
+				"group": "Attachments",
+				"default": "off",
+				"options": [
+					{
+						"value": "off",
+						"label": "Off"
+					},
+					{
+						"value": "tab",
+						"label": "This tab"
+					},
+					{
+						"value": "tabAndSelection",
+						"label": "This tab and the selection"
+					}
+				]
+			},
+			{
+				"key": "description",
+				"label": "Description",
+				"type": "Text",
+				"required": false,
+				"description": "One line under its name in Aria"
+			},
+			{
 				"key": "urlPatterns",
 				"label": "URL Patterns",
 				"type": "Tags",
@@ -21916,6 +23871,20 @@
 			{
 				"name": "tabId",
 				"type": "Number"
+			},
+			{
+				"name": "$binary",
+				"type": "Key-value pairs"
+			},
+			{
+				"name": "files",
+				"type": "List of entries",
+				"description": "The files sent with the message"
+			},
+			{
+				"name": "page",
+				"type": "Object",
+				"description": "The page the user shared, its text fenced as untrusted data"
 			}
 		],
 		"outputShape": "object"
@@ -21924,11 +23893,11 @@
 		"id": "builtin/trigger/contextmenu",
 		"docLink": "/nodes/builtin/trigger/contextmenu/",
 		"registryId": "af-base-node:trigger:contextMenu",
-		"name": "Context Menu",
+		"name": "From the right-click menu",
 		"family": "trigger",
 		"category": "browser",
 		"nodeType": "trigger",
-		"description": "Run the flow from the browser context menu.",
+		"description": "Adds an item to the right-click menu that starts it.",
 		"worksIn": [
 			"extension"
 		],
@@ -22059,11 +24028,11 @@
 		"id": "builtin/trigger/elementchange",
 		"docLink": "/nodes/builtin/trigger/elementchange/",
 		"registryId": "af-base-node:trigger:elementChangeTrigger",
-		"name": "Element Change",
+		"name": "When something on a page changes",
 		"family": "trigger",
 		"category": "browser",
 		"nodeType": "trigger",
-		"description": "Run the flow when any of one or more CSS selectors on a matching page changes.",
+		"description": "Watches part of a page and starts when it changes.",
 		"worksIn": [
 			"extension"
 		],
@@ -22112,7 +24081,7 @@
 			},
 			{
 				"key": "debounceMs",
-				"label": "Debounce (ms)",
+				"label": "Wait for changes to settle",
 				"type": "Number",
 				"required": false,
 				"default": 500,
@@ -22267,14 +24236,815 @@
 		"outputShape": "object"
 	},
 	{
+		"id": "builtin/trigger/evaluation",
+		"docLink": "/nodes/builtin/trigger/evaluation/",
+		"registryId": "af-base-node:trigger:evaluationTrigger",
+		"name": "Evaluation Trigger",
+		"family": "trigger",
+		"category": "manual",
+		"nodeType": "trigger",
+		"description": "Runs the workflow once per row of a test dataset, from Test runs only.",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "client",
+		"since": "0.9.0",
+		"credentials": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"authType": "OAuth2",
+				"required": false
+			}
+		],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "source",
+				"label": "Rows from",
+				"type": "Choice",
+				"required": false,
+				"default": "dataStore",
+				"options": [
+					{
+						"value": "dataStore",
+						"label": "Data Store"
+					},
+					{
+						"value": "csv",
+						"label": "CSV"
+					},
+					{
+						"value": "googleSheets",
+						"label": "Google Sheets"
+					}
+				]
+			},
+			{
+				"key": "dataStoreKey",
+				"label": "Dataset",
+				"type": "Text",
+				"required": false,
+				"description": "A Data Store key holding a list of rows, or a key prefix (one row per key, end it with *)"
+			},
+			{
+				"key": "dataStoreScope",
+				"label": "Whose keys",
+				"type": "Choice",
+				"required": false,
+				"default": "workflow",
+				"options": [
+					{
+						"value": "workflow",
+						"label": "This workflow"
+					},
+					{
+						"value": "global",
+						"label": "All workflows"
+					}
+				]
+			},
+			{
+				"key": "csv",
+				"label": "CSV",
+				"type": "Long text",
+				"required": false,
+				"description": "Paste the rows, with a header line"
+			},
+			{
+				"key": "credential",
+				"label": "Connection",
+				"type": "Credential",
+				"required": false
+			},
+			{
+				"key": "spreadsheetId",
+				"label": "Spreadsheet",
+				"type": "One of several shapes",
+				"required": false,
+				"description": "Paste its link or ID."
+			},
+			{
+				"key": "worksheetId",
+				"label": "Worksheet ID",
+				"type": "Text",
+				"required": false,
+				"description": "The gid in the link; empty = the first sheet."
+			},
+			{
+				"key": "limit",
+				"label": "Up to",
+				"type": "Number",
+				"required": false,
+				"default": 50,
+				"description": "Rows per evaluation run (at most 500)"
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputFields": [
+			{
+				"name": "_evalRow",
+				"type": "Number"
+			}
+		],
+		"outputShape": "object"
+	},
+	{
+		"id": "builtin/trigger/form-trigger",
+		"docLink": "/nodes/builtin/trigger/form-trigger/",
+		"registryId": "af-base-node:trigger:formTrigger",
+		"name": "When a form is submitted",
+		"family": "trigger",
+		"category": "manual",
+		"nodeType": "trigger",
+		"description": "Start the workflow when someone fills in and sends a form.",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "client",
+		"since": "0.9.0",
+		"credentials": [],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "title",
+				"label": "Form title",
+				"type": "Text",
+				"required": false,
+				"default": "Request"
+			},
+			{
+				"key": "description",
+				"label": "Description",
+				"type": "Text",
+				"required": false
+			},
+			{
+				"key": "fields",
+				"label": "Page 1 fields",
+				"type": "List of entries",
+				"required": false
+			},
+			{
+				"key": "name",
+				"label": "Field name",
+				"type": "Text",
+				"required": true,
+				"group": "Page 1 fields (each entry)",
+				"description": "Key the entered value is stored under, referenced downstream"
+			},
+			{
+				"key": "label",
+				"label": "Label",
+				"type": "Text",
+				"required": false,
+				"group": "Page 1 fields (each entry)",
+				"description": "Shown above the control"
+			},
+			{
+				"key": "type",
+				"label": "Type",
+				"type": "Choice",
+				"required": false,
+				"group": "Page 1 fields (each entry)",
+				"default": "text",
+				"options": [
+					{
+						"value": "text",
+						"label": "Short text"
+					},
+					{
+						"value": "textarea",
+						"label": "Long text"
+					},
+					{
+						"value": "number",
+						"label": "Number"
+					},
+					{
+						"value": "email",
+						"label": "Email"
+					},
+					{
+						"value": "url",
+						"label": "Link"
+					},
+					{
+						"value": "date",
+						"label": "Date"
+					},
+					{
+						"value": "checkbox",
+						"label": "Yes / no"
+					},
+					{
+						"value": "select",
+						"label": "Dropdown"
+					},
+					{
+						"value": "radio",
+						"label": "Choice"
+					},
+					{
+						"value": "checkboxes",
+						"label": "Checkboxes"
+					},
+					{
+						"value": "hidden",
+						"label": "Hidden (from an expression)"
+					}
+				]
+			},
+			{
+				"key": "options",
+				"label": "Choices",
+				"type": "List",
+				"required": false,
+				"group": "Page 1 fields (each entry)",
+				"description": "For a dropdown, choice or checkboxes field"
+			},
+			{
+				"key": "required",
+				"label": "Required",
+				"type": "Toggle",
+				"required": false,
+				"group": "Page 1 fields (each entry)"
+			},
+			{
+				"key": "placeholder",
+				"label": "Placeholder",
+				"type": "Text",
+				"required": false,
+				"group": "Page 1 fields (each entry)"
+			},
+			{
+				"key": "help",
+				"label": "Help text",
+				"type": "Text",
+				"required": false,
+				"group": "Page 1 fields (each entry)"
+			},
+			{
+				"key": "default",
+				"label": "Default",
+				"type": "Text",
+				"required": false,
+				"group": "Page 1 fields (each entry)",
+				"description": "Prefill, e.g. an answer from an earlier page"
+			},
+			{
+				"key": "minLength",
+				"label": "Min length",
+				"type": "Number",
+				"required": false,
+				"group": "Page 1 fields (each entry)"
+			},
+			{
+				"key": "maxLength",
+				"label": "Max length",
+				"type": "Number",
+				"required": false,
+				"group": "Page 1 fields (each entry)"
+			},
+			{
+				"key": "min",
+				"label": "Min",
+				"type": "Number",
+				"required": false,
+				"group": "Page 1 fields (each entry)"
+			},
+			{
+				"key": "max",
+				"label": "Max",
+				"type": "Number",
+				"required": false,
+				"group": "Page 1 fields (each entry)"
+			},
+			{
+				"key": "sections",
+				"label": "Pages",
+				"type": "List of entries",
+				"required": false,
+				"description": "Pages with Back and Next, sent once at the end."
+			},
+			{
+				"key": "title",
+				"label": "Page title",
+				"type": "Text",
+				"required": true,
+				"group": "Pages (each entry)"
+			},
+			{
+				"key": "description",
+				"label": "Description",
+				"type": "Text",
+				"required": false,
+				"group": "Pages (each entry)"
+			},
+			{
+				"key": "fields",
+				"label": "Fields",
+				"type": "List of entries",
+				"required": true,
+				"group": "Pages (each entry)"
+			},
+			{
+				"key": "name",
+				"label": "Field name",
+				"type": "Text",
+				"required": true,
+				"group": "Pages (each entry) › Fields (each entry)",
+				"description": "Key the entered value is stored under, referenced downstream"
+			},
+			{
+				"key": "label",
+				"label": "Label",
+				"type": "Text",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)",
+				"description": "Shown above the control"
+			},
+			{
+				"key": "type",
+				"label": "Type",
+				"type": "Choice",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)",
+				"default": "text",
+				"options": [
+					{
+						"value": "text",
+						"label": "Short text"
+					},
+					{
+						"value": "textarea",
+						"label": "Long text"
+					},
+					{
+						"value": "number",
+						"label": "Number"
+					},
+					{
+						"value": "email",
+						"label": "Email"
+					},
+					{
+						"value": "url",
+						"label": "Link"
+					},
+					{
+						"value": "date",
+						"label": "Date"
+					},
+					{
+						"value": "checkbox",
+						"label": "Yes / no"
+					},
+					{
+						"value": "select",
+						"label": "Dropdown"
+					},
+					{
+						"value": "radio",
+						"label": "Choice"
+					},
+					{
+						"value": "checkboxes",
+						"label": "Checkboxes"
+					},
+					{
+						"value": "hidden",
+						"label": "Hidden (from an expression)"
+					}
+				]
+			},
+			{
+				"key": "options",
+				"label": "Choices",
+				"type": "List",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)",
+				"description": "For a dropdown, choice or checkboxes field"
+			},
+			{
+				"key": "required",
+				"label": "Required",
+				"type": "Toggle",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)"
+			},
+			{
+				"key": "placeholder",
+				"label": "Placeholder",
+				"type": "Text",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)"
+			},
+			{
+				"key": "help",
+				"label": "Help text",
+				"type": "Text",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)"
+			},
+			{
+				"key": "default",
+				"label": "Default",
+				"type": "Text",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)",
+				"description": "Prefill, e.g. an answer from an earlier page"
+			},
+			{
+				"key": "minLength",
+				"label": "Min length",
+				"type": "Number",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)"
+			},
+			{
+				"key": "maxLength",
+				"label": "Max length",
+				"type": "Number",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)"
+			},
+			{
+				"key": "min",
+				"label": "Min",
+				"type": "Number",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)"
+			},
+			{
+				"key": "max",
+				"label": "Max",
+				"type": "Number",
+				"required": false,
+				"group": "Pages (each entry) › Fields (each entry)"
+			},
+			{
+				"key": "giveUpAfter",
+				"label": "Give up after",
+				"type": "Number",
+				"required": false,
+				"description": "If someone stops on a later page, the run ends as “Form not completed” after this. Never: it waits until you cancel it."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		}
+	},
+	{
+		"id": "builtin/trigger/github-trigger",
+		"docLink": "/nodes/builtin/trigger/github-trigger/",
+		"registryId": "af-base-node:trigger:githubTrigger",
+		"name": "New issue or pull request",
+		"family": "trigger",
+		"category": "polling",
+		"nodeType": "trigger",
+		"description": "Start the workflow when an issue or pull request is opened or updated on GitHub.",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "external",
+		"since": "0.9.0",
+		"credentials": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"authType": "Bearer Token",
+				"required": true
+			}
+		],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"type": "Credential",
+				"required": true
+			},
+			{
+				"key": "repository",
+				"label": "Repository",
+				"type": "One of several shapes",
+				"required": true,
+				"description": "owner/repo, or paste its link."
+			},
+			{
+				"key": "watch",
+				"label": "Watch",
+				"type": "Choice",
+				"required": false,
+				"default": "issues",
+				"options": [
+					{
+						"value": "issues",
+						"label": "Issues"
+					},
+					{
+						"value": "pulls",
+						"label": "Pull requests"
+					}
+				]
+			},
+			{
+				"key": "event",
+				"label": "Start a run when one is",
+				"type": "Choice",
+				"required": false,
+				"default": "opened",
+				"options": [
+					{
+						"value": "opened",
+						"label": "Opened"
+					},
+					{
+						"value": "updated",
+						"label": "Updated"
+					}
+				]
+			},
+			{
+				"key": "pollEvery",
+				"label": "Check every",
+				"type": "Number",
+				"required": false,
+				"default": 5,
+				"description": "At least 1 minute, only while the workflow is On."
+			},
+			{
+				"key": "onFirstRun",
+				"label": "On the first check",
+				"type": "Choice",
+				"required": false,
+				"default": "skipExisting",
+				"options": [
+					{
+						"value": "skipExisting",
+						"label": "Skip what’s already there"
+					},
+					{
+						"value": "emitLatest",
+						"label": "Start with the latest"
+					}
+				]
+			},
+			{
+				"key": "latestCount",
+				"label": "How many to start with",
+				"type": "Number",
+				"required": false,
+				"default": 3,
+				"description": "For “Start with the latest” and Fetch test event (1–20)."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputFields": [
+			{
+				"name": "id",
+				"type": "Number"
+			},
+			{
+				"name": "number",
+				"type": "Number"
+			},
+			{
+				"name": "title",
+				"type": "Text"
+			}
+		],
+		"outputShape": "list"
+	},
+	{
+		"id": "builtin/trigger/gmail-trigger",
+		"docLink": "/nodes/builtin/trigger/gmail-trigger/",
+		"registryId": "af-base-node:trigger:gmailTrigger",
+		"name": "New email",
+		"family": "trigger",
+		"category": "polling",
+		"nodeType": "trigger",
+		"description": "Start the workflow when a new email arrives in Gmail (inbox, a label or a search).",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "external",
+		"since": "0.9.0",
+		"credentials": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"authType": "OAuth2",
+				"required": true
+			}
+		],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"type": "Credential",
+				"required": true
+			},
+			{
+				"key": "label",
+				"label": "Label",
+				"type": "Text",
+				"required": false,
+				"description": "A Gmail label; empty = Inbox."
+			},
+			{
+				"key": "query",
+				"label": "Search",
+				"type": "Text",
+				"required": false,
+				"description": "Gmail search words. Only matching emails start a run."
+			},
+			{
+				"key": "pollEvery",
+				"label": "Check every",
+				"type": "Number",
+				"required": false,
+				"default": 5,
+				"description": "At least 1 minute, only while the workflow is On."
+			},
+			{
+				"key": "onFirstRun",
+				"label": "On the first check",
+				"type": "Choice",
+				"required": false,
+				"default": "skipExisting",
+				"options": [
+					{
+						"value": "skipExisting",
+						"label": "Skip what’s already there"
+					},
+					{
+						"value": "emitLatest",
+						"label": "Start with the latest"
+					}
+				]
+			},
+			{
+				"key": "latestCount",
+				"label": "How many to start with",
+				"type": "Number",
+				"required": false,
+				"default": 3,
+				"description": "For “Start with the latest” and Fetch test event (1–20)."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputFields": [
+			{
+				"name": "id",
+				"type": "Text"
+			},
+			{
+				"name": "threadId",
+				"type": "Text"
+			},
+			{
+				"name": "snippet",
+				"type": "Text"
+			}
+		],
+		"outputShape": "list"
+	},
+	{
+		"id": "builtin/trigger/google-sheets-trigger",
+		"docLink": "/nodes/builtin/trigger/google-sheets-trigger/",
+		"registryId": "af-base-node:trigger:googleSheetsTrigger",
+		"name": "New row",
+		"family": "trigger",
+		"category": "polling",
+		"nodeType": "trigger",
+		"description": "Start the workflow when rows are added at the bottom of a Google Sheet.",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "external",
+		"since": "0.9.0",
+		"credentials": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"authType": "OAuth2",
+				"required": true
+			}
+		],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"type": "Credential",
+				"required": true
+			},
+			{
+				"key": "spreadsheetId",
+				"label": "Spreadsheet",
+				"type": "One of several shapes",
+				"required": true,
+				"description": "Paste its link or ID."
+			},
+			{
+				"key": "worksheetId",
+				"label": "Worksheet ID",
+				"type": "Text",
+				"required": false,
+				"description": "The gid in the link; empty = the first sheet."
+			},
+			{
+				"key": "pollEvery",
+				"label": "Check every",
+				"type": "Number",
+				"required": false,
+				"default": 5,
+				"description": "At least 1 minute, only while the workflow is On."
+			},
+			{
+				"key": "onFirstRun",
+				"label": "On the first check",
+				"type": "Choice",
+				"required": false,
+				"default": "skipExisting",
+				"options": [
+					{
+						"value": "skipExisting",
+						"label": "Skip what’s already there"
+					},
+					{
+						"value": "emitLatest",
+						"label": "Start with the latest"
+					}
+				]
+			},
+			{
+				"key": "latestCount",
+				"label": "How many to start with",
+				"type": "Number",
+				"required": false,
+				"default": 3,
+				"description": "For “Start with the latest” and Fetch test event (1–20)."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputShape": "list"
+	},
+	{
 		"id": "builtin/trigger/hotkey",
 		"docLink": "/nodes/builtin/trigger/hotkey/",
 		"registryId": "af-base-node:trigger:hotkeyTrigger",
-		"name": "Hotkey",
+		"name": "Keyboard shortcut",
 		"family": "trigger",
 		"category": "browser",
 		"nodeType": "trigger",
-		"description": "Run the flow from a keyboard shortcut.",
+		"description": "Starts when you press the keys you choose.",
 		"worksIn": [
 			"extension"
 		],
@@ -22335,14 +25105,103 @@
 		"outputShape": "object"
 	},
 	{
+		"id": "builtin/trigger/linear-trigger",
+		"docLink": "/nodes/builtin/trigger/linear-trigger/",
+		"registryId": "af-base-node:trigger:linearTrigger",
+		"name": "New Linear issue",
+		"family": "trigger",
+		"category": "polling",
+		"nodeType": "trigger",
+		"description": "Start the workflow when an issue is created in Linear (optionally one team).",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "external",
+		"since": "0.9.0",
+		"credentials": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"authType": "Bearer Token",
+				"required": true
+			}
+		],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"type": "Credential",
+				"required": true
+			},
+			{
+				"key": "teamKey",
+				"label": "Team key",
+				"type": "Text",
+				"required": false,
+				"description": "Empty = every team."
+			},
+			{
+				"key": "pollEvery",
+				"label": "Check every",
+				"type": "Number",
+				"required": false,
+				"default": 5,
+				"description": "At least 1 minute, only while the workflow is On."
+			},
+			{
+				"key": "onFirstRun",
+				"label": "On the first check",
+				"type": "Choice",
+				"required": false,
+				"default": "skipExisting",
+				"options": [
+					{
+						"value": "skipExisting",
+						"label": "Skip what’s already there"
+					},
+					{
+						"value": "emitLatest",
+						"label": "Start with the latest"
+					}
+				]
+			},
+			{
+				"key": "latestCount",
+				"label": "How many to start with",
+				"type": "Number",
+				"required": false,
+				"default": 3,
+				"description": "For “Start with the latest” and Fetch test event (1–20)."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputFields": [
+			{
+				"name": "id",
+				"type": "Text"
+			}
+		],
+		"outputShape": "list"
+	},
+	{
 		"id": "builtin/trigger/navigation",
 		"docLink": "/nodes/builtin/trigger/navigation/",
 		"registryId": "af-base-node:trigger:navigationTrigger",
-		"name": "Navigation",
+		"name": "When a tab opens or changes",
 		"family": "trigger",
 		"category": "browser",
 		"nodeType": "trigger",
-		"description": "Run the flow when a browser tab is created, updated, or removed.",
+		"description": "Starts when you open a tab or its address changes.",
 		"worksIn": [
 			"extension"
 		],
@@ -22426,14 +25285,120 @@
 		"outputShape": "object"
 	},
 	{
+		"id": "builtin/trigger/notion-trigger",
+		"docLink": "/nodes/builtin/trigger/notion-trigger/",
+		"registryId": "af-base-node:trigger:notionTrigger",
+		"name": "New or updated page",
+		"family": "trigger",
+		"category": "polling",
+		"nodeType": "trigger",
+		"description": "Start the workflow when a page is added to or edited in a Notion database.",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "external",
+		"since": "0.9.0",
+		"credentials": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"authType": "Bearer Token",
+				"required": true
+			}
+		],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "credential",
+				"label": "Connection",
+				"type": "Credential",
+				"required": true
+			},
+			{
+				"key": "databaseId",
+				"label": "Database",
+				"type": "One of several shapes",
+				"required": true,
+				"description": "Paste its link or ID."
+			},
+			{
+				"key": "event",
+				"label": "Start a run when a page is",
+				"type": "Choice",
+				"required": false,
+				"default": "created",
+				"options": [
+					{
+						"value": "created",
+						"label": "Added"
+					},
+					{
+						"value": "updated",
+						"label": "Added or edited"
+					}
+				]
+			},
+			{
+				"key": "pollEvery",
+				"label": "Check every",
+				"type": "Number",
+				"required": false,
+				"default": 5,
+				"description": "At least 1 minute, only while the workflow is On."
+			},
+			{
+				"key": "onFirstRun",
+				"label": "On the first check",
+				"type": "Choice",
+				"required": false,
+				"default": "skipExisting",
+				"options": [
+					{
+						"value": "skipExisting",
+						"label": "Skip what’s already there"
+					},
+					{
+						"value": "emitLatest",
+						"label": "Start with the latest"
+					}
+				]
+			},
+			{
+				"key": "latestCount",
+				"label": "How many to start with",
+				"type": "Number",
+				"required": false,
+				"default": 3,
+				"description": "For “Start with the latest” and Fetch test event (1–20)."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputFields": [
+			{
+				"name": "id",
+				"type": "Text"
+			}
+		],
+		"outputShape": "list"
+	},
+	{
 		"id": "builtin/trigger/pageload",
 		"docLink": "/nodes/builtin/trigger/pageload/",
 		"registryId": "af-base-node:trigger:pageLoad",
-		"name": "Page Load",
+		"name": "When a page loads",
 		"family": "trigger",
 		"category": "browser",
 		"nodeType": "trigger",
-		"description": "Run the flow when a matching browser tab finishes loading.",
+		"description": "Starts when a page you choose finishes loading.",
 		"worksIn": [
 			"extension"
 		],
@@ -22493,6 +25458,106 @@
 		"outputShape": "object"
 	},
 	{
+		"id": "builtin/trigger/rss-feed-trigger",
+		"docLink": "/nodes/builtin/trigger/rss-feed-trigger/",
+		"registryId": "af-base-node:trigger:rssFeedTrigger",
+		"name": "New feed item",
+		"family": "trigger",
+		"category": "polling",
+		"nodeType": "trigger",
+		"description": "Start the workflow when a blog or RSS/Atom feed has a new item.",
+		"worksIn": [
+			"extension",
+			"web"
+		],
+		"runtime": "client",
+		"since": "0.9.0",
+		"credentials": [],
+		"dependencies": [],
+		"settings": [
+			{
+				"key": "url",
+				"label": "Feed URL",
+				"type": "URL",
+				"required": true,
+				"description": "An RSS or Atom address."
+			},
+			{
+				"key": "pollEvery",
+				"label": "Check every",
+				"type": "Number",
+				"required": false,
+				"default": 5,
+				"description": "At least 1 minute, only while the workflow is On."
+			},
+			{
+				"key": "onFirstRun",
+				"label": "On the first check",
+				"type": "Choice",
+				"required": false,
+				"default": "skipExisting",
+				"options": [
+					{
+						"value": "skipExisting",
+						"label": "Skip what’s already there"
+					},
+					{
+						"value": "emitLatest",
+						"label": "Start with the latest"
+					}
+				]
+			},
+			{
+				"key": "latestCount",
+				"label": "How many to start with",
+				"type": "Number",
+				"required": false,
+				"default": 3,
+				"description": "For “Start with the latest” and Fetch test event (1–20)."
+			}
+		],
+		"inputs": 1,
+		"outputs": {
+			"ports": [
+				{
+					"id": "0",
+					"label": "Output"
+				}
+			]
+		},
+		"outputFields": [
+			{
+				"name": "title",
+				"type": "Text"
+			},
+			{
+				"name": "link",
+				"type": "Text"
+			},
+			{
+				"name": "guid",
+				"type": "Text"
+			},
+			{
+				"name": "isoDate",
+				"type": "Text"
+			},
+			{
+				"name": "pubDate",
+				"type": "Text"
+			},
+			{
+				"name": "content",
+				"type": "Text"
+			},
+			{
+				"name": "contentSnippet",
+				"type": "Text"
+			}
+		],
+		"outputShape": "list"
+	},
+	{
 		"id": "builtin/trigger/schedule",
 		"docLink": "/nodes/builtin/trigger/schedule/",
 		"registryId": "af-base-node:trigger:schedule",
@@ -22519,18 +25584,18 @@
 						"when": [
 							{
 								"key": "triggerInterval",
-								"label": "Trigger Interval",
+								"label": "Run every",
 								"value": "seconds",
-								"valueLabel": "seconds"
+								"valueLabel": "Seconds"
 							}
 						],
 						"fields": [
 							{
 								"key": "secondsBetweenTriggers",
-								"label": "Seconds Between Triggers",
+								"label": "Every how many seconds",
 								"type": "Number",
 								"required": true,
-								"description": "Seconds between each run. Note: the browser floors alarms at ~1 minute, so second-level schedules are best-effort — the minimum is 10s and short intervals are effectively rounded up to about 1 minute. For reliable sub-minute timing, keep the flow running yourself."
+								"description": "Seconds between each run. Browsers run alarms at most every 30 seconds, so shorter intervals run every 30 s. For reliable sub-30-second timing, keep the flow running yourself."
 							}
 						]
 					},
@@ -22538,15 +25603,15 @@
 						"when": [
 							{
 								"key": "triggerInterval",
-								"label": "Trigger Interval",
+								"label": "Run every",
 								"value": "minutes",
-								"valueLabel": "minutes"
+								"valueLabel": "Minutes"
 							}
 						],
 						"fields": [
 							{
 								"key": "minutesBetweenTriggers",
-								"label": "Minutes Between Triggers",
+								"label": "Every how many minutes",
 								"type": "Number",
 								"required": true,
 								"description": "Number of minutes between each workflow trigger"
@@ -22557,15 +25622,15 @@
 						"when": [
 							{
 								"key": "triggerInterval",
-								"label": "Trigger Interval",
+								"label": "Run every",
 								"value": "hours",
-								"valueLabel": "hours"
+								"valueLabel": "Hours"
 							}
 						],
 						"fields": [
 							{
 								"key": "hoursBetweenTriggers",
-								"label": "Hours Between Triggers",
+								"label": "Every how many hours",
 								"type": "Number",
 								"required": false,
 								"description": "Number of hours between each workflow trigger"
@@ -22576,6 +25641,13 @@
 								"type": "Number",
 								"required": false,
 								"description": "Minute of the hour at which the workflow will be triggered"
+							},
+							{
+								"key": "timezone",
+								"label": "Timezone",
+								"type": "Choice (loaded from your account)",
+								"required": false,
+								"description": "Run at this time in another place. Empty = your browser’s time."
 							}
 						]
 					},
@@ -22583,28 +25655,28 @@
 						"when": [
 							{
 								"key": "triggerInterval",
-								"label": "Trigger Interval",
+								"label": "Run every",
 								"value": "days",
-								"valueLabel": "days"
+								"valueLabel": "Days"
 							}
 						],
 						"fields": [
 							{
 								"key": "daysBetweenTriggers",
-								"label": "Days Between Triggers",
+								"label": "Every how many days",
 								"type": "Number",
 								"required": false,
 								"description": "Number of days between each workflow trigger"
 							},
 							{
 								"key": "triggerAtHour",
-								"label": "Trigger at Hour",
+								"label": "At (hour)",
 								"type": "Choice",
 								"required": true,
 								"options": [
 									{
 										"value": "0",
-										"label": "0 AM"
+										"label": "12 AM (midnight)"
 									},
 									{
 										"value": "1",
@@ -22652,7 +25724,7 @@
 									},
 									{
 										"value": "12",
-										"label": "12 AM"
+										"label": "12 PM (noon)"
 									},
 									{
 										"value": "13",
@@ -22707,6 +25779,13 @@
 								"type": "Number",
 								"required": false,
 								"description": "Minute of the hour at which the workflow will be triggered"
+							},
+							{
+								"key": "timezone",
+								"label": "Timezone",
+								"type": "Choice (loaded from your account)",
+								"required": false,
+								"description": "Run at this time in another place. Empty = your browser’s time."
 							}
 						]
 					},
@@ -22714,15 +25793,15 @@
 						"when": [
 							{
 								"key": "triggerInterval",
-								"label": "Trigger Interval",
+								"label": "Run every",
 								"value": "weeks",
-								"valueLabel": "weeks"
+								"valueLabel": "Weeks"
 							}
 						],
 						"fields": [
 							{
 								"key": "weeksBetweenTriggers",
-								"label": "Weeks Between Triggers",
+								"label": "Every how many weeks",
 								"type": "Number",
 								"required": false,
 								"description": "Would run every week unless specified otherwise"
@@ -22766,13 +25845,13 @@
 							},
 							{
 								"key": "triggerAtHour",
-								"label": "Trigger at Hour",
+								"label": "At (hour)",
 								"type": "Choice",
 								"required": true,
 								"options": [
 									{
 										"value": "0",
-										"label": "0 AM"
+										"label": "12 AM (midnight)"
 									},
 									{
 										"value": "1",
@@ -22820,7 +25899,7 @@
 									},
 									{
 										"value": "12",
-										"label": "12 AM"
+										"label": "12 PM (noon)"
 									},
 									{
 										"value": "13",
@@ -22875,6 +25954,13 @@
 								"type": "Number",
 								"required": false,
 								"description": "Minute of the hour at which the workflow will be triggered"
+							},
+							{
+								"key": "timezone",
+								"label": "Timezone",
+								"type": "Choice (loaded from your account)",
+								"required": false,
+								"description": "Run at this time in another place. Empty = your browser’s time."
 							}
 						]
 					},
@@ -22882,15 +25968,15 @@
 						"when": [
 							{
 								"key": "triggerInterval",
-								"label": "Trigger Interval",
+								"label": "Run every",
 								"value": "months",
-								"valueLabel": "months"
+								"valueLabel": "Months"
 							}
 						],
 						"fields": [
 							{
 								"key": "monthsBetweenTriggers",
-								"label": "Months Between Triggers",
+								"label": "Every how many months",
 								"type": "Number",
 								"required": false,
 								"description": "Number of months between each workflow trigger"
@@ -22904,7 +25990,7 @@
 							},
 							{
 								"key": "triggerAtHour",
-								"label": "Trigger at Hour",
+								"label": "At (hour)",
 								"type": "Number",
 								"required": true,
 								"description": "Hour of the day at which the workflow will be triggered"
@@ -22915,6 +26001,39 @@
 								"type": "Number",
 								"required": false,
 								"description": "Minute of the hour at which the workflow will be triggered"
+							},
+							{
+								"key": "timezone",
+								"label": "Timezone",
+								"type": "Choice (loaded from your account)",
+								"required": false,
+								"description": "Run at this time in another place. Empty = your browser’s time."
+							}
+						]
+					},
+					{
+						"when": [
+							{
+								"key": "triggerInterval",
+								"label": "Run every",
+								"value": "cron",
+								"valueLabel": "Custom (cron)"
+							}
+						],
+						"fields": [
+							{
+								"key": "expression",
+								"label": "Cron rule",
+								"type": "Text",
+								"required": true,
+								"description": "minute · hour · day · month · weekday"
+							},
+							{
+								"key": "timezone",
+								"label": "Timezone",
+								"type": "Choice (loaded from your account)",
+								"required": false,
+								"description": "Run at this time in another place. Empty = your browser’s time."
 							}
 						]
 					}
@@ -22942,11 +26061,11 @@
 		"id": "builtin/trigger/whenstarted",
 		"docLink": "/nodes/builtin/trigger/whenstarted/",
 		"registryId": "af-base-node:trigger:whenStarted",
-		"name": "When Started",
+		"name": "When I press Run",
 		"family": "trigger",
 		"category": "manual",
 		"nodeType": "trigger",
-		"description": "Run the flow on clicking the start button. Good for getting started quickly.",
+		"description": "Starts the workflow when you press Run. Use it to try things out.",
 		"worksIn": [
 			"extension",
 			"web"
@@ -23071,7 +26190,7 @@
 		"family": "inpage",
 		"category": "Browser Control",
 		"nodeType": "basic",
-		"description": "Write text to the system clipboard on the active tab. This node never reads the clipboard; reading clipboard content is a separate, permission-gated node.",
+		"description": "Write text to the system clipboard on the active tab. This step never reads the clipboard; reading clipboard content is a separate, permission-gated step.",
 		"worksIn": [
 			"extension"
 		],
@@ -23144,11 +26263,11 @@
 		"id": "extension/displayobject",
 		"docLink": "/nodes/extension/displayobject/",
 		"registryId": "af-base-node:basic:displayObjectNode",
-		"name": "Display Object",
+		"name": "Show data",
 		"family": "inpage",
 		"category": "Display Content",
 		"nodeType": "basic",
-		"description": "Display an object in the UI",
+		"description": "Show the items in a card on the page.",
 		"worksIn": [
 			"extension"
 		],
@@ -23283,7 +26402,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -23347,7 +26466,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -23373,11 +26492,11 @@
 		"id": "extension/getalllinks",
 		"docLink": "/nodes/extension/getalllinks/",
 		"registryId": "af-base-node:basic:getAllLinksNode",
-		"name": "Get All Link",
+		"name": "Get all links",
 		"family": "inpage",
 		"category": "Retrieve HTML Content",
 		"nodeType": "basic",
-		"description": "Get all the links from the page of the actual openend tab",
+		"description": "Get every link on the open page.",
 		"worksIn": [
 			"extension"
 		],
@@ -23411,7 +26530,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -23468,7 +26587,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -23497,7 +26616,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "extension/getelementdata",
@@ -23649,7 +26769,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -23873,7 +26993,7 @@
 				"label": "Options",
 				"type": "Group",
 				"required": false,
-				"description": "The options for the node"
+				"description": "The options for this step"
 			},
 			{
 				"key": "includeInputFields",
@@ -23893,7 +27013,8 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "extension/getstructureddata",
@@ -23962,7 +27083,7 @@
 					},
 					{
 						"value": "keyValue",
-						"label": "Key/Value"
+						"label": "Key–value list"
 					}
 				],
 				"description": "How list items are represented"
@@ -24001,7 +27122,8 @@
 				"description": "One item per row or list entry"
 			}
 		],
-		"outputShape": "list"
+		"outputShape": "list",
+		"agentTool": true
 	},
 	{
 		"id": "extension/screenshotpage",
@@ -24085,7 +27207,8 @@
 				"type": "Key-value pairs"
 			}
 		],
-		"outputShape": "object"
+		"outputShape": "object",
+		"agentTool": true
 	},
 	{
 		"id": "extension/shownotification",
@@ -24095,7 +27218,7 @@
 		"family": "inpage",
 		"category": "Display Content",
 		"nodeType": "basic",
-		"description": "Show a native browser notification You can use this node when a background or browser-triggered workflow needs to notify the user..",
+		"description": "Show a native browser notification You can use this step when a background or browser-triggered workflow needs to notify the user..",
 		"worksIn": [
 			"extension"
 		],
@@ -24299,17 +27422,18 @@
 					"label": "Output"
 				}
 			]
-		}
+		},
+		"agentTool": true
 	},
 	{
 		"id": "extension/ui/automation",
 		"docLink": "/nodes/extension/ui/automation/",
 		"registryId": "af-base-node:basic:uiAutomationNode",
-		"name": "UI Automation",
+		"name": "Act on the page",
 		"family": "inpage",
 		"category": "UI Manipulation",
 		"nodeType": "basic",
-		"description": "Automate UI interactions",
+		"description": "Click, type and fill on the open page, step by step.",
 		"worksIn": [
 			"extension"
 		],
@@ -24334,7 +27458,8 @@
 				}
 			]
 		},
-		"outputShape": "value"
+		"outputShape": "value",
+		"agentTool": true
 	},
 	{
 		"id": "extension/ui/delete-elements",
@@ -24369,7 +27494,8 @@
 				}
 			]
 		},
-		"outputShape": "value"
+		"outputShape": "value",
+		"agentTool": true
 	},
 	{
 		"id": "extension/ui/form-fill",
@@ -24468,7 +27594,8 @@
 				"type": "List of entries"
 			}
 		],
-		"outputShape": "object"
+		"outputShape": "object",
+		"agentTool": true
 	},
 	{
 		"id": "extension/ui/highlight-elements",

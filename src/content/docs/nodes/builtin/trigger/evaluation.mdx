@@ -1,0 +1,101 @@
+---
+title: "Evaluation Trigger"
+description: "Run the workflow once per row of a test dataset, from Test runs only"
+sidebar:
+  label: "Evaluation Trigger"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/trigger/evaluation
+  family: trigger
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Hold the test rows of an evaluation. **Test runs** starts the workflow here, once per row, to measure how well it answers.
+
+{/* AUTO:callout:start */}
+<AwfCallout type="credential" title={"Can use an Evaluation Trigger connection"} href="/app/connections/" linkLabel={"Create a connection"}>
+  Optional: pick a saved connection in the **Connection** field when the service needs one. It signs in with an OAuth2.
+</AwfCallout>
+{/* AUTO:callout:end */}
+
+## What it does
+
+The Evaluation Trigger never starts a normal run: pressing **Run** ignores it, and it doesn't run on a schedule or any other trigger. Only **Run evaluation** in the canvas **⋯** menu › **Test runs** uses it. Each row becomes one run, and the row's columns are this trigger's output.
+
+Rows come from:
+
+- **Data Store**: a **Dataset** key that holds a list of rows, or a key prefix ending in `*` (one row per key, in key order). **Whose keys** picks this workflow's keys or all workflows'.
+- **CSV**: rows pasted in the step, with a header line.
+
+**Up to** caps the rows per evaluation run (50 by default, at most 500).
+
+- **Google Sheets**: a sheet read with the step's Google connection (the spreadsheet's link or ID, and the worksheet's gid). The first row names the columns; each non-empty row below is a case.
+
+To add a real run as a case, open it in [Runs](/app/workflows/run-history/#add-a-run-to-a-test-dataset) and use **Add this run's input to the test dataset** (Data Store lists only, not a key prefix).
+
+## When to use it
+
+- Before changing the model or the prompt of an AI workflow: run the same cases before and after, and compare.
+- To keep a set of tricky inputs that once went wrong, and check they stay fixed.
+
+See [Test runs](/app/workflows/test-runs/) for the whole method.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Rows from","type":"Choice","default":"Data Store","description":"Options: Data Store, CSV, Google Sheets."},{"name":"Dataset","type":"Text","description":"A Data Store key holding a list of rows, or a key prefix (one row per key, end it with *)."},{"name":"Whose keys","type":"Choice","default":"This workflow","description":"Options: This workflow, All workflows."},{"name":"CSV","type":"Long text","description":"Paste the rows, with a header line."},{"name":"Connection","type":"Credential"},{"name":"Spreadsheet","type":"One of several shapes","description":"Paste its link or ID."},{"name":"Worksheet ID","type":"Text","description":"The gid in the link; empty = the first sheet."},{"name":"Up to","type":"Number","default":"50","description":"Rows per evaluation run (at most 500)."}]} />
+{/* AUTO:settings:end */}
+
+Put the expected answer in a column of the dataset (for example `expected`), so an [Evaluation](/nodes/builtin/flow/evaluation/) step can compare it with what the workflow produced.
+
+```csv title="Pasted CSV"
+question,expected
+Where is my order 1042?,shipping
+Can I get a refund?,billing
+```
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"_evalRow","type":"Number"}]} />
+
+```json title="Shape of an output item"
+{
+  "_evalRow": 0
+}
+```
+{/* AUTO:outputs:end */}
+
+The row's columns, plus `_evalRow` (the row number, from 0).
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+- **Connection** (connection, OAuth2): optional. See [Create a connection](/app/connections/).
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. Evaluation Trigger with the CSV above, next to the workflow's normal [Chat Trigger](/nodes/builtin/trigger/chat/).
+2. Both triggers lead into the same [Text Classifier](/nodes/builtin/ai/aiagents/textclassifiernode/).
+3. An [Evaluation](/nodes/builtin/flow/evaluation/) step, **Set metrics**, **Category**, expected `{{ $('Evaluation Trigger').expected }}`.
+
+## Common issues
+
+- **"The dataset has no rows."**: the key is empty, or no key starts with the prefix.
+- **"Paste the CSV rows, with a header line."**: the CSV box is empty.
+- **"Save first: test runs use the saved workflow."**: Test runs always run the saved version. Save, then run the evaluation.
+
+## Related nodes
+
+- [Evaluation](/nodes/builtin/flow/evaluation/): score each case.
+- [Data Store](/nodes/builtin/core/datastore/): keep the dataset.

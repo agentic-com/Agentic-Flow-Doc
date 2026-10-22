@@ -40,6 +40,8 @@ export type ShotDef = {
 	/** Areas for <GuidedShot> / <StepShot>. Recorded with the hotspots, after them. */
 	spots?: SpotDef[];
 	prepare: (s: Session) => Promise<void>;
+	/** Runs after the capture (also when it failed): undoes what prepare set up outside the app's own state, such as a route stub. */
+	cleanup?: (s: Session) => Promise<void>;
 };
 
 export const btn = (name: string | RegExp, exact = false): Locate => (p) => p.getByRole('button', { name, exact });

@@ -160,4 +160,18 @@ export const NAV_LABELS: Record<string, { fr: string; de: string; 'zh-CN': strin
 	"Read-later": { fr: "À lire plus tard", de: "Später lesen", 'zh-CN': "稍后阅读" },
 	"Dev": { fr: "Développement", de: "Entwicklung", 'zh-CN': "开发" },
 	"Other": { fr: "Autres", de: "Weitere", 'zh-CN': "其他" },
+
+	// From the app glossary seed (docs/ux/glossary.md).
+	"Runs": { fr: "Exécutions", de: "Ausführungen", 'zh-CN': "运行记录" },
+	// TODO(i18n): Road to 1.0 pages, English until the docs are translated.
+	"Workflow settings": { fr: "Workflow settings", de: "Workflow settings", 'zh-CN': "Workflow settings" },
+	"Keyboard shortcuts": { fr: "Keyboard shortcuts", de: "Keyboard shortcuts", 'zh-CN': "Keyboard shortcuts" },
+	"Test runs": { fr: "Test runs", de: "Test runs", 'zh-CN': "Test runs" },
+	"Step versions": { fr: "Step versions", de: "Step versions", 'zh-CN': "Step versions" },
+	"Behaviour versions": { fr: "Behaviour versions", de: "Behaviour versions", 'zh-CN': "Behaviour versions" },
+	"Variables": { fr: "Variables", de: "Variables", 'zh-CN': "Variables" },
+	"Insights": { fr: "Insights", de: "Insights", 'zh-CN': "Insights" },
+	"Updating AWFlow": { fr: "Updating AWFlow", de: "Updating AWFlow", 'zh-CN': "Updating AWFlow" },
+	"Kept results": { fr: "Kept results", de: "Kept results", 'zh-CN': "Kept results" },
+	"Run from here": { fr: "Run from here", de: "Run from here", 'zh-CN': "Run from here" },
 };

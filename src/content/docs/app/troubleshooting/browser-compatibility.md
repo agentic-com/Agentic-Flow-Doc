@@ -22,7 +22,7 @@ AWFlow relies on modern browser APIs for automation, DOM access, and local AI ex
 |-------|---------------|------|
 | **Google Chrome** | Fully supported | Recommended |
 | **Microsoft Edge** | Fully supported | Chromium-based |
-| **Firefox** | Supported (version 140 or later) | A few differences, listed below |
+| **Firefox** | Supported (version 140 or later) | Install from Firefox Add-ons; a few differences, listed below |
 | **Safari** | Not supported | Technical limitations |
 
 <aside>
@@ -70,7 +70,7 @@ If the issue persists:
 
 ## Firefox
 
-AWFlow runs in **Firefox 140 or later** (desktop). Workflows, triggers, page steps, integrations and the web app work as in Chrome. The differences are below.
+AWFlow runs in **Firefox 140 or later** (desktop). Install it from <a href="https://addons.mozilla.org/addon/awflow/" target="_blank" rel="noopener">AWFlow on Firefox Add-ons</a> (**Add to Firefox**). Workflows, triggers, page steps, integrations and the web app work as in Chrome. The differences are below.
 
 ### First run
 

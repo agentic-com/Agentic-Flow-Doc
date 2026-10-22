@@ -1,0 +1,87 @@
+---
+title: "Variables"
+description: "Keep a base URL, an inbox or an id in one place and write {{ $vars.NAME }} in any step. Change it once, every workflow follows."
+kind: guide
+section: app
+sidebar:
+  order: 6
+  badge:
+    text: New
+    variant: tip
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import { Badge, Callout, GuidedShot } from "@components/awflow";
+
+<Badge variant="no-setup" text="Free" />
+
+**In the app:** **Your data › Variables** (`#/app/variables`)
+
+A **variable** is a named value you reuse in many steps: the address of your API, the email inbox a workflow reads, the id of a spreadsheet. Write `{{ $vars.NAME }}` in any field; when the value changes, change it once on the Variables page.
+
+<Callout type="careful" title="Secrets belong in Connections">
+Variables are visible to anyone who edits your workflows, and they aren't encrypted. Put API keys, tokens and passwords in a [connection](/app/connections/) instead.
+</Callout>
+
+## Add a variable
+
+<Steps>
+
+1. Open **Your data › Variables** and press **New variable**.
+2. Give it a **Name**: letters, numbers and `_`, starting with a letter or `_`, up to 50 characters. Names are usually written in capitals, like `BASE_URL`.
+3. Type the **Value** (up to 2,000 characters).
+4. Optional: a **Description** of what it is for. It is shown when someone imports a workflow that needs this variable.
+5. Press **Save**.
+
+</Steps>
+
+<GuidedShot
+  shot="variables-new"
+  steps={[
+    { spot: 'name', title: 'Name', body: 'Letters, numbers and `_`, up to 50.' },
+    { spot: 'value', title: 'Value', body: 'Up to 2,000 characters. Never a key or a password.' },
+    { spot: 'description', title: 'Description', body: 'Optional: shown to whoever imports a workflow that needs it.' },
+    { spot: 'save', title: 'Save', check: 'the variable is listed on the Variables page.' },
+  ]}
+/>
+
+You can keep up to 200 variables. A value that looks like a known key format (an OpenAI or GitHub key, for example) is refused, with **Store as a connection**. A name like `API_KEY`, or a value that looks secret, shows a warning and needs **Save anyway**.
+
+## Use it in a step
+
+- In an expression field, type `$vars.` and pick the name from the suggestions.
+- Or open **Use data** on a field: the picker has a **Variables** section. Tap a variable (or drag it) to insert `{{ $vars.NAME }}`. **New variable…** creates one without leaving the step.
+
+```text title="URL field of an HTTP Request step"
+{{ $vars.BASE_URL }}/orders?status=open
+```
+
+Variables are read **once, when the run starts**. A run that pauses (an approval, a long wait) keeps the values it started with, even if you change them meanwhile.
+
+A step that reads a variable nobody has set **fails** with a clear message and an **Add NAME** button; it never runs with an empty value.
+
+## The Variables page
+
+In the side panel each row shows the name, the value and how many workflows use it. On a wide screen the table shows **Name**, **Value**, **Description**, **Used in**, **Location** and **Updated**, with search and bulk delete.
+
+- **Edit** opens the same sheet as **New variable**.
+- **Delete** says which workflows use the variable and will break. A variable no workflow uses says "No workflow uses it".
+- A link such as `#/app/variables?new=BASE_URL` opens the sheet with the name filled in.
+
+## On this device and in your account
+
+Variables live where the workflow lives:
+
+- A workflow **on this device** reads the variables kept on this device.
+- A workflow **in your account (cloud)** reads the variables of your account.
+
+When you are signed in, a name missing in one place is read from the other. If the same name has two different values, the page flags it with **differs**.
+
+## Share and import
+
+When you export or publish a workflow, the file lists the variables it needs (names and descriptions, **never the values**). After an import, [Ready to run](/app/workflows/components/nodes/#ready-to-run) lists each one as **Set NAME**, with the author's description, and lets you set it in place.
+
+## Related
+
+- [Data store](/app/data-store/): values that **workflows write** while they run (counters, last-seen ids). Variables are values **you** set.
+- [Expressions](/concepts/data/data-mapping/data-mapping-expressions/): where `$vars` fits with `$input`, `$('Step')` and the other references.

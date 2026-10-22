@@ -10,8 +10,8 @@ const dialog = (p: Page) => p.getByRole('dialog');
 
 async function openNewCredential(s: Session) {
 	await s.go('#/app/credentials');
-	await s.page.getByRole('button', { name: 'Add Credential' }).first().click({ timeout: T });
-	await dialog(s.page).getByText('New Credential').first().waitFor({ timeout: T });
+	await s.page.getByRole('button', { name: /Add connection/ }).first().click({ timeout: T });
+	await dialog(s.page).getByText('New connection').first().waitFor({ timeout: T });
 }
 
 async function pickApp(s: Session, app: string) {
@@ -27,8 +27,11 @@ async function pickApp(s: Session, app: string) {
 
 const nameSpot: SpotDef = { id: 'name', label: 'Name', locator: (p) => dialog(p).getByRole('textbox', { name: 'Name', exact: true }) };
 const storageSpot: SpotDef = { id: 'storage', label: 'Where the secret is stored (here, locally in this browser)', locator: (p) => dialog(p).getByText('Saved locally in this browser') };
-const createSpot: SpotDef = { id: 'create', label: 'Create Credential', locator: (p) => dialog(p).getByRole('button', { name: 'Create Credential' }) };
+const SAVE = /^(Add connection|Save and test|Save connection|Save)$/;
+const createSpot: SpotDef = { id: 'create', label: 'Save the connection', locator: (p) => dialog(p).getByRole('button', { name: SAVE }).last() };
 const field = (id: string, name: string, label = name): SpotDef => ({ id, label, locator: (p) => dialog(p).getByRole('textbox', { name, exact: true }) });
+/** The n-th secret field after Name and Description (apps label them their own way: Personal access token, API key…). */
+const secret = (id: string, n: number, label: string): SpotDef => ({ id, label, locator: (p) => dialog(p).getByRole('textbox').nth(2 + n) });
 
 function appShot(page: string, app: string, kind: 'bearer' | 'basic' | 'oauth'): ShotDef {
 	const slug = page;
@@ -36,16 +39,16 @@ function appShot(page: string, app: string, kind: 'bearer' | 'basic' | 'oauth'):
 	const vendor = isGoogle ? 'Google' : 'Microsoft';
 	const fieldsAlt =
 		kind === 'bearer'
-			? 'a Bearer Token field (no Auth Type menu: the app sets it)'
+			? 'a Bearer Token field (no Type menu: the app sets it)'
 			: kind === 'basic'
-				? 'Username and Password fields (no Auth Type menu: the app sets Basic Auth)'
+				? 'Username and Password fields (no Type menu: the app sets Basic Auth)'
 				: `a collapsed Create your ${vendor} OAuth client guide, a Client ID field${isGoogle ? ', a Client Secret (optional) field' : ' (no Client Secret: Microsoft 365 is a public client)'} and a Check connection button, disabled until a Client ID is filled`;
 	const spots: SpotDef[] = [
 		{ id: 'app', label: `Integration App / Service: ${app}`, locator: (p) => dialog(p).getByRole('combobox').first() },
 		nameSpot
 	];
-	if (kind === 'bearer') spots.push(field('token', 'Bearer Token'));
-	if (kind === 'basic') spots.push(field('username', 'Username'), field('password', 'Password'));
+	if (kind === 'bearer') spots.push(secret('token', 0, 'The token field (named after the app’s own word for it)'));
+	if (kind === 'basic') spots.push(secret('username', 0, 'First key field'), secret('password', 1, 'Second key field'));
 	if (kind === 'oauth') {
 		spots.push({ id: 'oauth-guide', label: `Create your ${vendor} OAuth client guide`, locator: btn(new RegExp(`Create your ${vendor} OAuth client`)) });
 		spots.push(field('client-id', 'Client ID'));
@@ -56,8 +59,8 @@ function appShot(page: string, app: string, kind: 'bearer' | 'basic' | 'oauth'):
 	return {
 		name: `credentials-${slug}`,
 		page: `app/connections/${page}`,
-		route: '#/app/credentials (Add Credential)',
-		alt: `The New Credential dialog with ${app} picked under Integration App / Service: Name and Description fields, ${fieldsAlt}, a note that the secret is saved locally and encrypted in this browser, and the Cancel and Create Credential buttons.`,
+		route: '#/app/credentials (Add connection)',
+		alt: `The New connection form with ${app} picked under Integration App / Service: Name and Description fields, ${fieldsAlt}, and the Cancel and Save and test buttons.`,
 		spots,
 		prepare: async (s) => {
 			await openNewCredential(s);
@@ -75,9 +78,9 @@ function appShot(page: string, app: string, kind: 'bearer' | 'basic' | 'oauth'):
 
 function simpleShot(kind: 'jwt' | 'bearer' | 'basic', authLabel: string, page: string): ShotDef {
 	const spots: SpotDef[] = [
-		{ id: 'app', label: 'Integration App / Service: none (Simple Credential)', locator: (p) => dialog(p).getByRole('combobox').first() },
+		{ id: 'app', label: 'Integration App / Service: none (an API key or password)', locator: (p) => dialog(p).getByRole('combobox').first() },
 		nameSpot,
-		{ id: 'auth-type', label: `Auth Type: ${authLabel}`, locator: (p) => dialog(p).getByRole('button', { name: 'Auth Type' }) }
+		{ id: 'auth-type', label: `Type: ${authLabel}`, locator: (p) => dialog(p).getByRole('button', { name: 'Type', exact: true }) }
 	];
 	if (kind === 'jwt') spots.push(field('token', 'JWT'));
 	if (kind === 'bearer') spots.push(field('token', 'Bearer Token'));
@@ -87,17 +90,17 @@ function simpleShot(kind: 'jwt' | 'bearer' | 'basic', authLabel: string, page: s
 	return {
 		name: `credentials-simple-${kind}`,
 		page: `app/connections/${page}`,
-		route: '#/app/credentials (Add Credential)',
-		alt: `The New Credential dialog for a simple credential (no app picked, so Integration App / Service reads Select an integration...): Name and Description fields, the Auth Type menu set to ${authLabel}, ${fields}, a note that the secret is saved locally and encrypted in this browser, and the Cancel and Create Credential buttons.`,
+		route: '#/app/credentials (Add connection)',
+		alt: `The New connection form for a connection without an app (no app picked, so Integration App / Service reads Select an integration...): Name and Description fields, the Type menu set to ${authLabel}, ${fields}, and the Cancel and Save and test buttons.`,
 		spots,
 		prepare: async (s) => {
 			await openNewCredential(s);
 			const page = s.page;
 			if (kind !== 'basic' || !(await dialog(page).getByRole('textbox', { name: 'Username' }).count())) {
-				await dialog(page).getByRole('button', { name: 'Auth Type' }).click({ timeout: T });
+				await dialog(page).getByRole('button', { name: 'Type', exact: true }).click({ timeout: T });
 				await page.getByRole('option', { name: authLabel, exact: true }).click({ timeout: T });
 			}
-			await dialog(page).getByRole('button', { name: 'Auth Type' }).filter({ hasText: authLabel }).waitFor({ timeout: T });
+			await dialog(page).getByRole('button', { name: 'Type', exact: true }).filter({ hasText: authLabel }).waitFor({ timeout: T });
 			await page.waitForTimeout(400);
 		}
 	};
@@ -107,29 +110,34 @@ export const shots: ShotDef[] = [
 	{
 		name: 'credentials-new',
 		page: 'app/connections/create',
-		route: '#/app/credentials',
-		alt: 'The New Credential dialog over the Credentials page: an Integration App / Service picker, Name and Description fields, an Auth Type menu set to Basic Auth with Username and Password fields, a note that the secret is saved locally and encrypted in this browser, and the Create Credential button.',
-		hotspots: [
-			{ id: 'app', label: 'Pick the app or service', locate: (p) => p.getByRole('dialog').getByRole('combobox').first() },
-			{ id: 'name', label: 'Name it so you can find it in nodes', locate: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Name', exact: true }) },
-			{ id: 'auth-type', label: 'Auth type decides which fields you fill', locate: (p) => p.getByRole('dialog').getByRole('button', { name: 'Auth Type' }) },
-			{ id: 'storage', label: 'Where the secret is stored', locate: (p) => p.getByRole('dialog').getByText('Saved locally in this browser') }
-		],
+		route: '#/app/credentials?new=1',
+		alt: 'The New connection form over the Connections page: the Integration App / Service picker, Name (Weather API) and Description, Type set to Bearer token with its Bearer Token field, a note that it is saved locally in this browser, and the Cancel and Add connection buttons.',
 		spots: [
-			{ id: 'fields', label: 'The fields of the chosen auth type (here Username and Password)', locator: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Username' }) },
-			{ id: 'create', label: 'Create Credential', locator: (p) => p.getByRole('dialog').getByRole('button', { name: 'Create Credential' }) }
+			{ id: 'app', label: 'Pick the app or service', locator: (p) => p.getByRole('dialog').getByRole('combobox').first() },
+			{ id: 'name', label: 'Name it so you can find it in steps', locator: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Name', exact: true }) },
+			{ id: 'auth-type', label: 'Type: how the service signs in', locator: (p) => p.getByRole('dialog').getByRole('button', { name: 'Type' }) },
+			{ id: 'fields', label: 'The fields of that type (here the token)', locator: (p) => p.getByRole('dialog').getByRole('textbox', { name: /Bearer Token/i }) },
+			{ id: 'storage', label: 'Where it is saved', locator: (p) => p.getByRole('dialog').getByText('Saved locally in this browser') },
+			{ id: 'create', label: 'Add connection', locator: (p) => p.getByRole('dialog').getByRole('button', { name: /^(Add connection|Save and test|Save connection)$/ }).last() }
 		],
 		prepare: async (s) => {
+			await s.page.goto('about:blank');
 			await s.go('#/app/credentials');
-			await s.page.getByRole('button', { name: 'Add Credential' }).first().click({ timeout: T });
-			await s.page.getByRole('dialog').getByText('New Credential').first().waitFor({ timeout: T });
+			await s.page.getByRole('button', { name: /Add connection/ }).first().click({ timeout: T });
+			const d = s.page.getByRole('dialog');
+			await d.getByRole('textbox', { name: 'Name', exact: true }).click({ timeout: T });
+			await d.getByRole('textbox', { name: 'Name', exact: true }).fill('Weather API');
+			await d.getByRole('button', { name: 'Type' }).click({ timeout: T });
+			await s.page.getByRole('option', { name: 'Bearer token' }).first().click({ timeout: T });
+			await s.page.getByRole('dialog').getByRole('textbox', { name: /Bearer Token/i }).waitFor({ timeout: T });
+			await s.page.waitForTimeout(600);
 		}
 	},
 	{
 		name: 'credentials-oauth',
 		page: 'app/connections/oauth-client',
-		route: '#/app/credentials (Add Credential)',
-		alt: 'The New Credential dialog with Gmail picked: Name and Description fields, then the Create your Google OAuth client guide in 5 steps (create a Google Cloud project, enable the Gmail API, set up the consent screen, create a Web application client with the redirect URI shown and a Copy button, paste the Client ID and Secret), and a Step-by-step with screenshots link. This capture is the web app, so the redirect URI is https://app.awflow.io/oauth-callback/web.',
+		route: '#/app/credentials (Add connection)',
+		alt: 'The New connection form with Gmail picked: Name and Description fields, then the Create your Google OAuth client guide in 5 steps (create a Google Cloud project, enable the Gmail API, set up the consent screen, create a Web application client with the redirect URI shown and a Copy button, paste the Client ID and Secret), and a Step-by-step with screenshots link. This capture is the web app, so the redirect URI is https://app.awflow.io/oauth-callback/web.',
 		hotspots: [
 			{ id: 'app', label: 'The app: Gmail', locate: (p) => p.getByRole('dialog').getByRole('combobox').first() },
 			{ id: 'create-google-oauth-client', label: 'Create your Google OAuth client guide', locate: btn(/Create your Google OAuth client/) },
@@ -138,9 +146,9 @@ export const shots: ShotDef[] = [
 		prepare: async (s) => {
 			await s.go('#/app/credentials');
 			const page = s.page;
-			await page.getByRole('button', { name: 'Add Credential' }).first().click({ timeout: T });
+			await page.getByRole('button', { name: /Add connection/ }).first().click({ timeout: T });
 			const dialog = page.getByRole('dialog');
-			await dialog.getByText('New Credential').first().waitFor({ timeout: T });
+			await dialog.getByText('New connection').first().waitFor({ timeout: T });
 			await dialog.getByRole('combobox').first().click({ timeout: T });
 			await page.keyboard.type('Gmail');
 			await page.waitForTimeout(400);
@@ -153,11 +161,11 @@ export const shots: ShotDef[] = [
 		name: 'credentials-edit',
 		page: 'app/connections/edit',
 		route: '#/app/credentials (row menu › Open)',
-		alt: 'The Edit Credential dialog for a GitHub credential named GitHub (team): the Integration App / Service set to GitHub, the Name and Description fields, the Bearer Token field (a placeholder value), and Cancel and Update Credential buttons.',
+		alt: 'The Edit connection form for a GitHub connection named GitHub (team): the Integration App / Service set to GitHub, the Name and Description fields, the Bearer Token field (a placeholder value), and Cancel and save buttons.',
 		hotspots: [
 			{ id: 'name-description', label: 'Name and description', locate: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Name', exact: true }) },
-			{ id: 'secret-fields', label: 'Secret fields: here, the token', locate: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Bearer Token' }) },
-			{ id: 'update-credential', label: 'Update Credential', locate: (p) => p.getByRole('dialog').getByRole('button', { name: 'Update Credential' }) }
+			{ id: 'secret-fields', label: 'Secret fields: here, the token', locate: (p) => p.getByRole('dialog').getByRole('textbox').nth(2) },
+			{ id: 'update-credential', label: 'Save the connection', locate: (p) => p.getByRole('dialog').getByRole('button', { name: SAVE }).last() }
 		],
 		spots: [
 			{ id: 'description', label: 'Description', locator: (p) => p.getByRole('dialog').getByRole('textbox', { name: 'Description' }) },
@@ -166,26 +174,28 @@ export const shots: ShotDef[] = [
 		prepare: async (s) => {
 			await s.go('#/app/credentials');
 			const page = s.page;
-			await page.getByRole('heading', { name: /My Credentials/ }).waitFor({ timeout: T });
+			await page.getByRole('button', { name: /Add connection/ }).first().waitFor({ timeout: T });
 			await page.waitForTimeout(800);
 			const row = () => page.getByRole('row').filter({ hasText: 'GitHub (team)' }).first();
 			if (!(await row().count())) {
-				await page.getByRole('button', { name: 'Add Credential' }).first().click({ timeout: T });
+				await page.getByRole('button', { name: /Add connection/ }).first().click({ timeout: T });
 				const d = page.getByRole('dialog');
-				await d.getByText('New Credential').first().waitFor({ timeout: T });
+				await d.getByText('New connection').first().waitFor({ timeout: T });
 				await d.getByRole('combobox').first().click({ timeout: T });
 				await page.keyboard.type('GitHub');
 				await page.waitForTimeout(400);
 				await page.keyboard.press('Enter');
 				await d.getByRole('textbox', { name: 'Name', exact: true }).fill('GitHub (team)');
 				await d.getByRole('textbox', { name: 'Description' }).fill('Fine-grained token for the team repos');
-				await d.getByRole('textbox', { name: 'Bearer Token' }).fill('docs-capture-placeholder-token');
-				await d.getByRole('button', { name: 'Create Credential' }).click({ timeout: T });
+				await d.getByRole('textbox').nth(2).fill('docs-capture-placeholder-token');
+				await d.getByRole('button', { name: SAVE }).last().click({ timeout: T });
+				const skip = page.getByRole('button', { name: /^(Close|Done|OK)$/ });
+				if (await skip.count()) await skip.first().click().catch(() => {});
 				await row().waitFor({ timeout: T });
 			}
 			await row().getByRole('button', { name: 'Open menu' }).click({ timeout: T });
 			await page.getByRole('menuitem', { name: 'Open' }).click({ timeout: T });
-			await page.getByRole('dialog').getByText('Edit Credential').first().waitFor({ timeout: T });
+			await page.getByRole('dialog').getByText(/Edit connection/).first().waitFor({ timeout: T });
 			await page.waitForTimeout(600);
 		}
 	},
@@ -213,6 +223,6 @@ export const shots: ShotDef[] = [
 	appShot('google', 'Gmail', 'oauth'),
 	appShot('microsoft-365', 'Microsoft 365', 'oauth'),
 	simpleShot('jwt', 'JWT', 'openai'),
-	simpleShot('bearer', 'Bearer Token', 'http-and-apis'),
-	simpleShot('basic', 'Basic Auth', 'http-and-apis')
+	simpleShot('bearer', 'Bearer token', 'http-and-apis'),
+	simpleShot('basic', 'Basic (username + password)', 'http-and-apis')
 ];

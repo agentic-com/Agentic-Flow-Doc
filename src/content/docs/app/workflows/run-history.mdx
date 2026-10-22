@@ -1,135 +1,304 @@
 ---
-title: "Run history"
-description: "Find a past run, see why it failed, and answer runs that are waiting for you"
+title: "Runs"
+description: "Every run of your workflows: find a past run, see why it failed, debug it in the editor, run it again, and answer runs that are waiting for you"
 kind: guide
 section: app
 sidebar:
-  label: "Run history"
+  label: "Runs"
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
-import { GuidedShot, Screenshot, StepCard, StepShot } from '@components/awflow';
-import runHistoryLight from '@assets/screenshots/run-history.light.webp';
-import runHistoryDark from '@assets/screenshots/run-history.dark.webp';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
 
-Every time a workflow runs, AWFlow saves a record of it: when it started, how long it took, whether it worked, and its log. You find these records in the workflow's **Executions** tab.
+Every time a workflow runs, AWFlow keeps a record of it: when and how it started, how long it took, whether it worked, its log and, depending on the workflow's settings, the data each step received and returned.
 
-## Open a workflow's runs
+**Every run is recorded**: automatic runs (a schedule, a shortcut, a page trigger…), runs you start with **Run**, and single steps you run with **Run step**, even before you save your changes.
 
-<Steps>
+## Where to find runs
 
-1. Open **Workflows** in the sidebar and click the workflow.
+- **One workflow**: open it and pick the **Runs** tab (next to **Editor** and **Logs**).
+- **All workflows**: **Workflows** › **Runs**. It lists the runs of every workflow, plus runs waiting for you and what your agents did, newest first and grouped by day. Filter by **Needs you**, **Failed**, **Running** or **All**, by workflow or agent, and hide manual runs. It opens on **Needs you** when something waits for you.
 
-2. Click the **Executions** tab at the top (it reads **Runs** on narrow screens).
-
-</Steps>
-
-The workflow page has three tabs:
-
-- **Editor**: the canvas.
-- **Logs**: the live log of the run you started from the editor in this session. It is not kept after you leave.
-- **Executions**: every saved run of this workflow.
-
-<Screenshot
-  src={runHistoryLight}
-  srcDark={runHistoryDark}
-  alt="The Executions tab of the Hash Text workflow: a table of saved runs, each with a Success status, when it started, its duration, where it ran (Local) and its metadata, with a filter bar above."
-  hotspots={[{ x: 62, y: 9.4, label: 'Executions tab' }, { x: 58.9, y: 14.3, label: 'Filter runs' }, { x: 21.9, y: 29.2, label: 'A saved run and its status' }]}
-/>
+(Before AWFlow 0.9 the tab was called **Executions**, and the separate **Activity** page is now part of **Workflows › Runs**.)
 
 ## Read the list
 
-Each row is one run:
+The chips **All**, **Automatic** and **Manual** above the list show how many runs started each way. Each row shows:
 
-- **Status**: what happened.
-- **Started**: when it began, such as *5m ago* or *Yesterday 18:20*.
-- **Duration**: how long it took.
-- **Where**: *Local* or *Cloud*, the same place the workflow is stored.
-- **Metadata**: labels the run attached to itself with the [Execution Data](/nodes/builtin/core/execution-data/) node, if the workflow uses it.
+- **Status**: what happened (see below).
+- **Started by**: **Automatic · Schedule** (or the trigger that started it), or **Manual** for runs you started yourself, with the step name for a single-step run.
+- **Started** and **Duration**.
+- **Where**: **Local** (this device) or **Cloud**, the same place the workflow is stored.
+- **Metadata**: labels the run attached to itself with the [Run details](/nodes/builtin/core/execution-data/) step, if the workflow uses it.
 
 | Status | Meaning |
 | --- | --- |
-| **Success** | The run finished without errors. |
-| **Failed** | A step stopped with an error. |
-| **Waiting** | The run is paused until you approve something or fill in a form. |
-| **Running** | The run is still going. |
-| **Canceled** | Someone canceled the run. |
-| **Queued** | The run is waiting to start. |
+| **Done** | The run finished without errors. |
+| **Done with errors** | It finished, but some items went to a step's [error output](/concepts/flow/error-handling/#send-failed-items-to-an-error-output). |
+| **Failed** | A step stopped the run with an error. |
+| **Waiting** | The run is paused until you approve something, fill in a form, or a wait ends. |
+| **Running** | The run is still going. Its row has **Stop**. |
+| **Canceled** | Someone pressed Stop, or canceled a waiting or queued run. |
+| **Timed out** | The run took longer than **Longest a run may take** (see [Workflow settings](/app/workflows/settings/#run-limits)), or a step took longer than its **Time limit**, so it stopped. |
+| **Interrupted** | The run stopped unexpectedly: the tab, the browser or the extension closed while it was going. |
+| **Queued** | The run is waiting to start, because the workflow is set to **Wait in line** or too many runs are going. Its row has **Cancel**. |
 
-Failed and waiting runs have a coloured stripe on the left so they stand out.
+A failed run is always **Failed**, never **Canceled**: **Canceled** only means a person stopped it. **Timed out** and **Interrupted** count as failed (they show under the **Failed** chip and in [Insights](/app/insights/)).
+
+### Stop a run
+
+A **Running** row has **Stop**, in any AWFlow window, whether you started the run or a trigger did (a run a schedule started in the background shows *Schedule · in the background · 2 min*).
+
+<StepCard n={1} title="Press Stop">
+  At the end of the **Running** row.
+
+  <StepShot shot="runs-stop" spot="stop" n={1} zoom={44} />
+</StepCard>
+
+<StepCard n={2} title="Confirm" check="the run ends as Canceled.">
+  *Stop this run?* says which step is canceled now. Press **Stop run** (or **Keep running**).
+
+  <StepShot shot="runs-stop-confirm" spot="stop-run" n={2} zoom={44} />
+</StepCard>
+
+<StepCard n={3} title="See the result">
+  A toast says *Run stopped* and *marked Canceled*; **View run** opens it.
+
+  <StepShot shot="runs-stopped-toast" spot="view-run" n={3} zoom={44} />
+</StepCard>
+
+The step running now is canceled at once (a request in flight is aborted). Steps that already finished keep their results. A Stop is never turned into "continue": steps set to **Continue with an empty result** still stop.
+
+### Queued runs
+
+When the workflow is set to **Wait in line** (see [Workflow settings](/app/workflows/settings/#run-limits)), a run that starts while another is going waits as **Queued**: its row says *Waits for the run before it* and its place in line. **Cancel** takes it out of the line.
+
+<GuidedShot
+  shot="runs-queued"
+  steps={[
+    { spot: 'queued', title: 'Queued', body: 'The run waits for the run before it.' },
+    { spot: 'cancel', title: 'Cancel', body: 'Takes the run out of the line; it is marked **Canceled**.' },
+  ]}
+/>
+
+### One run, across pauses
+
+A run that pauses (an approval, a form, a long Wait) and goes on later stays **one run**: the same row, the same id, its steps and log lines before and after the pause together. The run's header counts its pauses (*2 pauses*).
+
+### Interrupted runs
+
+When the browser or the extension closes in the middle of a run, AWFlow notices it the next time it starts: the run ends as **Interrupted**. Its detail says *This run stopped unexpectedly*, which step was running (*Stopped while running*), the last step that finished, the steps that *Didn't run*, and whether the workflow's error workflow was told (it is, as for any failure of an unattended run). **Debug in editor** is the main button, as on a failed run.
+
+<GuidedShot
+  shot="run-interrupted"
+  steps={[
+    { spot: 'notice', title: 'This run stopped unexpectedly', body: 'Which step was running when the browser closed, and the last step that finished.' },
+    { spot: 'step', title: 'Stopped while running', body: 'The step that was going. The steps after it *Didn\'t run*.' },
+    { spot: 'run-again', title: 'Run again', body: 'Starts the workflow again, as for a failed run.' },
+  ]}
+/>
+
+### Timed out runs
+
+A run that goes past a time limit ends as **Timed out**. Its detail names the step that was running (*Get page took longer than its 1 s time limit, so the run stopped*), and **Change** opens where that limit is set. The step shows as **Failed** and the steps after it *Didn't run*. Like a failed run, a Timed out run keeps its step data and offers **Run again**.
+
+<GuidedShot
+  shot="run-timed-out"
+  steps={[
+    { spot: 'notice', title: 'Timed out', body: 'The step that ran out of time and its limit.' },
+    { spot: 'run-again', title: 'Run again', body: 'Starts the workflow again, as for a failed run.' },
+    { spot: 'step', title: 'The step past its limit', body: 'Shows as **Failed**, with how long it ran.' },
+  ]}
+/>
+
+A row marked **Ran unsaved changes** ran edits you hadn't saved yet. Its **Graph** shows exactly what ran.
+
+**Not synced yet** marks a cloud run that couldn't be saved to your account (offline, or the service was down). It is kept on this device and sent later by itself; **Retry now** sends it at once.
 
 ## Find yesterday's failed run
 
-<StepCard n={1} title="Click Filter">
-  In the **Executions** tab, click **Filter** above the list.
+<StepCard n={1} title="Open Filter">
+  In the **Runs** tab, click **Filter** above the list.
 
   <StepShot shot="run-history" spot="filter-runs" n={1} />
 </StepCard>
 
 <StepCard n={2} title="Pick the status">
-  Under **Status**, open the list and pick **Failed**.
+  Under **Status**, pick **Failed**.
 
   <StepShot shot="run-filter" spot="status" n={2} zoom={44} />
 </StepCard>
 
 <StepCard n={3} title="Pick the dates">
-  Under **Execution date range**, click **Pick a date** and pick yesterday. The last day of the range is fully included.
+  Under **Run date range**, pick yesterday. The last day of the range is fully included.
 
   <StepShot shot="run-filter" spot="date-range" n={3} zoom={44} />
 </StepCard>
 
-<StepCard n={4} title="Open the run" check="its details open beside the list.">
+<StepCard n={4} title="Open the run" check="its details open beside the list (full screen in the side panel).">
   Click the run in the list.
 
   <StepShot shot="run-detail" spot="run-row" n={4} />
 </StepCard>
 
-You can also type in the **Filter...** box. It matches the status name (for example *Failed*), the run id, and metadata such as `order:1234`. Click **Reset** in the filter panel to clear the status and dates.
-
-On narrow screens, use the **All**, **Failed** and **Waiting** chips at the top instead.
+You can also type in the search box. It matches the status, the run id and metadata such as `order:1234`.
 
 ## Read a run's details
 
-Click a row, or use **⋮ › Open detail**. A panel opens beside the list with the status, start time, duration, where it ran, its run id and its metadata. Drag the divider to make the panel wider.
+Click a row, or use its **⋮** menu › **Open**. A panel opens beside the list (in the side panel it fills the screen, with **‹ Runs** to go back). Its header shows the run's status and the workflow name, with how it started, how long it took and its pauses below (for example *Manual · 1.1 s · 2 pauses*).
 
 <GuidedShot
   shot="run-detail"
   steps={[
     { spot: 'run-row', title: 'Pick the run', body: 'The panel shows the run you clicked.' },
+    { spot: 'timeline-tab', title: 'Timeline', body: 'Every step on one time axis, with its duration.' },
+    { spot: 'steps-tab', title: 'Steps', body: 'Each step with its items and timing, and its **Input** and **Output** when step data was saved.' },
     { spot: 'graph-tab', title: 'Graph', body: 'A read-only copy of the workflow **as it was when it ran**, even if you changed it since.' },
-    { spot: 'logs-tab', title: 'Logs', body: 'Every log line the run wrote, including the error message that made it fail.' },
-    { spot: 'open-in-editor', title: 'Open in editor', body: 'Opens the current version of the workflow, so you can fix it.' },
+    { spot: 'logs-tab', title: 'Logs', body: 'What happened, step by step, with the error that made it fail.' },
+    { spot: 'debug-in-editor', title: 'Debug in editor', body: 'Opens the workflow with this run’s data on the canvas (see below).' },
   ]}
 />
 
-<Aside>
-The run record keeps the log, not each step's full input and output. To see the data flowing through each step, run the workflow again from the editor and inspect the steps there. Adding log messages or [Execution Data](/nodes/builtin/core/execution-data/) to important steps makes later runs easier to investigate.
-</Aside>
+- **Timeline** draws every step on one time axis with its duration. A pause is drawn hatched on the step that waited, and listed below it (*Paused 09:00 → 11:12*). Pick a step to see its input and output: below the timeline in the side panel, beside it on a wide screen.
 
-There is no "retry" button on a past run. To run it again, use **Run** in the editor or on the workflows list.
+  <GuidedShot
+    shot="run-timeline"
+    steps={[
+      { spot: 'timeline-tab', title: 'Timeline', body: 'Opens the time axis of the run.' },
+      { spot: 'bar', title: 'A step and its duration', body: 'The bar shows when the step ran and for how long. Pick it to see its input and output.' },
+    ]}
+  />
+
+- **Logs** lists the run's lines with their time, level, step (and item) and message: filter them by level (**All levels**), by step (**All steps**) or by words (**Search logs**). Long runs keep the last 5,000 lines; errors and warnings are always kept. In the editor's **Logs** tab, the same run shows as a tree: one row per step with the items in and out and its duration, loop steps as "×24 runs", and under AI steps each model call with its tokens and each tool call. Each call names the building block that made it ("Model call · gpt-4o-mini", the tool, the memory or knowledge base); **Open** in its sheet jumps to that step. Steps that looked at a page show the page drawing (see [Browser control & safety](/app/chat-and-agents/browser-control/#what-you-see-of-a-page)). Search it, or show only **Errors** or **AI**. The plain log is one tap away.
+- **Steps** lists each step with the **Input** and **Output** it had in that run, when the workflow saves step data. By default, AWFlow saves step data only for **failed runs**; change it in [Workflow settings](/app/workflows/settings/#run-history) (**Change what's saved** links there). Passwords and keys are never saved. On a failed run, a line above the steps says what the workflow saves (*Step data saved: Only for failed runs*), with **Change**: it opens the workflow's **Run history** setting, ringed, and its header takes you back to the run. For an installed workflow the author set it (*set by the author*), and **Make a copy** gives you a copy whose settings you can change.
+- In **Steps**, the step that failed opens on the same fix card as in the editor: what happened, the likely cause, what to try, **Fix with Aria** and **Open the step**. It is built from the error kept with the run, so it shows even when the run kept no step data. For example, a step that couldn't use its connection because your [vault](/app/account/secret-vault/) was locked says *Unlock your vault in Connections, then run again.* The hints the run noted for a step (*0 items*, *ran once per item*…) show under its row too.
+- **Graph** stays as the last tab.
+- A **Timed out** run names the step past its time limit, with **Change** (see [Timed out runs](#timed-out-runs)).
+- A run of a version that was deleted since keeps its logs; the graph then says **No workflow snapshot**.
+
+## Debug a run in the editor
+
+**Debug in editor** (the main button on a failed run, also in the row's **⋮** menu) opens the workflow with that run's data on the canvas:
+
+- each step that ran shows its output from that run, with a blue **from run** badge;
+- the failed step opens on its error;
+- steps you changed since show a **changed** chip; new steps have no data.
+
+A blue banner offers **Run again with this data** (the same trigger data, after a confirmation if steps have side effects), **Open the run** and **Clear**. A step whose earlier steps carry that data says *Input loaded from the 03:02 run · Clear* above its buttons. Fix the failing step, then run it with **Run step**: it uses the data of the run, without running the steps before it again.
+
+The run data is only shown: it is never saved into the workflow, and **Clear** or a full run removes it. If the run used an older version of the workflow, AWFlow asks whether to use its data on the current version or open the version that ran in [History](/app/workflows/history/).
+
+## Run a failed run again
+
+On a failed or canceled run, **Run again ▾** offers:
+
+- **Use the current version**: your workflow as it is now (**Includes your latest saved changes**).
+- **Use the version that ran**: exactly what ran then (not available once that version was removed).
+
+Both start from the trigger data the run saved. A confirmation lists the steps that will run again: steps like *Send email* or *Create row* would repeat. To restart from the failed step only, use **Debug in editor**. The new run shows **Retry of 14:02**, and the old one **Retried → Done**.
+
+## Run failed items again
+
+When some items of a step failed (they went to its **Error** output, or one stopped the run), you don't have to run the whole workflow again. In the run's **Steps** tab, the step lists its failed items (*Went to Error · 3 items*, *37 done · 3 failed*), each with its error:
+
+- **Run again** on an item runs that item only.
+- **Run the 3 failed items again** runs all of them, in one new run.
+
+<GuidedShot
+  shot="run-failed-items"
+  steps={[
+    { spot: 'heading', title: 'The failed items', body: 'How many went to **Error**, and how many went through.' },
+    { spot: 'item', title: 'Run again', body: 'Runs this one item again.' },
+    { spot: 'all', title: 'Run the 3 failed items again', body: 'Runs all of them, in one new run.' },
+  ]}
+/>
+
+A dialog asks first (*Run item 4 again?*). It shows the item's input in this run, and lets you pick what to **Run it on**:
+
+- **The workflow as it is now** (default): includes what you changed since the run, for example the fix.
+- **The version it ran on**: exactly as it ran then.
+
+<GuidedShot
+  shot="run-failed-items-retry"
+  steps={[
+    { spot: 'version', title: 'Run it on', body: 'The workflow as it is now, or the version it ran on.' },
+    { spot: 'run-again', title: 'Run again', body: 'Starts the new run, for the failed items only.' },
+  ]}
+/>
+
+Only the failed step and the steps after it run again, for those items only. The steps before it don't run again: their results for that item in this run are used, as with [Run from here](/app/workflows/run-from-here/). The items that went through aren't touched. An HTTP Request step that [sends an idempotency key](/nodes/builtin/core/http-request/#send-an-idempotency-key) sends the same key as the failed attempt, so the service can ignore a request it already took.
+
+The retry is a new run, shown in **Runs** with a **Retry** chip (*Retry of 09:00 · item 4*). A toast says how it went (*Item 4 went through*, or *Item 4 failed again*). The original run keeps its status and gets a *1 of 3 retried* badge; each retried item says *Retried 09:41 · Done*, with **View retry**.
+
+A run that didn't keep its step data can't run its items again from here (*This run didn't keep its data*): see [Save step data](/app/workflows/settings/#run-history).
+
+### When nothing is connected to the Error output
+
+A step set to **Send to an error output** with no step linked to **Error** stops the run when an item fails: the failed item has nowhere to go. The run says so (*Create invoice failed, but nothing is connected to its Error output*), keeps the error, and offers **Connect a step** (it opens the workflow) and **Run it again**. On the canvas, the step's **Error** output reads *Error · not connected*; its **Advanced** settings say *Nothing is connected to Error yet*, with **Add a step to Error** or **Stop the run instead**. See [Send failed items to an error output](/concepts/flow/error-handling/#send-failed-items-to-an-error-output).
+
+## Add a run to a test dataset
+
+On a run of a workflow that has an [Evaluation Trigger](/nodes/builtin/trigger/evaluation/), **Add this run's input to the test dataset** adds what started that run as one more test case (in the trigger's Data Store list, created if needed; up to 500 rows). See [Test runs](/app/workflows/test-runs/).
+
+## Fix with Aria
+
+On a failed run (and on a failed step's output), **Fix with Aria** opens Aria on the failure. Before anything is sent, it shows exactly what it will share: the error, the step with its settings (connections become a name only), the shape of the input without its values, and the steps before it. A sample of the data is only included if you switch it on. Aria answers with an explanation and a change you can **Keep** or undo. See [Building workflows in chat](/app/chat-and-agents/building-workflows-in-chat/).
 
 ## Runs that need you
 
-When a run pauses for an approval or a form, it shows up in a **Needs attention** band at the top of the **Executions** tab.
+When a run pauses for an approval or a form, it shows in a **Needs you** band at the top of **Runs**, and the inbox icon in the header counts it.
 
 - For an approval, click **Approve**, **Reject** or **Cancel**.
-- For a form, fill in the fields and click **Submit**, or **Cancel run**. Required fields must be filled in.
+- For a form, fill in the fields and click **Submit**, or **Cancel run**.
 
-Canceling records the run as **Canceled**. Only paused runs of the workflow's current version are listed here.
+Canceling records the run as **Canceled**.
 
-While a run is going, requests to approve an action on a website also appear in this band, with a countdown before they are rejected automatically. After you approve one, **Approve all remaining for this run** skips the rest of the prompts for that run. Use it with care.
+### Paused runs continue on the version they started on
+
+If you edit the workflow while a run is paused, the run still **continues on the version it started on**: your changes apply to the next runs. The run's card says so (*You changed this workflow after the run paused*), with **What changed**. If that version was deleted, the run waits for you to choose: **Continue on the current version** (steps that no longer exist are skipped and listed in the run) or **Cancel this run**.
+
+<GuidedShot
+  shot="paused-run-changed"
+  steps={[
+    { spot: 'notice', title: 'You changed this workflow after the run paused', body: 'It continues with the version it started on (v1); your changes (v2) apply to the next runs.' },
+    { spot: 'what-changed', title: 'What changed', body: 'Compares the two versions.' },
+    { spot: 'approve', title: 'Answer as usual', body: '**Approve**, **Reject** or **Cancel**.' },
+  ]}
+/>
+
+When the version is gone:
+
+<GuidedShot
+  shot="paused-run-version-gone"
+  steps={[
+    { spot: 'notice', title: 'The version this run started on was deleted', body: 'It can\'t continue as it was.' },
+    { spot: 'continue-current', title: 'Continue on the current version', body: 'Steps that no longer exist are skipped and listed in the run.' },
+    { spot: 'cancel-run', title: 'Or cancel this run', body: 'Marked **Canceled**; nothing else runs.' },
+    { spot: 'continue', title: 'Continue', body: 'Applies your choice. **Not now** leaves the run waiting.' },
+  ]}
+/>
+
+A paused run continues **exactly once**: answering it in two windows, or a Wait alarm firing twice, never runs the rest twice (the second window sees that it was already continued). If the browser closes while it continues, it waits again and can be continued later.
+
+While a run is going, requests to approve an action on a website appear here too; after you approve one, **Approve all remaining** skips the rest of the prompts for that run. Use it with care.
 
 <Aside type="note">
 Paused runs are kept on this device until they finish. A [Wait](/nodes/builtin/flow/wait/) of a minute or more in the extension survives closing the tab; in the web app it only lasts while the page stays open.
 </Aside>
 
+## Evaluation runs
+
+Runs started by [Test runs](/app/workflows/test-runs/) are hidden from the list. Turn on **Show evaluation runs** to see them.
+
 ## How long runs are kept
 
-- **Local workflows** keep their newest **100 runs**. Older runs are removed automatically.
+- **Local workflows** keep their newest **100 runs** each. Older runs are removed automatically.
 - **Cloud workflows** keep a number of runs set by your plan, counted across all your cloud workflows. When you reach it, the oldest runs are removed first. See [Plan](/app/settings/plan/).
+- Removing old versions of a workflow never removes the runs that used them.
+- [Insights](/app/insights/) keep their daily numbers even after runs are removed.
 
 ## See also
 
-- [Manage your workflows list](/app/workflows/manage-list/)
-- [Activity](/app/activity/) for what your agents did
+- [Run from the canvas](/app/workflows/executions/run-from-the-canvas/)
 - [Error handling](/concepts/flow/error-handling/)
+- [Workflow settings](/app/workflows/settings/)

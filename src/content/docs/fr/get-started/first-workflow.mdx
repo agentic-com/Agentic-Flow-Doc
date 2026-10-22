@@ -10,7 +10,7 @@ lesson:
 sidebar:
   label: "2 · Votre premier workflow"
 i18n:
-  source: "87377a6cd78cf645f75f3ba1934e253f49354e42"
+  source: "25264d61e1b7a6c74eca263deecdb572a8f51c05"
 ---
 
 import { Aside } from "@astrojs/starlight/components";
@@ -34,7 +34,7 @@ import FlowPreview from "@components/awflow/FlowPreview.astro";
 
 Un **workflow** est une chaîne d'étapes, appelées **nœuds**. Un **déclencheur** le démarre, et chaque nœud transmet sa sortie au suivant. Vous allez créer le plus petit workflow utile : lire le texte sélectionné sur une page et le transformer en un petit rapport.
 
-<FlowPreview src="/examples/first-workflow.awf" caption="Ce que vous allez créer : Au démarrage → Obtenir le texte sélectionné → Modifier les champs." />
+<FlowPreview src="/examples/first-workflow.awf" caption="Ce que vous allez créer : Quand j'appuie sur Lancer → Obtenir le texte sélectionné → Modifier les champs." />
 
 ## Étapes
 
@@ -44,20 +44,20 @@ Un **workflow** est une chaîne d'étapes, appelées **nœuds**. Un **déclenche
   <StepShot shot="create-workflow" spot="blank-canvas" n={1} />
 </StepCard>
 
-<StepCard n={2} title="Ajouter un déclencheur" check="un nœud Au démarrage est sur le canevas.">
-  Cliquez sur **Ajouter un déclencheur** (dans un panneau étroit : **Add trigger** au milieu du canevas). Le panneau **Déclencheur** s'ouvre : saisissez `when` dans son champ de recherche et choisissez **Au démarrage**. Il démarre le workflow quand vous cliquez sur **Tester le workflow**.
+<StepCard n={2} title="Ajouter un déclencheur" check="une étape Quand j'appuie sur Lancer est sur le canevas.">
+  Cliquez sur **Ajouter un déclencheur** (dans un panneau étroit : **Add trigger** au milieu du canevas). Le panneau **Déclencheur** s'ouvre : choisissez **Quand j'appuie sur Lancer** sous **Qu'est-ce qui doit démarrer ce workflow ?**. Il démarre le workflow quand vous appuyez sur **Exécuter**.
 
   <StepShot shot="gs-trigger-search" spot="when-started" n={2} />
 </StepCard>
 
-<StepCard n={3} title="Lire le texte sélectionné" check="Obtenir le texte sélectionné est relié à Au démarrage par une ligne.">
-  Cliquez sur le **+** au bord droit de **Au démarrage**, cherchez **Obtenir le texte sélectionné** et choisissez-le. Double-cliquez dessus pour ouvrir ses paramètres, définissez **Nom du champ de sortie** sur `text`, puis fermez le panneau (**×** en haut à droite, ou <kbd>Esc</kbd>).
+<StepCard n={3} title="Lire le texte sélectionné" check="Obtenir le texte sélectionné est relié à Quand j'appuie sur Lancer par une ligne.">
+  Cliquez sur le **+** au bord droit de **Quand j'appuie sur Lancer**, cherchez **Obtenir le texte sélectionné** et choisissez-le. Double-cliquez dessus pour ouvrir ses paramètres, définissez **Nom du champ de sortie** sur `text`, puis fermez le panneau (**×** en haut à droite, ou <kbd>Esc</kbd>).
 
   <StepShot shot="gs-get-selected-text" spot="output-field-name" n={3} />
 </StepCard>
 
 <StepCard n={4} title="L'exécuter" check="Obtenir le texte sélectionné → Output → Actual affiche un champ text avec votre phrase.">
-  Passez à votre autre onglet et sélectionnez (surlignez) une phrase. Revenez au panneau AWFlow et cliquez sur **Tester le workflow** en haut du canevas. Ouvrez ensuite **Obtenir le texte sélectionné** et regardez son onglet **Output**, sous **Actual**.
+  Passez à votre autre onglet et sélectionnez (surlignez) une phrase. Revenez au panneau AWFlow et appuyez sur **Exécuter** en haut du canevas. Ouvrez ensuite **Obtenir le texte sélectionné** et regardez son onglet **Output**, sous **Actual**.
 
   <StepShot shot="gs-first-workflow" spot="test-workflow" n={4} />
 </StepCard>
@@ -70,7 +70,7 @@ Un **workflow** est une chaîne d'étapes, appelées **nœuds**. Un **déclenche
   Length: {{ $input.text.length }} characters
   ```
 
-  `{{ $input.text }}` lit le champ `text` de l'étape précédente. Fermez le panneau, sélectionnez de nouveau du texte, puis cliquez sur **Tester le workflow**.
+  `{{ $input.text }}` lit le champ `text` de l'étape précédente. Fermez le panneau, sélectionnez de nouveau du texte, puis appuyez sur **Exécuter**.
 
   <StepShot shot="gs-edit-fields" spot="processed-text" n={5} />
 </StepCard>
@@ -82,7 +82,7 @@ Un **workflow** est une chaîne d'étapes, appelées **nœuds**. Un **déclenche
 </StepCard>
 
 <Aside type="tip" title="Testez une étape à la fois">
-Survolez un nœud et cliquez sur **Tester cette étape** pour n'exécuter que cette étape, ou ouvrez-le et cliquez sur **Étape de test**. Exécuter souvent, un nœud à la fois, est le moyen le plus rapide de trouver ce qui ne va pas.
+Survolez un nœud et cliquez sur **Lancer l'étape** pour n'exécuter que cette étape, ou ouvrez-le et cliquez sur **Lancer l'étape**. Exécuter souvent, un nœud à la fois, est le moyen le plus rapide de trouver ce qui ne va pas.
 </Aside>
 
 ## Ce que vous avez appris

@@ -1,0 +1,118 @@
+{
+	"name": "Lead sync",
+	"description": "Waits a little, then builds a summary from an earlier step.",
+	"tags": [],
+	"type": "triggered",
+	"nodes": [
+		{
+			"id": "trigger-run",
+			"type": "trigger",
+			"position": {
+				"x": 120,
+				"y": 300
+			},
+			"data": {
+				"instance": {
+					"id": "af-base-node:trigger:whenStarted"
+				},
+				"label": "Run now",
+				"inputs": {},
+				"parameters": {
+					"notes": "Starts the workflow when you press Run."
+				}
+			}
+		},
+		{
+			"id": "seed-text",
+			"type": "basic",
+			"position": {
+				"x": 440,
+				"y": 300
+			},
+			"data": {
+				"instance": {
+					"id": "af-base-node:basic:editFields"
+				},
+				"label": "Get leads",
+				"inputs": {
+					"fields": {
+						"name": {
+							"type": "string",
+							"value": "Ada Lovelace"
+						},
+						"email": {
+							"type": "string",
+							"value": "ada@example.com"
+						}
+					}
+				},
+				"parameters": {
+					"notes": "Stands in for an app step that fetches new leads."
+				}
+			}
+		},
+		{
+			"id": "wait",
+			"type": "basic",
+			"position": {
+				"x": 700,
+				"y": 300
+			},
+			"data": {
+				"instance": {
+					"id": "af-base-node:basic:wait"
+				},
+				"label": "Wait a moment",
+				"inputs": {
+					"amount": 45,
+					"unit": "s"
+				},
+				"parameters": {}
+			}
+		},
+		{
+			"id": "summary",
+			"type": "basic",
+			"position": {
+				"x": 960,
+				"y": 300
+			},
+			"data": {
+				"instance": {
+					"id": "af-base-node:basic:editFields"
+				},
+				"label": "Build the summary",
+				"inputs": {
+					"fields": {
+						"summary": {
+							"type": "string",
+							"value": "New lead: {{ $('Get leads').name }} ({{ $('Get leads').email }})"
+						}
+					}
+				},
+				"parameters": {}
+			}
+		}
+	],
+	"edges": [
+		{
+			"id": "e1",
+			"source": "trigger-run",
+			"target": "seed-text",
+			"type": "flowEdge"
+		},
+		{
+			"id": "e2",
+			"source": "seed-text",
+			"target": "wait",
+			"type": "flowEdge"
+		},
+		{
+			"id": "e3",
+			"source": "wait",
+			"target": "summary",
+			"type": "flowEdge"
+		}
+	],
+	"requiredInputs": []
+}

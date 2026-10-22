@@ -1,0 +1,96 @@
+---
+title: "Respond to Chat"
+description: "Send a message to the chat that started the run"
+sidebar:
+  label: "Respond to Chat"
+kind: node
+section: nodes
+worksIn: [extension, web]
+node:
+  id: builtin/flow/respond-to-chat
+  family: flow
+  since: "0.9.0"
+---
+
+import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
+import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
+
+Send a message back to the chat that started the run. Use it to control exactly what the chat shows, or to ask a follow-up question and wait for the answer.
+
+## What it does
+
+In a workflow started by a [Chat Trigger](/nodes/builtin/trigger/chat/), the reply in the chat comes from a **reply step**: a Respond to Chat step, or else the last AI step on the trigger's path. The reply streams into the chat as it is written.
+
+Respond to Chat sends its **Message**. Then, depending on **After sending**:
+
+- **Carry on**: the run continues straight away.
+- **Wait for the reply**: the run pauses until the person writes the next chat message. That message becomes this step's output, and the run continues from here.
+
+With **Add to chat memory** on (the default), the message is also stored in the Chat Memory connected to the Chat Trigger, so an agent later in the chat remembers it.
+
+When no chat is open for the run (it was started another way), the message is only stored in the chat memory and the run log says so.
+
+### When the message streams
+
+In an open chat, the message **streams** (words appear as they are written, with *Draft reply is writing…*) only when it is exactly the reply of the AI step linked straight to this step, for example `{{ $('Draft reply').response }}` or `{{ $input.response }}`. Otherwise it is **sent whole** once it is ready: when a step in between (Guardrails, Edit Fields…) can change the text, or when the message is more than one AI step's reply. The step's settings say which (*Streams into the open chat as Draft reply writes.*, or *Sent whole: …* with the reason). Nothing else changes: the run and the stored message are the same either way.
+
+## When to use it
+
+- A fixed reply: "Got it, your ticket is #1234."
+- Combining several results into one message, after steps that are not AI steps.
+- A short back-and-forth: ask for a missing detail, wait, then use the answer.
+
+## Inputs and settings
+
+{/* AUTO:settings:start */}
+<AwfParamTable rows={[{"name":"Message","type":"Long text"},{"name":"After sending","type":"Choice","default":"Carry on","description":"Options: Carry on, Wait for the reply."},{"name":"Add to chat memory","type":"Toggle","default":"On","description":"Also store the message in the Chat Memory connected to the Chat Trigger."}]} />
+{/* AUTO:settings:end */}
+
+Write the **Message** with data from earlier steps, for example `Done! I added {{ $input.count }} rows.`
+
+## Outputs
+
+{/* AUTO:outputs:start */}
+<AwfOutputPorts ports={[{"name":"Output"}]} />
+
+Each output item has these fields:
+
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"message","type":"Text","description":"The message sent to the chat"},{"name":"chatInput","type":"Text","description":"The user’s answer (Wait for the reply)"}]} />
+
+```json title="Shape of an output item"
+{
+  "message": "…",
+  "chatInput": "…"
+}
+```
+{/* AUTO:outputs:end */}
+
+```json title="Output"
+{ "message": "Which project?", "chatInput": "Website redesign" }
+```
+
+`chatInput` is set only with **Wait for the reply**: it holds the person's answer.
+
+## Dependencies and credentials
+
+{/* AUTO:deps:start */}
+None. This node needs no connection and has no slots for other nodes.
+{/* AUTO:deps:end */}
+
+## Example workflow
+
+1. [Chat Trigger](/nodes/builtin/trigger/chat/) receives "Add a task".
+2. Respond to Chat: "Which project?", **Wait for the reply**.
+3. [Todoist](/nodes/builtin/integration/todoist/) creates the task in `{{ $input.chatInput }}`.
+4. Respond to Chat: `Added to {{ $('Respond to Chat').chatInput }}.`
+
+## Common issues
+
+- **The chat shows the agent's text instead**: the reply step is the Respond to Chat step only when the run reaches it. Check that it sits on the path the run takes.
+- **Stop in the chat**: stopping keeps the part of the reply already written and marks it as stopped.
+
+## Related nodes
+
+- [Chat Trigger](/nodes/builtin/trigger/chat/): starts the run from a chat.
+- [Tools Agent](/nodes/builtin/ai/aiagents/toolsagentnode/): an AI reply with tools.
+- [Wait For Approval](/nodes/builtin/flow/wait-for-approval/): pause for a decision instead of a message.

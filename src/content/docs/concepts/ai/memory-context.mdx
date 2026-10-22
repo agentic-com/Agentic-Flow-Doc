@@ -7,6 +7,7 @@ sidebar:
 ---
 
 import { Aside } from "@astrojs/starlight/components";
+import { GuidedShot } from "@components/awflow";
 
 A model has no memory of its own. Each time an AI node runs, the model sees only what the node sends it: the **context**. Memory is a way to add the earlier conversation to that context, so the next answer can build on the last one.
 
@@ -25,6 +26,22 @@ On each run, an agent's context is built from:
 | Tool results | Tools the agent called during this run |
 
 Everything must fit in the model's **context window**. Small and on-device models have small windows, so give them less.
+
+### See it: The model sees
+
+You don't have to guess what was sent. After an AI step runs, its **Output** has a violet **The model sees** card for each model call (**Call 1**, **Call 2**…, an agent makes one per round of tool calls). It lists the parts in order (instructions, the message, chat memory, tools, knowledge passages, tool results), each with its token count and a meter against the model's context window (*3,210 of 8,192 tokens*). Values that came from earlier steps are highlighted, and tool and page results are marked *Untrusted data, not instructions*. On later calls, *New since call 1* shows what was added. **Copy the full prompt** copies the text.
+
+<GuidedShot
+  shot="model-sees"
+  steps={[
+    { spot: 'card', title: 'The model sees', body: 'Each part of the prompt, its tokens, and the meter against the context window.' },
+    { spot: 'copy', title: 'Copy the full prompt', body: 'Copies the text that was sent.' },
+  ]}
+/>
+
+In **Setup**, **The model will see** previews the same parts from the last data, and warns in amber when the prompt won't fit the connected model (*Too long for Llama 3.2 1B: 1,200 tokens over. Chat memory is cut first; or pick a model with more room.*), with **Change model**.
+
+The full text of each part is kept for runs you start in the editor. Background runs keep a summary (the parts and their token counts), kept with the run's step data: in [Runs](/app/workflows/run-history/), an AI step lists its model calls with one card each.
 
 ## Chat Memory
 

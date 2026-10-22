@@ -12,9 +12,9 @@ import { GuidedShot } from '@components/awflow';
 
 AWFlow tells you about things in two ways: the **bell** for account updates, and **waiting-run alerts** when a workflow needs your answer.
 
-## The bell
+## The inbox
 
-The bell sits at the top right of the app. A badge counts unread notifications.
+The inbox icon sits at the top right of the app. Since AWFlow 0.9 it gathers notifications **and** runs waiting for you, with one count. (The screenshot below shows the earlier bell.)
 
 <GuidedShot
   shot="notifications"
@@ -41,18 +41,44 @@ Notifications need an account. In a local workspace the bell is hidden and the p
 
 ## The Notifications page
 
-The page lists every notification, newest first. Unread ones are highlighted. Click one to mark it read and open what it is about. **Mark all read** clears the unread count.
+The page lists every notification, newest first. Unread ones are highlighted. Search them, and switch between **All**, **Unread** and **From AWFlow (N)** (kept in the page address). **From AWFlow** lists the active notices and the update card first, then the notices you dismissed, each with **Show again**. Click one to mark it read and open what it is about. **Mark all read** clears the unread count.
+
+<GuidedShot
+  shot="notifications-from-awflow"
+  steps={[
+    { spot: 'chip', title: 'From AWFlow', body: 'Notices from AWFlow and the update card, with how many.' },
+    { spot: 'update', title: 'The update card', body: 'What changes for your workflows in this version.' },
+    { spot: 'review', title: 'Review', body: 'Opens the *What changes* sheet.' },
+    { spot: 'notice', title: 'A notice', body: '**×** hides it; it moves below, with **Show again**.' },
+  ]}
+/>
 
 ## Runs waiting for you
 
-When a workflow pauses for an approval or a form, the header shows **N waiting**. Click it to approve, reject, or open the run. You can also answer in the workflow's [run history](/app/workflows/run-history/#runs-that-need-you).
+When a workflow pauses for an approval or a form, the inbox counts it. Open it to approve, reject, or open the run; it lands on the workflow's **Runs** tab. You can also answer in the workflow's [run history](/app/workflows/run-history/#runs-that-need-you).
 
 You are also alerted outside the app:
 
 - **In the extension**, when AWFlow isn't the window in front of you, a desktop notification says *Your approval is needed*. It stays until you act.
 - **When the app is in front of you** (or in the web app), a short chime plays. Turn it off with **Play a sound when your approval is needed** in [Preferences](/app/settings/preferences/#approval-sound).
 
-Waiting runs don't add an entry to the bell.
+### Notices from AWFlow
+
+The inbox also shows short **notices from AWFlow** (a planned maintenance, a feature to try), marked *From AWFlow*. They count until you open the inbox; **×** hides one, with **Undo**. A notice that AWFlow needs an update can't be dismissed: it stays at the top, with **Update AWFlow**, and a banner says the same. See [Updating AWFlow](/app/updating-awflow/).
+
+<GuidedShot
+  shot="inbox-from-awflow"
+  steps={[
+    { spot: 'heading', title: 'From AWFlow', body: 'How many are new since you last opened the inbox.' },
+    { spot: 'update', title: 'The update card', body: '**Review** or **Release notes**; **×** is **Later**.' },
+    { spot: 'notice', title: 'A notice', body: 'A planned maintenance, a feature to try.' },
+    { spot: 'dismiss', title: '×', body: 'Hides it, with **Undo**.' },
+  ]}
+/>
+
+When AWFlow updated, or an update is ready (*AWFlow 0.9 is ready*, *Updated to AWFlow 0.9*), the card that tells you what changes for your workflows also shows in the inbox under *From AWFlow*. It counts as new until you see it; **Later** hides it on Home and in the inbox until the next version. **Review** opens the *What changes* sheet from any page, and **Open** goes to the workflow with the steps concerned ringed.
+
+A form workflow you are filling in shows its next pages in place, with no badge, sound or notification while it's open.
 
 ## Newsletter
 

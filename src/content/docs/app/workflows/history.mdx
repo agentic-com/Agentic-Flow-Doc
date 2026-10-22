@@ -1,42 +1,75 @@
 ---
 title: Workflow history
-description: "See the saved versions of a workflow in AWFlow, preview one, and restore it."
+description: "Every saved version of a workflow: see what changed, compare with the current one, name and keep a version, and restore it."
 sidebar:
   order: 8
 section: app
 ---
 
+import { Steps } from '@astrojs/starlight/components';
 import { GuidedShot } from '@components/awflow';
 
-Workflow history helps you go back to an older version of a workflow.
+AWFlow keeps a new **version** of a workflow each time you save it, or when Aria applies a change, or when you restore an older version. **History** lists them so you can see what changed and go back.
 
-## Understand workflow history
-
-AWFlow keeps a new version of the workflow **each time you save it**. The first version is the one you created or imported.
-
-:::note[Workflow history and execution history]
-Don't confuse workflow history with execution history.
-
-Executions are workflow runs. With the [executions list](/app/workflows/run-history/), you can see previous runs of the workflow.
-
-Workflow history is previous versions of the workflow: for example, a version with a different node, or different parameters set.
+:::note[History and Runs]
+History is about **versions** of the workflow (a different step, other settings). The record of each time it ran is in [Runs](/app/workflows/run-history/).
 :::
 
-A run paused by [Wait For Approval](/nodes/builtin/flow/wait-for-approval/) appears in the executions list as a **waiting** run, and can be approved, rejected, or cancelled from there.
+## Open History
 
-## View and restore a version
-
-Open the workflow in the editor. Everything happens in the **Version history** popover at the top right:
+In the editor, click the **History** button (the clock icon next to **Save**). A full-height sheet opens: *Every saved version of this workflow.*
 
 <GuidedShot
   shot="version-history"
   steps={[
-    { spot: 'version-history', title: 'Click Version history', body: 'The clock icon next to **Save**. It lists the saved versions, newest first, by the date and time they were saved.' },
-    { spot: 'date-range', title: 'Narrow the dates (optional)', body: 'Pick a start and end date to list only the versions saved in between.' },
-    { spot: 'version', title: 'Click a version', body: 'The canvas shows that version.', check: 'the steps and their settings are the ones of that version.' },
+    { spot: 'version-history', title: 'Open History', body: 'The clock button next to **Save**.' },
+    { spot: 'current', title: 'Find the version you want', body: 'Newest first; **Current** marks the one the canvas is based on.' },
   ]}
 />
 
-To keep the version you picked, make it the current one: change something (move a step, for example), then click **Save**. Saving keeps a new version, so the newer ones stay in the list. To go back to the newest version instead, click the first version in the list, or reload the page.
+Versions are grouped **Today**, **Yesterday** and **Earlier**. Each row shows:
 
-The list is read when the editor opens: reload the page to see a version you have just saved.
+- its name, or **Saved** (or **Aria: …** for a change Aria made, **Restored from …** for a restore);
+- an icon for where it came from: a save, Aria, or a restore;
+- the time, and what changed since the previous version, for example "+2 steps · 1 changed · 1 link";
+- **Current** on the version the canvas is based on.
+
+## See and compare a version
+
+Click a row:
+
+- **Preview** opens that version read-only.
+- **Download .awf** saves that version as a file (passwords and keys are always left out; the file name carries the version's time).
+- The actions show the **last run** of that version, with its status dot (for example *· last run Done*).
+- **Compare with current** shows the old version with the differences ringed on the canvas, and the changes in plain words. Connection details are hidden.
+
+## Restore a version
+
+<Steps>
+
+1. Click the version, then **Restore…**.
+2. Confirm. The version is restored **as a new version**, labelled **Restored from …**, so the newer versions stay in the list.
+3. The canvas shows it with **Restored — not saved yet**. Press **Save** to keep it.
+
+</Steps>
+
+## Name and keep a version
+
+Click the star on a row, or **Name and keep**, and give the version a name ("Before the Slack change"). Named versions:
+
+- stand out in the list;
+- **survive clean-up**: they are never removed automatically (up to 20 per workflow).
+
+**Unname** removes the name.
+
+## How many versions are kept
+
+- **On this device**: the last **50** versions of each workflow. Named, published and running versions (a paused run still needs its version) are always kept, as are the versions of the last 10 runs.
+- **In your account (cloud)**: as many as your [plan](/app/settings/plan/) allows. Named versions and the versions paused runs need are always kept.
+
+When a version is removed, the runs that used it keep their logs. Unsaved runs from the editor are kept as drafts and never show in History.
+
+## Related
+
+- [Workflow behaviour versions](/app/workflows/behaviour-versions/): upgrading saves one new version you can restore.
+- [Runs](/app/workflows/run-history/): **Debug in editor** can open the version a run used.

@@ -18,20 +18,35 @@ Run the workflow automatically at set times: every few minutes, daily at 9:00, e
 
 ## What it does
 
-Schedule starts the workflow on the rules you set, once the workflow is published. Each rule picks a **Trigger Interval** and then asks only for what that interval needs:
+Schedule starts the workflow on the rules you set, while the workflow is **On** and your browser is open. Each rule picks **Run every** and then asks only for what that choice needs:
 
-| Trigger Interval | You set |
+| Run every | You set |
 | --- | --- |
-| `seconds` | **Seconds Between Triggers** (at least 10) |
-| `minutes` | **Minutes Between Triggers** |
-| `hours` | **Hours Between Triggers** and, optionally, **Trigger at Minute** |
-| `days` | **Days Between Triggers**, **Trigger at Hour**, **Trigger at Minute** |
-| `weeks` | **Weeks Between Triggers**, the weekdays (field **Units**), **Trigger at Hour**, **Trigger at Minute** |
-| `months` | **Months Between Triggers**, **Trigger at Day of Month**, **Trigger at Hour**, **Trigger at Minute** |
+| **Seconds** | **Every how many seconds** (browsers run alarms at most every 30 seconds; below 30, an amber note says so) |
+| **Minutes** | **Every how many minutes** |
+| **Hours** | **Every how many hours** and, optionally, **Trigger at Minute** |
+| **Days** | **Every how many days**, **At (hour)**, **Trigger at Minute** |
+| **Weeks** | **Every how many weeks**, the weekdays, **At (hour)**, **Trigger at Minute** |
+| **Months** | **Every how many months**, **Trigger at Day of Month**, **At (hour)**, **Trigger at Minute** |
+| **Custom (cron)** | a **Cron rule** |
+
+A new Schedule step starts ready: every day at 09:00. Hours read *12 AM (midnight)* and *12 PM (noon)*; a rule with an hour or minute out of range isn't scheduled and shows in **Ready to run**.
 
 Add several rules to combine schedules, for example weekdays at 9:00 plus Saturdays at noon.
 
-Daily, weekly and monthly schedules (and hourly ones pinned to a minute) stay on the same local clock time when daylight saving time changes.
+### Timezone
+
+Hourly, daily, weekly, monthly and cron rules take an optional **Timezone** (for example *Europe/Paris*). Empty means your browser's time. Set one zone for the whole workflow in [Workflow settings](/app/workflows/settings/#running); a rule's own zone wins. Schedules stay on the same clock time when daylight saving time changes: a time skipped by the change runs at the first minute after it, a repeated hour runs once.
+
+### Custom (cron)
+
+**Custom (cron)** takes a 5-part cron rule: minute, hour, day of month, month, weekday. Lists (`1,15`), ranges (`1-5`), steps (`*/15`), names (`MON`, `JAN`), `L` (last day) and shortcuts like `@daily` work. The field shows the rule in plain words, the next 3 runs (and your own time when the zone differs), and ready-made presets. A 6-part rule with seconds is refused: schedules run at most once a minute. Runs missed while the browser was closed aren't replayed.
+
+```txt title="Cron rule"
+0 9 * * 1-5     every weekday at 09:00
+*/15 8-18 * * * every 15 minutes from 08:00 to 18:59
+0 8 L * *       at 08:00 on the last day of each month
+```
 
 ## When to use it
 
@@ -44,9 +59,9 @@ Daily, weekly and monthly schedules (and hourly ones pinned to a minute) stay on
 {/* AUTO:settings:start */}
 <AwfParamTable rows={[{"name":"Rules","type":"List","required":true}]} />
 
-**Rules** changes shape with its **Trigger Interval** choice:
+**Rules** changes shape with its **Run every** choice:
 
-<AwfOperationTabs hydrate="visible" pick={"Trigger Interval"} groups={[{"options":[{"label":"seconds","rows":[{"name":"Seconds Between Triggers","type":"Number","required":true,"description":"Seconds between each run. Note: the browser floors alarms at ~1 minute, so second-level schedules are best-effort — the minimum is 10s and short intervals are effectively rounded up to about 1 minute. For reliable sub-minute timing, keep the flow running yourself."}]},{"label":"minutes","rows":[{"name":"Minutes Between Triggers","type":"Number","required":true,"description":"Number of minutes between each workflow trigger."}]},{"label":"hours","rows":[{"name":"Hours Between Triggers","type":"Number","description":"Number of hours between each workflow trigger."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]},{"label":"days","rows":[{"name":"Days Between Triggers","type":"Number","description":"Number of days between each workflow trigger."},{"name":"Trigger at Hour","type":"Choice","required":true,"description":"Hour of the day at which the workflow will be triggered. 24 options."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]},{"label":"weeks","rows":[{"name":"Weeks Between Triggers","type":"Number","description":"Would run every week unless specified otherwise."},{"name":"Trigger on Weekdays","type":"Multiple choice","required":true,"description":"The days of the week on which the workflow runs. Options: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday."},{"name":"Trigger at Hour","type":"Choice","required":true,"description":"Hour of the day at which the workflow will be triggered. 24 options."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]},{"label":"months","rows":[{"name":"Months Between Triggers","type":"Number","description":"Number of months between each workflow trigger."},{"name":"Trigger at Day of Month","type":"Number","description":"Day of the month at which the workflow will be triggered."},{"name":"Trigger at Hour","type":"Number","required":true,"description":"Hour of the day at which the workflow will be triggered."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."}]}]}]} />
+<AwfOperationTabs hydrate="visible" pick={"Run every"} groups={[{"options":[{"label":"Seconds","rows":[{"name":"Every how many seconds","type":"Number","required":true,"description":"Seconds between each run. Browsers run alarms at most every 30 seconds, so shorter intervals run every 30 s. For reliable sub-30-second timing, keep the flow running yourself."}]},{"label":"Minutes","rows":[{"name":"Every how many minutes","type":"Number","required":true,"description":"Number of minutes between each workflow trigger."}]},{"label":"Hours","rows":[{"name":"Every how many hours","type":"Number","description":"Number of hours between each workflow trigger."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."},{"name":"Timezone","type":"Choice (loaded from your account)","description":"Run at this time in another place. Empty = your browser’s time."}]},{"label":"Days","rows":[{"name":"Every how many days","type":"Number","description":"Number of days between each workflow trigger."},{"name":"At (hour)","type":"Choice","required":true,"description":"Hour of the day at which the workflow will be triggered. 24 options."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."},{"name":"Timezone","type":"Choice (loaded from your account)","description":"Run at this time in another place. Empty = your browser’s time."}]},{"label":"Weeks","rows":[{"name":"Every how many weeks","type":"Number","description":"Would run every week unless specified otherwise."},{"name":"Trigger on Weekdays","type":"Multiple choice","required":true,"description":"The days of the week on which the workflow runs. Options: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday."},{"name":"At (hour)","type":"Choice","required":true,"description":"Hour of the day at which the workflow will be triggered. 24 options."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."},{"name":"Timezone","type":"Choice (loaded from your account)","description":"Run at this time in another place. Empty = your browser’s time."}]},{"label":"Months","rows":[{"name":"Every how many months","type":"Number","description":"Number of months between each workflow trigger."},{"name":"Trigger at Day of Month","type":"Number","description":"Day of the month at which the workflow will be triggered."},{"name":"At (hour)","type":"Number","required":true,"description":"Hour of the day at which the workflow will be triggered."},{"name":"Trigger at Minute","type":"Number","description":"Minute of the hour at which the workflow will be triggered."},{"name":"Timezone","type":"Choice (loaded from your account)","description":"Run at this time in another place. Empty = your browser’s time."}]},{"label":"Custom (cron)","rows":[{"name":"Cron rule","type":"Text","required":true,"description":"minute · hour · day · month · weekday."},{"name":"Timezone","type":"Choice (loaded from your account)","description":"Run at this time in another place. Empty = your browser’s time."}]}]}]} />
 {/* AUTO:settings:end */}
 
 ## Outputs
@@ -75,15 +90,16 @@ None. This node needs no connection and has no slots for other nodes.
 
 ## Example workflow
 
-1. Schedule with one rule: `days`, **Days Between Triggers** 1, **Trigger at Hour** 8 AM, **Trigger at Minute** 0.
+1. Schedule with one rule: **Days**, **Every how many days** 1, **At (hour)** 8 AM, **Trigger at Minute** 0.
 2. [RSS Feed Read](/nodes/builtin/core/rss-feed-read/) fetches a feed.
 3. [Limit](/nodes/builtin/datatransformation/limit/) keeps the 5 newest posts.
 4. [Telegram](/nodes/builtin/integration/telegram/) sends them to you.
 
 ## Common issues
 
-- **The workflow never runs on its own.** Publish the workflow: schedules only run for published workflows. To test, run it from the canvas.
-- **A seconds schedule runs about once a minute.** The browser runs scheduled alarms at most about once a minute, so second-level schedules are approximate. The minimum is 10 seconds.
+- **The workflow never runs on its own.** Turn the workflow **On**: schedules only run for workflows that are On, while the browser is open. To test, press **Run** on the canvas.
+- **A seconds schedule runs every 30 seconds.** Browsers run alarms at most every 30 seconds, so a shorter interval runs every 30 s.
+- **The cron rule is refused.** Check it has 5 parts; the message under the field says what's wrong in plain words.
 - **A monthly schedule skipped a month.** That month has no such day (for example the 31st). Pick a day that every month has, such as the 1st or the 28th.
 
 ## Related nodes

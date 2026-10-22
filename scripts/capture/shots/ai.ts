@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { type ShotDef, btn, link, text, inDialog } from './define.ts';
 import { T, type Session } from '../lib/session.ts';
-import type { Locator } from '../lib/util.ts';
+import type { Locator, Page } from '../lib/util.ts';
 import { buildAwmem, CHAT_TITLE } from '../lib/awmem.ts';
 
 /** Closes a dialog or menu the previous shot left open. */
@@ -34,6 +34,21 @@ async function scrollPane(loc: Locator, block: 'start' | 'center') {
 		p.scrollTop += r.top - pr.top - (center ? (pr.height - r.height) / 2 : 16);
 	});
 }
+
+const POPOVER = '[data-slot="popover-content"]';
+const OLLAMA_URL = 'http://localhost:11434/**';
+type PageRoutes = {
+	route(url: string, handler: (r: { request(): { url(): string }; fulfill(o: Record<string, unknown>): Promise<void> }) => Promise<void>): Promise<void>;
+	unroute(url: string): Promise<void>;
+};
+/** Three models as Ollama's /api/tags lists them: two that can call tools, one chat-only. */
+const OLLAMA_MODELS = [
+	{ name: 'llama3.1:8b', size: 4_920_753_328, details: { family: 'llama', parameter_size: '8.0B' }, capabilities: ['completion', 'tools'] },
+	{ name: 'qwen2.5:7b', size: 4_683_087_332, details: { family: 'qwen2', parameter_size: '7.6B' }, capabilities: ['completion', 'tools'] },
+	{ name: 'gemma2:2b', size: 1_629_518_495, details: { family: 'gemma2', parameter_size: '2.6B' }, capabilities: ['completion'] }
+];
+/** The composer's model chip (its name is the model in use). */
+const modelChip = (p: Page) => p.locator('[data-slot="popover-trigger"]').filter({ hasText: /Auto|Gemini|llama|qwen|gemma/ }).last();
 
 /** The "Price checker" agent made once per session with Blank agent; returns after opening the builder on `tab`. */
 const agentRoutes = new WeakMap<Session, string>();
@@ -152,7 +167,7 @@ export const shots: ShotDef[] = [
 		hotspots: [
 			{ id: 'storage-header', label: 'Storage header: space used, by engine', locate: text(/of \d+(\.\d+)? GB/) },
 			{ id: 'tasks', label: 'Tasks', locate: text('BROWSE BY TASK') },
-			{ id: 'search-engine-filter', label: 'Search and engine filter', locate: (p) => p.getByRole('textbox', { name: 'Filter models…' }) },
+			{ id: 'search-engine-filter', label: 'Search models, Filters and Sort by', locate: (p) => p.getByRole('searchbox', { name: /Search models/ }).or(p.getByRole('textbox', { name: /Search models/ })).first() },
 			{ id: 'model-card', label: 'A model card: size, device fit and install state', locate: (p) => p.getByText('Llama 3.2 1B Instruct').first() }
 		],
 		prepare: async (s) => {
@@ -528,8 +543,31 @@ export const shots: ShotDef[] = [
 			await closeOverlays(s);
 			await s.assistant();
 			await s.page.getByRole('button', { name: 'New chat' }).first().click({ timeout: T });
+			// New chat asks who to talk to (#24): Enter starts Aria, who is preselected.
+			const picker = s.page.getByRole('dialog', { name: 'New chat' });
+			if (await picker.waitFor({ timeout: 3000 }).then(() => true, () => false)) {
+				await s.page.keyboard.press('Enter');
+				await picker.waitFor({ state: 'hidden', timeout: T });
+			}
 			await s.page.getByRole('textbox', { name: 'Ask Aria anything…' }).waitFor({ timeout: T });
 			await s.page.waitForTimeout(800);
+		}
+	},
+	{
+		name: 'new-chat-picker',
+		page: 'app/chat-and-agents/chat',
+		route: '#/app/assistant (New chat)',
+		alt: 'The New chat dialog: Who do you want to talk to?, a search box for agents, teams and workflow chats, and Aria first and preselected (Enter), Builds and fixes workflows, answers questions.',
+		spots: [
+			{ id: 'search', label: 'Search agents, teams and workflow chats', locator: (p) => p.getByRole('dialog', { name: 'New chat' }).getByRole('combobox') },
+			{ id: 'aria', label: 'Aria, preselected', locator: (p) => p.getByRole('dialog', { name: 'New chat' }).getByRole('option', { name: /^Aria/ }) }
+		],
+		prepare: async (s) => {
+			await closeOverlays(s);
+			await s.assistant();
+			await s.page.getByRole('button', { name: 'New chat' }).first().click({ timeout: T });
+			await s.page.getByRole('dialog', { name: 'New chat' }).waitFor({ timeout: T });
+			await s.page.waitForTimeout(600);
 		}
 	},
 	{
@@ -615,6 +653,24 @@ export const shots: ShotDef[] = [
 			await s.page.getByRole('radiogroup', { name: 'Preview a state' }).waitFor({ timeout: T });
 			await scrollPane(s.page.getByRole('heading', { name: 'Identity' }).first(), 'start');
 			await s.page.waitForTimeout(800);
+		}
+	},
+	{
+		name: 'aria-identity',
+		page: 'app/chat-and-agents/agent-builder',
+		route: '#/app/agents/aria',
+		alt: "The Identity tab of the agent builder for Aria, drawn as Ember Mochi, a squishy amber spirit with a glowing flame. Her name reads Aria, Built in; her role is Your helper in the browser. In the look studio, the large preview with Preview a state and Try a reaction on the left; on the right, Her look with two cards, Ember Mochi (selected, Official AWFlow mascot) and Pip the Owlet (Alternative look), and How she shows what she is doing with live tiles for Thinking, Working, Needs you and Done. The Try it rail is on the right.",
+		viewport: { width: 1440, height: 1100 },
+		spots: [
+			{ id: 'mascots', label: "Her look: Ember Mochi or Pip the Owlet", locator: (p) => p.getByRole('radiogroup', { name: 'Mascot' }) },
+			{ id: 'states', label: 'How she shows what she is doing', locator: (p) => p.getByTestId('aria-state').first() },
+			{ id: 'preview', label: 'Preview a state', locator: (p) => p.getByRole('radiogroup', { name: 'Preview a state' }) }
+		],
+		prepare: async (s) => {
+			await closeOverlays(s);
+			await s.go('#/app/agents/aria');
+			await s.page.getByRole('radiogroup', { name: 'Mascot' }).waitFor({ timeout: T });
+			await s.page.waitForTimeout(1200);
 		}
 	},
 	{
@@ -733,4 +789,41 @@ export const shots: ShotDef[] = [
 			await teamWizard(s, 4);
 		}
 	},
+	{
+		name: 'ollama-picker',
+		page: 'app/chat-and-agents/chat',
+		route: '#/app/assistant (model picker)',
+		alt: "A new chat with Aria with the model picker open above the composer: the Ollama · this computer group lists three models found in a running Ollama (llama3.1:8b, selected, and qwen2.5:7b, each 8k with Tools; gemma2:2b marked No tools), followed by the On this device models to download, a Manage local models link and Compare.",
+		note: "Ollama's model list (GET localhost:11434/api/tags) is answered by the capture with three example models; no Ollama runs on the capturing machine.",
+		spots: [
+			{ id: 'model-picker', label: 'Model picker', locator: (p) => modelChip(p) },
+			{ id: 'ollama-group', label: 'Ollama · this computer', locator: text(/^Ollama · this computer/) },
+			{ id: 'ollama-model', label: 'A model found in Ollama', locator: (p) => p.locator(POPOVER).getByRole('button', { name: /llama3\.1:8b/ }) },
+			{ id: 'no-tools', label: 'No tools: this model can chat but not use tools', locator: (p) => p.locator(POPOVER).getByRole('button', { name: /gemma2:2b/ }).getByText('No tools') }
+		],
+		prepare: async (s) => {
+			await closeOverlays(s);
+			// A running Ollama, as the app's discovery sees it (the capture otherwise blocks port 11434).
+			await (s.page as unknown as PageRoutes).route(OLLAMA_URL, (route) =>
+				route.fulfill(
+					new URL(route.request().url()).pathname === '/api/tags'
+						? { status: 200, headers: { 'access-control-allow-origin': '*' }, contentType: 'application/json', body: JSON.stringify({ models: OLLAMA_MODELS }) }
+						: { status: 404, headers: { 'access-control-allow-origin': '*' }, body: '' }
+				)
+			);
+			await s.page.goto('about:blank');
+			await s.assistant();
+			await s.page.getByRole('button', { name: 'New chat' }).first().click({ timeout: T });
+			await s.page.getByRole('textbox', { name: 'Ask Aria anything…' }).waitFor({ timeout: T });
+			await s.page.waitForTimeout(1500);
+			await modelChip(s.page).click({ timeout: T });
+			await s.page.getByText(/^Ollama · this computer/).waitFor({ timeout: T });
+			await s.page.waitForTimeout(800);
+		},
+		cleanup: async (s) => {
+			await (s.page as unknown as PageRoutes).unroute(OLLAMA_URL);
+			// Drops the app's in-memory list of detected models, so later shots see no Ollama.
+			await s.page.goto('about:blank');
+		}
+	}
 ];

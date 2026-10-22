@@ -1,0 +1,51 @@
+---
+title: "Crash reports"
+description: "See the errors AWFlow reports from users' browsers, grouped by cause, and map a minified stack back to the source"
+kind: guide
+section: app
+sidebar:
+  label: "Crash reports"
+  badge:
+    text: New
+    variant: tip
+---
+
+import { Badge, Steps } from '@astrojs/starlight/components';
+
+<Badge text="Admin" variant="caution" />
+
+**Crash reports** (Admin panel › **Crash reports**, `#/admin/errors`) lists the errors the app reports from users' browsers, so the team can see what breaks, for how many people, and since which version.
+
+Reports come only from people who left **Send error reports** on (Settings › Privacy). Messages and stacks are scrubbed on the device before they are sent, and no workflow content is ever included. Reports are **kept 90 days**.
+
+## The list
+
+Errors with the same cause are grouped into one row (a *fingerprint*). Each row shows:
+
+| Column | Meaning |
+| --- | --- |
+| **Error** | The error message, with a **New** badge when it first appeared in the latest version. |
+| **Count** | How many reports in the period. |
+| **Installs** | How many different installs reported it (one person reporting it 50 times is one install). |
+| **First seen** / **Last seen** | When it first and last happened. |
+| **Versions** | The AWFlow versions it happened in. |
+| **Browsers** | The browsers it happened in. |
+
+Narrow the list with **Search messages**, a version (**All versions** or one), the surface (**Extension** or **Web**), the period (**Last 24 hours**, **Last 7 days**, **Last 30 days**), and **New in vX.Y.Z** for errors that only appeared in the latest release.
+
+## Read one error
+
+<Steps>
+
+1. Press **View** on a row. The drawer shows the **Latest samples** with their stack (**Stack · minified**). **Copy fingerprint** copies the group's id, for an issue.
+2. Press **Symbolicate**. The browser downloads the source maps of that release and maps each line of the stack back to the source file and line. Nothing leaves your browser.
+3. If no source maps were uploaded for that version, a message says so.
+
+</Steps>
+
+Source maps are uploaded when a release is built (see the app's release checklist). They are never shipped to users.
+
+## Related
+
+- [Admin overview](/app/admin/)
+- [Privacy and your data](/app/privacy-and-data/): what crash reports contain.

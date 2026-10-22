@@ -66,6 +66,48 @@ const CATEGORIES = [
 	workflowCount
 }));
 
+/** Notices from AWFlow (`/config/client`), sent while the `notices` switch is on. */
+const NOTICES = [
+	{ id: 'docs-maintenance', level: 'warning', message: 'Planned maintenance on Sunday, 06:00–07:00 UTC: sign-in and the Marketplace may be slow.' },
+	{ id: 'docs-test-runs', level: 'info', message: 'New: Test runs check that a workflow still answers well after a change.', url: 'https://docs.awflow.io/app/workflows/test-runs/' }
+];
+
+/** A workflow installed from the marketplace by Alex Doe: JSON Prettify by a fictional author, v2 installed, v3 approved. */
+function installedFixture(fixturesDir: string) {
+	const awf = JSON.parse(readFileSync(join(fixturesDir, 'json-prettify.awf'), 'utf8')) as { name: string; description: string; tags: string[]; nodes: Json[]; edges: Json[] };
+	const workflowId = 'wf_docs_json_prettify';
+	const graph = { id: 'wg_docs_json_prettify_2', workflowId, nodes: awf.nodes, edges: awf.edges, createdDate: T0 - 20 * 86_400_000 };
+	const download = {
+		id: 'dl_docs_json_prettify',
+		publishedWorkflowId: 'pw_docs_json_prettify',
+		version: 2,
+		latestVersion: 3,
+		latestNote: 'Keeps the key order of the original and shows the error line when the JSON is invalid.',
+		nodesInputs: null,
+		permissionManifest: null,
+		requiredInputs: [],
+		listingStatus: 'approved',
+		workflow: {
+			id: workflowId,
+			name: awf.name,
+			description: awf.description,
+			userId: 'usr_docs_sam',
+			activeGraph: graph.id,
+			status: 'active',
+			type: 'triggered',
+			visibility: 'public',
+			tags: awf.tags,
+			installedFrom: null,
+			permissionManifest: null,
+			basedOn: { listingId: 'pw_docs_json_prettify', name: awf.name, author: 'Sam Lee' },
+			createdDate: T0 - 30 * 86_400_000,
+			lastModified: T0 - 20 * 86_400_000
+		},
+		graph
+	};
+	return { workflowId, download };
+}
+
 /** Per-browser-context state: what the wizard saved so far. */
 export function createFakeApi(fixturesDir: string, origin: string) {
 	const awf = JSON.parse(readFileSync(join(fixturesDir, `${CLOUD_FIXTURE}.awf`), 'utf8')) as {
@@ -96,9 +138,12 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 	/**
 	 * Capture-only switches, set by a shot's prepare with `POST /__docs/state` (see shots/admin.ts):
 	 * `role` turns Alex Doe into an admin for the admin screens; `newsletterPrompt` lets the
-	 * "Stay in the loop" card show. Both are off by default so other shots stay unchanged.
+	 * "Stay in the loop" card show; `installed` adds one workflow installed from the marketplace
+	 * (an older version, a newer one approved); `notices` makes `/config/client` send two notices
+	 * from AWFlow. All are off by default so other shots stay unchanged.
 	 */
-	const state = { role: 'user', newsletterPrompt: false, newsletter: 'subscribed' as string };
+	const state = { role: 'user', newsletterPrompt: false, newsletter: 'subscribed' as string, installed: false, notices: false };
+	const installed = installedFixture(fixturesDir);
 	const admin = createAdminFixtures(fixturesDir, user);
 	const NOW = Date.now();
 	const notifications = [
@@ -117,6 +162,33 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 		const [max_workflows, max_workflow_versions, max_workflow_nodes, max_executions, max_credentials] = l as (number | null)[];
 		return { id, name, description, priceMonthly, priceYearly, isPopular, highlights: [], limits: { max_workflows, max_workflow_versions, max_workflow_nodes, max_executions, max_credentials } };
 	});
+	/** Request board: fictional community requests (requesters use example names). */
+	const DAY = 86_400_000;
+	const wanted = (id: string, title: string, description: string, voteCount: number, status: string, days: number, o: Json = {}) => ({
+		id,
+		title,
+		description,
+		category: null,
+		requester: { id: `usr_docs_${id}`, name: 'Mei Lin', image: null, verified: false },
+		voteCount,
+		hasVoted: false,
+		status,
+		createdDate: NOW - days * DAY,
+		etaDate: null as number | null,
+		lastModified: NOW - days * DAY,
+		fulfilledPublishedWorkflowId: null as string | null,
+		...o
+	});
+	const board = [
+		wanted('wr_2', 'Summarise YouTube video transcripts', 'Open a video, get the key points and timestamps as a short list.', 37, 'open', 15),
+		wanted('wr_3', 'Export a LinkedIn profile to a Google Sheet', 'One row per profile: name, headline, company and location.', 29, 'open', 11, { hasVoted: true }),
+		wanted('wr_6', 'Translate the selected text in place', 'Select a paragraph, pick a language, and replace it with the translation.', 14, 'open', 5),
+		wanted('wr_9', 'Daily digest of new GitHub issues', 'Every morning, list the issues opened since yesterday in my repositories.', 8, 'open', 2),
+		wanted('wr_1', 'Save the current page to Notion', 'Title, link, a short summary and tags, added to a Notion database.', 48, 'building', 20, { etaDate: NOW + 12 * DAY }),
+		wanted('wr_10', 'Fill expense reports from receipts', 'Read a receipt photo and fill the expense form fields.', 19, 'building', 9),
+		wanted('wr_5', 'Price-drop alert for any product page', 'Check a product page every day and notify me when the price goes down.', 21, 'fulfilled', 40, { fulfilledPublishedWorkflowId: 'pw_docs_price', lastModified: NOW - 3 * DAY }),
+		wanted('wr_11', 'Copy a table from any page to CSV', 'Pick a table on the page and download it as a CSV file.', 16, 'fulfilled', 60, { fulfilledPublishedWorkflowId: 'pw_docs_csv', lastModified: NOW - 12 * DAY })
+	];
 	const assets = new Map<string, { type: string; data: Buffer }>();
 	const unknown = new Set<string>();
 
@@ -189,7 +261,12 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 		if (path === '/me/counts') return [200, { workflows: 1, credentials: 0 }];
 		if (path === '/me/subscription')
 			return [200, { id: 'sub_docs', userId: USER_ID, planId: 'free', billingCycle: 'monthly', status: 'active', startDate: T0, endDate: null }];
-		if (path === '/published-workflows/downloads') return [200, []];
+		if (path === '/published-workflows/downloads') return [200, state.installed ? [installed.download] : []];
+		if (state.installed && path === `/published-workflows/downloads/${installed.workflowId}`) return [200, installed.download];
+		if (state.installed && path === `/published-workflows/downloads/${installed.workflowId}/versions`) return [200, [1, 2, 3]];
+		if (state.installed && path === `/executions/workflow/${installed.workflowId}`) return [200, []];
+		if (path === '/config/client')
+			return [200, { notices: state.notices ? NOTICES : [], flags: {}, killSwitch: { nodes: [], integrations: [] } }];
 		if (path === '/published-workflows/revocations') return [200, { revoked: [], updatedAt: T0 }];
 		if (path === '/me/plan' || path === '/plans/free') return [200, PLANS[0]];
 		if (path === '/plans') return [200, PLANS];
@@ -239,6 +316,12 @@ export function createFakeApi(fixturesDir: string, origin: string) {
 			return [200, { ok: true }];
 		}
 		if (path === '/workflow-categories' && method === 'POST') return [200, { ...CATEGORIES[0], ...body, id: `Workflow_Category:${body.slug}`, workflowCount: 0 }];
+		// The public request board (one lane per call, most-voted first).
+		if (path === '/wanted-flows/stats') return [200, { requestsThisWeek: 12, votesThisWeek: 140, shippedThisMonth: 3, inReviewNow: 1 }];
+		if (path === '/wanted-flows' && method === 'GET') {
+			const lane = q.get('status');
+			return [200, board.filter((r) => !lane || r.status === lane).sort((a, b) => b.voteCount - a.voteCount)];
+		}
 		return null;
 	}
 

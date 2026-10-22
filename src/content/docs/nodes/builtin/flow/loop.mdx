@@ -40,10 +40,16 @@ To work through a long list a few items at a time, [Split in Batches](/nodes/bui
 ## Inputs and settings
 
 {/* AUTO:settings:start */}
-<AwfParamTable rows={[{"name":"Max Iterations","type":"Number","default":"100","description":"Maximum number of loop iterations."},{"name":"Conditions","type":"Conditions","required":true,"description":"The conditions to evaluate."}]} />
+<AwfParamTable rows={[{"name":"Max Iterations","type":"Number","default":"100","description":"Maximum number of loop iterations."},{"name":"Conditions","type":"Conditions","required":true,"description":"The conditions to evaluate."},{"name":"Collect results","type":"Toggle","default":"Off","description":"Output everything that came back through Loop Back, in order, on Done."},{"name":"One entry per item","type":"Toggle","default":"On","description":"Used with Collect results: a pass that returns a list adds its items one by one. Off: one entry per pass."}]} />
 {/* AUTO:settings:end */}
 
 **Max Iterations** accepts 1 to 1,000. The limit stops a loop whose conditions never fail from freezing the tab.
+
+### Collect results
+
+Turn on **Collect results** to get, on **Done**, everything that came back through **Loop Back** during the passes, in order, as `results` (one entry per item, or per pass). Without it, **Done** only carries the last data, as before. Up to 10,000 entries (about 2 MB) are kept; beyond that the list is cut, `resultsTruncated` is set and the run log warns you. Nested loops each keep their own results.
+
+A Loop with no conditions fails with a clear message. When **Max Iterations** ends it while the conditions still hold, the run log warns you and the output carries `stoppedEarly: true`.
 
 ## Outputs
 
@@ -52,13 +58,16 @@ To work through a long list a few items at a time, [Split in Batches](/nodes/bui
 
 Each output item has these fields:
 
-<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"done","type":"True/false","description":"True when the loop exits through Done"},{"name":"currentIndex","type":"Number"},{"name":"inData","type":"Any","description":"The incoming data, unchanged"}]} />
+<AwfParamTable nameLabel="Field" descriptionLabel="What it holds" rows={[{"name":"done","type":"True/false","description":"True when the loop exits through Done"},{"name":"currentIndex","type":"Number"},{"name":"inData","type":"Any","description":"The incoming data, unchanged"},{"name":"stoppedEarly","type":"True/false","description":"True when Max Iterations ended the loop while its condition still held"},{"name":"results","type":"List","description":"With Collect results: what came back through Loop Back on every pass"},{"name":"resultsTruncated","type":"True/false","description":"True when Collect results stopped at its limit"}]} />
 
 ```json title="Shape of an output item"
 {
   "done": true,
   "currentIndex": 0,
-  "inData": null
+  "inData": null,
+  "stoppedEarly": true,
+  "results": [],
+  "resultsTruncated": true
 }
 ```
 {/* AUTO:outputs:end */}

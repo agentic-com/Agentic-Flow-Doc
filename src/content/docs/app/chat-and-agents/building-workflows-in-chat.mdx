@@ -40,13 +40,25 @@ The header shows the workflow's name as a pill. Click it to open **Build which w
 
 The home cards help you start: **Automate something** turns on Build for this chat, and **Improve one of my workflows** opens the picker on *Your workflows*.
 
+## A plan first, for bigger builds
+
+When you ask for something bigger (more than 3 actions, a branch, or more than 2 apps), Aria first shows a **plan card** before building anything: a summary, the trigger, numbered steps with app icons, and up to 5 questions to answer (one choice, several, or free text).
+
+- **Build** builds the approved plan with your answers.
+- **Change** asks what should change and re-plans once, marking the changed steps.
+- **Cancel** ends the turn with no draft.
+
+Turn on **Plan first** in the message box to always get a plan (remembered per place: the Aria page, the side panel, the canvas dock).
+
+In the [notch](/app/assistant-notch/), the plan card is compact: *Plan · N steps*, the questions **one at a time** (with previous / next), and **Build**, **Change** and **Cancel** in place of the message box.
+
 ## While it builds
 
 Aria builds with the **whole conversation so far**, so details you gave a few messages earlier ("only invoices over €500") are taken into account.
 
 A **Building your workflow** card shows each stage as it runs, with its time: *Understand your request*, *Look for similar workflows*, *Choose an approach*, *Write the workflow* and *Check it's valid* (plus *Fixing the problems* when the check finds something). When it is done, the card folds into a line such as **Built in 0:14 · 5 stages**; click it to see the stages again.
 
-The **preview draws the workflow as it is written**. Steps after an **IF** or **Switch** are laid out in side-by-side lanes, one per branch, in the order of the node's outputs, and each branch is wired to the right output.
+The **preview draws the workflow as it is written**. AI building blocks (a chat model, memory, tools, an output parser) are attached to their agent's slots, not chained as steps. Steps after an **If** or **Route by value** are laid out in side-by-side lanes, one per branch, in the order of the node's outputs, and each branch is wired to the right output.
 
 **Stop** on the card really stops the build: the model call in progress is cancelled and no more requests go to the model, so a stopped build costs nothing further. A **Build stopped** receipt stays in the chat with the stages that ran, *Nothing was changed*, **Build again** and **Edit request**.
 
@@ -56,10 +68,11 @@ When the new workflow needs something from you before it can run — a credentia
 
 ## Changes, undo and versions
 
-Each build reply ends with a change chip, such as **Invoice saver · v3 · +1 step**. It counts steps added, changed and removed since the previous version.
+Each build reply ends with a change chip, such as **Invoice saver · v3 · +1 step**. It counts steps added, changed and removed since the previous version, and **⇄ 2 links** when the links between steps changed. History and Compare say *Added link*, *Removed link* and *Moved link* the same way.
 
 - **View changes** opens the preview with the differences highlighted.
-- **Undo** reverts the **latest** change only, and goes back one version. Older changes can't be undone from the chip.
+- **Undo** reverts the **latest** change and goes back one version.
+- On an **older** message's chip, **Revert to before this message** brings back the workflow as it was before that message. It asks first (*Revert to before this message?*): the version it goes back to, how many messages' changes it undoes, and each step that goes away, comes back or goes back, with the versions that touched it (*added in v3, changed in v5*). The revert is saved as a new version (*It comes back as v6, so you can undo the revert*). Afterwards the chips it undid read **Reverted**, a divider marks the point in the chat, and the new version has its own chip with **Undo** and **Review & save**.
 - **Keep building &lt;name&gt;** appears after a one-off build made in Chat: it turns Build on for that workflow.
 - **Review & save** appears when the workflow can be saved (see below).
 
@@ -78,7 +91,16 @@ Changes to a saved workflow are **staged in the chat**; the workflow itself is u
 
 **Discard** throws away the staged changes and goes back to the saved version.
 
+When Aria changes an existing workflow, it asks the model for a short list of edits (add, change, rename, remove, connect, disconnect) and applies them itself: settings it doesn't touch, connections, names, positions and notes stay exactly as they were, so the list of changes is exact. A change plan also counts **links** that changed, so a draft that only rewires steps can be kept. Aria checks its draft with the **workflow doctor** (a loop without an exit, a branch going nowhere, a secret typed into a field, a missing connection…), fixes what it can and lists the rest as settings to check.
+
 A workflow built from scratch is saved with the usual save dialog. After that, the chat remembers it, so saving again updates it instead of creating another one.
+
+## Fix with Aria
+
+When a step or a run fails, **Fix with Aria** (on the failure card, in the step's **Output**, and in a failed run's menu in **Runs**) opens Aria on the failure. Before you send anything, it shows exactly what it will share: the error, the step with its settings (connections replaced by their name), the shape of the input without its values, and the steps before it. A **sample of the data** is only included if you switch it on (on by default only with an on-device model, at most 2,000 characters). Aria explains the problem and proposes a change: **Keep** applies it as one undo step. If the workflow changed since that run, Aria says so.
+
+- A connection error offers **Help me connect** instead.
+- Code steps offer **Write this code with Aria**: it reads the last input's shape and your current code, and answers with a change you **Keep** or **Undo**.
 
 ## Mentioning another workflow
 
