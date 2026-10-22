@@ -68,6 +68,16 @@ By default a 4xx or 5xx answer fails the step, and the error shows the status, t
 
 A file response (an image, a PDF, a download) arrives as binary data under the `data` key, ready for file uploads such as Slack **File → Upload**, Google Drive **File → Create** or Gmail attachments.
 
+### Send an idempotency key
+
+Some services (payments such as Stripe, Adyen or PayPal) can ignore a request they already received, if it carries the same idempotency key. That way a retry never charges twice. In the step's **Advanced** tab, turn on **Send an idempotency key**. It is off by default, and nothing is sent until you turn it on.
+
+- **Header name**: `Idempotency-Key` by default, which most services use. Change it if your service expects another header. The key replaces a header of the same name that you set on the step.
+- **Value sent**: one key per run, step and item (shown as `run_… · Charge card · item 1`). It stays the same when the step tries again (**Try again automatically**) and when a paused run continues. A new run gets a new key.
+- With [pagination](#fetch-every-page), only the first page's request carries the key. The later pages go without it.
+
+When a retry sends the request again, the run log says *Item 1: sent again with the same idempotency key.*
+
 ## When to use it
 
 - Call an API that has no dedicated node.
