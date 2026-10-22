@@ -6,7 +6,7 @@ kind: guide
 sidebar:
   label: "Pas à pas : brancher selon le contenu de la page"
 i18n:
-  source: "e5dad7ead383eca9bf039fad4870dfc93df5866f"
+  source: "bd19a952a239ac1f8fb82f5a80d11fd2269e4a86"
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
@@ -59,10 +59,10 @@ Voilà l'idée principale des workflows : ils peuvent réagir à ce qu'ils trou
 
 ## Étape 2 : ajouter un nœud d'extraction de liens
 
-1. Cliquez sur **Ajouter un déclencheur** et choisissez **When I press Run** sous **What should start this workflow?**. Cliquez ensuite sur le **+** à son bord droit.
+1. Cliquez sur **Ajouter un déclencheur** et choisissez **Quand j'appuie sur Lancer** sous **Qu'est-ce qui doit démarrer ce workflow ?**. Cliquez ensuite sur le **+** à son bord droit.
 2. Cherchez **Get All Links** et insérez-le.
 3. Par défaut, il extrait les URL et les libellés de tous les liens `<a>` de la page actuelle.
-4. Cliquez sur **Étape de test** pour le tester.
+4. Cliquez sur **Lancer l'étape** pour le tester.
 
 Vous verrez la liste des liens dans la sortie du nœud.
 
@@ -76,7 +76,7 @@ Voilà comment récupérer tous les liens hypertexte de la page.
 
 1. Depuis **Get All Links**, cliquez sur le **+** à son bord droit.
 2. Cherchez **Obtenir tout le texte** et ajoutez-le.
-3. Cliquez sur **Étape de test** pour récupérer le texte complet de la page.
+3. Cliquez sur **Lancer l'étape** pour récupérer le texte complet de la page.
 4. Depuis **Obtenir tout le texte**, cliquez de nouveau sur le **+** à son bord droit.
 5. Insérez **Modifier les champs** pour analyser le texte.
 6. Double-cliquez dessus, puis cliquez sur **Ajouter un champ** une fois par champ.
@@ -85,7 +85,7 @@ Voilà comment récupérer tous les liens hypertexte de la page.
    - **character_count**: `{{ $json.text.length }}`
    - **summary**: `{{ $json.text.substring(0, 200) }}...`
 
-8. Cliquez sur **Étape de test** pour voir les résultats de l'analyse.
+8. Cliquez sur **Lancer l'étape** pour voir les résultats de l'analyse.
 
 Vous obtenez ainsi un « profil » rapide de la page : sa longueur, plus un court aperçu.
 
@@ -152,7 +152,7 @@ Exécutez ensuite le workflow complet. La sortie finale différera selon que le 
 ## Étape 6 : exécuter et passer en revue le workflow complet
 
 1. Rendez-vous sur une page web contenant beaucoup de texte (par exemple un article d'actualité).
-2. Dans l'éditeur, cliquez sur **Tester le workflow** (il s'exécute à partir du déclencheur).
+2. Dans l'éditeur, appuyez sur **Exécuter** (il s'exécute à partir du déclencheur).
 3. Regardez le workflow s'exécuter étape par étape :
    - les liens sont extraits ;
    - le texte complet est récupéré ;
