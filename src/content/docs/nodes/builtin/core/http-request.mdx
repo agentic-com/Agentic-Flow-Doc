@@ -14,6 +14,8 @@ node:
 import { Callout as AwfCallout, OperationTabs as AwfOperationTabs, OutputPorts as AwfOutputPorts, ParamTable as AwfParamTable, RecipeCard as AwfRecipeCard } from '@components/awflow'; // AUTO:imports
 import AwfFlowPreview from '@components/awflow/FlowPreview.astro'; // AUTO:imports
 
+import GuidedShot from '@components/awflow/GuidedShot.astro';
+
 *Formerly **Http Request**. The step was renamed in AWFlow 0.9; searching for the old name still finds it.*
 
 Call any web address or API and use the response in the next steps.
@@ -63,6 +65,15 @@ Under **Body**, **Write the body as** offers **Fields** (one row per field, the 
 - **Max pages** is 10 by default (at most 100); **Wait between pages** slows it down. When the limit cuts it short, a hint and the run log say so.
 
 Under the settings, a line says what it will do: *Will fetch up to 10 pages. Stops sooner when there's no next link.* For page numbers it spells out the values it sends (*offset = 0, 100, 200 … 900*); for a cursor, what keeps it going. After a run it adds how many entries each page had (*Up to 10 pages, about 1,000 items (the last run got 100 per page)*). When a run stops at **Max pages** while more pages exist, the **Output** shows an amber note (*Stopped at 10 pages, the limit*) with **Raise to 25**, and the **Last run** bar says *more exist*, with **Raise**.
+
+<GuidedShot
+  shot="http-pagination"
+  steps={[
+    { spot: 'line', title: 'What it will do', body: 'The values it sends, when it stops, and what the last run got per page.' },
+    { spot: 'notice', title: 'Stopped at the limit', body: 'More pages exist than **Max pages** allows.' },
+    { spot: 'raise', title: 'Raise to 25', body: 'Raises **Max pages**; run the step again to get the rest.' },
+  ]}
+/>
 
 ### Errors as data
 

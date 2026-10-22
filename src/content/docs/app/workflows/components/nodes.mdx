@@ -136,7 +136,24 @@ After a run:
 
 When the step gets several items, the arrow next to **Run step** (**Run step ▾**) offers **Run this step with…**: **All 24 items** or **Only item 3**, the item shown in the **Input** pane, each with how many calls it makes. Testing with one item is quicker and cheaper while you tune a step (an AI prompt, an HTTP call).
 
+<GuidedShot
+  shot="step-test-one-item-menu"
+  steps={[
+    { spot: 'menu', title: 'Run this step with…', body: 'Opens from the arrow next to **Run step**.' },
+    { spot: 'all', title: 'All 4 items', body: 'One call per item.' },
+    { spot: 'one', title: 'Only item 1', body: 'The item shown in the **Input** pane: one call.' },
+  ]}
+/>
+
 A one-item test is marked in blue in the **Output** (*Tested with item 3 only*: the other items didn't run, and the steps after this one see 1 item until you run all), with **Run all 24**, and in the **Last run** bar (*Last run: item 3 of 24 only*). Any full run clears it.
+
+<GuidedShot
+  shot="step-tested-one-item"
+  steps={[
+    { spot: 'note', title: 'Tested with item 1 only', body: 'The other items didn’t run.' },
+    { spot: 'run-all', title: 'Run all 4', body: 'Runs the step with every item again.' },
+  ]}
+/>
 
 To pick the item, use the item stepper in the **Input** pane (*Item 3 of 24*): it opens a list that finds an item by any of its values (**Find an item**).
 

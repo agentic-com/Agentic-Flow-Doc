@@ -8,7 +8,7 @@ sidebar:
 ---
 import healthLight from '@assets/screenshots/settings-health.light.webp';
 import healthDark from '@assets/screenshots/settings-health.dark.webp';
-import { Screenshot } from '@components/awflow';
+import { Screenshot, StepCard, StepShot } from '@components/awflow';
 
 **In the app:** **Settings › Health**
 
@@ -39,6 +39,18 @@ import { Screenshot } from '@components/awflow';
 
 - **Found**: where the key was (a header, a Bearer token, or a parameter in the address), masked: the key is never shown in full.
 - **Connection type**, guessed from where it sat, and the connection's **name**.
+
+<StepCard n={1} title="Press Move to a connection">
+  On the card *An API key is pasted into a step*.
+
+  <StepShot shot="health-pasted-key" spot="move" n={1} zoom={44} />
+</StepCard>
+
+<StepCard n={2} title="Check it and press Move" check="the step uses the new connection, and the key is gone from it.">
+  The sheet shows where the key was (masked) and the connection it makes.
+
+  <StepShot shot="health-key-move" spot="move" n={2} zoom={44} />
+</StepCard>
 
 **Move** creates the connection (stored like your other connections, in the vault on this device, and limited to the step's site), points the step at it and removes the field from the step, with **Undo**. If the workflow was published to the Marketplace with the key inside, an amber note says so (*was shared before*): create a new key at the service and paste it into the connection.
 

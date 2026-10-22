@@ -10,7 +10,7 @@ sidebar:
 ---
 import insightsLight from '@assets/screenshots/insights-page.light.webp';
 import insightsDark from '@assets/screenshots/insights-page.dark.webp';
-import { Screenshot } from '@components/awflow';
+import { GuidedShot, Screenshot } from '@components/awflow';
 
 **In the app:** the recap on **Home**, and its link to the **Insights** page (`#/app/insights`)
 
@@ -33,6 +33,13 @@ Pick a period: **7 days**, **30 days**, **90 days** or **1 year**.
 Below the tiles: the workflow most worth a look (for example the one that failed most), and your top workflows by runs, with their own runs, failure rate, typical time and last failure. Home shows the top 3; the Insights page the top 10 (a table on a wide screen, cards in the side panel).
 
 For a workflow that keeps failing, the card says **where**: *Most often at Create invoice · 7 of 9*, the usual error (*Usually: 429 Too many requests*) and **Open the step**. Workflow cards and the **Last failure** column show the same line once a workflow failed twice. Tap the line to open **Runs** filtered to that workflow's failed runs. Cloud runs count too.
+
+<GuidedShot
+  shot="insights-failing-step"
+  steps={[
+    { spot: 'line', title: 'Most often at', body: 'The step it fails at, how often, and the usual error.' },
+  ]}
+/>
 
 ## Set the time a workflow saves
 
