@@ -65,10 +65,11 @@ Thread options: show agent-to-agent messages, let agents work in parallel, @ment
 
 - Max steps for all agents together (default 60)
 - Max handoffs between agents (12)
-- Cloud tokens per thread (200k) — every call to a cloud model counts, including the page text, search results and other tool results the agents send back to it; on-device agents never count. Input the provider serves from its prompt cache counts at a tenth of its size, since it is cheaper
 - Agents working at once (2)
 
 When a limit is reached, the thread **pauses and asks you** or **stops**. A paused thread shows a **Not done yet** card with **Continue · 30 more steps** and **Change the limit**.
+
+A team can also have a monthly **token budget**, set on its **Rules & limits** tab. It warns you at 80% and, at 100%, notifies you, switches to on-device models or pauses the team. It replaces the old cloud-token cap per thread. See [Alerts & budgets](/app/observability/alerts-and-budgets/).
 
 **Shared by the team**: team memory (facts every member can read, plus the memories an agent shared with **this** team in its Memory tab — see [Team memory](/app/chat-and-agents/memory/#team-memory)), team [knowledge bases](/app/chat-and-agents/knowledge/#teams-and-projects) (each member also uses its own), and one browser tab group that members share.
 
@@ -100,6 +101,10 @@ A thread starts with the team's setup at that moment. When you change the team, 
 ## Save a chat as a team
 
 When two or more agents have joined a normal chat, Aria offers **Save … as a team?** — one click opens the wizard with those members.
+
+## Observe a team
+
+Every team thread is recorded as traces in **Observability**: pick **Teams** as the source on the **Traces** tab to see each agent's turns and handoffs, and use **Monitor** to follow the team's runs and tokens over time. See [Traces](/app/observability/traces/) and [Monitor](/app/observability/monitor/).
 
 ## Share a team
 

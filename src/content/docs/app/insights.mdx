@@ -1,20 +1,26 @@
 ---
-title: "Insights"
-description: "How often your workflows run, how often they fail, how long they take and how much time they save you — on Home and on the Insights page."
+title: "Workflow stats"
+description: "How often your workflows run, how often they fail, how long they take and how much time they save you — on Home and on the Workflow stats page."
 kind: guide
 section: app
 sidebar:
+  label: "Workflow stats"
   badge:
     text: New
     variant: tip
 ---
 import insightsLight from '@assets/screenshots/insights-page.light.webp';
 import insightsDark from '@assets/screenshots/insights-page.dark.webp';
+import { Aside } from '@astrojs/starlight/components';
 import { GuidedShot, Screenshot } from '@components/awflow';
 
-**In the app:** the recap on **Home**, and its link to the **Insights** page (`#/app/insights`)
+**In the app:** the **Workflow stats** recap on **Home**, and its link to the **Workflow stats** page (`#/app/insights`)
 
-**Insights** show what your workflows do for you over time. They are computed from your runs, on this device for workflows kept here and in your account for cloud workflows.
+<Aside type="note" title="Looking for AI-agent Insights?">
+This page was called **Insights** before. That name now belongs to the reports that find patterns in your agents' conversations: see [Insights](/app/observability/insights/) under Observability. The Insights page there links back here.
+</Aside>
+
+**Workflow stats** show what your workflows do for you over time. They are computed from your runs, on this device for workflows kept here and in your account for cloud workflows.
 
 <Screenshot src={insightsLight} srcDark={insightsDark} alt="The Insights page at side-panel width: Your insights for the last 30 days with the 7 days, 30 days, 90 days and 1 year tabs; tiles for Runs, Failure rate, Typical run time and Time saved (not set yet, with Set time saved per run); then Workflows · top 10 by runs with Hash Text, and the bottom bar." width={400} />
 
@@ -30,7 +36,7 @@ Pick a period: **7 days**, **30 days**, **90 days** or **1 year**.
 | **Typical run time** | About how long a run takes. |
 | **Time saved** | Runs multiplied by the minutes each run saves you (see below). |
 
-Below the tiles: the workflow most worth a look (for example the one that failed most), and your top workflows by runs, with their own runs, failure rate, typical time and last failure. Home shows the top 3; the Insights page the top 10 (a table on a wide screen, cards in the side panel).
+Below the tiles: the workflow most worth a look (for example the one that failed most), and your top workflows by runs, with their own runs, failure rate, typical time and last failure. Home shows the top 3; the Workflow stats page the top 10 (a table on a wide screen, cards in the side panel).
 
 For a workflow that keeps failing, the card says **where**: *Most often at Create invoice · 7 of 9*, the usual error (*Usually: 429 Too many requests*) and **Open the step**. Workflow cards and the **Last failure** column show the same line once a workflow failed twice. Tap the line to open **Runs** filtered to that workflow's failed runs. Cloud runs count too.
 
@@ -45,7 +51,7 @@ For a workflow that keeps failing, the card says **where**: *Most often at Creat
 
 Time saved needs one number per workflow: how many minutes a run saves you.
 
-1. In the workflow list of Insights, press **Set** next to a workflow (or open [Workflow settings](/app/workflows/settings/#value) › **Value**).
+1. In the workflow list of Workflow stats, press **Set** next to a workflow (or open [Workflow settings](/app/workflows/settings/#value) › **Value**).
 2. Type the **Minutes saved per run**. About 1 minute per step is a good start.
 3. **Save**. It is saved as a new version of the workflow.
 
@@ -53,7 +59,7 @@ The value applies to runs from now on. Earlier days keep their numbers.
 
 ## Good to know
 
-- Numbers are kept per day when each run finishes, so deleting old runs from Runs never changes past insights.
+- Numbers are kept per day when each run finishes, so deleting old runs from Runs never changes past stats.
 - When cloud numbers can't load, the page shows this device's numbers and says so.
 - With no runs in the period, the page says so and links to your workflows.
 
@@ -61,3 +67,4 @@ The value applies to runs from now on. Earlier days keep their numbers.
 
 - [Run history](/app/workflows/run-history/): every run, one by one.
 - [Health](/app/settings/health/): workflows that keep failing on their own.
+- [Observability](/app/observability/overview/): traces, monitoring, evals and Insights for your AI agents.
