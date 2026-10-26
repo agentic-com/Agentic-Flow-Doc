@@ -53,7 +53,7 @@ export const shots: ShotDef[] = [
 		page: 'app/insights',
 		route: '#/app/insights',
 		viewport: PANEL,
-		alt: 'The Insights page at side-panel width: Your insights for the last 30 days with the 7 days, 30 days, 90 days and 1 year tabs; tiles for Runs, Failure rate, Typical run time and Time saved (not set yet, with Set time saved per run); then Workflows · top 10 by runs with Hash Text, and the bottom bar.',
+		alt: 'The Workflow stats page at side-panel width: Workflow stats for the last 30 days with the 7 days, 30 days, 90 days and 1 year tabs; tiles for Runs, Failure rate, Typical run time and Time saved (not set yet, with Set time saved per run); then Workflows · top 10 by runs with Hash Text, and the bottom bar.',
 		spots: [],
 		prepare: async (s) => {
 			await openAtPanel(s, 'hash-text', true);
