@@ -1,0 +1,164 @@
+---
+title: "Traces"
+description: "Find an AI run and read it step by step: the trace list, filters and stats, the Conversation, Steps and Timeline views, Developer view, feedback, Add to dataset and fix buttons."
+kind: guide
+section: app
+sidebar:
+  label: "Traces"
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { GuidedShot } from '@components/awflow';
+
+**In the app:** sidebar › **Observability** › **Traces** (`#/app/observability`), an agent's **Observe › Traces** tab, or **View trace** under any reply
+
+A **trace** is the record of one AI run: what was asked, each model call, tool call and lookup, how long each took and how many tokens it used. Use traces to understand a slow or wrong reply, to find out why a run failed, and to rate replies so you can test fixes later.
+
+## Find a run
+
+Open **Observability**. The **Traces** tab lists every run of Aria, your agents, teams, routines and AI workflow steps on this device, newest first.
+
+<GuidedShot
+  shot="obs-traces"
+  steps={[
+    { spot: 'view-switch', title: 'Threads, Traces or Spans', body: 'Threads groups runs by conversation. Traces shows one row per run. Spans lists single steps, such as every model call.' },
+    { spot: 'source-filter', title: 'Pick a source', body: 'All sources, Agents, Aria, Teams, Workflow steps or Routines. Errors only and On device narrow the list further.' },
+    { spot: 'trace-row', title: 'Open a run', body: 'Each row shows the name, input, output, start time, latency and tokens. Click it to open the trace.' },
+    { spot: 'stats-rail', title: 'Stats for what you see', body: 'Traces, error rate, tokens, latency, traces per day, where it ran and the top tools, for the dates and filters in use.' }
+  ]}
+/>
+
+Narrow the list with the toolbar:
+
+- **Search** looks through inputs, outputs and tool names.
+- The date button picks **Last 24 hours**, **Last 7 days**, **Last 30 days** or **All time**.
+- **Filter** opens more choices: **Status** (Succeeded, Failed, Running, Waiting, Interrupted), **Where it ran** (Anywhere, Cloud, On device) and **Surface** (Page, Side panel, Notch, Quick chat, Try it, Routine, Workflow). Click **Show results** to apply them, or **Clear** to reset them.
+- In the **Spans** view, the chips pick a kind of step instead of a source: **Model calls**, **Tools**, **Lookups**, **Rules** or **Agents**.
+
+The stats rail on the right follows your filters. Collapse it to make room, and bring it back with **Stats**. **Export** at the top downloads the runs shown.
+
+The list loads more runs as you scroll. It shows up to the latest 1,000 runs; to see older ones, narrow the dates or filters.
+
+## Read a trace
+
+Open a run to see its trace. At the top, a short story says what happened, for example *Inbox Triage answered in 6.5 s using 14.1k tokens* (an illustrative example). When the run failed, the story says what went wrong and offers a fix.
+
+<GuidedShot
+  shot="obs-trace"
+  steps={[
+    { spot: 'summary', title: 'The story', body: 'What happened, how long it took and how many tokens it used. Fix buttons, Add to dataset and Export trace sit underneath.' },
+    { spot: 'tabs', title: 'Conversation, Steps or Timeline', body: 'Three views of the same run.' },
+    { spot: 'feedback', title: 'Rate the reply', body: '👍 Helpful or 👎 Not helpful, with reasons.' },
+    { spot: 'developer-view', title: 'Developer view', body: 'Raw span names and kinds, model ids, JSON input and output, and every attribute.' }
+  ]}
+/>
+
+Pick a view:
+
+| View | What it shows |
+| --- | --- |
+| **Conversation** | The whole conversation, turn by turn: your message, the reply, the tools it called, and the time and tokens of each turn. **Steps** on a turn opens that turn's steps. |
+| **Steps** | The run as a tree of steps on the left and the selected step's details on the right. |
+| **Timeline** | Each step as a bar on a time line, so you can see what took longest and what ran in parallel. Click a bar to open that step in **Steps**. |
+
+### Steps
+
+<GuidedShot
+  shot="obs-trace-steps"
+  steps={[
+    { spot: 'span-tree', title: 'The steps', body: 'Each step with its kind, time and tokens. Fold a step to hide what is inside, or use Collapse to steps.' },
+    { spot: 'detail-pane', title: 'The selected step', body: 'Input & output and Events. In Developer view, Attributes too.' }
+  ]}
+/>
+
+Steps have plain names: *Thinking* for a model call, *Used gmail.search* for a tool, *Recalled memories* or *Looked up knowledge* for a lookup, *Checked rule* for a rule decision, *Prepared context* for what the model received. A failed step is marked in red, and its details explain the error.
+
+The details pane has these tabs:
+
+- **Input & output** shows what the step received and returned. For a model call, it shows the messages; for a tool, its arguments and result. Switch between **JSON** and **Raw**, and copy the text.
+- **Events** lists what happened during the step, such as the first token, an Auto model switch or an approval request.
+- **Attributes** appears in Developer view. It lists every recorded attribute.
+
+### Developer view
+
+Turn on the **Developer view** switch in the trace's header (**Dev** on a narrow screen). Steps then show their raw names and kinds (`LLM`, `TOOL`, `RETRIEVER`…), the story shows the trace and session ids, and the details pane adds **Attributes**. The switch is remembered. To start every trace this way, turn on **Open traces in developer view** in [Settings & privacy](/app/observability/settings/).
+
+### Other actions
+
+- **Export trace** (under the story, or in the **More** menu) downloads this trace.
+- **Copy trace ID** (in **More**) copies the id, for a bug report.
+- On a narrow screen, **Copy link** copies the trace's address.
+
+## Fix a failed run
+
+When a run failed, the story names the step at fault and offers up to two buttons:
+
+| Button | When it shows |
+| --- | --- |
+| **Reconnect** and the app's name, for example **Reconnect Gmail** | A tool was refused because its connection expired. It opens your connections. |
+| **Open AI providers** | A model refused the key, or its quota ran out, and no other model took over. It opens **Settings › Providers**. |
+| **Retry this turn** | For Aria and agent chats: it opens the conversation again so you can resend. |
+
+A rule that blocked an action, or an approval you declined, is not treated as a failure. If the run went on to fail anyway, the story points at the real cause.
+
+A run that stopped because the page was closed or reloaded shows as **Interrupted**. A run waiting for your approval shows as **Waiting**. When you answer, the rest of the run is added to the same trace.
+
+## Rate a reply
+
+Every reply from Aria and your agents has 👍 and 👎 buttons: under the reply in each chat, and in the trace's header.
+
+1. Click 👍 (**Helpful**) to save a positive rating at once.
+2. Click 👎 (**Not helpful**) to open **What went wrong?**
+3. Pick any reasons: **Wrong answer**, **Wrong tool**, **Missed context**, **Too slow**, **Unsafe action** or **Other**.
+4. Optionally, add a comment in **Tell us more (optional)**.
+5. Keep **Add this turn to the … regressions dataset** ticked to save the turn as a test example for that agent, for example *Inbox Triage · regressions*.
+6. Click **Send feedback**.
+
+Click the pressed thumb again to remove your rating. Your rating and reasons show under **Your feedback** in the trace's **Steps** view.
+
+Feedback **stays on this device**. It feeds the helpful rate in Monitor, datasets in Evals and the summaries in Insights. A rated trace is kept even when older traces are cleaned up.
+
+## Add a run to a dataset
+
+To keep a reply as a test example without rating it, click **Add to dataset** under the trace's story. This shows on agent and Aria replies only.
+
+1. Pick a **Dataset**, or **New dataset…** and type its name.
+2. Optionally, write an **Expected answer**: what a good answer says. Leave it empty to score without a reference.
+3. Click **Add to dataset**.
+
+You can then replay the example against new versions of the agent. See [Evals](/app/observability/evals/).
+
+## In the side panel
+
+<GuidedShot
+  shot="obs-traces-panel"
+  steps={[
+    { spot: 'trace-row', title: 'Two-line rows', body: 'Name, status, time and tokens fit on two lines. Tap a row to open the trace.' },
+    { spot: 'filters', title: 'Filters in one row', body: 'Swipe the chips sideways. Search sits above them.' }
+  ]}
+/>
+
+In the side panel, open **More**, then **Observability**. The list uses two-line rows and the stats rail is hidden. In a trace, the steps and their details stack: tap a step to open its details, and **Back to steps** to return.
+
+## An agent's traces
+
+On an agent's page, **Observe › Traces** shows that agent's runs only, with its numbers for the last 7 days above the list. **Open in Observability** opens the same list in the full **Traces** tab, filtered to the agent.
+
+<Aside type="note" title="For developers">
+Traces follow the OpenTelemetry model. Each span has an OpenInference kind (`openinference.span.kind`: `AGENT`, `CHAIN`, `LLM`, `TOOL`, `RETRIEVER`, `EMBEDDING`, `RERANKER`, `GUARDRAIL`, `PROMPT`, `EVALUATOR`) plus `gen_ai.*` and `awf.*` attributes. Trace ids are 32 hex characters and span ids 16. A conversation's id is the `session.id`. Feedback is stored as an annotation on the root span. Developer view shows all of this; **Export trace** gives you the raw data. See [Observability concepts](/concepts/ai/observability/).
+</Aside>
+
+## Good to know
+
+- With **Record traces** off, the list says **Recording is off** and offers **Turn on recording**.
+- A trace that's no longer on this device (deleted, or older than your retention setting) opens as **This trace is no longer on this device**.
+- The stats are based on the latest 2,000 runs. When a search finds nothing in the most recent runs, **Keep searching** looks further back.
+- Tokens are counted; AWFlow never shows a price.
+
+## Related
+
+- [Observability overview](/app/observability/overview/): the four tabs and where to find them.
+- [Monitor](/app/observability/monitor/): the same runs over time.
+- [Evals](/app/observability/evals/): use rated replies as test examples.
+- [Settings & privacy](/app/observability/settings/): what is recorded and how long it's kept.
+- [Seeing the work](/app/chat-and-agents/seeing-the-work/): what a reply shows while it runs.
