@@ -520,6 +520,16 @@ const SHOTS: Record<string, Def> = {
 			choices: { label: 'Your pick' }
 		}
 	},
+	'obs-regression': {
+		source: 'obs-regression-1280',
+		page: 'app/observability/agent-versions',
+		route: '#/app/agents/<id>?tab=evals',
+		alt: 'The Evals tab of the Inbox Triage agent: a draft banner says You edited Instructions just now · draft v2 is not tested yet, with an Always re-run on change checkbox and a Test v2 vs baseline v1 button. Below, Versions lists v2 · draft (untested) and v1 · current with the baseline chip and a score of 0.91; Datasets shows Everyday inbox requests (8 examples, baseline 0.91) with Open and New dataset; and Score by version charts v1.',
+		spots: {
+			banner: { label: 'An untested draft' },
+			'test-draft': { label: 'Test it against the last version' }
+		}
+	},
 	'obs-insights': {
 		source: 'obs-insights-1280',
 		page: 'app/observability/insights',
