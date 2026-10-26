@@ -43,6 +43,7 @@ The form's fields:
 | **Region** | Langfuse only: **EU** or **US**. It switches the endpoint for you. |
 | **Protocol** | **OTLP/HTTP · JSON** or **OTLP/HTTP · protobuf**. Keep the preset's choice unless your tool asks for the other. |
 | **Send** | **Spans with content** (prompts, replies, tool inputs and results, already cleaned of secrets) or **Timing and tokens only**. |
+| **Mask emails and phone numbers** | Off by default. See [Mask personal details](#mask-personal-details). |
 | **Headers** | Name and value pairs. Click **Header** to add one. Langfuse has **Public key** and **Secret key** fields instead. |
 
 Below the headers, the form says where traces will go: *AWFlow will send AI traces to cloud.langfuse.com*, for example. Saving the collector is your consent to send them there.
@@ -126,6 +127,19 @@ Several collectors can be on at once. Each one has its own queue and status.
 - **Timing and tokens only** sends the steps, their names, times, token counts, models and errors, without any text.
 
 Switching a collector to **Timing and tokens only** also applies to the spans already waiting for it.
+
+## Mask personal details
+
+With **Spans with content**, tick **Mask emails and phone numbers** to hide them from this collector. They are replaced before sending; traces on this device keep the text. The box is off by default. With **Timing and tokens only** it is disabled, because no text is sent.
+
+- An email address becomes `[email]`.
+- A phone number becomes `[phone]`.
+
+The phone rule is conservative, so it does not hide every number. It masks numbers written with a `+`, with `(` or with a leading 0, and numbers split into 3 or more groups by dashes or dots. Some plain numbers are not masked. Dates, ids and versions are never touched.
+
+Masking is not a guarantee. If a tool must never see personal details, choose **Timing and tokens only**.
+
+**Send test span** includes a sample with an email and a phone number, so you can see in your tool how they come out.
 
 ## Check the status
 
