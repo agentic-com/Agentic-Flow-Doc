@@ -626,7 +626,7 @@ const SHOTS: Record<string, Def> = {
 		source: 'obs-online-setup-1280',
 		page: 'app/observability/online-evals',
 		route: '#/app/agents/<id>?tab=evals (Online evals › Set up)',
-		alt: 'Inbox Triage’s Evals tab with the Online evals setup open on the right: Score live conversations on; How many at 10%, less than 1 a day from the last 14 days; Which conversations with All selected, then Failed, With 👎, Chat and Routines; Evaluators with Completeness, Tool selection and Refusal ticked and the other judges unticked, + Add evaluator and a note that Correctness isn’t offered because it needs an expected answer; Judge model Agent’s model and Monthly cap 1000000; an estimate of about 9.6k judge tokens a month that also count toward the agent’s budget, a note that a cloud judge’s provider receives each scored conversation, then Cancel and Save.',
+		alt: 'Inbox Triage’s Evals tab with the Online evals setup open on the right: Score live conversations on; How many at 10%, less than 1 a day from the last 14 days; Which conversations with All selected, then Failed, With 👎, Chat and Routines; Evaluators with Completeness, Tool selection and Refusal ticked and the other judges unticked, + Add evaluator and a note that Correctness isn’t offered because it needs an expected answer; Judge model Agent’s model and Monthly cap 1 000 000 (1.00M judge tokens a month); an estimate of about 9.6k judge tokens a month that also count toward the agent’s budget, a note that a cloud judge’s provider receives each scored conversation, then Cancel and Save.',
 		spots: {
 			sheet: { label: 'The Online evals setup' },
 			rate: { label: 'How many' },
@@ -639,7 +639,7 @@ const SHOTS: Record<string, Def> = {
 		source: 'obs-online-card-1280',
 		page: 'app/observability/online-evals',
 		route: '#/app/agents/<id>?tab=evals',
-		alt: 'Inbox Triage’s Evals tab with the Online evals card On: 10% of conversations · 10 scored in 7 days · 46.8k / 1.00M judge tokens with a meter; Average score · last 7 days: Completeness 0.75, Tool selection 0.94, Refusal 1.00; the links See scored conversations and 2 low scores → Add to dataset, the Score past traces… button, and Edit at the top.',
+		alt: 'Inbox Triage’s Evals tab with the Online evals card as a full-width row above Versions and Datasets, On: tiles Sampling 10% of all conversations, Scored · 7 days 10 (last 1 min ago) and Judge tokens · October 46.8k / 1.00M with a meter; Average score · last 7 days with a 7-day trend line each: Completeness 0.75, Tool selection 0.94, Refusal 1.00; the links See scored conversations and 2 low scores → Add to dataset, the Score past traces… button, and Edit at the top.',
 		spots: {
 			card: { label: 'Online evals card' },
 			edit: { label: 'Edit' },

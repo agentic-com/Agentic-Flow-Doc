@@ -38,7 +38,7 @@ Online evals are set per agent, for your own agents. Open the agent's **Evals** 
     { spot: 'rate', title: 'How many', body: 'The share of conversations to score, from 1% to 100% (10% to start). The line below says about how many that is a day, from the last 14 days.' },
     { spot: 'filter', title: 'Which conversations', body: '**All**, or only some: **Failed**, **With 👎**, **Chat** or **Routines**. Pick several and a conversation is scored when it matches any of them.' },
     { spot: 'evaluators', title: 'Evaluators', body: '**Completeness**, **Tool selection** and **Refusal** are ticked to start. Tick others, or add your own with **+ Add evaluator**.' },
-    { spot: 'cap', title: 'Judge model and monthly cap', body: 'The judge is the **Agent’s model** unless you pick another. The cap is the judge tokens online evals may use per month (1,000,000 to start).', check: 'after **Save**, the card shows **On** and *Online evals are on.*' }
+    { spot: 'cap', title: 'Judge model and monthly cap', body: 'The judge is the **Agent’s model** unless you pick another. The cap is the judge tokens online evals may use per month (1 000 000 to start). Type a number, or a short form such as `500k` or `1M`.', check: 'after **Save**, the card shows **On** and *Online evals are on.*' }
   ]}
 />
 
@@ -73,14 +73,14 @@ The card then shows what online evals did over the last 7 days:
 <GuidedShot
   shot="obs-online-card"
   steps={[
-    { spot: 'card', title: 'The numbers', body: 'The sampling rate, how many conversations were scored in 7 days, the judge tokens used this month against the cap, and the **Average score · last 7 days** of each evaluator.' },
+    { spot: 'card', title: 'The numbers', body: 'Three tiles: **Sampling**, **Scored · 7 days** (with when the last one was scored) and **Judge tokens** this month against the cap. Below, the **Average score · last 7 days** of each evaluator, with its trend line.' },
     { spot: 'edit', title: 'Edit', body: 'Opens the setup again.' },
     { spot: 'low-link', title: 'Low scores', body: '*2 low scores → Add to dataset* turns those conversations into test examples. **See scored conversations** opens them in Traces.' },
     { spot: 'backfill', title: 'Score past traces…', body: 'Scores conversations from before you turned online evals on.' }
   ]}
 />
 
-On a wide card the numbers sit in three tiles, and each average has a small 7-day trend line. A code check shows its pass rate (*92% pass*) instead of an average. If the judge failed on some conversations, the card says so (*3 judge calls failed in the last 7 days. They are tried again.*).
+On a wide screen the card spans the whole tab, above **Versions** and **Datasets**. On a narrow one, such as the side panel, the tiles shrink to one summary line (*10% of conversations · 10 scored in 7 days · 46.8k / 1.00M judge tokens*) and the trend lines become ↑ / ↓ arrows. A code check shows its pass rate (*92% pass*) instead of an average. If the judge failed on some conversations, the card says so (*3 judge calls failed in the last 7 days. They are tried again.*).
 
 ## Scores on a trace
 
