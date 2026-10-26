@@ -8,7 +8,7 @@ sidebar:
 ---
 
 import { Aside } from '@astrojs/starlight/components';
-import { GuidedShot, StepCard, StepShot } from '@components/awflow';
+import { StepCard, StepShot } from '@components/awflow';
 
 **In the app:** sidebar › **Agents & teams** › open an agent › **Evals** tab (under **Observe**).
 
@@ -38,13 +38,10 @@ A version is a snapshot of the settings that shape the agent's answers: **Instru
 
 ## The agent's Evals tab
 
-<GuidedShot
-  shot="obs-regression"
-  steps={[
-    { spot: 'banner', title: 'The draft banner', body: 'Appears when you changed the agent since its latest version. It says what you edited and when, and whether the draft is tested. **Always re-run on change** is here too.' },
-    { spot: 'test-draft', title: 'Test the draft', body: 'Runs the draft against the latest version on the agent\'s main dataset and opens the results.' }
-  ]}
-/>
+At the top, the **draft banner** appears when you changed the agent since its latest version. It says what you edited and when, and whether the draft is tested. It holds:
+
+- **Always re-run on change**, to test every new draft automatically.
+- A button such as **Test v9 vs baseline v8**, which runs the draft against the latest version on the agent's main dataset and opens the results. Once the draft is tested, the button becomes **Open results**.
 
 Below the banner:
 
