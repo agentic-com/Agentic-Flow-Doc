@@ -66,6 +66,7 @@ Each rule in the **Alert rules** list shows its state:
 | **OK** | The value is on the right side of the line. |
 | **Firing** | The line was crossed. You are told once, then not again until the **Don't repeat for** time has passed. |
 | **Muted** | You muted the rule for 24 hours. It keeps its state but tells nobody. |
+| **Off** | You turned the rule off. It is not checked and tells nobody. |
 
 A firing alert **resolves by itself** once the value stays back under the line for 30 minutes (or above it, for a **below** rule). The resolve is an in-app notice only, and only when the fire was announced. If the runs stop altogether, a firing alert also resolves after 30 minutes.
 
@@ -73,7 +74,7 @@ A firing alert **resolves by itself** once the value stays back under the line f
   shot="obs-alerts"
   steps={[
     { spot: 'new-alert', title: 'New alert', body: 'Add another rule.' },
-    { spot: 'rule-row', title: 'A rule', body: 'Its condition and scope, its state and last change, and how it notifies. Click it to edit, mute or delete.' },
+    { spot: 'rule-row', title: 'A rule', body: 'Its condition and scope, its state and last change, and how it notifies. Switch it on or off, or click it to edit, mute or delete.' },
   ]}
 />
 
@@ -89,6 +90,14 @@ The **Alerts** page also lists **Recent alerts**, fired and resolved, newest fir
 ### Mute, edit or delete a rule
 
 Click a rule to open it. **Mute 24 h** silences it for a day (**Unmute** ends that early). Change any field and click **Save alert**. **Delete** removes the rule; its past alerts stay in **Recent alerts**.
+
+### Turn a rule off
+
+To pause a rule without deleting it, use the switch on its row in the **Alert rules** list, or the **On** switch in the alert editor and then **Save alert**. An off rule is not checked, and **Off** shows on its row. Turn it back on when you want it again.
+
+If the rule was firing, the alert ends when you turn the rule off, with no notice. Turning it back on starts a fresh check.
+
+Budget rules are read-only here and have no switch. To stop one, change or remove the budget.
 
 ## Token budgets
 
@@ -107,8 +116,10 @@ A budget is a monthly token cap for one agent (Aria included) or one team. It re
 1. Open the agent's page, then the **Monitor** tab under **Observe**. For a team, open its **Rules & limits** tab.
 2. In **Monthly token budget**, type the cap, for example `2M` or `500k`. It saves as soon as you leave the field.
 3. Next, keep **Cloud tokens only** (on-device models are free to run) or pick **All tokens (incl. on device)**.
-4. Under **At 80%**, tick **In-app**, **Desktop** or both. The 100% notice uses the same channels.
-5. Under **At 100%**, choose what happens (below).
+4. Under **At 80%**, tick **In-app**, **Desktop** or both.
+5. Under **At 100%**, choose what happens (below), then under **Notify me** tick **In-app**, **Desktop** or both for the 100% notice. It has its own channels.
+
+A budget you set up before keeps its 80% choices for the 100% notice until you change them.
 
 Every change saves at once. To stop limiting, click **Remove budget** and confirm. Usage is still recorded; nothing is limited any more.
 
