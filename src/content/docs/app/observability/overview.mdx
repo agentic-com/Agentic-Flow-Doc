@@ -40,7 +40,7 @@ They build on each other. Your 👍 and 👎 on replies become test examples in 
 
 By default, each trace reads like a short story: *Inbox Triage answered in 6.5 s using 14.1k tokens*, with plain step names such as *Thinking* or *Used gmail.search*. When a run failed, the story says why and offers a fix, such as **Reconnect Gmail**. (These examples are illustrative.)
 
-Switch on **Developer view** on a trace to see the technical detail on the same data: span kinds, model ids, raw input and output, and the OpenTelemetry attributes. To open every trace this way, turn on **Open traces in developer view** in [Settings & privacy](/app/observability/settings/).
+Switch on **Developer view** on a trace to see the technical detail on the same data: span kinds, model ids, raw input and output, and the OpenTelemetry attributes. It is one setting (**Open traces in developer view** in [Settings & privacy](/app/observability/settings/)), so it stays on for every trace until you turn it off.
 
 ## Your data in brief
 
@@ -68,7 +68,7 @@ Switch on **Developer view** on a trace to see the technical detail on the same 
 
 - Observability works the same for everyone, signed in or not. It needs no account.
 - Only AI work is traced. For whole workflow runs, see [Run history](/app/workflows/run-history/) and [Workflow stats](/app/insights/).
-- Experiments and Insights reports run their own traces. They never count in Monitor or against a budget.
+- Experiments and Insights reports run their own traces. They never count in Monitor, but their tokens count toward the agent's budget.
 - With recording off, budgets still count tokens, but no new traces are kept.
 
 ## Related

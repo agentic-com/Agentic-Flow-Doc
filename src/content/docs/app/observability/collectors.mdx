@@ -136,11 +136,11 @@ Each collector in the list shows its endpoint, protocol and a status line. The s
 | **Last export 5 min ago · 120 spans today · Queue empty** | Connected and up to date. (Example values.) |
 | **No export yet** | Saved, but nothing has been sent yet. |
 | An error, **Since** a time, the spans waiting and the next retry | Sending failed, for example because you're offline or the collector is down. AWFlow keeps retrying. |
-| An error with a **Fix** button | The collector refused the keys (HTTP 401 or 403). Click **Fix**, enter the header values again and save. Waiting spans are sent again then. |
+| An error with a **Fix** button | The collector refused the request. For refused keys (HTTP 401 or 403), click **Fix**, enter the header values again and save: waiting spans are sent again then. For any other refusal (another 4xx error), that batch of spans is dropped, not retried; click **Fix** to check the endpoint and settings. |
 | **Waiting for vault unlock** | Your secret vault is locked, so AWFlow can't read the header values. Unlock it and sending resumes. |
 | **Off** | The switch is off. |
 
-To change a collector, click its pencil icon. In the form, **Remove** deletes it; the spans waiting for it are dropped.
+To change a collector, click its pencil icon. In the form, **Remove** deletes it after you confirm with **Remove collector**; the spans waiting for it are dropped.
 
 ## How sending works
 
