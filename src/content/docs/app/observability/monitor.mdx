@@ -1,0 +1,168 @@
+---
+title: "Monitor"
+description: "Watch your AI runs day by day: the Overview dashboard with traffic, errors, latency and tools, the range and filters, a table view on every chart, and custom dashboards with the chart editor."
+kind: guide
+section: app
+sidebar:
+  label: "Monitor"
+---
+import { Aside } from '@astrojs/starlight/components';
+import { GuidedShot, StepCard, StepShot } from '@components/awflow';
+
+**In the app:** sidebar › **Observability** › **Monitor** (`#/app/observability/monitor`), and the **Monitor** tab under **Observe** on an agent's page
+
+**Monitor** shows how your AI runs are doing over days and weeks. Each run of Aria, your agents, teams, routines and AI workflow steps adds to its charts: how many runs finished, how many failed, how long they took and which tools they used. Everything is computed on this device from your [traces](/app/observability/traces/).
+
+Monitor has two parts, picked at the top: **Dashboards** (this page) and **Alerts** (see [Alerts & budgets](/app/observability/alerts-and-budgets/)).
+
+## The Overview dashboard
+
+The **Overview** is the prebuilt dashboard. It opens first and needs no setup.
+
+<GuidedShot
+  shot="obs-monitor"
+  steps={[
+    { spot: 'range', title: 'Range and filters', body: 'Pick the period, then narrow to one source, agent or model.' },
+    { spot: 'tiles', title: 'The four tiles', body: 'The headline numbers for the range, with the change against the previous period.' },
+    { spot: 'chart', title: 'Charts', body: 'Each chart has a table view and a link to the matching traces.' },
+    { spot: 'dashboards', title: 'Dashboards', body: 'Switch to a custom dashboard, or make one.' },
+  ]}
+/>
+
+When you have [token budgets](/app/observability/alerts-and-budgets/#token-budgets), a **Token budgets** section sits at the top, with one meter per budget for this month. Below it the Overview has three sections.
+
+**Traffic & errors**
+
+| Tile or chart | What it shows |
+| --- | --- |
+| **Finished traces** | Runs that ended, successfully or not. Runs still going or paused don't count. |
+| **Error rate** | The share of finished traces that failed. |
+| **Failed traces** | How many finished traces failed. |
+| **Active agents** | How many agents ran. With one agent picked in the filters, this tile shows **Tool calls** instead. |
+| **Traces per day** | Succeeded and failed runs, day by day. |
+| **Top error types** | Failed traces by cause. |
+| **Error rate by source** | The error rate of each source over time. |
+| **Failed traces by agent** | Which agents failed most. |
+
+**Latency**
+
+| Chart | What it shows |
+| --- | --- |
+| **End-to-end latency** | How long a run takes, P50 and P99, in seconds. |
+| **Time to first token** | How soon each model starts replying (P50 by model). |
+| **Latency by model** | A table per model: where it **Runs on** (**Cloud** or **On device**), **Calls**, **P50**, **P99**, **TTFT P50** and **Errors**. |
+
+**Tools & skills**
+
+| Chart | What it shows |
+| --- | --- |
+| **Tools** | Calls, failure rate and speed per tool. |
+| **Rule decisions** | What your rules did with tool calls: allowed, asked or blocked. |
+
+P50 is the typical run: half of the runs were faster. P99 is the slow end: only 1 run in 100 was slower.
+
+## Range and filters
+
+The filter row sits above the charts:
+
+- **Range**: **Last 7 days**, **Last 14 days** (the default), **Last 30 days** or **Last 90 days**. Tiles compare the range with the period just before it.
+- **Source**: **All**, **Agent**, **Aria**, **Team**, **Workflow step** or **Routine**.
+- **Agent**: one of your agents. Agent and Source can't both be set: picking one clears the other.
+- **Model**: one model. It applies to the model charts only, and the page says so.
+
+A chart that can't follow a filter says so in its subtitle, for example *· All agents*. Its traces link then keeps only the filters it follows.
+
+## Read a chart as a table
+
+Every chart card has two buttons in its corner:
+
+- **Table view** shows the same numbers as a table, for exact values or a screen reader. Click **Chart view** to go back.
+- **Open matching traces** opens [Traces](/app/observability/traces/) with the same range and filters, so you can see the runs behind a number.
+
+## Custom dashboards
+
+Build your own dashboard when the Overview doesn't answer your question, for example "how many tokens does Research Scout use per day?". Custom dashboards are kept on this device.
+
+<StepCard n={1} title="Create a dashboard" check="an empty dashboard opens, named in the dashboard picker.">
+  In the Monitor header, click **New dashboard**. Or, on the Overview, click **Clone as custom** to start from a copy of the Overview's charts (the token budgets section isn't copied).
+
+  <StepShot shot="obs-monitor" spot="dashboards" n={1} />
+</StepCard>
+
+<StepCard n={2} title="Add a chart" check="the Edit chart sheet opens next to the dashboard.">
+  Click **Add chart**, or pick one of the **Templates**: **Error rate over time**, **Average latency by model**, **Token usage over time**, **Most-used tools** or **On-device share**.
+</StepCard>
+
+<StepCard n={3} title="Choose what to measure">
+  Give the chart a **Title**. Pick the **Data** (**Traces**, **Spans** or **Feedback**), then the **Metric** and how to combine it, for example **Latency** with **P99**.
+
+  <StepShot shot="obs-chart-editor" spot="metric" n={3} />
+</StepCard>
+
+<StepCard n={4} title="Split it into groups">
+  Pick a **Group by**, for example **Agent** or **Agent version**. The chart shows the top 5 groups; the rest folds into "Other".
+
+  <StepShot shot="obs-chart-editor" spot="group-by" n={4} />
+</StepCard>
+
+<StepCard n={5} title="Save the chart" check="the chart appears on the dashboard.">
+  Pick a **Chart** type, then click **Save chart**. The preview on the dashboard updates while you edit.
+
+  <StepShot shot="obs-chart-editor" spot="save" n={5} />
+</StepCard>
+
+### The chart editor
+
+| Field | Choices |
+| --- | --- |
+| **Data** | **Traces** (one per run), **Spans** (each model call, tool call and step inside a run) or **Feedback** (your 👍 / 👎). |
+| **Metric** | **Count**, **Latency**, **Time to first token**, **Tokens**, **Error rate (ratio)** or **Feedback score**. |
+| **Aggregation** | **Sum**, **Average**, **P50** or **P99**; under **More**: **P90**, **Min** and **Max**. |
+| **Tokens** | For the Tokens metric: **Total**, **Input**, **Output** or **Cloud only**. |
+| **Filters** | Click **Filter**, then pick a **Field**, an **Operator** and a **Value**, and click **Add filter**. Fields include **Agent**, **Source**, **Model**, **Tool**, **Runs on**, **Tag**, **Status**, **Feedback**, **Duration** and **Tokens**. |
+| Filter scope | **Span** (the span itself), **Trace** (the run's first span) or **Whole tree** (any span in the run). |
+| **Group by** | **Tool name**, **Agent**, **Model**, **Source**, **Runs on (cloud / on device)**, **Tag**, **Agent version**, **Attribute… (e.g. awf.surface)** or **None**. |
+| **Chart** | **Line**, **Stacked**, **KPI**, **Ranked**, **Donut** or **Table**. |
+
+With **Data** set to **Spans**, add a **Kind** filter (for example kind = LLM for model calls or TOOL for tool calls). Without one, the editor shows **Add a span kind filter** and won't save. Grouping or filtering by an attribute also needs **Spans** with a kind filter.
+
+### Compare agent versions
+
+Group by **Agent version** to see whether a new version of an agent does better than the last one: errors, latency or tokens per version, side by side. Pick the agent in the dashboard's **Agent** filter so only its versions show. Aria isn't versioned, so its runs fall in no group. Runs from [Evals](/app/observability/evals/) experiments never count here, so a test variant never counts as a real version. See [Agent versions](/app/observability/agent-versions/).
+
+### Manage dashboards
+
+- **Switch** with the dashboard picker next to **Dashboards**. The Overview is marked **Prebuilt**, your own dashboards **Custom**.
+- **Rename** or **Delete** a dashboard from its ⋯ menu in the picker. Deleting removes its charts from this device; your traces stay.
+- A custom dashboard has its own range and filters, saved with it, plus a **Group by** that applies to every chart without a Group by of its own (KPI charts excepted).
+- **Edit a chart** with its pencil button. Its **Chart actions** menu has **Move up**, **Move down** and **Remove**. You can also drag a chart by its handle to reorder it.
+
+## An agent's Monitor tab
+
+On an agent's page, the **Monitor** tab under **Observe** shows the same kind of numbers for that agent only: **Runs**, **Errors**, **P50 latency**, **Cloud tokens** and **Helpful** (the share of 👍 ratings), then **Runs per day**, **Latency** and **Tools used**. It also holds the agent's [token budget](/app/observability/alerts-and-budgets/#token-budgets). Pick the range at the top, or click **Open in Observability** for the full Monitor filtered to this agent.
+
+## What Monitor counts
+
+- Runs of Aria, your agents, teams, routines and AI workflow steps.
+- **Evals and Insights runs never count.** Experiments from [Evals](/app/observability/evals/) and analyses from [Insights](/app/observability/insights/) are your own test and analysis traffic, so they never move the charts, tiles or alerts. You still find them in Traces.
+- A day with no runs is a gap in a line chart, not a zero.
+- If **Recording** is off in **Settings › Observability**, new runs don't reach the charts, and Monitor says so. Token budgets still count. See [Settings & privacy](/app/observability/settings/).
+
+<Aside type="note" title="For developers">
+The Overview reads daily rollups, which are kept for 400 days even after the traces themselves are removed. Custom charts use the cheapest source that can answer them: the daily rollups, then a scan of the trace summaries (up to 20,000), then a scan of spans (up to 50,000, and only with a `kind` filter). Average, minimum and maximum latency always scan summaries. A scanned chart only sees traces still kept on this device and says so (*Traces kept on this device*); a scan that hit its limit is marked *Partial: scan limit reached*. When several dashboard filters apply, Agent wins over Source, and Source over Model.
+</Aside>
+
+## Good to know
+
+- Monitor counts tokens, never money.
+- Numbers come from this device only. Another browser or device has its own Monitor.
+- With no runs in the range, Monitor says *No AI runs in this range yet.*; with filters set, **Clear filters** brings everything back.
+- Error rates only count finished runs: a run that is still going or waiting for you is left out.
+
+## Related
+
+- [Alerts & budgets](/app/observability/alerts-and-budgets/): get told when a number crosses a line, and cap an agent's monthly tokens.
+- [Traces](/app/observability/traces/): every run, step by step.
+- [Agent versions](/app/observability/agent-versions/): drafts, Apply and roll back.
+- [Observability overview](/app/observability/overview/): how traces, Monitor, Evals and Insights fit together.
+- [Settings & privacy](/app/observability/settings/): recording and what stays on this device.
