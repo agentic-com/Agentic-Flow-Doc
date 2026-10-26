@@ -1,6 +1,6 @@
 ---
 title: "Privacy settings"
-description: "Turn anonymous usage statistics and error reports on or off, and clear agent memory and traces"
+description: "Turn anonymous usage statistics and error reports on or off, and clear agent memory"
 kind: guide
 section: app
 sidebar:
@@ -19,10 +19,7 @@ import { GuidedShot } from '@components/awflow';
     { spot: 'what-we-collect', title: 'See what is collected', body: 'Click **What we collect** for examples of events.' },
     { spot: 'reset-install-id', title: 'Reset the install ID', body: 'Replaces the random ID your statistics are tied to.' },
     { spot: 'error-reports', title: 'Send error reports, or not', body: '**Send error reports**: on by default, off in this picture.' },
-    { spot: 'forget-everything', title: 'Erase agent memory', body: '**Forget everything** asks you to confirm. It is greyed out while there is nothing to forget.' },
-    { spot: 'developer-mode', title: 'Show traces under replies', body: '**Developer mode** adds a **Trace** button under assistant replies.' },
-    { spot: 'keep-traces', title: 'Choose what traces keep', body: '**Keep traces** (sizes and timings) and **Include prompt text**.' },
-    { spot: 'clear-traces', title: 'Clear traces', body: 'Click **Clear traces**, then **Delete traces** to confirm.', check: 'the line at the bottom sums up what this device shares, here *Nothing is shared from this device.*' },
+    { spot: 'forget-everything', title: 'Erase agent memory', body: '**Forget everything** asks you to confirm. It is greyed out while there is nothing to forget.', check: 'the line at the bottom sums up what this device shares, here *Nothing is shared from this device.*' },
   ]}
 />
 
@@ -49,13 +46,6 @@ On Firefox, nothing is sent unless you also allow Firefox's "technical and inter
 
 Aria and your agents remember lasting preferences you share with them. These memories are stored **only on this device**. **Forget everything** erases them for all agents after you confirm with **Yes, forget everything**.
 
-## Turn traces
+## AI traces
 
-Each assistant reply leaves a trace on this device: model calls, tools, timings and token counts. Traces are kept for 7 days and never uploaded.
-
-- **Developer mode** shows a **Trace** button under replies. Off by default.
-- **Keep traces** stores sizes and timings. On by default.
-- **Include prompt text** also keeps what the model received and replied, with secrets removed. Off by default.
-- **Clear traces**, then **Delete traces**, deletes every trace on this device.
-
-See [Turn traces](/app/chat-and-agents/turn-traces/).
+AI traces moved to **Settings › Observability**: the page has a link to it. That is where you choose whether traces are recorded, whether prompts and replies are kept, how long traces stay on this device, and where they are sent. See [Observability settings & privacy](/app/observability/settings/).

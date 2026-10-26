@@ -31,7 +31,7 @@ AWFlow keeps data in two places:
 | Knowledge bases | This browser only |
 | AI providers and their API keys | This browser only |
 | Data Store values | This browser only |
-| Assistant traces | This browser only, 7 days |
+| AI traces, datasets, experiments and Insights reports | This browser only (traces 30 days by default) |
 | Safe mode, site permissions, privacy choices | This browser only |
 | Profile, avatar, settings | Your account (signed in) |
 
@@ -59,6 +59,10 @@ To move items between local and cloud, use **Move to cloud** / **Move to local**
 - **Cloud AI providers** (OpenAI, Anthropic, Google and others) are called **directly from your browser** with your own API key. Your prompt goes to that provider and is covered by its privacy terms. AWFlow does not run or relay these AI calls.
 - **Ollama** runs on your own computer; calls go to it locally.
 - Knowledge bases marked device-only are never sent to a cloud model.
+
+## Observability
+
+[Observability](/app/observability/overview/) records each run of Aria, your agents, teams, routines and AI workflow steps as a trace on this device. By default a trace includes the prompts and replies, because Evals and Insights need them; API keys, tokens and passwords are removed before anything is saved. Traces, datasets, experiments and Insights reports are never sent to the AWFlow servers. A copy leaves your device only if you add a collector of your own, such as Phoenix or Langfuse. In **Settings › Observability** you can stop recording, keep timings and token counts only for chosen agents, turn content off, and choose how long traces are kept. See [Settings & privacy](/app/observability/settings/).
 
 ## Usage statistics and error reports
 
@@ -115,7 +119,7 @@ On top of the browser's permissions, AWFlow asks before installed workflows cont
 | A credential | **Delete** in Credentials. |
 | Chats | Select them on the Chats page and delete. |
 | Agent memory | **Settings › Privacy › Forget everything**, or per fact in [Memory](/app/memory/overview/). |
-| Traces | **Settings › Privacy › Clear traces**. |
+| AI traces | **Settings › Observability › Clear traces**. See [Settings & privacy](/app/observability/settings/#export-or-clear). |
 | Data Store values | **Settings › Preferences › Data store**. |
 | Local AI models | **Remove** on the [Local AI](/app/local-models/) page. |
 | Everything in this browser | Clear the browser's site data for AWFlow, or uninstall the extension. |
