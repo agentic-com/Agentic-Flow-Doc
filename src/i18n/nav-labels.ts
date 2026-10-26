@@ -26,6 +26,7 @@ export const NAV_LABELS: Record<string, { fr: string; de: string; 'zh-CN': strin
 	"Alerts & budgets": { fr: "Alertes et budgets", de: "Warnungen & Budgets", 'zh-CN': "提醒与预算" },
 	"Evals": { fr: "Évaluations", de: "Evaluierungen", 'zh-CN': "评估" },
 	"Agent versions": { fr: "Versions des agents", de: "Agent-Versionen", 'zh-CN': "智能体版本" },
+	"Online evals": { fr: "Évaluations en ligne", de: "Online-Evaluierungen", 'zh-CN': "在线评估" },
 	"Fix with Aria": { fr: "Corriger avec Aria", de: "Mit Aria beheben", 'zh-CN': "使用 Aria 修复" },
 	"Settings & privacy": { fr: "Paramètres et confidentialité", de: "Einstellungen & Datenschutz", 'zh-CN': "设置与隐私" },
 	"Send to your tools": { fr: "Envoyer vers vos outils", de: "An Ihre Tools senden", 'zh-CN': "发送到你的工具" },

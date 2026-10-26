@@ -32,7 +32,7 @@ Narrow the list with the toolbar:
 
 - **Search** looks through inputs, outputs and tool names.
 - The date button picks **Last 24 hours**, **Last 7 days**, **Last 30 days** or **All time**.
-- **Filter** opens more choices: **Status** (Succeeded, Failed, Running, Waiting, Interrupted), **Where it ran** (Anywhere, Cloud, On device) and **Surface** (Page, Side panel, Notch, Quick chat, Try it, Routine, Workflow). Click **Show results** to apply them, or **Clear** to reset them.
+- **Filter** opens more choices: **Status** (Succeeded, Failed, Running, Waiting, Interrupted), **Where it ran** (Anywhere, Cloud, On device), **Surface** (Page, Side panel, Notch, Quick chat, Try it, Routine, Workflow) and **Online score** (Any, **Low online score**, **Scored online**). Click **Show results** to apply them, or **Clear** to reset them. **Low online score** keeps the runs that an [online eval](/app/observability/online-evals/) scored low; it shows as a chip you can remove.
 - In the **Spans** view, the chips pick a kind of step instead of a source: **Model calls**, **Tools**, **Lookups**, **Rules** or **Agents**.
 
 The stats rail on the right follows your filters. Collapse it to make room, and bring it back with **Stats**. **Export** at the top downloads the runs shown.
@@ -127,6 +127,10 @@ To keep a reply as a test example without rating it, click **Add to dataset** un
 3. Click **Add to dataset**.
 
 You can then replay the example against new versions of the agent. See [Evals](/app/observability/evals/).
+
+## Online scores
+
+When the agent has [online evals](/app/observability/online-evals/) and this run was in the sample, **Online scores** shows under the trace's story: one chip per evaluator, ✓ for a pass and ✕ for a low score, and which model scored it. Click a ✕ chip to read the judge's explanation, with **Add to dataset** and **Not right? Rate it yourself**. See [Scores on a trace](/app/observability/online-evals/#scores-on-a-trace).
 
 ## In the side panel
 

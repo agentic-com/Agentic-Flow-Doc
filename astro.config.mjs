@@ -377,6 +377,7 @@ export default defineConfig({
                 { ...nav("Alerts & budgets"), link: "app/observability/alerts-and-budgets" },
                 { ...nav("Evals"), link: "app/observability/evals" },
                 { ...nav("Agent versions"), link: "app/observability/agent-versions" },
+                { ...nav("Online evals"), link: "app/observability/online-evals" },
                 { ...nav("Insights"), link: "app/observability/insights" },
                 { ...nav("Fix with Aria"), link: "app/observability/fix-with-aria" },
                 { ...nav("Settings & privacy"), link: "app/observability/settings" },

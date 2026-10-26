@@ -8,6 +8,7 @@
  *   (app) E2E_SHOTS_DIR=/tmp/w10 E2E_SHOTS_DARK=1 bun run test:e2e -- doc-states --project=web-desktop
  *   (app) E2E_SHOTS_DIR=/tmp/w10 E2E_SHOTS_DARK=1 bun run test:e2e:ext -- doc-states
  *   (app) E2E_SHOTS_DIR=/tmp/obs E2E_SHOTS_DARK=1 bun run test:e2e -- doc-states-observability --project=web-desktop
+ *     (its "Online evals" test makes the obs-online-* screens, O10)
  *   (docs) bun scripts/capture/import-e2e.ts /tmp/w10 <app commit> [shot,shot,…]
  *
  * Writes src/assets/screenshots/<shot>.{light,dark}.webp + <shot>.json, the same format as
@@ -618,6 +619,61 @@ const SHOTS: Record<string, Def> = {
 			endpoint: { label: 'Endpoint' },
 			headers: { label: 'Headers' },
 			test: { label: 'Send test span' }
+		}
+	},
+	// Online evals (O10, awflow/Agentic-Flow#1618): e2e/specs/web/doc-states-observability.spec.ts.
+	'obs-online-setup': {
+		source: 'obs-online-setup-1280',
+		page: 'app/observability/online-evals',
+		route: '#/app/agents/<id>?tab=evals (Online evals › Set up)',
+		alt: 'Inbox Triage’s Evals tab with the Online evals setup open on the right: Score live conversations on; How many at 10%, less than 1 a day from the last 14 days; Which conversations with All selected, then Failed, With 👎, Chat and Routines; Evaluators with Completeness, Tool selection and Refusal ticked and the other judges unticked, + Add evaluator and a note that Correctness isn’t offered because it needs an expected answer; Judge model Agent’s model and Monthly cap 1000000; an estimate of about 9.6k judge tokens a month that also count toward the agent’s budget, a note that a cloud judge’s provider receives each scored conversation, then Cancel and Save.',
+		spots: {
+			sheet: { label: 'The Online evals setup' },
+			rate: { label: 'How many' },
+			filter: { label: 'Which conversations' },
+			evaluators: { label: 'Evaluators' },
+			cap: { label: 'Monthly cap' }
+		}
+	},
+	'obs-online-card': {
+		source: 'obs-online-card-1280',
+		page: 'app/observability/online-evals',
+		route: '#/app/agents/<id>?tab=evals',
+		alt: 'Inbox Triage’s Evals tab with the Online evals card On: 10% of conversations · 10 scored in 7 days · 46.8k / 1.00M judge tokens with a meter; Average score · last 7 days: Completeness 0.75, Tool selection 0.94, Refusal 1.00; the links See scored conversations and 2 low scores → Add to dataset, the Score past traces… button, and Edit at the top.',
+		spots: {
+			card: { label: 'Online evals card' },
+			edit: { label: 'Edit' },
+			backfill: { label: 'Score past traces…' },
+			'low-link': { label: '2 low scores → Add to dataset' }
+		}
+	},
+	'obs-online-trace': {
+		source: 'obs-online-trace-1280',
+		page: 'app/observability/online-evals',
+		route: '#/app/observability/trace/<id>',
+		alt: 'A trace of Inbox Triage on Conversation. Under the summary, Online scores shows the chips Completeness 0.35 (low, open), Refusal 1.00 and Tool selection 1.00, and Scored by gpt-5-mini · 4.6k judge tokens. The open chip explains that the user asked for the September invoice from Northwind and the reply attaches NW-0912 from 3 October, with Add to dataset and Not right? Rate it yourself. Below, the conversation: Find the invoice from Northwind for September and the agent’s answer.',
+		spots: {
+			chips: { label: 'Online score chips' },
+			explanation: { label: 'The judge’s explanation' }
+		}
+	},
+	'obs-online-chart': {
+		source: 'obs-online-chart-1280',
+		page: 'app/observability/online-evals',
+		route: '#/app/agents/<id>?tab=monitor',
+		alt: 'Inbox Triage’s Monitor tab, scrolled to the Online eval scores chart: one line per evaluator (Completeness, Refusal, Tool selection) with the average score per day, Completeness dipping to 0.10 on one day.',
+		spots: {
+			chart: { label: 'Online eval scores' }
+		}
+	},
+	'obs-online-alert': {
+		source: 'obs-online-alert-1280',
+		page: 'app/observability/online-evals',
+		route: '#/app/observability/monitor/alerts (New alert)',
+		alt: 'Monitor › Alerts with the New alert sheet: Name Inbox Triage online scores; When Online eval score of Inbox Triage over the last 24 hours is below 0.7; Evaluator All evaluators, with the hint that the average online score is 0 to 1 and needs at least 5 scores; the Last 48 hours preview says it would not have fired, its scores above the 0.70 line; then Notify me, Cancel and Save alert.',
+		spots: {
+			metric: { label: 'Online eval score' },
+			evaluator: { label: 'Evaluator' }
 		}
 	}
 };
