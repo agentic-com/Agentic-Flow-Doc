@@ -47,7 +47,7 @@ Both work without an account, and both count tokens only, never money.
 
 | Part | Choices |
 | --- | --- |
-| **Metric** | **Error rate** (%), **Latency P99** (seconds), **Tool failures** (a count), **Tokens** (cloud tokens) or **👎 feedback** (thumbs-down runs). |
+| **Metric** | **Error rate** (%), **Latency P99** (seconds), **Tool failures** (a count), **Tokens** (cloud tokens), **👎 feedback** (thumbs-down runs) or **Online eval score** (0 to 1, see below). |
 | **Scope** | **All agents**, Aria or one agent; or a source (**Agent runs**, **Team runs**, **Workflow step runs**, **Routine runs**); or where the model runs (**Cloud models**, **On-device models**). |
 | **Window** | The last 15 minutes, hour, 6 hours or 24 hours. |
 | **Comparison** | **above**, **at least** or **below**. |
@@ -56,6 +56,16 @@ Both work without an account, and both count tokens only, never money.
 For **Tool failures**, a **Tool** field appears: leave it empty for any tool, or type one, for example `slack.post_message`.
 
 An error rate needs at least 5 finished runs in the window. With fewer, the alert waits.
+
+### Alert on online eval scores
+
+Pick **Online eval score** to watch the scores of [online evals](/app/observability/online-evals/). The condition starts at *below 0.7*.
+
+- **Scope** is **All agents** or one of your agents (Aria, sources and where the model runs aren't offered).
+- An **Evaluator** field appears. Leave **All evaluators**, or pick an agent first and then one of its evaluators. The rule then reads like *Online eval score (Completeness) < 0.70*.
+- The value is the average score of the conversations scored in the window, and the rule needs **at least 5 scores** there before it can fire. With fewer, the preview says *Not enough scores yet (needs 5 in a window)*.
+- A score is 0 to 1, so a threshold above 1 shows *A score is 0 to 1* and can't be saved.
+- A score counts at the time its conversation started, and the traces link of a fired alert opens them with the **Low online score** filter.
 
 ## Fired and resolved
 
@@ -151,6 +161,8 @@ Each budget also appears in the **Alert rules** list as a read-only rule named *
 
 Runs started by [Evals](/app/observability/evals/) experiments and by [Insights](/app/observability/insights/) are analysis traffic. They never count in Monitor: they add nothing to the charts, and alerts ignore them.
 
+[Online evals](/app/observability/online-evals/) judges aren't traced at all. Their tokens count toward the agent's budget and toward online evals' own monthly cap, and a paused budget pauses online evals.
+
 Their tokens still count toward the agent's budget, because they are real model calls. The budget never pauses or switches an experiment run, so a comparison is never cut short or changed halfway. Before an experiment runs, its estimate shows the budget that remains.
 
 <Aside type="note" title="For developers">
@@ -172,4 +184,5 @@ Alerts read the trace summaries of their window, not the daily rollups, so they 
 - [Agents](/app/chat-and-agents/agents/) and [Teams](/app/chat-and-agents/teams/): where budgets live.
 - [Local models](/app/local-models/): install one so a budget can switch to it.
 - [Evals](/app/observability/evals/): test changes without moving your Monitor numbers.
+- [Online evals](/app/observability/online-evals/): the scores an Online eval score alert watches.
 - [Notifications](/app/notifications/): the bell and your other notices.

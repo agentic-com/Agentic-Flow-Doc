@@ -115,14 +115,16 @@ Build your own dashboard when the Overview doesn't answer your question, for exa
 
 | Field | Choices |
 | --- | --- |
-| **Data** | **Traces** (one per run), **Spans** (each model call, tool call and step inside a run) or **Feedback** (your 👍 / 👎). |
-| **Metric** | **Count**, **Latency**, **Time to first token**, **Tokens**, **Error rate (ratio)** or **Feedback score**. |
+| **Data** | **Traces** (one per run), **Spans** (each model call, tool call and step inside a run), **Feedback** (your 👍 / 👎) or **Online evals** (the scores of [online evals](/app/observability/online-evals/)). |
+| **Metric** | **Count**, **Latency**, **Time to first token**, **Tokens**, **Error rate (ratio)** or **Feedback score**. With **Online evals**, the metric is **Eval score (0–1)**. |
 | **Aggregation** | **Sum**, **Average**, **P50** or **P99**; under **More**: **P90**, **Min** and **Max**. |
 | **Tokens** | For the Tokens metric: **Total**, **Input**, **Output** or **Cloud only**. |
 | **Filters** | Click **Filter**, then pick a **Field**, an **Operator** and a **Value**, and click **Add filter**. Fields include **Agent**, **Source**, **Model**, **Tool**, **Runs on**, **Tag**, **Status**, **Feedback**, **Duration** and **Tokens**. |
 | Filter scope | **Span** (the span itself), **Trace** (the run's first span) or **Whole tree** (any span in the run). |
 | **Group by** | **Tool name**, **Agent**, **Model**, **Source**, **Runs on (cloud / on device)**, **Tag**, **Agent version**, **Attribute… (e.g. awf.surface)** or **None**. |
 | **Chart** | **Line**, **Stacked**, **KPI**, **Ranked**, **Donut** or **Table**. |
+
+With **Data** set to **Online evals**, the chart shows the average score (or P50, Min, P90, P99, Max), and groups by **Evaluator**, **Agent** or **Agent version**. A score counts on the day its conversation started, so scoring past traces later fills in the right days.
 
 With **Data** set to **Spans**, add a **Kind** filter (for example kind = LLM for model calls or TOOL for tool calls). Without one, the editor shows **Add a span kind filter** and won't save. Grouping or filtering by an attribute also needs **Spans** with a kind filter.
 
@@ -139,7 +141,7 @@ Group by **Agent version** to see whether a new version of an agent does better 
 
 ## An agent's Monitor tab
 
-On an agent's page, the **Monitor** tab under **Observe** shows the same kind of numbers for that agent only: **Runs**, **Errors**, **P50 latency**, **Cloud tokens** and **Helpful** (the share of 👍 ratings), then **Runs per day**, **Latency** and **Tools used**. It also holds the agent's [token budget](/app/observability/alerts-and-budgets/#token-budgets). Pick the range at the top, or click **Open in Observability** for the full Monitor filtered to this agent.
+On an agent's page, the **Monitor** tab under **Observe** shows the same kind of numbers for that agent only: **Runs**, **Errors**, **P50 latency**, **Cloud tokens** and **Helpful** (the share of 👍 ratings), then **Runs per day**, **Latency** and **Tools used**. It also holds the agent's [token budget](/app/observability/alerts-and-budgets/#token-budgets). Pick the range at the top, or click **Open in Observability** for the full Monitor filtered to this agent. When the agent has [online evals](/app/observability/online-evals/) with scores in the range, the tab adds an **Online eval scores** chart: the average score per evaluator and day.
 
 ## What Monitor counts
 
@@ -163,6 +165,7 @@ The Overview reads daily rollups, which are kept for 400 days even after the tra
 
 - [Alerts & budgets](/app/observability/alerts-and-budgets/): get told when a number crosses a line, and cap an agent's monthly tokens.
 - [Traces](/app/observability/traces/): every run, step by step.
+- [Online evals](/app/observability/online-evals/): the scores behind the Online evals chart data.
 - [Agent versions](/app/observability/agent-versions/): drafts, Apply and roll back.
 - [Observability overview](/app/observability/overview/): how traces, Monitor, Evals and Insights fit together.
 - [Settings & privacy](/app/observability/settings/): recording and what stays on this device.

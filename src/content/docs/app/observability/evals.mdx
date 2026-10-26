@@ -28,7 +28,7 @@ flowchart LR
   class Edit awf-warn
 ```
 
-Applying a winner and going back to an earlier setup are covered in [Agent versions](/app/observability/agent-versions/).
+Applying a winner and going back to an earlier setup are covered in [Agent versions](/app/observability/agent-versions/). To score an agent's real conversations as they happen, rather than test examples, see [Online evals](/app/observability/online-evals/).
 
 ## The Evals page
 
@@ -108,6 +108,12 @@ A new dataset starts with four evaluators: **Completeness**, **Expected tools ca
 There is a fourth kind, **Human**: your own ratings. You don't add it by hand; AWFlow creates it ("You: helpful") the first time you [review an experiment](#rate-answers-yourself).
 
 Every score runs from 0 to 1. A check that doesn't apply to an example (a **Must contain** on an example with no such words) gives no score, and a judge that fails gives no score either. Neither counts as 0.
+
+The same evaluators can also score live conversations, except the ones that need an expected answer (**Correctness**, **Exact match**, **Must contain**, **Must not contain**, **Expected tools called**). See [Online evals](/app/observability/online-evals/#which-evaluators-you-can-use).
+
+### Low online scores become examples
+
+When an agent has [online evals](/app/observability/online-evals/), its **Evals** tab shows an **Online evals** card. Its link *2 low scores → Add to dataset* (with your count) lists the conversations that scored low in the last 7 days, worst first, and adds the ones you keep to a dataset, with their input. Run an experiment on them to check that your next change fixes them.
 
 ## Run an experiment
 
@@ -209,6 +215,7 @@ Every experiment run is a normal trace with source `experiment`, the tag `experi
 ## Related
 
 - [Agent versions](/app/observability/agent-versions/): drafts, Apply, roll back and "Always re-run on change".
+- [Online evals](/app/observability/online-evals/): score a sample of real conversations as they happen.
 - [Traces](/app/observability/traces/): find a conversation and add it to a dataset.
 - [Insights](/app/observability/insights/): turn a category of conversations into a dataset.
 - [Fix with Aria](/app/observability/fix-with-aria/): a proposed fix becomes a draft you test here.
