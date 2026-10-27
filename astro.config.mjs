@@ -517,6 +517,16 @@ export default defineConfig({
               ],
             },
             {
+              ...nav("Marketplace"),
+              items: [
+                {
+                  ...nav("Performance & sharing stats"),
+                  link: "app/marketplace/author-stats",
+                  badge: { text: "New", variant: "tip" },
+                },
+              ],
+            },
+            {
               ...nav("More features"),
               collapsed: true,
               items: [

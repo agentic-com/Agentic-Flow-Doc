@@ -104,6 +104,8 @@ export const NAV_LABELS: Record<string, { fr: string; de: string; 'zh-CN': strin
 	"Save from anywhere": { fr: "Enregistrer depuis n'importe où", de: "Von überall speichern", 'zh-CN': "随处保存" },
 	"Test search": { fr: "Tester la recherche", de: "Suche testen", 'zh-CN': "测试搜索" },
 	"Privacy": { fr: "Confidentialité", de: "Datenschutz", 'zh-CN': "隐私" },
+	"Marketplace": { fr: "Place de marché", de: "Marktplatz", 'zh-CN': "市场" },
+	"Performance & sharing stats": { fr: "Performances et partage des statistiques", de: "Leistung & Statistikfreigabe", 'zh-CN': "表现与统计分享" },
 	"Re-embed or delete": { fr: "Réindexer ou supprimer", de: "Neu einbetten oder löschen", 'zh-CN': "重新嵌入或删除" },
 	"Export & import": { fr: "Exporter et importer", de: "Exportieren & Importieren", 'zh-CN': "导出与导入" },
 	"Memory": { fr: "Mémoire", de: "Gedächtnis", 'zh-CN': "记忆" },
