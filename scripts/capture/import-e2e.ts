@@ -675,6 +675,62 @@ const SHOTS: Record<string, Def> = {
 			metric: { label: 'Online eval score' },
 			evaluator: { label: 'Evaluator' }
 		}
+	},
+	// Marketplace author metrics (O11a, #1619): app e2e/specs/web/doc-states-marketplace-stats.spec.ts.
+	'mk-install-optin': {
+		source: 'mk-install-optin-1280',
+		page: 'app/marketplace/author-stats',
+		route: '#/app/marketplace/<id> (Install)',
+		alt: 'The Install “Daily news digest”? dialog, made by Maya Chen: Once installed, it can Read the active browser tab. Below, an unticked checkbox Help Maya Chen improve Daily news digest (share anonymous performance stats once a day: how often it runs and fails, never your data), with What’s shared? open: Shared lists runs, successes and error types, how long runs take, which triggers start it, cloud or on-device runs and tokens, 👍/👎 counts and reasons, approvals left waiting and step-limit stops, which version you installed, whether you changed it and an anonymous ID for each item; Never shared lists your emails, prompts or replies, what your runs read or wrote, settings you typed, connection names and who you are. Then Unticked by default, the permissions checkbox, Cancel and Install.',
+		spots: {
+			checkbox: { label: 'Help Maya Chen improve Daily news digest' },
+			whats: { label: 'What’s shared?' }
+		}
+	},
+	'mk-privacy-card': {
+		source: 'mk-privacy-card-1280',
+		page: 'app/marketplace/author-stats',
+		route: '#/app/settings/privacy (Help marketplace authors)',
+		alt: 'Settings › Privacy, the Help marketplace authors card: When I install something with Ask me each time (default) selected, Always share and Never share; Sharing for lists Inbox Triage (agent) and Daily news digest (workflow), each Last sent for Oct 26, 2026 with its switch on; See exactly what was sent is open, sent Oct 27, 2026, showing the JSON of the Daily news digest entry: kind workflow, version 3, day 2026-10-26, an anonymous install ID, modified false, 4 runs, 3 ok, 1 network error, 4 schedule triggers.',
+		spots: {
+			modes: { label: 'When I install something' },
+			items: { label: 'Sharing for' },
+			sent: { label: 'See exactly what was sent' }
+		}
+	},
+	'mk-perf-agent': {
+		source: 'mk-perf-agent-1280',
+		page: 'app/marketplace/author-stats',
+		route: '#/app/marketplace/agents/<id>?tab=performance',
+		alt: 'The Performance tab of the Inbox Triage agent template, next to Marketplace page: Private to you · based on 58 of 140 installs that share stats, Last 30 days, All versions. Tiles: Success 91% of 2,310 runs, Helpful 84% of rated replies, Typical time (P50) 6.8 s with P99 38 s, Approvals abandoned 7 (waited over an hour). What goes wrong: provider quota or rate limit 46%, a tool failed 31%, the provider rejected the key 19%, Other (each under 5) < 5. Thumbs-down reasons: Wrong answer 46%, Missed context 32%, Other (each under 5) < 5; Where it runs: cloud 78% of runs, on-device 22%, tokens 4.2M cloud and 1.1M on-device. Success by version: v2 and v1 bars; Success per day: a line around 90% over 30 days with a dip.',
+		spots: {
+			banner: { label: 'Private to you · based on 58 of 140 installs' },
+			tiles: { label: 'Success, Helpful, Typical time, Approvals abandoned' },
+			versions: { label: 'Success by version' },
+			errors: { label: 'What goes wrong' }
+		}
+	},
+	'mk-perf-workflow': {
+		source: 'mk-perf-workflow-1280',
+		page: 'app/marketplace/author-stats',
+		route: '#/app/marketplace/<id>?tab=performance',
+		alt: 'The Performance tab of the Weekly sales recap workflow: Private to you · based on 38 of 112 installs that share stats, Which installs Unmodified (38) selected or All installs, Last 30 days, All versions. Tiles: Run success 95% of 1,520 runs, Duration (P50) 4.2 s with P99 21 s, Runs per install per week 9.3, Changed after install 17% of installs. How it’s started: On a schedule 71%, By hand 24%, Other (each under 5) < 5. What goes wrong: a connection expired 54%, network error 29%, Other (each under 5) < 5. Success by version with v3 and v2 bars; Success per day says per-day success shows for all versions and all installs.',
+		spots: {
+			banner: { label: 'Private to you · based on 38 of 112 installs' },
+			which: { label: 'Unmodified or All installs' },
+			tiles: { label: 'Run success, Duration, Runs per install per week, Changed after install' },
+			triggers: { label: 'How it’s started' }
+		}
+	},
+	'mk-perf-below': {
+		source: 'mk-perf-below-1280',
+		page: 'app/marketplace/author-stats',
+		route: '#/app/marketplace/agents/<id>?tab=performance',
+		alt: 'The Performance tab of the Support desk team template: Not enough installs yet, 6 of 10 with a progress bar 60% full, Stats appear once 10 installs share them in this period, so no single person can be singled out, and 9 installs in total · sharing is up to each person. Below: Private to you. Nobody else sees these numbers.',
+		spots: {
+			tab: { label: 'Performance' },
+			count: { label: '6 of 10' }
+		}
 	}
 };
 const [dirArg, commit = 'unknown', onlyArg] = process.argv.slice(2);

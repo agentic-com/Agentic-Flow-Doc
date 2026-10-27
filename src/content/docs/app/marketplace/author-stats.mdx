@@ -1,0 +1,133 @@
+---
+title: "See how your shared workflows and agents perform"
+description: "Authors see, privately, how often the workflows, agents and teams they shared on the marketplace run and fail, once 10 installs share stats. Installers choose whether to share, and can see exactly what was sent."
+kind: guide
+section: app
+sidebar:
+  label: "Performance & sharing stats"
+  badge:
+    text: New
+    variant: tip
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { GuidedShot } from '@components/awflow';
+
+**In the app:** open your workflow, agent or team in the **Marketplace** › **Performance** tab. To share stats as an installer: the **Install** dialog, or **Settings › Privacy › Help marketplace authors**.
+
+When you share a workflow, an agent or a team on the marketplace, you can't see how it does on other people's devices: whether it runs, how often it fails, and why. With this feature, people who install it can choose to send **anonymous daily stats** about it. You then see the result on a private **Performance** tab of its Marketplace page, once enough installs share stats that no single person can be singled out.
+
+- [For authors: the Performance tab](#for-authors-the-performance-tab)
+- [For installers: what you share](#for-installers-what-you-share)
+
+## For authors: the Performance tab
+
+Open the Marketplace page of something you published: from **Marketplace**, or from **My published workflows** for a workflow. Above the page you see two tabs: **Marketplace page** (what everyone sees) and **Performance**. Only you see the **Performance** tab. Nobody else, installers included, sees these numbers.
+
+You need to be signed in with the account that published it.
+
+### An agent or a team
+
+<GuidedShot
+  shot="mk-perf-agent"
+  steps={[
+    { spot: 'banner', title: 'Who it covers', body: '*Private to you · based on 58 of 140 installs that share stats.* The first number is the installs that sent stats in the period, the second every install, sharing or not. Pick the **Range** (last 7, 30 or 90 days) and a **Version** on the right.' },
+    { spot: 'tiles', title: 'The four numbers', body: '**Success**: the share of runs that finished without an error. **Helpful**: 👍 out of all rated replies. **Typical time (P50)**: half the runs take less than this, with the slow end (**P99**) below it. **Approvals abandoned**: approvals that waited over an hour.' },
+    { spot: 'versions', title: 'Success by version', body: 'Did your last update help? Each version has its own bar. The **Table view** button at the card’s top right lists the installs and success rate of each version.' },
+    { spot: 'errors', title: 'What goes wrong', body: 'The kinds of errors, as a share of failed runs, for example *Provider quota or rate limit* or *A tool failed*. Next to it, the reasons people gave with 👎, and the split between cloud and on-device runs with their tokens.' }
+  ]}
+/>
+
+Below the cards, **Success per day** shows a line over the period. A day with too few installs or runs leaves a gap in the line.
+
+### A workflow
+
+A workflow's tab has the same banner, with a **Which installs** choice next to it.
+
+<GuidedShot
+  shot="mk-perf-workflow"
+  steps={[
+    { spot: 'banner', title: 'Who it covers', body: 'The installs that shared stats in the period, out of every install.' },
+    { spot: 'which', title: 'Unmodified or all installs', body: '**Unmodified** (the default) counts only the copies people haven’t changed since they installed them, so the numbers are about *your* workflow. The number in brackets is how many there are. **All installs** counts the changed copies too.' },
+    { spot: 'tiles', title: 'The four numbers', body: '**Run success**, **Duration (P50)** with the slow end (P99) below, **Runs per install per week**, and **Changed after install**: the share of installs that edited their copy.' },
+    { spot: 'triggers', title: 'How it’s started', body: 'The share of runs started **On a schedule**, **By hand**, **From the right-click menu**, **From a chat** or **From a form**. Next to it, **What goes wrong**, then **Success by version**.' }
+  ]}
+/>
+
+**Success per day** shows only for all versions and all installs. With **Unmodified** or a single version chosen, its card says *Per-day success shows for all versions and all installs.*
+
+### How the numbers are kept anonymous
+
+These rules apply to every number on the tab:
+
+- **Nothing shows below 10 installs.** Until 10 installs share stats in the chosen period, the tab shows **Not enough installs yet**, with how many have shared so far (for example **6 of 10**), a progress bar and the total number of installs. A longer range often gets you there sooner.
+- **Small counts read "< 5".** A count from 1 to 4 shows as **< 5** instead of the exact number. Error types or 👎 reasons with fewer than 5 runs each are grouped into one line, **Other (each under 5)**.
+- **Percentages are rounded** to whole numbers.
+- **Hidden for this filter.** A view can have 10 installs or more and still be held back, when a smaller group inside it (a version, or the changed or unchanged copies) has fewer than 10. The tab then says **Hidden for this filter** and offers **All versions** or **All installs**.
+- **The automatic switch to all installs.** When the **Unmodified** view of a workflow is held back this way, the tab switches to **All installs** on its own, with a note: *Showing all installs: the unmodified view is hidden while some groups have fewer than 10 installs.* Choose **Unmodified** again at any time; it shows **Hidden for this filter** until the groups are large enough.
+
+<GuidedShot
+  shot="mk-perf-below"
+  steps={[
+    { spot: 'tab', title: 'Performance', body: 'Your private tab, next to **Marketplace page**.' },
+    { spot: 'count', title: 'Not enough installs yet', body: 'Here 6 installs shared stats in the last 30 days; the numbers appear at 10. Sharing is up to each person, so this can take a while for a new item.' }
+  ]}
+/>
+
+<Aside type="note" title="Where the numbers come from">
+Only installs whose owner chose to share send stats, once a day, for the days before today. An install that has AWFlow closed for a few days sends them when it opens again (up to 7 days back), so the last days of a range can still grow. Stats are kept 13 months. Which step fails and how people change a workflow come in a later update.
+</Aside>
+
+## For installers: what you share
+
+Sharing stats is **off unless you say yes**, item by item. It is separate from AWFlow's [usage statistics](/app/privacy-and-data/#usage-statistics-and-error-reports), and it needs an account: nothing is sent in local mode.
+
+### When you install
+
+The **Install** dialog of a marketplace workflow has a checkbox **Help \{author\} improve \{item\}**, for example *Help Maya Chen improve Daily news digest*. It starts **unticked**. An agent or a team has the same checkbox in **What it can do**, above **Install**.
+
+<GuidedShot
+  shot="mk-install-optin"
+  steps={[
+    { spot: 'checkbox', title: 'Help the author', body: 'Tick it to send anonymous daily stats about this item to its author. Leave it unticked and nothing is sent about it.' },
+    { spot: 'whats', title: 'What’s shared?', body: 'Opens the two lists below: what is shared, and what never is.', check: 'after **Install**, the item is listed in **Settings › Privacy › Help marketplace authors**, with its switch on.' }
+  ]}
+/>
+
+| Shared, once a day | Never shared |
+| --- | --- |
+| Runs, successes and error types | Your emails, prompts or replies |
+| How long runs take | What your runs read or wrote |
+| Which triggers start it | Settings you typed |
+| Cloud or on-device runs and tokens | Connection names |
+| 👍/👎 counts and reasons | Who you are |
+| Approvals left waiting and step-limit stops | |
+| Which version you installed | |
+| Whether you changed it | |
+| An anonymous ID for each item | |
+
+Only counts and fixed categories are sent, never text. The anonymous ID is different for each item, so two items you share can't be linked to each other or to you. It comes from a random secret kept on this device, separate from the usage statistics install ID: **Reset install ID** doesn't change it.
+
+### Settings › Privacy: Help marketplace authors
+
+<GuidedShot
+  shot="mk-privacy-card"
+  steps={[
+    { spot: 'modes', title: 'When I install something', body: '**Ask me each time** (the default): the checkbox starts unticked. **Always share**: it starts ticked; you can still untick it. **Never share**: the checkbox isn’t offered, and sharing stops for every item you installed.' },
+    { spot: 'items', title: 'Sharing for', body: 'Everything you installed from the marketplace on this device, with a switch each and the last day sent, for example *Last sent for Oct 26, 2026*. Turn a switch off to stop sharing for that item only.' },
+    { spot: 'sent', title: 'See exactly what was sent', body: 'The last daily stats this device sent, as they left it: one entry per item and day, with counts only.' }
+  ]}
+/>
+
+**Never share** keeps your switches as they are: choose **Ask me each time** again and the items that were on start sharing again.
+
+You can also turn sharing off for one item where you use it:
+
+- **An agent:** its **Monitor** tab has a **Sharing stats with \{author\}** switch.
+- **A workflow:** in the workflow's **Settings**.
+
+## Related
+
+- [Publishing workflows](/app/workflows/publishing/) and [Agent & team templates](/app/chat-and-agents/templates/)
+- [Privacy & your data](/app/privacy-and-data/)
+- [Observability](/app/observability/overview/): traces, Monitor and evals for your own runs, on your device
