@@ -31,7 +31,7 @@ AWFlow keeps data in two places:
 | Knowledge bases | This browser only |
 | AI providers and their API keys | This browser only |
 | Data Store values | This browser only |
-| Assistant traces | This browser only, 7 days |
+| AI traces, datasets, experiments and Insights reports | This browser only (traces 30 days by default) |
 | Safe mode, site permissions, privacy choices | This browser only |
 | Profile, avatar, settings | Your account (signed in) |
 
@@ -60,6 +60,10 @@ To move items between local and cloud, use **Move to cloud** / **Move to local**
 - **Ollama** runs on your own computer; calls go to it locally.
 - Knowledge bases marked device-only are never sent to a cloud model.
 
+## Observability
+
+[Observability](/app/observability/overview/) records each run of Aria, your agents, teams, routines and AI workflow steps as a trace on this device. By default a trace includes the prompts and replies, because Evals and Insights need them; API keys, tokens and passwords are removed before anything is saved. Traces, datasets, experiments and Insights reports are never sent to the AWFlow servers. A copy leaves your device only if you add a collector of your own, such as Phoenix or Langfuse. In **Settings › Observability** you can stop recording, keep timings and token counts only for chosen agents, turn content off, and choose how long traces are kept. See [Settings & privacy](/app/observability/settings/).
+
 ## Usage statistics and error reports
 
 AWFlow collects **anonymous** usage statistics and crash reports to improve the product. Both are **on by default** and you can switch them off in [Settings › Privacy](/app/settings/privacy/). A notice tells you about this the first time you open the app.
@@ -71,6 +75,12 @@ AWFlow collects **anonymous** usage statistics and crash reports to improve the 
 - Crash reports are grouped by cause and kept 90 days. Only AWFlow's admins can read them ([Crash reports](/app/admin/errors/)).
 - Statistics go only to AWFlow's own server. There are no third-party analytics, advertising IDs or tracking cookies.
 - The switches apply whether you're signed in or not. On Firefox, nothing is sent until you also allow Firefox's data-collection permission.
+
+## Stats for marketplace authors
+
+When you install a workflow, agent or team from the marketplace while signed in, you can tick **Help \{author\} improve \{item\}**. That item then sends its author **anonymous daily stats**: counts of runs, failures and error types, run times, triggers, 👍/👎 counts and reasons, the version, whether you changed it, and an anonymous ID per item. Never your prompts, replies, data, settings, connection names or who you are. It's off unless you tick it, separate from the usage statistics above, and never sent in local mode. Authors see the numbers only once 10 installs share them.
+
+Choose **Ask me each time**, **Always share** or **Never share**, turn single items off, and see exactly what was sent in **Settings › Privacy › Help marketplace authors**. See [Performance & sharing stats](/app/marketplace/author-stats/#for-installers-what-you-share).
 
 ## Other things that go online
 
@@ -115,7 +125,8 @@ On top of the browser's permissions, AWFlow asks before installed workflows cont
 | A credential | **Delete** in Credentials. |
 | Chats | Select them on the Chats page and delete. |
 | Agent memory | **Settings › Privacy › Forget everything**, or per fact in [Memory](/app/memory/overview/). |
-| Traces | **Settings › Privacy › Clear traces**. |
+| AI traces | **Settings › Observability › Clear traces**. See [Settings & privacy](/app/observability/settings/#export-or-clear). |
+| An agent's data | **Delete** the agent, then tick what else to remove: **Also delete its traces** and **Also delete its datasets, experiments and Insights reports**. See [Settings & privacy](/app/observability/settings/#when-you-delete-an-agent). |
 | Data Store values | **Settings › Preferences › Data store**. |
 | Local AI models | **Remove** on the [Local AI](/app/local-models/) page. |
 | Everything in this browser | Clear the browser's site data for AWFlow, or uninstall the extension. |

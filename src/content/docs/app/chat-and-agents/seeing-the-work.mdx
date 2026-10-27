@@ -62,7 +62,7 @@ Under each reply, a quiet line tells you who answered and what it took:
 - **Model calls** and **tokens**. A `~` means some counts are estimates because the provider didn't report them.
 - How long it took, and the speed (tokens per second) for on-device models.
 
-Click the usage to open a **per-call table** (*Call · In · Out · Time*), including calls that failed (for example *429, not billed*). It also shows how much of the input came **from cache (cheaper)**. For a full timeline of a reply, turn on [Developer mode](/app/chat-and-agents/turn-traces/) and click **Trace**.
+Click the usage to open a **per-call table** (*Call · In · Out · Time*), including calls that failed (for example *429, not billed*). It also shows how much of the input came **from cache (cheaper)**. For the full story of a reply, step by step, click **View trace** under it: the trace opens in [Observability](/app/observability/traces/). The 👍 and 👎 buttons next to it rate the reply, which helps you [test a fix](/app/observability/evals/) later.
 
 :::note[Prompt caching]
 With Anthropic models, the parts of the prompt that repeat from one message to the next (instructions, tools, earlier messages) are cached by the provider, so long chats are cheaper and faster. The model picker marks these models with a **Cache** chip.

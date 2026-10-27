@@ -277,17 +277,14 @@ export const shots: ShotDef[] = [
 		page: 'app/settings/privacy',
 		route: '#/app/settings/privacy',
 		viewport: { width: 1440, height: 1340 },
-		alt: 'Settings, Privacy: Usage statistics with the Share anonymous usage statistics switch (off), What we collect, Reset install ID and a Privacy policy link; Error reports with the Send error reports switch (off); Agent memory with Forget everything (no memories yet); Turn traces with the Developer mode, Keep traces (on) and Include prompt text switches and a Clear traces button; and the summary Nothing is shared from this device.',
+		alt: 'Settings, Privacy: Usage statistics with the Share anonymous usage statistics switch (off), What we collect, Reset install ID and a Privacy policy link; Error reports with the Send error reports switch (off); Agent memory with Forget everything (no memories yet); and the summary Nothing is shared from this device.',
 		note: 'The capture browser starts with usage statistics and error reports off, so docs runs never send telemetry.',
 		spots: [
 			{ id: 'usage-stats', label: 'Share anonymous usage statistics', locator: (p) => main(p).getByRole('switch', { name: 'Share anonymous usage statistics' }) },
 			{ id: 'what-we-collect', label: 'What we collect', locator: (p) => main(p).getByRole('button', { name: 'What we collect' }) },
 			{ id: 'reset-install-id', label: 'Reset install ID', locator: (p) => main(p).getByRole('button', { name: 'Reset install ID' }) },
 			{ id: 'error-reports', label: 'Send error reports', locator: (p) => main(p).getByRole('switch', { name: 'Send error reports' }) },
-			{ id: 'forget-everything', label: 'Forget everything', locator: (p) => main(p).getByRole('button', { name: 'Forget everything' }) },
-			{ id: 'developer-mode', label: 'Developer mode', locator: (p) => main(p).getByRole('switch', { name: 'Developer mode' }) },
-			{ id: 'keep-traces', label: 'Keep traces and Include prompt text', locator: (p) => main(p).getByRole('switch', { name: 'Keep traces' }) },
-			{ id: 'clear-traces', label: 'Clear traces', locator: (p) => main(p).getByRole('button', { name: 'Clear traces' }) }
+			{ id: 'forget-everything', label: 'Forget everything', locator: (p) => main(p).getByRole('button', { name: 'Forget everything' }) }
 		],
 		prepare: async (s) => {
 			const page = s.page;

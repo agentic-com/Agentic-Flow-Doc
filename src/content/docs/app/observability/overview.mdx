@@ -1,0 +1,84 @@
+---
+title: "Observability"
+description: "See what your AI did, step by step, follow it over time, test changes and learn what people ask: Traces, Monitor, Evals and Insights, on your device."
+kind: guide
+section: app
+sidebar:
+  label: "Overview"
+  badge:
+    text: New
+    variant: tip
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+**In the app:** sidebar › **Observability** (`#/app/observability`), and the **Observe** tabs on each agent's page
+
+**Observability** records every run of Aria, your agents, teams, routines and AI workflow steps on this device. Use it to see why a reply was slow or wrong, to check that an agent stays within its token budget, to test a change before you keep it, and to learn what people ask your agents.
+
+## The four tabs
+
+The **Observability** page has four tabs:
+
+| Tab | What it's for |
+| --- | --- |
+| **Traces** | Every run, step by step: what the agent was asked, which models and tools it used, how long each step took, how many tokens it used, and what went wrong. |
+| **Monitor** | Dashboards of runs, errors, response time and tokens over time, plus alerts and token budgets. |
+| **Evals** | Datasets of test examples and experiments that compare versions of an agent before you keep a change. |
+| **Insights** | Reports that group conversations into categories: what people ask, where an agent gets stuck, what it can't do yet. |
+
+They build on each other. Your 👍 and 👎 on replies become test examples in Evals, Insights can turn a category into a dataset or a fix, and an experiment that wins becomes the agent's new version. [Observability concepts](/concepts/ai/observability/) explains how.
+
+[Online evals](/app/observability/online-evals/) score a sample of an agent's real conversations as they happen. Set them up from the **Online evals** card on the agent's **Evals** tab; the scores then show on traces, in Monitor and in alerts.
+
+Shared something on the marketplace? Its private **Performance** tab shows how it runs on other people's devices, from the anonymous daily stats that installers choose to share. See [Performance & sharing stats](/app/marketplace/author-stats/).
+
+## Where to find it
+
+- **Everything:** in the sidebar, under **Automate**, click **Observability**. In the side panel, open **More**, then **Observability**.
+- **One agent:** open the agent from **Agents & teams**. Next to its Build tabs, the **Observe** group has **Traces**, **Monitor**, **Evals** and **Insights** for that agent only. The agent's token budget is on its **Monitor** tab.
+- **One reply:** under a reply in any chat, click **View trace** to open its trace. 👍 and 👎 next to it rate the reply.
+- **Settings:** **Settings › Observability** controls what is recorded, how long it's kept and where copies are sent.
+
+## Two ways to read a trace
+
+By default, each trace reads like a short story: *Inbox Triage answered in 6.5 s using 14.1k tokens*, with plain step names such as *Thinking* or *Used gmail.search*. When a run failed, the story says why and offers a fix, such as **Reconnect Gmail**. (These examples are illustrative.)
+
+Switch on **Developer view** on a trace to see the technical detail on the same data: span kinds, model ids, raw input and output, and the OpenTelemetry attributes. It is one setting (**Open traces in developer view** in [Settings & privacy](/app/observability/settings/)), so it stays on for every trace until you turn it off.
+
+## Your data in brief
+
+- Traces stay **in this browser**. Nothing is sent to the AWFlow servers.
+- Prompts and replies are kept by default, because Evals and Insights need them. API keys, tokens and passwords are removed before saving.
+- You can stop recording, keep timings and token counts only for chosen agents, and choose how long traces are kept.
+- A copy leaves your device only if you add a collector of your own, such as Phoenix or Langfuse.
+- Everything is measured in **tokens**. AWFlow never shows a price.
+
+## Pages in this section
+
+<CardGrid>
+  <LinkCard title="Traces" href="/app/observability/traces/" description="The run list, a trace step by step, feedback and fixes." />
+  <LinkCard title="Monitor" href="/app/observability/monitor/" description="Dashboards and charts over time." />
+  <LinkCard title="Alerts & budgets" href="/app/observability/alerts-and-budgets/" description="Get told when something drifts, and cap an agent's tokens." />
+  <LinkCard title="Evals" href="/app/observability/evals/" description="Datasets, experiments and human review." />
+  <LinkCard title="Agent versions" href="/app/observability/agent-versions/" description="Drafts, apply and roll back." />
+  <LinkCard title="Online evals" href="/app/observability/online-evals/" description="Score a sample of real conversations as they happen." />
+  <LinkCard title="Insights" href="/app/observability/insights/" description="Reports on what people ask and where agents get stuck." />
+  <LinkCard title="Fix with Aria" href="/app/observability/fix-with-aria/" description="Turn a stuck category into a tested fix." />
+  <LinkCard title="Settings & privacy" href="/app/observability/settings/" description="Recording, content, storage and retention." />
+  <LinkCard title="Send to your tools" href="/app/observability/collectors/" description="Phoenix, Langfuse or any OpenTelemetry collector." />
+</CardGrid>
+
+## Good to know
+
+- Observability works the same for everyone, signed in or not. It needs no account.
+- Only AI work is traced. For whole workflow runs, see [Run history](/app/workflows/run-history/) and [Workflow stats](/app/insights/).
+- Experiments and Insights reports run their own traces. They never count in Monitor, but their tokens count toward the agent's budget.
+- With recording off, budgets still count tokens, but no new traces are kept.
+
+## Related
+
+- [Observability concepts](/concepts/ai/observability/): traces, spans, threads and the four pillars.
+- [Agents](/app/chat-and-agents/agents/): the agent page and its Observe tabs.
+- [Seeing the work](/app/chat-and-agents/seeing-the-work/): what a reply shows while it runs.
+- [Privacy & your data](/app/privacy-and-data/): what AWFlow keeps and shares.

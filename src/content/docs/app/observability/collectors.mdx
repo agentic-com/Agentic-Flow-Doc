@@ -1,0 +1,189 @@
+---
+title: "Send traces to your tools"
+description: "Send a copy of every AI span to your own OpenTelemetry collector: step by step for Phoenix and Langfuse, any OTLP endpoint, the test span, content or timing only, and the export status."
+kind: guide
+section: app
+sidebar:
+  label: "Send to your tools"
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import { GuidedShot } from '@components/awflow';
+
+**In the app:** **Settings › Observability › OpenTelemetry collectors**
+
+AWFlow keeps traces in your browser. If you already use an observability tool, such as Arize Phoenix, Langfuse, LangSmith, Grafana, Honeycomb or Jaeger, AWFlow can also send it a copy of every span. A **collector** is the address that tool receives traces on.
+
+Collectors speak **OTLP**, the OpenTelemetry protocol. AWFlow sends standard OTLP over HTTP, so any tool that accepts OTLP traces can read them. Spans carry both OpenInference attributes (read by Phoenix) and OpenTelemetry GenAI attributes. Nothing is sent until you add a collector.
+
+## Add a collector
+
+1. Open **Settings › Observability** and scroll to **OpenTelemetry collectors**.
+2. Click **Add a collector**.
+3. Pick a **Preset**. It fills in the endpoint, the protocol and the headers your tool needs.
+4. Fill in the rest, click **Send test span** to check the connection, then click **Save collector**.
+
+<GuidedShot
+  shot="obs-collector"
+  steps={[
+    { spot: 'preset', title: 'Preset', body: 'Phoenix (local), Langfuse, LangSmith, Grafana Cloud, Honeycomb, Jaeger or Custom OTLP.' },
+    { spot: 'endpoint', title: 'Endpoint', body: 'The full traces address, ending in /v1/traces. Keys go in headers, never in the address.' },
+    { spot: 'headers', title: 'Headers', body: 'API keys and other headers your tool asks for. Their values go into your secret vault.' },
+    { spot: 'test', title: 'Send test span', body: 'Sends one test trace now and shows the answer and how long it took.' }
+  ]}
+/>
+
+The form's fields:
+
+| Field | What to enter |
+| --- | --- |
+| **Preset** | The tool you send to. **Custom OTLP** leaves everything empty. |
+| **Name** | How the collector is listed. It defaults to the preset's name. |
+| **Endpoint** | The full traces address, for example `http://localhost:6006/v1/traces`. Use `https://`; plain `http://` works only for `localhost` and `127.0.0.1`. |
+| **Region** | Langfuse only: **EU** or **US**. It switches the endpoint for you. |
+| **Protocol** | **OTLP/HTTP · JSON** or **OTLP/HTTP · protobuf**. Keep the preset's choice unless your tool asks for the other. |
+| **Send** | **Spans with content** (prompts, replies, tool inputs and results, already cleaned of secrets) or **Timing and tokens only**. |
+| **Mask emails and phone numbers** | Off by default. See [Mask personal details](#mask-personal-details). |
+| **Headers** | Name and value pairs. Click **Header** to add one. Langfuse has **Public key** and **Secret key** fields instead. |
+
+Below the headers, the form says where traces will go: *AWFlow will send AI traces to cloud.langfuse.com*, for example. Saving the collector is your consent to send them there.
+
+## Phoenix on your computer
+
+[Arize Phoenix](https://arize.com/docs/phoenix) runs on your own computer and reads AWFlow's spans as they are.
+
+<Steps>
+1. Start Phoenix. With Docker:
+
+   ```sh
+   docker run -p 6006:6006 -p 4317:4317 -i -t arizephoenix/phoenix:latest
+   ```
+
+   Or with Python: `pip install arize-phoenix`, then `phoenix serve`. Phoenix's interface and its OTLP HTTP collector both use port 6006.
+
+2. In AWFlow, open **Settings › Observability**, click **Add a collector** and pick **Phoenix (local)**. The endpoint becomes `http://localhost:6006/v1/traces` and the protocol **OTLP/HTTP · JSON**. No header is needed.
+
+3. Click **Send test span**. In the extension, the browser first asks to let AWFlow reach `localhost:6006`: choose **Allow**. The form should show **Test span accepted**.
+
+4. Click **Save collector**.
+
+5. Ask Aria or an agent something, then open Phoenix at `http://localhost:6006`. The run appears in Phoenix, with the same steps you see in AWFlow.
+</Steps>
+
+If your Phoenix asks for an API key, click **Header** and add the header its documentation names.
+
+## Langfuse
+
+[Langfuse](https://langfuse.com) receives OpenTelemetry traces at its `/api/public/otel` address. It authenticates with your project's **public key** and **secret key**.
+
+<Steps>
+1. Find your project's keys in Langfuse, under the project's settings. See Langfuse's guide [Where are my Langfuse API keys?](https://langfuse.com/faq/all/where-are-langfuse-api-keys). The public key starts with `pk-lf-`, the secret key with `sk-lf-`.
+
+2. In AWFlow, open **Settings › Observability**, click **Add a collector** and pick **Langfuse**.
+
+3. Pick the **Region** your Langfuse project is in. The endpoint follows:
+
+   | Region | Endpoint |
+   | --- | --- |
+   | **EU** | `https://cloud.langfuse.com/api/public/otel/v1/traces` |
+   | **US** | `https://us.cloud.langfuse.com/api/public/otel/v1/traces` |
+
+   For a Langfuse you host yourself, replace the address's host with yours: `https://<your Langfuse host>/api/public/otel/v1/traces`.
+
+4. Paste the **Public key** and the **Secret key**. The protocol is **OTLP/HTTP · protobuf**.
+
+5. Click **Send test span**. The form should show **Test span accepted**.
+
+6. Click **Save collector**.
+</Steps>
+
+You don't need to build the authentication header yourself. Langfuse uses HTTP Basic authentication: AWFlow joins the two keys with a colon, `public key:secret key`, encodes that text in Base64 and sends it as `Authorization: Basic <encoded text>`. Only that header is saved, in your secret vault.
+
+When you edit a Langfuse collector later, the key fields show **••••• (saved)**. Leave both empty to keep the saved keys, or fill in **both** to replace them.
+
+## Any OTLP endpoint
+
+Pick the preset of your tool, or **Custom OTLP** for anything else, such as your own OpenTelemetry Collector.
+
+| Preset | Endpoint it fills in | Headers it asks for |
+| --- | --- | --- |
+| **Phoenix (local)** | `http://localhost:6006/v1/traces` | None |
+| **Langfuse** | `https://cloud.langfuse.com/api/public/otel/v1/traces` | Public key and secret key |
+| **LangSmith** | `https://api.smith.langchain.com/otel/v1/traces` | `x-api-key`, `Langsmith-Project` |
+| **Grafana Cloud** | `https://otlp-gateway-<zone>.grafana.net/otlp/v1/traces` | `Authorization` |
+| **Honeycomb** | `https://api.honeycomb.io/v1/traces` | `x-honeycomb-team` |
+| **Jaeger** | `http://localhost:4318/v1/traces` | None |
+| **Custom OTLP** | Empty | None; add your own |
+
+For Grafana Cloud, replace `<zone>` with your stack's zone; the form won't save while a `<…>` placeholder is left. Each tool's own documentation says which values to put in its headers.
+
+Several collectors can be on at once. Each one has its own queue and status.
+
+## Content or timing only
+
+**Send** decides what each collector receives:
+
+- **Spans with content** sends what is stored on this device: messages, tool inputs and results, all already cleaned of API keys, tokens and passwords. Agents you added to **Don't record content for…** never have content to send.
+- **Timing and tokens only** sends the steps, their names, times, token counts, models and errors, without any text.
+
+Switching a collector to **Timing and tokens only** also applies to the spans already waiting for it.
+
+## Mask personal details
+
+With **Spans with content**, tick **Mask emails and phone numbers** to hide them from this collector. They are replaced before sending; traces on this device keep the text. The box is off by default. With **Timing and tokens only** it is disabled, because no text is sent.
+
+- An email address becomes `[email]`.
+- A phone number becomes `[phone]`.
+
+The phone rule is conservative, so it does not hide every number. It masks numbers written with a `+`, with `(` or with a leading 0, and numbers split into 3 or more groups by dashes or dots. Some plain numbers are not masked. Dates, ids and versions are never touched.
+
+Masking is not a guarantee. If a tool must never see personal details, choose **Timing and tokens only**.
+
+**Send test span** includes a sample with an email and a phone number, so you can see in your tool how they come out.
+
+## Check the status
+
+Each collector in the list shows its endpoint, protocol and a status line. The switch turns sending on or off.
+
+| Status | What it means |
+| --- | --- |
+| **Last export 5 min ago · 120 spans today · Queue empty** | Connected and up to date. (Example values.) |
+| **No export yet** | Saved, but nothing has been sent yet. |
+| An error, **Since** a time, the spans waiting and the next retry | Sending failed, for example because you're offline or the collector is down. AWFlow keeps retrying. |
+| An error with a **Fix** button | The collector refused the request. For refused keys (HTTP 401 or 403), click **Fix**, enter the header values again and save: waiting spans are sent again then. For any other refusal (another 4xx error), that batch of spans is dropped, not retried; click **Fix** to check the endpoint and settings. |
+| **Waiting for vault unlock** | Your secret vault is locked, so AWFlow can't read the header values. Unlock it and sending resumes. |
+| **Off** | The switch is off. |
+
+To change a collector, click its pencil icon. In the form, **Remove** deletes it after you confirm with **Remove collector**; the spans waiting for it are dropped.
+
+## How sending works
+
+- AWFlow sends spans from an **open AWFlow page**: an app tab or the side panel. When none is open, spans wait in a queue on this device and go out the next time you open AWFlow.
+- New spans go out a couple of seconds after they're recorded, then at least once a minute while a page is open.
+- Only spans recorded **after** you add a collector are sent. To share older traces, use **Export (OTLP JSON)** in [Settings & privacy](/app/observability/settings/#export-or-clear).
+- After a failure, AWFlow waits longer between tries: 30 seconds, 2 minutes, 10 minutes, 30 minutes, then every hour. Spans that can't be sent within 72 hours are dropped.
+- Each collector's queue holds up to 5,000 spans or 20 MB. Beyond that, the oldest waiting spans are dropped.
+
+## In the web app
+
+The web app sends from the browser page itself, so your collector must **allow requests from the AWFlow site** (CORS). The form reminds you of this. A collector on `localhost` or a cloud service that doesn't allow browser requests won't work from the web app; use the extension, or put your own OpenTelemetry Collector with CORS enabled in front of it.
+
+In the extension, `https://` collectors work without extra steps. For a collector on `localhost`, the browser asks once for permission to reach it.
+
+<Aside type="note" title="For developers">
+AWFlow sends OTLP/HTTP `ExportTraceServiceRequest` messages, JSON or protobuf, in batches of up to 512 spans or 1 MB, gzipped when the collector accepts it. The resource has `service.name` `awflow-extension` or `awflow-web`, and the instrumentation scope is `awflow`. Spans carry `openinference.span.kind`, `llm.*`, `tool.*` and `retrieval.*` attributes, `gen_ai.*` attributes and AWFlow's `awf.*` attributes. `llm.cost.*` and `user.id` are never exported. The test span is a single trace with `awf.test=true`. Header values are encrypted with your secret vault's key; this is why only an open, unlocked page can send.
+</Aside>
+
+## Good to know
+
+- Header values are stored in your [secret vault](/app/account/secret-vault/). If the vault is locked when you save or test, the form asks you to unlock it under **Security**.
+- An endpoint with a user name or password in it (`https://user:pass@…`) is refused. Put keys in headers.
+- Collectors receive tokens, never prices.
+- A collector gets a copy. Your traces stay on this device either way.
+
+## Related
+
+- [Settings & privacy](/app/observability/settings/): what is recorded and kept.
+- [Traces](/app/observability/traces/): the same runs, inside AWFlow.
+- [Observability concepts](/concepts/ai/observability/): traces, spans and span kinds.
+- [Secret vault](/app/account/secret-vault/): where header values are kept.

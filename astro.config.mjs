@@ -173,7 +173,7 @@ export default defineConfig({
     "/usage/using-the-app/chat-and-agents/seeing-the-work/": "/app/chat-and-agents/seeing-the-work/",
     "/usage/using-the-app/chat-and-agents/teams/": "/app/chat-and-agents/teams/",
     "/usage/using-the-app/chat-and-agents/templates/": "/app/chat-and-agents/templates/",
-    "/usage/using-the-app/chat-and-agents/turn-traces/": "/app/chat-and-agents/turn-traces/",
+    "/usage/using-the-app/chat-and-agents/turn-traces/": "/app/observability/traces/",
     "/usage/using-the-app/credentials/": "/app/connections/",
     "/usage/using-the-app/credentials/create/": "/app/connections/create/",
     "/usage/using-the-app/credentials/edit/": "/app/connections/edit/",
@@ -220,6 +220,8 @@ export default defineConfig({
     "/usage/using-the-app/workflows/publishing/": "/app/workflows/publishing/",
     "/usage/using-the-app/workflows/run-history/": "/app/workflows/run-history/",
     "/usage/using-the-app/workflows/tags/": "/app/workflows/tags/",
+    // Observability (awflow/Agentic-Flow#1617): the Trace drawer page became the Traces guide.
+    "/app/chat-and-agents/turn-traces/": "/app/observability/traces/",
   },
   markdown: {
     // Astro 7's default Sätteri processor rejects raw `html` nodes in MDX;
@@ -364,7 +366,22 @@ export default defineConfig({
                 { ...nav("Knowledge in chats & agents"), link: "app/chat-and-agents/knowledge" },
                 { ...nav("Browser control & safety"), link: "app/chat-and-agents/browser-control" },
                 { ...nav("Agent & team templates"), link: "app/chat-and-agents/templates" },
-                { ...nav("Turn traces"), link: "app/chat-and-agents/turn-traces" },
+              ],
+            },
+            {
+              ...nav("Observability"),
+              items: [
+                { ...nav("Overview"), link: "app/observability/overview" },
+                { ...nav("Traces"), link: "app/observability/traces" },
+                { ...nav("Monitor"), link: "app/observability/monitor" },
+                { ...nav("Alerts & budgets"), link: "app/observability/alerts-and-budgets" },
+                { ...nav("Evals"), link: "app/observability/evals" },
+                { ...nav("Agent versions"), link: "app/observability/agent-versions" },
+                { ...nav("Online evals"), link: "app/observability/online-evals" },
+                { ...nav("Insights"), link: "app/observability/insights" },
+                { ...nav("Fix with Aria"), link: "app/observability/fix-with-aria" },
+                { ...nav("Settings & privacy"), link: "app/observability/settings" },
+                { ...nav("Send to your tools"), link: "app/observability/collectors" },
               ],
             },
             {
@@ -500,13 +517,23 @@ export default defineConfig({
               ],
             },
             {
+              ...nav("Marketplace"),
+              items: [
+                {
+                  ...nav("Performance & sharing stats"),
+                  link: "app/marketplace/author-stats",
+                  badge: { text: "New", variant: "tip" },
+                },
+              ],
+            },
+            {
               ...nav("More features"),
               collapsed: true,
               items: [
                 { ...nav("Assistant Notch"), link: "app/assistant-notch" },
                 { ...nav("Data store"), link: "app/data-store" },
                 { ...nav("Variables"), link: "app/variables" },
-                { ...nav("Insights"), link: "app/insights" },
+                { ...nav("Workflow stats"), link: "app/insights" },
                 { ...nav("Activity"), link: "app/activity" },
                 { ...nav("Notifications"), link: "app/notifications" },
                 { ...nav("Newsletter"), link: "app/newsletter" },

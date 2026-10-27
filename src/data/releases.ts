@@ -228,7 +228,7 @@ export const RELEASES: Release[] = [
 			{ kind: 'new', area: 'Knowledge', text: 'Portable .awkb files to export a base and import it on another device.', link: '/app/knowledge-bases/export-import-backup/', label: 'Export & import' },
 			{ kind: 'new', area: 'Aria & agents', text: 'A knowledge picker in chat with citations you can open, and a Knowledge tab for agents.', link: '/app/chat-and-agents/knowledge/', label: 'Knowledge in chats & agents' },
 			{ kind: 'new', area: 'Aria & agents', text: 'A work timeline shows each model and tool step as it happens, with a reply receipt.', link: '/app/chat-and-agents/seeing-the-work/', label: 'Following Aria’s work' },
-			{ kind: 'new', area: 'Aria & agents', text: 'Turn traces (Developer mode) show where the time and tokens of each reply went.', link: '/app/chat-and-agents/turn-traces/', label: 'Turn traces' },
+			{ kind: 'new', area: 'Aria & agents', text: 'Turn traces (Developer mode) show where the time and tokens of each reply went.', link: '/app/observability/traces/', label: 'Traces' },
 			{ kind: 'improved', area: 'Knowledge', text: 'Hybrid keyword and vector search, with optional on-device reranking.', link: '/concepts/ai/rag/', label: 'RAG concepts' },
 			{ kind: 'improved', area: 'Nodes', text: 'Workflow knowledge nodes gained hybrid search, MMR, metadata filters and a richer base picker.', link: '/nodes/builtin/ai/aidependencies/vectorstore/localknowledge/', label: 'Local Knowledge' },
 			{ kind: 'improved', area: 'Aria & agents', text: 'Project files now use the same knowledge engine.', link: '/app/chat-and-agents/projects/', label: 'Projects' },
