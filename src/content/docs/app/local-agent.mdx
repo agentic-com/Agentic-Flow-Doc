@@ -1,0 +1,128 @@
+---
+title: "Careful tool use on local models"
+description: "How Aria acts in your browser with an on-device model: checked tool calls, questions instead of guesses, how Aria acts, Confirm changes, the GPU switch and which model to pick."
+kind: guide
+section: app
+sidebar:
+  label: "Careful tool use"
+---
+
+import { LinkCard, CardGrid } from "@astrojs/starlight/components";
+import { Badge, Callout } from "@components/awflow";
+
+<Badge variant="on-device" text="Runs and stays on this device" /> <Badge variant="new" />
+
+**In the app:** **Settings › Local models › Careful tool use**, and **Chat settings** in any chat
+
+Small models that run in your browser can chat well, but on their own they often pick the wrong tool, invent a detail or write a tool call that doesn't work. **Careful tool use** adds checks around them, so an on-device model can open pages, search the web and click on the page for you without guessing.
+
+## What careful tool use does
+
+When you ask for something that needs a tool, Aria with an on-device model works in small, checked steps:
+
+1. **It picks a tool.** It first narrows the request down to a few tools that fit, then the model chooses one of them. It can only answer with one of those tools, or with a plain answer.
+2. **It fills in the details under a fixed format.** The model writes the tool's details (a web address, a search, the element to click) in a format that only allows valid values. Element and step names are taken from your request or from the page, never made up.
+3. **It asks when unsure.** When the checks don't agree, when the request is vague, or when a detail is missing, Aria asks you a question instead of guessing. You answer with one tap (see [When Aria asks](#when-aria-asks)).
+
+While it decides, the step card appears at once with **Choosing a tool…**, then fills in: the tool, then its target, then the result.
+
+It applies to models that run in your browser: the chat models on the [Local AI](/app/local-models/) page and Chrome's built-in model (Gemini Nano). Cloud models are not affected.
+
+### On by default without a cloud provider
+
+**Careful tool use** is on by default when **no cloud provider is set up** in **Settings › Providers**. Ollama runs on your computer, so it counts as local: with only Ollama set up, careful tool use is still on. As soon as you set up a cloud provider, the default is off. A choice you make yourself always wins over the default.
+
+### Turn it on or off
+
+Open **Settings › Local models** and use the **Careful tool use** switch: *On-device models pick tools with built-in checks: only valid calls, details taken from the page, and a question when unsure.*
+
+Turned off, on-device models call tools freely, as before. Answers can come a little faster, but tool calls are no longer checked.
+
+## How Aria acts
+
+Each chat decides how much Aria does without asking you. Open **Chat settings** from the chat header and pick one under **How Aria acts**:
+
+| Option | What it does |
+| --- | --- |
+| **Always ask first** | Shows what it would do; you confirm each action. Before every action, the question dock asks *Shall I do this?* with one option, **Do it**. **Skip** or your own words cancel the action. Works with every model, cloud models too. |
+| **Act when sure** (default) | Acts when its checks agree, asks when they don't. |
+| **Act on its own** | Chains several steps without asking. Only offered for **Qwen3 4B** and cloud models: with a smaller on-device model it is greyed out with *Needs Qwen3 4B or a cloud model.* |
+
+Each chat keeps its own choice. **Settings › Local models** holds the device-wide switches; each chat can change how Aria acts from its settings.
+
+## Confirm changes
+
+**Confirm changes** is in **Chat settings**, below **How Aria acts**, and is **on by default**: *Ask before sending, submitting or deleting anything.*
+
+With it on, Aria shows an approval card before any action that sends, submits or deletes something, such as a click on a **Send** or **Submit** button or typing into a field and submitting it. Typing into a field or choosing in a dropdown doesn't ask. It applies in every **How Aria acts** mode. Turn the switch off to let those actions run without the extra card.
+
+<Callout type="info" title="Where these chat settings apply">
+
+**Confirm changes**, the next-step chips and the notes and cards below work in chats on the **Assistant** page (in a tab or in the side panel). The canvas Aria dock, the [Assistant Notch](/app/assistant-notch/) and team threads run the same checked steps under the agent's own rules: there, a chat with **Confirm changes** on does not confirm.
+
+</Callout>
+
+## When Aria asks
+
+Questions open in the **question dock** above the composer. Pick an option with a click or its number key; <kbd>Esc</kbd> skips. A small label says why Aria asks:
+
+- **Not sure which action.** Each option names the action and its real target, for example *Search the web · …* or *Open a page · …*. Aria's best guess is listed first and marked **Aria's pick**, but nothing is selected for you. When an answer without tools could do, **Just answer** (*From what I already know*) is one of the options. Or type in **Something else…**.
+- **Missing a detail.** For example *To click on the page, I need the element. Which one do you mean?* The options are the matching elements from the page, each with where it sits (the page header, the page footer, the cookie bar, a form on the page). If none is right, type in **Describe it…**.
+
+## After a result
+
+With the smaller models (the **Quick** and **Balanced** kind, see below), Aria acts one step at a time. After a reply, a **Next step, from what's on the page** card can suggest one click it saw on the page, for example *Click “Pricing”*. Tap it to run it as a new turn, or **That's all for now** to stop there. Qwen3 4B and cloud models carry on by themselves.
+
+### When the checks don't run
+
+- **Written freely.** When the checked step gives up and the model answers on its own, a quiet line under the reply says *Written freely, without Aria's tool checks. Worth a second look.* **Retry with checks** answers again.
+- **Step limit.** When an on-device model runs out of steps, or stops instead of repeating the same action, a card offers **Continue for N more steps** or **Stop here**.
+- **The model can't start.** A model whose files are too large for this browser shows *… can't start in this browser*, with **Continue with** another model, **Choose another model** or **Try again**. Your message is kept.
+
+### Stop
+
+**Stop** works at any point, including while Aria is still **Choosing a tool…**: the turn ends there, nothing more runs, and no answer is written in its place. See [Stopping a reply](/app/chat-and-agents/seeing-the-work/#stopping-a-reply).
+
+## GPU or processor
+
+On-device models are much faster on the GPU (WebGPU). AWFlow uses it automatically when your browser supports it.
+
+**Settings › Local models › Use the GPU when possible** (on by default): *Models that have GPU weights download and run them when your browser supports WebGPU, which is much faster. Turn this off to always use the processor. Applies to the next download and the next run.*
+
+If your GPU can't run a model, AWFlow switches to the processor instead of failing:
+
+- the model pill in the chat header reads **Local · CPU** in amber while it lasts;
+- a note in the chat says **Running on the CPU for now.** *Your GPU couldn't run this model, so each action takes longer.*, with **Try the GPU again** and **Use a smaller model**.
+
+## Which model to pick
+
+When you set up Aria on this device, the first-run card **Private, on this device** presents models by how they act, with an "acts well" meter, the download size and the time per action:
+
+| Kind | How it acts |
+| --- | --- |
+| **Quick** | Fastest. Asks you often before it acts. |
+| **Balanced** | Acts on most requests, asks when unsure. |
+| **Capable** | Acts on its own, rarely asks, or chains several steps. Slower here. |
+
+Each kind shows the best model that runs on your device. Models are ranked by how well they use tools first, then by how well they fit your device. The same order is used for **Recommended first** on the [Local AI](/app/local-models/) page.
+
+- **Qwen3 models are the strongest agents.** Qwen3 4B picks the right action most often and makes the fewest wrong ones; it is the only on-device model that chains several steps on its own.
+- **Llama 3.2 3B**, **Phi 3.5 Mini**, **Qwen2.5 3B** and **Hermes 3 (Llama 3.2 3B)** act well and ask when unsure.
+- **Llama 3.2 1B** is good for chat, but it is the weakest for agent work: it asks often and ranks last for acting in your browser.
+
+### See how a model acts
+
+Open a chat model on the **Local AI** page. Its detail sheet has an **As an agent** section:
+
+- **acts, and is right**, **acts, but wrong** and **asks you first**: measured on requests Aria had never seen;
+- **How it acts**, **Per action** (on the GPU) and **Multi-step tasks** (*One step at a time* or *Chains several steps*);
+- **On this device: N actions, M questions**: what careful tool use did with this model on this device, plus how many replies you marked wrong and how many answers were written without the checks. These counts stay on your device.
+
+## Related
+
+<CardGrid>
+  <LinkCard title="Local AI" href="/app/local-models/" description="Find, install and manage on-device models." />
+  <LinkCard title="Install, test and remove models" href="/app/local-models-install/" description="Variants, device fit and background downloads." />
+  <LinkCard title="Chat with Aria" href="/app/chat-and-agents/chat/" description="Chat settings, models and page context." />
+  <LinkCard title="Following Aria's work" href="/app/chat-and-agents/seeing-the-work/" description="The work timeline, the step limit and Stop." />
+</CardGrid>

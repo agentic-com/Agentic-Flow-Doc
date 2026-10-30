@@ -117,6 +117,7 @@ export const NAV_LABELS: Record<string, { fr: string; de: string; 'zh-CN': strin
 	"Local AI": { fr: "IA locale", de: "Lokale KI", 'zh-CN': "本地 AI" },
 	"Install & manage": { fr: "Installer et gérer", de: "Installieren & Verwalten", 'zh-CN': "安装与管理" },
 	"Compare models": { fr: "Comparer les modèles", de: "Modelle vergleichen", 'zh-CN': "比较模型" },
+	"Careful tool use": { fr: "Utilisation prudente des outils", de: "Sorgfältige Tool-Nutzung", 'zh-CN': "谨慎使用工具" },
 	"Add a custom model": { fr: "Ajouter un modèle personnalisé", de: "Benutzerdefiniertes Modell hinzufügen", 'zh-CN': "添加自定义模型" },
 	"More features": { fr: "Autres fonctionnalités", de: "Weitere Funktionen", 'zh-CN': "更多功能" },
 	"Assistant Notch": { fr: "Encoche Assistant", de: "Assistent Notch", 'zh-CN': "助手凹口" },

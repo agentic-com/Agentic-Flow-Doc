@@ -514,6 +514,7 @@ export default defineConfig({
                 { ...nav("Install & manage"), link: "app/local-models-install" },
                 { ...nav("Compare models"), link: "app/local-models-compare" },
                 { ...nav("Add a custom model"), link: "app/local-models-custom" },
+                { ...nav("Careful tool use"), link: "app/local-agent" },
               ],
             },
             {
