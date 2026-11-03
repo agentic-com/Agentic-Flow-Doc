@@ -54,11 +54,13 @@ Each chat keeps its own choice. **Settings › Local models** holds the device-w
 
 **Confirm changes** is in **Chat settings**, below **How Aria acts**, and is **on by default**: *Ask before sending, submitting or deleting anything.*
 
-With it on, Aria shows an approval card before any action that sends, submits or deletes something, such as a click on a **Send** or **Submit** button or typing into a field and submitting it. Typing into a field or choosing in a dropdown doesn't ask. It applies in every **How Aria acts** mode. Turn the switch off to let those actions run without the extra card.
+With it on, Aria asks before any action that sends, submits or deletes something, such as a click on a **Send** or **Submit** button or typing into a field and submitting it. On the **Assistant** page it shows an approval card; in the canvas Aria dock and the [Assistant Notch](/app/assistant-notch/) the question dock asks *Shall I do this?* with **Do it**. Typing into a field or choosing in a dropdown doesn't ask, and an action the agent's rules block is blocked without asking. It applies in every **How Aria acts** mode. Turn the switch off to let those actions run without asking.
 
 <Callout type="info" title="Where these chat settings apply">
 
-**Confirm changes**, the next-step chips and the notes and cards below work in chats on the **Assistant** page (in a tab or in the side panel). The canvas Aria dock, the [Assistant Notch](/app/assistant-notch/) and team threads run the same checked steps under the agent's own rules: there, a chat with **Confirm changes** on does not confirm.
+**Confirm changes** and the next-step chips work in chats on the **Assistant** page (in a tab or in the side panel), in the canvas Aria dock and in the [Assistant Notch](/app/assistant-notch/) inside the app. The dock and the notch have no chat settings of their own: there, **Confirm changes** is on.
+
+The notes and cards under [When the checks don't run](#when-the-checks-dont-run) show on the **Assistant** page only. The notch on web pages and team threads run the same checked steps under the agent's own rules: there, a chat with **Confirm changes** on does not confirm.
 
 </Callout>
 
@@ -68,6 +70,8 @@ Questions open in the **question dock** above the composer. Pick an option with 
 
 - **Not sure which action.** Each option names the action and its real target, for example *Search the web · …* or *Open a page · …*. Aria's best guess is listed first and marked **Aria's pick**, but nothing is selected for you. When an answer without tools could do, **Just answer** (*From what I already know*) is one of the options. Or type in **Something else…**.
 - **Missing a detail.** For example *To click on the page, I need the element. Which one do you mean?* The options are the matching elements from the page, each with where it sits (the page header, the page footer, the cookie bar, a form on the page). If none is right, type in **Describe it…**.
+
+While a question waits, the steps Aria already took stay visible above it. A waiting question also survives a reload: reopen the chat and it is still there, and your answer carries on from where Aria stopped, without repeating the actions it already did. If the chat's model or agent changed in the meantime, your answer starts the request again instead. Sending a new message instead of answering drops the question.
 
 ## After a result
 
@@ -81,7 +85,7 @@ With the smaller models (the **Quick** and **Balanced** kind, see below), Aria a
 
 ### Stop
 
-**Stop** works at any point, including while Aria is still **Choosing a tool…**: the turn ends there, nothing more runs, and no answer is written in its place. See [Stopping a reply](/app/chat-and-agents/seeing-the-work/#stopping-a-reply).
+**Stop** works at any point, including while Aria is still **Choosing a tool…**: the on-device model stops at once, even in the middle of writing, the turn ends there, nothing more runs, and no answer is written in its place. A next-step suggestion that is still being worked out is dropped too. See [Stopping a reply](/app/chat-and-agents/seeing-the-work/#stopping-a-reply).
 
 ## GPU or processor
 
