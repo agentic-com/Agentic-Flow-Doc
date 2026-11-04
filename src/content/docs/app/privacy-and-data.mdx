@@ -45,7 +45,7 @@ To move items between local and cloud, use **Move to cloud** / **Move to local**
 
 ## Connections and secrets
 
-- **Local credentials** are encrypted in the browser. By default the key is stored on the same device, which guards against casual inspection. Turn on the [local secret vault](/app/account/secret-vault/) to lock them with a passphrase only you know.
+- **Local credentials** (and AI provider API keys) are encrypted in the browser with a key made from a passphrase only you know: the [local secret vault](/app/account/secret-vault/). A passphrase is required before you save a key on this device, and it is never stored. Keys saved before this was required keep working until you set one. If the encryption key can't be loaded, AWFlow refuses to save a secret rather than store it unencrypted.
 - **Cloud credentials** are sent to AWFlow over an encrypted connection and stored encrypted on the server. The server holds that key, so it can decrypt them to give them back to you. If you want secrets that never leave your device, keep those credentials local.
 - **Workflow export**, **Copy steps** and publishing leave out connections and values that look like secrets.
 - A connection can be **locked to its sites** (**Allowed sites**): AWFlow then refuses to send its key anywhere else, even if a step asks.
@@ -59,6 +59,7 @@ To move items between local and cloud, use **Move to cloud** / **Move to local**
 - **Cloud AI providers** (OpenAI, Anthropic, Google and others) are called **directly from your browser** with your own API key. Your prompt goes to that provider and is covered by its privacy terms. AWFlow does not run or relay these AI calls.
 - **Ollama** runs on your own computer; calls go to it locally.
 - Knowledge bases marked device-only are never sent to a cloud model.
+- **Pictures from web addresses aren't shown in AI answers.** A page the assistant reads could hide instructions that tell it to add such a picture, with your data inside the address; loading it would send that data out without a click. Links in answers open only `https`, `http` and `mailto` addresses.
 
 ## Observability
 
